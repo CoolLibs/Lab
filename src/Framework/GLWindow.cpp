@@ -23,7 +23,6 @@ void GLWindow::switchFullScreen() {
 }
 
 void GLWindow::escapeFullScreen() {
-	if (m_bIsFullScreen)
-		SDL_SetWindowFullscreen(window, 0);
+	SDL_SetWindowFullscreen(window, 0);
 	m_bIsFullScreen = false;
 }
