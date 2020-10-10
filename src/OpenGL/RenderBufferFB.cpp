@@ -1,10 +1,10 @@
-#include "RenderBuffer.h"
+#include "RenderBufferFB.h"
 
-RenderBuffer::~RenderBuffer() {
+RenderBufferFB::~RenderBufferFB() {
 	destroyAttachments();
 }
 
-void RenderBuffer::createAttachments(int width, int height) {
+void RenderBufferFB::createAttachments(int width, int height) {
 	// Color attachment
 	GLCall(glGenRenderbuffers(1, &m_colorRenderBufferId));
 	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, m_colorRenderBufferId));
@@ -17,12 +17,12 @@ void RenderBuffer::createAttachments(int width, int height) {
 	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, 0));
 }
 
-void RenderBuffer::destroyAttachments() {
+void RenderBufferFB::destroyAttachments() {
 	GLCall(glDeleteRenderbuffers(1, &m_colorRenderBufferId));
 	GLCall(glDeleteRenderbuffers(1, &m_depthRenderBufferId));
 }
 
-void RenderBuffer::attachAttachments() {
+void RenderBufferFB::attachAttachments() {
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, getFrameBufferId()));
 	GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_colorRenderBufferId));
 	GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBufferId));

@@ -2,10 +2,10 @@
 
 #include "FrameBuffer.h"
 
-class TextureFrameBuffer : public FrameBuffer {
+class TextureFB : public FrameBuffer {
 public:
-	TextureFrameBuffer() = default;
-	~TextureFrameBuffer();
+	TextureFB() = default;
+	~TextureFB();
 
 	void attachTextureToSlot(unsigned int slot);
 

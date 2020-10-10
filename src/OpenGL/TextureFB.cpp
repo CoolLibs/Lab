@@ -1,10 +1,10 @@
-#include "TextureFrameBuffer.h"
+#include "TextureFB.h"
 
-TextureFrameBuffer::~TextureFrameBuffer() {
+TextureFB::~TextureFB() {
 	destroyAttachments();
 }
 
-void TextureFrameBuffer::createAttachments(int width, int height) {
+void TextureFB::createAttachments(int width, int height) {
 	GLCall(glGenTextures(1, &m_colorTextureId));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_colorTextureId));
 	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
@@ -15,18 +15,18 @@ void TextureFrameBuffer::createAttachments(int width, int height) {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-void TextureFrameBuffer::destroyAttachments() {
+void TextureFB::destroyAttachments() {
 	GLCall(glDeleteTextures(1, &m_colorTextureId));
 }
 
-void TextureFrameBuffer::attachAttachments() {
+void TextureFB::attachAttachments() {
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, getFrameBufferId()));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_colorTextureId));
 	GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTextureId, 0));
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
-void TextureFrameBuffer::attachTextureToSlot(unsigned int slot) {
+void TextureFB::attachTextureToSlot(unsigned int slot) {
 	GLCall(glActiveTexture(GL_TEXTURE0 + slot));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_colorTextureId));
 }

@@ -2,10 +2,10 @@
 
 #include "FrameBuffer.h"
 
-class RenderBuffer : public FrameBuffer {
+class RenderBufferFB : public FrameBuffer {
 public:
-	RenderBuffer() = default;
-	~RenderBuffer();
+	RenderBufferFB() = default;
+	~RenderBufferFB();
 
 private:
 	void createAttachments(int width, int height) override;
