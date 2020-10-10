@@ -4,7 +4,8 @@
 
 ### GLCall
 
-Always wrap your OpenGL calls in the GLCall(...) macro. It will add debug checks that might prove very usefull !
+Always wrap your OpenGL calls in the GLCall(...) macro. It will add debug checks even if your computer doesn't support modern OpenGL debugging.
+NB : You can control the look of the modern debugging messages in the Framework/GLDebugCallback.h file, as well as ignore some warnings
 
 ```
 TODO : add example
