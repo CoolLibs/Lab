@@ -1,7 +1,7 @@
 #include "App.h"
 
 App::App()
-	: m_shader("shaders/vert.vert", "shaders/frag.frag")
+	: m_shader("shaders/fullscreen.vert", "shaders/test.frag")
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -14,7 +14,7 @@ void App::update() {
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		m_shader.bind();
-		m_renderer.drawFullScreenWithUVs();
+		m_renderer.dummyDrawCallForFullscreen();
 	}
 	m_renderer.end();
 }

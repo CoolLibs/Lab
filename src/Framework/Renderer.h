@@ -1,20 +1,18 @@
 #pragma once
 
 #include "OpenGL/RenderBufferFB.h"
-#include "OpenGL/QuadVAO.h"
 
 class Renderer {
 public:
 	Renderer();
-	~Renderer() = default;
-	Renderer(const Renderer& other) = delete;			 // non-copyable because QuadVAO is not quite copyable at the moment
-	Renderer& operator=(const Renderer& other) = delete; // non-copyable because QuadVAO is not quite copyable at the moment
+	~Renderer();
+	Renderer(const Renderer& other) = delete;			 // non-copyable because it would destroy the VAO (we would need move operators)
+	Renderer& operator=(const Renderer& other) = delete; // non-copyable because it would destroy the VAO (we would need move operators)
 
 	void begin();
 	void end();
 
-	void drawFullScreen();
-	void drawFullScreenWithUVs();
+	void dummyDrawCallForFullscreen(); // We use a smart trick to render fullscreen, as explained here : https://stackoverflow.com/a/59739538
 
 	inline RenderBufferFB& renderBuffer() { return m_renderBuffer; }
 
@@ -22,6 +20,5 @@ public:
 
 private:
 	RenderBufferFB m_renderBuffer;
-	QuadVAO m_fullScreenVAO;
-	QuadVAO m_fullScreenVAOWithUVs;
+	GLuint m_dummyVaoID;
 };

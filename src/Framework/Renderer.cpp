@@ -1,9 +1,12 @@
 #include "Renderer.h"
 #include "Framework/Viewports.h"
 
-Renderer::Renderer()
-	: m_fullScreenVAO(false), m_fullScreenVAOWithUVs(true)
-{}
+Renderer::Renderer() {
+	GLCall(glGenVertexArrays(1, &m_dummyVaoID));
+}
+Renderer::~Renderer() {
+	GLCall(glDeleteVertexArrays(1, &m_dummyVaoID));
+}
 
 void Renderer::begin() {
 	m_renderBuffer.bind();
@@ -14,13 +17,8 @@ void Renderer::end() {
 	m_renderBuffer.unbind();
 }
 
-void Renderer::drawFullScreen() {
-	m_fullScreenVAO.bind();
-	GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
-}
-
-void Renderer::drawFullScreenWithUVs() {
-	m_fullScreenVAOWithUVs.bind();
+void Renderer::dummyDrawCallForFullscreen() {
+	GLCall(glBindVertexArray(m_dummyVaoID));
 	GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
 }
 
