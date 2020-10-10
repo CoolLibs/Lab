@@ -20,7 +20,7 @@ void TextureFB::destroyAttachments() {
 }
 
 void TextureFB::attachAttachments() {
-	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, getFrameBufferId()));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId()));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_colorTextureId));
 	GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTextureId, 0));
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));

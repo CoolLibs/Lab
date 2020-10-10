@@ -10,7 +10,7 @@ void Renderer::begin() {
 }
 
 void Renderer::end() {
-	m_renderBuffer.blitToScreen(Viewports::SwapYConvention(Viewports::AppView().botLeft()), Viewports::SwapYConvention(Viewports::AppView().topRight()));
+	m_renderBuffer.blitTo(Viewports::SwapYConvention(Viewports::AppView().botLeft()), Viewports::SwapYConvention(Viewports::AppView().topRight()));
 	m_renderBuffer.unbind();
 }
 
@@ -25,6 +25,5 @@ void Renderer::drawFullScreenWithUVs() {
 }
 
 void Renderer::onRenderAreaResized() {
-	const glm::ivec2& size = Viewports::Size().size();
-	m_renderBuffer.setSize(size.x, size.y);
+	m_renderBuffer.setSize(Viewports::Size().size());
 }

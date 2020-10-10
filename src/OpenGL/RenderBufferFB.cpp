@@ -23,7 +23,7 @@ void RenderBufferFB::destroyAttachments() {
 }
 
 void RenderBufferFB::attachAttachments() {
-	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, getFrameBufferId()));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId()));
 	GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_colorRenderBufferId));
 	GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBufferId));
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
