@@ -15,7 +15,7 @@ public:
 private:
 	void onWindowMove();
 	void onWindowResize();
-	void updateAvailableAppViewSizeAndPos(ImGuiDockNode* node);
+	void updateAvailableRenderingSpaceSizeAndPos(ImGuiDockNode* node);
 	bool onEvent(const SDL_Event& e); // Returns true iff the event has been handled and must not be forwarded to the app
 	void ImGuiDockspace();
 	inline void closeApp() { m_bShouldClose = true; }
@@ -23,7 +23,6 @@ private:
 private:
 	bool m_bShowUI = true;
 	glm::vec3 m_emptySpaceColor = glm::vec3(0.5f);
-
 	GLWindow& m_glWindow;
 	App& m_app;
 	bool m_bShouldClose = false;

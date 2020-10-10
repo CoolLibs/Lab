@@ -27,7 +27,7 @@ void AppFramework::onWindowResize() {
 	glViewport(0, 0, w, h);
 }
 
-void AppFramework::updateAvailableAppViewSizeAndPos(ImGuiDockNode* node) {
+void AppFramework::updateAvailableRenderingSpaceSizeAndPos(ImGuiDockNode* node) {
 	// Position
 	Viewports::setAvailableAppViewTopLeft(
 		node->Pos.x - Viewports::getWindowTopLeft().x,
@@ -104,6 +104,7 @@ void AppFramework::update() {
 	// Actual application code
 	m_app.update();
 	if (m_bShowUI) {
+		// Menu bar
 		ImGui::BeginMainMenuBar();
 		if (ImGui::BeginMenu("RenderArea")) {
 			ImGui::ColorEdit3("Empty space color", glm::value_ptr(m_emptySpaceColor));
@@ -112,6 +113,7 @@ void AppFramework::update() {
 		}
 		m_app.ImGuiMenus();
 		ImGui::EndMainMenuBar();
+		// Windows
 		m_app.ImGuiWindows();
 	}
 	// Render ImGui
@@ -151,14 +153,13 @@ void AppFramework::ImGuiDockspace() {
 	bool bopen = true;
 	ImGui::Begin("MyMainDockSpace", &bopen, window_flags);
 	ImGui::PopStyleVar(3);
-
-	// DockSpace
+	
 	ImGuiIO& io = ImGui::GetIO();
 	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 	{
 		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-		updateAvailableAppViewSizeAndPos(ImGui::DockBuilderGetCentralNode(dockspace_id));
+		updateAvailableRenderingSpaceSizeAndPos(ImGui::DockBuilderGetCentralNode(dockspace_id));
 	}
 	else
 	{
