@@ -20,15 +20,15 @@ public:
 	inline float aspectRatio() const { return static_cast<float>(m_size.x) / static_cast<float>(m_size.y); }
 
 protected:
+	virtual void destroyAttachments();
+	virtual void createAttachments(int width, int height);
+	virtual void attachAttachments();
+
 	inline GLuint frameBufferId() { return m_frameBufferId; }
 
 private:
-	virtual void destroyAttachments() = 0;
-	virtual void createAttachments(int width, int height) = 0;
-	virtual void attachAttachments() = 0;
-
-private:
 	GLuint m_frameBufferId;
+	GLuint m_depthRenderBufferId;
 	glm::ivec2 m_size;
 	int m_prevViewportSettings[4];
 };

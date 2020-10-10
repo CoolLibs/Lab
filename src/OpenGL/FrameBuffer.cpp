@@ -8,6 +8,7 @@ FrameBuffer::FrameBuffer()
 }
 
 FrameBuffer::~FrameBuffer() {
+	destroyAttachments();
 	GLCall(glDeleteFramebuffers(1, &m_frameBufferId));
 }
 
@@ -38,4 +39,21 @@ void FrameBuffer::blitTo(const glm::ivec2& botLeft, const glm::ivec2& topRight, 
 
 void FrameBuffer::blitTo(FrameBuffer& frameBuffer) {
 	blitTo({ 0, 0 }, frameBuffer.size(), frameBuffer.frameBufferId());
+}
+
+void FrameBuffer::createAttachments(int width, int height) {
+	GLCall(glGenRenderbuffers(1, &m_depthRenderBufferId));
+	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, m_depthRenderBufferId));
+	GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
+	GLCall(glBindRenderbuffer(GL_RENDERBUFFER, 0));
+}
+
+void FrameBuffer::destroyAttachments() {
+	GLCall(glDeleteRenderbuffers(1, &m_depthRenderBufferId));
+}
+
+void FrameBuffer::attachAttachments() {
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, frameBufferId()));
+	GLCall(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthRenderBufferId));
+	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

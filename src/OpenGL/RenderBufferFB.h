@@ -14,5 +14,4 @@ private:
 
 private:
 	GLuint m_colorRenderBufferId;
-	GLuint m_depthRenderBufferId;
 };
