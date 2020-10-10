@@ -12,8 +12,8 @@ public:
 private:
 	void createAttachments(int width, int height) override;
 	void destroyAttachments() override;
-	virtual void attachAttachments() override;
+	void attachAttachments() override;
 
 private:
-	unsigned int m_colorTextureId;
+	GLuint m_colorTextureId;
 };

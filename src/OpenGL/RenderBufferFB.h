@@ -10,9 +10,9 @@ public:
 private:
 	void createAttachments(int width, int height) override;
 	void destroyAttachments() override;
-	virtual void attachAttachments() override;
+	void attachAttachments() override;
 
 private:
-	unsigned int m_colorRenderBufferId;
-	unsigned int m_depthRenderBufferId;
+	GLuint m_colorRenderBufferId;
+	GLuint m_depthRenderBufferId;
 };
