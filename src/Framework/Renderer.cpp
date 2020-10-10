@@ -14,17 +14,9 @@ void Renderer::end() {
 	m_renderBuffer.unbind();
 }
 
-void Renderer::onRenderAreaResized(const glm::vec3& clearColor) {
+void Renderer::onRenderAreaResized() {
 	const glm::ivec2& size = Viewports::Size().size();
 	m_renderBuffer.setSize(size.x, size.y);
-	clearRenderBuffer(clearColor);
-}
-
-void Renderer::clearRenderBuffer(const glm::vec3& clearColor) {
-	m_renderBuffer.bind();
-	glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	m_renderBuffer.unbind();
 }
 
 void Renderer::drawFullScreen() {

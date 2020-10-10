@@ -13,9 +13,8 @@ public:
 	void begin();
 	void end();
 
-	void onRenderAreaResized(const glm::vec3& clearColor);
+	void onRenderAreaResized();
 
-	void clearRenderBuffer(const glm::vec3& clearColor);
 	void drawFullScreen();
 	void drawFullScreenWithUVs();
 

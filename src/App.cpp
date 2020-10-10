@@ -1,11 +1,5 @@
 #include "App.h"
 
-#include "Framework/Viewports.h"
-#include "Helper/Input.h"
-#ifndef NDEBUG
-#include "Helper/MyImGui.h"
-#endif
-
 App::App()
 	: m_shader("shaders/vert.vert", "shaders/frag.frag")
 {
@@ -16,15 +10,13 @@ App::App()
 
 void App::update() {
 	m_renderer.begin();
-	glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	m_shader.bind();
-	m_renderer.drawFullScreenWithUVs();
+	{
+		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		m_shader.bind();
+		m_renderer.drawFullScreenWithUVs();
+	}
 	m_renderer.end();
-}
-
-void App::onRenderAreaResized() {
-	m_renderer.onRenderAreaResized(m_bgColor);
 }
 
 void App::ImGuiWindows() {
@@ -107,4 +99,8 @@ void App::onEvent(const SDL_Event& e) {
 			break;
 		}
 	}
+}
+
+void App::onRenderAreaResized() {
+	m_renderer.onRenderAreaResized();
 }
