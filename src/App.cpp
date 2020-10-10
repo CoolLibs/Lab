@@ -3,7 +3,7 @@
 App::App()
 	: m_shader("shaders/vert.vert", "shaders/frag.frag")
 {
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 }
@@ -12,7 +12,7 @@ void App::update() {
 	m_renderer.begin();
 	{
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		m_shader.bind();
 		m_renderer.drawFullScreenWithUVs();
 	}
