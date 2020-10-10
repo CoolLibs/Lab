@@ -1,5 +1,6 @@
 #include "Framework/AppFramework.h"
 #include "Framework/GLWindow.h"
+#include "Framework/GLDebugCallback.h"
 
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
@@ -16,7 +17,7 @@ int main(int argc, char *argv[]) {
 	// ------- Initialize SDL and OpenGL ------------
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
-		Log::Error("Unable to initialize SDL : {}", SDL_GetError());
+		Log::Error("Failed to initialize SDL : {}", SDL_GetError());
 	}
 	SDL_GL_LoadLibrary(NULL);
 #if __APPLE__
@@ -31,6 +32,9 @@ int main(int argc, char *argv[]) {
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+#ifndef NDEBUG
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+#endif
 
 	// Window
 	SDL_Window* window = SDL_CreateWindow(
@@ -51,8 +55,21 @@ int main(int argc, char *argv[]) {
 	SDL_GL_SetSwapInterval(1);
 
 	if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
-		Log::Error("Glad failed to initialize");
+		Log::Error("Failed to initialize Glad");
 	}
+
+#ifndef NDEBUG
+	int flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+	if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(GLDebugCallback, nullptr);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+	}
+	else {
+		Log::Warn("Couldn't setup OpenGL Debugging");
+	}
+#endif
 
 	// ------- Initialize ImGUI ------------
 
