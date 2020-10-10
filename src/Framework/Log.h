@@ -34,6 +34,9 @@ namespace Log {
 		}
 		template<typename ...Args> inline void Error(Args&& ...args) {
 			spdlog::error(std::forward<Args>(args)...);
+#ifndef NDEBUG
+			debug_break();
+#endif
 		}
 	}
 }

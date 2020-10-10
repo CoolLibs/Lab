@@ -6,23 +6,28 @@
 #include "Helper/MyImGui.h"
 #endif
 
-App::App() {
-	glEnable(GL_DEPTH_TEST);
+App::App()
+	: m_shader("shaders/vert.vert", "shaders/frag.frag")
+{
+	//glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 }
 
 void App::update() {
+	m_renderer.begin();
 	glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+	m_shader.bind();
+	m_renderer.drawFullScreenWithUVs();
+	m_renderer.end();
 }
 
 void App::onRenderAreaResized() {
 	m_renderer.onRenderAreaResized(m_bgColor);
 }
 
-void App::ImGui() {
-	MenuBar();
+void App::ImGuiWindows() {
 #ifndef NDEBUG
 	if (m_bShow_Debug) {
 		ImGui::Begin("Debug", &m_bShow_Debug);
@@ -37,8 +42,7 @@ void App::ImGui() {
 #endif
 }
 
-void App::MenuBar() {
-	ImGui::BeginMainMenuBar();
+void App::ImGuiMenus() {
 	if (ImGui::BeginMenu("Windows")) {
 #ifndef NDEBUG
 		ImGui::Separator();
@@ -46,7 +50,6 @@ void App::MenuBar() {
 #endif
 		ImGui::EndMenu();
 	}
-	ImGui::EndMainMenuBar();
 }
 
 void App::onEvent(const SDL_Event& e) {

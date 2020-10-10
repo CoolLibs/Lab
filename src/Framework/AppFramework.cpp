@@ -93,6 +93,9 @@ void AppFramework::update() {
 		if (!onEvent(e))
 			m_app.onEvent(e);
 	}
+	// Clear screen
+	glClearColor(m_emptySpaceColor.x, m_emptySpaceColor.y, m_emptySpaceColor.z, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 	// Start ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_glWindow.window);
@@ -100,8 +103,17 @@ void AppFramework::update() {
 	ImGuiDockspace();
 	// Actual application code
 	m_app.update();
-	if (m_bShowUI)
-		m_app.ImGui();
+	if (m_bShowUI) {
+		ImGui::BeginMainMenuBar();
+		if (ImGui::BeginMenu("RenderArea")) {
+			ImGui::ColorEdit3("Empty space color", glm::value_ptr(m_emptySpaceColor));
+			Viewports::ImGuiConstrainAppViewRatio();
+			ImGui::EndMenu();
+		}
+		m_app.ImGuiMenus();
+		ImGui::EndMainMenuBar();
+		m_app.ImGuiWindows();
+	}
 	// Render ImGui
 	ImGuiIO& io = ImGui::GetIO();
 	ImGui::Render();

@@ -4,6 +4,7 @@
 
 class Viewports {
 	friend class AppFramework;
+	friend class Renderer;
 public:
 	static RectSize Size(); // Size that should be used for rendering
 	static inline bool IsExporting() { return m_bIsExporting; }

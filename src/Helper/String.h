@@ -7,6 +7,7 @@ namespace MyString {
 	std::string FileName(const std::string& myString);
 	std::string FileExtension(const std::string& myString);
 	bool StartsWith(const char* toFind, const std::string& str);
+	void ReplaceAll(std::string& str, const std::string& from, const std::string& to);
 	template<typename T>
 	std::string ToString(T val, int minNbChars = -1) { // adds 0s to the left to reach minNbChars (if the latter isn't -1)
 		std::string str = std::to_string(val);

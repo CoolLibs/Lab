@@ -22,6 +22,7 @@ private:
 
 private:
 	bool m_bShowUI = true;
+	glm::vec3 m_emptySpaceColor = glm::vec3(0.5f);
 
 	GLWindow& m_glWindow;
 	App& m_app;

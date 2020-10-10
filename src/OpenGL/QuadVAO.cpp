@@ -9,21 +9,13 @@ QuadVAO::QuadVAO(bool bWithUVs) {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_vboID));
     static float vertices[] = {
         -1.0f, -1.0f,
-         1.0f, -1.0f,
-         1.0f,  1.0f,
-
-        -1.0f, -1.0f,
-         1.0f,  1.0f,
-        -1.0f,  1.0f
+         3.0f, -1.0f,
+        -1.0f,  3.0f
     };    
     static float verticesWithUVs[] = {
-        -1.0f, -1.0f, 0.0f, 0.0f,
-         1.0f, -1.0f, 1.0f, 0.0f,
-         1.0f,  1.0f, 1.0f, 1.0f,
-
-        -1.0f, -1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f, 1.0f, 1.0f,
-        -1.0f,  1.0f, 0.0f, 1.0f
+        -1.0f, -1.0f,  0.0f, 0.0f,
+         3.0f, -1.0f,  2.0f, 0.0f,
+        -1.0f,  3.0f,  0.0f, 2.0f
     };
     if (!bWithUVs) {
         GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW));
@@ -32,21 +24,23 @@ QuadVAO::QuadVAO(bool bWithUVs) {
         GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(verticesWithUVs), verticesWithUVs, GL_STATIC_DRAW));
     }
     // Layout
+    constexpr int VERTEX_ATTRIB_POS = 0;
     if (!bWithUVs) {
-        GLCall(glEnableVertexAttribArray(0));
-        GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
+        GLCall(glEnableVertexAttribArray(VERTEX_ATTRIB_POS));
+        GLCall(glVertexAttribPointer(VERTEX_ATTRIB_POS, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0));
     }
     else {
-        GLCall(glEnableVertexAttribArray(0));
-        GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0));
-        GLCall(glEnableVertexAttribArray(1));
-        GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float))));
+        constexpr int VERTEX_ATTRIB_UV = 1;
+        GLCall(glEnableVertexAttribArray(VERTEX_ATTRIB_POS));
+        GLCall(glVertexAttribPointer(VERTEX_ATTRIB_POS, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0));
+        GLCall(glEnableVertexAttribArray(VERTEX_ATTRIB_UV));
+        GLCall(glVertexAttribPointer(VERTEX_ATTRIB_UV, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float))));
     }
 }
 
 QuadVAO::~QuadVAO() {
-    glDeleteBuffers(1, &m_vboID);
-    glDeleteVertexArrays(1, &m_vaoID);
+    GLCall(glDeleteBuffers(1, &m_vboID));
+    GLCall(glDeleteVertexArrays(1, &m_vaoID));
 }
 
 void QuadVAO::bind() {

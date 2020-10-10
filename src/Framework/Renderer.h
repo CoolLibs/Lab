@@ -10,6 +10,9 @@ public:
 	Renderer(const Renderer& other) = delete;			 // non-copyable
 	Renderer& operator=(const Renderer& other) = delete; // non-copyable
 
+	void begin();
+	void end();
+
 	void onRenderAreaResized(const glm::vec3& clearColor);
 
 	void clearRenderBuffer(const glm::vec3& clearColor);

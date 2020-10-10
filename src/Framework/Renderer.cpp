@@ -5,9 +5,18 @@ Renderer::Renderer()
 	: m_fullScreenVAO(false), m_fullScreenVAOWithUVs(true)
 {}
 
+void Renderer::begin() {
+	m_renderBuffer.bind();
+}
+
+void Renderer::end() {
+	m_renderBuffer.blitToScreen(Viewports::SwapYConvention(Viewports::AppView().botLeft()), Viewports::SwapYConvention(Viewports::AppView().topRight()));
+	m_renderBuffer.unbind();
+}
+
 void Renderer::onRenderAreaResized(const glm::vec3& clearColor) {
 	const glm::ivec2& size = Viewports::Size().size();
-	m_renderBuffer    .setSize(size.x, size.y);
+	m_renderBuffer.setSize(size.x, size.y);
 	clearRenderBuffer(clearColor);
 }
 
@@ -20,10 +29,10 @@ void Renderer::clearRenderBuffer(const glm::vec3& clearColor) {
 
 void Renderer::drawFullScreen() {
 	m_fullScreenVAO.bind();
-	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+	GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
 }
 
 void Renderer::drawFullScreenWithUVs() {
 	m_fullScreenVAOWithUVs.bind();
-	GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
+	GLCall(glDrawArrays(GL_TRIANGLES, 0, 3));
 }
