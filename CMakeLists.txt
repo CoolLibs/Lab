@@ -120,9 +120,7 @@ target_precompile_headers(${PROJECT_NAME}
   # Libraries
     <imgui/imgui.h>
     <imgui/misc/cpp/imgui_stdlib.h>
-    <glm/vec2.hpp>
-    <glm/vec3.hpp>
-    <glm/vec4.hpp>
+    <glm/glm.hpp>
     <glm/gtc/type_ptr.hpp>
     <glad/glad.h>
     <SDL2/SDL.h>
