@@ -25,7 +25,6 @@ void AppFramework::onWindowResize() {
 	int w, h;
 	SDL_GetWindowSize(m_glWindow.window, &w, &h);
 	RenderState::setWindowSize(w, h);
-	glViewport(0, 0, w, h);
 }
 
 void AppFramework::updateAvailableRenderingSpaceSizeAndPos(ImGuiDockNode* node) {
