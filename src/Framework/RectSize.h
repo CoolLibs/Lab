@@ -1,7 +1,6 @@
 #pragma once
 
 class RectSize {
-	friend class RenderState;
 public:
 	RectSize(int width = 0, int height = 0)
 		: m_size(width, height)
@@ -15,12 +14,11 @@ public:
 	inline const glm::ivec2& size() const { return m_size; }
 	inline float aspectRatio() const      { return m_aspectRatio; }
 
-private:
 	inline void setSize(int width, int height) { m_size.x = width; m_size.y = height; computeAspectRatio(); }
+
+private:
 	inline void computeAspectRatio() { 
-		m_aspectRatio = m_size.y == 0
-						   ? 0.0f
-						   : static_cast<float>(m_size.x) / static_cast<float>(m_size.y);
+		m_aspectRatio = m_size.y == 0 ? 0.0f : static_cast<float>(m_size.x) / static_cast<float>(m_size.y);
 	}
 
 private:
