@@ -1,7 +1,7 @@
 #include "App.h"
 
 #include "Framework/RenderState.h"
-#include "Helper/Input.h"
+#include "Framework/Input.h"
 
 App::App()
 	: m_shader("shaders/fullscreen.vert", "shaders/test.frag")

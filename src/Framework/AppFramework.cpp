@@ -5,7 +5,7 @@
 #include "imgui/imgui_internal.h"
 
 #include "RenderState.h"
-#include "Helper/Input.h"
+#include "Input.h"
 
 AppFramework::AppFramework(GLWindow& glWindow, App& app)
 	: m_glWindow(glWindow), m_app(app)
