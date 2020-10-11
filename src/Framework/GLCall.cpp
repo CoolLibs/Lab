@@ -1,19 +1,20 @@
 #include "GLCall.h"
 
-void glexp::clear() {
+void glDebug::clearFromPreviousErrors() {
 	while (glGetError() != GL_NO_ERROR);
 }
 
-bool glexp::doesFunctionWork(const char *functionName, const char *filename, int line) {
+bool glDebug::checkForErrors(const char *functionName, const char *filename, int line) {
 	GLenum error;
+	bool bFoundErrors = false;
 	while ((error = glGetError()) != GL_NO_ERROR) {
-		Log::Error("[OpenGL Error] {}: {} {} {}", glErrorString(error), functionName, filename, line);
-		return false;
+		Log::ErrorWithoutBreakpoint("[OpenGL Error] {} : {} {} {}", glErrorString(error), functionName, filename, line);
+		bFoundErrors = true;
 	}
-	return true;
+	return bFoundErrors;
 }
 
-char const* glexp::glErrorString(GLenum const err) {
+char const* glDebug::glErrorString(GLenum const err) {
 	switch (err) {
 	case GL_NO_ERROR:
 		return "GL_NO_ERROR";
@@ -34,7 +35,6 @@ char const* glexp::glErrorString(GLenum const err) {
 		return "GL_INVALID_FRAMEBUFFER_OPERATION";
 
 	default:
-		assert(!"unknown error");
-		return nullptr;
+		return "UNKNOWN_ERROR_TYPE";
 	}
 }

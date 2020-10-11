@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <debug_break/debug_break.h>
 
 #ifndef NDEBUG
 
@@ -53,7 +52,7 @@ void APIENTRY GLDebugCallback(GLenum source,
     } std::cerr << std::endl;
     std::cerr << std::endl;
 
-    debug_break();
+    assert(false);
 }
 
 #endif

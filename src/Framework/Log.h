@@ -1,7 +1,6 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
-#include <debug_break/debug_break.h>
 
 namespace Log {
 	inline void Initialize() {
@@ -21,7 +20,12 @@ namespace Log {
 	template<typename ...Args> inline void Error(Args&& ...args) {
 #ifndef NDEBUG
 		spdlog::error(std::forward<Args>(args)...);
-		debug_break();
+		assert(false);
+#endif
+	}
+	template<typename ...Args> inline void ErrorWithoutBreakpoint(Args&& ...args) {
+#ifndef NDEBUG
+		spdlog::error(std::forward<Args>(args)...);
 #endif
 	}
 	//
@@ -34,9 +38,7 @@ namespace Log {
 		}
 		template<typename ...Args> inline void Error(Args&& ...args) {
 			spdlog::error(std::forward<Args>(args)...);
-#ifndef NDEBUG
-			debug_break();
-#endif
+			assert(false);
 		}
 	}
 }
