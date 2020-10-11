@@ -1,4 +1,4 @@
-# Django
+# C++ / OpenGL project template
 
 ## Things to know about his template
 
@@ -19,3 +19,8 @@ With CTRL + H
 
 Use Log::Info("some text {} {}", variable1ThatWillGoInTheCurlyBraces, variable2), Log::Warn or Log::Error (this one will also trigger a breakpoint)
 Note that those logs will be removed in release builds. If you want some of them to stay, use Log::Release instead of Log
+
+## TODO list
+
+* Finish this readme
+* Test the template on Linux (and Mac)
