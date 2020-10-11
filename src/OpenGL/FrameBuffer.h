@@ -30,5 +30,5 @@ private:
 	GLuint m_frameBufferId;
 	GLuint m_depthRenderBufferId;
 	glm::ivec2 m_size;
-	int m_prevViewportSettings[4];
+	int m_prevViewport[4];
 };

@@ -57,13 +57,13 @@ void FrameBuffer::setSize(const glm::ivec2& size) {
 
 void FrameBuffer::bind() {
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId));
-	GLCall(glGetIntegerv(GL_VIEWPORT, m_prevViewportSettings)); // Store viewport settings to restore them when unbinding
+	GLCall(glGetIntegerv(GL_VIEWPORT, m_prevViewport)); // Store viewport settings to restore them when unbinding
 	GLCall(glViewport(0, 0, width(), height()));                // Only usefull if we plan on using this frame buffer at a different resolution than the screen's
 }
 
 void FrameBuffer::unbind() {
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, SCREEN_FRAMEBUFFER_ID));
-	GLCall(glViewport(m_prevViewportSettings[0], m_prevViewportSettings[1], m_prevViewportSettings[2], m_prevViewportSettings[3]));
+	GLCall(glViewport(m_prevViewport[0], m_prevViewport[1], m_prevViewport[2], m_prevViewport[3]));
 }
 
 void FrameBuffer::blitTo(const glm::ivec2& botLeft, const glm::ivec2& topRight, GLuint dstFrameBufferID) {
