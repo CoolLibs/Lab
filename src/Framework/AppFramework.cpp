@@ -94,7 +94,7 @@ void AppFramework::update() {
 			m_app.onEvent(e);
 	}
 	// Clear screen
-	glClearColor(m_emptySpaceColor.x, m_emptySpaceColor.y, m_emptySpaceColor.z, 1.0f);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Start ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
@@ -107,7 +107,6 @@ void AppFramework::update() {
 		// Menu bar
 		ImGui::BeginMainMenuBar();
 		if (ImGui::BeginMenu("RenderArea")) {
-			ImGui::ColorEdit3("Empty space color", glm::value_ptr(m_emptySpaceColor));
 			RenderState::ImGuiConstrainInAppRenderAreaRatio();
 			ImGui::EndMenu();
 		}
