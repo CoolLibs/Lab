@@ -30,8 +30,8 @@ void AppFramework::onWindowResize() {
 void AppFramework::updateAvailableRenderingSpaceSizeAndPos(ImGuiDockNode* node) {
 	// Position
 	RenderState::setAvailableSpaceTopLeft(
-		node->Pos.x - RenderState::getWindowTopLeft().x,
-		node->Pos.y - RenderState::getWindowTopLeft().y
+		static_cast<int>(node->Pos.x) - RenderState::getWindowTopLeft().x,
+		static_cast<int>(node->Pos.y) - RenderState::getWindowTopLeft().y
 	);
 	// Size
 	glm::ivec2 size = { static_cast<int>(node->Size.x), static_cast<int>(node->Size.y) };
