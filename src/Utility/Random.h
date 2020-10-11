@@ -2,8 +2,8 @@
 
 class MyRand {
 public:
-	static float _0to1();
-	static float _m1to1();
+	static float get0to1();
+	static float getMinus1to1();
 
 private:
 	static std::random_device trueRandomGenerator;
