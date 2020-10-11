@@ -1,7 +1,7 @@
 #include "ShaderHelper.h"
 
-#include "Helper/String.h"
-#include "Helper/File.h"
+#include "Utility/String.h"
+#include "Utility/File.h"
 
 std::string ShaderHelper::parseFile(const std::string& filepath, const std::vector<std::pair<std::string, std::string>>& modifyFromTo) {
 	std::string res;
