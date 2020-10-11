@@ -1,8 +1,8 @@
 #pragma once
 
-#include <iostream>
-
 #ifndef NDEBUG
+
+#include <iostream>
 
 void APIENTRY GLDebugCallback(GLenum source,
     GLenum type,
