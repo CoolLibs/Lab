@@ -15,5 +15,5 @@ private:
 	void attachAttachments() override;
 
 private:
-	GLuint m_colorTextureId;
+	GLuint m_colorTextureId = -1;
 };

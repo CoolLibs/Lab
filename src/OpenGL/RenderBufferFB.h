@@ -13,5 +13,5 @@ private:
 	void attachAttachments() override;
 
 private:
-	GLuint m_colorRenderBufferId;
+	GLuint m_colorRenderBufferId = -1;
 };

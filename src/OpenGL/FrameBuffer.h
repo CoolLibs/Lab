@@ -27,8 +27,8 @@ protected:
 	inline GLuint frameBufferId() { return m_frameBufferId; }
 
 private:
-	GLuint m_frameBufferId;
-	GLuint m_depthRenderBufferId;
-	glm::ivec2 m_size;
+	GLuint m_frameBufferId = -1;
+	GLuint m_depthRenderBufferId = -1;
+	glm::ivec2 m_size = glm::ivec2(0);
 	int m_prevViewport[4];
 };
