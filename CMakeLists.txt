@@ -97,24 +97,21 @@ if (WIN32) # Copy .dll to output folder
     )
 endif()
 
-# Copy imgui.ini to output folder
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-    #if (EXISTS ${CMAKE_SOURCE_DIR}/imgui.ini))
-         
-        ${CMAKE_SOURCE_DIR}/imgui.ini
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>/imgui.ini
-    #endif()
-)
-
 # Copy shaders folder to output folder
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/shaders/
-    $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
+        ${CMAKE_SOURCE_DIR}/shaders/
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
 )
+# Copy imgui.ini to output folder
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/imgui.ini
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/imgui.ini
+)
+
 # Setup working directory in Visual Studio (to access the shaders folder) :
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
