@@ -16,7 +16,7 @@ unsigned int ShaderHelper::compileShader(unsigned int type, const std::string& s
 	const char* src = source.c_str();
 	GLCall(glShaderSource(id, 1, &src, nullptr));
 	GLCall(glCompileShader(id));
-	// Check for errors
+#ifndef NDEBUG
 	int result;
 	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
 	if (result == GL_FALSE) {
@@ -29,6 +29,6 @@ unsigned int ShaderHelper::compileShader(unsigned int type, const std::string& s
 		glDeleteShader(id);
 		return 0;
 	}
-	//
+#endif
 	return id;
 }
