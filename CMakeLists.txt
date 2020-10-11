@@ -88,7 +88,7 @@ if (UNIX)
     target_link_libraries(${PROJECT_NAME} -ldl)
 endif()
 
-if (WIN32) # Copy .dll to build folder
+if (WIN32) # Copy .dll to output folder
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different
@@ -97,7 +97,18 @@ if (WIN32) # Copy .dll to build folder
     )
 endif()
 
-# Copy shaders folder after a build
+# Copy imgui.ini to output folder
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    #if (EXISTS ${CMAKE_SOURCE_DIR}/imgui.ini))
+         
+        ${CMAKE_SOURCE_DIR}/imgui.ini
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/imgui.ini
+    #endif()
+)
+
+# Copy shaders folder to output folder
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
