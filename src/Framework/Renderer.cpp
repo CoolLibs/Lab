@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "Framework/Viewports.h"
+#include "RenderState.h"
 
 Renderer::Renderer() {
 	GLCall(glGenVertexArrays(1, &m_dummyVaoID));
@@ -13,7 +13,7 @@ void Renderer::begin() {
 }
 
 void Renderer::end() {
-	m_renderBuffer.blitTo(Viewports::SwapYConvention(Viewports::AppView().botLeft()), Viewports::SwapYConvention(Viewports::AppView().topRight()));
+	m_renderBuffer.blitTo(RenderState::SwapYConvention(RenderState::AppView().botLeft()), RenderState::SwapYConvention(RenderState::AppView().topRight()));
 	m_renderBuffer.unbind();
 }
 
@@ -23,5 +23,5 @@ void Renderer::dummyDrawCallForFullscreen() {
 }
 
 void Renderer::onRenderAreaResized() {
-	m_renderBuffer.setSize(Viewports::Size().size());
+	m_renderBuffer.setSize(RenderState::Size().size());
 }

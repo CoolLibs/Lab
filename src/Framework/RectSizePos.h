@@ -3,7 +3,7 @@
 #include "RectSize.h"
 
 class RectSizePos : public RectSize {
-	friend class Viewports;
+	friend class RenderState;
 public:
 	RectSizePos(int width = 0, int height = 0, int topLeftX = 0, int topLeftY = 0)
 		: RectSize(width, height), m_topLeft(topLeftX, topLeftY)

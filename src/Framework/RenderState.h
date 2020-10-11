@@ -2,16 +2,16 @@
 
 #include "RectSizePos.h"
 
-class Viewports {
+class RenderState {
 	friend class AppFramework;
 	friend class Renderer;
+	friend class Input;
 public:
 	static RectSize Size(); // Size that should be used for rendering
 	static inline bool IsExporting() { return m_bIsExporting; }
 
-	static RectSizePos AppView(); // Size of the available viewing area and its position inside the window // TODO make me private
-
 private:
+	static RectSizePos AppView(); // Size of the available viewing area and its position inside the window // TODO make me private
 	inline static glm::ivec2 SwapYConvention(const glm::ivec2& p) { return { p.x, m_Window.height() - p.y }; }
 
 	static void setIsExporting(bool bIsExporting);
@@ -34,12 +34,11 @@ private:
 private:
 	static std::function<void()> OnRenderAreaResized; // Function pointer to be used as a callback
 
-private:
 	static RectSizePos m_Window;           // Size of the window, and it's position inside the screen
 	static RectSizePos m_AvailableAppView; // Size of the available viewing area (excludes the docked ImGui windows), and its position inside the window
 	static RectSize m_Export;              // Size of the exported images
 
-	static bool m_bIsExporting; // Owned by Viewports because it needs to know it when deciding what the render size should be
+	static bool m_bIsExporting; // Owned by RenderState because it needs to know it when deciding what the render size should be
 
 	static bool m_bConstrainAppViewRatio;
 	static float m_appViewConstrainedRatio;

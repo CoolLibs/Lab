@@ -4,12 +4,13 @@
 #include <imgui_impl_opengl3.h>
 #include "imgui/imgui_internal.h"
 
+#include "RenderState.h"
 #include "Helper/Input.h"
 
 AppFramework::AppFramework(GLWindow& glWindow, App& app)
 	: m_glWindow(glWindow), m_app(app)
 {
-	Viewports::setRenderAreaResizedCallback([&app]() {app.onRenderAreaResized(); });
+	RenderState::setRenderAreaResizedCallback([&app]() {app.onRenderAreaResized(); });
 	onWindowMove();
 	onWindowResize();
 }
@@ -17,26 +18,26 @@ AppFramework::AppFramework(GLWindow& glWindow, App& app)
 void AppFramework::onWindowMove() {
 	int x, y;
 	SDL_GetWindowPosition(m_glWindow.window, &x, &y);
-	Viewports::setWindowTopLeft(x, y);
+	RenderState::setWindowTopLeft(x, y);
 }
 
 void AppFramework::onWindowResize() {
 	int w, h;
 	SDL_GetWindowSize(m_glWindow.window, &w, &h);
-	Viewports::setWindowSize(w, h);
+	RenderState::setWindowSize(w, h);
 	glViewport(0, 0, w, h);
 }
 
 void AppFramework::updateAvailableRenderingSpaceSizeAndPos(ImGuiDockNode* node) {
 	// Position
-	Viewports::setAvailableAppViewTopLeft(
-		node->Pos.x - Viewports::getWindowTopLeft().x,
-		node->Pos.y - Viewports::getWindowTopLeft().y
+	RenderState::setAvailableAppViewTopLeft(
+		node->Pos.x - RenderState::getWindowTopLeft().x,
+		node->Pos.y - RenderState::getWindowTopLeft().y
 	);
 	// Size
 	glm::ivec2 size = { static_cast<int>(node->Size.x), static_cast<int>(node->Size.y) };
-	if (size.x != Viewports::getAvailableAppViewSize().x || size.y != Viewports::getAvailableAppViewSize().y) {
-		Viewports::setAvailableAppViewSize(size.x, size.y);
+	if (size.x != RenderState::getAvailableAppViewSize().x || size.y != RenderState::getAvailableAppViewSize().y) {
+		RenderState::setAvailableAppViewSize(size.x, size.y);
 	}
 }
 
@@ -108,7 +109,7 @@ void AppFramework::update() {
 		ImGui::BeginMainMenuBar();
 		if (ImGui::BeginMenu("RenderArea")) {
 			ImGui::ColorEdit3("Empty space color", glm::value_ptr(m_emptySpaceColor));
-			Viewports::ImGuiConstrainAppViewRatio();
+			RenderState::ImGuiConstrainAppViewRatio();
 			ImGui::EndMenu();
 		}
 		m_app.ImGuiMenus();

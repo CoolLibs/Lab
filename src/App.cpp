@@ -1,5 +1,8 @@
 #include "App.h"
 
+#include "Framework/RenderState.h"
+#include "Helper/Input.h"
+
 App::App()
 	: m_shader("shaders/fullscreen.vert", "shaders/test.frag")
 {
@@ -24,7 +27,9 @@ void App::ImGuiWindows() {
 	if (m_bShow_Debug) {
 		ImGui::Begin("Debug", &m_bShow_Debug);
 		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-		ImGui::Text("Render Area Size : %d %d", Viewports::Size().width(), Viewports::Size().height());
+		ImGui::Text("Render Area Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
+		ImGui::Text("Mouse Position in Render Area : %d %d", Input::MouseInPixels().x, Input::MouseInPixels().y);
+		ImGui::Text("Mouse Position Normalized : %.2f %.2f", Input::MouseInNormalizedRatioSpace().x, Input::MouseInNormalizedRatioSpace().y);
 		ImGui::ColorEdit3("Background Color", glm::value_ptr(m_bgColor));
 		ImGui::Checkbox("Show Demo Window", &m_bShow_ImGuiDemo);
 		ImGui::End();
@@ -45,7 +50,7 @@ void App::ImGuiMenus() {
 }
 
 void App::onEvent(const SDL_Event& e) {
-	if (!Viewports::IsExporting()) {
+	if (!RenderState::IsExporting()) {
 		switch (e.type) {
 
 		case SDL_MOUSEMOTION:

@@ -1,7 +1,5 @@
 #include "FrameBuffer.h"
 
-#include "Framework/Viewports.h"
-
 FrameBuffer::FrameBuffer()
 {
 	GLCall(glGenFramebuffers(1, &m_frameBufferId));
