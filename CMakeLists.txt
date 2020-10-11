@@ -134,4 +134,5 @@ target_precompile_headers(${PROJECT_NAME}
   # Project Code
     [["Framework/Log.h"]]
     [["Framework/GLCall.h"]]
+    [["Utility/Cereal4glm.h"]]
 )
