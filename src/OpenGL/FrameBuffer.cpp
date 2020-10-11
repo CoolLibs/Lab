@@ -17,6 +17,44 @@ void FrameBuffer::setSize(const glm::ivec2& size) {
 	destroyAttachments();
 	createAttachments(size.x, size.y);
 	attachAttachments();
+#ifndef NDEBUG
+	bind();
+	GLCall(auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER));
+	if (status != GL_FRAMEBUFFER_COMPLETE) {
+		const char* statusStr;
+		switch (status) {
+		case GL_FRAMEBUFFER_UNDEFINED:
+			statusStr = "GL_FRAMEBUFFER_UNDEFINED";
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+			statusStr = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT ";
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+			statusStr = "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT ";
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+			statusStr = "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER ";
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+			statusStr = "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER ";
+			break;
+		case GL_FRAMEBUFFER_UNSUPPORTED:
+			statusStr = "GL_FRAMEBUFFER_UNSUPPORTED ";
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+			statusStr = "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE ";
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+			statusStr = "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS ";
+			break;
+		default:
+			statusStr = "UNKNOWN_ERROR";
+			break;
+		}
+		Log::Error("Framebuffer is not complete : {}", statusStr);
+	}
+	unbind();
+#endif
 }
 
 void FrameBuffer::bind() {
