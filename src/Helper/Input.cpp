@@ -10,14 +10,14 @@ bool Input::KeyIsDown(SDL_Scancode key) {
 glm::ivec2 Input::MouseInPixels() {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
-	return glm::ivec2(x, y) - RenderState::AppView().topLeft();
+	return glm::ivec2(x, y) - RenderState::InAppRenderArea().topLeft();
 }
 
 glm::vec2 Input::MouseInNormalizedRatioSpace() {
 	glm::vec2 pos = MouseInPixels();
-	pos /= RenderState::AppView().height();
+	pos /= RenderState::InAppRenderArea().height();
 	pos.y = 1.0f - pos.y;
 	pos *= 2.0f;
-	pos -= glm::vec2(RenderState::AppView().aspectRatio(), 1.0f);
+	pos -= glm::vec2(RenderState::InAppRenderArea().aspectRatio(), 1.0f);
 	return pos;
 }

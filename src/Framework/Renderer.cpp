@@ -13,7 +13,7 @@ void Renderer::begin() {
 }
 
 void Renderer::end() {
-	m_renderBuffer.blitTo(RenderState::SwapYConvention(RenderState::AppView().botLeft()), RenderState::SwapYConvention(RenderState::AppView().topRight()));
+	m_renderBuffer.blitTo(RenderState::SwapYConvention(RenderState::InAppRenderArea().botLeft()), RenderState::SwapYConvention(RenderState::InAppRenderArea().topRight()));
 	m_renderBuffer.unbind();
 }
 

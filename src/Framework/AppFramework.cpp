@@ -30,14 +30,14 @@ void AppFramework::onWindowResize() {
 
 void AppFramework::updateAvailableRenderingSpaceSizeAndPos(ImGuiDockNode* node) {
 	// Position
-	RenderState::setAvailableAppViewTopLeft(
+	RenderState::setAvailableSpaceTopLeft(
 		node->Pos.x - RenderState::getWindowTopLeft().x,
 		node->Pos.y - RenderState::getWindowTopLeft().y
 	);
 	// Size
 	glm::ivec2 size = { static_cast<int>(node->Size.x), static_cast<int>(node->Size.y) };
-	if (size.x != RenderState::getAvailableAppViewSize().x || size.y != RenderState::getAvailableAppViewSize().y) {
-		RenderState::setAvailableAppViewSize(size.x, size.y);
+	if (size.x != RenderState::getAvailableSpaceSize().x || size.y != RenderState::getAvailableSpaceSize().y) {
+		RenderState::setAvailableSpaceSize(size.x, size.y);
 	}
 }
 
@@ -109,7 +109,7 @@ void AppFramework::update() {
 		ImGui::BeginMainMenuBar();
 		if (ImGui::BeginMenu("RenderArea")) {
 			ImGui::ColorEdit3("Empty space color", glm::value_ptr(m_emptySpaceColor));
-			RenderState::ImGuiConstrainAppViewRatio();
+			RenderState::ImGuiConstrainInAppRenderAreaRatio();
 			ImGui::EndMenu();
 		}
 		m_app.ImGuiMenus();
