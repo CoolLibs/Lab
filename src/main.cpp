@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 
 	// Window
 	SDL_Window* window = SDL_CreateWindow(
-		"Template Project",
+		"is0",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		1280, 720,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI 
