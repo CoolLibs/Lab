@@ -62,6 +62,7 @@ include_directories(
     lib/glad/include
     lib/imgui
     lib/glm
+    lib/spdlog/include
     lib
     src
 )
