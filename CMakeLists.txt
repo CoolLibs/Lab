@@ -61,7 +61,7 @@ include_directories(
     ${SDL2_INCLUDE_DIRS}
     lib/glad/include
     lib/imgui
-    lib/glm-0.9.9.8
+    lib/glm
     lib
     src
 )
