@@ -4,7 +4,7 @@
 #include "Framework/Input.h"
 
 App::App()
-	: m_shader("shaders/fullscreen.vert", "shaders/test.frag")
+	: m_shader("shaders/fullscreen.vert", "shaders/ArtOfCode-StartingPoint.frag")
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
