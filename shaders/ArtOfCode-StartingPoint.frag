@@ -12,6 +12,7 @@
 #version 430
 
 varying vec2 vTexCoords;
+uniform float uAspectRatio;
 
 #define MAX_STEPS 100
 #define MAX_DIST 100.
@@ -81,7 +82,8 @@ vec3 GetRayDir(vec2 uv, vec3 p, vec3 l, float z) {
 
 void main()
 {
-    vec2 uv = vTexCoords;
+    vec2 uv = vTexCoords - vec2(0.5);
+    uv.x *= uAspectRatio;
 	vec2 m = vec2(0.);
     
     vec3 col = vec3(0);
