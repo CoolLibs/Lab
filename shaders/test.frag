@@ -1,4 +1,4 @@
-#version 330
+#version 430
 
 varying vec2 vTexCoords;
 
