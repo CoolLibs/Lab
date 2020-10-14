@@ -11,7 +11,7 @@
 
 #version 430
 
-varying vec2 vTexCoords;
+varying vec2 vUV;
 uniform float uAspectRatio;
 uniform vec3 uCamX;
 uniform vec3 uCamY;
@@ -109,18 +109,13 @@ vec3 GetRayDir(vec2 uv, vec3 p, vec3 l, float z) {
 
 void main()
 {
-    //vec2 uv = vTexCoords - vec2(0.5);
-    //uv.x *= uAspectRatio;
-    vec2 uv = vTexCoords;
-    
     vec3 col = vec3(0);
     vec3 ro = uCamPos;
-    vec3 cBL = ro - uFocalLength * uCamZ - uAspectRatio * uCamX * 0.5 - uCamY * 0.5;
-    vec3 cBR = cBL + uAspectRatio * uCamX;
-    vec3 cTL = cBL + uCamY;
-    vec3 rd = normalize(cBL + uv.x * (cBR - cBL) + uv.y * (cTL - cBL) - ro);
-    //ro = applyToPoint    (uCamTransform, ro);
-    //rd = applyToDirection(uCamTransform, rd);
+    vec3 rd = normalize(
+          uCamX * (vUV.x - 0.5) * uAspectRatio
+        + uCamY * (vUV.y - 0.5)
+        - uCamZ * uFocalLength
+    );
 
     float d = RayMarch(ro, rd);
     
