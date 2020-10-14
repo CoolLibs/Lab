@@ -25,7 +25,6 @@ public:
 
 private:
 	void onTransformChanged();
-	void onProjectionChanged();
 
 	template <typename T, typename ...Args>
 	inline void setState(Args&& ...args) {

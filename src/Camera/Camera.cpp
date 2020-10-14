@@ -8,7 +8,6 @@
 Camera::Camera() {
 	setState<CameraState_Idle>();
 	onTransformChanged();
-	onProjectionChanged();
 }
 
 void Camera::onTransformChanged() {
@@ -19,10 +18,6 @@ void Camera::onTransformChanged() {
 	) * m_distToLookAt;
 	m_viewMatrix = glm::lookAt(posRelToLookAt + m_lookAt, m_lookAt, glm::vec3(0.0f, Math::sign(cos(m_angleUp)), 0.0f));
 	m_transformMatrix = glm::inverse(m_viewMatrix);
-}
-
-void Camera::onProjectionChanged() {
-	// Nothing to do at the moment
 }
 
 glm::vec3 Camera::xAxis() const { return glm::normalize(glm::column(m_transformMatrix, 0)); }
