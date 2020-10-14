@@ -18,7 +18,8 @@ void CameraState_Rest::onWheelDown() {
 }
 
 void CameraState_Rest::onWheelScroll(float dl){
-	
+	m_camera.m_distToLookAt += dl;
+	m_camera.onTransformChanged();
 }
 
 void CameraState_Rest::onKeyPressed(SDL_Scancode scancode) {

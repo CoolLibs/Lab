@@ -46,6 +46,7 @@ void App::ImGuiWindows() {
 			m[2][0], m[2][1], m[2][2], m[2][3],
 			m[3][0], m[3][1], m[3][2], m[3][3]
 		);
+		ImGui::Text("Ground : %.2f Up : %.2f Radius : %.2f", m_camera.m_angleGround, m_camera.m_angleUp, m_camera.m_distToLookAt);
 		ImGui::SliderFloat("Focal Length", &m_focalLength, 0.0f, 10.0f);
 		ImGui::ColorEdit3("Background Color", glm::value_ptr(m_bgColor));
 		ImGui::Checkbox("Show Demo Window", &m_bShow_ImGuiDemo);

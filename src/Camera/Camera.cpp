@@ -13,9 +13,15 @@ Camera::Camera() {
 }
 
 void Camera::onTransformChanged() {
-	m_transformMatrix = glm::translate(glm::rotate(glm::rotate(glm::mat4(1.0f), m_angleUp, glm::vec3(1, 0, 0)), m_angleGround, glm::vec3(0, 1, 0)), m_position);
+	//m_transformMatrix = glm::translate(glm::rotate(glm::rotate(glm::mat4(1.0f), m_angleUp, glm::vec3(1, 0, 0)), m_angleGround, glm::vec3(0, 1, 0)), m_position);
 	//m_transformMatrix = glm::rotate(m_transformMatrix, m_angleUp, xAxis());
-	m_inverseTransformMatrix = glm::inverse(m_transformMatrix);
+	glm::vec3 xyz = {
+		cos(m_angleUp) * cos(m_angleGround),
+		sin(m_angleUp),
+		cos(m_angleUp) * sin(m_angleGround)
+	};
+	m_inverseTransformMatrix = glm::lookAt(xyz * m_distToLookAt + m_lookAt, m_lookAt, glm::vec3(0.0f, Math::sign(cos(m_angleUp)), 0.0f));
+	m_transformMatrix = glm::inverse(m_inverseTransformMatrix);
 }
 
 void Camera::onProjectionChanged() {

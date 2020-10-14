@@ -63,12 +63,12 @@ vec3 applyToDirection(mat4 m, vec3 v) {
 
 float GetDist(vec3 p) {
     //p = applyToPoint(inverse(uCamTransform), p);
-    float d = sdTorus(p, vec2(10, 1));
+    //float d = sdTorus(p, vec2(10, 1));
     //float d = min(
     //    sdTorus(p, vec2(10, 1)),
     //    abs(p.y + 1.)
     //);
-    //float d = sdBox(p, vec3(1));
+    float d = sdBox(p, vec3(1));
    	
     return d;
 }
@@ -116,7 +116,7 @@ void main()
     
     vec3 col = vec3(0);
     vec3 ro = camPos;
-    vec3 cBL = ro - uFocalLength * camZ;
+    vec3 cBL = ro - uFocalLength * camZ - uAspectRatio * camX * 0.5 - camY * 0.5;
     vec3 cBR = cBL + uAspectRatio * camX;
     vec3 cTL = cBL + camY;
     vec3 rd = normalize(cBL + uv.x * (cBR - cBL) + uv.y * (cTL - cBL) - ro);

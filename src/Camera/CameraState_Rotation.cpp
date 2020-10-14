@@ -12,7 +12,7 @@ CameraState_Rotation::CameraState_Rotation(Camera& camera)
 
 void CameraState_Rotation::update() {
 	glm::vec2 mouseDL = Input::MouseInCentimeters() - m_initialMousePos;
-	//mouseDL.y *= -1.0f;
+	mouseDL.y *= -1.0f;
 	m_camera.angleGround() = m_initialAngleGround + mouseDL.x * 0.0001f;
 	m_camera.angleUp()     = m_initialAngleUp     + mouseDL.y * 0.0001f;
 	//m_camera.m_sphereCoords.angleGround() = m_initialAngleGround + mouseDL.x * glm::two_pi<float>() * 0.0005f / 2.5f;
