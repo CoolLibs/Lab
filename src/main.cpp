@@ -5,6 +5,8 @@
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
 
+#include "Framework/Input.h"
+
 int main(int argc, char *argv[]) {
 	// OpenGL version
 	constexpr int glMajorVersion = 4;
@@ -94,6 +96,8 @@ int main(int argc, char *argv[]) {
 	ImGui_ImplOpenGL3_Init(glslVersion);
 
 	// ------ Initialize our own classes
+
+	Input::Initialize();
 
 	// ------ Actual App
 	{

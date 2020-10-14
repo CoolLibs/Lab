@@ -13,9 +13,15 @@
 
 varying vec2 vTexCoords;
 uniform float uAspectRatio;
+//uniform mat4 uCamTransform;
+uniform vec3 camPos;
+uniform vec3 camX;
+uniform vec3 camY;
+uniform vec3 camZ;
+uniform float uFocalLength;
 
 #define MAX_STEPS 100
-#define MAX_DIST 100.
+#define MAX_DIST 10000.
 #define SURF_DIST .001
 
 #define S smoothstep
@@ -37,8 +43,32 @@ float sdBox(vec3 p, vec3 s) {
 	return length(max(p, 0.))+min(max(p.x, max(p.y, p.z)), 0.);
 }
 
+float sdTorus( vec3 p, vec2 t )
+{
+  vec2 q = vec2(length(p.xz)-t.x,p.y);
+  return length(q)-t.y;
+}
+
+vec3 applyToPoint(mat4 m, vec3 v) {
+    vec4 vv = vec4(v, 1.);
+    vv =  m * vv;
+    return vec3(vv) / vv.w;
+}
+
+vec3 applyToDirection(mat4 m, vec3 v) {
+    vec4 vv = vec4(v, 0.);
+    vv = m * vv;
+    return normalize(vec3(vv) / vv.w);
+}
+
 float GetDist(vec3 p) {
-    float d = sdBox(p, vec3(1));
+    //p = applyToPoint(inverse(uCamTransform), p);
+    float d = sdTorus(p, vec2(10, 1));
+    //float d = min(
+    //    sdTorus(p, vec2(10, 1)),
+    //    abs(p.y + 1.)
+    //);
+    //float d = sdBox(p, vec3(1));
    	
     return d;
 }
@@ -78,33 +108,36 @@ vec3 GetRayDir(vec2 uv, vec3 p, vec3 l, float z) {
     return d;
 }
 
-
-
 void main()
 {
-    vec2 uv = vTexCoords - vec2(0.5);
-    uv.x *= uAspectRatio;
-	vec2 m = vec2(0.);
+    //vec2 uv = vTexCoords - vec2(0.5);
+    //uv.x *= uAspectRatio;
+    vec2 uv = vTexCoords;
     
     vec3 col = vec3(0);
-    
-    vec3 ro = vec3(0, 3, -3);
-    ro.yz *= Rot(-m.y*3.14+1.);
-    ro.xz *= Rot(-m.x*6.2831);
-    
-    vec3 rd = GetRayDir(uv, ro, vec3(0), 1.);
+    vec3 ro = camPos;
+    vec3 cBL = ro - uFocalLength * camZ;
+    vec3 cBR = cBL + uAspectRatio * camX;
+    vec3 cTL = cBL + camY;
+    vec3 rd = normalize(cBL + uv.x * (cBR - cBL) + uv.y * (cTL - cBL) - ro);
+    //ro = applyToPoint    (uCamTransform, ro);
+    //rd = applyToDirection(uCamTransform, rd);
 
     float d = RayMarch(ro, rd);
     
     if(d<MAX_DIST) {
-    	vec3 p = ro + rd * d;
+    	//vec3 p = applyToPoint(inverse(uCamTransform), ro + rd * d);
+        vec3 p = ro + rd * d;
     	vec3 n = GetNormal(p);
         
     	float dif = dot(n, normalize(vec3(1,2,3)))*.5+.5;
-    	col += dif;  
+    	col += dif;
+    }
+    else {
+        col = vec3(1, 0, 0);
     }
     
     col = pow(col, vec3(.4545));	// gamma correction
-    
+    //col = vec3(ro);
     gl_FragColor = vec4(col,1.0);
 }
