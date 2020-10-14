@@ -1,12 +1,12 @@
 #include "Camera.h"
-#include "CameraState_Rest.h"
+#include "CameraState_Idle.h"
 
 #include "Utility/Math.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <glm/gtc/matrix_access.hpp>
 
 Camera::Camera() {
-	setState<CameraState_Rest>();
+	setState<CameraState_Idle>();
 	onTransformChanged();
 	onProjectionChanged();
 }

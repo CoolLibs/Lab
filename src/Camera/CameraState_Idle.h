@@ -2,10 +2,10 @@
 
 #include "CameraState.h"
 
-class CameraState_Rest : public CameraState {
+class CameraState_Idle : public CameraState {
 public:
-	CameraState_Rest(Camera& camera);
-	~CameraState_Rest() = default;
+	CameraState_Idle(Camera& camera);
+	~CameraState_Idle() = default;
 
 	void onWheelDown() override;
 	void onWheelScroll(float dl) override;

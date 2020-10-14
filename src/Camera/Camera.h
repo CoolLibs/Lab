@@ -3,7 +3,7 @@
 #include "CameraState.h"
 
 class Camera {
-friend class CameraState_Rest;
+friend class CameraState_Idle;
 friend class CameraState_Rotation;
 friend class CameraState_Translation; 
 public:

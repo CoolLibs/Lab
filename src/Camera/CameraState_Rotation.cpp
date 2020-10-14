@@ -1,5 +1,5 @@
 #include "CameraState_Rotation.h"
-#include "CameraState_Rest.h"
+#include "CameraState_Idle.h"
 #include "Camera.h"
 #include "Framework/Input.h"
 
@@ -18,5 +18,5 @@ void CameraState_Rotation::update() {
 }
 
 void CameraState_Rotation::onWheelUp() {
-	m_camera.setState<CameraState_Rest>();
+	m_camera.setState<CameraState_Idle>();
 }
