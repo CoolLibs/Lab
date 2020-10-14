@@ -16,7 +16,6 @@ public:
 	void onRenderAreaResized();
 
 private:
-	float m_focalLength = 2.7f;
 	Camera m_camera;
 	Renderer m_renderer;
 	Shader m_shader;

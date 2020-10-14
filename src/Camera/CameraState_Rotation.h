@@ -11,7 +11,6 @@ public:
 	void onWheelUp() override;
 
 private:
-	float m_initialRadius;
 	float m_initialAngleGround;
 	float m_initialAngleUp;
 	glm::vec2 m_initialMousePos; // In centimeters

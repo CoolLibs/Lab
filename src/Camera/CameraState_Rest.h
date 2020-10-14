@@ -9,5 +9,4 @@ public:
 
 	void onWheelDown() override;
 	void onWheelScroll(float dl) override;
-	void onKeyPressed(SDL_Scancode scancode) override;
 };

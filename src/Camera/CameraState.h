@@ -13,7 +13,6 @@ public:
 	virtual void onWheelDown() {};
 	virtual void onWheelUp() {};
 	virtual void onWheelScroll(float dl) {};
-	virtual void onKeyPressed(SDL_Scancode scancode) {};
 
 protected:
 	Camera& m_camera;

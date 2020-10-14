@@ -11,6 +11,6 @@ public:
 	void onWheelUp() override;
 
 private:
-	glm::vec3 m_initialLookedAtPoint;
+	glm::vec3 m_initialLookAt;
 	glm::vec2 m_initialMousePos; // In centimeters
 };

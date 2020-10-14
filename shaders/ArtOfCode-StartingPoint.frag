@@ -13,11 +13,10 @@
 
 varying vec2 vTexCoords;
 uniform float uAspectRatio;
-//uniform mat4 uCamTransform;
-uniform vec3 camPos;
-uniform vec3 camX;
-uniform vec3 camY;
-uniform vec3 camZ;
+uniform vec3 uCamX;
+uniform vec3 uCamY;
+uniform vec3 uCamZ;
+uniform vec3 uCamPos;
 uniform float uFocalLength;
 
 #define MAX_STEPS 100
@@ -115,10 +114,10 @@ void main()
     vec2 uv = vTexCoords;
     
     vec3 col = vec3(0);
-    vec3 ro = camPos;
-    vec3 cBL = ro - uFocalLength * camZ - uAspectRatio * camX * 0.5 - camY * 0.5;
-    vec3 cBR = cBL + uAspectRatio * camX;
-    vec3 cTL = cBL + camY;
+    vec3 ro = uCamPos;
+    vec3 cBL = ro - uFocalLength * uCamZ - uAspectRatio * uCamX * 0.5 - uCamY * 0.5;
+    vec3 cBR = cBL + uAspectRatio * uCamX;
+    vec3 cTL = cBL + uCamY;
     vec3 rd = normalize(cBL + uv.x * (cBR - cBL) + uv.y * (cTL - cBL) - ro);
     //ro = applyToPoint    (uCamTransform, ro);
     //rd = applyToDirection(uCamTransform, rd);
