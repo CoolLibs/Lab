@@ -1,5 +1,7 @@
 #pragma once
 
+#include <random>
+
 class MyRand {
 public:
 	static float get0to1();

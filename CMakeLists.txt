@@ -136,8 +136,8 @@ target_precompile_headers(${PROJECT_NAME}
   # std
     <vector>
     <string>
-    <random>
     <memory>
+    <functional>
     <unordered_map>
     <queue>
   # Project Code
