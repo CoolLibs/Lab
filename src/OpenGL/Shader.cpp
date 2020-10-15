@@ -6,10 +6,10 @@
 #define ASSERT_SHADER_IS_BOUND
 #endif
 
-Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath) {
+Shader::Shader(const char* vertexShaderFilepath, const char* fragmentShaderFilepath) {
 	GLCall(m_shaderId = glCreateProgram());
-	unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER,   ShaderHelper::parseFile(vertexShaderFilepath));
-	unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, ShaderHelper::parseFile(fragmentShaderFilepath));
+	unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER,   ShaderHelper::parseFile(vertexShaderFilepath).c_str());
+	unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, ShaderHelper::parseFile(fragmentShaderFilepath).c_str());
 
 	GLCall(glAttachShader(m_shaderId, vs));
 	GLCall(glAttachShader(m_shaderId, fs));

@@ -1,6 +1,6 @@
 #pragma once
 
 namespace ShaderHelper {
-	std::string parseFile(const std::string& filepath, const std::vector<std::pair<std::string, std::string>>& modifyFromTo = {});
-	unsigned int compileShader(unsigned int type, const std::string& source);
+	std::string parseFile(const char* filepath);
+	unsigned int compileShader(unsigned int type, const char* source);
 }

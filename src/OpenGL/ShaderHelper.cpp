@@ -1,20 +1,16 @@
 #include "ShaderHelper.h"
 
-#include "Utility/String.h"
 #include "Utility/File.h"
 
-std::string ShaderHelper::parseFile(const std::string& filepath, const std::vector<std::pair<std::string, std::string>>& modifyFromTo) {
+std::string ShaderHelper::parseFile(const char* filepath) {
 	std::string res;
 	MyFile::ToString(filepath, &res);
-	for (const auto& pair : modifyFromTo)
-		MyString::ReplaceAll(res, pair.first, pair.second);
 	return res;
 }
 
-unsigned int ShaderHelper::compileShader(unsigned int type, const std::string& source) {
+unsigned int ShaderHelper::compileShader(unsigned int type, const char* source) {
 	GLCall(unsigned int id = glCreateShader(type));
-	const char* src = source.c_str();
-	GLCall(glShaderSource(id, 1, &src, nullptr));
+	GLCall(glShaderSource(id, 1, &source, nullptr));
 	GLCall(glCompileShader(id));
 #ifndef NDEBUG
 	int result;

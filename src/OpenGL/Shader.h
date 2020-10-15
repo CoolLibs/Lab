@@ -4,7 +4,7 @@
 
 class Shader {
 public:
-	Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath);
+	Shader(const char* vertexShaderFilepath, const char* fragmentShaderFilepath);
 	~Shader();
 
 	void bind();
@@ -19,7 +19,7 @@ public:
 	void setUniformMat4f(const char* uniformName, const glm::mat4& mat);
 
 private:
-	std::unordered_map<std::string, int> m_uniformLocationCache;
+	std::unordered_map<const char*, int> m_uniformLocationCache;
 	int getUniformLocation(const char* uniformName);
 
 private:
