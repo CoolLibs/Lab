@@ -29,6 +29,17 @@ static GLuint compileShader(GLenum type, const char* source) {
 }
 
 Shader::Shader(const char* vertexShaderFilepath, const char* fragmentShaderFilepath) {
+	compile(vertexShaderFilepath, fragmentShaderFilepath);
+}
+
+Shader::~Shader() {
+	GLCall(glDeleteProgram(m_shaderId));
+}
+
+void Shader::compile(const char* vertexShaderFilepath, const char* fragmentShaderFilepath) {
+	if (m_shaderId != 0)
+		GLCall(glDeleteProgram(m_shaderId));
+
 	GLCall(m_shaderId = glCreateProgram());
 	std::string vertexSrc, fragmentSrc;
 	MyFile::ToString(vertexShaderFilepath, &vertexSrc);
@@ -43,10 +54,6 @@ Shader::Shader(const char* vertexShaderFilepath, const char* fragmentShaderFilep
 
 	GLCall(glDeleteShader(vs));
 	GLCall(glDeleteShader(fs));
-}
-
-Shader::~Shader() {
-	GLCall(glDeleteProgram(m_shaderId));
 }
 
 void Shader::bind() {

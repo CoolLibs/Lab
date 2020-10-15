@@ -3,7 +3,9 @@
 class Shader {
 public:
 	Shader(const char* vertexShaderFilepath, const char* fragmentShaderFilepath);
+	Shader() = default;
 	~Shader();
+	void compile(const char* vertexShaderFilepath, const char* fragmentShaderFilepath);
 
 	void bind();
 
