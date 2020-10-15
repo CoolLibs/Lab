@@ -162,7 +162,7 @@ void AppFramework::ImGuiDockspace() {
 	}
 	else
 	{
-		spdlog::warn("Docking not enabled !");
+		Log::Warn("Docking not enabled !");
 	}
 	ImGui::End();
 }

@@ -17,7 +17,7 @@ void FileWatcher::update() {
 	if (t - m_timeOfLastCheck > delayBetweenChecks) {
 		m_timeOfLastCheck = t;
 		// Check file exists
-		if (MyFile::Exists(m_path.string())) {
+		if (MyFile::Exists(m_path.string().c_str())) {
 			// Check file was updated since last check
 			std::filesystem::file_time_type lastChange = std::filesystem::last_write_time(m_path);
 			if (lastChange != m_timeOfLastChange) {
