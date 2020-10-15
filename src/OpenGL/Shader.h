@@ -23,5 +23,5 @@ private:
 	int getUniformLocation(const char* uniformName);
 
 private:
-	GLuint m_shaderId = -1;
+	GLuint m_shaderId = 0;
 };
