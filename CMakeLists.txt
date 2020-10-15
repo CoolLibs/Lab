@@ -138,6 +138,7 @@ target_precompile_headers(${PROJECT_NAME}
     <string>
     <random>
     <memory>
+    <functional>
     <unordered_map>
     <queue>
   # Project Code

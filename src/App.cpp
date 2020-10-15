@@ -2,9 +2,10 @@
 
 #include "Framework/RenderState.h"
 #include "Framework/Input.h"
+#include "Framework/Time.h"
 
 App::App()
-	: m_shader("shaders/fullscreen.vert", "shaders/ArtOfCode-StartingPoint.frag")
+	: m_shaderWatcher("shaders/ArtOfCode-StartingPoint.frag", [this](const char* path) { m_shader.compile("shaders/fullscreen.vert", path); })
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -12,6 +13,7 @@ App::App()
 }
 
 void App::update() {
+	m_shaderWatcher.update();
 	m_camera.update();
 	m_renderer.begin();
 	{
@@ -24,6 +26,8 @@ void App::update() {
 		m_shader.setUniform3f("uCamZ", m_camera.zAxis());
 		m_shader.setUniform3f("uCamPos", m_camera.position());
 		m_shader.setUniform1f("uFocalLength", m_camera.focalLength());
+		float time = SDL_GetPerformanceCounter() / (float)SDL_GetPerformanceFrequency();
+		m_shader.setUniform1f("uTime", time);
 		m_renderer.dummyDrawCallForFullscreen();
 	}
 	m_renderer.end();
@@ -45,6 +49,7 @@ void App::ImGuiWindows() {
 			m[0][2], m[1][2], m[2][2], m[3][2],
 			m[0][3], m[1][3], m[2][3], m[3][3]
 		);
+		ImGui::Text("Time : %.1fs", Time::time());
 		ImGui::ColorEdit3("Background Color", glm::value_ptr(m_bgColor));
 		ImGui::Checkbox("Show Demo Window", &m_bShow_ImGuiDemo);
 		ImGui::End();
@@ -82,6 +87,7 @@ void App::onEvent(const SDL_Event& e) {
 			if (!ImGui::GetIO().WantCaptureMouse) {
 				switch(e.button.button) {
 				case SDL_BUTTON_LEFT:
+					m_camera.onWheelDown();
 					break;
 				case SDL_BUTTON_RIGHT:
 					break;
@@ -96,6 +102,7 @@ void App::onEvent(const SDL_Event& e) {
 			if (!ImGui::GetIO().WantCaptureMouse) {
 				switch (e.button.button) {
 				case SDL_BUTTON_LEFT:
+					m_camera.onWheelUp();
 					break;
 				case SDL_BUTTON_RIGHT:
 					break;

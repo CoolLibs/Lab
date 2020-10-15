@@ -7,8 +7,18 @@
 #endif
 
 Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath) {
+	compile(vertexShaderFilepath, fragmentShaderFilepath);
+}
+
+Shader::~Shader() {
+	GLCall(glDeleteProgram(m_shaderId));
+}
+
+void Shader::compile(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath) {
+	if (m_shaderId != 0)
+		GLCall(glDeleteProgram(m_shaderId));
 	GLCall(m_shaderId = glCreateProgram());
-	unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER,   ShaderHelper::parseFile(vertexShaderFilepath));
+	unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER, ShaderHelper::parseFile(vertexShaderFilepath));
 	unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, ShaderHelper::parseFile(fragmentShaderFilepath));
 
 	GLCall(glAttachShader(m_shaderId, vs));
@@ -18,10 +28,6 @@ Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragm
 
 	GLCall(glDeleteShader(vs));
 	GLCall(glDeleteShader(fs));
-}
-
-Shader::~Shader() {
-	GLCall(glDeleteProgram(m_shaderId));
 }
 
 void Shader::bind() {

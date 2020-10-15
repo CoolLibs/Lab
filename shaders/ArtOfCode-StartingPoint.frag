@@ -19,6 +19,10 @@ uniform vec3 uCamZ;
 uniform vec3 uCamPos;
 uniform float uFocalLength;
 
+uniform float uTime;
+
+#define TAU 6.28
+
 #define MAX_STEPS 100
 #define MAX_DIST 10000.
 #define SURF_DIST .001
@@ -60,6 +64,23 @@ vec3 applyToDirection(mat4 m, vec3 v) {
     return normalize(vec3(vv) / vv.w);
 }
 
+float sdSphere(vec3 p, float r) {
+    return length(p) - r;
+}
+
+float smin( float a, float b, float k )
+{
+    float res = exp2( -k*a ) + exp2( -k*b );
+    return -log2( res )/k;
+}
+
+float sdCapsule( vec3 p, vec3 a, vec3 b, float r )
+{
+  vec3 pa = p - a, ba = b - a;
+  float h = clamp( dot(pa,ba)/dot(ba,ba), 0.0, 1.0 );
+  return length( pa - ba*h ) - r;
+}
+
 float GetDist(vec3 p) {
     //p = applyToPoint(inverse(uCamTransform), p);
     //float d = sdTorus(p, vec2(10, 1));
@@ -67,8 +88,51 @@ float GetDist(vec3 p) {
     //    sdTorus(p, vec2(10, 1)),
     //    abs(p.y + 1.)
     //);
-    float d = sdBox(p, vec3(1));
-   	
+    float d = MAX_DIST;
+    const int N = 3;
+    vec2 ptOnCircle = vec2(cos(uTime), sin(uTime));
+    // Axis
+    for (int k = 0; k < N; ++k) {
+        float angle = TAU / 2. * k / N;
+        vec2 axis = vec2(cos(angle), sin(angle));
+        vec2 proj = dot(ptOnCircle, axis) * axis;
+        d = min(d, sdTorus(p + vec3(proj.x, 0., proj.y), vec2(0.1, 0.01)));
+        float r;
+        float maxR = 0.015;
+        float t = fract(uTime/30.+0.5);
+        float m = 0.2;
+        float timeIdle = 0.5 - m;
+        if (t < timeIdle*0.5) {
+            r = maxR;
+        }
+        else if (t < timeIdle*0.5 + m) {
+            r = mix(maxR, 0., (t-timeIdle*0.5)/m);
+        }
+        else if (t < timeIdle*0.5 + m + timeIdle) {
+            r = 0.;
+        }
+        else if (t < timeIdle*0.5 + m + timeIdle + m) {
+            r = mix(0., maxR, (t-timeIdle*1.5-m)/m);
+        }
+        else {
+            r = maxR;
+        }
+        if (r!=0.) {//int(floor(uTime / 6.)) % 2 == 0) {
+            d = min(d, sdCapsule(p, vec3(axis.x, 0, axis.y), - vec3(axis.x, 0, axis.y), r));
+        }
+    }
+    // Tori
+    for (int k = 0; k < N; ++k) {
+        float angle = TAU / 2. * k / N;
+        vec2 axis = vec2(cos(angle), sin(angle));
+        vec2 proj = dot(ptOnCircle, axis) * axis;
+        d = min(d, sdTorus(p + vec3(proj.x, 0., proj.y), vec2(0.1, 0.01)));
+    }
+    //p.x += cos(uTime);
+    //float d = sdSphere(p, 0.25);
+    //p.x -= cos(uTime);
+    //p.z += sin(uTime);
+   	//d = min(d, sdSphere(p, 0.25));
     return d;
 }
 
@@ -109,8 +173,12 @@ vec3 GetRayDir(vec2 uv, vec3 p, vec3 l, float z) {
 
 void main()
 {
+    vec2 axis = vec2(1., 0.);
+    vec2 ptOnCircle = vec2(cos(uTime), sin(uTime));
+    vec2 proj = dot(ptOnCircle, axis) * axis;
+
     vec3 col = vec3(0);
-    vec3 ro = uCamPos;
+    vec3 ro = uCamPos - vec3(proj.x, 0., proj.y);
     vec3 rd = normalize(
           uCamX * (vUV.x - 0.5) * uAspectRatio
         + uCamY * (vUV.y - 0.5)
@@ -125,10 +193,11 @@ void main()
     	vec3 n = GetNormal(p);
         
     	float dif = dot(n, normalize(vec3(1,2,3)))*.5+.5;
-    	col += dif;
+    	col += dif * vec3(0., 0.5, 0.9);
     }
     else {
-        col = vec3(1, 0, 0);
+        float t = 1. - abs(rd.y);
+        col = mix(vec3(8.), vec3(0.2), t);
     }
     
     col = pow(col, vec3(.4545));	// gamma correction

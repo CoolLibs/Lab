@@ -3,6 +3,7 @@
 #include "Framework/Renderer.h"
 #include "OpenGL/Shader.h"
 #include "Camera/Camera.h"
+#include "Utility/FileWatcher.h"
 
 class App {
 public:
@@ -16,9 +17,10 @@ public:
 	void onRenderAreaResized();
 
 private:
+	Shader m_shader;
+	FileWatcher m_shaderWatcher;
 	Camera m_camera;
 	Renderer m_renderer;
-	Shader m_shader;
 	glm::vec3 m_bgColor = glm::vec3(0.478f, 0.674f, 0.792f);
 #ifndef NDEBUG
 	bool m_bShow_Debug = true;

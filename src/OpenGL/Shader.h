@@ -5,7 +5,9 @@
 class Shader {
 public:
 	Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath);
+	Shader() = default;
 	~Shader();
+	void compile(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath);
 
 	void bind();
 
@@ -23,5 +25,5 @@ private:
 	int getUniformLocation(const char* uniformName);
 
 private:
-	GLuint m_shaderId = -1;
+	GLuint m_shaderId = 0;
 };

@@ -6,6 +6,8 @@
 #include <imgui_impl_opengl3.h>
 
 #include "Framework/Input.h"
+#include "Framework/Time.h"
+#include "Clock/Clock_Realtime.h"
 
 int main(int argc, char *argv[]) {
 	// OpenGL version
@@ -98,12 +100,15 @@ int main(int argc, char *argv[]) {
 	// ------ Initialize our own classes
 
 	Input::Initialize();
+	Clock_Realtime::Initialize();
+	Time::Initialize();
 
 	// ------ Actual App
 	{
 		App app;
 		AppFramework appFramework(glWindow, app);
 		while (!appFramework.shouldClose()) {
+			Time::Update();
 			appFramework.update();
 		}
 	} // Needs to be in a scope so that app is destructed here. Otherwise console won't close
