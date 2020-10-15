@@ -1,15 +1,40 @@
 #include "Shader.h"
 
+#include "Utility/File.h"
+
 #ifndef NDEBUG
 #define ASSERT_SHADER_IS_BOUND GLint id; glGetIntegerv(GL_CURRENT_PROGRAM, &id); assert(id == m_shaderId && "The shader must be bound before setting any uniform");
 #else 
 #define ASSERT_SHADER_IS_BOUND
 #endif
 
+static GLuint compileShader(GLenum type, const char* source) {
+	GLCall(GLuint id = glCreateShader(type));
+	GLCall(glShaderSource(id, 1, &source, nullptr));
+	GLCall(glCompileShader(id));
+#ifndef NDEBUG
+	int result;
+	GLCall(glGetShaderiv(id, GL_COMPILE_STATUS, &result));
+	if (result == GL_FALSE) {
+		int length;
+		GLCall(glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length));
+		char* message = (char*)alloca(length * sizeof(char));
+		GLCall(glGetShaderInfoLog(id, length, &length, message));
+		Log::Error("Failed to compile {} {} :\n{}", (type == GL_FRAGMENT_SHADER ? "fragment" : "vertex"), "shader", message);
+		glDeleteShader(id);
+		return 0;
+	}
+#endif
+	return id;
+}
+
 Shader::Shader(const char* vertexShaderFilepath, const char* fragmentShaderFilepath) {
 	GLCall(m_shaderId = glCreateProgram());
-	unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER,   ShaderHelper::parseFile(vertexShaderFilepath).c_str());
-	unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, ShaderHelper::parseFile(fragmentShaderFilepath).c_str());
+	std::string vertexSrc, fragmentSrc;
+	MyFile::ToString(vertexShaderFilepath, &vertexSrc);
+	MyFile::ToString(fragmentShaderFilepath, &fragmentSrc);
+	GLuint vs = compileShader(GL_VERTEX_SHADER, vertexSrc.c_str());
+	GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentSrc.c_str());
 
 	GLCall(glAttachShader(m_shaderId, vs));
 	GLCall(glAttachShader(m_shaderId, fs));
@@ -32,7 +57,7 @@ int Shader::getUniformLocation(const char* uniformName) {
 	if (m_uniformLocationCache.find(uniformName) != m_uniformLocationCache.end()) {
 		return m_uniformLocationCache[uniformName];
 	}
-	GLCall(int location = glGetUniformLocation(m_shaderId, uniformName));
+	GLCall(GLint location = glGetUniformLocation(m_shaderId, uniformName));
 	m_uniformLocationCache[uniformName] = location;
 	return location;
 }

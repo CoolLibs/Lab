@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ShaderHelper.h"
-
 class Shader {
 public:
 	Shader(const char* vertexShaderFilepath, const char* fragmentShaderFilepath);
@@ -19,8 +17,8 @@ public:
 	void setUniformMat4f(const char* uniformName, const glm::mat4& mat);
 
 private:
-	std::unordered_map<const char*, int> m_uniformLocationCache;
-	int getUniformLocation(const char* uniformName);
+	std::unordered_map<const char*, GLint> m_uniformLocationCache;
+	GLint getUniformLocation(const char* uniformName);
 
 private:
 	GLuint m_shaderId = 0;
