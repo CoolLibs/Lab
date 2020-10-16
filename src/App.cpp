@@ -26,8 +26,7 @@ void App::update() {
 		m_shader.setUniform3f("uCamZ", m_camera.zAxis());
 		m_shader.setUniform3f("uCamPos", m_camera.position());
 		m_shader.setUniform1f("uFocalLength", m_camera.focalLength());
-		float time = SDL_GetPerformanceCounter() / (float)SDL_GetPerformanceFrequency();
-		m_shader.setUniform1f("uTime", time);
+		m_shader.setUniform1f("uTime", Time::time());
 		m_renderer.dummyDrawCallForFullscreen();
 	}
 	m_renderer.end();
