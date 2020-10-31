@@ -1,5 +1,5 @@
 # Set standards
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(is0 C CXX)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
