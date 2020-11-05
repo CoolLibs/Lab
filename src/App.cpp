@@ -5,16 +5,16 @@
 #include "Framework/Time.h"
 
 App::App()
-	: m_shaderWatcher("shaders/ArtOfCode-StartingPoint.frag", [this](const char* path) { m_shader.compile("shaders/fullscreen.vert", path); })
+	: m_shaderWatcher("myShaders/ArtOfCode-StartingPoint.frag", [this](const char* path) { m_shader.compile("shaders/fullscreen.vert", path); })
 {
+	RenderState::setRenderAreaResizedCallback([this]() {m_renderer.onRenderAreaResized(); });
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
+	RenderState::setExportSize(1920, 1080);
 }
 
-void App::update() {
-	m_shaderWatcher.update();
-	m_camera.update();
+void App::render() {
 	m_renderer.begin();
 	{
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
@@ -30,6 +30,12 @@ void App::update() {
 		m_renderer.dummyDrawCallForFullscreen();
 	}
 	m_renderer.end();
+}
+
+void App::update() {
+	m_shaderWatcher.update();
+	m_camera.update();
+	render();
 }
 
 void App::ImGuiWindows() {
@@ -114,7 +120,9 @@ void App::onEvent(const SDL_Event& e) {
 
 		case SDL_KEYDOWN:
 			if (!ImGui::GetIO().WantTextInput) {
-
+				if (e.key.keysym.sym == 's' && Input::KeyIsDown(SDL_SCANCODE_LCTRL)) {
+					m_exporter.exportFrame(m_renderer.renderBuffer(), [this]() {render();});
+				}
 			}
 			break;
 

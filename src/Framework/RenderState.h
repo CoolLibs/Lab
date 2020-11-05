@@ -9,8 +9,10 @@ public:
 	static inline bool IsExporting() { return m_bIsExporting; }
 
 private:
+	friend class App;
 	friend class AppFramework;
 	friend class Renderer;
+	friend class Exporter;
 	friend class Input;
 	// Size and position that should be used for showing rendered images inside the window
 	static RectSizePos InAppRenderArea();
