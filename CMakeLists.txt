@@ -9,19 +9,19 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # /////////////////////////////////////////////////////////////////////////////
 
 ################################ -------- ######
-file(GLOB_RECURSE MY_SOURCES src/*)
-file(GLOB_RECURSE MY_SHADERS shaders/*)
+file(GLOB_RECURSE SOURCES src/*)
+file(GLOB_RECURSE SHADERS shaders/*)
 
 # Recreate folder architecture inside visual studio solution (might work for other IDEs as well)
 # src
-foreach(_source IN ITEMS ${MY_SOURCES})
+foreach(_source IN ITEMS ${SOURCES})
     get_filename_component(_source_path "${_source}" PATH)
     string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_group_path}")
     source_group("${_group_path}" FILES "${_source}")
 endforeach()
-# internal-shaders
-foreach(_source IN ITEMS ${MY_SHADERS})
+# shaders
+foreach(_source IN ITEMS ${SHADERS})
     get_filename_component(_source_path "${_source}" PATH)
     string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_group_path}")
@@ -73,8 +73,8 @@ include_directories(
 # /////////////////////////////////////////////////////////////////////////////
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
-add_executable(${PROJECT_NAME} ${MY_SOURCES}
-    ${MY_SHADERS} ${MY_CONFIGS} # include in the VS project so they will appear in the solution explorer
+add_executable(${PROJECT_NAME} ${SOURCES}
+    ${SHADERS} # include in the VS project so they will appear in the solution explorer
 )
 target_link_libraries(
     ${PROJECT_NAME}
