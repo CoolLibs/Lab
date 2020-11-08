@@ -2,26 +2,26 @@
 
 #include "Clock/Clock_Realtime.h"
 
-std::unique_ptr<Clock> Time::s_clock = nullptr;
+std::unique_ptr<Clock> Time::m_clock = nullptr;
 
 void Time::Initialize() {
-    s_clock = std::make_unique<Clock_Realtime>();
+    m_clock = std::make_unique<Clock_Realtime>();
 }
 
 void Time::Update() {
-    s_clock->update();
+    m_clock->update();
 }
 
 float Time::deltaTime() {
-    return s_clock->deltaTime();
+    return m_clock->deltaTime();
 }
 
 float Time::time() {
-    return s_clock->time();
+    return m_clock->time();
 }
 
 void Time::setTime(float t) {
-    s_clock->setTime(t);
+    m_clock->setTime(t);
 }
 
 void Time::ImGui() {

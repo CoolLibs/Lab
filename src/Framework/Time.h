@@ -14,5 +14,5 @@ public:
 	static void setTime(float t);
 
 private:
-	static std::unique_ptr<Clock> s_clock;
+	static std::unique_ptr<Clock> m_clock;
 };
