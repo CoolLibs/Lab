@@ -36,9 +36,13 @@ void App::update() {
 	m_shaderWatcher.update();
 	m_camera.update();
 	render();
+	Time::Update();
 }
 
 void App::ImGuiWindows() {
+	ImGui::Begin("Time");
+	Time::ImGui();
+	ImGui::End();
 #ifndef NDEBUG
 	if (m_bShow_Debug) {
 		ImGui::Begin("Debug", &m_bShow_Debug);
@@ -54,7 +58,6 @@ void App::ImGuiWindows() {
 			m[0][2], m[1][2], m[2][2], m[3][2],
 			m[0][3], m[1][3], m[2][3], m[3][3]
 		);
-		ImGui::Text("Time : %.1fs", Time::time());
 		ImGui::ColorEdit3("Background Color", glm::value_ptr(m_bgColor));
 		ImGui::Checkbox("Show Demo Window", &m_bShow_ImGuiDemo);
 		ImGui::End();

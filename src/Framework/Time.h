@@ -1,15 +1,18 @@
 #pragma once
 
-class Clock_Realtime;
+class Clock;
 
 class Time {
 public:
 	static void Initialize();
 	static void Update();
-	// Time in seconds since the start of the app
+	static void ImGui();
+	// In seconds
 	static float time();
 	static float deltaTime();
+	// In seconds
+	static void setTime(float t);
 
 private:
-	static std::unique_ptr<Clock_Realtime> s_clock;
+	static std::unique_ptr<Clock> s_clock;
 };

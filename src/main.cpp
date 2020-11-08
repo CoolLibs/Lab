@@ -108,7 +108,6 @@ int main(int argc, char *argv[]) {
 		App app;
 		AppFramework appFramework(glWindow, app);
 		while (!appFramework.shouldClose()) {
-			Time::Update();
 			appFramework.update();
 		}
 	} // Needs to be in a scope so that app is destructed here. Otherwise console won't close
