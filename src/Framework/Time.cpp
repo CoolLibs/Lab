@@ -32,7 +32,7 @@ void Time::ImGui() {
     }
     ImGui::SameLine();
     float t = time();
-    if (ImGui::DragFloat("seconds", &t)) {
+    if (ImGui::DragFloat("seconds", &t, 0.5f, 0.f, 0.f, "%.2f")) {
         setTime(t);
     }
 }
