@@ -7,7 +7,10 @@ Clock_FixedTimestep::Clock_FixedTimestep(float fps, float initialTime)
 }
 
 float Clock_FixedTimestep::deltaTime() const {
-    return m_dt;
+    if (Clock::isPlaying())
+        return m_dt;
+    else
+        return 0.f;
 }
 
 float Clock_FixedTimestep::time() const {
@@ -19,5 +22,6 @@ void Clock_FixedTimestep::setTime(float newTime) {
 }
 
 void Clock_FixedTimestep::update() {
-    m_framesCount++;
+    if (Clock::isPlaying())
+        m_framesCount++;
 }

@@ -10,4 +10,12 @@ public:
 
 	virtual void setTime(float newTime) = 0;
 	virtual void update() = 0;
+
+	virtual void play();
+	virtual void pause();
+	void togglePlayPause();
+	inline bool isPlaying() const { return m_bPlaying; }
+
+private:
+	bool m_bPlaying = true;
 };

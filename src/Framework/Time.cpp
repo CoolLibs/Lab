@@ -26,6 +26,9 @@ void Time::setTime(float t) {
 
 void Time::ImGui() {
     float t = time();
+    if (ImGui::Button(m_clock->isPlaying() ? "Pause" : "Play")) {
+        m_clock->togglePlayPause();
+    }
     if (ImGui::DragFloat("seconds", &t)) {
         setTime(t);
     }

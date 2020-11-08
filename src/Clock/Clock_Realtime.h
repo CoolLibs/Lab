@@ -14,9 +14,13 @@ public:
 	void setTime(float newTime) override;
 	void update() override;
 
+	void play() override;
+	void pause() override;
+
 private:
 	Uint64 m_lastTime;
 	Uint64 m_currentTime;
+	Uint64 m_SDLTimeWhenPaused = 0;
 	float m_offsetWithSDLTime; // Allows us to setTime as we wish
 	static float SDLPerformanceCounter2Seconds;
 };
