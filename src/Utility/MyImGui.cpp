@@ -82,8 +82,8 @@ void MyImGui::ButtonDisabled(const char* label, const char* reasonForDisabling) 
 	Tooltip(reasonForDisabling);
 }
 
-static constexpr int BUTTON_ICON_SIZE = 24;
-static constexpr int BUTTON_FRAME_PADDING = 2;
+static constexpr int BUTTON_ICON_SIZE = 18;
+static constexpr int BUTTON_FRAME_PADDING = 1;
 
 bool MyImGui::ButtonWithIcon(GLuint texID, const ImVec4& tintColor, const ImVec4& backgroundColor) {
 	return ImGui::ImageButton(reinterpret_cast<ImTextureID>(texID), ImVec2(BUTTON_ICON_SIZE, BUTTON_ICON_SIZE), ImVec2(0.f, 0.f), ImVec2(1.f, 1.f), BUTTON_FRAME_PADDING, backgroundColor, tintColor);

@@ -8,6 +8,7 @@
 #include "Framework/Input.h"
 #include "Framework/Time.h"
 #include "Clock/Clock_Realtime.h"
+#include "Constants/Textures.h"
 
 int main(int argc, char *argv[]) {
 	// OpenGL version
@@ -102,6 +103,7 @@ int main(int argc, char *argv[]) {
 	Input::Initialize();
 	Clock_Realtime::Initialize();
 	Time::Initialize();
+	Textures::_LoadAll();
 
 	// ------ Actual App
 	{
@@ -113,6 +115,7 @@ int main(int argc, char *argv[]) {
 	} // Needs to be in a scope so that app is destructed here. Otherwise console won't close
 
 	// ------ Shutdown
+	Textures::_DestroyAll();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();

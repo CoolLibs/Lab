@@ -51,6 +51,7 @@ endif()
 add_library(GLAD STATIC "lib/glad/src/glad.c")
 file(GLOB_RECURSE IMGUI_SOURCES lib/imgui/*)
 add_library(IMGUI STATIC ${IMGUI_SOURCES})
+add_library(STB_IMAGE STATIC "lib/stb_image/stb_image.cpp")
 add_library(STB_IMAGE_WRITE STATIC "lib/stb_image/stb_image_write.cpp")
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -81,6 +82,7 @@ target_link_libraries(
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES}
     GLAD
+    STB_IMAGE
     STB_IMAGE_WRITE
     IMGUI
 )
@@ -106,6 +108,13 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/shaders/
         $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
+)
+# Copy icons folder to output folder
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/icons/
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/icons
 )
 # Copy imgui.ini to output folder
 add_custom_command(
