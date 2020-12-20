@@ -48,7 +48,8 @@ void App::ImGuiWindows() {
 		ImGui::Begin("Debug", &m_bShow_Debug);
 		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
 		ImGui::Text("Render Area Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
-		ImGui::Text("Mouse Position in Render Area : %d %d", Input::MouseInPixels().x, Input::MouseInPixels().y);
+		ImGui::Text("Mouse Position in Render Area : %d %d pixels", Input::MouseInPixels().x, Input::MouseInPixels().y);
+		ImGui::Text("Mouse Position in Render Area : %.0f %.0f centimeters", Input::MouseInCentimeters().x, Input::MouseInCentimeters().y);
 		ImGui::Text("Mouse Position Normalized : %.2f %.2f", Input::MouseInNormalizedRatioSpace().x, Input::MouseInNormalizedRatioSpace().y);
 		ImGui::Text("Camera Transform matrix :");
 		glm::mat4 m = m_camera.transformMatrix();
