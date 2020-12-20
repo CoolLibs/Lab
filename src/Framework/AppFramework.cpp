@@ -10,6 +10,7 @@
 AppFramework::AppFramework(GLWindow& glWindow, App& app)
 	: m_glWindow(glWindow), m_app(app)
 {
+	Input::Initialize();
 	RenderState::setRenderAreaResizedCallback([&app]() {app.onRenderAreaResized(); });
 	onWindowMove();
 	onWindowResize();

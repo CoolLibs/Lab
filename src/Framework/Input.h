@@ -2,8 +2,6 @@
 
 class Input {
 public:
-	static void Initialize();
-
 	static bool KeyIsDown(SDL_Scancode key);
 	// Relative to the viewing area, not the whole window !
 	static glm::ivec2 MouseInPixels();
@@ -13,5 +11,10 @@ public:
 	static glm::vec2  MouseInNormalizedRatioSpace();
 
 private:
-	static glm::vec2 s_DPCM; // Dots per Centimeter ; like DPI but in a sensible unit
+friend class AppFramework;
+	static void Initialize();
+
+private:
+	// Dots per Centimeter ; like DPI but in a sensible unit
+	static glm::vec2 s_DPCM;
 };

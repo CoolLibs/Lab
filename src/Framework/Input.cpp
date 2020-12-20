@@ -2,8 +2,7 @@
 
 #include "RenderState.h"
 
-glm::vec2 Input::s_DPCM = glm::vec2(37.795277f); // Corresponds to 96 DPI
-
+glm::vec2 Input::s_DPCM;
 static constexpr float INCH_TO_CM = 2.54f;
 
 void Input::Initialize() {

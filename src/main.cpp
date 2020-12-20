@@ -5,7 +5,6 @@
 #include <imgui_impl_sdl.h>
 #include <imgui_impl_opengl3.h>
 
-#include "Framework/Input.h"
 #include "Framework/Time.h"
 #include "Clock/Clock_Realtime.h"
 #include "Constants/Textures.h"
@@ -100,7 +99,6 @@ int main(int argc, char *argv[]) {
 
 	// ------ Initialize our own classes
 
-	Input::Initialize();
 	Clock_Realtime::Initialize();
 	Time::Initialize();
 	Textures::_LoadAll();
