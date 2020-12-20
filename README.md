@@ -1,6 +1,6 @@
 # C++ / OpenGL project template
 
-## Things to know about his template
+## Things to know about this template
 
 ### GLCall
 
