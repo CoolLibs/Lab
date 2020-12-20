@@ -4,6 +4,9 @@
 
 glm::vec2 Input::s_DPCM;
 static constexpr float INCH_TO_CM = 2.54f;
+#ifndef NDEBUG
+bool Input::s_initialized = false;
+#endif
 
 void Input::Initialize() {
 	int exitCode = SDL_GetDisplayDPI(0, nullptr, &s_DPCM[0], &s_DPCM[1]);
@@ -12,6 +15,11 @@ void Input::Initialize() {
 		Log::Release::Warn("Couldn't retrieve your screen's DPI. Going for the default 96 DPI.");
 	}
 	s_DPCM /= INCH_TO_CM;
+#ifndef NDEBUG
+	if (s_initialized)
+		Log::Warn("[Input::Initialize] You are calling Initialize() twice.");
+	s_initialized = true;
+#endif
 }
 
 bool Input::KeyIsDown(SDL_Scancode key) {
@@ -26,6 +34,10 @@ glm::ivec2 Input::MouseInPixels() {
 }
 
 glm::vec2 Input::MouseInCentimeters() {
+#ifndef NDEBUG
+	if (!s_initialized)
+		Log::Error("You are using Input::MouseInCentimeters() before the Input class is Initialized. Initialize() happens in the constructor of AppFramework.");
+#endif
 	return static_cast<glm::vec2>(MouseInPixels()) * s_DPCM;
 }
 

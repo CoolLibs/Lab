@@ -22,4 +22,7 @@ friend class AppFramework;
 private:
 	/// Dots per Centimeter ; like DPI but in a sensible unit
 	static glm::vec2 s_DPCM;
+#ifndef NDEBUG
+	static bool s_initialized;
+#endif
 };
