@@ -6,7 +6,11 @@ glm::vec2 Input::s_DPCM;
 static constexpr float INCH_TO_CM = 2.54f;
 
 void Input::Initialize() {
-	SDL_GetDisplayDPI(0, nullptr, &s_DPCM[0], &s_DPCM[1]);
+	int exitCode = SDL_GetDisplayDPI(0, nullptr, &s_DPCM[0], &s_DPCM[1]);
+	if (exitCode == -1) { // Failure
+		s_DPCM = glm::vec2(96.f);
+		Log::Release::Warn("Couldn't retrieve your screen's DPI. Going for the default 96 DPI.");
+	}
 	s_DPCM /= INCH_TO_CM;
 }
 
