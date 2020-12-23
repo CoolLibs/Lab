@@ -25,3 +25,6 @@
 [submodule "Cool/ExportImage"]
 	path = Cool/ExportImage
 	url = https://github.com/CoolOpenGL/ExportImage
+[submodule "Cool/ImGui"]
+	path = Cool/ImGui
+	url = https://github.com/CoolOpenGL/ImGui

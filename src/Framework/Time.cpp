@@ -1,7 +1,7 @@
 #include "Time.h"
 
 #include "Clock/Clock_Realtime.h"
-#include "Utility/MyImGui.h"
+#include <Cool/ImGui/ImGui.h>
 #include "Constants/Textures.h"
 
 std::unique_ptr<Clock> Time::m_clock = nullptr;
@@ -27,7 +27,7 @@ void Time::setTime(float t) {
 }
 
 void Time::ImGui() {
-    if (MyImGui::ButtonWithIcon(m_clock->isPlaying() ? Textures::Pause() : Textures::Play())) {
+    if (CoolImGui::ButtonWithIcon(m_clock->isPlaying() ? Textures::Pause() : Textures::Play())) {
         m_clock->togglePlayPause();
     }
     ImGui::SameLine();
