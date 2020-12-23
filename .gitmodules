@@ -1,0 +1,18 @@
+[submodule "Cool/CMake-Helpers"]
+	path = Cool/CMake-Helpers
+	url = https://github.com/CoolOpenGL/CMake-Helpers
+[submodule "Cool/Log"]
+	path = Cool/Log
+	url = https://github.com/CoolOpenGL/Log
+[submodule "Cool/App"]
+	path = Cool/App
+	url = https://github.com/CoolOpenGL/App
+[submodule "Cool/OpenGL"]
+	path = Cool/OpenGL
+	url = https://github.com/CoolOpenGL/OpenGL
+[submodule "Cool/File"]
+	path = Cool/File
+	url = https://github.com/CoolOpenGL/File
+[submodule "Cool/Renderer_Fullscreen"]
+	path = Cool/Renderer_Fullscreen
+	url = https://github.com/CoolOpenGL/Renderer_Fullscreen
