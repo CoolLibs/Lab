@@ -2,6 +2,8 @@
 
 #include <stb_image/stb_image.h>
 
+using namespace Cool;
+
 GLuint Textures::m_playID  = -1;
 GLuint Textures::m_pauseID = -1;
 

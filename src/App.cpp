@@ -1,13 +1,12 @@
 #include "App.h"
 
-#include "Framework/RenderState.h"
-#include "Framework/Input.h"
+#include <Cool/App/RenderState.h>
+#include <Cool/App/Input.h>
 #include "Framework/Time.h"
 
 App::App()
-	: m_shaderWatcher("myShaders/ArtOfCode-StartingPoint.frag", [this](const char* path) { m_shader.compile("shaders/fullscreen.vert", path); })
+	: m_shaderWatcher("myShaders/ArtOfCode-StartingPoint.frag", [this](const char* path) { m_shader.compile("Cool/Renderer_Fullscreen/fullscreen.vert", path); })
 {
-	RenderState::setRenderAreaResizedCallback([this]() {m_renderer.onRenderAreaResized(); });
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
@@ -27,7 +26,7 @@ void App::render() {
 		m_shader.setUniform3f("uCamPos", m_camera.position());
 		m_shader.setUniform1f("uFocalLength", m_camera.focalLength());
 		m_shader.setUniform1f("uTime", Time::time());
-		m_renderer.dummyDrawCallForFullscreen();
+		m_renderer.render();
 	}
 	m_renderer.end();
 }
@@ -140,8 +139,4 @@ void App::onEvent(const SDL_Event& e) {
 			break;
 		}
 	}
-}
-
-void App::onRenderAreaResized() {
-	m_renderer.onRenderAreaResized();
 }

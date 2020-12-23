@@ -19,3 +19,9 @@
 [submodule "Cool/FileWatcher"]
 	path = Cool/FileWatcher
 	url = https://github.com/CoolOpenGL/FileWatcher
+[submodule "Cool/Camera"]
+	path = Cool/Camera
+	url = https://github.com/CoolOpenGL/Camera
+[submodule "Cool/ExportImage"]
+	path = Cool/ExportImage
+	url = https://github.com/CoolOpenGL/ExportImage

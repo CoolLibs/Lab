@@ -12,8 +12,10 @@ set(COOL_MODULES
     App
     OpenGL
     Renderer_Fullscreen
+    Camera
     File
     FileWatcher
+    ExportImage
 )
 
 # Set the path where all the Cool modules are stored. It is required by all the Cool IncludeMe.cmake files
@@ -44,6 +46,12 @@ foreach(cool_module IN ITEMS ${COOL_MODULES})
     include("${PATH_TO_COOL}/${cool_module}/IncludeMe.cmake")
 endforeach()
 
+# Libraries
+add_library(STB_IMAGE STATIC "lib/stb_image/stb_image.cpp")
+target_link_libraries(${PROJECT_NAME}
+    STB_IMAGE
+)
+
 # Recreate the folder architecture inside the Visual Studio solution (might work for other IDEs as well)
 include("${PATH_TO_COOL}/CMake-Helpers/VS_helpers.cmake")
 VS_RegisterFiles("${MY_SOURCES}")
@@ -57,6 +65,7 @@ copy_folder_to_the_output_folder("icons")
 # Set include directories
 include_directories(
     src
+    lib
 )
 
 # /////////////////////////////////////////////////////////////////////////////

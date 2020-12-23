@@ -1,5 +1,7 @@
 #pragma once
 
+namespace Cool {
+
 class RenderBufferFB;
 
 class Exporter {
@@ -13,3 +15,5 @@ private:
 	std::string folderPath;
 	std::string fileName;
 };
+
+} // namespace Cool
