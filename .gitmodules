@@ -16,3 +16,6 @@
 [submodule "Cool/Renderer_Fullscreen"]
 	path = Cool/Renderer_Fullscreen
 	url = https://github.com/CoolOpenGL/Renderer_Fullscreen
+[submodule "Cool/FileWatcher"]
+	path = Cool/FileWatcher
+	url = https://github.com/CoolOpenGL/FileWatcher

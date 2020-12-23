@@ -4,7 +4,9 @@
 #include "Framework/Exporter.h"
 #include "OpenGL/Shader.h"
 #include "Camera/Camera.h"
-#include "Utility/FileWatcher.h"
+#include <Cool/FileWatcher/FileWatcher.h>
+
+using namespace Cool;
 
 class App {
 public:
