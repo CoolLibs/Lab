@@ -1,158 +1,69 @@
-# Set standards
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.8)
+
+# Set project name
 project(is0 C CXX)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+# Set C++ version
+set(CXX_STANDARD 17)
 
-# /////////////////////////////////////////////////////////////////////////////
-# ////////////////////////////// PROJECT FILES ////////////////////////////////
-# /////////////////////////////////////////////////////////////////////////////
+# Declare the Cool modules that we use
+set(COOL_MODULES
+    Log
+    App
+    OpenGL
+    Renderer_Fullscreen
+    File
+)
 
-################################ -------- ######
-file(GLOB_RECURSE SOURCES src/*)
-file(GLOB_RECURSE SHADERS shaders/*)
+# Set the path where all the Cool modules are stored. It is required by all the Cool IncludeMe.cmake files
+set(PATH_TO_COOL ${CMAKE_SOURCE_DIR}/Cool)
 
-# Recreate folder architecture inside visual studio solution (might work for other IDEs as well)
-# src
-foreach(_source IN ITEMS ${SOURCES})
-    get_filename_component(_source_path "${_source}" PATH)
-    string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_group_path}")
-    source_group("${_group_path}" FILES "${_source}")
+# Set the folder where the executable is created
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+
+# Grab all the source files
+foreach(cool_module IN ITEMS ${COOL_MODULES})
+    list(APPEND COOL_SOURCES "${PATH_TO_COOL}/${cool_module}/src/*")
 endforeach()
-# shaders
-foreach(_source IN ITEMS ${SHADERS})
-    get_filename_component(_source_path "${_source}" PATH)
-    string(REPLACE "${CMAKE_SOURCE_DIR}" "" _group_path "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_group_path}")
-    source_group("${_group_path}" FILES "${_source}")
+file(GLOB_RECURSE MY_SOURCES
+    src/*
+    ${COOL_SOURCES}
+)
+file(GLOB_RECURSE MY_SHADERS myShaders/*)
+
+# Create target executable
+add_executable(${PROJECT_NAME}
+    ${MY_SOURCES}
+    ${MY_SHADERS} # we include them here only so that they will appear in the solution explorer of Visual Studio
+)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CXX_STANDARD})
+
+# Include Cool CMake things
+foreach(cool_module IN ITEMS ${COOL_MODULES})
+    include("${PATH_TO_COOL}/${cool_module}/IncludeMe.cmake")
 endforeach()
-################################ -------- ######
 
-# /////////////////////////////////////////////////////////////////////////////
-# /////////////////////////////// DEPENDENCIES ////////////////////////////////
-# /////////////////////////////////////////////////////////////////////////////
+# Recreate the folder architecture inside the Visual Studio solution (might work for other IDEs as well)
+include("${PATH_TO_COOL}/CMake-Helpers/VS_helpers.cmake")
+VS_RegisterFiles("${MY_SOURCES}")
+VS_RegisterFiles("${MY_SHADERS}")
 
-find_package(OpenGL REQUIRED)
+# Add a post build operation to copy shaders to the output folder (where the executable is created)
+include("${PATH_TO_COOL}/CMake-Helpers/copy_folder_to_the_output_folder.cmake")
+copy_folder_to_the_output_folder("myShaders")
+copy_folder_to_the_output_folder("icons")
 
-# On windows
-if (WIN32) 
-    set(SDL2_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.10/include)
-    set(SDL2_LIBRARIES ${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.10/lib/x64/SDL2.lib;
-                       ${CMAKE_SOURCE_DIR}/lib/SDL2-2.0.10/lib/x64/SDL2main.lib)
-
-# On linux
-else()
-    find_package(SDL2 REQUIRED)
-endif()
-
-# ------------------------------ BUILD IF NEEDED ------------------------------
-
-add_library(GLAD STATIC "lib/glad/src/glad.c")
-file(GLOB_RECURSE IMGUI_SOURCES lib/imgui/*)
-add_library(IMGUI STATIC ${IMGUI_SOURCES})
-add_library(STB_IMAGE STATIC "lib/stb_image/stb_image.cpp")
-add_library(STB_IMAGE_WRITE STATIC "lib/stb_image/stb_image_write.cpp")
-
-# /////////////////////////////////////////////////////////////////////////////
-# ///////////////////////////////// INCLUDES //////////////////////////////////
-# /////////////////////////////////////////////////////////////////////////////
-
+# Set include directories
 include_directories(
-    ${OPENGL_INCLUDE_DIR}
-    ${SDL2_INCLUDE_DIRS}
-    lib/glad/include
-    lib/imgui
-    lib/glm
-    lib/spdlog/include
-    lib
     src
 )
-
-# /////////////////////////////////////////////////////////////////////////////
-# /////////////////////////////////// BUILD ///////////////////////////////////
-# /////////////////////////////////////////////////////////////////////////////
-
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
-add_executable(${PROJECT_NAME} ${SOURCES}
-    ${SHADERS} # include in the VS project so they will appear in the solution explorer
-)
-target_link_libraries(
-    ${PROJECT_NAME}
-    ${OPENGL_LIBRARIES}
-    ${SDL2_LIBRARIES}
-    GLAD
-    STB_IMAGE
-    STB_IMAGE_WRITE
-    IMGUI
-)
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-
-if (UNIX)
-    target_link_libraries(${PROJECT_NAME} -ldl)
-endif()
-
-if (WIN32) # Copy .dll to output folder
-    add_custom_command(
-        TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${PROJECT_SOURCE_DIR}/lib/SDL2-2.0.10/lib/x64/SDL2.dll"
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>
-    )
-endif()
-
-# Copy shaders folder to output folder
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/shaders/
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
-)
-# Copy icons folder to output folder
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/icons/
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>/icons
-)
-# Copy imgui.ini to output folder
-add_custom_command(
-    TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/imgui.ini
-        $<TARGET_FILE_DIR:${PROJECT_NAME}>/imgui.ini
-)
-
-# Setup working directory in Visual Studio (to access the shaders folder) :
-set_target_properties(
-    ${PROJECT_NAME} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
 # /////////////////////////////////////////////////////////////////////////////
 # ////////////////////////// PRECOMPILED HEADER ! /////////////////////////////
 # /////////////////////////////////////////////////////////////////////////////
 
-# More infos on Precompiled Headers : https://www.youtube.com/watch?v=eSI4wctZUto&ab_channel=TheCherno
-
-target_precompile_headers(${PROJECT_NAME}
-  PRIVATE
-  # Libraries
-    <imgui/imgui.h>
-    <imgui/misc/cpp/imgui_stdlib.h>
-    <glm/glm.hpp>
-    <glm/gtc/type_ptr.hpp>
-    <glad/glad.h>
-    <SDL2/SDL.h>
-  # std
-    <vector>
-    <string>
-    <memory>
-    <functional>
-    <unordered_map>
-    <queue>
-  # Project Code
-    [["Framework/Log.h"]]
-    [["Framework/GLCall.h"]]
-    [["Utility/Cereal4glm.h"]]
+# More infos on precompiled headers : https://www.youtube.com/watch?v=eSI4wctZUto&ab_channel=TheCherno
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+    # put things like <string> here
+    # <memory>
 )
