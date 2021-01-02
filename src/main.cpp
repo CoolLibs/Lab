@@ -1,20 +1,17 @@
 #include <Cool/Log/Log.h>
 #include <Cool/App/AppManager.h>
+#include <Cool/Time/Time.h>
+#include <Cool/Icons/Icons.h>
 
 #include "App.h"
 
-#include "Clock/Clock_Realtime.h"
-#include "Framework/Time.h"
-#include "Constants/Textures.h"
-
 int main() {
 	Cool::Log::Initialize();
-	Clock_Realtime::Initialize();
-	Time::Initialize();
+	Cool::Time::Initialize();
 	Cool::AppManager appManager("is0");
-	Textures::_LoadAll();
+	Cool::Icons::_LoadAll();
 	App app;
 	int exitCode = appManager.run(app);
-	Textures::_DestroyAll();
+	Cool::Icons::_DestroyAll();
 	return exitCode;
 }

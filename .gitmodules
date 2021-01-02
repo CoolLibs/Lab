@@ -28,3 +28,12 @@
 [submodule "Cool/ImGui"]
 	path = Cool/ImGui
 	url = https://github.com/CoolOpenGL/ImGui
+[submodule "Cool/Time"]
+	path = Cool/Time
+	url = https://github.com/CoolOpenGL/Time
+[submodule "Cool/Icons"]
+	path = Cool/Icons
+	url = https://github.com/CoolOpenGL/Icons
+[submodule "Cool/LoadImage"]
+	path = Cool/LoadImage
+	url = https://github.com/CoolOpenGL/LoadImage

@@ -17,6 +17,9 @@ set(COOL_MODULES
     FileWatcher
     ExportImage
     ImGui
+    Time
+    LoadImage
+    Icons
 )
 
 # Set the path where all the Cool modules are stored. It is required by all the Cool IncludeMe.cmake files
@@ -47,12 +50,6 @@ foreach(cool_module IN ITEMS ${COOL_MODULES})
     include("${PATH_TO_COOL}/${cool_module}/IncludeMe.cmake")
 endforeach()
 
-# Libraries
-add_library(STB_IMAGE STATIC "lib/stb_image/stb_image.cpp")
-target_link_libraries(${PROJECT_NAME}
-    STB_IMAGE
-)
-
 # Recreate the folder architecture inside the Visual Studio solution (might work for other IDEs as well)
 include("${PATH_TO_COOL}/CMake-Helpers/VS_helpers.cmake")
 VS_RegisterFiles("${MY_SOURCES}")
@@ -61,12 +58,10 @@ VS_RegisterFiles("${MY_SHADERS}")
 # Add a post build operation to copy shaders to the output folder (where the executable is created)
 include("${PATH_TO_COOL}/CMake-Helpers/copy_folder_to_the_output_folder.cmake")
 copy_folder_to_the_output_folder("myShaders")
-copy_folder_to_the_output_folder("icons")
 
 # Set include directories
 include_directories(
     src
-    lib
 )
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -75,6 +70,6 @@ include_directories(
 
 # More infos on precompiled headers : https://www.youtube.com/watch?v=eSI4wctZUto&ab_channel=TheCherno
 target_precompile_headers(${PROJECT_NAME} PRIVATE
-    # put things like <string> here
-    # <memory>
+    <string>
+    <memory>
 )

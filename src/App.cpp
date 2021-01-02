@@ -2,7 +2,7 @@
 
 #include <Cool/App/RenderState.h>
 #include <Cool/App/Input.h>
-#include "Framework/Time.h"
+#include <Cool/Time/Time.h>
 
 App::App()
 	: m_shaderWatcher("myShaders/ArtOfCode-StartingPoint.frag", [this](const char* path) { m_shader.compile("Cool/Renderer_Fullscreen/fullscreen.vert", path); })
@@ -10,7 +10,7 @@ App::App()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
-	RenderState::setExportSize(1920, 1080);
+	RenderState::setExportSize(1920, 1080); // TODO remove me
 }
 
 void App::render() {
@@ -40,7 +40,7 @@ void App::update() {
 
 void App::ImGuiWindows() {
 	ImGui::Begin("Time");
-	Time::ImGui();
+	Time::ImGuiTimeline();
 	ImGui::End();
 #ifndef NDEBUG
 	if (m_bShow_Debug) {
