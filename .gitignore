@@ -5,6 +5,6 @@ build/
 
 imgui.ini
 
-exports/
+out/
 
 myShaders/

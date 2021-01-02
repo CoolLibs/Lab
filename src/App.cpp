@@ -124,7 +124,9 @@ void App::onEvent(const SDL_Event& e) {
 		case SDL_KEYDOWN:
 			if (!ImGui::GetIO().WantTextInput) {
 				if (e.key.keysym.sym == 's' && Input::KeyIsDown(SDL_SCANCODE_LCTRL)) {
-					m_exporter.exportFrame(m_renderer.renderBuffer(), [this]() {render();});
+					m_exporter.beginImageExport();
+					render();
+					m_exporter.endImageExport(m_renderer.renderBuffer());
 				}
 			}
 			break;

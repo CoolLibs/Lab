@@ -2,7 +2,7 @@
 
 #include <Cool/App/IApp.h>
 #include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
-#include "Framework/Exporter.h"
+#include <Cool/Exporter.h>
 #include <Cool/OpenGL/Shader.h>
 #include <Cool/Camera/Camera.h>
 #include <Cool/FileWatcher/FileWatcher.h>

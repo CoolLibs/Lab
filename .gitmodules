@@ -40,3 +40,6 @@
 [submodule "Cool/AspectRatio"]
 	path = Cool/AspectRatio
 	url = https://github.com/CoolOpenGL/AspectRatio
+[submodule "Cool/Exporter"]
+	path = Cool/Exporter
+	url = https://github.com/CoolOpenGL/Exporter
