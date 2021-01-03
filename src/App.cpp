@@ -35,6 +35,7 @@ void App::update() {
 	m_shaderWatcher.update();
 	m_camera.update();
 	render();
+	m_exporter.update(m_renderer.renderBuffer());
 	Time::Update();
 }
 
@@ -47,6 +48,7 @@ void App::ImGuiWindows() {
 		render();
 		m_exporter.endImageExport(m_renderer.renderBuffer());
 	}
+	m_exporter.ImGuiExportImageSequenceWindow();
 #ifndef NDEBUG
 	if (m_bShow_Debug) {
 		ImGui::Begin("Debug", &m_bShow_Debug);
@@ -134,6 +136,9 @@ void App::onEvent(const SDL_Event& e) {
 			if (!ImGui::GetIO().WantTextInput) {
 				if (e.key.keysym.sym == 's' && Input::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 					m_exporter.setIsExportImageWindowOpen(true);
+				}
+				if (e.key.keysym.sym == 'e' && Input::KeyIsDown(SDL_SCANCODE_LCTRL)) {
+					m_exporter.setIsExportImageSequenceWindowOpen(true);
 				}
 			}
 			break;

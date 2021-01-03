@@ -43,3 +43,6 @@
 [submodule "Cool/Exporter"]
 	path = Cool/Exporter
 	url = https://github.com/CoolOpenGL/Exporter
+[submodule "Cool/String"]
+	path = Cool/String
+	url = https://github.com/CoolOpenGL/String
