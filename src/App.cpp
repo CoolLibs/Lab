@@ -43,35 +43,37 @@ void App::ImGuiWindows() {
 	ImGui::Begin("Time");
 	Time::ImGuiTimeline();
 	ImGui::End();
-	if (m_exporter.ImGuiExportImageWindow()) {
-		m_exporter.beginImageExport();
-		render();
-		m_exporter.endImageExport(m_renderer.renderBuffer());
-	}
 	m_exporter.ImGuiExportImageSequenceWindow();
+	if (!RenderState::IsExporting()) {
+		if (m_exporter.ImGuiExportImageWindow()) {
+			m_exporter.beginImageExport();
+			render();
+			m_exporter.endImageExport(m_renderer.renderBuffer());
+		}
 #ifndef NDEBUG
-	if (m_bShow_Debug) {
-		ImGui::Begin("Debug", &m_bShow_Debug);
-		ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-		ImGui::Text("Render Area Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
-		ImGui::Text("Mouse Position in Render Area : %d %d pixels", Input::MouseInPixels().x, Input::MouseInPixels().y);
-		ImGui::Text("Mouse Position in Render Area : %.0f %.0f centimeters", Input::MouseInCentimeters().x, Input::MouseInCentimeters().y);
-		ImGui::Text("Mouse Position Normalized : %.2f %.2f", Input::MouseInNormalizedRatioSpace().x, Input::MouseInNormalizedRatioSpace().y);
-		ImGui::Text("Camera Transform matrix :");
-		glm::mat4 m = m_camera.transformMatrix();
-		ImGui::Text("%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f",
-			m[0][0], m[1][0], m[2][0], m[3][0],
-			m[0][1], m[1][1], m[2][1], m[3][1],
-			m[0][2], m[1][2], m[2][2], m[3][2],
-			m[0][3], m[1][3], m[2][3], m[3][3]
-		);
-		ImGui::ColorEdit3("Background Color", glm::value_ptr(m_bgColor));
-		ImGui::Checkbox("Show Demo Window", &m_bShow_ImGuiDemo);
-		ImGui::End();
-	}
-	if (m_bShow_ImGuiDemo) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		ImGui::ShowDemoWindow(&m_bShow_ImGuiDemo);
+		if (m_bShow_Debug) {
+			ImGui::Begin("Debug", &m_bShow_Debug);
+			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+			ImGui::Text("Render Area Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
+			ImGui::Text("Mouse Position in Render Area : %d %d pixels", Input::MouseInPixels().x, Input::MouseInPixels().y);
+			ImGui::Text("Mouse Position in Render Area : %.0f %.0f centimeters", Input::MouseInCentimeters().x, Input::MouseInCentimeters().y);
+			ImGui::Text("Mouse Position Normalized : %.2f %.2f", Input::MouseInNormalizedRatioSpace().x, Input::MouseInNormalizedRatioSpace().y);
+			ImGui::Text("Camera Transform matrix :");
+			glm::mat4 m = m_camera.transformMatrix();
+			ImGui::Text("%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f",
+				m[0][0], m[1][0], m[2][0], m[3][0],
+				m[0][1], m[1][1], m[2][1], m[3][1],
+				m[0][2], m[1][2], m[2][2], m[3][2],
+				m[0][3], m[1][3], m[2][3], m[3][3]
+			);
+			ImGui::ColorEdit3("Background Color", glm::value_ptr(m_bgColor));
+			ImGui::Checkbox("Show Demo Window", &m_bShow_ImGuiDemo);
+			ImGui::End();
+		}
+		if (m_bShow_ImGuiDemo) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+			ImGui::ShowDemoWindow(&m_bShow_ImGuiDemo);
 #endif
+	}
 }
 
 void App::ImGuiMenus() {
