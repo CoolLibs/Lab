@@ -42,6 +42,11 @@ void App::ImGuiWindows() {
 	ImGui::Begin("Time");
 	Time::ImGuiTimeline();
 	ImGui::End();
+	if (m_exporter.ImGuiExportImageWindow()) {
+		m_exporter.beginImageExport();
+		render();
+		m_exporter.endImageExport(m_renderer.renderBuffer());
+	}
 #ifndef NDEBUG
 	if (m_bShow_Debug) {
 		ImGui::Begin("Debug", &m_bShow_Debug);
@@ -68,6 +73,10 @@ void App::ImGuiWindows() {
 }
 
 void App::ImGuiMenus() {
+	if (ImGui::BeginMenu("Export")) {
+		m_exporter.ImGuiMenuItems();
+		ImGui::EndMenu();
+	}
 	if (ImGui::BeginMenu("Windows")) {
 #ifndef NDEBUG
 		ImGui::Separator();
@@ -124,9 +133,7 @@ void App::onEvent(const SDL_Event& e) {
 		case SDL_KEYDOWN:
 			if (!ImGui::GetIO().WantTextInput) {
 				if (e.key.keysym.sym == 's' && Input::KeyIsDown(SDL_SCANCODE_LCTRL)) {
-					m_exporter.beginImageExport();
-					render();
-					m_exporter.endImageExport(m_renderer.renderBuffer());
+					m_exporter.setIsExportImageWindowOpen(true);
 				}
 			}
 			break;
