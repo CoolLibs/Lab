@@ -10,6 +10,8 @@ uniform float uFocalLength;
 
 uniform float uTime;
 
+// Adapted from https://github.com/enkimute/ganja.js/blob/master/codegen/cpp/cga.cpp
+
 struct Mvec {
     float c0;
     float c1;
