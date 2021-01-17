@@ -611,6 +611,6 @@ void main()
 		col = vec3(t);
     }
     // 
-    col = pow(col, vec3(.4545)); // gamma correction
+    col = pow(max(col, vec3(0.)), vec3(.4545)); // gamma correction
     gl_FragColor = vec4(col,1.0);
 }
