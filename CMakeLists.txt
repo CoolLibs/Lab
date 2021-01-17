@@ -9,7 +9,6 @@ set(CXX_STANDARD 17)
 # Declare the Cool modules that we use
 set(COOL_MODULES
     Log
-    AspectRatio
     App
     OpenGL
     Renderer_Fullscreen
