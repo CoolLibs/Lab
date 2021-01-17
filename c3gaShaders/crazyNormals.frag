@@ -624,17 +624,16 @@ void main()
             normal = normalized(sub(p2, sphereCenter));
         }
 		//
-		float t = inner(lightDir, normal).c0;
-		col = vec3(max(t, 0.)*0.99+0.01);
+		float t = - inner(lightDir, normal).c0;
+		col = vec3(normal.c1, normal.c2, normal.c3);
     //}
     if (ptPairSq > 0) {
         
     }
     else {
-        // Anti-aliasing
-        col *= smoothstep(-0.1, 0., ptPairSq);
+        //col *= smoothstep(-0.1, 0., ptPairSq);
     }
     // 
-    col = pow(max(col, vec3(0.)), vec3(.4545)); // gamma correction
+    col = pow(col, vec3(.4545)); // gamma correction
     gl_FragColor = vec4(col,1.0);
 }
