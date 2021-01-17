@@ -9,3 +9,5 @@ out/
 
 myShaders/
 exports/
+
+.vscode/
