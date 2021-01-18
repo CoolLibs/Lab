@@ -53,7 +53,15 @@ void App::ImGuiWindows() {
 #ifndef NDEBUG
 		if (m_bShow_Debug) {
 			ImGui::Begin("Debug", &m_bShow_Debug);
-			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+			ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+			ImGui::SameLine();
+			static bool capFramerate = true;
+			if (ImGui::Checkbox("Cap framerate", &capFramerate)) {
+				if (capFramerate)
+					SDL_GL_SetSwapInterval(1);
+				else
+					SDL_GL_SetSwapInterval(0);
+			}
 			ImGui::Text("Render Area Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
 			ImGui::Text("Mouse Position in Render Area : %d %d pixels", Input::MouseInPixels().x, Input::MouseInPixels().y);
 			ImGui::Text("Mouse Position in Render Area : %.0f %.0f centimeters", Input::MouseInCentimeters().x, Input::MouseInCentimeters().y);
