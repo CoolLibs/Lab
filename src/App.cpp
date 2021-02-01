@@ -5,7 +5,7 @@
 #include <Cool/Time/Time.h>
 
 App::App()
-	: m_shaderWatcher("myShaders/c3ga RayTracing.frag", [this](const char* path) { m_shader.compile("Cool/Renderer_Fullscreen/fullscreen.vert", path); })
+	: m_shaderWatcher("myShaders/c3ga RayTracing.frag", [this](const char* path) { m_shader.createProgram("Cool/Renderer_Fullscreen/fullscreen.vert", path); })
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
