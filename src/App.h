@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/App/IApp.h>
+#include <Cool/App/OpenGLWindow.h>
 #include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
 #include <Cool/Exporter.h>
 #include <Cool/OpenGL/Shader.h>
@@ -11,18 +12,22 @@ using namespace Cool;
 
 class App : public IApp {
 public:
-	App();
+	App(OpenGLWindow& mainWindow);
 	~App() = default;
 
 	void update() override;
 	void ImGuiWindows() override;
 	void ImGuiMenus() override;
-	void onEvent(const SDL_Event& e) override;
+	void onKeyboardEvent(int key, int scancode, int action, int mods) override;
+	void onMouseButtonEvent(int button, int action, int mods) override;
+	void onScrollEvent(double xOffset, double yOffset) override;
+	void onMouseMoveEvent(double xPos, double yPos) override;
 
 private:
 	void render();
 
 private:
+	OpenGLWindow& m_mainWindow;
 	Shader m_shader;
 	FileWatcher m_shaderWatcher;
 	Camera m_camera;
