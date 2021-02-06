@@ -7,5 +7,6 @@ imgui.ini
 
 out/
 
-myShaders/
 exports/
+
+.vscode/

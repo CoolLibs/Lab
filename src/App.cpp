@@ -4,8 +4,8 @@
 #include <Cool/App/Input.h>
 #include <Cool/Time/Time.h>
 
-App::App()
-	: m_shaderWatcher("myShaders/ArtOfCode-StartingPoint.frag", [this](const char* path) { m_shader.compile("Cool/Renderer_Fullscreen/fullscreen.vert", path); })
+App::App(OpenGLWindow& mainWindow)
+	: m_mainWindow(mainWindow), m_shaderWatcher("myShaders/c3ga RayTracing.frag", [this](const char* path) { m_shader.createProgram("Cool/Renderer_Fullscreen/fullscreen.vert", path); })
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -53,10 +53,17 @@ void App::ImGuiWindows() {
 #ifndef NDEBUG
 		if (m_bShow_Debug) {
 			ImGui::Begin("Debug", &m_bShow_Debug);
-			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-			ImGui::Text("Render Area Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
-			ImGui::Text("Mouse Position in Render Area : %d %d pixels", Input::MouseInPixels().x, Input::MouseInPixels().y);
-			ImGui::Text("Mouse Position in Render Area : %.0f %.0f centimeters", Input::MouseInCentimeters().x, Input::MouseInCentimeters().y);
+			ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+			ImGui::SameLine();
+			bool capFramerate = m_mainWindow.isVSyncEnabled();
+			if (ImGui::Checkbox("Cap framerate", &capFramerate)) {
+				if (capFramerate)
+					m_mainWindow.enableVSync();
+				else
+					m_mainWindow.disableVSync();
+			}
+			ImGui::Text("Rendering Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
+			ImGui::Text("Mouse Position in Render Area : %.0f %.0f screen coordinates", Input::MouseInScreenCoordinates().x, Input::MouseInScreenCoordinates().y);
 			ImGui::Text("Mouse Position Normalized : %.2f %.2f", Input::MouseInNormalizedRatioSpace().x, Input::MouseInNormalizedRatioSpace().y);
 			ImGui::Text("Camera Transform matrix :");
 			glm::mat4 m = m_camera.transformMatrix();
@@ -90,69 +97,38 @@ void App::ImGuiMenus() {
 	}
 }
 
-void App::onEvent(const SDL_Event& e) {
-	if (!RenderState::IsExporting()) {
-		switch (e.type) {
-
-		case SDL_MOUSEMOTION:
-			if (!ImGui::GetIO().WantCaptureMouse) {
-
-			}
-			break;
-
-		case SDL_MOUSEWHEEL:
-			m_camera.onWheelScroll(e.wheel.y);
-			break;
-
-		case SDL_MOUSEBUTTONDOWN:
-			if (!ImGui::GetIO().WantCaptureMouse) {
-				switch(e.button.button) {
-				case SDL_BUTTON_LEFT:
-					m_camera.onWheelDown();
-					break;
-				case SDL_BUTTON_RIGHT:
-					break;
-				case SDL_BUTTON_MIDDLE:
-					m_camera.onWheelDown();
-					break;
-				}
-			}
-			break;
-
-		case SDL_MOUSEBUTTONUP:
-			if (!ImGui::GetIO().WantCaptureMouse) {
-				switch (e.button.button) {
-				case SDL_BUTTON_LEFT:
-					m_camera.onWheelUp();
-					break;
-				case SDL_BUTTON_RIGHT:
-					break;
-				case SDL_BUTTON_MIDDLE:
-					m_camera.onWheelUp();
-					break;
-				}
-			}
-			break;
-
-		case SDL_KEYDOWN:
-			if (!ImGui::GetIO().WantTextInput) {
-				if (e.key.keysym.sym == 's' && Input::KeyIsDown(SDL_SCANCODE_LCTRL)) {
-					m_exporter.setIsExportImageWindowOpen(true);
-				}
-				if (e.key.keysym.sym == 'e' && Input::KeyIsDown(SDL_SCANCODE_LCTRL)) {
-					m_exporter.setIsExportImageSequenceWindowOpen(true);
-				}
-			}
-			break;
-
-		case SDL_KEYUP:
-			if (!ImGui::GetIO().WantTextInput) {
-
-			}
-			break;
-
-		default:
-			break;
+void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantTextInput) {
+		if (Input::MatchesChar("s", key) && (mods & GLFW_MOD_CONTROL)) {
+			m_exporter.setIsExportImageWindowOpen(true);
 		}
+		if (Input::MatchesChar("e", key) && (mods & GLFW_MOD_CONTROL)) {
+			m_exporter.setIsExportImageSequenceWindowOpen(true);
+		}
+	}
+}
+
+void App::onMouseButtonEvent(int button, int action, int mods) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_MIDDLE) {
+			if (action == GLFW_PRESS) {
+				m_camera.onWheelDown(mods);
+			}
+			else if (action == GLFW_RELEASE) {
+				m_camera.onWheelUp();
+			}
+		}
+	}
+}
+
+void App::onScrollEvent(double xOffset, double yOffset) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
+		m_camera.onWheelScroll(yOffset);
+	}
+}
+
+void App::onMouseMoveEvent(double xpos, double ypos) {
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
+
 	}
 }
