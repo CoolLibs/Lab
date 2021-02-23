@@ -43,3 +43,6 @@
 [submodule "Cool/String"]
 	path = Cool/String
 	url = https://github.com/CoolOpenGL/String
+[submodule "Cool/Serialization"]
+	path = Cool/Serialization
+	url = https://github.com/CoolLibs/Serialization
