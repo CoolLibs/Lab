@@ -8,7 +8,9 @@ ShaderManager::ShaderManager()
 	: m_shaderWatcher([this](const char* path) {
 			m_shader.createProgram("Cool/Renderer_Fullscreen/fullscreen.vert", path);
 	  })
-{}
+{
+	setShaderPath("shader-examples/simple3D.frag");
+}
 
 void ShaderManager::setupForRendering(const Camera& camera) {
 	m_shader.bind();
