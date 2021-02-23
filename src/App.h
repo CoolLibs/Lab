@@ -12,7 +12,7 @@ using namespace Cool;
 class App : public IApp {
 public:
 	App(OpenGLWindow& mainWindow);
-	~App() = default;
+	~App();
 
 	void update() override;
 	void ImGuiWindows() override;
@@ -36,4 +36,15 @@ private:
 	bool m_bShow_Debug = true;
 	bool m_bShow_ImGuiDemo = false;
 #endif
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template<class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			cereal::make_nvp("Shader Manager", m_shaderManager)
+		);
+	}
 };

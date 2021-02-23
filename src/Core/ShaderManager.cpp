@@ -8,9 +8,7 @@ ShaderManager::ShaderManager()
 	: m_shaderWatcher([this](const char* path) {
 			m_shader.createProgram("Cool/Renderer_Fullscreen/fullscreen.vert", path);
 	  })
-{
-	setShaderPath("myShaders/c3ga RayTracing.frag");
-}
+{}
 
 void ShaderManager::setupForRendering(const Camera& camera) {
 	m_shader.bind();

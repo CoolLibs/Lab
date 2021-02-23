@@ -25,7 +25,26 @@ public:
 	void setShaderPath(std::string_view path);
 
 private:
-	std::string m_currentShaderPath = "";
-	Shader m_shader; // Must be declared before m_shaderWatcher because the latter compiles m_shader
+	Shader m_shader;
 	FileWatcher m_shaderWatcher;
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void save(Archive& archive) const
+	{
+		archive(
+			cereal::make_nvp("Shader Path", m_shaderWatcher.path().string())
+		);
+	}
+	template<class Archive>
+	void load(Archive& archive)
+	{
+		std::string path;
+		archive(
+			path
+		);
+		setShaderPath(path);
+	}
 };
