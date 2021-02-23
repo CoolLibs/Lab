@@ -18,8 +18,10 @@ void App::render() {
 	{
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_shaderManager.setupForRendering(m_camera);
-		m_renderer.render();
+		if (m_shaderManager.isValid()) {
+			m_shaderManager.setupForRendering(m_camera);
+			m_renderer.render();
+		}
 	}
 	m_renderer.end();
 }

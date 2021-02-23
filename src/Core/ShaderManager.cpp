@@ -5,10 +5,12 @@
 #include <Cool/Time/Time.h>
 
 ShaderManager::ShaderManager()
-	: m_shaderWatcher("myShaders/c3ga RayTracing.frag", [this](const char* path) {
+	: m_shaderWatcher([this](const char* path) {
 			m_shader.createProgram("Cool/Renderer_Fullscreen/fullscreen.vert", path);
 	  })
-{}
+{
+	setShaderPath("myShaders/c3ga RayTracing.frag");
+}
 
 void ShaderManager::setupForRendering(const Camera& camera) {
 	m_shader.bind();
@@ -26,5 +28,10 @@ void ShaderManager::setShaderPath(std::string_view path) {
 }
 
 void ShaderManager::ImGui() {
-	ImGui::Text(m_shaderWatcher.path().string().c_str());
+	std::string path = m_shaderWatcher.path().string();
+	if (ImGui::InputText("path", &path)) {
+		setShaderPath(path);
+	}
+	if (ImGui::Button("Hi"))
+		setShaderPath("");
 }

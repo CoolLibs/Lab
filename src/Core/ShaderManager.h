@@ -14,6 +14,11 @@ public:
 	~ShaderManager() = default;
 
 	inline void update() { m_shaderWatcher.update(); }
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns>true iff we currently have a valid shader that can be used for rendering</returns>
+	inline bool isValid() const { return m_shaderWatcher.pathIsValid(); } // TODO doesn't currently check that the compilation succeeded
 	void setupForRendering(const Camera& camera);
 	void ImGui();
 
