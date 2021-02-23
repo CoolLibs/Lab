@@ -5,7 +5,7 @@
 #include <Cool/Time/Time.h>
 
 App::App(OpenGLWindow& mainWindow)
-	: m_mainWindow(mainWindow), m_shaderWatcher("myShaders/c3ga RayTracing.frag", [this](const char* path) { m_shader.createProgram("Cool/Renderer_Fullscreen/fullscreen.vert", path); })
+	: m_mainWindow(mainWindow)
 {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -18,21 +18,14 @@ void App::render() {
 	{
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		m_shader.bind();
-		m_shader.setUniform1f("uAspectRatio", RenderState::Size().aspectRatio());
-		m_shader.setUniform3f("uCamX", m_camera.xAxis());
-		m_shader.setUniform3f("uCamY", m_camera.yAxis());
-		m_shader.setUniform3f("uCamZ", m_camera.zAxis());
-		m_shader.setUniform3f("uCamPos", m_camera.position());
-		m_shader.setUniform1f("uFocalLength", m_camera.focalLength());
-		m_shader.setUniform1f("uTime", Time::time());
+		m_shaderManager.setupForRendering(m_camera);
 		m_renderer.render();
 	}
 	m_renderer.end();
 }
 
 void App::update() {
-	m_shaderWatcher.update();
+	m_shaderManager.update();
 	m_camera.update();
 	render();
 	m_exporter.update(m_renderer.renderBuffer());
@@ -45,11 +38,17 @@ void App::ImGuiWindows() {
 	ImGui::End();
 	m_exporter.ImGuiExportImageSequenceWindow();
 	if (!RenderState::IsExporting()) {
+		//
+		ImGui::Begin("Shader");
+		m_shaderManager.ImGui();
+		ImGui::End();
+		//
 		if (m_exporter.ImGuiExportImageWindow()) {
 			m_exporter.beginImageExport();
 			render();
 			m_exporter.endImageExport(m_renderer.renderBuffer());
 		}
+		//
 #ifndef NDEBUG
 		if (m_bShow_Debug) {
 			ImGui::Begin("Debug", &m_bShow_Debug);

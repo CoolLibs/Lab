@@ -4,9 +4,8 @@
 #include <Cool/App/OpenGLWindow.h>
 #include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
 #include <Cool/Exporter.h>
-#include <Cool/OpenGL/Shader.h>
 #include <Cool/Camera/Camera.h>
-#include <Cool/FileWatcher/FileWatcher.h>
+#include "Core/ShaderManager.h"
 
 using namespace Cool;
 
@@ -28,8 +27,7 @@ private:
 
 private:
 	OpenGLWindow& m_mainWindow;
-	Shader m_shader;
-	FileWatcher m_shaderWatcher;
+	ShaderManager m_shaderManager;
 	Camera m_camera;
 	Renderer_Fullscreen m_renderer;
 	Exporter m_exporter;
