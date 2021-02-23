@@ -16,7 +16,7 @@ App::App(OpenGLWindow& mainWindow)
 }
 
 App::~App() {
-	Serialization::ToJSON(*this, (File::RootDir + "/last-session-cache.json").c_str());
+	Serialization::ToJSON(*this, (File::RootDir + "/last-session-cache.json").c_str(), "App");
 }
 
 void App::render() {
