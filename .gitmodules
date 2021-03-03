@@ -46,3 +46,12 @@
 [submodule "Cool/Serialization"]
 	path = Cool/Serialization
 	url = https://github.com/CoolLibs/Serialization
+[submodule "Cool/Params"]
+	path = Cool/Params
+	url = https://github.com/CoolLibs/Params
+[submodule "Cool/History"]
+	path = Cool/History
+	url = https://github.com/CoolLibs/History
+[submodule "Cool/Random"]
+	path = Cool/Random
+	url = https://github.com/CoolLibs/Random

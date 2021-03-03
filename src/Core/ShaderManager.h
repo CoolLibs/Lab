@@ -2,6 +2,7 @@
 
 #include <Cool/FileWatcher/FileWatcher.h>
 #include <Cool/OpenGL/Shader.h>
+#include <Cool/Params/internal/IParam.h>
 
 using namespace Cool;
 namespace Cool {
@@ -25,8 +26,12 @@ public:
 	void setShaderPath(std::string_view path);
 
 private:
+	void compile_shader(const char* path);
+
+private:
 	Shader m_shader;
 	FileWatcher m_shaderWatcher;
+	std::vector<std::unique_ptr<Cool::Internal::IParam>> _dynamic_params;
 
 private:
 	//Serialization
