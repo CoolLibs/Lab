@@ -32,6 +32,4 @@ void ShaderManager::ImGui() {
 	if (ImGui::InputText("path", &path)) {
 		setShaderPath(path);
 	}
-	if (ImGui::Button("Hi"))
-		setShaderPath("");
 }
