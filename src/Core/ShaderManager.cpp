@@ -18,7 +18,7 @@ void ShaderManager::compile_shader(const char* path) {
 }
 
 void ShaderManager::parse_shader_for_params(const char* path) {
-	_dynamic_params.clear();
+	std::vector<std::unique_ptr<Cool::Internal::IParam>> new_params;
 	std::ifstream stream(path);
 	std::string line;
 	bool began = false;
@@ -35,14 +35,21 @@ void ShaderManager::parse_shader_for_params(const char* path) {
 					const auto name_pos = type_pos_end + 1;
 					const auto name_pos_end = line.find_first_of(" ;", name_pos);
 					const std::string name = line.substr(name_pos, name_pos_end - name_pos);
-					if (!type.compare("int"))
-						_dynamic_params.push_back(std::make_unique<Param::Int>(name));
-					else if (!type.compare("float"))
-						_dynamic_params.push_back(std::make_unique<Param::Float>(name));
-					else if (!type.compare("vec2"))
-						_dynamic_params.push_back(std::make_unique<Param::Vec2>(name));
-					else if (!type.compare("vec3"))
-						_dynamic_params.push_back(std::make_unique<Param::Color>(name));
+					//
+					const size_t param_idx = find_param(name);
+					if (param_idx != -1) {
+						new_params.push_back(std::move(_dynamic_params[param_idx]));
+					}
+					else {
+						if (!type.compare("int"))
+							new_params.push_back(std::make_unique<Param::Int>(name));
+						else if (!type.compare("float"))
+							new_params.push_back(std::make_unique<Param::Float>(name));
+						else if (!type.compare("vec2"))
+							new_params.push_back(std::make_unique<Param::Vec2>(name));
+						else if (!type.compare("vec3"))
+							new_params.push_back(std::make_unique<Param::Color>(name));
+					}
 				}
 			}
 			catch (std::exception e) {
@@ -52,6 +59,15 @@ void ShaderManager::parse_shader_for_params(const char* path) {
 		if (!line.compare("// BEGIN DYNAMIC PARAMS"))
 			began = true;
 	}
+	_dynamic_params = std::move(new_params);
+}
+
+size_t ShaderManager::find_param(std::string_view name) {
+	for (size_t i = 0; i < _dynamic_params.size(); ++i) {
+		if (_dynamic_params[i] && !name.compare(_dynamic_params[i]->name()))
+			return i;
+	}
+	return -1;
 }
 
 void ShaderManager::setupForRendering(const Camera& camera) {

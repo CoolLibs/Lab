@@ -28,6 +28,7 @@ public:
 private:
 	void compile_shader(const char* path);
 	void parse_shader_for_params(const char* path);
+	size_t find_param(std::string_view name);
 
 private:
 	Shader m_shader;
