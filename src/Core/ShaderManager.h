@@ -27,6 +27,7 @@ public:
 
 private:
 	void compile_shader(const char* path);
+	void parse_shader_for_params(const char* path);
 
 private:
 	Shader m_shader;
