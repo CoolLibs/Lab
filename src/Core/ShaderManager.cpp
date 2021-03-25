@@ -72,13 +72,13 @@ size_t ShaderManager::find_param(std::string_view name) {
 
 void ShaderManager::setupForRendering(const Camera& camera) {
 	m_shader.bind();
-	m_shader.setUniform1f("uAspectRatio", RenderState::Size().aspectRatio());
-	m_shader.setUniform3f("uCamX",        camera.xAxis());
-	m_shader.setUniform3f("uCamY",        camera.yAxis());
-	m_shader.setUniform3f("uCamZ",        camera.zAxis());
-	m_shader.setUniform3f("uCamPos",      camera.position());
-	m_shader.setUniform1f("uFocalLength", camera.focalLength());
-	m_shader.setUniform1f("uTime", Time::time());
+	m_shader.setUniform("uAspectRatio", RenderState::Size().aspectRatio());
+	m_shader.setUniform("uCamX",        camera.xAxis());
+	m_shader.setUniform("uCamY",        camera.yAxis());
+	m_shader.setUniform("uCamZ",        camera.zAxis());
+	m_shader.setUniform("uCamPos",      camera.position());
+	m_shader.setUniform("uFocalLength", camera.focalLength());
+	m_shader.setUniform("uTime", Time::time());
 	for (const auto& param : _dynamic_params) {
 		param->set_uniform_in_shader(m_shader);
 	}

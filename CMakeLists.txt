@@ -43,12 +43,12 @@ file(GLOB_RECURSE MY_SOURCES
     src/*
     ${COOL_SOURCES}
 )
-file(GLOB_RECURSE MY_SHADERS myShaders/*)
+file(GLOB_RECURSE SHADER_EXAMPLES shader-examples/*)
 
 # Create target executable
 add_executable(${PROJECT_NAME}
     ${MY_SOURCES}
-    ${MY_SHADERS} # we include them here only so that they will appear in the solution explorer of Visual Studio
+    ${SHADER_EXAMPLES} # we include them here only so that they will appear in the solution explorer of Visual Studio
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CXX_STANDARD})
 
@@ -60,11 +60,11 @@ endforeach()
 # Recreate the folder architecture inside the Visual Studio solution (might work for other IDEs as well)
 include("${PATH_TO_COOL}/CMake-Helpers/VS_helpers.cmake")
 VS_RegisterFiles("${MY_SOURCES}")
-VS_RegisterFiles("${MY_SHADERS}")
+VS_RegisterFiles("${SHADER_EXAMPLES}")
 
 # Add a post build operation to copy shaders to the output folder (where the executable is created)
 include("${PATH_TO_COOL}/CMake-Helpers/copy_folder_to_the_output_folder.cmake")
-copy_folder_to_the_output_folder("myShaders")
+copy_folder_to_the_output_folder("shader-examples")
 
 # Set include directories
 include_directories(
