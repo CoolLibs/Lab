@@ -104,11 +104,19 @@ void App::ImGuiMenus() {
 
 void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantTextInput) {
-		if (Input::MatchesChar("s", key) && (mods & GLFW_MOD_CONTROL)) {
-			m_exporter.open_window_export_image(true);
-		}
-		if (Input::MatchesChar("e", key) && (mods & GLFW_MOD_CONTROL)) {
-			m_exporter.open_window_export_image_sequence(true);
+		if (action == GLFW_RELEASE) {
+			if (Input::MatchesChar("s", key) && (mods & GLFW_MOD_CONTROL)) {
+				m_exporter.open_window_export_image(true);
+			}
+			if (Input::MatchesChar("e", key) && (mods & GLFW_MOD_CONTROL)) {
+				m_exporter.open_window_export_image_sequence(true);
+			}
+			if (Input::MatchesChar("z", key) && (mods & GLFW_MOD_CONTROL)) {
+				ParamsHistory::Get().move_backward();
+			}
+			if (Input::MatchesChar("y", key) && (mods & GLFW_MOD_CONTROL)) {
+				ParamsHistory::Get().move_forward();
+			}
 		}
 	}
 }
