@@ -55,3 +55,6 @@
 [submodule "Cool/Random"]
 	path = Cool/Random
 	url = https://github.com/CoolLibs/Random
+[submodule "Cool/MultiThread"]
+	path = Cool/MultiThread
+	url = https://github.com/CoolLibs/MultiThread/

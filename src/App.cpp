@@ -44,7 +44,7 @@ void App::ImGuiWindows() {
 	ImGui::Begin("Time");
 	Time::ImGuiTimeline();
 	ImGui::End();
-	m_exporter.ImGuiExportImageSequenceWindow();
+	m_exporter.ImGui_window_export_image_sequence();
 	Log::Release::Show_Console();
 	if (!RenderState::IsExporting()) {
 		//
@@ -52,11 +52,7 @@ void App::ImGuiWindows() {
 		m_shaderManager.ImGui();
 		ImGui::End();
 		//
-		if (m_exporter.ImGuiExportImageWindow()) {
-			m_exporter.beginImageExport();
-			render();
-			m_exporter.endImageExport(m_renderer.renderBuffer());
-		}
+		m_exporter.ImGui_window_export_image([this]() {render(); }, m_renderer.renderBuffer());
 		//
 #ifndef NDEBUG
 		if (m_bShow_Debug) {
@@ -93,7 +89,7 @@ void App::ImGuiWindows() {
 
 void App::ImGuiMenus() {
 	if (ImGui::BeginMenu("Export")) {
-		m_exporter.ImGuiMenuItems();
+		m_exporter.ImGui_menu_items();
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Windows")) {
@@ -109,10 +105,10 @@ void App::ImGuiMenus() {
 void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantTextInput) {
 		if (Input::MatchesChar("s", key) && (mods & GLFW_MOD_CONTROL)) {
-			m_exporter.setIsExportImageWindowOpen(true);
+			m_exporter.open_window_export_image(true);
 		}
 		if (Input::MatchesChar("e", key) && (mods & GLFW_MOD_CONTROL)) {
-			m_exporter.setIsExportImageSequenceWindowOpen(true);
+			m_exporter.open_window_export_image_sequence(true);
 		}
 	}
 }
