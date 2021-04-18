@@ -33,9 +33,6 @@ void App::render() {
 }
 
 void App::update() {
-	for (std::function<void()> callback : _delayed_event_handling)
-		callback();
-	_delayed_event_handling.clear();
 	m_shaderManager.update();
 	m_camera.update();
 	render();
@@ -125,18 +122,16 @@ void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 }
 
 void App::onMouseButtonEvent(int button, int action, int mods) {
-	_delayed_event_handling.push_back([=]() {
-		if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-			if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_MIDDLE) {
-				if (action == GLFW_PRESS) {
-					m_camera.onWheelDown(mods);
-				}
-				else if (action == GLFW_RELEASE) {
-					m_camera.onWheelUp();
-				}
+	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
+		if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_MIDDLE) {
+			if (action == GLFW_PRESS) {
+				m_camera.onWheelDown(mods);
+			}
+			else if (action == GLFW_RELEASE) {
+				m_camera.onWheelUp();
 			}
 		}
-	});
+	}
 }
 
 void App::onScrollEvent(double xOffset, double yOffset) {
