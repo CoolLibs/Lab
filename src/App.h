@@ -26,6 +26,7 @@ private:
 	void render();
 
 private:
+	std::vector<std::function<void()>> _delayed_event_handling; // When we are focused on another app and come back to this one, ImGui::GetIO().WantCaptureMouse is always false and needs one frame of delay to properly re-update itself
 	OpenGLWindow& m_mainWindow;
 	ShaderManager m_shaderManager;
 	Camera m_camera;
