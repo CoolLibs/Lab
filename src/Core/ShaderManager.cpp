@@ -5,6 +5,7 @@
 #include <Cool/Time/Time.h>
 #include <Cool/Params/Params.h>
 #include <Cool/File/File.h>
+#include <Cool/App/NfdFileFilter.h>
 
 ShaderManager::ShaderManager()
 	: m_shaderWatcher([this](const char* path) { compile_shader(path); })
@@ -97,7 +98,7 @@ void ShaderManager::ImGui() {
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
-	if (ImGui::OpenFileDialog(&path, { { "Fragment Shader", "frag,fs,glsl,fragment" } }, File::WhithoutFileName(path))) {
+	if (ImGui::OpenFileDialog(&path, NfdFileFilter::FragmentShader, File::WhithoutFileName(path))) {
 		setShaderPath(path);
 	}
 	ImGui::Separator();
