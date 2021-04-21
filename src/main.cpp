@@ -17,8 +17,6 @@ int main() {
 #ifdef NDEBUG
 	glfwMaximizeWindow(mainWindow.get());
 #endif
-	// Load Icons
-	Cool::Icons::_LoadAll();
 	// App
 	App app(mainWindow);
 	Cool::AppManager appManager(mainWindow, app);

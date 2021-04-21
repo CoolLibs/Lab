@@ -90,10 +90,18 @@ void ShaderManager::setShaderPath(std::string_view path) {
 
 void ShaderManager::ImGui() {
 	std::string path = m_shaderWatcher.path().string();
-	if (ImGui::InputText("path", &path)) {
+	ImGui::Text("Path : "); ImGui::SameLine();
+	ImGui::PushID(2132541);
+	if (ImGui::InputText("", &path)) {
+		setShaderPath(path);
+	}
+	ImGui::PopID();
+	ImGui::SameLine();
+	if (ImGui::OpenFileDialog(&path, { { "Fragment Shader", "frag,fs,glsl,fragment" } }, File::WhithoutFileName(path))) {
 		setShaderPath(path);
 	}
 	ImGui::Separator();
+	ImGui::NewLine();
 	for (auto& param : _dynamic_params) {
 		param->ImGui({}, []() {});
 	}
