@@ -2,7 +2,6 @@
 #include <Cool/App/AppManager.h>
 #include <Cool/App/OpenGLWindowingSystem.h>
 #include <Cool/Time/Time.h>
-#include <Cool/Icons/Icons.h>
 
 #include "App.h"
 

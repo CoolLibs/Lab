@@ -4,7 +4,6 @@
 #include <Cool/App/Input.h>
 #include <Cool/Time/Time.h>
 #include <Cool/Serialization/JsonFile.h>
-#include <Cool/Icons/Icons.h>
 
 App::App(OpenGLWindow& mainWindow)
 	: m_mainWindow(mainWindow)
@@ -14,9 +13,6 @@ App::App(OpenGLWindow& mainWindow)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
 	RenderState::setExportSize(1920, 1080); // TODO remove me
-	// Preload icon textures
-	Icons::Pause();
-	Icons::Play();
 }
 
 App::~App() {
