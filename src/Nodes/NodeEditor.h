@@ -9,7 +9,7 @@ public:
 	NodeEditor();
 	~NodeEditor();
 
-	void update();
+	void ImGui_window();
 
 private:
 	ed::EditorContext* _context;

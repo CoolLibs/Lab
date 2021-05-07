@@ -41,7 +41,7 @@ void App::update() {
 }
 
 void App::ImGuiWindows() {
-	_node_editor.update();
+	_node_editor.ImGui_window();
 	ImGui::Begin("Time");
 	Time::ImGuiTimeline();
 	ImGui::End();
