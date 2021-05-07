@@ -46,6 +46,7 @@ foreach(cool_module IN ITEMS ${COOL_MODULES})
 endforeach()
 file(GLOB_RECURSE MY_SOURCES
     src/*
+    lib/imgui-node-editor/*
     ${COOL_SOURCES}
 )
 file(GLOB_RECURSE SHADER_EXAMPLES shader-examples/*)
@@ -74,6 +75,7 @@ copy_folder_to_the_output_folder("shader-examples")
 # Set include directories
 include_directories(
     src
+    lib
 )
 
 # /////////////////////////////////////////////////////////////////////////////
