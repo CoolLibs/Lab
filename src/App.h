@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Cool/App/IApp.h>
-#include <Cool/App/OpenGLWindow.h>
+#include <Cool/App/Window.h>
 #include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Camera/Camera.h>
@@ -11,7 +11,7 @@ using namespace Cool;
 
 class App : public IApp {
 public:
-	App(OpenGLWindow& mainWindow);
+	App(Window& mainWindow);
 	~App();
 
 	void update() override;
@@ -26,7 +26,7 @@ private:
 	void render();
 
 private:
-	OpenGLWindow& m_mainWindow;
+	Window& m_mainWindow;
 	ShaderManager m_shaderManager;
 	Camera m_camera;
 	Renderer_Fullscreen m_renderer;

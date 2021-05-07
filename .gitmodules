@@ -58,3 +58,6 @@
 [submodule "Cool/MultiThread"]
 	path = Cool/MultiThread
 	url = https://github.com/CoolLibs/MultiThread/
+[submodule "Cool/Gpu"]
+	path = Cool/Gpu
+	url = https://github.com/CoolLibs/Gpu

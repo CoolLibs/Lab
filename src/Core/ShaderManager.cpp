@@ -14,7 +14,7 @@ ShaderManager::ShaderManager()
 }
 
 void ShaderManager::compile_shader(const char* path) {
-	m_shader.createProgram("Cool/Renderer_Fullscreen/fullscreen.vert", path);
+	m_shader.create_program("Cool/Renderer_Fullscreen/fullscreen.vert", path);
 	parse_shader_for_params(path);
 }
 
@@ -73,13 +73,13 @@ size_t ShaderManager::find_param(std::string_view name) {
 
 void ShaderManager::setupForRendering(const Camera& camera) {
 	m_shader.bind();
-	m_shader.setUniform("uAspectRatio", RenderState::Size().aspectRatio());
-	m_shader.setUniform("uCamX",        camera.xAxis());
-	m_shader.setUniform("uCamY",        camera.yAxis());
-	m_shader.setUniform("uCamZ",        camera.zAxis());
-	m_shader.setUniform("uCamPos",      camera.position());
-	m_shader.setUniform("uFocalLength", camera.focalLength());
-	m_shader.setUniform("uTime", Time::time());
+	m_shader.set_uniform("uAspectRatio", RenderState::Size().aspectRatio());
+	m_shader.set_uniform("uCamX",        camera.xAxis());
+	m_shader.set_uniform("uCamY",        camera.yAxis());
+	m_shader.set_uniform("uCamZ",        camera.zAxis());
+	m_shader.set_uniform("uCamPos",      camera.position());
+	m_shader.set_uniform("uFocalLength", camera.focalLength());
+	m_shader.set_uniform("uTime", Time::time());
 	for (const auto& param : _dynamic_params) {
 		param->set_uniform_in_shader(m_shader);
 	}

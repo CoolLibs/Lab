@@ -1,6 +1,6 @@
 #include <Cool/Log/Log.h>
 #include <Cool/App/AppManager.h>
-#include <Cool/App/OpenGLWindowingSystem.h>
+#include <Cool/App/WindowFactory.h>
 #include <Cool/Time/Time.h>
 
 #include "App.h"
@@ -10,9 +10,9 @@ int main() {
 	Cool::Log::Initialize();
 	Cool::Time::Initialize();
 	// Init Glfw and set OpenGL version to 4.3
-	Cool::OpenGLWindowingSystem windowingSystem(4, 3);
+	Cool::WindowFactory window_factory(4, 3);
 	// Create the main window and init OpenGL
-	Cool::OpenGLWindow mainWindow = windowingSystem.createWindow("is0", 1280, 720);
+	Cool::Window& mainWindow = window_factory.create("is0", 1280, 720);
 #ifdef NDEBUG
 	glfwMaximizeWindow(mainWindow.get());
 #endif

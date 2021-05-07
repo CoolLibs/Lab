@@ -5,7 +5,7 @@
 #include <Cool/Time/Time.h>
 #include <Cool/Serialization/JsonFile.h>
 
-App::App(OpenGLWindow& mainWindow)
+App::App(Window& mainWindow)
 	: m_mainWindow(mainWindow)
 {
 	Serialization::FromJSON(*this, (File::RootDir + "/last-session-cache.json").c_str());

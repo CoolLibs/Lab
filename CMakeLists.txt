@@ -6,10 +6,15 @@ project(is0 C CXX)
 # Set C++ version
 set(CXX_STANDARD 17)
 
+# Choose our GPU API
+#set(COOL_USE_VULKAN true)
+set(COOL_USE_OPENGL true)
+
 # Declare the Cool modules that we use
 set(COOL_MODULES
     Log
     App
+    Gpu
     OpenGL
     Renderer_Fullscreen
     Camera
