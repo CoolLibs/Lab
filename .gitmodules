@@ -63,4 +63,4 @@
 	url = https://github.com/CoolLibs/Gpu
 [submodule "lib/imgui-node-editor"]
 	path = lib/imgui-node-editor
-	url = https://github.com/thedmd/imgui-node-editor
+	url = https://github.com/JulesFouchy/imgui-node-editor
