@@ -1,27 +1,18 @@
 #pragma once
 
-#include <Cool/FileWatcher/FileWatcher.h>
-#include <Cool/OpenGL/Shader.h>
+#include "ShaderManager.h"
 #include <Cool/Params/internal/IParam.h>
+#include <Cool/FileWatcher/FileWatcher.h>
 
-using namespace Cool;
-namespace Cool {
-	class Camera;
-}
-
-class ShaderManager {
+class ShaderManager_FromText : public ShaderManager {
 public:
-	ShaderManager();
-	~ShaderManager() = default;
+	ShaderManager_FromText();
 
-	inline void update() { m_shaderWatcher.update(); }
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <returns>true iff we currently have a valid shader that can be used for rendering</returns>
-	inline bool isValid() const { return m_shaderWatcher.pathIsValid(); } // TODO doesn't currently check that the compilation succeeded
-	void setupForRendering(const Camera& camera);
-	void ImGui();
+	void setup_for_rendering(const Camera& camera) override;
+
+	inline void update() override { m_shaderWatcher.update(); }
+	inline bool is_valid() const override { return m_shaderWatcher.pathIsValid(); } // TODO doesn't currently check that the compilation succeeded
+	void ImGui() override;
 
 	void setShaderPath(std::string_view path);
 
@@ -31,7 +22,6 @@ private:
 	size_t find_param(std::string_view name);
 
 private:
-	Shader m_shader;
 	FileWatcher m_shaderWatcher;
 	std::vector<std::unique_ptr<Cool::Internal::IParam>> _dynamic_params;
 

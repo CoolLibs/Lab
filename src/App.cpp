@@ -24,8 +24,8 @@ void App::render() {
 	{
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		if (m_shaderManager.isValid()) {
-			m_shaderManager.setupForRendering(m_camera);
+		if (_shader_manager->is_valid()) {
+			_shader_manager->setup_for_rendering(m_camera);
 			m_renderer.render();
 		}
 	}
@@ -33,7 +33,7 @@ void App::render() {
 }
 
 void App::update() {
-	m_shaderManager.update();
+	_shader_manager->update();
 	m_camera.update();
 	render();
 	m_exporter.update(m_renderer.renderBuffer());
@@ -50,7 +50,9 @@ void App::ImGuiWindows() {
 	if (!RenderState::IsExporting()) {
 		//
 		ImGui::Begin("Shader");
-		m_shaderManager.ImGui();
+		_shader_manager.ImGui();
+		ImGui::Separator();
+		_shader_manager->ImGui();
 		ImGui::End();
 		//
 		m_exporter.ImGui_window_export_image([this]() {render(); }, m_renderer.renderBuffer());

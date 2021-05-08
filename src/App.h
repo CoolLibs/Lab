@@ -5,7 +5,7 @@
 #include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Camera/Camera.h>
-#include "Core/ShaderManager.h"
+#include "ShaderManager/ShaderManagerManager.h"
 #include "Nodes/NodeEditor.h"
 
 using namespace Cool;
@@ -28,7 +28,7 @@ private:
 
 private:
 	Window& m_mainWindow;
-	ShaderManager m_shaderManager;
+	ShaderManagerManager _shader_manager;
 	Camera m_camera;
 	Renderer_Fullscreen m_renderer;
 	Exporter m_exporter;
@@ -46,7 +46,7 @@ private:
 	void serialize(Archive& archive)
 	{
 		archive(
-			cereal::make_nvp("Shader Manager", m_shaderManager)
+			cereal::make_nvp("Shader Manager Manager", _shader_manager)
 		);
 	}
 };

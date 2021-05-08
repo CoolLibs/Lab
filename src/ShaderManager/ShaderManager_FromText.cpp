@@ -1,24 +1,22 @@
-#include "ShaderManager.h"
+#include "ShaderManager_FromText.h"
 
 #include <Cool/Camera/Camera.h>
-#include <Cool/App/RenderState.h>
-#include <Cool/Time/Time.h>
 #include <Cool/Params/Params.h>
 #include <Cool/File/File.h>
 #include <Cool/App/NfdFileFilter.h>
 
-ShaderManager::ShaderManager()
+ShaderManager_FromText::ShaderManager_FromText()
 	: m_shaderWatcher([this](const char* path) { compile_shader(path); })
 {
 	setShaderPath("shader-examples/simple3D.frag");
 }
 
-void ShaderManager::compile_shader(const char* path) {
-	m_shader.create_program("Cool/Renderer_Fullscreen/fullscreen.vert", path);
+void ShaderManager_FromText::compile_shader(const char* path) {
+	_shader.create_program("Cool/Renderer_Fullscreen/fullscreen.vert", path);
 	parse_shader_for_params(path);
 }
 
-void ShaderManager::parse_shader_for_params(const char* path) {
+void ShaderManager_FromText::parse_shader_for_params(const char* path) {
 	std::vector<std::unique_ptr<Cool::Internal::IParam>> new_params;
 	std::ifstream stream(path);
 	std::string line;
@@ -63,7 +61,7 @@ void ShaderManager::parse_shader_for_params(const char* path) {
 	_dynamic_params = std::move(new_params);
 }
 
-size_t ShaderManager::find_param(std::string_view name) {
+size_t ShaderManager_FromText::find_param(std::string_view name) {
 	for (size_t i = 0; i < _dynamic_params.size(); ++i) {
 		if (_dynamic_params[i] && !name.compare(_dynamic_params[i]->name()))
 			return i;
@@ -71,25 +69,18 @@ size_t ShaderManager::find_param(std::string_view name) {
 	return -1;
 }
 
-void ShaderManager::setupForRendering(const Camera& camera) {
-	m_shader.bind();
-	m_shader.set_uniform("uAspectRatio", RenderState::Size().aspectRatio());
-	m_shader.set_uniform("uCamX",        camera.xAxis());
-	m_shader.set_uniform("uCamY",        camera.yAxis());
-	m_shader.set_uniform("uCamZ",        camera.zAxis());
-	m_shader.set_uniform("uCamPos",      camera.position());
-	m_shader.set_uniform("uFocalLength", camera.focalLength());
-	m_shader.set_uniform("uTime", Time::time());
+void ShaderManager_FromText::setup_for_rendering(const Camera& camera) {
+	ShaderManager::setup_for_rendering(camera);
 	for (const auto& param : _dynamic_params) {
-		param->set_uniform_in_shader(m_shader);
+		param->set_uniform_in_shader(_shader);
 	}
 }
 
-void ShaderManager::setShaderPath(std::string_view path) {
+void ShaderManager_FromText::setShaderPath(std::string_view path) {
 	m_shaderWatcher.setPath(path);
 }
 
-void ShaderManager::ImGui() {
+void ShaderManager_FromText::ImGui() {
 	std::string path = m_shaderWatcher.path().string();
 	ImGui::Text("Path : "); ImGui::SameLine();
 	ImGui::PushID(2132541);
