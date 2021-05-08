@@ -2,6 +2,7 @@ using namespace Cool;
 
 #include "NodeEditor.h"
 #include "Node_Sphere.h"
+#include "Node_Transform.h"
 
 NodeEditor::NodeEditor()
 	: _context(ed::CreateEditor())
@@ -24,7 +25,9 @@ void NodeEditor::on_tree_change() {
 std::string NodeEditor::gen_scene_sdf() {
     std::string s;
     for (const auto& node : _nodes) {
-        s += "d = min(d, " + node->function_name() + "(pos));\n";
+        if (node->is_terminal()) {
+            s += "d = min(d, " + node->function_name() + "(pos));\n";
+        }
     }
     return 
     "float sceneSDF(vec3 pos) {\n"
@@ -228,6 +231,10 @@ void NodeEditor::ImGui_window()
     if (ImGui::BeginPopupContextItem("sdfxaas", ImGuiPopupFlags_MouseButtonMiddle)) {
         if (ImGui::Button("Sphere")) {
             _nodes.push_back(std::make_unique<Node_Sphere>());
+            on_tree_change();
+        }
+        if (ImGui::Button("Transform")) {
+            _nodes.push_back(std::make_unique<Node_Transform>());
             on_tree_change();
         }
         ImGui::EndPopup();

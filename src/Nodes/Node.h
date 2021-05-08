@@ -7,6 +7,7 @@ public:
 	inline std::string_view name() const { return _name; }
 	inline size_t id() const { return _id; }
 
+	virtual bool is_terminal() = 0;
 	virtual std::string function_body() = 0;
 	virtual std::string inputs() = 0;
 	virtual std::string output_type() = 0;
@@ -33,6 +34,10 @@ public:
 
 	std::string output_type() override {
 		return "vec3";
+	}
+
+	bool is_terminal() override {
+		return false;
 	}
 };
 

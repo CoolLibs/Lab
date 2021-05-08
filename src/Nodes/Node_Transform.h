@@ -2,9 +2,8 @@
 
 #include "Node.h"
 
-class Node_Sphere : public ShapeNode {
+class Node_Transform : public ModifierNode {
 public:
-	Node_Sphere();
-	bool is_terminal() override;
+	Node_Transform();
 	std::string function_body() override;
 };
