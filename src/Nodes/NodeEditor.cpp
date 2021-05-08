@@ -37,6 +37,13 @@ std::string NodeEditor::gen_scene_sdf() {
 }
 
 std::string NodeEditor::gen_raymarching_shader_code() {
+    // Update the source codes that are dynamic (depend on things like the links)
+    _registry.view<NodeCodeGenerator>().each([&](auto e, NodeCodeGenerator& code_generator) {
+        _registry.get<NodeCode>(e).fn_implementation =
+            NodeFactory::fn_implementation(NodeFactory::fn_signature(_registry.get<NodeInfo>(e).fn_name), code_generator.gen_source_code(e));
+    });
+
+    // Collect all function declarations and implementations
     std::string function_declarations = "";
     std::string function_implementations = "";
 
@@ -45,6 +52,7 @@ std::string NodeEditor::gen_raymarching_shader_code() {
         function_implementations += node_code.fn_implementation;
     });
 
+    //
     return R"V0G0N(
 #version 430
 
