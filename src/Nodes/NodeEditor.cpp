@@ -2,8 +2,7 @@ using namespace Cool;
 
 #include "NodeEditor.h"
 #include "Node.h"
-#include "Node_Sphere.h"
-#include "Node_Transform.h"
+#include "NodeFactory.h"
 
 NodeEditor::NodeEditor()
 	: _context(ed::CreateEditor())
@@ -25,10 +24,9 @@ void NodeEditor::on_tree_change() {
 
 std::string NodeEditor::gen_scene_sdf() {
     std::string s;
-    _registry.each([&](auto node) {
-        if (is_terminal(_registry, node)) {
-            s += "d = min(d, " + function_name(_registry, node) + "(pos));\n";
-        }
+    // TODO improve me with a group
+    (_registry.view<IsTerminalNode>() | _registry.view<NodeInfo>()).each([&](auto, NodeInfo& node_info) {
+        s += "d = min(d, " + node_info.fn_name + "(pos));\n";
     });
     return 
     "float sceneSDF(vec3 pos) {\n"
@@ -40,13 +38,11 @@ std::string NodeEditor::gen_scene_sdf() {
 
 std::string NodeEditor::gen_raymarching_shader_code() {
     std::string function_declarations = "";
-    _registry.each([&](auto node) {
-        function_declarations += function_declaration(_registry, node);
-    });
-
     std::string function_implementations = "";
-    _registry.each([&](auto node) {
-        function_implementations += function_implementation(_registry, node);
+
+    _registry.view<NodeCode>().each([&](auto, NodeCode& node_code) {
+        function_declarations    += node_code.fn_declaration;
+        function_implementations += node_code.fn_implementation;
     });
 
     return R"V0G0N(
@@ -141,10 +137,9 @@ void NodeEditor::ImGui_window()
     //
 
     // Submit nodes
-    _registry.each([&](auto entity) {
-        const Node& node = _registry.get<Node>(entity);
+    _registry.view<NodeInfo>().each([&](auto, NodeInfo& node_info) {
         ed::BeginNode(uniqueId++);
-        ImGui::Text(node.name.c_str());
+        ImGui::Text(node_info.name.c_str());
         ed::BeginPin(uniqueId++, ed::PinKind::Input);
         ImGui::Text("->");
         ed::EndPin();
@@ -232,7 +227,11 @@ void NodeEditor::ImGui_window()
     ed::End();
     if (ImGui::BeginPopupContextItem("sdfxaas", ImGuiPopupFlags_MouseButtonMiddle)) {
         if (ImGui::Button("Sphere")) {
-            create_shape_node(_registry, "Sphere", "return length(pos -vec3(" + std::to_string(coutn++) + ")) - 1;");
+            NodeFactory::sphere(_registry);
+            on_tree_change();
+        }
+        if (ImGui::Button("Cube")) {
+            NodeFactory::cube(_registry);
             on_tree_change();
         }
         //if (ImGui::Button("Transform")) {

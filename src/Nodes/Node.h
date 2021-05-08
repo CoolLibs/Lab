@@ -2,6 +2,21 @@
 
 #include <entt/entt.hpp>
 
+struct NodeInfo {
+	std::string name;
+	std::string fn_name;
+};
+
+struct NodeCode {
+	std::string fn_declaration;
+	std::string fn_implementation;
+};
+
+struct IsTerminalNode {};
+
+struct ModifierNode {
+
+};
 
 class Input {
 public:
