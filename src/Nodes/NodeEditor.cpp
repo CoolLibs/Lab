@@ -234,10 +234,10 @@ void NodeEditor::ImGui_window()
             NodeFactory::cube(_registry);
             on_tree_change();
         }
-        //if (ImGui::Button("Transform")) {
-        //    _nodes.push_back(std::make_unique<Node_Transform>());
-        //    on_tree_change();
-        //}
+        if (ImGui::Button("Transform")) {
+            NodeFactory::transform(_registry);
+            on_tree_change();
+        }
         ImGui::EndPopup();
     }
     ImGui::End();

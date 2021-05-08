@@ -12,6 +12,12 @@ struct NodeCode {
 	std::string fn_implementation;
 };
 
+using CodeGenerator = std::function<std::string(entt::entity)>;
+
+struct NodeCodeGenerator {
+	CodeGenerator gen_source_code;
+};
+
 struct IsTerminalNode {};
 
 struct ModifierNode {
