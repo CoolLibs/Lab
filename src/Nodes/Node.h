@@ -9,12 +9,14 @@ class Node {
 public:
 	Node(Type return_type, std::string_view name);
 
-	virtual std::string function_body() = 0;
+	inline std::string_view name() const { return _name; }
 
+	virtual std::string function_body() = 0;
 	std::string function_name();
 	std::string function_signature();
 	std::string function_declaration();
 	std::string function_implementation();
+
 	static std::string to_string(Type type);
 
 private:

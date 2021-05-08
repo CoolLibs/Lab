@@ -107,45 +107,19 @@ void NodeEditor::ImGui_window()
     // 1) Commit known data to editor
     //
 
-    // Submit Node A
-    ed::NodeId nodeA_Id = uniqueId++;
-    ed::PinId  nodeA_InputPinId = uniqueId++;
-    ed::PinId  nodeA_OutputPinId = uniqueId++;
-
-    ed::BeginNode(nodeA_Id);
-    ImGui::Text("Node A");
-    ed::BeginPin(nodeA_InputPinId, ed::PinKind::Input);
-    ImGui::Text("-> In");
-    ed::EndPin();
-    ImGui::SameLine();
-    ed::BeginPin(nodeA_OutputPinId, ed::PinKind::Output);
-    ImGui::Text("Out ->");
-    ed::EndPin();
-    ed::EndNode();
-
-    // Submit Node B
-    ed::NodeId nodeB_Id = uniqueId++;
-    ed::PinId  nodeB_InputPinId1 = uniqueId++;
-    ed::PinId  nodeB_InputPinId2 = uniqueId++;
-    ed::PinId  nodeB_OutputPinId = uniqueId++;
-
-    ed::BeginNode(nodeB_Id);
-    ImGui::Text("Node B");
-    ImGui::BeginGroup();
-    ed::BeginPin(nodeB_InputPinId1, ed::PinKind::Input);
-    ImGui::Text("-> In1");
-    ed::EndPin();
-    ed::BeginPin(nodeB_InputPinId2, ed::PinKind::Input);
-    ImGui::Text("-> In2");
-    ed::EndPin();
-    ImGui::EndGroup();
-    ImGui::SameLine();
-    ImGui::BeginGroup();
-    ed::BeginPin(nodeB_OutputPinId, ed::PinKind::Output);
-    ImGui::Text("Out ->");
-    ed::EndPin();
-    ImGui::EndGroup();
-    ed::EndNode();
+    // Submit nodes
+    for (const auto& node : _nodes) {
+        ed::BeginNode(uniqueId++);
+        ImGui::Text(node->name().data());
+        ed::BeginPin(uniqueId++, ed::PinKind::Input);
+        ImGui::Text("->");
+        ed::EndPin();
+        ImGui::SameLine();
+        ed::BeginPin(uniqueId++, ed::PinKind::Output);
+        ImGui::Text("->");
+        ed::EndPin();
+        ed::EndNode();
+    }
 
     // Submit Links
     for (auto& linkInfo : _links)
@@ -222,5 +196,11 @@ void NodeEditor::ImGui_window()
     ed::EndDelete(); // Wrap up deletion action
 
     ed::End();
+    if (ImGui::BeginPopupContextItem("sdfxaas", ImGuiPopupFlags_MouseButtonMiddle)) {
+        if (ImGui::Button("Sphere")) {
+            _nodes.push_back(std::make_unique<Node_Sphere>());
+        }
+        ImGui::EndPopup();
+    }
     ImGui::End();
 }
