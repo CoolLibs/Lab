@@ -10,6 +10,7 @@ public:
 	Node(Type return_type, std::string_view name);
 
 	inline std::string_view name() const { return _name; }
+	inline size_t id() const { return _id; }
 
 	virtual std::string function_body() = 0;
 	std::string function_name();

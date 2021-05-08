@@ -5,5 +5,5 @@ Node_Sphere::Node_Sphere()
 {}
 
 std::string Node_Sphere::function_body() {
-	return "return length(pos) - 1;";
+	return "return length(pos + vec3(" + std::to_string(id()) +")) - 1;";
 }

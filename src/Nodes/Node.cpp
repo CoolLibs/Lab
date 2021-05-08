@@ -17,13 +17,13 @@ std::string Node::function_signature() {
 }
 
 std::string Node::function_declaration() {
-	return function_signature() + ";";
+	return function_signature() + ";\n";
 }
 
 std::string Node::function_implementation() {
 	return function_signature() + " {\n"
 		 + function_body()
-		 + "\n};";
+		 + "\n};\n";
 }
 
 std::string Node::to_string(Type type) {

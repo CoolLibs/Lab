@@ -12,12 +12,40 @@ NodeEditor::~NodeEditor() {
 }
 
 void NodeEditor::subscribe_to_tree_change(std::function<void(NodeEditor&)> callback) {
-    _on_tree_change.push_back(callback);
+    _on_tree_change_callbacks.push_back(callback);
     callback(*this);
 }
 
+void NodeEditor::on_tree_change() {
+    for (auto& callback : _on_tree_change_callbacks)
+        callback(*this);
+}
+
+std::string NodeEditor::gen_scene_sdf() {
+    std::string s;
+    for (const auto& node : _nodes) {
+        s += "d = min(d, " + node->function_name() + "(pos));\n";
+    }
+    return 
+    "float sceneSDF(vec3 pos) {\n"
+        "float d = MAX_DIST;\n"
+        + s +
+        "return d;\n"
+    "}\n";
+}
+
 std::string NodeEditor::gen_raymarching_shader_code() {
-return R"V0G0N(
+    std::string function_declarations = "";
+    for (const auto& node : _nodes) {
+        function_declarations += node->function_declaration();
+    }
+
+    std::string function_implementations = "";
+    for (const auto& node : _nodes) {
+        function_implementations += node->function_implementation();
+    }
+
+    return R"V0G0N(
 #version 430
 
 in vec2 vTexCoords;
@@ -36,10 +64,11 @@ uniform float uTime;
 #define NORMAL_DELTA 0.0001
 
 #define saturate(v) clamp(v, 0., 1.)
-
-float sceneSDF(vec3 pos) {
-    return length(pos) - 1.;
-}
+)V0G0N"
++ function_declarations
++ function_implementations
++ gen_scene_sdf()
++ R"V0G0N(
 
 float rayMarching(vec3 ro, vec3 rd) {
     float t = 0.;
@@ -199,6 +228,7 @@ void NodeEditor::ImGui_window()
     if (ImGui::BeginPopupContextItem("sdfxaas", ImGuiPopupFlags_MouseButtonMiddle)) {
         if (ImGui::Button("Sphere")) {
             _nodes.push_back(std::make_unique<Node_Sphere>());
+            on_tree_change();
         }
         ImGui::EndPopup();
     }

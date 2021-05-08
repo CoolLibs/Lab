@@ -23,9 +23,13 @@ public:
 	void subscribe_to_tree_change(std::function<void(NodeEditor&)> callback);
 
 private:
+	void on_tree_change();
+	std::string gen_scene_sdf();
+
+private:
 	ed::EditorContext* _context; 
 	ImVector<LinkInfo> _links;
 	int _next_link_id = 100; // Counter to help generate link ids. In real application this will probably based on pointer to user data structure.
 	std::vector<std::unique_ptr<Node>> _nodes;
-	std::vector<std::function<void(NodeEditor&)>> _on_tree_change;
+	std::vector<std::function<void(NodeEditor&)>> _on_tree_change_callbacks;
 };
