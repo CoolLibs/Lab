@@ -1,14 +1,16 @@
 #pragma once
 
 #include "ShaderManager.h"
+#include "Nodes/NodeEditor.h"
 
 class ShaderManager_FromNodes : public ShaderManager {
 public:
-	inline void update() override {}
+	void update() override {};
 	inline bool is_valid() const override { return false; } // TODO
-	void ImGui() override;
+	void ImGui_window() override;
 
 private:
+	NodeEditor _node_editor;
 
 private:
 	//Serialization

@@ -80,7 +80,8 @@ void ShaderManager_FromText::setShaderPath(std::string_view path) {
 	m_shaderWatcher.setPath(path);
 }
 
-void ShaderManager_FromText::ImGui() {
+void ShaderManager_FromText::ImGui_window() {
+	ImGui::Begin("Shader");
 	std::string path = m_shaderWatcher.path().string();
 	ImGui::Text("Path : "); ImGui::SameLine();
 	ImGui::PushID(2132541);
@@ -97,4 +98,5 @@ void ShaderManager_FromText::ImGui() {
 	for (auto& param : _dynamic_params) {
 		param->ImGui({}, []() {});
 	}
+	ImGui::End();
 }

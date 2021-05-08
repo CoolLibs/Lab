@@ -1,5 +1,5 @@
 #include "ShaderManager_FromNodes.h"
 
-void ShaderManager_FromNodes::ImGui() {
-
+void ShaderManager_FromNodes::ImGui_window() {
+	_node_editor.ImGui_window();
 }

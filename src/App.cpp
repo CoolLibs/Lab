@@ -41,7 +41,6 @@ void App::update() {
 }
 
 void App::ImGuiWindows() {
-	_node_editor.ImGui_window();
 	ImGui::Begin("Time");
 	Time::ImGuiTimeline();
 	ImGui::End();
@@ -49,11 +48,7 @@ void App::ImGuiWindows() {
 	Log::Release::Show_Console();
 	if (!RenderState::IsExporting()) {
 		//
-		ImGui::Begin("Shader");
-		_shader_manager.ImGui();
-		ImGui::Separator();
-		_shader_manager->ImGui();
-		ImGui::End();
+		_shader_manager.ImGui_windows();
 		//
 		m_exporter.ImGui_window_export_image([this]() {render(); }, m_renderer.renderBuffer());
 		//

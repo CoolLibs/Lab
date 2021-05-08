@@ -5,7 +5,7 @@
 
 class ShaderManagerManager {
 public:
-	void ImGui();
+	void ImGui_windows();
 
 	ShaderManager& operator*() { if (_use_nodes) return _from_nodes; else return _from_text; }
 	ShaderManager* operator->() { return &operator*(); }

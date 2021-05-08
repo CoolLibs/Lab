@@ -6,7 +6,6 @@
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Camera/Camera.h>
 #include "ShaderManager/ShaderManagerManager.h"
-#include "Nodes/NodeEditor.h"
 
 using namespace Cool;
 
@@ -32,7 +31,6 @@ private:
 	Camera m_camera;
 	Renderer_Fullscreen m_renderer;
 	Exporter m_exporter;
-	NodeEditor _node_editor;
 	glm::vec3 m_bgColor = glm::vec3(0.478f, 0.674f, 0.792f);
 #ifndef NDEBUG
 	bool m_bShow_Debug = true;

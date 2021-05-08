@@ -12,7 +12,7 @@ public:
 
 	inline void update() override { m_shaderWatcher.update(); }
 	inline bool is_valid() const override { return m_shaderWatcher.pathIsValid(); } // TODO doesn't currently check that the compilation succeeded
-	void ImGui() override;
+	void ImGui_window() override;
 
 	void setShaderPath(std::string_view path);
 
