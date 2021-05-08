@@ -5,8 +5,10 @@
 
 class ShaderManager_FromNodes : public ShaderManager {
 public:
+	ShaderManager_FromNodes();
+
 	void update() override {};
-	inline bool is_valid() const override { return false; } // TODO
+	inline bool is_valid() const override { return true; } // TODO
 	void ImGui_window() override;
 
 private:

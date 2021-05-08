@@ -17,8 +17,13 @@ public:
 
 	void ImGui_window();
 
+	std::string gen_raymarching_shader_code();
+
+	void subscribe_to_tree_change(std::function<void(NodeEditor&)> callback);
+
 private:
 	ed::EditorContext* _context; 
 	ImVector<LinkInfo> _links;
 	int _next_link_id = 100; // Counter to help generate link ids. In real application this will probably based on pointer to user data structure.
+	std::vector<std::function<void(NodeEditor&)>> _on_tree_change;
 };
