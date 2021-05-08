@@ -1,7 +1,7 @@
 #include "Node_Sphere.h"
 
 Node_Sphere::Node_Sphere()
-	: Node(Type::Float, "Sphere")
+	: ShapeNode("Sphere")
 {}
 
 std::string Node_Sphere::function_body() {
