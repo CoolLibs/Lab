@@ -76,6 +76,7 @@ copy_folder_to_the_output_folder("shader-examples")
 include_directories(
     src
     lib
+    lib/entt/single_include
 )
 
 # /////////////////////////////////////////////////////////////////////////////

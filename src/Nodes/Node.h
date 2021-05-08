@@ -1,84 +1,84 @@
 #pragma once
 
-class Node {
+#include <entt/entt.hpp>
+
+
+class Input {
 public:
-	Node(std::string_view name);
-
-	inline std::string_view name() const { return _name; }
-	inline size_t id() const { return _id; }
-
-	virtual bool is_terminal() = 0;
-	virtual std::string function_body() = 0;
-	virtual std::string inputs() = 0;
-	virtual std::string output_type() = 0;
-	std::string function_name();
-	std::string function_signature();
-	std::string function_declaration();
-	std::string function_implementation();
-
-private:
-	std::string _name;
-	size_t _id;
-	static size_t next_node_id;
+	virtual std::string to_glsl_string() const = 0;
 };
 
-class ModifierNode : public Node {
+class Input_Vec3 : public Input{
 public:
-	ModifierNode(std::string_view name)
-		: Node(name)
-	{}
-
-	std::string inputs() override {
+	std::string to_glsl_string() const override {
 		return "(vec3 pos)";
 	}
-
-	std::string output_type() override {
-		return "vec3";
-	}
-
-	bool is_terminal() override {
-		return false;
-	}
 };
 
-class ShapeNode : public Node {
+class Output {
 public:
-	ShapeNode(std::string_view name)
-		: Node(name)
-	{}
-
-	std::string inputs() override {
-		return "(vec3 pos)";
-	}
-
-	std::string output_type() override {
-		return "float";
-	}
+	virtual std::string to_glsl_string() const = 0;
+	virtual bool is_terminal(const entt::registry& R) const = 0;
 };
 
-class CombinerNode : public Node {
+class Output_Float : public Output {
 public:
-	CombinerNode(std::string_view name)
-		: Node(name)
-	{
-		_input_nodes_ids.push_back(0); // TODO remove me
-		_input_nodes_ids.push_back(1);
-		_input_nodes_ids.push_back(2);
-	}
-
-	std::string inputs() override {
-		std::string s = "(float d0";
-		for (size_t i = 1; i < _input_nodes_ids.size(); ++i) {
-			s += ", float d" + std::to_string(i);
-		}
-		s += ")";
-		return s;
-	}
-
-	std::string output_type() override {
+	std::string to_glsl_string() const override {
 		return "float";
 	}
 
+	bool is_terminal(const entt::registry& R) const override {
+		return !R.valid(out_node);
+	}
+
 private:
-	std::vector<size_t> _input_nodes_ids;
+	entt::entity out_node = entt::null;
 };
+
+struct Node {
+	std::string name;
+	std::string glsl_body;
+	std::unique_ptr<Input> input;
+	std::unique_ptr<Output> output;
+};
+
+bool is_terminal(entt::registry& R, entt::entity e) {
+	const auto& node = R.get<Node>(e);
+	return node.output->is_terminal(R);
+}
+
+std::uint32_t id(entt::entity e) {
+	return static_cast<std::uint32_t>(e);
+}
+
+std::string function_name(entt::registry& R, entt::entity e) {
+	const auto& node = R.get<Node>(e);
+	return node.name + "__" + std::to_string(id(e));
+}
+
+std::string function_signature(entt::registry& R, entt::entity e) {
+	const auto& node = R.get<Node>(e);
+	return node.output->to_glsl_string() + " " + function_name(R, e) + node.input->to_glsl_string();
+}
+
+std::string function_declaration(entt::registry& R, entt::entity e) {
+	return function_signature(R, e) + ";\n";
+}
+
+std::string function_implementation(entt::registry& R, entt::entity e) {
+	const auto& node = R.get<Node>(e);
+	return function_signature(R, e) + " {\n"
+		 + node.glsl_body
+		 + "\n};\n";
+}
+
+entt::entity create_shape_node(entt::registry& R, std::string name, std::string glsl_body) {
+	entt::entity e = R.create();
+	Node node;
+	node.name = name;
+	node.glsl_body = glsl_body;
+	node.input = std::make_unique<Input_Vec3>();
+	node.output = std::make_unique<Output_Float>();
+	R.emplace<Node>(e, std::move(node));
+	return e;
+}

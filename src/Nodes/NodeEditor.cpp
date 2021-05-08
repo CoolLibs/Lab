@@ -1,6 +1,7 @@
 using namespace Cool;
 
 #include "NodeEditor.h"
+#include "Node.h"
 #include "Node_Sphere.h"
 #include "Node_Transform.h"
 
@@ -24,11 +25,11 @@ void NodeEditor::on_tree_change() {
 
 std::string NodeEditor::gen_scene_sdf() {
     std::string s;
-    for (const auto& node : _nodes) {
-        if (node->is_terminal()) {
-            s += "d = min(d, " + node->function_name() + "(pos));\n";
+    _registry.each([&](auto node) {
+        if (is_terminal(_registry, node)) {
+            s += "d = min(d, " + function_name(_registry, node) + "(pos));\n";
         }
-    }
+    });
     return 
     "float sceneSDF(vec3 pos) {\n"
         "float d = MAX_DIST;\n"
@@ -39,14 +40,14 @@ std::string NodeEditor::gen_scene_sdf() {
 
 std::string NodeEditor::gen_raymarching_shader_code() {
     std::string function_declarations = "";
-    for (const auto& node : _nodes) {
-        function_declarations += node->function_declaration();
-    }
+    _registry.each([&](auto node) {
+        function_declarations += function_declaration(_registry, node);
+    });
 
     std::string function_implementations = "";
-    for (const auto& node : _nodes) {
-        function_implementations += node->function_implementation();
-    }
+    _registry.each([&](auto node) {
+        function_implementations += function_implementation(_registry, node);
+    });
 
     return R"V0G0N(
 #version 430
@@ -140,9 +141,10 @@ void NodeEditor::ImGui_window()
     //
 
     // Submit nodes
-    for (const auto& node : _nodes) {
+    _registry.each([&](auto entity) {
+        const Node& node = _registry.get<Node>(entity);
         ed::BeginNode(uniqueId++);
-        ImGui::Text(node->name().data());
+        ImGui::Text(node.name.c_str());
         ed::BeginPin(uniqueId++, ed::PinKind::Input);
         ImGui::Text("->");
         ed::EndPin();
@@ -151,7 +153,7 @@ void NodeEditor::ImGui_window()
         ImGui::Text("->");
         ed::EndPin();
         ed::EndNode();
-    }
+    });
 
     // Submit Links
     for (auto& linkInfo : _links)
@@ -226,17 +228,17 @@ void NodeEditor::ImGui_window()
         }
     }
     ed::EndDelete(); // Wrap up deletion action
-
+    static int coutn = 0;
     ed::End();
     if (ImGui::BeginPopupContextItem("sdfxaas", ImGuiPopupFlags_MouseButtonMiddle)) {
         if (ImGui::Button("Sphere")) {
-            _nodes.push_back(std::make_unique<Node_Sphere>());
+            create_shape_node(_registry, "Sphere", "return length(pos -vec3(" + std::to_string(coutn++) + ")) - 1;");
             on_tree_change();
         }
-        if (ImGui::Button("Transform")) {
-            _nodes.push_back(std::make_unique<Node_Transform>());
-            on_tree_change();
-        }
+        //if (ImGui::Button("Transform")) {
+        //    _nodes.push_back(std::make_unique<Node_Transform>());
+        //    on_tree_change();
+        //}
         ImGui::EndPopup();
     }
     ImGui::End();
