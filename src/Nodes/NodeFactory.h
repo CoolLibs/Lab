@@ -5,8 +5,8 @@
 
 namespace NodeFactory {
 
-std::string fn_signature(std::string output, std::string name, std::string inputs) {
-	return output + " " + name + inputs;
+std::string fn_signature(std::string name) {
+	return "float " + name + "(vec3 pos)";
 }
 
 std::string fn_declaration(std::string signature) {
@@ -29,7 +29,7 @@ inline entt::entity node(entt::registry& R, std::string name) {
 inline entt::entity shape(entt::registry& R, std::string name, std::string fn_body) {
 	entt::entity e = node(R, name);
 	std::string fn_name = R.get<NodeInfo>(e).fn_name;
-	std::string signature = fn_signature("float", fn_name, "(vec3 pos)");
+	std::string signature = fn_signature(fn_name);
 	R.emplace<NodeCode>(e,
 		/*fn_declaration*/ fn_declaration(signature),
 		/*fn_implementation*/ fn_implementation(signature, fn_body)
