@@ -12,8 +12,14 @@ struct NodeCode {
 	std::string fn_implementation;
 };
 
+struct ShapeNode {
+	entt::entity output_pin;
+};
+
 struct ModifierNode {
 	entt::entity input_node;
+	entt::entity input_pin;
+	entt::entity output_pin;
 };
 
 using CodeGenerator = std::function<std::string(entt::entity)>;
