@@ -29,6 +29,7 @@ namespace NodeFactory {
 			/*fn_name*/ name + "__" + std::to_string(static_cast<std::uint32_t>(e)),
 			/*node_id*/ static_cast<ed::NodeId>(NextId())
 		);
+		R.emplace<IsTerminalNode>(e);
 		return e;
 	}
 
@@ -41,7 +42,6 @@ namespace NodeFactory {
 			/*fn_implementation*/ fn_implementation(signature, fn_body)
 		);
 		R.emplace<ShapeNode>(e, OutputPinSingle(NextId()));
-		R.emplace<IsTerminalNode>(e);
 		return e;
 	}
 
@@ -80,18 +80,18 @@ namespace NodeFactory {
 		);
 	}
 
-	inline entt::entity transform(entt::registry& R) {
+	inline entt::entity transform(entt::registry& R, NodeEditor& node_enditor) {
 		return modifier(R,
 			"Transform",
 			[&](entt::entity e) {
-				//entt::entity input_node = R.get<ModifierNode>(e).input_node;
-				//if (R.valid(input_node)) {
-				//	std::string fn_name = R.get<NodeInfo>(input_node).fn_name;
-				//	return "return " + fn_name + "(pos - vec3(1.));";
-				//}
-				//else {
-					return std::string("return 0.;");
-				//}
+				entt::entity input_node = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
+				if (R.valid(input_node)) {
+					std::string fn_name = R.get<NodeInfo>(input_node).fn_name;
+					return "return " + fn_name + "(pos - vec3(1.));";
+				}
+				else {
+					return std::string("return MAX_DIST;");
+				}
 			}
 		);
 	}

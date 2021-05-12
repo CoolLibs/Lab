@@ -29,16 +29,16 @@ public:
 
 	void subscribe_to_tree_change(std::function<void(NodeEditor&)> callback);
 
-private:
-	void on_tree_change();
-	std::string gen_scene_sdf();
-	PinInfo compute_pin_infos(ed::PinId pin_id);
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <param name="pin_id"></param>
 	/// <returns>Can return entt::null if no node is connected to the pin</returns>
 	entt::entity compute_node_connected_to_pin(ed::PinId pin_id);
+private:
+	void on_tree_change();
+	std::string gen_scene_sdf();
+	PinInfo compute_pin_infos(ed::PinId pin_id);
 
 private:
 	ed::EditorContext* _context; 

@@ -238,6 +238,8 @@ void NodeEditor::ImGui_window()
                 if (accept_link)
                 {
                     _links.push_back({ ed::LinkId(NodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity });
+                    _registry.remove_if_exists<IsTerminalNode>(start_pin_info.node_entity);
+                    on_tree_change();
                     // Draw new link
                     //ed::Link(_links.back().id, _links.back().start_pin_id, _links.back().end_pin_id);
                 }
@@ -266,7 +268,9 @@ void NodeEditor::ImGui_window()
                 {
                     if (link.id == deletedLinkId)
                     {
+                        _registry.emplace<IsTerminalNode>(link.start_node_entity);
                         _links.erase(&link);
+                        on_tree_change();
                         break;
                     }
                 }
@@ -289,7 +293,7 @@ void NodeEditor::ImGui_window()
             on_tree_change();
         }
         if (ImGui::Button("Transform")) {
-            NodeFactory::transform(_registry);
+            NodeFactory::transform(_registry, *this);
             on_tree_change();
         }
         ImGui::EndPopup();
