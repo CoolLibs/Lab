@@ -138,22 +138,32 @@ void NodeEditor::ImGui_window()
     ImGui::Begin("Nodes");
     ed::SetCurrentEditor(_context);
     ed::Begin("My Editor");
-    int uniqueId = 1;
 
     //
     // 1) Commit known data to editor
     //
 
-    // Submit nodes
-    _registry.view<NodeInfo>().each([&](auto, NodeInfo& node_info) {
-        ed::BeginNode(uniqueId++);
+    // Draw Shape Nodes 
+    _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
+        const NodeInfo& node_info = _registry.get<NodeInfo>(e);
+        ed::BeginNode(node_info.node_id);
         ImGui::Text(node_info.name.c_str());
-        ed::BeginPin(uniqueId++, ed::PinKind::Input);
-        ImGui::Text("->");
+        ed::BeginPin(shape_node.output_pin.id, ed::PinKind::Output);
+        ImGui::Text("OUT->");
+        ed::EndPin();
+        ed::EndNode();
+    });
+    // Draw Modifier Nodes 
+    _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
+        const NodeInfo& node_info = _registry.get<NodeInfo>(e);
+        ed::BeginNode(node_info.node_id);
+        ImGui::Text(node_info.name.c_str());
+        ed::BeginPin(modifier_node.input_pin.id, ed::PinKind::Input);
+        ImGui::Text("->IN");
         ed::EndPin();
         ImGui::SameLine();
-        ed::BeginPin(uniqueId++, ed::PinKind::Output);
-        ImGui::Text("->");
+        ed::BeginPin(modifier_node.output_pin.id, ed::PinKind::Output);
+        ImGui::Text("OUT->");
         ed::EndPin();
         ed::EndNode();
     });
