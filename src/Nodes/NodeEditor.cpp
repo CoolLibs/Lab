@@ -133,10 +133,6 @@ void main() {
 )V0G0N";
 }
 
-static ed::PinId to_pin_id(entt::entity e) {
-    return static_cast<std::uint32_t>(e) + 1;
-}
-
 void NodeEditor::ImGui_window()
 {
     ImGui::Begin("Nodes");
@@ -148,28 +144,17 @@ void NodeEditor::ImGui_window()
     // 1) Commit known data to editor
     //
 
-    // Draw Shape Nodes
-    _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
-        const NodeInfo& node_info = _registry.get<NodeInfo>(e);
+    // Submit nodes
+    _registry.view<NodeInfo>().each([&](auto, NodeInfo& node_info) {
         ed::BeginNode(uniqueId++);
-            ImGui::Text(node_info.name.c_str());
-            ed::BeginPin(to_pin_id(shape_node.output_pin), ed::PinKind::Output);
-                ImGui::Text("OUT->");
-            ed::EndPin();
-        ed::EndNode();
-    });
-    // Draw Modifier Nodes
-    _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
-        const NodeInfo& node_info = _registry.get<NodeInfo>(e);
-        ed::BeginNode(uniqueId++);
-            ImGui::Text(node_info.name.c_str());
-            ed::BeginPin(to_pin_id(modifier_node.input_pin), ed::PinKind::Input);
-                ImGui::Text("->IN");
-            ed::EndPin();
-            ImGui::SameLine();
-            ed::BeginPin(to_pin_id(modifier_node.output_pin), ed::PinKind::Output);
-                ImGui::Text("OUT->");
-            ed::EndPin();
+        ImGui::Text(node_info.name.c_str());
+        ed::BeginPin(uniqueId++, ed::PinKind::Input);
+        ImGui::Text("->");
+        ed::EndPin();
+        ImGui::SameLine();
+        ed::BeginPin(uniqueId++, ed::PinKind::Output);
+        ImGui::Text("->");
+        ed::EndPin();
         ed::EndNode();
     });
 
@@ -204,16 +189,6 @@ void NodeEditor::ImGui_window()
                 // ed::AcceptNewItem() return true when user release mouse button.
                 if (ed::AcceptNewItem())
                 {
-                    entt::entity pin_in = static_cast<entt::entity>(static_cast<std::uint32_t>(inputPinId.Get()) - 1);
-                    entt::entity pin_out = static_cast<entt::entity>(static_cast<std::uint32_t>(outputPinId.Get()) - 1);
-                    entt::entity receiver_node = _registry.get<PinParentNode>(pin_out).parent_node;
-                    entt::entity other_node = _registry.get<PinParentNode>(pin_in).parent_node;
-                    if (auto* modifier_node = _registry.try_get<ModifierNode>(receiver_node)) {
-                        modifier_node->input_node = other_node;
-                        _registry.emplace_or_replace<IsTerminalNode>(receiver_node);
-                        _registry.remove<IsTerminalNode>(other_node);
-                    }
-                    on_tree_change();
                     // Since we accepted new link, lets add one to our list of links.
                     _links.push_back({ ed::LinkId(_next_link_id++), inputPinId, outputPinId });
 
