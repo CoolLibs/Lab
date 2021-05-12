@@ -63,10 +63,9 @@ namespace NodeFactory {
 	}
 
 	inline entt::entity sphere(entt::registry& R) {
-		static int coutn = 0;
 		return shape(R,
 			"Sphere",
-			"return length(pos -vec3(" + std::to_string(coutn++) + ")) - 1;"
+			"return length(pos) - 1;"
 		);
 	}
 
