@@ -6,9 +6,16 @@
 namespace ed = ax::NodeEditor;
 
 struct LinkInfo {
-	ed::LinkId Id;
-	ed::PinId  InputId;
-	ed::PinId  OutputId;
+	ed::LinkId id;
+	ed::PinId start_pin_id;
+	entt::entity start_node_entity;
+	ed::PinId end_pin_id;
+	entt::entity end_node_entity;
+};
+
+struct PinInfo {
+	ed::PinKind kind;
+	entt::entity node_entity = entt::null;
 };
 
 class NodeEditor {
@@ -25,6 +32,13 @@ public:
 private:
 	void on_tree_change();
 	std::string gen_scene_sdf();
+	PinInfo compute_pin_infos(ed::PinId pin_id);
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="pin_id"></param>
+	/// <returns>Can return entt::null if no node is connected to the pin</returns>
+	entt::entity compute_node_connected_to_pin(ed::PinId pin_id);
 
 private:
 	ed::EditorContext* _context; 

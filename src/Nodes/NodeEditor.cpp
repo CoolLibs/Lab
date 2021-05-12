@@ -133,6 +133,40 @@ void main() {
 )V0G0N";
 }
 
+PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id) {
+    PinInfo pin_info;
+    _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
+        if (shape_node.output_pin.id == pin_id) {
+            pin_info.kind = ed::PinKind::Output;
+            pin_info.node_entity = e;
+        }
+    });
+    _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
+        if (modifier_node.output_pin.id == pin_id) {
+            pin_info.kind = ed::PinKind::Output;
+            pin_info.node_entity = e;
+        }
+        if (modifier_node.input_pin.id == pin_id) {
+            pin_info.kind = ed::PinKind::Input;
+            pin_info.node_entity = e;
+        }
+    });
+    assert(_registry.valid(pin_info.node_entity));
+    return pin_info;
+}
+
+entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id) {
+    for (const auto& link : _links) {
+        if (link.start_pin_id == pin_id) {
+            return link.end_node_entity;
+        }
+        if (link.end_pin_id == pin_id) {
+            return link.start_node_entity;
+        }
+    }
+    return entt::null;
+}
+
 void NodeEditor::ImGui_window()
 {
     ImGui::Begin("Nodes");
@@ -170,7 +204,7 @@ void NodeEditor::ImGui_window()
 
     // Submit Links
     for (auto& linkInfo : _links)
-        ed::Link(linkInfo.Id, linkInfo.InputId, linkInfo.OutputId);
+        ed::Link(linkInfo.id, linkInfo.start_pin_id, linkInfo.end_pin_id);
 
     //
     // 2) Handle interactions
@@ -179,36 +213,38 @@ void NodeEditor::ImGui_window()
     // Handle creation action, returns true if editor want to create new object (node or link)
     if (ed::BeginCreate())
     {
-        ed::PinId inputPinId, outputPinId;
-        if (ed::QueryNewLink(&inputPinId, &outputPinId))
+        ed::PinId start_pin_id, end_pin_id;
+        if (ed::QueryNewLink(&start_pin_id, &end_pin_id))
         {
-            // QueryNewLink returns true if editor want to create new link between pins.
-            //
-            // Link can be created only for two valid pins, it is up to you to
-            // validate if connection make sense. Editor is happy to make any.
-            //
-            // Link always goes from input to output. User may choose to drag
-            // link from output pin or input pin. This determine which pin ids
-            // are valid and which are not:
-            //   * input valid, output invalid - user started to drag new ling from input pin
-            //   * input invalid, output valid - user started to drag new ling from output pin
-            //   * input valid, output valid   - user dragged link over other pin, can be validated
-
-            if (inputPinId && outputPinId) // both are valid, let's accept link
+            if (start_pin_id && end_pin_id && ed::AcceptNewItem())
             {
-                // ed::AcceptNewItem() return true when user release mouse button.
-                if (ed::AcceptNewItem())
-                {
-                    // Since we accepted new link, lets add one to our list of links.
-                    _links.push_back({ ed::LinkId(_next_link_id++), inputPinId, outputPinId });
+                PinInfo start_pin_info = compute_pin_infos(start_pin_id);
+                PinInfo end_pin_info = compute_pin_infos(end_pin_id);
 
-                    // Draw new link.
-                    ed::Link(_links.back().Id, _links.back().InputId, _links.back().OutputId);
+                if (start_pin_info.kind == ed::PinKind::Input) // Reorder so that we always go from an output pin to an input pin
+                {
+                    std::swap(start_pin_info, end_pin_info);
+                    std::swap(start_pin_id, end_pin_id);
                 }
 
-                // You may choose to reject connection between these nodes
-                // by calling ed::RejectNewItem(). This will allow editor to give
-                // visual feedback by changing link thickness and color.
+                bool accept_link = true;
+                // Check that there isn't already a node connected to the end_pin
+                accept_link &= !_registry.valid(compute_node_connected_to_pin(end_pin_id));
+                // Check that one pin is an input and the other an output
+                accept_link &= start_pin_info.kind != end_pin_info.kind;
+                // Check that we are not linking a node to itself
+                accept_link &= start_pin_info.node_entity != end_pin_info.node_entity;
+
+                if (accept_link)
+                {
+                    _links.push_back({ ed::LinkId(NodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity });
+                    // Draw new link
+                    //ed::Link(_links.back().id, _links.back().start_pin_id, _links.back().end_pin_id);
+                }
+                else
+                {
+                    ed::RejectNewItem();
+                }
             }
         }
     }
@@ -228,7 +264,7 @@ void NodeEditor::ImGui_window()
                 // Then remove link from your data.
                 for (auto& link : _links)
                 {
-                    if (link.Id == deletedLinkId)
+                    if (link.id == deletedLinkId)
                     {
                         _links.erase(&link);
                         break;
