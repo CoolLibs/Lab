@@ -25,8 +25,8 @@ void NodeEditor::on_tree_change() {
 std::string NodeEditor::gen_scene_sdf() {
     std::string s;
     // TODO improve me with a group
-    (_registry.view<IsTerminalNode>() | _registry.view<NodeInfo>()).each([&](auto, NodeInfo& node_info) {
-        s += "d = min(d, " + node_info.fn_name + "(pos));\n";
+    (_registry.view<IsTerminalNode>() | _registry.view<Node>()).each([&](auto, Node& node) {
+        s += "d = min(d, " + node.fn_name + "(pos));\n";
     });
     return 
     "float sceneSDF(vec3 pos) {\n"
@@ -37,19 +37,18 @@ std::string NodeEditor::gen_scene_sdf() {
 }
 
 std::string NodeEditor::gen_raymarching_shader_code() {
-    // Update the source codes that are dynamic (depend on things like the links)
-    _registry.view<NodeCodeGenerator>().each([&](auto e, NodeCodeGenerator& code_generator) {
-        _registry.get<NodeCode>(e).fn_implementation =
-            NodeFactory::fn_implementation(NodeFactory::fn_signature(_registry.get<NodeInfo>(e).fn_name), code_generator.gen_source_code(e));
+    // Update the source codes
+    _registry.view<Node>().each([&](auto e, Node& node) {
+        node.fn_implementation = NodeFactory::fn_implementation(NodeFactory::fn_signature(node.fn_name), node.gen_source_code(e));
     });
 
     // Collect all function declarations and implementations
     std::string function_declarations = "";
     std::string function_implementations = "";
 
-    _registry.view<NodeCode>().each([&](auto, NodeCode& node_code) {
-        function_declarations    += node_code.fn_declaration;
-        function_implementations += node_code.fn_implementation;
+    _registry.view<Node>().each([&](auto, Node& node) {
+        function_declarations    += node.fn_declaration;
+        function_implementations += node.fn_implementation;
     });
 
     //
@@ -179,9 +178,9 @@ void NodeEditor::ImGui_window()
 
     // Draw Shape Nodes 
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
-        const NodeInfo& node_info = _registry.get<NodeInfo>(e);
-        ed::BeginNode(node_info.node_id);
-        ImGui::Text(node_info.name.c_str());
+        const Node& node = _registry.get<Node>(e);
+        ed::BeginNode(node.node_id);
+        ImGui::Text(node.name.c_str());
         ed::BeginPin(shape_node.output_pin.id, ed::PinKind::Output);
         ImGui::Text("OUT->");
         ed::EndPin();
@@ -189,9 +188,9 @@ void NodeEditor::ImGui_window()
     });
     // Draw Modifier Nodes 
     _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
-        const NodeInfo& node_info = _registry.get<NodeInfo>(e);
-        ed::BeginNode(node_info.node_id);
-        ImGui::Text(node_info.name.c_str());
+        const Node& node = _registry.get<Node>(e);
+        ed::BeginNode(node.node_id);
+        ImGui::Text(node.name.c_str());
         ed::BeginPin(modifier_node.input_pin.id, ed::PinKind::Input);
         ImGui::Text("->IN");
         ed::EndPin();

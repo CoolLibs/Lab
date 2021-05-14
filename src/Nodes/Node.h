@@ -2,15 +2,18 @@
 
 #include <entt/entt.hpp>
 
-struct NodeInfo {
+using CodeGenerator = std::function<std::string(entt::entity)>;
+using UiWidgets = std::function<bool(entt::entity)>;
+
+struct Node {
 	std::string name;
 	std::string fn_name;
 	ed::NodeId node_id;
-};
-
-struct NodeCode {
 	std::string fn_declaration;
 	std::string fn_implementation;
+
+	CodeGenerator gen_source_code;
+	UiWidgets show_widgets;
 };
 
 struct InputPinSingle {
@@ -33,12 +36,6 @@ struct ModifierNode {
 	// entt::entity input_node; 
 	InputPinSingle input_pin;
 	OutputPinSingle output_pin;
-};
-
-using CodeGenerator = std::function<std::string(entt::entity)>;
-
-struct NodeCodeGenerator {
-	CodeGenerator gen_source_code;
 };
 
 struct IsTerminalNode {};
