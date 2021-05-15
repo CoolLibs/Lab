@@ -181,9 +181,12 @@ void NodeEditor::ImGui_window()
         const Node& node = _registry.get<Node>(e);
         ed::BeginNode(node.node_id);
         ImGui::Text(node.name.c_str());
+        ImGui::BeginGroup();
         if (node.show_widgets(e)) {
             on_tree_change();
         }
+        ImGui::EndGroup();
+        ImGui::SameLine();
         ed::BeginPin(shape_node.output_pin.id, ed::PinKind::Output);
         ImGui::Text("OUT->");
         ed::EndPin();
@@ -194,12 +197,15 @@ void NodeEditor::ImGui_window()
         const Node& node = _registry.get<Node>(e);
         ed::BeginNode(node.node_id);
         ImGui::Text(node.name.c_str());
-        if (node.show_widgets(e)) {
-            on_tree_change();
-        }
         ed::BeginPin(modifier_node.input_pin.id, ed::PinKind::Input);
         ImGui::Text("->IN");
         ed::EndPin();
+        ImGui::SameLine();
+        ImGui::BeginGroup();
+        if (node.show_widgets(e)) {
+            on_tree_change();
+        }
+        ImGui::EndGroup();
         ImGui::SameLine();
         ed::BeginPin(modifier_node.output_pin.id, ed::PinKind::Output);
         ImGui::Text("OUT->");
