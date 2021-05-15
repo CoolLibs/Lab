@@ -130,7 +130,7 @@ namespace NodeFactory {
 	}
 
 	struct RepeatInfinite {
-		glm::vec3 pos;
+		float extent;
 	};
 
 	inline entt::entity repeat_infinite(entt::registry& R, NodeEditor& node_enditor) {
@@ -141,22 +141,22 @@ namespace NodeFactory {
 				entt::entity input_node = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
 				if (R.valid(input_node)) {
 					std::string fn_name = R.get<Node>(input_node).fn_name;
-					return "return " + fn_name + "(fract(pos)-0.5);";
+					return "return " + fn_name + "((fract(pos / " + std::to_string(repeat.extent) + ")-0.5) * " + std::to_string(repeat.extent) + ");";
 				}
 				else {
 					return std::string("return MAX_DIST;");
 				}
 			},
 			[&](entt::entity e) {
-				//auto& transfo = R.get<Transform>(e);
-				//ImGui::PushID(static_cast<int>(e));
-				//ImGui::SetNextItemWidth(200.f);
-				//bool b = ImGui::SliderFloat3("position", glm::value_ptr(transfo.pos), -10.f, 10.f);
-				//ImGui::PopID();
-				return false;
+				auto& repeat = R.get<RepeatInfinite>(e);
+				ImGui::PushID(static_cast<int>(e));
+				ImGui::SetNextItemWidth(200.f);
+				bool b = ImGui::SliderFloat("extent", &repeat.extent, 0.f, 10.f);
+				ImGui::PopID();
+				return b;
 			}
 			);
-		R.emplace<RepeatInfinite>(e, glm::vec3(0.f));
+		R.emplace<RepeatInfinite>(e, 8.f);
 		return e;
 	}
 	struct Twist {
