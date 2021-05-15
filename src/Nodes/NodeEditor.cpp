@@ -100,7 +100,7 @@ vec3 getNormal(vec3 p) {
 }
 
 vec3 render(vec3 ro, vec3 rd) {
-    vec3 finalCol = vec3(1., 0., 1.);
+    vec3 finalCol = vec3(0.3, 0.7, 0.98);
     
     float d = rayMarching(ro, rd);
     
@@ -112,7 +112,7 @@ vec3 render(vec3 ro, vec3 rd) {
       //float sunFactor = saturate(dot(normal, nSunDir));
       //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
     
-      finalCol = normal;
+      finalCol = normal * 0.5 + 0.5;
     }
     
     finalCol = saturate(finalCol);
@@ -299,6 +299,14 @@ void NodeEditor::ImGui_window()
         }
         if (ImGui::Button("Transform")) {
             NodeFactory::transform(_registry, *this);
+            on_tree_change();
+        }
+        if (ImGui::Button("Repeat Infinite")) {
+            NodeFactory::repeat_infinite(_registry, *this);
+            on_tree_change();
+        }
+        if (ImGui::Button("Twist")) {
+            NodeFactory::twist(_registry, *this);
             on_tree_change();
         }
         ImGui::EndPopup();

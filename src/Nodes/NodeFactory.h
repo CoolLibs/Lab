@@ -78,6 +78,10 @@ namespace NodeFactory {
 		return e;
 	}
 
+	struct Cube {
+		glm::vec3 radii;
+	};
+
 	inline entt::entity cube(entt::registry& R) {
 		return shape(R,
 			"Cube",
@@ -93,6 +97,7 @@ namespace NodeFactory {
 
 	struct Transform {
 		glm::vec3 pos;
+		glm::vec3 scale;
 	};
 
 	inline entt::entity transform(entt::registry& R, NodeEditor& node_enditor) {
@@ -103,7 +108,7 @@ namespace NodeFactory {
 				entt::entity input_node = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
 				if (R.valid(input_node)) {
 					std::string fn_name = R.get<Node>(input_node).fn_name;
-					return "return " + fn_name + "(pos - vec3(" + std::to_string(transfo.pos.x) + ", " + std::to_string(transfo.pos.y) + ", " + std::to_string(transfo.pos.z) + "));";
+					return "return " + fn_name + "(pos / vec3(" + std::to_string(transfo.scale.x) + ", " + std::to_string(transfo.scale.y) + ", " + std::to_string(transfo.scale.z) + ") - vec3(" + std::to_string(transfo.pos.x) + ", " + std::to_string(transfo.pos.y) + ", " + std::to_string(transfo.pos.z) + "));";
 				}
 				else {
 					return std::string("return MAX_DIST;");
@@ -112,13 +117,82 @@ namespace NodeFactory {
 			[&](entt::entity e) {
 				auto& transfo = R.get<Transform>(e);
 				ImGui::PushID(static_cast<int>(e));
-				ImGui::SetNextItemWidth(200.f);
+				ImGui::PushItemWidth(200.f);
 				bool b = ImGui::SliderFloat3("position", glm::value_ptr(transfo.pos), -10.f, 10.f);
+				b |= ImGui::SliderFloat3("scale", glm::value_ptr(transfo.scale), -10.f, 10.f);
+				ImGui::PopItemWidth();
 				ImGui::PopID();
 				return b;
 			}
 		);
-		R.emplace<Transform>(e, glm::vec3(0.f));
+		R.emplace<Transform>(e, glm::vec3(0.f), glm::vec3(1.f));
+		return e;
+	}
+
+	struct RepeatInfinite {
+		glm::vec3 pos;
+	};
+
+	inline entt::entity repeat_infinite(entt::registry& R, NodeEditor& node_enditor) {
+		entt::entity e = modifier(R,
+			"Repeat",
+			[&](entt::entity e) {
+				const auto& repeat = R.get<RepeatInfinite>(e);
+				entt::entity input_node = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
+				if (R.valid(input_node)) {
+					std::string fn_name = R.get<Node>(input_node).fn_name;
+					return "return " + fn_name + "(fract(pos)-0.5);";
+				}
+				else {
+					return std::string("return MAX_DIST;");
+				}
+			},
+			[&](entt::entity e) {
+				//auto& transfo = R.get<Transform>(e);
+				//ImGui::PushID(static_cast<int>(e));
+				//ImGui::SetNextItemWidth(200.f);
+				//bool b = ImGui::SliderFloat3("position", glm::value_ptr(transfo.pos), -10.f, 10.f);
+				//ImGui::PopID();
+				return false;
+			}
+			);
+		R.emplace<RepeatInfinite>(e, glm::vec3(0.f));
+		return e;
+	}
+	struct Twist {
+		float k;
+	};
+
+	inline entt::entity twist(entt::registry& R, NodeEditor& node_enditor) {
+		entt::entity e = modifier(R,
+			"Twist",
+			[&](entt::entity e) {
+				const auto& twist_params = R.get<Twist>(e);
+				entt::entity input_node = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
+				if (R.valid(input_node)) {
+					std::string fn_name = R.get<Node>(input_node).fn_name;
+					return "const float k = " + std::to_string(twist_params.k) + ";" +
+	R"V0G0N( 
+    float c = cos(k*pos.y);
+    float s = sin(k*pos.y);
+    mat2  m = mat2(c,-s,s,c);
+    vec3  q = vec3(m*pos.xz,pos.y);
+    return )V0G0N" + fn_name + "(q);";
+				}
+				else {
+					return std::string("return MAX_DIST;");
+				}
+			},
+			[&](entt::entity e) {
+				auto& twist_params = R.get<Twist>(e);
+				ImGui::PushID(static_cast<int>(e));
+				ImGui::SetNextItemWidth(200.f);
+				bool b = ImGui::SliderFloat("twist", &twist_params.k, -3.f, 3.f);
+				ImGui::PopID();
+				return b;
+			}
+			);
+		R.emplace<Twist>(e, 1.f);
 		return e;
 	}
 
