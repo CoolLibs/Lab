@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
 # Set project name
-project(is0 C CXX)
+project(CoolLab C CXX)
 
 # Set C++ version
 set(CXX_STANDARD 17)
