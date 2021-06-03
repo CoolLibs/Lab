@@ -45,7 +45,7 @@ void App::ImGuiWindows() {
 	Time::ImGuiTimeline();
 	ImGui::End();
 	m_exporter.ImGui_window_export_image_sequence();
-	Log::Release::Show_Console();
+	Log::ToUser::Show_Console();
 	if (!RenderState::IsExporting()) {
 		//
 		_shader_manager.ImGui_windows();
@@ -91,7 +91,7 @@ void App::ImGuiMenus() {
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Windows")) {
-		Log::Release::ImGui_Toggle_Console();
+		Log::ToUser::ImGui_Toggle_Console();
 #ifndef NDEBUG
 		ImGui::Separator();
 		ImGui::Checkbox("Debug", &m_bShow_Debug);
