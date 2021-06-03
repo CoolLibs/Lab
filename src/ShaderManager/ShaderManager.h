@@ -9,7 +9,7 @@ namespace Cool {
 
 class ShaderManager {
 public:
-	virtual void setup_for_rendering(const Camera& camera);
+	virtual void setup_for_rendering(const Camera& camera, float focal_length);
 
 	virtual void update() = 0;
 	virtual void ImGui_window() = 0;

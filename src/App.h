@@ -5,6 +5,8 @@
 #include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Camera/Camera.h>
+#include <Cool/Camera/ViewController_Trackball.h>
+#include <Cool/Camera/ProjectionController_Perspective.h>
 #include "ShaderManager/ShaderManagerManager.h"
 
 using namespace Cool;
@@ -29,6 +31,8 @@ private:
 	Window& m_mainWindow;
 	ShaderManagerManager _shader_manager;
 	Camera m_camera;
+	ViewController_Trackball _camera_trackball_controller;
+	ProjectionController_Perspective _camera_perspective_controller;
 	Renderer_Fullscreen m_renderer;
 	Exporter m_exporter;
 	glm::vec3 m_bgColor = glm::vec3(0.478f, 0.674f, 0.792f);

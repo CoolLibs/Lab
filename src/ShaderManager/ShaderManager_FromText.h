@@ -8,7 +8,7 @@ class ShaderManager_FromText : public ShaderManager {
 public:
 	ShaderManager_FromText();
 
-	void setup_for_rendering(const Camera& camera) override;
+	void setup_for_rendering(const Camera& camera, float focal_length) override;
 
 	inline void update() override { m_shaderWatcher.update(); }
 	inline bool is_valid() const override { return m_shaderWatcher.pathIsValid(); } // TODO doesn't currently check that the compilation succeeded

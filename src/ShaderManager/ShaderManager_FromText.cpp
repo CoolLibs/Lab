@@ -69,8 +69,8 @@ size_t ShaderManager_FromText::find_param(std::string_view name) {
 	return -1;
 }
 
-void ShaderManager_FromText::setup_for_rendering(const Camera& camera) {
-	ShaderManager::setup_for_rendering(camera);
+void ShaderManager_FromText::setup_for_rendering(const Camera& camera, float focal_length) {
+	ShaderManager::setup_for_rendering(camera, focal_length);
 	for (const auto& param : _dynamic_params) {
 		param->set_uniform_in_shader(_shader);
 	}

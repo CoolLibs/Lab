@@ -6,7 +6,7 @@
 #include <Cool/Serialization/JsonFile.h>
 
 App::App(Window& mainWindow)
-	: m_mainWindow(mainWindow)
+	: m_mainWindow(mainWindow), _camera_trackball_controller(m_camera), _camera_perspective_controller(m_camera)
 {
 	Serialization::from_json(*this, (File::root_dir() + "/last-session-cache.json").c_str());
 	glEnable(GL_DEPTH_TEST);
@@ -25,7 +25,7 @@ void App::render() {
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		if (_shader_manager->is_valid()) {
-			_shader_manager->setup_for_rendering(m_camera);
+			_shader_manager->setup_for_rendering(m_camera, _camera_perspective_controller.focal_length());
 			m_renderer.render();
 		}
 	}
@@ -34,7 +34,7 @@ void App::render() {
 
 void App::update() {
 	_shader_manager->update();
-	m_camera.update();
+	_camera_trackball_controller.update();
 	render();
 	m_exporter.update(m_renderer.renderBuffer());
 	Time::Update();
@@ -68,7 +68,7 @@ void App::ImGuiWindows() {
 			ImGui::Text("Mouse Position in Render Area : %.0f %.0f screen coordinates", Input::MouseInScreenCoordinates().x, Input::MouseInScreenCoordinates().y);
 			ImGui::Text("Mouse Position Normalized : %.2f %.2f", Input::MouseInNormalizedRatioSpace().x, Input::MouseInNormalizedRatioSpace().y);
 			ImGui::Text("Camera Transform matrix :");
-			glm::mat4 m = m_camera.transformMatrix();
+			glm::mat4 m = m_camera.transform_matrix();
 			ImGui::Text("%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f",
 				m[0][0], m[1][0], m[2][0], m[3][0],
 				m[0][1], m[1][1], m[2][1], m[3][1],
@@ -123,10 +123,10 @@ void App::onMouseButtonEvent(int button, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_MIDDLE) {
 			if (action == GLFW_PRESS) {
-				m_camera.onWheelDown(mods);
+				_camera_trackball_controller.on_wheel_down(mods);
 			}
 			else if (action == GLFW_RELEASE) {
-				m_camera.onWheelUp();
+				_camera_trackball_controller.on_wheel_up();
 			}
 		}
 	}
@@ -134,7 +134,7 @@ void App::onMouseButtonEvent(int button, int action, int mods) {
 
 void App::onScrollEvent(double xOffset, double yOffset) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-		m_camera.onWheelScroll(yOffset);
+		_camera_trackball_controller.on_wheel_scroll(yOffset);
 	}
 }
 
