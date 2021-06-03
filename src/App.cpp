@@ -8,7 +8,7 @@
 App::App(Window& mainWindow)
 	: m_mainWindow(mainWindow)
 {
-	Serialization::from_json(*this, (File::RootDir + "/last-session-cache.json").c_str());
+	Serialization::from_json(*this, (File::root_dir() + "/last-session-cache.json").c_str());
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
@@ -16,7 +16,7 @@ App::App(Window& mainWindow)
 }
 
 App::~App() {
-	Serialization::to_json(*this, (File::RootDir + "/last-session-cache.json").c_str(), "App");
+	Serialization::to_json(*this, (File::root_dir() + "/last-session-cache.json").c_str(), "App");
 }
 
 void App::render() {
