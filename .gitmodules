@@ -1,66 +1,9 @@
-[submodule "Cool/CMake-Helpers"]
-	path = Cool/CMake-Helpers
-	url = https://github.com/CoolOpenGL/CMake-Helpers
-[submodule "Cool/Log"]
-	path = Cool/Log
-	url = https://github.com/CoolOpenGL/Log
-[submodule "Cool/App"]
-	path = Cool/App
-	url = https://github.com/CoolOpenGL/App
-[submodule "Cool/OpenGL"]
-	path = Cool/OpenGL
-	url = https://github.com/CoolOpenGL/OpenGL
-[submodule "Cool/File"]
-	path = Cool/File
-	url = https://github.com/CoolOpenGL/File
-[submodule "Cool/Renderer_Fullscreen"]
-	path = Cool/Renderer_Fullscreen
-	url = https://github.com/CoolOpenGL/Renderer_Fullscreen
-[submodule "Cool/FileWatcher"]
-	path = Cool/FileWatcher
-	url = https://github.com/CoolOpenGL/FileWatcher
-[submodule "Cool/ExportImage"]
-	path = Cool/ExportImage
-	url = https://github.com/CoolOpenGL/ExportImage
-[submodule "Cool/ImGui"]
-	path = Cool/ImGui
-	url = https://github.com/CoolOpenGL/ImGui
-[submodule "Cool/Time"]
-	path = Cool/Time
-	url = https://github.com/CoolOpenGL/Time
-[submodule "Cool/Icons"]
-	path = Cool/Icons
-	url = https://github.com/CoolOpenGL/Icons
-[submodule "Cool/LoadImage"]
-	path = Cool/LoadImage
-	url = https://github.com/CoolOpenGL/LoadImage
-[submodule "Cool/Exporter"]
-	path = Cool/Exporter
-	url = https://github.com/CoolOpenGL/Exporter
-[submodule "Cool/String"]
-	path = Cool/String
-	url = https://github.com/CoolOpenGL/String
-[submodule "Cool/Serialization"]
-	path = Cool/Serialization
-	url = https://github.com/CoolLibs/Serialization
-[submodule "Cool/Params"]
-	path = Cool/Params
-	url = https://github.com/CoolLibs/Params
-[submodule "Cool/History"]
-	path = Cool/History
-	url = https://github.com/CoolLibs/History
-[submodule "Cool/Random"]
-	path = Cool/Random
-	url = https://github.com/CoolLibs/Random
-[submodule "Cool/MultiThread"]
-	path = Cool/MultiThread
-	url = https://github.com/CoolLibs/MultiThread/
-[submodule "Cool/Gpu"]
-	path = Cool/Gpu
-	url = https://github.com/CoolLibs/Gpu
 [submodule "lib/imgui-node-editor"]
 	path = lib/imgui-node-editor
 	url = https://github.com/JulesFouchy/imgui-node-editor
 [submodule "lib/entt"]
 	path = lib/entt
 	url = https://github.com/skypjack/entt
+[submodule "Cool"]
+	path = Cool
+	url = https://github.com/CoolLibs/Cool
