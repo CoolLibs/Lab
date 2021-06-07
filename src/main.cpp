@@ -11,7 +11,7 @@ void main() {
 	Cool::Log::Initialize();
 #ifndef NDEBUG
 	// When launching from an IDE (which almost always means we are in Debug mode)
-	// the initial current_path will be set in bin/Debug
+	// the initial current_path will be set to	 bin/Debug
 	// but I prefer to have it at the root of the project, so that the assets we load
 	// are the ones at the root of the project, not the ones that have been copied to the bin folders.
 	// This means that if for example we do hot reloading of shaders
@@ -25,8 +25,12 @@ void main() {
 #endif
 	Cool::File::initialize_root_dir(std::filesystem::current_path().string());
 	Cool::Time::Initialize();
-	// Init Glfw and set OpenGL version to 4.3
+	// Init Glfw and set OpenGL version
+#ifndef __APPLE__
 	Cool::WindowFactory window_factory(4, 3);
+#else
+	Cool::WindowFactory window_factory(3, 3); // OpenGL > 3.3 is not supported on MacOS
+#endif
 	// Create the main window and init OpenGL
 	Cool::Window& mainWindow = window_factory.create("Cool Lab", 1280, 720);
 #ifdef NDEBUG
