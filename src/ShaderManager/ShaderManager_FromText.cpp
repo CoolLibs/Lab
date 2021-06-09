@@ -12,7 +12,7 @@ ShaderManager_FromText::ShaderManager_FromText()
 }
 
 void ShaderManager_FromText::compile_shader(const char* path) {
-	_shader.create_program("Cool/Renderer_Fullscreen/fullscreen.vert", path);
+	_shader.create_program("Cool/res/shaders/fullscreen.vert", path);
 	parse_shader_for_params(path);
 }
 

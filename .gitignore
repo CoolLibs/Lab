@@ -3,8 +3,6 @@ bin/
 
 build/
 
-imgui.ini
-
 out/
 
 exports/
@@ -14,3 +12,5 @@ exports/
 myShaders/
 
 last-session-cache.json
+
+NodeEditor.json

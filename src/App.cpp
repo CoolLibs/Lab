@@ -20,7 +20,7 @@ App::~App() {
 }
 
 void App::render() {
-	m_renderer.begin();
+	m_renderer.begin();	
 	{
 		glClearColor(m_bgColor.r, m_bgColor.g, m_bgColor.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -37,12 +37,12 @@ void App::update() {
 	_camera_trackball_controller.update();
 	render();
 	m_exporter.update(m_renderer.renderBuffer());
-	Time::Update();
+	Time::update();
 }
 
 void App::ImGuiWindows() {
 	ImGui::Begin("Time");
-	Time::ImGuiTimeline();
+	Time::imgui_timeline();
 	ImGui::End();
 	m_exporter.ImGui_window_export_image_sequence();
 	Log::ToUser::Show_Console();

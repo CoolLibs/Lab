@@ -24,7 +24,7 @@ void main() {
 	std::filesystem::current_path(current_path.parent_path().parent_path());
 #endif
 	Cool::File::initialize_root_dir(std::filesystem::current_path().string());
-	Cool::Time::Initialize();
+	Cool::Time::initialize();
 	// Init Glfw and set OpenGL version
 #ifndef __APPLE__
 	Cool::WindowFactory window_factory(4, 3);
