@@ -52,7 +52,7 @@ void ShaderManager_FromText::parse_shader_for_params(const char* path) {
 				}
 			}
 			catch (std::exception e) {
-				Log::Warn(e.what());
+				Log::warn(e.what());
 			}
 		}
 		if (!line.compare("// BEGIN DYNAMIC PARAMS"))

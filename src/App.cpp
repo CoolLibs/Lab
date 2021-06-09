@@ -45,7 +45,7 @@ void App::ImGuiWindows() {
 	Time::imgui_timeline();
 	ImGui::End();
 	m_exporter.ImGui_window_export_image_sequence();
-	Log::ToUser::Show_Console();
+	Log::ToUser::imgui_console_window();
 	if (!RenderState::IsExporting()) {
 		//
 		_shader_manager.ImGui_windows();
@@ -91,7 +91,7 @@ void App::ImGuiMenus() {
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Windows")) {
-		Log::ToUser::ImGui_Toggle_Console();
+		Log::ToUser::imgui_toggle_console();
 #ifndef NDEBUG
 		ImGui::Separator();
 		ImGui::Checkbox("Debug", &m_bShow_Debug);
@@ -110,10 +110,10 @@ void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 				m_exporter.open_window_export_image_sequence(true);
 			}
 			if (Input::MatchesChar("z", key) && (mods & GLFW_MOD_CONTROL)) {
-				ParamsHistory::Get().move_backward();
+				ParamsHistory::get().move_backward();
 			}
 			if (Input::MatchesChar("y", key) && (mods & GLFW_MOD_CONTROL)) {
-				ParamsHistory::Get().move_forward();
+				ParamsHistory::get().move_forward();
 			}
 		}
 	}

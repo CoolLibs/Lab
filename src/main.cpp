@@ -8,7 +8,7 @@
 
 void main() {
 	// Init
-	Cool::Log::Initialize();
+	Cool::Log::initialize();
 #ifndef NDEBUG
 	// When launching from an IDE (which almost always means we are in Debug mode)
 	// the initial current_path will be set to	 bin/Debug
