@@ -28,15 +28,15 @@ add_executable(${PROJECT_NAME}
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CXX_STANDARD})
 
 # Include Cool
-include("Cool/IncludeMe.cmake")
+include("Cool/cmake/IncludeMe.cmake")
 
 # Recreate the folder architecture inside the Visual Studio solution (might work for other IDEs as well)
-include("Cool/VS_helpers.cmake")
+include("Cool/cmake/VS_helpers.cmake")
 VS_RegisterFiles("${MY_SOURCES}")
 VS_RegisterFiles("${SHADER_EXAMPLES}")
 
 # Add a post build operation to copy shaders to the output folder (where the executable is created)
-include("Cool/copy_folder_to_the_output_folder.cmake")
+include("Cool/cmake/copy_folder_to_the_output_folder.cmake")
 copy_folder_to_the_output_folder("shader-examples")
 
 # Set include directories
