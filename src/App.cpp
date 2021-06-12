@@ -8,7 +8,7 @@
 App::App(Window& mainWindow)
 	: m_mainWindow(mainWindow), _camera_trackball_controller(m_camera), _camera_perspective_controller(m_camera)
 {
-	Serialization::from_json(*this, (File::root_dir() + "/last-session-cache.json").c_str());
+	Serialization::from_json(*this, File::root_dir() + "/last-session-cache.json");
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
@@ -16,7 +16,7 @@ App::App(Window& mainWindow)
 }
 
 App::~App() {
-	Serialization::to_json(*this, (File::root_dir() + "/last-session-cache.json").c_str(), "App");
+	Serialization::to_json(*this, File::root_dir() + "/last-session-cache.json", "App");
 }
 
 void App::render() {
@@ -44,13 +44,13 @@ void App::ImGuiWindows() {
 	ImGui::Begin("Time");
 	Time::imgui_timeline();
 	ImGui::End();
-	m_exporter.ImGui_window_export_image_sequence();
+	m_exporter.imgui_window_export_image_sequence();
 	Log::ToUser::imgui_console_window();
 	if (!RenderState::IsExporting()) {
 		//
 		_shader_manager.ImGui_windows();
 		//
-		m_exporter.ImGui_window_export_image([this]() {render(); }, m_renderer.renderBuffer());
+		m_exporter.imgui_window_export_image([this]() {render(); }, m_renderer.renderBuffer());
 		//
 #ifndef NDEBUG
 		if (m_bShow_Debug) {
@@ -87,7 +87,7 @@ void App::ImGuiWindows() {
 
 void App::ImGuiMenus() {
 	if (ImGui::BeginMenu("Export")) {
-		m_exporter.ImGui_menu_items();
+		m_exporter.imgui_menu_items();
 		ImGui::EndMenu();
 	}
 	if (ImGui::BeginMenu("Windows")) {

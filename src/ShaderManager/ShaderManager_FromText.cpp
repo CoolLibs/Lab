@@ -6,12 +6,12 @@
 #include <Cool/App/NfdFileFilter.h>
 
 ShaderManager_FromText::ShaderManager_FromText()
-	: m_shaderWatcher([this](const char* path) { compile_shader(path); })
+	: m_shaderWatcher([this](std::string_view path) { compile_shader(path); })
 {
 	setShaderPath("shader-examples/simple3D.frag");
 }
 
-void ShaderManager_FromText::compile_shader(const char* path) {
+void ShaderManager_FromText::compile_shader(std::string_view path) {
 	_shader.create_program("Cool/res/shaders/fullscreen.vert", path);
 	parse_shader_for_params(path);
 }

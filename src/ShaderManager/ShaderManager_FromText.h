@@ -11,14 +11,14 @@ public:
 	void setup_for_rendering(const Camera& camera, float focal_length) override;
 
 	inline void update() override { m_shaderWatcher.update(); }
-	inline bool is_valid() const override { return m_shaderWatcher.pathIsValid(); } // TODO doesn't currently check that the compilation succeeded
+	inline bool is_valid() const override { return m_shaderWatcher.path_is_valid(); } // TODO doesn't currently check that the compilation succeeded
 	void ImGui_window() override;
 
 	void setShaderPath(std::string_view path);
 
 private:
-	void compile_shader(const char* path);
-	void parse_shader_for_params(const char* path);
+	void compile_shader(std::string_view path);
+	void parse_shader_for_params(std::string_view path);
 	size_t find_param(std::string_view name);
 
 private:
