@@ -110,10 +110,10 @@ void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 				m_exporter.open_window_export_image_sequence(true);
 			}
 			if (Input::MatchesChar("z", key) && (mods & GLFW_MOD_CONTROL)) {
-				ParamsHistory::get().move_backward();
+				ParametersHistory::get().move_backward();
 			}
 			if (Input::MatchesChar("y", key) && (mods & GLFW_MOD_CONTROL)) {
-				ParamsHistory::get().move_forward();
+				ParametersHistory::get().move_forward();
 			}
 		}
 	}

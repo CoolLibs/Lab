@@ -1,9 +1,9 @@
 #include "ShaderManager_FromText.h"
 
 #include <Cool/Camera/Camera.h>
-#include <Cool/Params/Params.h>
 #include <Cool/File/File.h>
 #include <Cool/App/NfdFileFilter.h>
+#include <fstream>
 
 ShaderManager_FromText::ShaderManager_FromText()
 	: m_shaderWatcher([this](std::string_view path) { compile_shader(path); })
@@ -16,15 +16,16 @@ void ShaderManager_FromText::compile_shader(std::string_view path) {
 	parse_shader_for_params(path);
 }
 
-void ShaderManager_FromText::parse_shader_for_params(const char* path) {
-	std::vector<std::unique_ptr<Cool::Internal::IParam>> new_params;
+void ShaderManager_FromText::parse_shader_for_params(std::string_view path) {
+	ParameterDynamicList new_params;
 	std::ifstream stream(path);
 	std::string line;
-	bool began = false;
+	bool has_begun = false;
 	while (getline(stream, line)) {
-		if (began) {
-			if (!line.compare("// END DYNAMIC PARAMS"))
+		if (has_begun) {
+			if (!line.compare("// END DYNAMIC PARAMS")) {
 				break;
+			}
 			try {
 				const auto uniform_pos = line.find("uniform");
 				if (uniform_pos != std::string::npos) {
@@ -35,49 +36,40 @@ void ShaderManager_FromText::parse_shader_for_params(const char* path) {
 					const auto name_pos_end = line.find_first_of(" ;", name_pos);
 					const std::string name = line.substr(name_pos, name_pos_end - name_pos);
 					//
-					const size_t param_idx = find_param(name);
+					const size_t param_idx = _parameters.find(name);
 					if (param_idx != -1) {
-						new_params.push_back(std::move(_dynamic_params[param_idx]));
+						new_params->push_back((*_parameters)[param_idx]);
 					}
 					else {
 						if (!type.compare("int"))
-							new_params.push_back(std::make_unique<Param::Int>(name));
+							new_params->push_back(Parameter::Int(name));
 						else if (!type.compare("float"))
-							new_params.push_back(std::make_unique<Param::Float>(name));
+							new_params->push_back(Parameter::Float(name));
 						else if (!type.compare("vec2"))
-							new_params.push_back(std::make_unique<Param::Vec2>(name));
+							new_params->push_back(Parameter::Vec2(name));
 						else if (!type.compare("vec3"))
-							new_params.push_back(std::make_unique<Param::Color>(name));
+							new_params->push_back(Parameter::Color(name));
 					}
 				}
 			}
 			catch (std::exception e) {
-				Log::warn(e.what());
+				Log::ToUser::warn("[ShaderManager_FromText::parse_shader_for_params] Error while parsing :\n{}", e.what());
 			}
 		}
-		if (!line.compare("// BEGIN DYNAMIC PARAMS"))
-			began = true;
+		if (!line.compare("// BEGIN DYNAMIC PARAMS")) {
+			has_begun = true;
+		}
 	}
-	_dynamic_params = std::move(new_params);
-}
-
-size_t ShaderManager_FromText::find_param(std::string_view name) {
-	for (size_t i = 0; i < _dynamic_params.size(); ++i) {
-		if (_dynamic_params[i] && !name.compare(_dynamic_params[i]->name()))
-			return i;
-	}
-	return -1;
+	*_parameters = std::move(*new_params);
 }
 
 void ShaderManager_FromText::setup_for_rendering(const Camera& camera, float focal_length) {
 	ShaderManager::setup_for_rendering(camera, focal_length);
-	for (const auto& param : _dynamic_params) {
-		param->set_uniform_in_shader(_shader);
-	}
+	_parameters.set_uniforms_in_shader(_shader);
 }
 
 void ShaderManager_FromText::setShaderPath(std::string_view path) {
-	m_shaderWatcher.setPath(path);
+	m_shaderWatcher.set_path(path);
 }
 
 void ShaderManager_FromText::ImGui_window() {
@@ -90,13 +82,11 @@ void ShaderManager_FromText::ImGui_window() {
 	}
 	ImGui::PopID();
 	ImGui::SameLine();
-	if (ImGui::OpenFileDialog(&path, NfdFileFilter::FragmentShader, File::WhithoutFileName(path))) {
+	if (ImGui::open_file_dialog(&path, NfdFileFilter::FragmentShader, File::whithout_file_name(path))) {
 		setShaderPath(path);
 	}
 	ImGui::Separator();
 	ImGui::NewLine();
-	for (auto& param : _dynamic_params) {
-		param->ImGui({}, []() {});
-	}
+	_parameters.imgui();
 	ImGui::End();
 }

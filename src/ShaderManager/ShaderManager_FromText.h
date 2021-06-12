@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ShaderManager.h"
-#include <Cool/Params/internal/IParam.h>
+#include <Cool/Parameters/ParameterDynamicList.h>
 #include <Cool/FileWatcher/FileWatcher.h>
 
 class ShaderManager_FromText : public ShaderManager {
@@ -19,11 +19,10 @@ public:
 private:
 	void compile_shader(std::string_view path);
 	void parse_shader_for_params(std::string_view path);
-	size_t find_param(std::string_view name);
 
 private:
 	FileWatcher m_shaderWatcher;
-	std::vector<std::unique_ptr<Cool::Internal::IParam>> _dynamic_params;
+	ParameterDynamicList _parameters;
 
 private:
 	//Serialization
@@ -32,7 +31,8 @@ private:
 	void save(Archive& archive) const
 	{
 		archive(
-			cereal::make_nvp("Shader Path", m_shaderWatcher.path().string())
+			cereal::make_nvp("Shader Path", m_shaderWatcher.path().string()),
+			cereal::make_nvp("Parameters", _parameters)
 		);
 	}
 	template<class Archive>
@@ -40,7 +40,8 @@ private:
 	{
 		std::string path;
 		archive(
-			path
+			path,
+			_parameters
 		);
 		setShaderPath(path);
 	}
