@@ -13,7 +13,7 @@ using namespace Cool;
 
 class App : public IApp {
 public:
-	App(Window& mainWindow);
+	App(Window& main_window);
 	~App();
 
 	void update() override;
@@ -28,17 +28,17 @@ private:
 	void render();
 
 private:
-	Window& m_mainWindow;
+	Window& _main_window;
 	ShaderManagerManager _shader_manager;
-	Camera m_camera;
+	Camera _camera;
 	ViewController_Trackball _camera_trackball_controller;
 	ProjectionController_Perspective _camera_perspective_controller;
-	Renderer_Fullscreen m_renderer;
-	Exporter m_exporter;
-	glm::vec3 m_bgColor = glm::vec3(0.478f, 0.674f, 0.792f);
+	Renderer_Fullscreen _renderer;
+	Exporter _exporter;
+	glm::vec3 _background_color = glm::vec3(0.478f, 0.674f, 0.792f);
 #ifndef NDEBUG
-	bool m_bShow_Debug = true;
-	bool m_bShow_ImGuiDemo = false;
+	bool _show_imgui_debug = true;
+	bool _show_imgui_demo = false;
 #endif
 
 private:
