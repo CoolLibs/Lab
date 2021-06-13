@@ -109,6 +109,8 @@ void App::onKeyboardEvent(int key, int scancode, int action, int mods) {
 			if (Input::MatchesChar("e", key) && (mods & GLFW_MOD_CONTROL)) {
 				m_exporter.open_window_export_image_sequence(true);
 			}
+		}
+		if (action == GLFW_PRESS || action == GLFW_REPEAT) {
 			if (Input::MatchesChar("z", key) && (mods & GLFW_MOD_CONTROL)) {
 				ParametersHistory::get().move_backward();
 			}
