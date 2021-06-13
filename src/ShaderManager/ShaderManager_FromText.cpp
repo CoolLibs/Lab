@@ -36,7 +36,7 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path) {
 					const auto name_pos_end = line.find_first_of(" ;", name_pos);
 					const std::string name = line.substr(name_pos, name_pos_end - name_pos);
 					//
-					const size_t param_idx = _parameters.find(name);
+					const size_t param_idx = _parameters.index_of(name);
 					if (param_idx != -1) {
 						new_params->push_back((*_parameters)[param_idx]);
 					}
