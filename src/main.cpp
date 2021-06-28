@@ -11,7 +11,7 @@ void main() {
 	Cool::Log::initialize();
 #ifndef NDEBUG
 	// When launching from an IDE (which almost always means we are in Debug mode)
-	// the initial current_path will be set to	 bin/Debug
+	// the initial current_path will be set to bin/Debug
 	// but I prefer to have it at the root of the project, so that the assets we load
 	// are the ones at the root of the project, not the ones that have been copied to the bin folders.
 	// This means that if for example we do hot reloading of shaders
