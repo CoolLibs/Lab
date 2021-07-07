@@ -1,3 +1,8 @@
+#ifdef DEBUG
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <doctest/doctest.h>
+#endif
+
 #include <Cool/Log/Log.h>
 #include <Cool/App/AppManager.h>
 #include <Cool/App/WindowFactory.h>
@@ -6,7 +11,17 @@
 
 #include "App.h"
 
-void main() {
+int main(int argc, char** argv) {
+#ifdef DEBUG
+	// Run the tests !
+	doctest::Context context;
+	context.applyCommandLine(argc, argv);
+	int res = context.run();
+	if(context.shouldExit()) {
+		return res;
+	}
+#endif
+
 	// Init
 	Cool::Log::initialize();
 #ifndef NDEBUG
