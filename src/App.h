@@ -36,7 +36,7 @@ private:
 	Renderer_Fullscreen _renderer;
 	Exporter _exporter;
 	glm::vec3 _background_color = glm::vec3(0.478f, 0.674f, 0.792f);
-#ifndef NDEBUG
+#ifdef DEBUG
 	bool _show_imgui_debug = true;
 	bool _show_imgui_demo = false;
 #endif

@@ -54,7 +54,7 @@ void App::ImGuiWindows() {
 		//
 		_exporter.imgui_window_export_image([this]() {render();}, _renderer.renderBuffer());
 		//
-#ifndef NDEBUG
+#ifdef DEBUG
 		if (_show_imgui_debug) {
 			ImGui::Begin("Debug", &_show_imgui_debug);
 			ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
@@ -97,7 +97,7 @@ void App::ImGuiMenus() {
 	}
 	if (ImGui::BeginMenu("Windows")) {
 		Log::ToUser::imgui_toggle_console();
-#ifndef NDEBUG
+#ifdef DEBUG
 		ImGui::Separator();
 		ImGui::Checkbox("Debug", &_show_imgui_debug);
 #endif

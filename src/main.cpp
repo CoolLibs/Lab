@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 
 	// Init
 	Cool::Log::initialize();
-#ifndef NDEBUG
+#ifdef DEBUG
 	// When launching from an IDE (which almost always means we are in Debug mode)
 	// the initial current_path will be set to bin/Debug
 	// but I prefer to have it at the root of the project, so that the assets we load
@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 #endif
 	// Create the main window and init OpenGL
 	Cool::Window& mainWindow = window_factory.create("Cool Lab", 1280, 720);
-#ifdef NDEBUG
+#ifndef DEBUG
 	glfwMaximizeWindow(mainWindow.get());
 #endif
 	// App
