@@ -6,7 +6,9 @@
 #include <Cool/Serialization/JsonFile.h>
 
 App::App(Window& main_window)
-	: _main_window(main_window), _camera_trackball_controller(_camera), _camera_perspective_controller(_camera)
+	: _main_window(main_window)
+	, _camera_trackball_controller(_camera)
+	, _camera_perspective_controller(_camera)
 {
 	Serialization::from_json(*this, File::root_dir() + "/last-session-cache.json");
 	glEnable(GL_DEPTH_TEST);
@@ -17,6 +19,14 @@ App::App(Window& main_window)
 
 App::~App() {
 	Serialization::to_json(*this, File::root_dir() + "/last-session-cache.json", "App");
+}
+
+void App::update() {
+	_shader_manager->update();
+	_camera_trackball_controller.update();
+	render();
+	_exporter.update(_renderer.renderBuffer());
+	Time::update();
 }
 
 void App::render() {
@@ -30,14 +40,6 @@ void App::render() {
 		}
 	}
 	_renderer.end();
-}
-
-void App::update() {
-	_shader_manager->update();
-	_camera_trackball_controller.update();
-	render();
-	_exporter.update(_renderer.renderBuffer());
-	Time::update();
 }
 
 void App::ImGuiWindows() {
