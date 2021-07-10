@@ -8,7 +8,7 @@
 ShaderManager_FromText::ShaderManager_FromText()
 	: m_shaderWatcher([this](std::string_view path) { compile_shader(path); })
 {
-	setShaderPath("shader-examples/simple3D.frag");
+	setShaderPath("shader-examples/ray_marcher.frag");
 }
 
 void ShaderManager_FromText::compile_shader(std::string_view path) {
