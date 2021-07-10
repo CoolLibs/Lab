@@ -7,8 +7,6 @@
 
 App::App(Window& main_window)
 	: _main_window(main_window)
-	, _camera_trackball_controller()
-	, _camera_perspective_controller(_camera)
 {
 	Serialization::from_json(*this, File::root_dir() + "/last-session-cache.json");
 	glEnable(GL_DEPTH_TEST);
@@ -22,6 +20,7 @@ App::App(Window& main_window)
 			glm::vec3{0, 1, 0}
 		)
 	);
+	_camera_perspective_controller.apply_to(_camera);
 }
 
 App::~App() {
