@@ -4,23 +4,17 @@
 #include <Cool/App/Input.h>
 #include <Cool/Time/Time.h>
 #include <Cool/Serialization/JsonFile.h>
-#include <Cool/Constants/Constants.h>
 
 App::App(Window& main_window)
 	: _main_window(main_window)
+	, _camera{{15.f, 0.f, 0.f}}
 {
 	Serialization::from_json(*this, File::root_dir() + "/last-session-cache.json");
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
 	RenderState::setExportSize(1920, 1080); // TODO remove me
-	_camera.set_view_matrix(
-		glm::lookAt(
-			glm::vec3{3, 0, 0},
-			glm::vec3{0, 0, 0},
-			Constants::world_up
-		)
-	);
+	_camera_trackball_controller.set_distance_to_look_at(15.f);
 	_camera_perspective_controller.apply_to(_camera);
 }
 
