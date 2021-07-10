@@ -7,7 +7,7 @@
 
 App::App(Window& main_window)
 	: _main_window(main_window)
-	, _camera_trackball_controller(_camera)
+	, _camera_trackball_controller()
 	, _camera_perspective_controller(_camera)
 {
 	Serialization::from_json(*this, File::root_dir() + "/last-session-cache.json");
@@ -15,6 +15,13 @@ App::App(Window& main_window)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
 	RenderState::setExportSize(1920, 1080); // TODO remove me
+	_camera.set_view_matrix(
+		glm::lookAt(
+			glm::vec3{0, 0, 3},
+			glm::vec3{0, 0, 0},
+			glm::vec3{0, 1, 0}
+		)
+	);
 }
 
 App::~App() {
@@ -23,7 +30,6 @@ App::~App() {
 
 void App::update() {
 	_shader_manager->update();
-	_camera_trackball_controller.update();
 	render();
 	_exporter.update(_renderer.renderBuffer());
 	Time::update();
@@ -79,6 +85,9 @@ void App::ImGuiWindows() {
 				m[0][2], m[1][2], m[2][2], m[3][2],
 				m[0][3], m[1][3], m[2][3], m[3][3]
 			);
+			if (ImGui::Button("Look at the origin")) {
+				_camera_trackball_controller.look_at_the_origin(_camera);
+			}
 			ImGui::ColorEdit3("Background Color", glm::value_ptr(_background_color));
 			ImGui::Checkbox("Show Demo Window", &_show_imgui_demo);
 			ImGui::End();
@@ -130,10 +139,10 @@ void App::onMouseButtonEvent(int button, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_MIDDLE) {
 			if (action == GLFW_PRESS) {
-				_camera_trackball_controller.on_wheel_down(mods);
+				_camera_trackball_controller.on_wheel_down(_camera, mods);
 			}
 			else if (action == GLFW_RELEASE) {
-				_camera_trackball_controller.on_wheel_up();
+				_camera_trackball_controller.on_wheel_up(_camera);
 			}
 		}
 	}
@@ -141,12 +150,16 @@ void App::onMouseButtonEvent(int button, int action, int mods) {
 
 void App::onScrollEvent(double xOffset, double yOffset) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-		_camera_trackball_controller.on_wheel_scroll(yOffset);
+		_camera_trackball_controller.on_wheel_scroll(_camera, yOffset);
 	}
 }
 
 void App::onMouseMoveEvent(double xpos, double ypos) {
+	static glm::vec2 prev_pos = {static_cast<float>(xpos), static_cast<float>(ypos)};
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-
+		const glm::vec2 current_pos = {static_cast<float>(xpos), static_cast<float>(ypos)};
+		const glm::vec2 delta = current_pos - prev_pos;
+		_camera_trackball_controller.on_mouse_move(_camera, delta);
+		prev_pos = current_pos;
 	}
 }
