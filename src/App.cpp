@@ -54,6 +54,14 @@ void App::ImGuiWindows() {
 	_exporter.imgui_window_export_image_sequence();
 	Log::ToUser::imgui_console_window();
 	if (!RenderState::IsExporting()) {
+		ImGui::Begin("Camera");
+		if (ImGui::Button("Look at the origin")) {
+			_camera_trackball_controller.look_at_the_origin(_camera);
+		}
+		if (_camera_perspective_controller.ImGui()) {
+			_camera_perspective_controller.apply_to(_camera);
+		}
+		ImGui::End();
 		//
 		_shader_manager.ImGui_windows();
 		//
@@ -84,9 +92,6 @@ void App::ImGuiWindows() {
 				m[0][2], m[1][2], m[2][2], m[3][2],
 				m[0][3], m[1][3], m[2][3], m[3][3]
 			);
-			if (ImGui::Button("Look at the origin")) {
-				_camera_trackball_controller.look_at_the_origin(_camera);
-			}
 			ImGui::ColorEdit3("Background Color", glm::value_ptr(_background_color));
 			ImGui::Checkbox("Show Demo Window", &_show_imgui_demo);
 			ImGui::End();
