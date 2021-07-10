@@ -56,13 +56,13 @@ std::string NodeEditor::gen_raymarching_shader_code() {
 #version 430
 
 in vec2 vTexCoords;
-uniform float uAspectRatio;
-uniform vec3 uCamX;
-uniform vec3 uCamY;
-uniform vec3 uCamZ;
-uniform vec3 uCamPos;
-uniform float uFocalLength;
-uniform float uTime;
+uniform float _aspect_ratio;
+uniform vec3 _camera_right_axis;
+uniform vec3 _camera_up_axis;
+uniform vec3 _camera_front_axis;
+uniform vec3 _camera_position;
+uniform float _focal_length;
+uniform float _time;
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 150
@@ -121,11 +121,11 @@ vec3 render(vec3 ro, vec3 rd) {
 }
 
 void main() {
-    vec3 ro = uCamPos;
+    vec3 ro = _camera_position;
     vec3 rd = normalize(
-              uCamX * (vTexCoords.x - 0.5) * uAspectRatio
-            + uCamY * (vTexCoords.y - 0.5)
-            - uCamZ * uFocalLength
+        _camera_right_axis * (vTexCoords.x - 0.5) * _aspect_ratio
+      + _camera_up_axis    * (vTexCoords.y - 0.5)
+      + _camera_front_axis * _focal_length
     );
     gl_FragColor = vec4(render(ro, rd), 1.);
 }
