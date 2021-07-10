@@ -4,6 +4,7 @@
 #include <Cool/App/Input.h>
 #include <Cool/Time/Time.h>
 #include <Cool/Serialization/JsonFile.h>
+#include <Cool/Constants/Constants.h>
 
 App::App(Window& main_window)
 	: _main_window(main_window)
@@ -15,9 +16,9 @@ App::App(Window& main_window)
 	RenderState::setExportSize(1920, 1080); // TODO remove me
 	_camera.set_view_matrix(
 		glm::lookAt(
-			glm::vec3{0, 0, 3},
+			glm::vec3{3, 0, 0},
 			glm::vec3{0, 0, 0},
-			glm::vec3{0, 1, 0}
+			Constants::world_up
 		)
 	);
 	_camera_perspective_controller.apply_to(_camera);
