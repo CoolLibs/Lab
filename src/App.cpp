@@ -14,7 +14,7 @@ App::App(Window& main_window)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
 	RenderState::setExportSize(1920, 1080); // TODO remove me
-	_camera_trackball_controller.set_distance_to_look_at(15.f);
+	_camera_orbital_controller.set_distance_to_orbit_center(15.f);
 	_camera_perspective_controller.apply_to(_camera);
 }
 
@@ -50,8 +50,9 @@ void App::ImGuiWindows() {
 	Log::ToUser::imgui_console_window();
 	if (!RenderState::IsExporting()) {
 		ImGui::Begin("Camera");
+		_camera_orbital_controller.ImGui();
 		if (ImGui::Button("Look at the origin")) {
-			_camera_trackball_controller.look_at_the_origin(_camera);
+			_camera_orbital_controller.set_orbit_center({0, 0, 0}, _camera);
 		}
 		if (_camera_perspective_controller.ImGui()) {
 			_camera_perspective_controller.apply_to(_camera);
@@ -138,10 +139,10 @@ void App::onMouseButtonEvent(int button, int action, int mods) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
 		if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_MIDDLE) {
 			if (action == GLFW_PRESS) {
-				_camera_trackball_controller.on_wheel_down(_camera, mods);
+				_camera_orbital_controller.on_wheel_down(_camera, mods);
 			}
 			else if (action == GLFW_RELEASE) {
-				_camera_trackball_controller.on_wheel_up(_camera);
+				_camera_orbital_controller.on_wheel_up(_camera);
 			}
 		}
 	}
@@ -149,7 +150,7 @@ void App::onMouseButtonEvent(int button, int action, int mods) {
 
 void App::onScrollEvent(double xOffset, double yOffset) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-		_camera_trackball_controller.on_wheel_scroll(_camera, yOffset);
+		_camera_orbital_controller.on_wheel_scroll(_camera, yOffset);
 	}
 }
 
@@ -158,7 +159,7 @@ void App::onMouseMoveEvent(double xpos, double ypos) {
 	if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
 		const glm::vec2 current_pos = {static_cast<float>(xpos), static_cast<float>(ypos)};
 		const glm::vec2 delta = current_pos - prev_pos;
-		_camera_trackball_controller.on_mouse_move(_camera, delta);
+		_camera_orbital_controller.on_mouse_move(_camera, delta);
 		prev_pos = current_pos;
 	}
 }

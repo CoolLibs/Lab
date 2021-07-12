@@ -5,7 +5,7 @@
 #include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Camera/Camera.h>
-#include <Cool/Camera/ViewController_Trackball.h>
+#include <Cool/Camera/ViewController_Orbital.h>
 #include <Cool/Camera/ProjectionController_Perspective.h>
 #include "ShaderManager/ShaderManagerManager.h"
 
@@ -31,7 +31,7 @@ private:
 	Window& _main_window;
 	ShaderManagerManager _shader_manager;
 	Camera _camera;
-	ViewController_Trackball _camera_trackball_controller;
+	ViewController_Orbital _camera_orbital_controller;
 	ProjectionController_Perspective _camera_perspective_controller;
 	Renderer_Fullscreen _renderer;
 	Exporter _exporter;
