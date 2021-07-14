@@ -5,49 +5,54 @@ using namespace Cool;
 #include "NodeFactory.h"
 
 NodeEditor::NodeEditor()
-	: _context(ed::CreateEditor())
-{}
-
-NodeEditor::~NodeEditor() {
-	ed::DestroyEditor(_context);
+    : _context(ed::CreateEditor())
+{
 }
 
-void NodeEditor::subscribe_to_tree_change(std::function<void(NodeEditor&)> callback) {
+NodeEditor::~NodeEditor()
+{
+    ed::DestroyEditor(_context);
+}
+
+void NodeEditor::subscribe_to_tree_change(std::function<void(NodeEditor&)> callback)
+{
     _on_tree_change_callbacks.push_back(callback);
     callback(*this);
 }
 
-void NodeEditor::on_tree_change() {
+void NodeEditor::on_tree_change()
+{
     for (auto& callback : _on_tree_change_callbacks)
         callback(*this);
 }
 
-std::string NodeEditor::gen_scene_sdf() {
+std::string NodeEditor::gen_scene_sdf()
+{
     std::string s;
     // TODO improve me with a group
     (_registry.view<IsTerminalNode>() | _registry.view<Node>()).each([&](auto, Node& node) {
         s += "d = min(d, " + node.fn_name + "(pos));\n";
     });
-    return 
-    "float sceneSDF(vec3 pos) {\n"
-        "float d = MAX_DIST;\n"
-        + s +
-        "return d;\n"
-    "}\n";
+    return "float sceneSDF(vec3 pos) {\n"
+           "float d = MAX_DIST;\n" +
+           s +
+           "return d;\n"
+           "}\n";
 }
 
-std::string NodeEditor::gen_raymarching_shader_code() {
+std::string NodeEditor::gen_raymarching_shader_code()
+{
     // Update the source codes
     _registry.view<Node>().each([&](auto e, Node& node) {
         node.fn_implementation = NodeFactory::fn_implementation(NodeFactory::fn_signature(node.fn_name), node.gen_source_code(e));
     });
 
     // Collect all function declarations and implementations
-    std::string function_declarations = "";
+    std::string function_declarations    = "";
     std::string function_implementations = "";
 
     _registry.view<Node>().each([&](auto, Node& node) {
-        function_declarations    += node.fn_declaration;
+        function_declarations += node.fn_declaration;
         function_implementations += node.fn_implementation;
     });
 
@@ -71,11 +76,8 @@ uniform float _time;
 #define NORMAL_DELTA 0.0001
 
 #define saturate(v) clamp(v, 0., 1.)
-)V0G0N"
-+ function_declarations
-+ function_implementations
-+ gen_scene_sdf()
-+ R"V0G0N(
+)V0G0N" + function_declarations +
+           function_implementations + gen_scene_sdf() + R"V0G0N(
 
 float rayMarching(vec3 ro, vec3 rd) {
     float t = 0.;
@@ -132,21 +134,22 @@ void main() {
 )V0G0N";
 }
 
-PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id) {
+PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id)
+{
     PinInfo pin_info;
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
         if (shape_node.output_pin.id == pin_id) {
-            pin_info.kind = ed::PinKind::Output;
+            pin_info.kind        = ed::PinKind::Output;
             pin_info.node_entity = e;
         }
     });
     _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
         if (modifier_node.output_pin.id == pin_id) {
-            pin_info.kind = ed::PinKind::Output;
+            pin_info.kind        = ed::PinKind::Output;
             pin_info.node_entity = e;
         }
         if (modifier_node.input_pin.id == pin_id) {
-            pin_info.kind = ed::PinKind::Input;
+            pin_info.kind        = ed::PinKind::Input;
             pin_info.node_entity = e;
         }
     });
@@ -154,7 +157,8 @@ PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id) {
     return pin_info;
 }
 
-entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id) {
+entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
+{
     for (const auto& link : _links) {
         if (link.start_pin_id == pin_id) {
             return link.end_node_entity;
@@ -176,7 +180,7 @@ void NodeEditor::ImGui_window()
     // 1) Commit known data to editor
     //
 
-    // Draw Shape Nodes 
+    // Draw Shape Nodes
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
         const Node& node = _registry.get<Node>(e);
         ed::BeginNode(node.node_id);
@@ -192,7 +196,7 @@ void NodeEditor::ImGui_window()
         ed::EndPin();
         ed::EndNode();
     });
-    // Draw Modifier Nodes 
+    // Draw Modifier Nodes
     _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
         const Node& node = _registry.get<Node>(e);
         ed::BeginNode(node.node_id);
@@ -222,15 +226,12 @@ void NodeEditor::ImGui_window()
     //
 
     // Handle creation action, returns true if editor want to create new object (node or link)
-    if (ed::BeginCreate())
-    {
+    if (ed::BeginCreate()) {
         ed::PinId start_pin_id, end_pin_id;
-        if (ed::QueryNewLink(&start_pin_id, &end_pin_id))
-        {
-            if (start_pin_id && end_pin_id && ed::AcceptNewItem())
-            {
+        if (ed::QueryNewLink(&start_pin_id, &end_pin_id)) {
+            if (start_pin_id && end_pin_id && ed::AcceptNewItem()) {
                 PinInfo start_pin_info = compute_pin_infos(start_pin_id);
-                PinInfo end_pin_info = compute_pin_infos(end_pin_id);
+                PinInfo end_pin_info   = compute_pin_infos(end_pin_id);
 
                 if (start_pin_info.kind == ed::PinKind::Input) // Reorder so that we always go from an output pin to an input pin
                 {
@@ -246,16 +247,14 @@ void NodeEditor::ImGui_window()
                 // Check that we are not linking a node to itself
                 accept_link &= start_pin_info.node_entity != end_pin_info.node_entity;
 
-                if (accept_link)
-                {
-                    _links.push_back({ ed::LinkId(NodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity });
+                if (accept_link) {
+                    _links.push_back({ed::LinkId(NodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity});
                     _registry.remove_if_exists<IsTerminalNode>(start_pin_info.node_entity);
                     on_tree_change();
                     // Draw new link
                     //ed::Link(_links.back().id, _links.back().start_pin_id, _links.back().end_pin_id);
                 }
-                else
-                {
+                else {
                     ed::RejectNewItem();
                 }
             }
@@ -263,22 +262,16 @@ void NodeEditor::ImGui_window()
     }
     ed::EndCreate(); // Wraps up object creation action handling.
 
-
     // Handle deletion action
-    if (ed::BeginDelete())
-    {
+    if (ed::BeginDelete()) {
         // There may be many links marked for deletion, let's loop over them.
         ed::LinkId deletedLinkId;
-        while (ed::QueryDeletedLink(&deletedLinkId))
-        {
+        while (ed::QueryDeletedLink(&deletedLinkId)) {
             // If you agree that link can be deleted, accept deletion.
-            if (ed::AcceptDeletedItem())
-            {
+            if (ed::AcceptDeletedItem()) {
                 // Then remove link from your data.
-                for (auto& link : _links)
-                {
-                    if (link.id == deletedLinkId)
-                    {
+                for (auto& link : _links) {
+                    if (link.id == deletedLinkId) {
                         _registry.emplace<IsTerminalNode>(link.start_node_entity);
                         _links.erase(&link);
                         on_tree_change();
