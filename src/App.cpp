@@ -1,6 +1,7 @@
 #include "App.h"
 #include <Cool/App/Input.h>
 #include <Cool/App/RenderState.h>
+#include <Cool/Log/ToUser.h>
 #include <Cool/Serialization/JsonFile.h>
 #include <Cool/Time/Time.h>
 

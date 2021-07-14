@@ -2,6 +2,7 @@
 #include <Cool/App/NfdFileFilter.h>
 #include <Cool/Camera/Camera.h>
 #include <Cool/File/File.h>
+#include <Cool/Log/ToUser.h>
 #include <fstream>
 
 ShaderManager_FromText::ShaderManager_FromText()
@@ -54,7 +55,7 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
                 }
             }
             catch (std::exception e) {
-                Log::ToUser::warn("[ShaderManager_FromText::parse_shader_for_params] Error while parsing :\n{}", e.what());
+                Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
             }
         }
         if (!line.compare("// BEGIN DYNAMIC PARAMS")) {
@@ -87,7 +88,7 @@ void ShaderManager_FromText::ImGui_window()
     }
     ImGui::PopID();
     ImGui::SameLine();
-    if (ImGui::open_file_dialog(&path, NfdFileFilter::FragmentShader, File::whithout_file_name(path))) {
+    if (ImGuiExtras::open_file_dialog(&path, NfdFileFilter::FragmentShader, File::whithout_file_name(path))) {
         setShaderPath(path);
     }
     ImGui::Separator();
