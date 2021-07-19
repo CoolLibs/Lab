@@ -27,6 +27,10 @@ add_executable(${PROJECT_NAME}
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CXX_STANDARD})
 
+# #define CMAKE_SOURCE_DIR
+# This is useful to set the current working directory in debug mode. YOUR RELEASE CODE SHOULDN'T RELY ON CMAKE_SOURCE_DIR
+set_property(TARGET ${PROJECT_NAME} PROPERTY COMPILE_DEFINITIONS "CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
+
 # Include Cool
 include("Cool/cmake/IncludeMe.cmake")
 
