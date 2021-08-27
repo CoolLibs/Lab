@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Nodes/NodeEditor.h"
+#include "is0/NodeEditor.h"
 #include "ShaderManager.h"
 
 class ShaderManager_FromNodes : public ShaderManager {
