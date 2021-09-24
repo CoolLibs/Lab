@@ -19,4 +19,6 @@ I would suggest you watch all these videos, in that order:
 
 ## Ideas
 
-```MAX_DIST``` in a ray marcher should be the far plane of the camera (aka length of the image of a canonical ray through the inverse of the projection matrix) 
+```MAX_DIST``` in a ray marcher should be the far plane of the camera (aka length of the image of a canonical ray through the inverse of the projection matrix)
+
+[This article](https://iquilezles.org/www/articles/fbmsdf/fbmsdf.htm) by Inigo would be a great technique to implement.
