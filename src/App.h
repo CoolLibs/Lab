@@ -1,45 +1,58 @@
 #pragma once
 
-#include <Cool/App/IApp.h>
-#include <Cool/App/Window.h>
+#include <Cool/AppManager/IApp.h>
 #include <Cool/Camera/Camera.h>
 #include <Cool/Camera/ProjectionController_Perspective.h>
 #include <Cool/Camera/ViewController_Orbital.h>
 #include <Cool/Exporter/Exporter.h>
-#include <Cool/Renderer_Fullscreen/Renderer_Fullscreen.h>
+#include <Cool/Exporter/internal/Polaroid.h>
+#include <Cool/Gpu/FullscreenPipeline.h>
+#include <Cool/Image/ImageSizeConstraint.h>
+#include <Cool/Serialization/AutoSerializer.h>
+#include <Cool/Time/Clock_Realtime.h>
+#include <Cool/View/RenderableViewManager.h>
+#include <Cool/Window/WindowManager.h>
 #include "ShaderManager/ShaderManagerManager.h"
 
 using namespace Cool;
 
 class App : public IApp {
 public:
-    App(Window& main_window);
-    ~App();
+    explicit App(Cool::WindowManager& windows);
 
     void update() override;
-    void ImGuiWindows() override;
-    void ImGuiMenus() override;
-    void onKeyboardEvent(int key, int scancode, int action, int mods) override;
-    void onMouseButtonEvent(int button, int action, int mods) override;
-    void onScrollEvent(double xOffset, double yOffset) override;
-    void onMouseMoveEvent(double xPos, double yPos) override;
+    bool inputs_are_allowed() const override;
+    bool wants_to_show_menu_bar() const override;
+    void imgui_windows() override;
+    void imgui_menus() override;
+
+    void on_keyboard_event(const Cool::KeyboardEvent& event) override;
+    void on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event) override;
+    void on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event) override;
+    void on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event) override;
 
 private:
-    void render();
+    void           render(Cool::RenderTarget& render_target, float time);
+    Cool::Polaroid polaroid();
 
 private:
-    Window&                          _main_window;
-    ShaderManagerManager             _shader_manager;
-    Camera                           _camera;
+    Window& _main_window;
+    // ShaderManagerManager             _shader_manager;
+    Cool::Camera                     _camera{{15.f, 0.f, 0.f}};
+    Cool::Clock_Realtime             _clock;
     ViewController_Orbital           _camera_orbital_controller;
     ProjectionController_Perspective _camera_perspective_controller;
-    Renderer_Fullscreen              _renderer;
+    Cool::ImageSizeConstraint        _preview_constraint;
+    Cool::RenderableViewManager      _views; // Must be before the views because it is used to construct them
+    Cool::RenderableView&            _view;
     Exporter                         _exporter;
     glm::vec3                        _background_color = glm::vec3(0.478f, 0.674f, 0.792f);
 #ifdef DEBUG
     bool _show_imgui_debug = true;
     bool _show_imgui_demo  = false;
 #endif
+    // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
+    Cool::AutoSerializer<App> _auto_serializer{Cool::File::root_dir() + "/last-session-cache.json", "App", *this};
 
 private:
     // Serialization
@@ -47,6 +60,6 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Shader Manager Manager", _shader_manager));
+        // archive(cereal::make_nvp("Shader Manager Manager", _shader_manager));
     }
 };

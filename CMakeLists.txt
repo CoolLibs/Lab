@@ -4,11 +4,11 @@ cmake_minimum_required(VERSION 3.16)
 project(CoolLab C CXX)
 
 # Set C++ version
-set(CXX_STANDARD 17)
+set(CXX_STANDARD 20)
 
-# Choose our GPU API
-#set(COOL_USE_VULKAN true)
-set(COOL_USE_OPENGL true)
+# Choose our GPU API and its version
+# set(COOL_USE_VULKAN 110)
+set(COOL_USE_OPENGL $<$<NOT:$<PLATFORM_ID:Darwin>>:430> $<$<PLATFORM_ID:Darwin>:330>) # Must be >= 330 for ImGui to work properly # We use 330 when building on Mac because they don't support higher versions of OpenGL
 
 # Set the folder where the executable is created
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
@@ -19,7 +19,6 @@ file(GLOB_RECURSE MY_SOURCES
     Cool/src/*
     lib/imgui-node-editor/*
 )
-file(GLOB_RECURSE SHADER_EXAMPLES shader-examples/*)
 
 # Create target executable
 add_executable(${PROJECT_NAME}
@@ -27,17 +26,8 @@ add_executable(${PROJECT_NAME}
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CXX_STANDARD})
 
-# #define CMAKE_SOURCE_DIR
-# This is useful to set the current working directory in debug mode. YOUR RELEASE CODE SHOULDN'T RELY ON CMAKE_SOURCE_DIR
-set_property(TARGET ${PROJECT_NAME} PROPERTY COMPILE_DEFINITIONS "CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
-
 # Include Cool
 include("Cool/cmake/IncludeMe.cmake")
-
-# Recreate the folder architecture inside the Visual Studio solution (might work for other IDEs as well)
-include("Cool/cmake/VS_helpers.cmake")
-VS_RegisterFiles("${MY_SOURCES}")
-VS_RegisterFiles("${SHADER_EXAMPLES}")
 
 # Add a post build operation to copy shaders to the output folder (where the executable is created)
 include("Cool/cmake/copy_folder_to_the_output_folder.cmake")

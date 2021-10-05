@@ -1,173 +1,179 @@
 #include "App.h"
-#include <Cool/App/Input.h>
-#include <Cool/App/RenderState.h>
+#include <Cool/Camera/hook_events.h>
+#include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
-#include <Cool/Serialization/JsonFile.h>
-#include <Cool/Time/Time.h>
+#include <Cool/Parameters/ParametersHistory.h>
+#include <Cool/Time/ClockU.h>
 
-App::App(Window& main_window)
-    : _main_window(main_window)
-    , _camera{{15.f, 0.f, 0.f}}
+App::App(Cool::WindowManager& windows)
+    : _main_window{windows.main_window()}
+    , _view{_views.make_view("View")}
 {
-    Serialization::from_json(*this, File::root_dir() + "/last-session-cache.json");
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
-    RenderState::setExportSize(1920, 1080);            // TODO remove me
+    Cool::CameraU::hook_events(_view.view.mouse_events(), _camera_orbital_controller, _camera);
+
     _camera_orbital_controller.set_distance_to_orbit_center(15.f);
-    _camera_perspective_controller.apply_to(_camera);
-}
-
-App::~App()
-{
-    Serialization::to_json(*this, File::root_dir() + "/last-session-cache.json", "App");
+    // glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_BLEND);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
 }
 
 void App::update()
 {
-    _shader_manager->update();
-    render();
-    _exporter.update(_renderer.renderBuffer());
-    Time::update();
-}
-
-void App::render()
-{
-    _renderer.begin();
-    {
-        glClearColor(_background_color.r, _background_color.g, _background_color.b, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        if (_shader_manager->is_valid()) {
-            _shader_manager->setup_for_rendering(_camera, _camera_perspective_controller.focal_length());
-            _renderer.render();
+    if (!_exporter.is_exporting()) {
+        _clock.update();
+        // _shader_manager->update();
+        for (auto& view : _views) {
+            view.update_size(_preview_constraint);
         }
+        polaroid().render(_clock.time());
     }
-    _renderer.end();
+    else {
+        _exporter.update(polaroid());
+    }
 }
 
-void App::ImGuiWindows()
+void App::render(Cool::RenderTarget& render_target, float time)
 {
+#if defined(COOL_VULKAN)
+#elif defined(COOL_OPENGL)
+    render_target.render([&]() {
+        _camera_perspective_controller.apply_to(_camera, ImageSizeU::aspect_ratio(render_target.current_size()));
+        glClearColor(_background_color.r, _background_color.g, _background_color.b, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT); // | GL_DEPTH_BUFFER_BIT);
+        // if (_shader_manager->is_valid()) {
+        //     _shader_manager->setup_for_rendering(_camera, _camera_perspective_controller.focal_length());
+        //     _renderer.render();
+        // }
+    });
+#endif
+}
+
+Cool::Polaroid App::polaroid()
+{
+    return {
+        .render_target = _view.render_target,
+        .render_fn     = [&](Cool::RenderTarget& render_target, float time) {
+            render(render_target, time);
+        }};
+}
+
+bool App::inputs_are_allowed() const
+{
+    return !_exporter.is_exporting();
+}
+
+bool App::wants_to_show_menu_bar() const
+{
+    return !_exporter.is_exporting();
+}
+
+void App::imgui_windows()
+{
+    // Views
+    for (const bool aspect_ratio_is_constrained = _exporter.is_exporting() || // cppcheck-suppress syntaxError // (CppCheck is not yet aware of this C++20 syntax)
+                                                  _preview_constraint.wants_to_constrain_aspect_ratio();
+         auto& view : _views) {
+        view.imgui_window(aspect_ratio_is_constrained);
+    }
+    // Time
     ImGui::Begin("Time");
-    Time::imgui_timeline();
+    Cool::ClockU::imgui_timeline(_clock);
     ImGui::End();
-    _exporter.imgui_window_export_image_sequence();
+    // Exporter
+    _exporter.imgui_windows(polaroid(), _clock.time());
+    // Console
     Log::ToUser::imgui_console_window();
-    if (!RenderState::IsExporting()) {
+    //
+    if (!_exporter.is_exporting()) {
+        // Camera
         ImGui::Begin("Camera");
         _camera_orbital_controller.ImGui();
         if (ImGui::Button("Look at the origin")) {
             _camera_orbital_controller.set_orbit_center({0, 0, 0}, _camera);
         }
-        if (_camera_perspective_controller.ImGui()) {
-            _camera_perspective_controller.apply_to(_camera);
-        }
+        _camera_perspective_controller.ImGui();
         ImGui::End();
-        //
-        _shader_manager.ImGui_windows();
-        //
-        _exporter.imgui_window_export_image([this]() { render(); }, _renderer.renderBuffer());
-        //
-#ifdef DEBUG
+        // ShaderManager
+        // _shader_manager.ImGui_windows();
+#if defined(DEBUG)
         if (_show_imgui_debug) {
             ImGui::Begin("Debug", &_show_imgui_debug);
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-            ImGui::SameLine();
-            bool cap_framerate = _main_window.isVSyncEnabled();
-            if (ImGui::Checkbox("Cap framerate", &cap_framerate)) {
-                if (cap_framerate) {
-                    _main_window.enableVSync();
-                }
-                else {
-                    _main_window.disableVSync();
-                }
-            }
-            ImGui::Text("Rendering Size : %d %d", RenderState::Size().width(), RenderState::Size().height());
-            ImGui::Text("Mouse Position in Render Area : %.0f %.0f screen coordinates", Input::MouseInScreenCoordinates().x, Input::MouseInScreenCoordinates().y);
-            ImGui::Text("Mouse Position Normalized : %.2f %.2f", Input::MouseInNormalizedRatioSpace().x, Input::MouseInNormalizedRatioSpace().y);
-            ImGui::Text("Camera Transform matrix :");
-            glm::mat4 m = _camera.transform_matrix();
-            ImGui::Text("%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f\n%.2f %.2f %.2f %.2f",
-                        m[0][0], m[1][0], m[2][0], m[3][0],
-                        m[0][1], m[1][1], m[2][1], m[3][1],
-                        m[0][2], m[1][2], m[2][2], m[3][2],
-                        m[0][3], m[1][3], m[2][3], m[3][3]);
-            ImGui::ColorEdit3("Background Color", glm::value_ptr(_background_color));
+            _main_window.imgui_cap_framerate();
             ImGui::Checkbox("Show Demo Window", &_show_imgui_demo);
             ImGui::End();
         }
-        if (_show_imgui_demo) { // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+        if (_show_imgui_demo) { // Show the big demo window (Most of the sample code is
+                                // in ImGui::ShowDemoWindow()! You can browse its code
+                                // to learn more about Dear ImGui!).
             ImGui::ShowDemoWindow(&_show_imgui_demo);
         }
 #endif
     }
 }
 
-void App::ImGuiMenus()
+void App::imgui_menus()
 {
-    if (ImGui::BeginMenu("Export")) {
-        _exporter.imgui_menu_items();
+    if (ImGui::BeginMenu("Preview")) {
+        _preview_constraint.imgui();
         ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Windows")) {
-        Log::ToUser::imgui_toggle_console();
-#ifdef DEBUG
+        Cool::Log::ToUser::imgui_toggle_console();
+        for (auto& view : _views) {
+            view.view.imgui_open_close_checkbox();
+        }
+#if defined(DEBUG)
         ImGui::Separator();
         ImGui::Checkbox("Debug", &_show_imgui_debug);
 #endif
         ImGui::EndMenu();
     }
+    if (ImGui::BeginMenu("Export")) {
+        _exporter.imgui_menu_items();
+        ImGui::EndMenu();
+    }
 }
 
-void App::onKeyboardEvent(int key, int scancode, int action, int mods)
+void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
-    if (!RenderState::IsExporting() && !ImGui::GetIO().WantTextInput) {
-        if (action == GLFW_RELEASE) {
-            if (Input::MatchesChar("s", key) && (mods & GLFW_MOD_CONTROL)) {
-                _exporter.open_window_export_image(true);
+    if (!_exporter.is_exporting()) {
+        if (event.action == GLFW_RELEASE) {
+            if (Input::matches_char("s", event.key) && event.mods.ctrl()) {
+                _exporter.image_export_window().open();
             }
-            if (Input::MatchesChar("e", key) && (mods & GLFW_MOD_CONTROL)) {
-                _exporter.open_window_export_image_sequence(true);
+            if (Input::matches_char("e", event.key) && event.mods.ctrl()) {
+                _exporter.video_export_window().open();
             }
         }
-        if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-            if (Input::MatchesChar("z", key) && (mods & GLFW_MOD_CONTROL)) {
+        if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
+            if (Input::matches_char("z", event.key) && event.mods.ctrl()) {
                 ParametersHistory::get().move_backward();
             }
-            if (Input::MatchesChar("y", key) && (mods & GLFW_MOD_CONTROL)) {
+            if (Input::matches_char("y", event.key) && event.mods.ctrl()) {
                 ParametersHistory::get().move_forward();
             }
         }
     }
 }
 
-void App::onMouseButtonEvent(int button, int action, int mods)
+void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
 {
-    if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT || button == GLFW_MOUSE_BUTTON_MIDDLE) {
-            if (action == GLFW_PRESS) {
-                _camera_orbital_controller.on_wheel_down(_camera, mods);
-            }
-            else if (action == GLFW_RELEASE) {
-                _camera_orbital_controller.on_wheel_up(_camera);
-            }
-        }
+    for (auto& view : _views) {
+        view.view.dispatch_mouse_button_event(event, _main_window.glfw());
     }
 }
 
-void App::onScrollEvent(double xOffset, double yOffset)
+void App::on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event)
 {
-    if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-        _camera_orbital_controller.on_wheel_scroll(_camera, yOffset);
+    for (auto& view : _views) {
+        view.view.dispatch_mouse_scroll_event(event, _main_window.glfw());
     }
 }
 
-void App::onMouseMoveEvent(double xpos, double ypos)
+void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event)
 {
-    static glm::vec2 prev_pos = {static_cast<float>(xpos), static_cast<float>(ypos)};
-    if (!RenderState::IsExporting() && !ImGui::GetIO().WantCaptureMouse) {
-        const glm::vec2 current_pos = {static_cast<float>(xpos), static_cast<float>(ypos)};
-        const glm::vec2 delta       = current_pos - prev_pos;
-        _camera_orbital_controller.on_mouse_move(_camera, delta);
-        prev_pos = current_pos;
+    for (auto& view : _views) {
+        view.view.dispatch_mouse_move_event(event, _main_window.glfw());
     }
 }
