@@ -1,9 +1,7 @@
 #pragma once
 
 #include <Cool/AppManager/IApp.h>
-#include <Cool/Camera/Camera.h>
-#include <Cool/Camera/ProjectionController_Perspective.h>
-#include <Cool/Camera/ViewController_Orbital.h>
+#include <Cool/Camera/CameraManager.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/FullscreenPipeline.h>
@@ -36,16 +34,14 @@ private:
     Cool::Polaroid polaroid();
 
 private:
-    Window&                          _main_window;
-    ShaderManagerManager             _shader_manager;
-    Cool::Camera                     _camera{{15.f, 0.f, 0.f}};
-    Cool::Clock_Realtime             _clock;
-    ViewController_Orbital           _camera_orbital_controller;
-    ProjectionController_Perspective _camera_perspective_controller;
-    Cool::ImageSizeConstraint        _preview_constraint;
-    Cool::RenderableViewManager      _views; // Must be before the views because it is used to construct them
-    Cool::RenderableView&            _view;
-    Exporter                         _exporter;
+    Window&                     _main_window;
+    ShaderManagerManager        _shader_manager;
+    Cool::CameraManager         _camera;
+    Cool::Clock_Realtime        _clock;
+    Cool::ImageSizeConstraint   _preview_constraint;
+    Cool::RenderableViewManager _views; // Must be before the views because it is used to construct them
+    Cool::RenderableView&       _view;
+    Exporter                    _exporter;
 #ifdef DEBUG
     bool _show_imgui_debug = true;
     bool _show_imgui_demo  = false;

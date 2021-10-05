@@ -1,5 +1,4 @@
 #include "App.h"
-#include <Cool/Camera/hook_events.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameters/ParametersHistory.h>
@@ -9,8 +8,7 @@ App::App(Cool::WindowManager& windows)
     : _main_window{windows.main_window()}
     , _view{_views.make_view("View")}
 {
-    Cool::CameraU::hook_events(_view.view.mouse_events(), _camera_orbital_controller, _camera);
-    _camera_orbital_controller.set_distance_to_orbit_center(15.f);
+    _camera.hook_events(_view.view.mouse_events());
 }
 
 void App::update()
@@ -34,11 +32,11 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #elif defined(COOL_OPENGL)
     render_target.render([&]() {
         const auto aspect_ratio = ImageSizeU::aspect_ratio(render_target.current_size());
-        _camera_perspective_controller.apply_to(_camera, aspect_ratio);
+        _camera.apply(aspect_ratio);
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         if (_shader_manager->is_valid()) {
-            _shader_manager->setup_for_rendering(_camera, _camera_perspective_controller.focal_length(), aspect_ratio, time);
+            _shader_manager->setup_for_rendering(*_camera, 2.f /*TODO*/, aspect_ratio, time);
             _shader_manager->render();
         }
     });
@@ -84,11 +82,7 @@ void App::imgui_windows()
         ImGui::End();
         // Camera
         ImGui::Begin("Camera");
-        _camera_orbital_controller.ImGui();
-        if (ImGui::Button("Look at the origin")) {
-            _camera_orbital_controller.set_orbit_center({0, 0, 0}, _camera);
-        }
-        _camera_perspective_controller.ImGui();
+        _camera.imgui();
         ImGui::End();
         // ShaderManager
         _shader_manager.ImGui_windows();
