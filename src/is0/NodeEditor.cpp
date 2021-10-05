@@ -29,15 +29,22 @@ void NodeEditor::on_tree_change()
 std::string NodeEditor::gen_scene_sdf()
 {
     std::string s;
+    bool        b = false;
     // TODO improve me with a group
     (_registry.view<IsTerminalNode>() | _registry.view<Node>()).each([&](auto, Node& node) {
         s += "d = min(d, " + node.fn_name + "(pos));\n";
+        b = true;
     });
-    return "float sceneSDF(vec3 pos) {\n"
-           "float d = MAX_DIST;\n" +
-           s +
-           "return d;\n"
-           "}\n";
+    if (b)
+        return "float sceneSDF(vec3 pos) {\n"
+               "float d = MAX_DIST;\n" +
+               s +
+               "return d;\n"
+               "}";
+    else
+        return "float sceneSDF(vec3 pos) {"
+               "return length(pos) - 10.;"
+               "}";
 }
 
 std::string NodeEditor::gen_raymarching_shader_code()
