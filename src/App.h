@@ -46,7 +46,6 @@ private:
     Cool::RenderableViewManager      _views; // Must be before the views because it is used to construct them
     Cool::RenderableView&            _view;
     Exporter                         _exporter;
-    glm::vec3                        _background_color = glm::vec3(0.478f, 0.674f, 0.792f);
 #ifdef DEBUG
     bool _show_imgui_debug = true;
     bool _show_imgui_demo  = false;
@@ -60,6 +59,6 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        // archive(cereal::make_nvp("Shader Manager Manager", _shader_manager));
+        archive(cereal::make_nvp("Shader Manager Manager", _shader_manager));
     }
 };

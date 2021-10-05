@@ -10,11 +10,7 @@ App::App(Cool::WindowManager& windows)
     , _view{_views.make_view("View")}
 {
     Cool::CameraU::hook_events(_view.view.mouse_events(), _camera_orbital_controller, _camera);
-
     _camera_orbital_controller.set_distance_to_orbit_center(15.f);
-    // glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Please note that the blending is WRONG for the alpha channel (but it doesn't matter in most cases) The correct call would be glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE) a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
 }
 
 void App::update()
@@ -39,8 +35,8 @@ void App::render(Cool::RenderTarget& render_target, float time)
     render_target.render([&]() {
         const auto aspect_ratio = ImageSizeU::aspect_ratio(render_target.current_size());
         _camera_perspective_controller.apply_to(_camera, aspect_ratio);
-        glClearColor(_background_color.r, _background_color.g, _background_color.b, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT); // | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT);
         if (_shader_manager->is_valid()) {
             _shader_manager->setup_for_rendering(_camera, _camera_perspective_controller.focal_length(), aspect_ratio, time);
             _shader_manager->render();
