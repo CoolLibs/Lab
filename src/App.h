@@ -36,8 +36,8 @@ private:
     Cool::Polaroid polaroid();
 
 private:
-    Window& _main_window;
-    // ShaderManagerManager             _shader_manager;
+    Window&                          _main_window;
+    ShaderManagerManager             _shader_manager;
     Cool::Camera                     _camera{{15.f, 0.f, 0.f}};
     Cool::Clock_Realtime             _clock;
     ViewController_Orbital           _camera_orbital_controller;

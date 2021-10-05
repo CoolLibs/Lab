@@ -1,16 +1,18 @@
-// #include "ShaderManager.h"
-// #include <Cool/App/RenderState.h>
-// #include <Cool/Camera/Camera.h>
-// #include <Cool/Time/Time.h>
+#include "ShaderManager.h"
 
-// void ShaderManager::setup_for_rendering(const Camera& camera, float focal_length)
-// {
-//     _shader.bind();
-//     _shader.set_uniform("_aspect_ratio", RenderState::Size().aspectRatio());
-//     _shader.set_uniform("_camera_right_axis", camera.right_axis());
-//     _shader.set_uniform("_camera_up_axis", camera.up_axis());
-//     _shader.set_uniform("_camera_front_axis", camera.front_axis());
-//     _shader.set_uniform("_camera_position", camera.position());
-//     _shader.set_uniform("_focal_length", focal_length);
-//     _shader.set_uniform("_time", Time::time());
-// }
+void ShaderManager::setup_for_rendering(const Cool::Camera& camera, float focal_length, float aspect_ratio, float time)
+{
+    _fullscreen_pipeline.shader().bind();
+    _fullscreen_pipeline.shader().set_uniform("_aspect_ratio", aspect_ratio);
+    _fullscreen_pipeline.shader().set_uniform("_camera_right_axis", camera.right_axis());
+    _fullscreen_pipeline.shader().set_uniform("_camera_up_axis", camera.up_axis());
+    _fullscreen_pipeline.shader().set_uniform("_camera_front_axis", camera.front_axis());
+    _fullscreen_pipeline.shader().set_uniform("_camera_position", camera.position());
+    _fullscreen_pipeline.shader().set_uniform("_focal_length", focal_length);
+    _fullscreen_pipeline.shader().set_uniform("_time", time);
+}
+
+void ShaderManager::render()
+{
+    _fullscreen_pipeline.draw();
+}

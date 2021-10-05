@@ -37,13 +37,14 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #if defined(COOL_VULKAN)
 #elif defined(COOL_OPENGL)
     render_target.render([&]() {
-        _camera_perspective_controller.apply_to(_camera, ImageSizeU::aspect_ratio(render_target.current_size()));
+        const auto aspect_ratio = ImageSizeU::aspect_ratio(render_target.current_size());
+        _camera_perspective_controller.apply_to(_camera, aspect_ratio);
         glClearColor(_background_color.r, _background_color.g, _background_color.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT); // | GL_DEPTH_BUFFER_BIT);
-        // if (_shader_manager->is_valid()) {
-        //     _shader_manager->setup_for_rendering(_camera, _camera_perspective_controller.focal_length());
-        //     _renderer.render();
-        // }
+        if (_shader_manager->is_valid()) {
+            _shader_manager->setup_for_rendering(_camera, _camera_perspective_controller.focal_length(), aspect_ratio, time);
+            _shader_manager->render();
+        }
     });
 #endif
 }
@@ -94,7 +95,7 @@ void App::imgui_windows()
         _camera_perspective_controller.ImGui();
         ImGui::End();
         // ShaderManager
-        // _shader_manager.ImGui_windows();
+        _shader_manager.ImGui_windows();
 #if defined(DEBUG)
         if (_show_imgui_debug) {
             ImGui::Begin("Debug", &_show_imgui_debug);
