@@ -17,7 +17,7 @@ void App::update()
 {
     if (!_exporter.is_exporting()) {
         _clock.update();
-        // _shader_manager->update();
+        _shader_manager->update();
         for (auto& view : _views) {
             view.update_size(_preview_constraint);
         }
@@ -72,16 +72,16 @@ void App::imgui_windows()
          auto& view : _views) {
         view.imgui_window(aspect_ratio_is_constrained);
     }
-    // Time
-    ImGui::Begin("Time");
-    Cool::ClockU::imgui_timeline(_clock);
-    ImGui::End();
     // Exporter
     _exporter.imgui_windows(polaroid(), _clock.time());
-    // Console
-    Log::ToUser::imgui_console_window();
     //
     if (!_exporter.is_exporting()) {
+        // Console
+        Log::ToUser::imgui_console_window();
+        // Time
+        ImGui::Begin("Time");
+        Cool::ClockU::imgui_timeline(_clock);
+        ImGui::End();
         // Camera
         ImGui::Begin("Camera");
         _camera_orbital_controller.ImGui();
@@ -134,22 +134,20 @@ void App::imgui_menus()
 
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
-    if (!_exporter.is_exporting()) {
-        if (event.action == GLFW_RELEASE) {
-            if (Input::matches_char("s", event.key) && event.mods.ctrl()) {
-                _exporter.image_export_window().open();
-            }
-            if (Input::matches_char("e", event.key) && event.mods.ctrl()) {
-                _exporter.video_export_window().open();
-            }
+    if (event.action == GLFW_RELEASE) {
+        if (Input::matches_char("s", event.key) && event.mods.ctrl()) {
+            _exporter.image_export_window().open();
         }
-        if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
-            if (Input::matches_char("z", event.key) && event.mods.ctrl()) {
-                ParametersHistory::get().move_backward();
-            }
-            if (Input::matches_char("y", event.key) && event.mods.ctrl()) {
-                ParametersHistory::get().move_forward();
-            }
+        if (Input::matches_char("e", event.key) && event.mods.ctrl()) {
+            _exporter.video_export_window().open();
+        }
+    }
+    if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
+        if (Input::matches_char("z", event.key) && event.mods.ctrl()) {
+            ParametersHistory::get().move_backward();
+        }
+        if (Input::matches_char("y", event.key) && event.mods.ctrl()) {
+            ParametersHistory::get().move_forward();
         }
     }
 }
