@@ -55,6 +55,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Shader Manager Manager", _shader_manager));
+        archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
+                cereal::make_nvp("Camera Manager", _camera));
     }
 };
