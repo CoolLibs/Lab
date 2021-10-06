@@ -3,8 +3,6 @@
 #include <Cool/Default/DefaultApp.h>
 #include "ShaderManager/ShaderManagerManager.h"
 
-using namespace Cool;
-
 class App : public CoolDefault::DefaultApp {
 public:
     explicit App(Cool::WindowManager& windows);
