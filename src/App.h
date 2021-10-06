@@ -33,7 +33,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Shader Manager Manager", _shader_manager));
-        // cereal::make_nvp("Default App", reinterpret_cast<DefaultApp>(*this)));
+        archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
+                cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)));
     }
 };
