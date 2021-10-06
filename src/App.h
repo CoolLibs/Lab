@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Cool/AppManager/DefaultApp.h>
+#include <Cool/Default/DefaultApp.h>
 #include "ShaderManager/ShaderManagerManager.h"
 
 using namespace Cool;
