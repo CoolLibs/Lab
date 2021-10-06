@@ -10,7 +10,7 @@ public:
     void         render();
 
     virtual void update()       = 0;
-    virtual void ImGui_window() = 0;
+    virtual void imgui_window() = 0;
     /// <summary>
     ///
     /// </summary>

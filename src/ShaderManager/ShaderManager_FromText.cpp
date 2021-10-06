@@ -6,9 +6,9 @@
 #include <fstream>
 
 ShaderManager_FromText::ShaderManager_FromText()
-    : m_shaderWatcher([this](std::string_view path) { compile_shader(path); })
+    : _file_watcher([this](std::string_view path) { compile_shader(path); })
 {
-    setShaderPath("shader-examples/ray_marcher.frag");
+    set_shader_path("shader-examples/ray_marcher.frag");
 }
 
 void ShaderManager_FromText::compile_shader(std::string_view path)
@@ -71,25 +71,25 @@ void ShaderManager_FromText::setup_for_rendering(const Cool::Camera& camera, flo
     _parameters.set_uniforms_in_shader(_fullscreen_pipeline.shader());
 }
 
-void ShaderManager_FromText::setShaderPath(std::string_view path)
+void ShaderManager_FromText::set_shader_path(std::string_view path)
 {
-    m_shaderWatcher.set_path(path);
+    _file_watcher.set_path(path);
 }
 
-void ShaderManager_FromText::ImGui_window()
+void ShaderManager_FromText::imgui_window()
 {
     ImGui::Begin("Shader");
-    std::string path = m_shaderWatcher.path().string();
+    std::string path = _file_watcher.path().string();
     ImGui::Text("Path : ");
     ImGui::SameLine();
     ImGui::PushID(2132541);
     if (ImGui::InputText("", &path)) {
-        setShaderPath(path);
+        set_shader_path(path);
     }
     ImGui::PopID();
     ImGui::SameLine();
     if (Cool::ImGuiExtras::open_file_dialog(&path, Cool::NfdFileFilter::FragmentShader, Cool::File::whithout_file_name(path))) {
-        setShaderPath(path);
+        set_shader_path(path);
     }
     ImGui::Separator();
     ImGui::NewLine();

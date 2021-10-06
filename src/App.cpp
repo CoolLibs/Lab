@@ -34,7 +34,7 @@ void App::imgui_windows()
 {
     DefaultApp::imgui_windows();
     if (inputs_are_allowed()) {
-        _shader_manager.ImGui_windows();
+        _shader_manager.imgui_windows();
     }
 }
 

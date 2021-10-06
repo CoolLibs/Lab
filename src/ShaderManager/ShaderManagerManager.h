@@ -5,7 +5,7 @@
 
 class ShaderManagerManager {
 public:
-    void ImGui_windows();
+    void imgui_windows();
 
     // clang-format off
     ShaderManager& operator*() { if(_use_nodes) return _from_nodes; else return _from_text; }

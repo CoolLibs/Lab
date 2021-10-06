@@ -10,18 +10,18 @@ public:
 
     void setup_for_rendering(const Cool::Camera& camera, float focal_length, float aspect_ratio, float time) override;
 
-    inline void update() override { m_shaderWatcher.update(); }
-    inline bool is_valid() const override { return m_shaderWatcher.path_is_valid(); } // TODO doesn't currently check that the compilation succeeded
-    void        ImGui_window() override;
+    inline void update() override { _file_watcher.update(); }
+    inline bool is_valid() const override { return _file_watcher.path_is_valid(); } // TODO doesn't currently check that the compilation succeeded
+    void        imgui_window() override;
 
-    void setShaderPath(std::string_view path);
+    void set_shader_path(std::string_view path);
 
 private:
     void compile_shader(std::string_view path);
     void parse_shader_for_params(std::string_view path);
 
 private:
-    Cool::FileWatcher          m_shaderWatcher;
+    Cool::FileWatcher          _file_watcher;
     Cool::ParameterDynamicList _parameters;
 
 private:
@@ -31,7 +31,7 @@ private:
     void save(Archive& archive) const
     {
         archive(
-            cereal::make_nvp("Shader Path", m_shaderWatcher.path().string()),
+            cereal::make_nvp("Shader Path", _file_watcher.path().string()),
             cereal::make_nvp("Parameters", _parameters));
     }
     template<class Archive>
@@ -41,6 +41,6 @@ private:
         archive(
             path,
             _parameters);
-        setShaderPath(path);
+        set_shader_path(path);
     }
 };

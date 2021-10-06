@@ -9,7 +9,7 @@ public:
 
     void        update() override{};
     inline bool is_valid() const override { return true; } // TODO
-    void        ImGui_window() override;
+    void        imgui_window() override;
 
 private:
     NodeEditor _node_editor;
