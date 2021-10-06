@@ -7,14 +7,10 @@ class ShaderManagerManager {
 public:
     void ImGui_windows();
 
-    ShaderManager& operator*()
-    {
-        if (_use_nodes)
-            return _from_nodes;
-        else
-            return _from_text;
-    }
+    // clang-format off
+    ShaderManager& operator*() { if(_use_nodes) return _from_nodes; else return _from_text; }
     ShaderManager* operator->() { return &operator*(); }
+    // clang-format on
 
 private:
     bool                    _use_nodes = false;
@@ -28,7 +24,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Use Nodes ?", _use_nodes),
+            cereal::make_nvp("Is using nodes", _use_nodes),
             cereal::make_nvp("From Nodes", _from_nodes),
             cereal::make_nvp("From Text", _from_text));
     }
