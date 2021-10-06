@@ -191,7 +191,7 @@ void NodeEditor::ImGui_window()
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
         const Node& node = _registry.get<Node>(e);
         ed::BeginNode(node.node_id);
-        ImGui::Text(node.name.c_str());
+        ImGui::Text("%s", node.name.c_str());
         ImGui::BeginGroup();
         if (node.show_widgets(e)) {
             on_tree_change();
@@ -207,7 +207,7 @@ void NodeEditor::ImGui_window()
     _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
         const Node& node = _registry.get<Node>(e);
         ed::BeginNode(node.node_id);
-        ImGui::Text(node.name.c_str());
+        ImGui::Text("%s", node.name.c_str());
         ed::BeginPin(modifier_node.input_pin.id, ed::PinKind::Input);
         ImGui::Text("->IN");
         ed::EndPin();
