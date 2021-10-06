@@ -52,6 +52,12 @@ Cool::Polaroid App::polaroid()
         }};
 }
 
+bool App::aspect_ratio_is_constrained() const
+{
+    return _exporter.is_exporting() ||
+           _preview_constraint.wants_to_constrain_aspect_ratio();
+}
+
 bool App::inputs_are_allowed() const
 {
     return !_exporter.is_exporting();
@@ -65,10 +71,8 @@ bool App::wants_to_show_menu_bar() const
 void App::imgui_windows()
 {
     // Views
-    for (const bool aspect_ratio_is_constrained = _exporter.is_exporting() || // cppcheck-suppress syntaxError // (CppCheck is not yet aware of this C++20 syntax)
-                                                  _preview_constraint.wants_to_constrain_aspect_ratio();
-         auto& view : _views) {
-        view.imgui_window(aspect_ratio_is_constrained);
+    for (auto& view : _views) {
+        view.imgui_window(aspect_ratio_is_constrained());
     }
     // Exporter
     _exporter.imgui_windows(polaroid(), _clock.time());
@@ -149,20 +153,20 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
 {
     for (auto& view : _views) {
-        view.view.dispatch_mouse_button_event(event, _main_window.glfw());
+        view.view.dispatch_mouse_button_event(view_event(event, view));
     }
 }
 
 void App::on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event)
 {
     for (auto& view : _views) {
-        view.view.dispatch_mouse_scroll_event(event, _main_window.glfw());
+        view.view.dispatch_mouse_scroll_event(view_event(event, view));
     }
 }
 
 void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event)
 {
     for (auto& view : _views) {
-        view.view.dispatch_mouse_move_event(event, _main_window.glfw());
+        view.view.dispatch_mouse_move_event(view_event(event, view));
     }
 }

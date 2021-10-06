@@ -32,6 +32,15 @@ public:
 private:
     void           render(Cool::RenderTarget& render_target, float time);
     Cool::Polaroid polaroid();
+    bool           aspect_ratio_is_constrained() const;
+    template<typename Event>
+    ViewEvent<Event> view_event(const Event& event, const RenderableView& view)
+    {
+        return {event,
+                _main_window.glfw(),
+                {view.render_target.current_size(),
+                 aspect_ratio_is_constrained()}};
+    }
 
 private:
     Window&                     _main_window;
