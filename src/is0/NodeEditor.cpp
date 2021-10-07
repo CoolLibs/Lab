@@ -68,8 +68,8 @@ std::string NodeEditor::gen_raymarching_shader_code()
 #version 430
 
 in vec2       vTexCoords;
-uniform mat4  _camera_view;
-uniform mat4  _camera_projection;
+uniform mat4  _camera_transform;
+uniform mat4  _camera_inverse_projection;
 uniform float _time;
 
 // ----- Ray marching options ----- //
@@ -127,7 +127,7 @@ vec3 render(vec3 ro, vec3 rd) {
 
 vec3 apply_camera(vec3 pos)
 {
-    vec4 v = (inverse(_camera_view) * inverse(_camera_projection) * vec4(pos, 1.));
+    vec4 v = (_camera_transform * _camera_inverse_projection * vec4(pos, 1.));
     return v.xyz / v.w;
 }
 
