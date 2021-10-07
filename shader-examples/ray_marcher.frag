@@ -11,7 +11,7 @@ uniform float _time;
 
 float sdf(vec3 p)
 {
-    return length(mod(p + 0.5, vec3(1.)) - 0.5) - .03;
+    return length(mod(p + 5., vec3(10.)) - 5.) - 1.;
 }
 
 float ray_march(vec3 ro, vec3 rd)
@@ -64,7 +64,7 @@ vec3 render(vec3 ro, vec3 rd)
 
 vec3 apply_camera(vec3 pos)
 {
-    vec4 v = (inverse(_camera_view) * /* inverse(_camera_projection) * */ vec4(pos, 1.));
+    vec4 v = (inverse(_camera_view) * inverse(_camera_projection) * vec4(pos, 1.));
     return v.xyz / v.w;
 }
 
@@ -81,7 +81,7 @@ vec3 ray_origin()
 vec3 ray_direction()
 {
     vec3 begin = vec3(point_on_face(), -1.);
-    vec3 end   = vec3(point_on_face(), 1.);
+    vec3 end   = vec3(point_on_face(), 0.);
     return normalize(apply_camera(end) - apply_camera(begin));
 }
 
