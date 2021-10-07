@@ -23,7 +23,7 @@ void App::render(Cool::RenderTarget& render_target, float time)
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         if (_shader_manager->is_valid()) {
-            _shader_manager->setup_for_rendering(*_camera, 2.f /*TODO*/, aspect_ratio, time);
+            _shader_manager->setup_for_rendering(*_camera, time);
             _shader_manager->render();
         }
     });

@@ -6,7 +6,7 @@
 
 class ShaderManager {
 public:
-    virtual void setup_for_rendering(const Cool::Camera& camera, float focal_length, float aspect_ratio, float time);
+    virtual void setup_for_rendering(const Cool::Camera& camera, float time);
     void         render();
 
     virtual void update()       = 0;
