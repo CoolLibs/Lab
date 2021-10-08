@@ -18,5 +18,5 @@ public:
     virtual bool is_valid() const = 0;
 
 protected:
-    Cool::FullscreenPipeline _fullscreen_pipeline{Cool::File::root_dir() + "/shader-examples/axes.frag"};
+    Cool::FullscreenPipeline _fullscreen_pipeline{Cool::ShaderSource{Cool::File::to_string(Cool::File::root_dir() + "/shader-examples/axes.frag")}};
 };

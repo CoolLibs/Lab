@@ -4,7 +4,7 @@
 ShaderManager_FromNodes::ShaderManager_FromNodes()
 {
     _node_editor.subscribe_to_tree_change([this](NodeEditor& node_editor) {
-        _fullscreen_pipeline.recompile_shader_from_source(node_editor.gen_raymarching_shader_code());
+        _fullscreen_pipeline.recompile(node_editor.gen_raymarching_shader_code());
     });
 }
 

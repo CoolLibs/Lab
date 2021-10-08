@@ -1,11 +1,11 @@
 #include "ShaderManager.h"
+#include <Cool/Camera/CameraShaderU.h>
 
 void ShaderManager::setup_for_rendering(const Cool::Camera& camera, float time)
 {
     _fullscreen_pipeline.shader().bind();
-    _fullscreen_pipeline.shader().set_uniform("_camera_transform", camera.transform_matrix());
-    _fullscreen_pipeline.shader().set_uniform("_camera_inverse_projection", glm::inverse(camera.projection_matrix()));
     _fullscreen_pipeline.shader().set_uniform("_time", time);
+    Cool::CameraShaderU::set_uniform(_fullscreen_pipeline.shader(), camera);
 }
 
 void ShaderManager::render()

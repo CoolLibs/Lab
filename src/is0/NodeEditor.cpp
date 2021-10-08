@@ -47,7 +47,7 @@ std::string NodeEditor::gen_scene_sdf()
                "}";
 }
 
-std::string NodeEditor::gen_raymarching_shader_code()
+Cool::ShaderSource NodeEditor::gen_raymarching_shader_code()
 {
     // Update the source codes
     _registry.view<Node>().each([&](auto e, Node& node) {
@@ -64,13 +64,12 @@ std::string NodeEditor::gen_raymarching_shader_code()
     });
 
     //
-    return R"V0G0N(
+    return ShaderSource{R"V0G0N(
 #version 430
 
 in vec2       vTexCoords;
-uniform mat4  _camera_transform;
-uniform mat4  _camera_inverse_projection;
 uniform float _time;
+#include "Cool/res/shaders/camera.glsl"
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 150
@@ -80,7 +79,7 @@ uniform float _time;
 
 #define saturate(v) clamp(v, 0., 1.)
 )V0G0N" + function_declarations +
-           function_implementations + gen_scene_sdf() + R"V0G0N(
+                        function_implementations + gen_scene_sdf() + R"V0G0N(
 
 float rayMarching(vec3 ro, vec3 rd) {
     float t = 0.;
@@ -125,35 +124,12 @@ vec3 render(vec3 ro, vec3 rd) {
     return finalCol;
 }
 
-vec3 apply_camera(vec3 pos)
-{
-    vec4 v = (_camera_transform * _camera_inverse_projection * vec4(pos, 1.));
-    return v.xyz / v.w;
-}
-
-vec2 point_on_face()
-{
-    return mix(vec2(-1.), vec2(1.), vTexCoords);
-}
-
-vec3 ray_origin()
-{
-    return apply_camera(vec3(point_on_face(), -1.));
-}
-
-vec3 ray_direction()
-{
-    vec3 begin = vec3(point_on_face(), -1.);
-    vec3 end   = vec3(point_on_face(), 0.);
-    return normalize(apply_camera(end) - apply_camera(begin));
-}
-
 void main() {
-    vec3 ro = ray_origin();
-    vec3 rd = ray_direction();
+    vec3 ro = cool_ray_origin();
+    vec3 rd = cool_ray_direction();
     gl_FragColor = vec4(render(ro, rd), 1.);
 }
-)V0G0N";
+)V0G0N"};
 }
 
 PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id)

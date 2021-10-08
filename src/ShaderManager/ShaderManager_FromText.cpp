@@ -13,7 +13,7 @@ ShaderManager_FromText::ShaderManager_FromText()
 
 void ShaderManager_FromText::compile_shader(std::string_view path)
 {
-    _fullscreen_pipeline.recompile_shader_from_file(path);
+    _fullscreen_pipeline.recompile(Cool::ShaderSource{Cool::File::to_string(path)});
     parse_shader_for_params(path);
 }
 
