@@ -11,7 +11,6 @@ public:
     void setup_for_rendering(const Cool::Camera& camera, float time) override;
 
     inline void update() override { _file_watcher.update(); }
-    inline bool is_valid() const override { return _file_watcher.path_is_valid(); } // TODO doesn't currently check that the compilation succeeded
     void        imgui_window() override;
 
     void set_shader_path(std::string_view path);

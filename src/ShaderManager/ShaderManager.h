@@ -11,11 +11,6 @@ public:
 
     virtual void update()       = 0;
     virtual void imgui_window() = 0;
-    /// <summary>
-    ///
-    /// </summary>
-    /// <returns>true iff we currently have a valid shader that can be used for rendering</returns>
-    virtual bool is_valid() const = 0;
 
 protected:
     Cool::FullscreenPipeline _fullscreen_pipeline{};
