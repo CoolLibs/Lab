@@ -1,13 +1,8 @@
 #version 430
 
 in vec2 vTexCoords;
-uniform float _aspect_ratio;
-uniform vec3 _camera_right_axis;
-uniform vec3 _camera_up_axis;
-uniform vec3 _camera_front_axis;
-uniform vec3 _camera_position;
-uniform float _focal_length;
 uniform float _time;
+#include "Cool/res/shaders/camera.glsl"
 
 #define MAX_STEPS 100
 #define MAX_DIST 100.
@@ -80,12 +75,8 @@ vec3 render(vec3 ro, vec3 rd) {
 }
 
 void main() {
-    vec3 ro = _camera_position;
-    vec3 rd = normalize(
-        _camera_right_axis * (vTexCoords.x - 0.5) * _aspect_ratio
-      + _camera_up_axis    * (vTexCoords.y - 0.5)
-      + _camera_front_axis * _focal_length
-    );
+    vec3 ro = cool_ray_origin();
+    vec3 rd = cool_ray_direction();
 
     gl_FragColor = vec4(render(ro, rd), 1.);
 }
