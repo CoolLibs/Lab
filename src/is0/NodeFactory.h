@@ -199,11 +199,11 @@ inline entt::entity twist(entt::registry& R, NodeEditor& node_enditor)
             auto& twist_params = R.get<Twist>(e);
             ImGui::PushID(static_cast<int>(e));
             ImGui::SetNextItemWidth(200.f);
-            bool b = ImGui::SliderFloat("twist", &twist_params.k, -3.f, 3.f);
+            bool b = ImGui::SliderFloat("twist", &twist_params.k, -0.02f, 0.02f);
             ImGui::PopID();
             return b;
         });
-    R.emplace<Twist>(e, 1.f);
+    R.emplace<Twist>(e, 0.f);
     return e;
 }
 
