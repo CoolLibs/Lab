@@ -47,7 +47,7 @@ std::string NodeEditor::gen_scene_sdf()
                "}";
 }
 
-Cool::ShaderSource NodeEditor::gen_raymarching_shader_code()
+std::string NodeEditor::gen_raymarching_shader_code()
 {
     // Update the source codes
     _registry.view<Node>().each([&](auto e, Node& node) {
@@ -64,7 +64,7 @@ Cool::ShaderSource NodeEditor::gen_raymarching_shader_code()
     });
 
     //
-    return ShaderSource{R"V0G0N(
+    return R"V0G0N(
 #version 430
 
 in vec2       vTexCoords;
@@ -79,7 +79,7 @@ uniform float _time;
 
 #define saturate(v) clamp(v, 0., 1.)
 )V0G0N" + function_declarations +
-                        function_implementations + gen_scene_sdf() + R"V0G0N(
+           function_implementations + gen_scene_sdf() + R"V0G0N(
 
 float rayMarching(vec3 ro, vec3 rd) {
     float t = 0.;
@@ -129,7 +129,7 @@ void main() {
     vec3 rd = cool_ray_direction();
     gl_FragColor = vec4(render(ro, rd), 1.);
 }
-)V0G0N"};
+)V0G0N";
 }
 
 PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id)

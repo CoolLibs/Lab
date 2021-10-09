@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Cool/Gpu/ShaderSource.h>
 #include <imgui-node-editor/imgui_node_editor.h>
 #include <entt/entt.hpp>
 
@@ -26,7 +25,7 @@ public:
 
     void ImGui_window();
 
-    Cool::ShaderSource gen_raymarching_shader_code();
+    std::string gen_raymarching_shader_code();
 
     void subscribe_to_tree_change(std::function<void(NodeEditor&)> callback);
 

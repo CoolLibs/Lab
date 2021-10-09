@@ -13,7 +13,7 @@ ShaderManager_FromText::ShaderManager_FromText()
 
 void ShaderManager_FromText::compile_shader(std::string_view path)
 {
-    _fullscreen_pipeline.recompile(Cool::ShaderSource{Cool::File::to_string(path)});
+    _fullscreen_pipeline.compile(Cool::File::to_string(path), path);
     parse_shader_for_params(path);
 }
 
@@ -67,8 +67,10 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
 
 void ShaderManager_FromText::setup_for_rendering(const Cool::Camera& camera, float time)
 {
-    ShaderManager::setup_for_rendering(camera, time);
-    _parameters.set_uniforms_in_shader(_fullscreen_pipeline.shader());
+    if (_fullscreen_pipeline.shader().has_value()) {
+        ShaderManager::setup_for_rendering(camera, time);
+        _parameters.set_uniforms_in_shader(*_fullscreen_pipeline.shader());
+    }
 }
 
 void ShaderManager_FromText::set_shader_path(std::string_view path)
