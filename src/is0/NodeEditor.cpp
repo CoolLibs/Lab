@@ -168,7 +168,7 @@ entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
     return entt::null;
 }
 
-void NodeEditor::ImGui_window()
+void NodeEditor::imgui_window()
 {
     ImGui::Begin("Nodes");
     ed::SetCurrentEditor(_context);

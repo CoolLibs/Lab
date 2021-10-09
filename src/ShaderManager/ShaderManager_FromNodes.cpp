@@ -10,5 +10,5 @@ ShaderManager_FromNodes::ShaderManager_FromNodes()
 
 void ShaderManager_FromNodes::imgui_window()
 {
-    _node_editor.ImGui_window();
+    _node_editor.imgui_window();
 }

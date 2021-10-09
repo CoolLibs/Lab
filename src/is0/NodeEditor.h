@@ -23,7 +23,7 @@ public:
     NodeEditor();
     ~NodeEditor();
 
-    void ImGui_window();
+    void imgui_window();
 
     std::string gen_raymarching_shader_code();
 
