@@ -6,9 +6,12 @@
 #include <fstream>
 
 ShaderManager_FromText::ShaderManager_FromText()
-    : _file_watcher([this](std::string_view path) { compile_shader(path); })
+    : _file_watcher{Cool::File::root_dir() + "/shader-examples/axes.frag",
+                    /* on_file_changed: */ [&](std::string_view path) { compile_shader(path); },
+                    /* on_path_invalid: */ [&](std::string_view path) { 
+                        Cool::Log::ToUser::error("Live Coding", "Invalid path: \"{}\"", path); 
+                        _fullscreen_pipeline.reset(); }}
 {
-    set_shader_path("shader-examples/ray_marcher.frag");
 }
 
 void ShaderManager_FromText::compile_shader(std::string_view path)
