@@ -7,10 +7,10 @@
 
 ShaderManager_FromText::ShaderManager_FromText()
     : _file_watcher{Cool::File::root_dir() + "/shader-examples/axes.frag",
-                    /* on_file_changed: */ [&](std::string_view path) { compile_shader(path); },
-                    /* on_path_invalid: */ [&](std::string_view path) { 
+                    {.on_file_changed = [&](std::string_view path) { compile_shader(path); },
+                     .on_path_invalid = [&](std::string_view path) { 
                         Cool::Log::ToUser::error("Live Coding", "Invalid path: \"{}\"", path); 
-                        _fullscreen_pipeline.reset(); }}
+                        _fullscreen_pipeline.reset(); }}}
 {
 }
 
