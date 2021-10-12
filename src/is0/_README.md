@@ -1,5 +1,8 @@
+# *is0*
 
-# is0
+## What is *is0* ?
+
+*is0* is a 3D modeler and renderer based on *Signed Distance Fields* (SDFs for short). It is an alternative representation of 3D objects that doesn't involve meshes and is very well suited for procedural modeling and raycast rendering.
 
 ## Learning SDFs and RayMarching
 
