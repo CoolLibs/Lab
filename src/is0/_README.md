@@ -6,7 +6,7 @@
 
 ## Learning SDFs and RayMarching
 
-I would suggest you watch all these videos, in that order: 
+I would suggest you watch these videos, in that order: 
 
 - [Conceptual intro to ray marching by *CodeParade*](https://www.youtube.com/watch?v=svLzmFuSBhk)
 
@@ -20,6 +20,7 @@ I would suggest you watch all these videos, in that order:
 
 - [Inigo's Artworks](https://iquilezles.org/www/articles/raymarchingdf/raymarchingdf.htm)
 - [List of primitives and effects](https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm)
+- [Inigo's painting process](https://youtu.be/8--5LwHRhjk)
 - [*Dream*'s engine : different rendering techniques for SDFs](https://www.youtube.com/watch?v=u9KNtnCZDMI)
 - [Fuse, a similar project](https://cdm.link/2021/09/fuse-for-vvvv-is-a-visual-revolution-free-always-runtime-patching-right-on-the-gpu/?fbclid=IwAR2nzVaNZO-zYzhiKdFagsm8KpsXMsFCvJwbydii13ILH6RMZb6b0LNJExM)
 - [Node Editor in SHADERed](https://shadered.org/plugin?id=spearnode)
