@@ -1,7 +1,7 @@
 using namespace Cool;
 
 #include "NodeEditor.h"
-#include "Node.h"
+#include "EdNode.h"
 #include "NodeFactory.h"
 
 NodeEditor::NodeEditor()
@@ -30,7 +30,7 @@ std::string NodeEditor::gen_scene_sdf()
 {
     std::string s;
     // TODO improve me with a group
-    (_registry.view<IsTerminalNode>() | _registry.view<Node>()).each([&](auto, Node& node) {
+    (_registry.view<IsTerminalNode>() | _registry.view<EdNode>()).each([&](auto, EdNode& node) {
         s += "d = min(d, " + node.fn_name + "(pos));\n";
     });
     return "float sceneSDF(vec3 pos) {\n"
@@ -43,7 +43,7 @@ std::string NodeEditor::gen_scene_sdf()
 std::string NodeEditor::gen_raymarching_shader_code()
 {
     // Update the source codes
-    _registry.view<Node>().each([&](auto e, Node& node) {
+    _registry.view<EdNode>().each([&](auto e, EdNode& node) {
         node.fn_implementation = NodeFactory::fn_implementation(NodeFactory::fn_signature(node.fn_name), node.gen_source_code(e));
     });
 
@@ -51,7 +51,7 @@ std::string NodeEditor::gen_raymarching_shader_code()
     std::string function_declarations    = "";
     std::string function_implementations = "";
 
-    _registry.view<Node>().each([&](auto, Node& node) {
+    _registry.view<EdNode>().each([&](auto, EdNode& node) {
         function_declarations += node.fn_declaration;
         function_implementations += node.fn_implementation;
     });
@@ -173,7 +173,7 @@ void NodeEditor::imgui_window()
 
     // Draw Shape Nodes
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
-        const Node& node = _registry.get<Node>(e);
+        const EdNode& node = _registry.get<EdNode>(e);
         ed::BeginNode(node.node_id);
         ImGui::Text("%s", node.name.c_str());
         ImGui::BeginGroup();
@@ -189,7 +189,7 @@ void NodeEditor::imgui_window()
     });
     // Draw Modifier Nodes
     _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
-        const Node& node = _registry.get<Node>(e);
+        const EdNode& node = _registry.get<EdNode>(e);
         ed::BeginNode(node.node_id);
         ImGui::Text("%s", node.name.c_str());
         ed::BeginPin(modifier_node.input_pin.id, ed::PinKind::Input);

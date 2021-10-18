@@ -5,7 +5,7 @@
 using CodeGenerator = std::function<std::string(entt::entity)>;
 using UiWidgets     = std::function<bool(entt::entity)>;
 
-struct Node {
+struct EdNode {
     std::string name;
     std::string fn_name;
     ed::NodeId  node_id;
