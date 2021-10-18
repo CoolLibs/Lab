@@ -5,28 +5,28 @@
 
 namespace NodeFactory {
 
-int NextId()
+inline int NextId()
 {
     static int id = 1;
     return id++;
 }
 
-std::string fn_signature(std::string name)
+inline std::string fn_signature(const std::string& name)
 {
     return "float " + name + "(vec3 pos)";
 }
 
-std::string fn_declaration(std::string signature)
+inline std::string fn_declaration(const std::string& signature)
 {
     return signature + ";\n";
 }
 
-std::string fn_implementation(std::string signature, std::string body)
+inline std::string fn_implementation(const std::string& signature, const std::string& body)
 {
     return signature + " {\n" + body + "\n}\n";
 }
 
-inline entt::entity node(entt::registry& R, std::string name, CodeGenerator gen_source_code, UiWidgets show_widgets)
+inline entt::entity node(entt::registry& R, const std::string& name, CodeGenerator gen_source_code, UiWidgets show_widgets)
 {
     entt::entity e       = R.create();
     std::string  fn_name = name + "__" + std::to_string(static_cast<std::uint32_t>(e));
@@ -42,14 +42,14 @@ inline entt::entity node(entt::registry& R, std::string name, CodeGenerator gen_
     return e;
 }
 
-inline entt::entity shape(entt::registry& R, std::string name, CodeGenerator fn_body_generator, UiWidgets show_widgets)
+inline entt::entity shape(entt::registry& R, const std::string& name, CodeGenerator fn_body_generator, UiWidgets show_widgets)
 {
     entt::entity e = node(R, name, fn_body_generator, show_widgets);
     R.emplace<ShapeNode>(e, OutputPinSingle(NextId()));
     return e;
 }
 
-inline entt::entity modifier(entt::registry& R, std::string name, CodeGenerator fn_body_generator, UiWidgets show_widgets)
+inline entt::entity modifier(entt::registry& R, const std::string& name, CodeGenerator fn_body_generator, UiWidgets show_widgets)
 {
     entt::entity e = node(R, name, fn_body_generator, show_widgets);
     R.emplace<ModifierNode>(e,
