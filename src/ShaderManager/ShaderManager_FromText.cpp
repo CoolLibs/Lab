@@ -47,13 +47,13 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
                     }
                     else {
                         if (!type.compare("int"))
-                            new_params->push_back(Cool::Parameter::Int(name));
+                            new_params->push_back(Cool::Parameter::Int{{.name = name}});
                         else if (!type.compare("float"))
-                            new_params->push_back(Cool::Parameter::Float(name));
+                            new_params->push_back(Cool::Parameter::Float{{.name = name}});
                         else if (!type.compare("vec2"))
-                            new_params->push_back(Cool::Parameter::Vec2(name));
+                            new_params->push_back(Cool::Parameter::Vec2{{.name = name}});
                         else if (!type.compare("vec3"))
-                            new_params->push_back(Cool::Parameter::Color(name));
+                            new_params->push_back(Cool::Parameter::Color{{.name = name}});
                     }
                 }
             }
