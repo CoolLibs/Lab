@@ -2,7 +2,7 @@ using namespace Cool;
 
 #include "NodeEditor.h"
 #include "EdNode.h"
-#include "NodeFactory.h"
+#include "EdNodeFactory.h"
 
 NodeEditor::NodeEditor()
     : _context(ed::CreateEditor())
@@ -44,7 +44,7 @@ std::string NodeEditor::gen_raymarching_shader_code()
 {
     // Update the source codes
     _registry.view<EdNode>().each([&](auto e, EdNode& node) {
-        node.fn_implementation = NodeFactory::fn_implementation(NodeFactory::fn_signature(node.fn_name), node.gen_source_code(e));
+        node.fn_implementation = EdNodeFactory::fn_implementation(EdNodeFactory::fn_signature(node.fn_name), node.gen_source_code(e));
     });
 
     // Collect all function declarations and implementations
@@ -239,7 +239,7 @@ void NodeEditor::imgui_window()
                 accept_link &= start_pin_info.node_entity != end_pin_info.node_entity;
 
                 if (accept_link) {
-                    _links.push_back({ed::LinkId(NodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity});
+                    _links.push_back({ed::LinkId(EdNodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity});
                     _registry.remove_if_exists<IsTerminalNode>(start_pin_info.node_entity);
                     on_tree_change();
                     // Draw new link
@@ -280,23 +280,23 @@ void NodeEditor::imgui_window()
     ed::End();
     if (ImGui::BeginPopupContextItem("sdfxaas", ImGuiPopupFlags_MouseButtonMiddle)) {
         if (ImGui::Button("Sphere")) {
-            NodeFactory::sphere(_registry);
+            EdNodeFactory::sphere(_registry);
             on_tree_change();
         }
         if (ImGui::Button("Cube")) {
-            NodeFactory::cube(_registry);
+            EdNodeFactory::cube(_registry);
             on_tree_change();
         }
         if (ImGui::Button("Transform")) {
-            NodeFactory::transform(_registry, *this);
+            EdNodeFactory::transform(_registry, *this);
             on_tree_change();
         }
         if (ImGui::Button("Repeat Infinite")) {
-            NodeFactory::repeat_infinite(_registry, *this);
+            EdNodeFactory::repeat_infinite(_registry, *this);
             on_tree_change();
         }
         if (ImGui::Button("Twist")) {
-            NodeFactory::twist(_registry, *this);
+            EdNodeFactory::twist(_registry, *this);
             on_tree_change();
         }
         ImGui::EndPopup();

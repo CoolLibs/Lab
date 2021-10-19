@@ -3,7 +3,7 @@
 #include <entt/entt.hpp>
 #include "EdNode.h"
 
-namespace NodeFactory {
+namespace EdNodeFactory {
 
 inline int NextId()
 {
@@ -207,4 +207,4 @@ inline entt::entity twist(entt::registry& R, NodeEditor& node_enditor)
     return e;
 }
 
-} // namespace NodeFactory
+} // namespace EdNodeFactory
