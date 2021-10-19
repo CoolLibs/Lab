@@ -107,7 +107,7 @@ struct Transform {
     glm::vec3 scale;
 };
 
-inline entt::entity transform(entt::registry& R, NodeEditor& node_enditor)
+inline entt::entity transform(entt::registry& R, EdNodeEditor& node_enditor)
 {
     entt::entity e = modifier(
         R,
@@ -141,7 +141,7 @@ struct RepeatInfinite {
     float extent;
 };
 
-inline entt::entity repeat_infinite(entt::registry& R, NodeEditor& node_enditor)
+inline entt::entity repeat_infinite(entt::registry& R, EdNodeEditor& node_enditor)
 {
     entt::entity e = modifier(
         R,
@@ -172,7 +172,7 @@ struct Twist {
     float k;
 };
 
-inline entt::entity twist(entt::registry& R, NodeEditor& node_enditor)
+inline entt::entity twist(entt::registry& R, EdNodeEditor& node_enditor)
 {
     entt::entity e = modifier(
         R,

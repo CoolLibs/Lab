@@ -1,32 +1,32 @@
 using namespace Cool;
 
-#include "NodeEditor.h"
+#include "EdNodeEditor.h"
 #include "EdNode.h"
 #include "EdNodeFactory.h"
 
-NodeEditor::NodeEditor()
+EdNodeEditor::EdNodeEditor()
     : _context(ed::CreateEditor())
 {
 }
 
-NodeEditor::~NodeEditor()
+EdNodeEditor::~EdNodeEditor()
 {
     ed::DestroyEditor(_context);
 }
 
-void NodeEditor::subscribe_to_tree_change(std::function<void(NodeEditor&)> callback)
+void EdNodeEditor::subscribe_to_tree_change(std::function<void(EdNodeEditor&)> callback)
 {
     _on_tree_change_callbacks.push_back(callback);
     callback(*this);
 }
 
-void NodeEditor::on_tree_change()
+void EdNodeEditor::on_tree_change()
 {
     for (auto& callback : _on_tree_change_callbacks)
         callback(*this);
 }
 
-std::string NodeEditor::gen_scene_sdf()
+std::string EdNodeEditor::gen_scene_sdf()
 {
     std::string s;
     // TODO improve me with a group
@@ -40,7 +40,7 @@ std::string NodeEditor::gen_scene_sdf()
            "}";
 }
 
-std::string NodeEditor::gen_raymarching_shader_code()
+std::string EdNodeEditor::gen_raymarching_shader_code()
 {
     // Update the source codes
     _registry.view<EdNode>().each([&](auto e, EdNode& node) {
@@ -125,7 +125,7 @@ void main() {
 )V0G0N";
 }
 
-PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id)
+PinInfo EdNodeEditor::compute_pin_infos(ed::PinId pin_id)
 {
     PinInfo pin_info;
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
@@ -148,7 +148,7 @@ PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id)
     return pin_info;
 }
 
-entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
+entt::entity EdNodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
 {
     for (const auto& link : _links) {
         if (link.start_pin_id == pin_id) {
@@ -161,7 +161,7 @@ entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
     return entt::null;
 }
 
-void NodeEditor::imgui_window()
+void EdNodeEditor::imgui_window()
 {
     ImGui::Begin("Nodes");
     ed::SetCurrentEditor(_context);
