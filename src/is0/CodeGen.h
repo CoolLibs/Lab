@@ -24,60 +24,19 @@ std::string function_name(const FnNameParams& p);
 std::string function_signature(const FnSignatureParams& p);
 std::string function_declaration(const FnSignatureParams& p);
 std::string function_definition(const FnDefinitionParams& p);
+
 std::string parameters_definitions(const Cool::ParameterList& list);
-
-template<typename T>
-std::string type_to_string()
-{
-    if constexpr (std::is_same_v<T, int>) {
-        return "int";
-    }
-    if constexpr (std::is_same_v<T, float>) {
-        return "float";
-    }
-    if constexpr (std::is_same_v<T, glm::vec2>) {
-        return "vec2";
-    }
-    if constexpr (std::is_same_v<T, glm::vec3>) {
-        return "vec3";
-    }
-    if constexpr (std::is_same_v<T, glm::vec4>) {
-        return "vec4";
-    }
-}
-
-template<typename T>
-std::string value_to_string(const T&& x)
-{
-    if constexpr (std::is_same_v<T, int>) {
-        return std::to_string(x);
-    }
-    if constexpr (std::is_same_v<T, float>) {
-        return std::to_string(x);
-    }
-    if constexpr (std::is_same_v<T, glm::vec2>) {
-        return glm::to_string(x);
-    }
-    if constexpr (std::is_same_v<T, glm::vec3>) {
-        return glm::to_string(x);
-    }
-    if constexpr (std::is_same_v<T, glm::vec4>) {
-        return glm::to_string(x);
-    }
-}
-
+std::string parameter_definition_any(const Cool::Parameter::Any& param);
 template<Cool::ParameterDesc Desc>
-inline std::string parameter_definition(const Cool::Parameter_Base<Desc>& param)
-{
-    return "const " + type_to_string<Desc::Value>() + " " + param.name() + " = " + value_to_string(*param) + ";";
-}
-
-inline std::string parameter_definition_any(const Cool::Parameter::Any& param)
-{
-    return std::visit([](auto&& param) { return parameter_definition(param); }, param);
-}
+std::string parameter_definition(const Cool::Parameter_Base<Desc>& param);
+template<typename T>
+std::string type_to_string();
+template<typename T>
+std::string value_to_string(const T&& x);
 
 } // namespace CodeGen
+
+#include "CodeGen.tpp"
 
 TEST_CASE("[is0::CodeGen] Function generation")
 {

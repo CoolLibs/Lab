@@ -30,10 +30,9 @@ std::string parameters_definitions(const Cool::ParameterList& list)
     });
 }
 
-// std::string parameter_definition(const Cool::Parameter::Any& param)
-// {
-//     const auto& name = std::visit([](const auto&& param) { return param.name(); }, param);
-//     return name;
-// }
+std::string parameter_definition_any(const Cool::Parameter::Any& param)
+{
+    return std::visit([](auto&& param) { return parameter_definition(param); }, param);
+}
 
 } // namespace CodeGen
