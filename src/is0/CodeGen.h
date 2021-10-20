@@ -16,6 +16,7 @@ struct FnSignatureParams {
 
 struct FnDefinitionParams {
     const FnSignatureParams& fn_signature_params;
+    std::string_view         body;
 };
 
 std::string function_name(const FnNameParams& p);
@@ -28,13 +29,16 @@ std::string function_definition(const FnDefinitionParams& p);
 TEST_CASE("[is0::CodeGen] Function generation")
 {
     // Given
-    const auto name             = std::string{"my_sdf"};
-    const auto name_params      = CodeGen::FnNameParams{name,
+    const auto name              = std::string{"my_sdf"};
+    const auto name_params       = CodeGen::FnNameParams{name,
                                                    Cool::Uuid{42}};
-    const auto signature_params = CodeGen::FnSignatureParams{name_params,
+    const auto signature_params  = CodeGen::FnSignatureParams{name_params,
                                                              "(vec3 pos)"};
+    const auto definition_params = CodeGen::FnDefinitionParams{signature_params,
+                                                               "{ return 1.; }"};
     // Then
     CHECK(CodeGen::function_name(name_params) == "my_sdf_42");
     CHECK(CodeGen::function_signature(signature_params) == "float my_sdf_42(vec3 pos)");
     CHECK(CodeGen::function_declaration(signature_params) == "float my_sdf_42(vec3 pos);");
+    CHECK(CodeGen::function_definition(definition_params) == "float my_sdf_42(vec3 pos){ return 1.; }");
 }

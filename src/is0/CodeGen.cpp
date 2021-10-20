@@ -19,7 +19,7 @@ std::string function_declaration(const FnSignatureParams& p)
 
 std::string function_definition(const FnDefinitionParams& p)
 {
-    return function_signature(p.fn_signature_params); //
+    return function_signature(p.fn_signature_params) + std::string{p.body};
 }
 
 } // namespace CodeGen
