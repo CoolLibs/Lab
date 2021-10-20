@@ -23,6 +23,11 @@ std::string function_definition(const FnDefinitionParams& p)
     return function_signature(p.fn_signature_params) + std::string{p.body};
 }
 
+std::string function_body(const Cool::ParameterList& list, const std::string& code_template)
+{
+    return "{\n" + parameters_definitions(list) + '\n' + code_template + "\n}";
+}
+
 std::string parameters_definitions(const Cool::ParameterList& list)
 {
     return std::accumulate(list->begin(), list->end(), std::string{""}, [](const std::string& acc, const auto& param) {

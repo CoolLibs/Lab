@@ -24,6 +24,7 @@ std::string function_name(const FnNameParams& p);
 std::string function_signature(const FnSignatureParams& p);
 std::string function_declaration(const FnSignatureParams& p);
 std::string function_definition(const FnDefinitionParams& p);
+std::string function_body(const Cool::ParameterList& list, const std::string& code_template);
 
 std::string parameters_definitions(const Cool::ParameterList& list);
 std::string parameter_definition_any(const Cool::Parameter::Any& param);
@@ -58,15 +59,21 @@ TEST_CASE("[is0::CodeGen] Function generation")
 TEST_CASE("[is0::CodeGen] Parameter definition")
 {
     // Given
-    const auto param_int  = Cool::Parameter::Int{{.name = "my_param", .default_value = 11}};
-    const auto param_vec2 = Cool::Parameter::Vec2{{.name = "my_param", .default_value = {1.f, 2.f}}};
+    const auto param_int  = Cool::Parameter::Int{{.name = "my_param_int", .default_value = 11}};
+    const auto param_vec2 = Cool::Parameter::Vec2{{.name = "my_param_vec2", .default_value = {1.f, 2.f}}};
     auto       param_list = Cool::ParameterList{};
     param_list->push_back(param_int);
     param_list->push_back(param_vec2);
     // Then
-    CHECK(CodeGen::parameter_definition(param_int) == "const int my_param = 11;");
-    CHECK(CodeGen::parameter_definition(param_vec2) == "const vec2 my_param = vec2(1.000000, 2.000000);");
-    CHECK(CodeGen::parameters_definitions(param_list) == R"(const int my_param = 11;
-const vec2 my_param = vec2(1.000000, 2.000000);
+    CHECK(CodeGen::parameter_definition(param_int) == "const int my_param_int = 11;");
+    CHECK(CodeGen::parameter_definition(param_vec2) == "const vec2 my_param_vec2 = vec2(1.000000, 2.000000);");
+    CHECK(CodeGen::parameters_definitions(param_list) == R"(const int my_param_int = 11;
+const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
 )");
+    CHECK(CodeGen::function_body(param_list, "return 0.;") == R"({
+const int my_param_int = 11;
+const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
+
+return 0.;
+})");
 }
