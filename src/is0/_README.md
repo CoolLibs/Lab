@@ -4,25 +4,45 @@
 
 *is0* is a 3D modeler and renderer based on *Signed Distance Fields* (SDFs for short). It is an alternative representation of 3D objects that doesn't involve meshes and is very well suited for procedural modeling and raycast rendering.
 
-## Learning SDFs and RayMarching
+## Learning about SDFs and Ray Marching
 
-I would suggest you watch these videos, in that order: 
+You can watch these videos, in that order: 
 
 - [Conceptual intro to ray marching by *CodeParade*](https://www.youtube.com/watch?v=svLzmFuSBhk)
 
 - [Conceptual intro to ray marching by *Sebastian Lague*](https://www.youtube.com/watch?v=Cp5WWtMoeKg)
 
-- [Practical intro to shader programming](https://www.youtube.com/watch?v=u5HAYVHsasc)
+- [Practical intro to shader programming by *The Art of Code*](https://www.youtube.com/watch?v=u5HAYVHsasc)
 
-- [Practical intro to ray marching](https://www.youtube.com/watch?v=PGtv-dBi2wE)
+- [Practical intro to ray marching by *The Art of Code*](https://www.youtube.com/watch?v=PGtv-dBi2wE)
+
+- [*Inigo Quilez* detailing the creation of one of his artworks](https://youtu.be/-pdSjBPH3zM) (long but very insightful)
+
+- [More videos from *The Art of Code*](https://youtu.be/AfKGMUDWfuE?list=PLGmrMu-IwbgtMxMiV3x4IrHPlPmg7FD-P)
+
+- [More videos from *Inigo Quilez*](https://youtu.be/PMltMdi1Wzg?list=PL0EpikNmjs2CYUMePMGh3IjjP4tQlYqji)
 
 ## Resources about SDFs
 
 - [List of primitives and effects](https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm)
+
 - [Inigo's Artworks](https://iquilezles.org/www/articles/raymarchingdf/raymarchingdf.htm)
+
 - [Inigo's painting process](https://youtu.be/8--5LwHRhjk)
-- [*Dream*'s engine : different rendering techniques for SDFs](https://www.youtube.com/watch?v=u9KNtnCZDMI)
+
+- [*Dream*'s engine: different rendering techniques for SDFs](https://www.youtube.com/watch?v=u9KNtnCZDMI)
+
+- [Non-euclidian space rendered with Ray Marching and SDFs](https://youtu.be/ivHG4AOkhYA)
+
 - [Performance optimizations for Ray Marching](https://youtu.be/ARlbxXxB1UQ)
+
+- [Another list full of resources](https://github.com/CedricGuillemet/SDF)
+
+## Other SDF-based tools
+
+- [MagicaCSG](https://youtu.be/Z1qj9xgqdps)
+
+- [Unity Raymarching Toolkit](https://youtu.be/QDfqgG8HJDQ)
 
 ## Other node-based tools
 
@@ -35,9 +55,3 @@ I would suggest you watch these videos, in that order:
 - [Node Editor in SHADERed](https://shadered.org/plugin?id=spearnode)
 
 - [Fuse for vvv](https://cdm.link/2021/09/fuse-for-vvvv-is-a-visual-revolution-free-always-runtime-patching-right-on-the-gpu/?fbclid=IwAR2nzVaNZO-zYzhiKdFagsm8KpsXMsFCvJwbydii13ILH6RMZb6b0LNJExM)
-
-## Ideas
-
-```MAX_DIST``` in a ray marcher should be the far plane of the camera (aka length of the image of a canonical ray through the inverse of the projection matrix)
-
-[This article](https://iquilezles.org/www/articles/fbmsdf/fbmsdf.htm) by Inigo would be a great technique to implement.
