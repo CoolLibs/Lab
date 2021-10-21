@@ -3,7 +3,7 @@
 
 ShaderManager_FromNodes::ShaderManager_FromNodes()
 {
-    _node_editor.subscribe_to_tree_change([this](NodeEditor& node_editor) {
+    _node_editor.subscribe_to_tree_change([this](EdNodeEditor& node_editor) {
         _fullscreen_pipeline.compile(node_editor.gen_raymarching_shader_code(), "is0 Ray Marcher");
     });
 }

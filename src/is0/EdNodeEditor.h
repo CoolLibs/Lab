@@ -18,16 +18,16 @@ struct PinInfo {
     entt::entity node_entity = entt::null;
 };
 
-class NodeEditor {
+class EdNodeEditor {
 public:
-    NodeEditor();
-    ~NodeEditor();
+    EdNodeEditor();
+    ~EdNodeEditor();
 
     void imgui_window();
 
     std::string gen_raymarching_shader_code();
 
-    void subscribe_to_tree_change(std::function<void(NodeEditor&)> callback);
+    void subscribe_to_tree_change(std::function<void(EdNodeEditor&)> callback);
 
     /// <summary>
     ///
@@ -42,9 +42,9 @@ private:
     PinInfo     compute_pin_infos(ed::PinId pin_id);
 
 private:
-    ed::EditorContext*                            _context;
-    ImVector<LinkInfo>                            _links;
-    int                                           _next_link_id = 100; // Counter to help generate link ids. In real application this will probably based on pointer to user data structure.
-    std::vector<std::function<void(NodeEditor&)>> _on_tree_change_callbacks;
-    entt::registry                                _registry;
+    ed::EditorContext*                              _context;
+    ImVector<LinkInfo>                              _links;
+    int                                             _next_link_id = 100; // Counter to help generate link ids. In real application this will probably based on pointer to user data structure.
+    std::vector<std::function<void(EdNodeEditor&)>> _on_tree_change_callbacks;
+    entt::registry                                  _registry;
 };

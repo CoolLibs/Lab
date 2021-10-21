@@ -1,9 +1,9 @@
 #pragma once
 
 #include <entt/entt.hpp>
-#include "Node.h"
+#include "EdNode.h"
 
-namespace NodeFactory {
+namespace EdNodeFactory {
 
 inline int NextId()
 {
@@ -30,14 +30,14 @@ inline entt::entity node(entt::registry& R, const std::string& name, CodeGenerat
 {
     entt::entity e       = R.create();
     std::string  fn_name = name + "__" + std::to_string(static_cast<std::uint32_t>(e));
-    R.emplace<Node>(e,
-                    /*name             */ name,
-                    /*fn_name          */ fn_name,
-                    /*node_id          */ static_cast<ed::NodeId>(NextId()),
-                    /*fn_declaration   */ fn_declaration(fn_signature(fn_name)),
-                    /*fn_implementation*/ "",
-                    /*gen_source_code  */ gen_source_code,
-                    /*show_widgets     */ show_widgets);
+    R.emplace<EdNode>(e,
+                      /*name             */ name,
+                      /*fn_name          */ fn_name,
+                      /*node_id          */ static_cast<ed::NodeId>(NextId()),
+                      /*fn_declaration   */ fn_declaration(fn_signature(fn_name)),
+                      /*fn_implementation*/ "",
+                      /*gen_source_code  */ gen_source_code,
+                      /*show_widgets     */ show_widgets);
     R.emplace<IsTerminalNode>(e);
     return e;
 }
@@ -107,7 +107,7 @@ struct Transform {
     glm::vec3 scale;
 };
 
-inline entt::entity transform(entt::registry& R, NodeEditor& node_enditor)
+inline entt::entity transform(entt::registry& R, EdNodeEditor& node_enditor)
 {
     entt::entity e = modifier(
         R,
@@ -116,7 +116,7 @@ inline entt::entity transform(entt::registry& R, NodeEditor& node_enditor)
             const auto&  transfo    = R.get<Transform>(e);
             entt::entity input_node = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
             if (R.valid(input_node)) {
-                std::string fn_name = R.get<Node>(input_node).fn_name;
+                std::string fn_name = R.get<EdNode>(input_node).fn_name;
                 return "return " + fn_name + "(pos / vec3(" + std::to_string(transfo.scale.x) + ", " + std::to_string(transfo.scale.y) + ", " + std::to_string(transfo.scale.z) + ") - vec3(" + std::to_string(transfo.pos.x) + ", " + std::to_string(transfo.pos.y) + ", " + std::to_string(transfo.pos.z) + "));";
             }
             else {
@@ -141,7 +141,7 @@ struct RepeatInfinite {
     float extent;
 };
 
-inline entt::entity repeat_infinite(entt::registry& R, NodeEditor& node_enditor)
+inline entt::entity repeat_infinite(entt::registry& R, EdNodeEditor& node_enditor)
 {
     entt::entity e = modifier(
         R,
@@ -150,7 +150,7 @@ inline entt::entity repeat_infinite(entt::registry& R, NodeEditor& node_enditor)
             const auto&  repeat     = R.get<RepeatInfinite>(e);
             entt::entity input_node = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
             if (R.valid(input_node)) {
-                std::string fn_name = R.get<Node>(input_node).fn_name;
+                std::string fn_name = R.get<EdNode>(input_node).fn_name;
                 return "return " + fn_name + "((fract(pos / " + std::to_string(repeat.extent) + ")-0.5) * " + std::to_string(repeat.extent) + ");";
             }
             else {
@@ -172,7 +172,7 @@ struct Twist {
     float k;
 };
 
-inline entt::entity twist(entt::registry& R, NodeEditor& node_enditor)
+inline entt::entity twist(entt::registry& R, EdNodeEditor& node_enditor)
 {
     entt::entity e = modifier(
         R,
@@ -181,7 +181,7 @@ inline entt::entity twist(entt::registry& R, NodeEditor& node_enditor)
             const auto&  twist_params = R.get<Twist>(e);
             entt::entity input_node   = node_enditor.compute_node_connected_to_pin(R.get<ModifierNode>(e).input_pin.id);
             if (R.valid(input_node)) {
-                std::string fn_name = R.get<Node>(input_node).fn_name;
+                std::string fn_name = R.get<EdNode>(input_node).fn_name;
                 return "const float k = " + std::to_string(twist_params.k) + ";" +
                        R"V0G0N( 
     float c = cos(k*pos.y);
@@ -207,4 +207,4 @@ inline entt::entity twist(entt::registry& R, NodeEditor& node_enditor)
     return e;
 }
 
-} // namespace NodeFactory
+} // namespace EdNodeFactory

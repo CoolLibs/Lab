@@ -1,36 +1,36 @@
 using namespace Cool;
 
-#include "NodeEditor.h"
-#include "Node.h"
-#include "NodeFactory.h"
+#include "EdNodeEditor.h"
+#include "EdNode.h"
+#include "EdNodeFactory.h"
 
-NodeEditor::NodeEditor()
+EdNodeEditor::EdNodeEditor()
     : _context(ed::CreateEditor())
 {
 }
 
-NodeEditor::~NodeEditor()
+EdNodeEditor::~EdNodeEditor()
 {
     ed::DestroyEditor(_context);
 }
 
-void NodeEditor::subscribe_to_tree_change(std::function<void(NodeEditor&)> callback)
+void EdNodeEditor::subscribe_to_tree_change(std::function<void(EdNodeEditor&)> callback)
 {
     _on_tree_change_callbacks.push_back(callback);
     callback(*this);
 }
 
-void NodeEditor::on_tree_change()
+void EdNodeEditor::on_tree_change()
 {
     for (auto& callback : _on_tree_change_callbacks)
         callback(*this);
 }
 
-std::string NodeEditor::gen_scene_sdf()
+std::string EdNodeEditor::gen_scene_sdf()
 {
     std::string s;
     // TODO improve me with a group
-    (_registry.view<IsTerminalNode>() | _registry.view<Node>()).each([&](auto, Node& node) {
+    (_registry.view<IsTerminalNode>() | _registry.view<EdNode>()).each([&](auto, EdNode& node) {
         s += "d = min(d, " + node.fn_name + "(pos));\n";
     });
     return "float sceneSDF(vec3 pos) {\n"
@@ -40,18 +40,18 @@ std::string NodeEditor::gen_scene_sdf()
            "}";
 }
 
-std::string NodeEditor::gen_raymarching_shader_code()
+std::string EdNodeEditor::gen_raymarching_shader_code()
 {
     // Update the source codes
-    _registry.view<Node>().each([&](auto e, Node& node) {
-        node.fn_implementation = NodeFactory::fn_implementation(NodeFactory::fn_signature(node.fn_name), node.gen_source_code(e));
+    _registry.view<EdNode>().each([&](auto e, EdNode& node) {
+        node.fn_implementation = EdNodeFactory::fn_implementation(EdNodeFactory::fn_signature(node.fn_name), node.gen_source_code(e));
     });
 
     // Collect all function declarations and implementations
     std::string function_declarations    = "";
     std::string function_implementations = "";
 
-    _registry.view<Node>().each([&](auto, Node& node) {
+    _registry.view<EdNode>().each([&](auto, EdNode& node) {
         function_declarations += node.fn_declaration;
         function_implementations += node.fn_implementation;
     });
@@ -125,7 +125,7 @@ void main() {
 )V0G0N";
 }
 
-PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id)
+PinInfo EdNodeEditor::compute_pin_infos(ed::PinId pin_id)
 {
     PinInfo pin_info;
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
@@ -148,7 +148,7 @@ PinInfo NodeEditor::compute_pin_infos(ed::PinId pin_id)
     return pin_info;
 }
 
-entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
+entt::entity EdNodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
 {
     for (const auto& link : _links) {
         if (link.start_pin_id == pin_id) {
@@ -161,7 +161,7 @@ entt::entity NodeEditor::compute_node_connected_to_pin(ed::PinId pin_id)
     return entt::null;
 }
 
-void NodeEditor::imgui_window()
+void EdNodeEditor::imgui_window()
 {
     ImGui::Begin("Nodes");
     ed::SetCurrentEditor(_context);
@@ -173,7 +173,7 @@ void NodeEditor::imgui_window()
 
     // Draw Shape Nodes
     _registry.view<ShapeNode>().each([&](auto e, ShapeNode& shape_node) {
-        const Node& node = _registry.get<Node>(e);
+        const EdNode& node = _registry.get<EdNode>(e);
         ed::BeginNode(node.node_id);
         ImGui::Text("%s", node.name.c_str());
         ImGui::BeginGroup();
@@ -189,7 +189,7 @@ void NodeEditor::imgui_window()
     });
     // Draw Modifier Nodes
     _registry.view<ModifierNode>().each([&](auto e, ModifierNode& modifier_node) {
-        const Node& node = _registry.get<Node>(e);
+        const EdNode& node = _registry.get<EdNode>(e);
         ed::BeginNode(node.node_id);
         ImGui::Text("%s", node.name.c_str());
         ed::BeginPin(modifier_node.input_pin.id, ed::PinKind::Input);
@@ -239,7 +239,7 @@ void NodeEditor::imgui_window()
                 accept_link &= start_pin_info.node_entity != end_pin_info.node_entity;
 
                 if (accept_link) {
-                    _links.push_back({ed::LinkId(NodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity});
+                    _links.push_back({ed::LinkId(EdNodeFactory::NextId()), start_pin_id, start_pin_info.node_entity, end_pin_id, end_pin_info.node_entity});
                     _registry.remove_if_exists<IsTerminalNode>(start_pin_info.node_entity);
                     on_tree_change();
                     // Draw new link
@@ -280,23 +280,23 @@ void NodeEditor::imgui_window()
     ed::End();
     if (ImGui::BeginPopupContextItem("sdfxaas", ImGuiPopupFlags_MouseButtonMiddle)) {
         if (ImGui::Button("Sphere")) {
-            NodeFactory::sphere(_registry);
+            EdNodeFactory::sphere(_registry);
             on_tree_change();
         }
         if (ImGui::Button("Cube")) {
-            NodeFactory::cube(_registry);
+            EdNodeFactory::cube(_registry);
             on_tree_change();
         }
         if (ImGui::Button("Transform")) {
-            NodeFactory::transform(_registry, *this);
+            EdNodeFactory::transform(_registry, *this);
             on_tree_change();
         }
         if (ImGui::Button("Repeat Infinite")) {
-            NodeFactory::repeat_infinite(_registry, *this);
+            EdNodeFactory::repeat_infinite(_registry, *this);
             on_tree_change();
         }
         if (ImGui::Button("Twist")) {
-            NodeFactory::twist(_registry, *this);
+            EdNodeFactory::twist(_registry, *this);
             on_tree_change();
         }
         ImGui::EndPopup();

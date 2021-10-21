@@ -3,6 +3,7 @@
 #include <Cool/File/File.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
+#include <Cool/Parameter/set_uniform.h>
 #include <fstream>
 
 ShaderManager_FromText::ShaderManager_FromText()
@@ -22,10 +23,10 @@ void ShaderManager_FromText::compile_shader(std::string_view path)
 
 void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
 {
-    Cool::ParameterDynamicList new_params;
-    std::ifstream              stream(path);
-    std::string                line;
-    bool                       has_begun = false;
+    Cool::ParameterList new_params;
+    std::ifstream       stream(path);
+    std::string         line;
+    bool                has_begun = false;
     while (getline(stream, line)) {
         if (has_begun) {
             if (!line.compare("// END DYNAMIC PARAMS")) {
@@ -41,19 +42,19 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
                     const auto        name_pos_end = line.find_first_of(" ;", name_pos);
                     const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
                     //
-                    const size_t param_idx = _parameters.index_of(name);
-                    if (param_idx != -1) {
-                        new_params->push_back((*_parameters)[param_idx]);
+                    const std::optional<size_t> param_idx = _parameters.index_of(name);
+                    if (param_idx.has_value()) {
+                        new_params->push_back((*_parameters)[*param_idx]);
                     }
                     else {
                         if (!type.compare("int"))
-                            new_params->push_back(Cool::Parameter::Int(name));
+                            new_params->push_back(Cool::Parameter::Int{{.name = name}});
                         else if (!type.compare("float"))
-                            new_params->push_back(Cool::Parameter::Float(name));
+                            new_params->push_back(Cool::Parameter::Float{{.name = name}});
                         else if (!type.compare("vec2"))
-                            new_params->push_back(Cool::Parameter::Vec2(name));
+                            new_params->push_back(Cool::Parameter::Vec2{{.name = name}});
                         else if (!type.compare("vec3"))
-                            new_params->push_back(Cool::Parameter::Color(name));
+                            new_params->push_back(Cool::Parameter::Color{{.name = name}});
                     }
                 }
             }
@@ -72,7 +73,7 @@ void ShaderManager_FromText::setup_for_rendering(const Cool::Camera& camera, flo
 {
     if (_fullscreen_pipeline.shader().has_value()) {
         ShaderManager::setup_for_rendering(camera, time);
-        _parameters.set_uniforms_in_shader(*_fullscreen_pipeline.shader());
+        set_uniforms(*_fullscreen_pipeline.shader(), _parameters);
     }
 }
 

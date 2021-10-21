@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Cool/FileWatcher/FileWatcher.h>
-#include <Cool/Parameters/ParameterDynamicList.h>
+#include <Cool/Parameter/ParameterList.h>
 #include "ShaderManager.h"
 
 class ShaderManager_FromText : public ShaderManager {
@@ -20,8 +20,8 @@ private:
     void parse_shader_for_params(std::string_view path);
 
 private:
-    Cool::FileWatcher          _file_watcher;
-    Cool::ParameterDynamicList _parameters;
+    Cool::FileWatcher   _file_watcher;
+    Cool::ParameterList _parameters;
 
 private:
     //Serialization
