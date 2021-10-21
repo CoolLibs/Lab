@@ -16,15 +16,25 @@ I would suggest you watch these videos, in that order:
 
 - [Practical intro to ray marching](https://www.youtube.com/watch?v=PGtv-dBi2wE)
 
-## Resources
+## Resources about SDFs
 
-- [Inigo's Artworks](https://iquilezles.org/www/articles/raymarchingdf/raymarchingdf.htm)
 - [List of primitives and effects](https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm)
+- [Inigo's Artworks](https://iquilezles.org/www/articles/raymarchingdf/raymarchingdf.htm)
 - [Inigo's painting process](https://youtu.be/8--5LwHRhjk)
 - [*Dream*'s engine : different rendering techniques for SDFs](https://www.youtube.com/watch?v=u9KNtnCZDMI)
-- [Fuse, a similar project](https://cdm.link/2021/09/fuse-for-vvvv-is-a-visual-revolution-free-always-runtime-patching-right-on-the-gpu/?fbclid=IwAR2nzVaNZO-zYzhiKdFagsm8KpsXMsFCvJwbydii13ILH6RMZb6b0LNJExM)
-- [Node Editor in SHADERed](https://shadered.org/plugin?id=spearnode)
 - [Performance optimizations for Ray Marching](https://youtu.be/ARlbxXxB1UQ)
+
+## Other node-based tools
+
+- [Unity's Shadergraph](https://youtu.be/Ar9eIn4z6XE)
+
+- [Blender's material nodes](https://youtu.be/BDtVsS_zR_8)
+
+- [Blender's geometry nodes](https://youtu.be/TjGL4RjR13Q)
+
+- [Node Editor in SHADERed](https://shadered.org/plugin?id=spearnode)
+
+- [Fuse for vvv](https://cdm.link/2021/09/fuse-for-vvvv-is-a-visual-revolution-free-always-runtime-patching-right-on-the-gpu/?fbclid=IwAR2nzVaNZO-zYzhiKdFagsm8KpsXMsFCvJwbydii13ILH6RMZb6b0LNJExM)
 
 ## Ideas
 
