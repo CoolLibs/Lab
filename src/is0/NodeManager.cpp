@@ -20,6 +20,11 @@ static void show_node(Node& node)
     ed::EndNode();
 }
 
+static void show_link(const Link& link)
+{
+    ed::Link(link.id, link.from_pin_id, link.to_pin_id);
+}
+
 void NodeManager::imgui_window()
 {
     ImGui::Begin("Nodes");
@@ -28,6 +33,9 @@ void NodeManager::imgui_window()
     {
         for (auto& node : _nodes) {
             show_node(node);
+        }
+        for (const auto& link : _links) {
+            show_link(link);
         }
     }
     ed::End();
