@@ -16,12 +16,12 @@ public:
     }
     EdUniqueContext(const EdUniqueContext&) = delete;
     EdUniqueContext& operator=(const EdUniqueContext&) = delete;
-    EdUniqueContext(EdUniqueContext&& rhs)
+    EdUniqueContext(EdUniqueContext&& rhs) noexcept
         : _context{rhs._context}
     {
         rhs._context = nullptr;
     };
-    EdUniqueContext& operator=(EdUniqueContext&& rhs)
+    EdUniqueContext& operator=(EdUniqueContext&& rhs) noexcept
     {
         if (this != &rhs) {
             _context     = rhs._context;
