@@ -1,4 +1,5 @@
 #include "CodeGen.h"
+#include <Cool/String/String.h>
 #include <numeric>
 
 namespace CodeGen {
@@ -23,9 +24,13 @@ std::string function_definition(const FnDefinitionParams& p)
     return function_signature(p.fn_signature_params) + std::string{p.body};
 }
 
-std::string function_body(const Cool::ParameterList& list, const std::string& code_template)
+std::string function_body(const Cool::ParameterList& list, const std::string& code_template, const std::vector<std::pair<std::string, std::string>>& sdf_identifiers)
 {
-    return "{\n" + parameters_definitions(list) + '\n' + code_template + "\n}";
+    return "{\n" +
+           parameters_definitions(list) +
+           '\n' +
+           Cool::String::replace({code_template, sdf_identifiers, "${", "}"}) +
+           "\n}";
 }
 
 std::string parameters_definitions(const Cool::ParameterList& list)
