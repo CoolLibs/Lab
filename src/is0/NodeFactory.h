@@ -9,7 +9,7 @@ public:
     {
         _node_templates.push_back({.name            = "Sphere",
                                    .code_template   = "return length(pos) - radius;",
-                                   .parameters      = {},
+                                   .parameters      = {Cool::Parameter::FloatDesc{"radius"}},
                                    .sdf_identifiers = {}});
         _node_templates.push_back({.name            = "Cube",
                                    .code_template   = "return length(pos) * 2.;",

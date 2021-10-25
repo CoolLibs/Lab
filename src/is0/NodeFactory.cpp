@@ -13,5 +13,7 @@ std::optional<Node> NodeFactory::imgui()
 
 Node NodeFactoryU::node_from_template(const NodeTemplate& node_template)
 {
-    return Node{.node_template_name = node_template.name};
+    return Node{.node_template_name = node_template.name,
+                .parameter_list     = Cool::ParameterList(node_template.parameters),
+                .input_pins         = std::vector<PinSdfIn>(node_template.sdf_identifiers.size())};
 }
