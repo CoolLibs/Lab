@@ -10,8 +10,6 @@ ShaderManager_FromNodes::ShaderManager_FromNodes()
 
 void ShaderManager_FromNodes::imgui_window()
 {
-    _node_editor.imgui_window();
-    ImGui::Begin("NewNodes");
-    _node_manager.imgui();
-    ImGui::End();
+    _node_manager.imgui_window();
+    // _node_editor.imgui_window();
 }

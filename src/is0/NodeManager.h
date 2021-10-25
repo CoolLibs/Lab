@@ -5,7 +5,8 @@
 
 class NodeManager {
 public:
-    bool imgui();
+    void imgui_window();
+    bool imgui_make_node();
 
 private:
     EdUniqueContext   _context;
