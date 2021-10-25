@@ -6,14 +6,14 @@ static void show_node(Node& node)
     ed::BeginNode(static_cast<ed::NodeId>(node.uuid));
     {
         ImGui::Text("%s", node.node_template_name.c_str());
-        if (!node.input_pins.empty()) {
-            ImGui::BeginGroup();
-            for (const auto& pin : node.input_pins) {
-                pin.show();
-            }
-            ImGui::EndGroup();
-            ImGui::SameLine();
+        ImGui::BeginGroup();
+        for (const auto& pin : node.input_pins) {
+            pin.show();
         }
+        ImGui::EndGroup();
+        ImGui::SameLine(200.f);
+        node.output_pin.show();
+
         ImGui::BeginGroup();
         ImGui::PushID(&node);
         ImGui::PushItemWidth(200.f);
@@ -24,8 +24,6 @@ static void show_node(Node& node)
         //     // on_tree_change();
         // }
         ImGui::EndGroup();
-        ImGui::SameLine();
-        node.output_pin.show();
     }
     ed::EndNode();
 }
