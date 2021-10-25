@@ -6,16 +6,22 @@ static void show_node(Node& node)
     ed::BeginNode(static_cast<ed::NodeId>(node.uuid));
     {
         ImGui::Text("%s", node.node_template_name.c_str());
+        if (!node.input_pins.empty()) {
+            ImGui::BeginGroup();
+            for (const auto& pin : node.input_pins) {
+                pin.show();
+            }
+            ImGui::EndGroup();
+            ImGui::SameLine();
+        }
         ImGui::BeginGroup();
         node.parameter_list.imgui();
         // if () {
         //     // on_tree_change();
         // }
         ImGui::EndGroup();
-        // ImGui::SameLine();
-        // ed::BeginPin(shape_node.output_pin.id, ed::PinKind::Output);
-        // ImGui::Text("OUT->");
-        // ed::EndPin();
+        ImGui::SameLine();
+        node.output_pin.show();
     }
     ed::EndNode();
 }
