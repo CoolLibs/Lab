@@ -1,29 +1,38 @@
 #include "NodeEditor.h"
 #include "CodeGen.h"
 
+static void show_node_pins(const Node& node)
+{
+    ImGui::BeginGroup();
+    for (const auto& pin : node.input_pins) {
+        pin.show();
+    }
+    ImGui::EndGroup();
+    ImGui::SameLine(200.f);
+    node.output_pin.show();
+}
+
+static void show_node_params(Node& node)
+{
+    ImGui::BeginGroup();
+    ImGui::PushID(&node);
+    ImGui::PushItemWidth(200.f);
+    node.parameter_list.imgui();
+    ImGui::PopItemWidth();
+    ImGui::PopID();
+    // if () {
+    //     // on_tree_change();
+    // }
+    ImGui::EndGroup();
+}
+
 static void show_node(Node& node)
 {
     ed::BeginNode(static_cast<ed::NodeId>(node.uuid));
     {
         ImGui::Text("%s", node.node_template_name.c_str());
-        ImGui::BeginGroup();
-        for (const auto& pin : node.input_pins) {
-            pin.show();
-        }
-        ImGui::EndGroup();
-        ImGui::SameLine(200.f);
-        node.output_pin.show();
-
-        ImGui::BeginGroup();
-        ImGui::PushID(&node);
-        ImGui::PushItemWidth(200.f);
-        node.parameter_list.imgui();
-        ImGui::PopItemWidth();
-        ImGui::PopID();
-        // if () {
-        //     // on_tree_change();
-        // }
-        ImGui::EndGroup();
+        show_node_pins(node);
+        show_node_params(node);
     }
     ed::EndNode();
 }
