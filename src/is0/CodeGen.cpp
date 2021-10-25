@@ -11,6 +11,74 @@ static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
 
 )";
 
+static constexpr const char* ray_marcher_begin = R"(#version 430
+
+in vec2 vTexCoords;
+uniform float _time;
+#include "Cool/res/shaders/camera.glsl"
+
+// ----- Ray marching options ----- //
+#define MAX_STEPS 150
+#define MAX_DIST 200.
+#define SURF_DIST 0.0001
+#define NORMAL_DELTA 0.0001
+
+#define saturate(v) clamp(v, 0., 1.)
+
+)";
+
+static constexpr const char* ray_marcher_end = R"(
+
+float rayMarching(vec3 ro, vec3 rd) {
+    float t = 0.;
+ 	
+    for (int i = 0; i < MAX_STEPS; i++) {
+    	vec3 pos = ro + rd * t;
+        float d = sceneSDF(pos);
+        t += d;
+        // If we are very close to the object, consider it as a hit and exit this loop
+        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
+    }
+    return t;
+}
+
+vec3 getNormal(vec3 p) {
+    const float h = NORMAL_DELTA;
+	const vec2 k = vec2(1., -1.);
+    return normalize( k.xyy * sceneSDF( p + k.xyy*h ) + 
+                      k.yyx * sceneSDF( p + k.yyx*h ) + 
+                      k.yxy * sceneSDF( p + k.yxy*h ) + 
+                      k.xxx * sceneSDF( p + k.xxx*h ) );
+}
+
+vec3 render(vec3 ro, vec3 rd) {
+    vec3 finalCol = vec3(0.3, 0.7, 0.98);
+    
+    float d = rayMarching(ro, rd);
+    
+    if (d < MAX_DIST) {
+      vec3 p = ro + rd * d;
+      vec3 normal = getNormal(p); 
+      //vec3 ref = reflect(rd, normal);
+      
+      //float sunFactor = saturate(dot(normal, nSunDir));
+      //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
+    
+      finalCol = normal * 0.5 + 0.5;
+    }
+    
+    finalCol = saturate(finalCol);
+    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
+    return finalCol;
+}
+
+void main() {
+    vec3 ro = cool_ray_origin();
+    vec3 rd = cool_ray_direction();
+    gl_FragColor = vec4(render(ro, rd), 1.);
+}
+)";
+
 static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const std::vector<Node>& nodes, const std::vector<Link>& links)
 {
     using namespace std::string_literals;
@@ -34,7 +102,7 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 
 std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
 {
-    return default_sdf + main_sdf(nodes, links, node_templates);
+    return ray_marcher_begin + std::string{default_sdf} + main_sdf(nodes, links, node_templates) + ray_marcher_end;
 }
 
 std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
