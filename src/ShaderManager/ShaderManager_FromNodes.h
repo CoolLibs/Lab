@@ -2,6 +2,7 @@
 
 #include "ShaderManager.h"
 #include "is0/EdNodeEditor.h"
+#include "is0/NodeManager.h"
 
 class ShaderManager_FromNodes : public ShaderManager {
 public:
@@ -12,6 +13,7 @@ public:
 
 private:
     EdNodeEditor _node_editor;
+    NodeManager  _node_manager;
 
 private:
     //Serialization
