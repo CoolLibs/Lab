@@ -15,7 +15,11 @@ static void show_node(Node& node)
             ImGui::SameLine();
         }
         ImGui::BeginGroup();
+        ImGui::PushID(&node);
+        ImGui::PushItemWidth(200.f);
         node.parameter_list.imgui();
+        ImGui::PopItemWidth();
+        ImGui::PopID();
         // if () {
         //     // on_tree_change();
         // }
