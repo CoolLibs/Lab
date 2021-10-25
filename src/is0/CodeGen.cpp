@@ -5,6 +5,12 @@
 
 namespace CodeGen {
 
+static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
+    return MAX_DIST;
+}
+
+)";
+
 static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const std::vector<Node>& nodes, const std::vector<Link>& links)
 {
     using namespace std::string_literals;
@@ -28,7 +34,7 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 
 std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
 {
-    return main_sdf(nodes, links, node_templates);
+    return default_sdf + main_sdf(nodes, links, node_templates);
 }
 
 std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
