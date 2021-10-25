@@ -28,6 +28,11 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 
 std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
 {
+    return main_sdf(nodes, links, node_templates);
+}
+
+std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
+{
     std::stringstream declarations;
     std::stringstream definitions;
     for (const auto& node : nodes) {
