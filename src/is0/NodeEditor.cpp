@@ -1,4 +1,4 @@
-#include "NodeManager.h"
+#include "NodeEditor.h"
 #include "CodeGen.h"
 
 static void show_node(Node& node)
@@ -25,7 +25,7 @@ static void show_link(const Link& link)
     ed::Link(link.id, link.from_pin_id, link.to_pin_id);
 }
 
-void NodeManager::imgui_window()
+void NodeEditor::imgui_window()
 {
     ImGui::Begin("Nodes");
     ed::SetCurrentEditor(&*_context);
@@ -46,7 +46,7 @@ void NodeManager::imgui_window()
     ImGui::End();
 }
 
-bool NodeManager::imgui_make_node()
+bool NodeEditor::imgui_make_node()
 {
     const std::optional<Node> node = _factory.imgui();
     if (node.has_value()) {

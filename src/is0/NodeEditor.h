@@ -4,7 +4,7 @@
 #include "Link.h"
 #include "NodeFactory.h"
 
-class NodeManager {
+class NodeEditor {
 public:
     void imgui_window();
     bool imgui_make_node();

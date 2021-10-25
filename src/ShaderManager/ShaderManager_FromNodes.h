@@ -1,8 +1,7 @@
 #pragma once
 
 #include "ShaderManager.h"
-#include "is0/EdNodeEditor.h"
-#include "is0/NodeManager.h"
+#include "is0/NodeEditor.h"
 
 class ShaderManager_FromNodes : public ShaderManager {
 public:
@@ -12,8 +11,7 @@ public:
     void imgui_window() override;
 
 private:
-    EdNodeEditor _node_editor;
-    NodeManager  _node_manager;
+    NodeEditor _node_editor;
 
 private:
     //Serialization
