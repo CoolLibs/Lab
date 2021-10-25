@@ -2,8 +2,13 @@
 
 #include <Cool/Parameter/ParameterList.h>
 #include <Cool/Uuid/Uuid.h>
+#include "Link.h"
+#include "Node.h"
+#include "NodeTemplate.h"
 
 namespace CodeGen {
+
+std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates);
 
 struct FnNameParams {
     std::string_view node_template_name;
@@ -74,7 +79,6 @@ const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
     CHECK(CodeGen::function_body(param_list, "return ${THE_SDF}(pos);", {std::make_pair("THE_SDF"s, "my_sdf"s)}) == R"({
 const int my_param_int = 11;
 const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
-
 return my_sdf(pos);
 })");
 }

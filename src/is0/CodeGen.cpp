@@ -1,8 +1,43 @@
 #include "CodeGen.h"
 #include <Cool/String/String.h>
 #include <numeric>
+#include "NodeEditorU.h"
 
 namespace CodeGen {
+
+std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
+{
+    using namespace std::string_literals;
+    std::stringstream declarations;
+    std::stringstream definitions;
+    for (const auto& node : nodes) {
+        const auto& node_template       = *std::ranges::find_if(node_templates, [&](const NodeTemplate& node_template) {
+            return node_template.name == node.node_template_name;
+        });
+        const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
+                                                               .node_template_name = node.node_template_name,
+                                                               .node_uuid          = node.uuid},
+                                                           .sdf_param_declaration = node_template.vec3_input_declaration};
+        declarations << function_declaration(fn_signature_params);
+        declarations << '\n';
+        std::vector<std::pair<std::string, std::string>> sdf_identifiers;
+        sdf_identifiers.reserve(node.input_pins.size());
+        for (size_t i = 0; i < node.input_pins.size(); ++i) {
+            const Node* input_node = NodeEditorU::find_input_node(node.input_pins[i], nodes, links);
+            sdf_identifiers.push_back(std::make_pair(
+                node_template.sdf_identifiers[i],
+                input_node ? function_name({input_node->node_template_name, input_node->uuid}) : "cool_default_sdf"s));
+        }
+        definitions << function_definition(FnDefinitionParams{
+            .fn_signature_params = fn_signature_params,
+            .body                = function_body(
+                node.parameter_list,
+                node_template.code_template,
+                sdf_identifiers)});
+        definitions << "\n\n";
+    }
+    return declarations.str() + '\n' + definitions.str();
+}
 
 std::string function_name(const FnNameParams& p)
 {
@@ -28,7 +63,6 @@ std::string function_body(const Cool::ParameterList& list, const std::string& co
 {
     return "{\n" +
            parameters_definitions(list) +
-           '\n' +
            Cool::String::replace({code_template, sdf_identifiers, "${", "}"}) +
            "\n}";
 }
