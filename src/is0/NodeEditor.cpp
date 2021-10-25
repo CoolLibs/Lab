@@ -42,6 +42,61 @@ static void show_link(const Link& link)
     ed::Link(link.id, link.from_pin_id, link.to_pin_id);
 }
 
+static const Pin& find_pin(ed::PinId id, const std::vector<Node>& nodes)
+{
+    for (const auto& node : nodes) {
+        if (node.output_pin.id() == id) {
+            return node.output_pin;
+        }
+        for (const auto& pin : node.input_pins) {
+            if (pin.id() == id) {
+                return pin;
+            }
+        }
+    }
+    throw std::invalid_argument("pin not found");
+}
+
+static void handle_link_creation(const std::vector<Node>& nodes, std::back_insert_iterator<std::vector<Link>> inserter)
+{
+    if (ed::BeginCreate()) {
+        ed::PinId from_pin_id, to_pin_id;
+        if (ed::QueryNewLink(&from_pin_id, &to_pin_id)) {
+            if (from_pin_id && to_pin_id && ed::AcceptNewItem()) {
+                const Pin* from_pin = &find_pin(from_pin_id, nodes);
+                const Pin* to_pin   = &find_pin(to_pin_id, nodes);
+
+                if (from_pin->kind() == ed::PinKind::Input) // Reorder so that we always go from an output pin to an input pin
+                {
+                    std::swap(from_pin, to_pin);
+                    std::swap(from_pin_id, to_pin_id);
+                }
+
+                bool accept_link = true;
+                // Check that there isn't already a node connected to the end_pin
+                // accept_link &= !_registry.valid(compute_node_connected_to_pin(end_pin_id));
+                // Check that one pin is an input and the other an output
+                accept_link &= from_pin->kind() != to_pin->kind();
+                // Check that we are not linking a node to itself
+                // accept_link &= start_pin_info.node_entity != end_pin_info.node_entity;
+
+                if (accept_link) {
+                    *inserter = Link{.from_pin_id = from_pin_id,
+                                     .to_pin_id   = to_pin_id};
+                    // _registry.remove_if_exists<IsTerminalNode>(start_pin_info.node_entity);
+                    // on_tree_change();
+                    // Draw new link
+                    //ed::Link(_links.back().id, _links.back().start_pin_id, _links.back().end_pin_id);
+                }
+                else {
+                    ed::RejectNewItem();
+                }
+            }
+        }
+    }
+    ed::EndCreate(); // Wraps up object creation action handling.
+}
+
 void NodeEditor::imgui_window()
 {
     ImGui::Begin("Nodes");
@@ -54,6 +109,7 @@ void NodeEditor::imgui_window()
         for (const auto& link : _links) {
             show_link(link);
         }
+        handle_link_creation(_nodes, std::back_inserter(_links));
     }
     ed::End();
     if (ImGui::BeginPopupContextItem("_node_templates_list", ImGuiPopupFlags_MouseButtonMiddle)) {

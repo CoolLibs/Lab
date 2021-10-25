@@ -10,8 +10,9 @@ public:
     {
     }
 
-    ed::PinId    id() const { return _id; }
-    virtual void show() const = 0;
+    ed::PinId           id() const { return _id; }
+    virtual ed::PinKind kind() const = 0;
+    virtual void        show() const = 0;
 
 private:
     ed::PinId _id;
@@ -19,9 +20,14 @@ private:
 
 class PinSdfIn : public Pin {
 public:
+    ed::PinKind kind() const override
+    {
+        return ed::PinKind::Input;
+    }
+
     void show() const override
     {
-        ed::BeginPin(id(), ed::PinKind::Input);
+        ed::BeginPin(id(), kind());
         ImGui::Text("IN->");
         ed::EndPin();
     }
@@ -29,9 +35,14 @@ public:
 
 class PinSdfOut : public Pin {
 public:
+    ed::PinKind kind() const override
+    {
+        return ed::PinKind::Output;
+    }
+
     void show() const override
     {
-        ed::BeginPin(id(), ed::PinKind::Output);
+        ed::BeginPin(id(), kind());
         ImGui::Text("OUT->");
         ed::EndPin();
     }
