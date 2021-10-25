@@ -5,35 +5,43 @@
 
 namespace CodeGen {
 
-std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
+static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const std::vector<Node>& nodes, const std::vector<Link>& links)
 {
     using namespace std::string_literals;
+    std::vector<std::pair<std::string, std::string>> sdf_identifiers;
+    sdf_identifiers.reserve(node.input_pins.size());
+    for (size_t i = 0; i < node.input_pins.size(); ++i) {
+        const Node* input_node = NodeEditorU::find_input_node(node.input_pins[i], nodes, links);
+        sdf_identifiers.push_back(std::make_pair(
+            node_template.sdf_identifiers[i],
+            input_node ? function_name({input_node->node_template_name, input_node->uuid}) : "is0_default_sdf"s));
+    }
+    return sdf_identifiers;
+}
+
+static const NodeTemplate& find_node_template(const Node& node, const std::vector<NodeTemplate>& node_templates)
+{
+    return *std::ranges::find_if(node_templates, [&](const NodeTemplate& node_template) {
+        return node_template.name == node.node_template_name;
+    });
+}
+
+std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
+{
     std::stringstream declarations;
     std::stringstream definitions;
     for (const auto& node : nodes) {
-        const auto& node_template       = *std::ranges::find_if(node_templates, [&](const NodeTemplate& node_template) {
-            return node_template.name == node.node_template_name;
-        });
+        const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
                                                                .node_template_name = node.node_template_name,
                                                                .node_uuid          = node.uuid},
                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
-        declarations << function_declaration(fn_signature_params);
-        declarations << '\n';
-        std::vector<std::pair<std::string, std::string>> sdf_identifiers;
-        sdf_identifiers.reserve(node.input_pins.size());
-        for (size_t i = 0; i < node.input_pins.size(); ++i) {
-            const Node* input_node = NodeEditorU::find_input_node(node.input_pins[i], nodes, links);
-            sdf_identifiers.push_back(std::make_pair(
-                node_template.sdf_identifiers[i],
-                input_node ? function_name({input_node->node_template_name, input_node->uuid}) : "cool_default_sdf"s));
-        }
+        declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
             .fn_signature_params = fn_signature_params,
-            .body                = function_body(
-                node.parameter_list,
-                node_template.code_template,
-                sdf_identifiers)});
+            .body                = function_body(node.parameter_list,
+                                  node_template.code_template,
+                                  compute_sdf_identifiers(node, node_template, nodes, links))});
         definitions << "\n\n";
     }
     return declarations.str() + '\n' + definitions.str();
