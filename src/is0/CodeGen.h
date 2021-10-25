@@ -75,12 +75,12 @@ TEST_CASE("[is0::CodeGen] Parameter definition")
     // Then
     CHECK(CodeGen::parameter_definition(param_int) == "const int my_param_int = 11;");
     CHECK(CodeGen::parameter_definition(param_vec2) == "const vec2 my_param_vec2 = vec2(1.000000, 2.000000);");
-    CHECK(CodeGen::parameters_definitions(param_list) == R"(const int my_param_int = 11;
-const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
+    CHECK(CodeGen::parameters_definitions(param_list) == R"(    const int my_param_int = 11;
+    const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
 )");
-    CHECK(CodeGen::function_body(param_list, "return ${THE_SDF}(pos);", {std::make_pair("THE_SDF"s, "my_sdf"s)}) == R"({
-const int my_param_int = 11;
-const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
-return my_sdf(pos);
+    CHECK(CodeGen::function_body(param_list, "    return ${THE_SDF}(pos);", {std::make_pair("THE_SDF"s, "my_sdf"s)}) == R"({
+    const int my_param_int = 11;
+    const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
+    return my_sdf(pos);
 })");
 }

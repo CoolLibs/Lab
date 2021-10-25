@@ -91,7 +91,7 @@ std::string function_body(const Cool::ParameterList& list, const std::string& co
 std::string parameters_definitions(const Cool::ParameterList& list)
 {
     return std::accumulate(list->begin(), list->end(), std::string{""}, [](const std::string& acc, const auto& param) {
-        return acc + parameter_definition_any(param) + '\n';
+        return acc + "    " + parameter_definition_any(param) + '\n';
     });
 }
 
