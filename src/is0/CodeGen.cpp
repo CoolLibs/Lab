@@ -35,6 +35,10 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
 {
     std::stringstream declarations;
     std::stringstream definitions;
+    std::stringstream main_sdf_definition;
+    main_sdf_definition << R"(float is0_main_sdf(vec3 pos) {
+    float d = MAX_DIST;)";
+
     for (const auto& node : nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
@@ -48,8 +52,12 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
                                   node_template.code_template,
                                   compute_sdf_identifiers(node, node_template, nodes, links))});
         definitions << "\n\n";
+        main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.uuid}) << "(pos));";
     }
-    return declarations.str() + '\n' + definitions.str();
+    main_sdf_definition << R"(
+    return d;
+})";
+    return declarations.str() + '\n' + definitions.str() + main_sdf_definition.str();
 }
 
 std::string function_name(const FnNameParams& p)
