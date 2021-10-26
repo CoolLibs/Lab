@@ -11,4 +11,7 @@ ShaderManager_FromNodes::ShaderManager_FromNodes()
 void ShaderManager_FromNodes::imgui_window()
 {
     _node_editor.imgui_window();
+    ImGui::Begin("is0 Shader Code");
+    ImGui::Text("%s", _node_editor.shader_code().c_str());
+    ImGui::End();
 }

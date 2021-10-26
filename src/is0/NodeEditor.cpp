@@ -115,10 +115,7 @@ void NodeEditor::handle_link_creation()
 
 void NodeEditor::imgui_window()
 {
-    ImGui::Begin("Node output");
-    ImGui::Text("%s", _shader_code.c_str());
-    ImGui::End();
-    ImGui::Begin("Nodes");
+    ImGui::Begin("is0");
     ed::SetCurrentEditor(&*_context);
     ed::Begin("My Editor");
     {
