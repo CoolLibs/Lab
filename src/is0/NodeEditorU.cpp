@@ -23,4 +23,11 @@ const Node& find_node_with_output_pin(ed::PinId pin_id, const std::vector<Node>&
     });
 }
 
+bool has_no_successor(const Node& node, const std::vector<Link>& links)
+{
+    return std::ranges::find_if(links, [&](const Link& link) {
+               return link.from_pin_id == node.output_pin.id();
+           }) == links.end();
+}
+
 } // namespace NodeEditorU

@@ -12,4 +12,6 @@ const Node* find_input_node(const Pin& pin, const std::vector<Node>& nodes, cons
 
 const Node& find_node_with_output_pin(ed::PinId pin_id, const std::vector<Node>& nodes);
 
+bool has_no_successor(const Node& node, const std::vector<Link>& links);
+
 } // namespace NodeEditorU
