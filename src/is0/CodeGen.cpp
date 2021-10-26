@@ -34,7 +34,7 @@ float rayMarching(vec3 ro, vec3 rd) {
  	
     for (int i = 0; i < MAX_STEPS; i++) {
     	vec3 pos = ro + rd * t;
-        float d = sceneSDF(pos);
+        float d = is0_main_sdf(pos);
         t += d;
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
@@ -45,10 +45,10 @@ float rayMarching(vec3 ro, vec3 rd) {
 vec3 getNormal(vec3 p) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * sceneSDF( p + k.xyy*h ) + 
-                      k.yyx * sceneSDF( p + k.yyx*h ) + 
-                      k.yxy * sceneSDF( p + k.yxy*h ) + 
-                      k.xxx * sceneSDF( p + k.xxx*h ) );
+    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
+                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
+                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
+                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
 }
 
 vec3 render(vec3 ro, vec3 rd) {
