@@ -1,6 +1,25 @@
 #include "NodeEditor.h"
 #include "CodeGen.h"
 
+NodeEditor::NodeEditor()
+{
+    update_shader_code();
+}
+
+void NodeEditor::subscribe_to_shader_code_changes(std::function<void(const std::string&)> callback)
+{
+    _on_shader_code_change.push_back(callback);
+    callback(_shader_code);
+}
+
+void NodeEditor::update_shader_code()
+{
+    _shader_code = CodeGen::full_shader_code(_nodes, _links, _factory.templates());
+    for (const auto& callback : _on_shader_code_change) {
+        callback(_shader_code);
+    }
+}
+
 static void show_node_pins(const Node& node)
 {
     ImGui::BeginGroup();
@@ -99,7 +118,7 @@ static void handle_link_creation(const std::vector<Node>& nodes, std::back_inser
 
 void NodeEditor::imgui_window()
 {
-    _shader_code = CodeGen::full_shader_code(_nodes, _links, _factory.templates());
+    update_shader_code();
     ImGui::Begin("Node output");
     ImGui::Text("%s", _shader_code.c_str());
     ImGui::End();
