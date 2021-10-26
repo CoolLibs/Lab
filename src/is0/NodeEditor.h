@@ -16,6 +16,7 @@ public:
     void subscribe_to_shader_code_changes(std::function<void(const std::string&)> callback);
 
 private:
+    void handle_link_creation();
     void update_shader_code();
 
 private:
