@@ -2,8 +2,15 @@
 
 #include <Cool/Parameter/ParameterList.h>
 #include <Cool/Uuid/Uuid.h>
+#include "Link.h"
+#include "Node.h"
+#include "NodeTemplate.h"
 
 namespace CodeGen {
+
+std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates);
+
+std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates);
 
 struct FnNameParams {
     std::string_view node_template_name;
@@ -24,7 +31,7 @@ std::string function_name(const FnNameParams& p);
 std::string function_signature(const FnSignatureParams& p);
 std::string function_declaration(const FnSignatureParams& p);
 std::string function_definition(const FnDefinitionParams& p);
-std::string function_body(const Cool::ParameterList& list, const std::string& code_template);
+std::string function_body(const Cool::ParameterList& list, const std::string& code_template, const std::vector<std::pair<std::string, std::string>>& sdf_identifiers);
 
 std::string parameters_definitions(const Cool::ParameterList& list);
 std::string parameter_definition_any(const Cool::Parameter::Any& param);
@@ -58,6 +65,7 @@ TEST_CASE("[is0::CodeGen] Function generation")
 
 TEST_CASE("[is0::CodeGen] Parameter definition")
 {
+    using namespace std::string_literals;
     // Given
     const auto param_int  = Cool::Parameter::Int{{.name = "my_param_int", .default_value = 11}};
     const auto param_vec2 = Cool::Parameter::Vec2{{.name = "my_param_vec2", .default_value = {1.f, 2.f}}};
@@ -67,13 +75,12 @@ TEST_CASE("[is0::CodeGen] Parameter definition")
     // Then
     CHECK(CodeGen::parameter_definition(param_int) == "const int my_param_int = 11;");
     CHECK(CodeGen::parameter_definition(param_vec2) == "const vec2 my_param_vec2 = vec2(1.000000, 2.000000);");
-    CHECK(CodeGen::parameters_definitions(param_list) == R"(const int my_param_int = 11;
-const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
+    CHECK(CodeGen::parameters_definitions(param_list) == R"(    const int my_param_int = 11;
+    const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
 )");
-    CHECK(CodeGen::function_body(param_list, "return 0.;") == R"({
-const int my_param_int = 11;
-const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
-
-return 0.;
+    CHECK(CodeGen::function_body(param_list, "    return ${THE_SDF}(pos);", {std::make_pair("THE_SDF"s, "my_sdf"s)}) == R"({
+    const int my_param_int = 11;
+    const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
+    return my_sdf(pos);
 })");
 }
