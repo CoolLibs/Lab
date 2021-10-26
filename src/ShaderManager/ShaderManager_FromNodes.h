@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Cool/ImGui/ImGuiWindow.h>
 #include "ShaderManager.h"
 #include "is0/NodeEditor.h"
 
@@ -11,7 +12,8 @@ public:
     void imgui_window() override;
 
 private:
-    NodeEditor _node_editor;
+    NodeEditor        _node_editor;
+    Cool::ImGuiWindow _shader_code_window{"is0 Shader Code", false};
 
 private:
     //Serialization
