@@ -16,6 +16,15 @@ public:
 
 private:
     ed::PinId _id;
+
+private:
+    //Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(_id);
+    }
 };
 
 class PinSdfIn : public Pin {
@@ -30,6 +39,15 @@ public:
         ed::BeginPin(id(), kind());
         ImGui::Text("IN->");
         ed::EndPin();
+    }
+
+private:
+    //Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(cereal::base_class<Pin>(this));
     }
 };
 
@@ -46,4 +64,30 @@ public:
         ImGui::Text("OUT->");
         ed::EndPin();
     }
+
+private:
+    //Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(cereal::base_class<Pin>(this));
+    }
 };
+
+namespace ax::NodeEditor {
+
+template<class Archive>
+void save(Archive& archive, const PinId& id)
+{
+    archive(cereal::make_nvp("id", id.Get()));
+}
+template<class Archive>
+void load(Archive& archive, PinId& id)
+{
+    uintptr_t val;
+    archive(val);
+    id = ed::PinId{val};
+}
+
+} // namespace ax::NodeEditor

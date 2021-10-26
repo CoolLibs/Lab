@@ -21,5 +21,6 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+        archive(cereal::make_nvp("is0 Node Editor", _node_editor));
     }
 };

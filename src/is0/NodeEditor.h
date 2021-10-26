@@ -27,4 +27,15 @@ private:
     std::string       _shader_code;
 
     std::vector<std::function<void(const std::string&)>> _on_shader_code_change;
+
+private:
+    //Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(cereal::make_nvp("Nodes", _nodes),
+                cereal::make_nvp("Links", _links));
+        update_shader_code();
+    }
 };
