@@ -126,7 +126,9 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
                                   node_template.code_template,
                                   compute_sdf_identifiers(node, node_template, nodes, links))});
         definitions << "\n\n";
-        main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.uuid}) << "(pos));";
+        if (NodeEditorU::has_no_successor(node, links)) {
+            main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.uuid}) << "(pos));";
+        }
     }
     main_sdf_definition << R"(
     return d;
