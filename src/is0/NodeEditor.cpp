@@ -97,10 +97,12 @@ static void handle_link_creation(const std::vector<Node>& nodes, std::back_inser
     ed::EndCreate(); // Wraps up object creation action handling.
 }
 
-#include "CodeGen.h"
-
 void NodeEditor::imgui_window()
 {
+    _shader_code = CodeGen::full_shader_code(_nodes, _links, _factory.templates());
+    ImGui::Begin("Node output");
+    ImGui::Text("%s", _shader_code.c_str());
+    ImGui::End();
     ImGui::Begin("Nodes");
     ed::SetCurrentEditor(&*_context);
     ed::Begin("My Editor");
@@ -118,9 +120,6 @@ void NodeEditor::imgui_window()
         imgui_make_node();
         ImGui::EndPopup();
     }
-    ImGui::End();
-    ImGui::Begin("Node output");
-    ImGui::Text("%s", CodeGen::full_shader_code(_nodes, _links, _factory.templates()).c_str());
     ImGui::End();
 }
 

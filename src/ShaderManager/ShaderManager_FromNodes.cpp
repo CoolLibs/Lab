@@ -11,4 +11,5 @@ ShaderManager_FromNodes::ShaderManager_FromNodes()
 void ShaderManager_FromNodes::imgui_window()
 {
     _node_editor.imgui_window();
+    _fullscreen_pipeline.compile(_node_editor.shader_code(), "is0 Ray Marcher");
 }

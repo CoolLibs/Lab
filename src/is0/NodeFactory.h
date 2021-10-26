@@ -13,13 +13,16 @@ public:
                                    .parameters             = {Cool::Parameter::FloatDesc{"radius"}},
                                    .sdf_identifiers        = {}});
         _node_templates.push_back({.name                   = "Cube",
-                                   .vec3_input_declaration = "(vec3 p)",
-                                   .code_template          = "    return length(p) * 2.;",
+                                   .vec3_input_declaration = "(vec3 pos)",
+                                   .code_template          = R"( 
+	vec3 q = abs(pos) - 1.; 
+	return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.); 
+	)",
                                    .parameters             = {},
                                    .sdf_identifiers        = {}});
         _node_templates.push_back({.name                   = "Repeat",
                                    .vec3_input_declaration = "(vec3 pos)",
-                                   .code_template          = "    return length(pos) * 2.;",
+                                   .code_template          = "    return ${SDF}((fract(pos / extent) - 0.5) * extent);",
                                    .parameters             = {Cool::Parameter::FloatDesc{"extent"}},
                                    .sdf_identifiers        = {"SDF"}});
         _node_templates.push_back({.name                   = "Intersection",
