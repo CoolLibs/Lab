@@ -2,7 +2,7 @@
 
 #include <Cool/Uuid/Uuid.h>
 #include "Ed.h"
-#include "Pin.h"
+#include "EdSerialization.h"
 
 struct Link {
     ed::LinkId id = static_cast<ed::LinkId>(Cool::Uuid{});
@@ -20,13 +20,3 @@ private:
                 cereal::make_nvp("To pin", to_pin_id));
     }
 };
-
-namespace ax::NodeEditor {
-
-template<class Archive>
-void serialize(Archive& archive, LinkId& id)
-{
-    archive(static_cast<uint64_t>(id));
-}
-
-} // namespace ax::NodeEditor

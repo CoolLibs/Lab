@@ -2,6 +2,7 @@
 
 #include <Cool/Uuid/Uuid.h>
 #include "Ed.h"
+#include "EdSerialization.h"
 
 class Pin {
 public:
@@ -74,20 +75,3 @@ private:
         archive(cereal::base_class<Pin>(this));
     }
 };
-
-namespace ax::NodeEditor {
-
-template<class Archive>
-void save(Archive& archive, const PinId& id)
-{
-    archive(cereal::make_nvp("id", id.Get()));
-}
-template<class Archive>
-void load(Archive& archive, PinId& id)
-{
-    uintptr_t val;
-    archive(val);
-    id = ed::PinId{val};
-}
-
-} // namespace ax::NodeEditor
