@@ -24,7 +24,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(_id);
+        archive(cereal::make_nvp("id", _id));
     }
 };
 
@@ -48,7 +48,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::base_class<Pin>(this));
+        archive(cereal::make_nvp("Pin", cereal::base_class<Pin>(this)));
     }
 };
 
@@ -72,6 +72,6 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::base_class<Pin>(this));
+        archive(cereal::make_nvp("Pin", cereal::base_class<Pin>(this)));
     }
 };
