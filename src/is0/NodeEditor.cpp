@@ -90,7 +90,6 @@ void NodeEditor::handle_link_creation()
                 }
 
                 bool accept_link = from_pin->kind() != to_pin->kind()                                             // One pin is an input and the other an output
-                                   && !ed::PinHadAnyLinks(from_pin_id)                                            // There isn't already a node connected to the begin pin
                                    && !ed::PinHadAnyLinks(to_pin_id)                                              // There isn't already a node connected to the end pin
                                    && NodeEditorU::pins_are_from_different_nodes(from_pin_id, to_pin_id, _nodes); // We are not connecting a node to itself
 
