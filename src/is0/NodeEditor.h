@@ -17,6 +17,7 @@ public:
 
 private:
     void handle_link_creation();
+    void handle_link_deletion();
     void update_shader_code();
 
 private:

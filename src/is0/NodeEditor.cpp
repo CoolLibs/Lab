@@ -111,6 +111,32 @@ void NodeEditor::handle_link_creation()
     ed::EndCreate(); // Wraps up object creation action handling.
 }
 
+void NodeEditor::handle_link_deletion()
+{
+    if (ed::BeginDelete()) {
+        // There may be many links marked for deletion, let's loop over them.
+        ed::LinkId deletedLinkId;
+        bool       has_erased_some = false;
+        while (ed::QueryDeletedLink(&deletedLinkId)) {
+            has_erased_some = true;
+            // If you agree that link can be deleted, accept deletion.
+            if (ed::AcceptDeletedItem()) {
+                // Then remove link from your data.
+                std::erase_if(_links, [&](const Link& link) {
+                    return link.id == deletedLinkId;
+                });
+            }
+
+            // You may reject link deletion by calling:
+            // ed::RejectDeletedItem();
+        }
+        if (has_erased_some) {
+            update_shader_code();
+        }
+    }
+    ed::EndDelete(); // Wrap up deletion action
+}
+
 void NodeEditor::imgui_window()
 {
     ImGui::Begin("is0");
@@ -124,6 +150,7 @@ void NodeEditor::imgui_window()
             show_link(link);
         }
         handle_link_creation();
+        handle_link_deletion();
     }
     ed::End();
     if (ImGui::BeginPopupContextItem("_node_templates_list", ImGuiPopupFlags_MouseButtonMiddle)) {
