@@ -2,23 +2,17 @@
 
 namespace ax::NodeEditor {
 
-template<class Archive>
-void save(Archive& archive, const PinId& id)
+template<class Archive, typename EdId>
+void save(Archive& archive, const EdId& id)
 {
     archive(cereal::make_nvp("id", id.Get()));
 }
-template<class Archive>
-void load(Archive& archive, PinId& id)
+template<class Archive, typename EdId>
+void load(Archive& archive, EdId& id)
 {
     uintptr_t val;
     archive(val);
-    id = ed::PinId{val};
-}
-
-template<class Archive>
-void serialize(Archive& archive, LinkId& id)
-{
-    archive(static_cast<uint64_t>(id));
+    id = EdId{val};
 }
 
 } // namespace ax::NodeEditor
