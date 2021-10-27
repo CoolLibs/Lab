@@ -3,6 +3,6 @@ radius: float {
     max: inf,
 }
 
-[] => (vec3 pos) {
-    return length(pos) - ${radius};
+[] (vec3 pos) {
+    return length(pos) - radius;
 }
