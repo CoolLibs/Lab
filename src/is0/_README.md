@@ -30,6 +30,8 @@ You can watch these videos, in that order:
 
 - [Inigo's painting process](https://youtu.be/8--5LwHRhjk)
 
+- [Rendering SDFs as smoke](https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html)
+
 - [*Dream*'s engine: different rendering techniques for SDFs](https://www.youtube.com/watch?v=u9KNtnCZDMI)
 
 - [Non-euclidian space rendered with Ray Marching and SDFs](https://youtu.be/ivHG4AOkhYA)
