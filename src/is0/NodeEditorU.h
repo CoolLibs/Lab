@@ -14,4 +14,6 @@ const Node& find_node_with_output_pin(ed::PinId pin_id, const std::vector<Node>&
 
 bool has_no_successor(const Node& node, const std::vector<Link>& links);
 
+bool pins_are_from_different_nodes(ed::PinId output_pin, ed::PinId input_pin, const std::vector<Node>& nodes);
+
 } // namespace NodeEditorU

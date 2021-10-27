@@ -30,4 +30,12 @@ bool has_no_successor(const Node& node, const std::vector<Link>& links)
            }) == links.end();
 }
 
+bool pins_are_from_different_nodes(ed::PinId output_pin, ed::PinId input_pin, const std::vector<Node>& nodes)
+{
+    const auto& node = find_node_with_output_pin(output_pin, nodes);
+    return std::ranges::none_of(node.input_pins, [&](const Pin& pin) {
+        return pin.id() == input_pin;
+    });
+}
+
 } // namespace NodeEditorU

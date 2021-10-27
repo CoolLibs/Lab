@@ -1,5 +1,6 @@
 #include "NodeEditor.h"
 #include "CodeGen.h"
+#include "NodeEditorU.h"
 
 NodeEditor::NodeEditor()
 {
@@ -88,13 +89,10 @@ void NodeEditor::handle_link_creation()
                     std::swap(from_pin_id, to_pin_id);
                 }
 
-                bool accept_link = true;
-                // Check that there isn't already a node connected to the end_pin
-                // accept_link &= !_registry.valid(compute_node_connected_to_pin(end_pin_id));
-                // Check that one pin is an input and the other an output
-                accept_link &= from_pin->kind() != to_pin->kind();
-                // Check that we are not linking a node to itself
-                // accept_link &= start_pin_info.node_entity != end_pin_info.node_entity;
+                bool accept_link = from_pin->kind() != to_pin->kind()                                             // One pin is an input and the other an output
+                                   && !ed::PinHadAnyLinks(from_pin_id)                                            // There isn't already a node connected to the begin pin
+                                   && !ed::PinHadAnyLinks(to_pin_id)                                              // There isn't already a node connected to the end pin
+                                   && NodeEditorU::pins_are_from_different_nodes(from_pin_id, to_pin_id, _nodes); // We are not connecting a node to itself
 
                 if (accept_link) {
                     _links.push_back(Link{.from_pin_id = from_pin_id,
@@ -102,7 +100,7 @@ void NodeEditor::handle_link_creation()
                     // _registry.remove_if_exists<IsTerminalNode>(start_pin_info.node_entity);
                     update_shader_code();
                     // Draw new link
-                    //ed::Link(_links.back().id, _links.back().start_pin_id, _links.back().end_pin_id);
+                    // ed::Link(_links.back().id, from_pin_id, to_pin_id);
                 }
                 else {
                     ed::RejectNewItem();
