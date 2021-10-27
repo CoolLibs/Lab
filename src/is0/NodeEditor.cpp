@@ -96,10 +96,7 @@ void NodeEditor::handle_link_creation()
                 if (accept_link) {
                     _links.push_back(Link{.from_pin_id = from_pin_id,
                                           .to_pin_id   = to_pin_id});
-                    // _registry.remove_if_exists<IsTerminalNode>(start_pin_info.node_entity);
                     update_shader_code();
-                    // Draw new link
-                    // ed::Link(_links.back().id, from_pin_id, to_pin_id);
                 }
                 else {
                     ed::RejectNewItem();
