@@ -18,7 +18,7 @@ uniform float _time;
 #include "Cool/res/shaders/camera.glsl"
 
 // ----- Ray marching options ----- //
-#define MAX_STEPS 150
+#define MAX_STEPS 1500
 #define MAX_DIST 200.
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001

@@ -44,14 +44,20 @@ public:
     float s = sin(k*p.y);
     mat2  m = mat2(c,-s,s,c);
     vec3  q = vec3(m*p.xz,p.y);
-    return ${SDF}(q);
+    return march_precision * ${SDF}(q);
 	)",
-                                   .parameters             = {Cool::Parameter::FloatDesc{
-                                       .name          = "k",
-                                       .default_value = 10.f,
-                                       .min_value     = 0.001f,
-                                       .max_value     = 20.f}},
-                                   .sdf_identifiers        = {"SDF"}});
+                                   .parameters             = {
+                                       Cool::Parameter::FloatDesc{
+                                           .name          = "k",
+                                           .default_value = 10.f,
+                                           .min_value     = 0.001f,
+                                           .max_value     = 20.f},
+                                       Cool::Parameter::FloatDesc{
+                                           .name          = "march_precision",
+                                           .default_value = 1.f,
+                                           .min_value     = 0.001f,
+                                           .max_value     = 1.f}},
+                                   .sdf_identifiers = {"SDF"}});
         _node_templates.push_back({.name                   = "Intersection",
                                    .vec3_input_declaration = "(vec3 pos)",
                                    .code_template          = "    return max(${SDF1}(pos), ${SDF2}(pos));",
