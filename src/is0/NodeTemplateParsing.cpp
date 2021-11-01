@@ -1,4 +1,5 @@
 #include "NodeTemplateParsing.h"
+#include <Cool/Parameter/Parsing.h>
 #include <Cool/String/String.h>
 
 static std::string_view find_capture(std::string_view source)
@@ -33,24 +34,31 @@ static std::string find_sdf_body(std::string_view source)
     return std::string{source.substr(pos->first, pos->second - pos->first + 1)};
 }
 
-void parse_body(NodeTemplate& node_template, std::string_view source)
+void parse_node_template(NodeTemplate& node_template, std::string_view source)
 {
     node_template.sdf_identifiers        = parse_capture(find_capture(source));
     node_template.vec3_input_declaration = find_sdf_input_declaration(source);
     node_template.code_template          = find_sdf_body(source);
+    node_template.parameters             = Cool::parse_all_parameter_desc(source);
 }
 
-TEST_CASE("[is0::NodeParsing] parse_body()")
+TEST_CASE("[is0::NodeParsing] parse_node_template()")
 {
     // Given
     const std::string source = R"(
 [MY_SDF1 MY_SDF2] (vec3 weird_pos) {
     return max(${MY_SDF1}(weird_pos), ${MY_SDF2}(weird_pos));
 }
+float {
+    "Name": "radius",
+    "Default value": 1.0,
+    "Min value": 0.0,
+    "Max value": 100.0
+}
 )";
     // When
     NodeTemplate node_template;
-    parse_body(node_template, source);
+    parse_node_template(node_template, source);
     // Then
     CHECK(node_template.vec3_input_declaration == "(vec3 weird_pos)");
     CHECK(node_template.code_template == R"({
@@ -58,6 +66,8 @@ TEST_CASE("[is0::NodeParsing] parse_body()")
 })");
     const std::vector<std::string> expected_sdf_identifiers = {"MY_SDF1", "MY_SDF2"};
     CHECK(node_template.sdf_identifiers == expected_sdf_identifiers);
+    REQUIRE(node_template.parameters.size() == 1);
+    CHECK(std::holds_alternative<Cool::Parameter::FloatDesc>(node_template.parameters[1]));
 }
 
 TEST_CASE("[is0::NodeParsing] find_capture()")
