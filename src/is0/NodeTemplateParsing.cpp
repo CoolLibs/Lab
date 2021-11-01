@@ -1,35 +1,43 @@
 #include "NodeTemplateParsing.h"
 #include <Cool/String/String.h>
 
-void parse_body(NodeTemplate& node_template, std::string_view source)
-{
-    node_template.sdf_identifiers = parse_capture(find_capture(source));
-    // // std::regex r{R"(\[(([^\s]+)\s*)\])"};
-    // // std::regex r{R"(\[(.+?)(?:,\s*|$)\])"};
-    // std::regex r{R"(\[(.*)\].*?\((.*)\)?.*?\{(.*)\}(.*))"};
-
-    // // flag type for determining the matching behavior (in this case on string objects)
-    // std::smatch m;
-
-    // // regex_search that searches pattern regexp in the string mystr
-    // std::regex_search(source, m, r);
-
-    // for (const auto x : m)
-    //     Cool::Log::info(x.str());
-}
-
-auto find_capture(std::string_view source) -> std::string_view
+static std::string_view find_capture(std::string_view source)
 {
     const auto capture_pos = Cool::String::find_matching_pair(source, '[', ']');
     if (!capture_pos.has_value()) {
-        throw std::invalid_argument("Couldn't parse the capture group. It should de balimited by \"[ ]\"");
+        throw std::invalid_argument("Couldn't parse the capture group. It should be delimited by \"[ ]\"");
     }
     return source.substr(capture_pos->first + 1, capture_pos->second - capture_pos->first - 1);
 }
 
-auto parse_capture(std::string_view source) -> std::vector<std::string>
+static std::vector<std::string> parse_capture(std::string_view source)
 {
     return Cool::String::split_into_words(std::string{source});
+}
+
+static std::string find_sdf_input_declaration(std::string_view source)
+{
+    const auto pos = Cool::String::find_matching_pair(source, '(', ')');
+    if (!pos.has_value()) {
+        throw std::invalid_argument("Couldn't parse the sdf input declaration. It should look like \"(vec3 pos)\"");
+    }
+    return std::string{source.substr(pos->first, pos->second - pos->first + 1)};
+}
+
+static std::string find_sdf_body(std::string_view source)
+{
+    const auto pos = Cool::String::find_matching_pair(source, '{', '}');
+    if (!pos.has_value()) {
+        throw std::invalid_argument("Couldn't parse the sdf body. It should be delimited by \"{ }\"");
+    }
+    return std::string{source.substr(pos->first, pos->second - pos->first + 1)};
+}
+
+void parse_body(NodeTemplate& node_template, std::string_view source)
+{
+    node_template.sdf_identifiers        = parse_capture(find_capture(source));
+    node_template.vec3_input_declaration = find_sdf_input_declaration(source);
+    node_template.code_template          = find_sdf_body(source);
 }
 
 TEST_CASE("[is0::NodeParsing] parse_body()")
@@ -46,7 +54,7 @@ TEST_CASE("[is0::NodeParsing] parse_body()")
     // Then
     CHECK(node_template.vec3_input_declaration == "(vec3 weird_pos)");
     CHECK(node_template.code_template == R"({
-    return max(${SDF1}(weird_pos), ${SDF2}(weird_pos));
+    return max(${MY_SDF1}(weird_pos), ${MY_SDF2}(weird_pos));
 })");
     const std::vector<std::string> expected_sdf_identifiers = {"MY_SDF1", "MY_SDF2"};
     CHECK(std::ranges::is_permutation(node_template.sdf_identifiers, expected_sdf_identifiers));
