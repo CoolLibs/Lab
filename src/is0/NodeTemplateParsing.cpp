@@ -36,7 +36,7 @@ TEST_CASE("[is0::NodeParsing] parse_body()")
 {
     // Given
     const std::string source = R"(
-[MY_SDF1, MY_SDF2] (vec3 weird_pos) {
+[MY_SDF1 MY_SDF2] (vec3 weird_pos) {
     return max(${MY_SDF1}(weird_pos), ${MY_SDF2}(weird_pos));
 }
 )";
@@ -55,9 +55,9 @@ TEST_CASE("[is0::NodeParsing] parse_body()")
 TEST_CASE("[is0::NodeParsing] find_capture()")
 {
     const std::string source = R"(
-[MY_SDF1, MY_SDF2] (vec3 weird_pos) {
+[MY_SDF1 MY_SDF2] (vec3 weird_pos) {
     return max(${MY_SDF1}(weird_pos), ${MY_SDF2}(weird_pos));
 }
 )";
-    CHECK(find_capture(source) == "MY_SDF1, MY_SDF2");
+    CHECK(find_capture(source) == "MY_SDF1 MY_SDF2");
 }
