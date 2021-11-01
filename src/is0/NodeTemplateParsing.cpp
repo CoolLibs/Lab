@@ -29,7 +29,7 @@ auto find_capture(std::string_view source) -> std::string_view
 
 auto parse_capture(std::string_view source) -> std::vector<std::string>
 {
-    return {};
+    return Cool::String::split_into_words(std::string{source});
 }
 
 TEST_CASE("[is0::NodeParsing] parse_body()")
