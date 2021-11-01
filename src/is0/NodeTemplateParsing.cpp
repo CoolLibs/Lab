@@ -57,7 +57,7 @@ TEST_CASE("[is0::NodeParsing] parse_body()")
     return max(${MY_SDF1}(weird_pos), ${MY_SDF2}(weird_pos));
 })");
     const std::vector<std::string> expected_sdf_identifiers = {"MY_SDF1", "MY_SDF2"};
-    CHECK(std::ranges::is_permutation(node_template.sdf_identifiers, expected_sdf_identifiers));
+    CHECK(node_template.sdf_identifiers == expected_sdf_identifiers);
 }
 
 TEST_CASE("[is0::NodeParsing] find_capture()")
