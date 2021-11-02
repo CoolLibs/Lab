@@ -109,28 +109,58 @@ void NodeEditor::handle_link_creation()
 
 void NodeEditor::handle_link_deletion()
 {
-    if (ed::BeginDelete()) {
-        // There may be many links marked for deletion, let's loop over them.
-        ed::LinkId deletedLinkId;
-        bool       has_erased_some = false;
-        while (ed::QueryDeletedLink(&deletedLinkId)) {
-            has_erased_some = true;
-            // If you agree that link can be deleted, accept deletion.
-            if (ed::AcceptDeletedItem()) {
-                // Then remove link from your data.
-                std::erase_if(_links, [&](const Link& link) {
-                    return link.id == deletedLinkId;
-                });
-            }
+    // There may be many links marked for deletion, let's loop over them.
+    ed::LinkId deletedLinkId;
+    bool       has_erased_some = false;
+    while (ed::QueryDeletedLink(&deletedLinkId)) {
+        has_erased_some = true;
+        // If you agree that link can be deleted, accept deletion.
+        if (ed::AcceptDeletedItem()) {
+            // Then remove link from your data.
+            std::erase_if(_links, [&](const Link& link) {
+                return link.id == deletedLinkId;
+            });
+        }
 
-            // You may reject link deletion by calling:
-            // ed::RejectDeletedItem();
-        }
-        if (has_erased_some) {
-            update_shader_code();
-        }
+        // You may reject link deletion by calling:
+        // ed::RejectDeletedItem();
     }
-    ed::EndDelete(); // Wrap up deletion action
+    if (has_erased_some) {
+        update_shader_code();
+    }
+}
+
+void NodeEditor::handle_node_deletion()
+{
+    ed::NodeId deletedNodeId;
+    bool       has_erased_some = false;
+    while (ed::QueryDeletedNode(&deletedNodeId)) {
+        has_erased_some = true;
+        // If you agree that link can be deleted, accept deletion.
+        if (ed::AcceptDeletedItem()) {
+            delete_node(deletedNodeId);
+        }
+
+        // You may reject link deletion by calling:
+        // ed::RejectDeletedItem();
+    }
+    if (has_erased_some) {
+        update_shader_code();
+    }
+}
+
+void NodeEditor::delete_node(ed::NodeId node_id)
+{
+    const auto node = std::ranges::find_if(_nodes, [&](const Node& node) {
+        return node.id() == node_id;
+    });
+    std::erase_if(_links, [&](const Link& link) {
+        return link.from_pin_id == node->output_pin.id() ||
+               std::ranges::any_of(node->input_pins, [&](const auto& pin) {
+                   return link.to_pin_id == pin.id();
+               });
+    });
+    _nodes.erase(node);
 }
 
 void NodeEditor::imgui_window()
@@ -146,9 +176,13 @@ void NodeEditor::imgui_window()
             show_link(link);
         }
         handle_link_creation();
-        handle_link_deletion();
+        if (ed::BeginDelete()) {
+            handle_link_deletion();
+            handle_node_deletion();
+        }
+        ed::EndDelete();
+        ed::End();
     }
-    ed::End();
     if (ImGui::BeginPopupContextItem("_node_templates_list", ImGuiPopupFlags_MouseButtonMiddle)) {
         imgui_make_node();
         ImGui::EndPopup();
