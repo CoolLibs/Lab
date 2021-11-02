@@ -8,9 +8,11 @@ public:
     explicit NodeFactory(std::string_view nodes_folder_path);
     std::optional<Node>              imgui();
     const std::vector<NodeTemplate>& templates() const { return _node_templates; }
+    void                             reload_templates();
 
 private:
     std::vector<NodeTemplate> _node_templates;
+    std::string               _nodes_folder_path;
 };
 
 namespace NodeFactoryU {

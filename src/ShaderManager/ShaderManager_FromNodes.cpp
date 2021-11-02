@@ -16,5 +16,8 @@ void ShaderManager_FromNodes::imgui_window()
     });
     ImGui::Begin("is0 Opt");
     _shader_code_window.open_close_checkbox();
+    if (ImGui::Button("Refresh node templates")) {
+        _node_editor.update_templates_and_nodes();
+    }
     ImGui::End();
 }

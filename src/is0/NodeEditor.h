@@ -16,13 +16,14 @@ public:
     /// Calls the callback, and will call it again whenever the shader code changes
     void subscribe_to_shader_code_changes(std::function<void(const std::string&)> callback);
 
+    void update_templates_and_nodes();
+
 private:
     void handle_link_creation();
     void handle_link_deletion();
     void handle_node_deletion();
     void update_shader_code();
     void delete_node(ed::NodeId id);
-    void update_nodes_from_templates();
 
 private:
     EdUniqueContext   _context;
@@ -41,7 +42,7 @@ private:
     {
         archive(cereal::make_nvp("Nodes", _nodes),
                 cereal::make_nvp("Links", _links));
-        update_nodes_from_templates();
+        update_templates_and_nodes();
         update_shader_code();
     }
 };

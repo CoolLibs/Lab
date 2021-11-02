@@ -205,8 +205,9 @@ bool NodeEditor::imgui_make_node()
     }
 }
 
-void NodeEditor::update_nodes_from_templates()
+void NodeEditor::update_templates_and_nodes()
 {
+    _factory.reload_templates();
     std::vector<ed::NodeId> to_delete;
     for (auto& node : _nodes) {
         Cool::ParameterList new_parameters{};
@@ -228,4 +229,5 @@ void NodeEditor::update_nodes_from_templates()
     for (auto id : to_delete) {
         delete_node(id);
     }
+    update_shader_code();
 }
