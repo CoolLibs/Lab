@@ -1,9 +1,22 @@
 [SDF] (vec3 p) {
-    float c = cos(intensity*p.y); 
-    float s = sin(intensity*p.y); 
-    mat2  m = mat2(c,-s,s,c); 
-    vec3  q = vec3(m*p.xz,p.y); 
+    float proj = dot(p, axis);
+    float c = cos(intensity*proj); 
+    float s = sin(intensity*proj); 
+    mat2  m = mat2(c,-s,s,c);
+    vec3 plane_axis1 = normalize(vec3(-axis.y, axis.x, 0.));
+    vec3 plane_axis2 = cross(plane_axis1, axis);
+    vec2 p_in_plane = vec2(dot(p, plane_axis1), dot(p, plane_axis2));
+    vec2 p_in_plane_rot = m*p_in_plane;
+    vec3  q = proj * axis + p_in_plane_rot.x * plane_axis1 + p_in_plane_rot.y * plane_axis2; 
     return march_precision * ${SDF}(q); 
+}
+
+direction3D {
+    "Name": "axis",
+    "Default": {
+        "x": 0.0,
+        "y": 0.0
+    }
 }
 
 float {
