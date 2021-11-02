@@ -22,6 +22,7 @@ private:
     void handle_node_deletion();
     void update_shader_code();
     void delete_node(ed::NodeId id);
+    void update_nodes_from_templates();
 
 private:
     EdUniqueContext   _context;
@@ -40,6 +41,7 @@ private:
     {
         archive(cereal::make_nvp("Nodes", _nodes),
                 cereal::make_nvp("Links", _links));
+        update_nodes_from_templates();
         update_shader_code();
     }
 };

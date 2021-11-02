@@ -1,4 +1,6 @@
 #include "NodeEditor.h"
+#include <Cool/Log/ToUser.h>
+#include <Cool/Parameter/ParameterU.h>
 #include "CodeGen.h"
 #include "NodeEditorU.h"
 
@@ -200,5 +202,30 @@ bool NodeEditor::imgui_make_node()
     }
     else {
         return false;
+    }
+}
+
+void NodeEditor::update_nodes_from_templates()
+{
+    std::vector<ed::NodeId> to_delete;
+    for (auto& node : _nodes) {
+        Cool::ParameterList new_parameters{};
+        new_parameters->reserve(node.parameter_list->size());
+        const auto node_template = std::ranges::find_if(_factory.templates(), [&](const NodeTemplate& node_template) {
+            return node_template.name == node.node_template_name;
+        });
+        if (node_template == _factory.templates().end()) {
+            to_delete.push_back(node.id());
+            Cool::Log::ToUser::warn("is0 " + node.node_template_name, "Deleted all {} nodes because the template was missing", node.node_template_name);
+        }
+        else {
+            for (const auto& desc : node_template->parameters) {
+                new_parameters->push_back(Cool::ParameterU::make_param(node.parameter_list, desc));
+            }
+            node.parameter_list = std::move(new_parameters);
+        }
+    }
+    for (auto id : to_delete) {
+        delete_node(id);
     }
 }
