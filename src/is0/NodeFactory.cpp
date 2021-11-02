@@ -15,7 +15,7 @@ NodeFactory::NodeFactory(std::string_view nodes_folder_path)
                 _node_templates.push_back(node_template);
             }
             catch (const std::exception& e) {
-                Cool::Log::ToUser::warn("is0::NodeFactory", "Failed to parse node from file '{}':\n{}", entry.path().string(), e.what());
+                Cool::Log::ToUser::warn("is0::NodeFactory::" + entry.path().stem().string(), "Failed to parse node from file '{}':\n{}", entry.path().string(), e.what());
             }
         }
     }
