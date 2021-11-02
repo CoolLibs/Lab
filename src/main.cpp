@@ -5,5 +5,6 @@
 int main()
 {
     CoolDefault::init();
-    Cool::run<App>({Cool::WindowConfig{.title = "Cool Lab"}});
+    Cool::run<App>({Cool::WindowConfig{.title                  = "Cool Lab",
+                                       .maximize_on_startup_if = true}});
 }
