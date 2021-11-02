@@ -3,6 +3,7 @@
 App::App(Cool::WindowManager& windows)
     : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
 {
+    _clock.pause();
 }
 
 void App::update()
