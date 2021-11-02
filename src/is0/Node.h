@@ -11,6 +11,8 @@ struct Node {
     std::vector<PinSdfIn> input_pins;
     PinSdfOut             output_pin;
 
+    ed::NodeId id() const { return static_cast<ed::NodeId>(uuid); }
+
 private:
     //Serialization
     friend class cereal::access;

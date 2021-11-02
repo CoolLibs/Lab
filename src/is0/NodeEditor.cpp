@@ -45,7 +45,7 @@ static void show_node_params(Node& node, std::function<void()> on_change)
 
 static void show_node(Node& node, std::function<void()> on_change)
 {
-    ed::BeginNode(static_cast<ed::NodeId>(node.uuid));
+    ed::BeginNode(node.id());
     {
         ImGui::Text("%s", node.node_template_name.c_str());
         show_node_pins(node);
