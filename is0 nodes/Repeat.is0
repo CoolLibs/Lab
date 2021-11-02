@@ -1,10 +1,11 @@
 [SDF] (vec3 pos) {
-    return ${SDF}(fract(pos/cell_size)-0.5) * cell_size;
+    vec3 p = (fract(pos / cell_radius) - 0.5) * cell_radius;
+    return ${SDF}(p);
 }
 
 float {
-    "Name": "cell_size",
-    "Default": 1.,
+    "Name": "cell_radius",
+    "Default": 10.0,
     "Min": 0.001,
-    "Max": 100.
+    "Max": 30.0
 }

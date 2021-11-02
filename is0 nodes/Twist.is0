@@ -1,0 +1,21 @@
+[SDF] (vec3 p) {
+    float c = cos(intensity*p.y); 
+    float s = sin(intensity*p.y); 
+    mat2  m = mat2(c,-s,s,c); 
+    vec3  q = vec3(m*p.xz,p.y); 
+    return march_precision * ${SDF}(q); 
+}
+
+float {
+    "Name": "intensity",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 5.0
+}
+
+float {
+    "Name": "march_precision",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 1.0
+}

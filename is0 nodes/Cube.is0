@@ -1,5 +1,6 @@
 [] (vec3 pos) {
-    return length(pos) - radius;
+	vec3 q = abs(pos) - radius;  
+	return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.);  
 }
 
 float {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Cool/File/File.h>
 #include "EdUniqueContext.h"
 #include "Link.h"
 #include "NodeFactory.h"
@@ -22,7 +23,7 @@ private:
 
 private:
     EdUniqueContext   _context;
-    NodeFactory       _factory;
+    NodeFactory       _factory{Cool::File::root_dir() + "/is0 nodes"};
     std::vector<Node> _nodes;
     std::vector<Link> _links;
     std::string       _shader_code;
