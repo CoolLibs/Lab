@@ -3,6 +3,7 @@
 #include <Cool/File/File.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
+#include <Cool/Parameter/ParameterU.h>
 #include <Cool/Parameter/set_uniform.h>
 #include <fstream>
 
@@ -42,20 +43,19 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
                     const auto        name_pos_end = line.find_first_of(" ;", name_pos);
                     const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
                     //
-                    const std::optional<size_t> param_idx = _parameters.index_of(name);
-                    if (param_idx.has_value()) {
-                        new_params->push_back((*_parameters)[*param_idx]);
-                    }
-                    else {
-                        if (!type.compare("int"))
-                            new_params->push_back(Cool::Parameter::Int{{.name = name}});
-                        else if (!type.compare("float"))
-                            new_params->push_back(Cool::Parameter::Float{{.name = name}});
-                        else if (!type.compare("vec2"))
-                            new_params->push_back(Cool::Parameter::Vec2{{.name = name}});
-                        else if (!type.compare("vec3"))
-                            new_params->push_back(Cool::Parameter::Color{{.name = name}});
-                    }
+                    const auto desc = [&]() -> Cool::Parameter::AnyDesc {
+                        if (type == "int")
+                            return Cool::Parameter::IntDesc{.name = name};
+                        else if (type == "float")
+                            return Cool::Parameter::FloatDesc{.name = name};
+                        else if (type == "vec2")
+                            return Cool::Parameter::Vec2Desc{.name = name};
+                        else if (type == "vec3")
+                            return Cool::Parameter::ColorDesc{.name = name};
+                        else
+                            throw std::invalid_argument(type + " is not a valid parameter type.");
+                    }();
+                    new_params->push_back(Cool::ParameterU::make_param(_parameters, desc));
                 }
             }
             catch (const std::exception& e) {
