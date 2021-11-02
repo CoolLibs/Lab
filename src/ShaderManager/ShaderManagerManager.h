@@ -13,7 +13,7 @@ public:
     // clang-format on
 
 private:
-    bool                    _use_nodes = false;
+    bool                    _use_nodes = true;
     ShaderManager_FromNodes _from_nodes;
     ShaderManager_FromText  _from_text;
 
