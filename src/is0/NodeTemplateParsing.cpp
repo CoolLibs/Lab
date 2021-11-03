@@ -14,7 +14,7 @@ static std::string_view find_capture(std::string_view source, size_t* end_pos)
 
 static std::vector<std::string> parse_capture(std::string_view source)
 {
-    return Cool::String::split_into_words(std::string{source});
+    return Cool::String::split_into_words(source, " ,;\n\t");
 }
 
 static std::string find_sdf_input_declaration(std::string_view source, size_t* end_pos)
