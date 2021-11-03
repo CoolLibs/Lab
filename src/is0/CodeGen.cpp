@@ -1,6 +1,7 @@
 #include "CodeGen.h"
 #include <Cool/String/String.h>
 #include <numeric>
+#include <sstream>
 #include "NodeEditorU.h"
 
 namespace CodeGen {

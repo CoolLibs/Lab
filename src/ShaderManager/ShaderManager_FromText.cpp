@@ -25,7 +25,7 @@ void ShaderManager_FromText::compile_shader(std::string_view path)
 void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
 {
     Cool::ParameterList new_params;
-    std::ifstream       stream(path);
+    std::ifstream       stream{std::string{path}};
     std::string         line;
     bool                has_begun = false;
     while (getline(stream, line)) {
