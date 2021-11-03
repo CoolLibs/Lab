@@ -210,8 +210,6 @@ void NodeEditor::update_templates_and_nodes()
     _factory.reload_templates();
     std::vector<ed::NodeId> to_delete;
     for (auto& node : _nodes) {
-        Cool::ParameterList new_parameters{};
-        new_parameters->reserve(node.parameter_list->size());
         const auto node_template = std::ranges::find_if(_factory.templates(), [&](const NodeTemplate& node_template) {
             return node_template.name == node.node_template_name;
         });
@@ -220,10 +218,23 @@ void NodeEditor::update_templates_and_nodes()
             Cool::Log::ToUser::warn("is0 " + node.node_template_name, "Deleted all {} nodes because the template was missing", node.node_template_name);
         }
         else {
+            // Update params
+            Cool::ParameterList new_parameters{};
+            new_parameters->reserve(node.parameter_list->size());
             for (const auto& desc : node_template->parameters) {
                 new_parameters->push_back(Cool::ParameterU::make_param(node.parameter_list, desc));
             }
             node.parameter_list = std::move(new_parameters);
+            // Update input pins
+            const auto nb_pins = node_template->sdf_identifiers.size();
+            if (nb_pins < node.input_pins.size()) {
+                for (size_t i = nb_pins; i < node.input_pins.size(); ++i) {
+                    std::erase_if(_links, [&](const Link& link) {
+                        return link.to_pin_id == node.input_pins[i].id();
+                    });
+                }
+            }
+            node.input_pins.resize(nb_pins);
         }
     }
     for (auto id : to_delete) {
