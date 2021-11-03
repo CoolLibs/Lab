@@ -17,7 +17,12 @@ void NodeEditor::subscribe_to_shader_code_changes(std::function<void(const std::
 
 void NodeEditor::update_shader_code()
 {
-    _shader_code = CodeGen::full_shader_code(_nodes, _links, _factory.templates());
+    if (_all_nodes_have_a_valid_template) {
+        _shader_code = CodeGen::full_shader_code(_nodes, _links, _factory.templates());
+    }
+    else {
+        _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
+    }
     for (const auto& callback : _on_shader_code_change) {
         callback(_shader_code);
     }
@@ -207,15 +212,15 @@ bool NodeEditor::imgui_make_node()
 
 void NodeEditor::update_templates_and_nodes()
 {
+    _all_nodes_have_a_valid_template = true;
     _factory.reload_templates();
-    std::vector<ed::NodeId> to_delete;
     for (auto& node : _nodes) {
         const auto node_template = std::ranges::find_if(_factory.templates(), [&](const NodeTemplate& node_template) {
             return node_template.name == node.node_template_name;
         });
         if (node_template == _factory.templates().end()) {
-            to_delete.push_back(node.id());
-            Cool::Log::ToUser::warn("is0 " + node.node_template_name, "Deleted all {} nodes because the template was missing", node.node_template_name);
+            _all_nodes_have_a_valid_template = false;
+            Cool::Log::ToUser::warn("is0 " + node.node_template_name, "Can't find node file '{0}.is0' Your graph can't be compiled.\nEither add a '{0}.is0' file or delete all {0} nodes.", node.node_template_name);
         }
         else {
             // Update params
@@ -236,9 +241,6 @@ void NodeEditor::update_templates_and_nodes()
             }
             node.input_pins.resize(nb_pins);
         }
-    }
-    for (auto id : to_delete) {
-        delete_node(id);
     }
     update_shader_code();
 }
