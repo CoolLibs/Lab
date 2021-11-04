@@ -139,7 +139,7 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
 
 std::string function_name(const FnNameParams& p)
 {
-    return std::string{p.node_template_name} + "_" + std::to_string(*p.node_id);
+    return std::string{p.node_template_name} + "_" + std::to_string(static_cast<unsigned int>(*p.node_id));
 }
 
 std::string function_signature(const FnSignatureParams& p)
