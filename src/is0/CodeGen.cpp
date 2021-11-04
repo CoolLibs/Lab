@@ -89,7 +89,7 @@ static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(
         const Node* input_node = NodeEditorU::find_input_node(node.input_pins[i], nodes, links);
         sdf_identifiers.push_back(std::make_pair(
             node_template.sdf_identifiers[i],
-            input_node ? function_name({input_node->node_template_name, input_node->uuid}) : "is0_default_sdf"s));
+            input_node ? function_name({input_node->node_template_name, input_node->id}) : "is0_default_sdf"s));
     }
     return sdf_identifiers;
 }
@@ -118,7 +118,7 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
                                                                .node_template_name = node.node_template_name,
-                                                               .node_uuid          = node.uuid},
+                                                               .node_id            = node.id},
                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
         declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
@@ -128,7 +128,7 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
                                   compute_sdf_identifiers(node, node_template, nodes, links))});
         definitions << "\n\n";
         if (NodeEditorU::has_no_successor(node, links)) {
-            main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.uuid}) << "(pos));";
+            main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
         }
     }
     main_sdf_definition << R"(
@@ -139,7 +139,7 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
 
 std::string function_name(const FnNameParams& p)
 {
-    return std::string{p.node_template_name} + "_" + std::to_string(p.node_uuid);
+    return std::string{p.node_template_name} + "_" + std::to_string(*p.node_id);
 }
 
 std::string function_signature(const FnSignatureParams& p)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <imnodes/imnodes.h>
 #include "Ed.h"
 
 class EdUniqueContext {
@@ -7,9 +8,13 @@ public:
     EdUniqueContext()
         : _context{ed::CreateEditor()}
     {
+        ImNodes::CreateContext();
+        ImNodes::LoadCurrentEditorStateFromIniFile("is0_node_editor.ini");
     }
     ~EdUniqueContext()
     {
+        ImNodes::SaveCurrentEditorStateToIniFile("is0_node_editor.ini");
+        ImNodes::DestroyContext();
         if (_context) {
             ed::DestroyEditor(_context);
         }

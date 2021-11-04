@@ -23,6 +23,9 @@ file(GLOB_RECURSE MY_SOURCES
 # Create target executable
 add_executable(${PROJECT_NAME}
     ${MY_SOURCES}
+    lib/imnodes/imnodes_internal.h
+    lib/imnodes/imnodes.h
+    lib/imnodes/imnodes.cpp
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CXX_STANDARD})
 

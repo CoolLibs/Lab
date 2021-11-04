@@ -23,7 +23,7 @@ private:
     void handle_link_deletion();
     void handle_node_deletion();
     void update_shader_code();
-    void delete_node(ed::NodeId id);
+    void delete_node(NodeId id);
 
 private:
     EdUniqueContext   _context;

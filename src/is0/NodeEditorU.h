@@ -10,10 +10,10 @@ namespace NodeEditorU {
  */
 const Node* find_input_node(const Pin& pin, const std::vector<Node>& nodes, const std::vector<Link>& links);
 
-const Node& find_node_with_output_pin(ed::PinId pin_id, const std::vector<Node>& nodes);
+const Node& find_node_with_output_pin(PinId pin_id, const std::vector<Node>& nodes);
 
 bool has_no_successor(const Node& node, const std::vector<Link>& links);
 
-bool pins_are_from_different_nodes(ed::PinId output_pin, ed::PinId input_pin, const std::vector<Node>& nodes);
+bool pins_are_from_different_nodes(PinId output_pin, PinId input_pin, const std::vector<Node>& nodes);
 
 } // namespace NodeEditorU

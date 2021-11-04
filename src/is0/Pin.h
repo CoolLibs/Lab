@@ -1,22 +1,21 @@
 #pragma once
 
-#include <Cool/Uuid/Uuid.h>
-#include "Ed.h"
-#include "EdSerialization.h"
+#include <imnodes/imnodes.h>
+#include "Id.h"
+
+enum class PinKind {
+    Input,
+    Output
+};
 
 class Pin {
 public:
-    Pin()
-        : _id{static_cast<ed::PinId>(Cool::Uuid{})}
-    {
-    }
-
-    ed::PinId           id() const { return _id; }
-    virtual ed::PinKind kind() const = 0;
-    virtual void        show() const = 0;
+    PinId           id() const { return _id; }
+    virtual PinKind kind() const = 0;
+    virtual void    show() const = 0;
 
 private:
-    ed::PinId _id;
+    PinId _id;
 
 private:
     //Serialization
@@ -30,16 +29,16 @@ private:
 
 class PinSdfIn : public Pin {
 public:
-    ed::PinKind kind() const override
+    PinKind kind() const override
     {
-        return ed::PinKind::Input;
+        return PinKind::Input;
     }
 
     void show() const override
     {
-        ed::BeginPin(id(), kind());
-        ImGui::Text("IN->");
-        ed::EndPin();
+        ImNodes::BeginInputAttribute(id());
+        ImGui::Text("IN");
+        ImNodes::EndInputAttribute();
     }
 
 private:
@@ -54,16 +53,16 @@ private:
 
 class PinSdfOut : public Pin {
 public:
-    ed::PinKind kind() const override
+    PinKind kind() const override
     {
-        return ed::PinKind::Output;
+        return PinKind::Output;
     }
 
     void show() const override
     {
-        ed::BeginPin(id(), kind());
-        ImGui::Text("OUT->");
-        ed::EndPin();
+        ImNodes::BeginOutputAttribute(id());
+        ImGui::Text("OUT");
+        ImNodes::EndOutputAttribute();
     }
 
 private:

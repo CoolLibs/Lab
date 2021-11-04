@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Cool/Parameter/ParameterList.h>
-#include <Cool/Uuid/Uuid.h>
 #include "Link.h"
 #include "Node.h"
 #include "NodeTemplate.h"
@@ -14,7 +13,7 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
 
 struct FnNameParams {
     std::string_view node_template_name;
-    Cool::Uuid       node_uuid;
+    NodeId           node_id;
 };
 
 struct FnSignatureParams {
@@ -51,7 +50,7 @@ TEST_CASE("[is0::CodeGen] Function generation")
     // Given
     const auto name              = std::string{"my_sdf"};
     const auto name_params       = CodeGen::FnNameParams{name,
-                                                   Cool::Uuid{42}};
+                                                   NodeId{42}};
     const auto signature_params  = CodeGen::FnSignatureParams{name_params,
                                                              "(vec3 pos)"};
     const auto definition_params = CodeGen::FnDefinitionParams{signature_params,
