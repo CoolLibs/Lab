@@ -85,6 +85,9 @@ void NodeEditor::handle_link_creation()
 {
     int from_pin_id, to_pin_id;
     if (ImNodes::IsLinkCreated(&from_pin_id, &to_pin_id)) {
+        std::erase_if(_links, [&](const Link& link) {
+            return link.to_pin_id == PinId{to_pin_id};
+        });
         _links.push_back(Link{.from_pin_id = PinId{from_pin_id},
                               .to_pin_id   = PinId{to_pin_id}});
         update_shader_code();
