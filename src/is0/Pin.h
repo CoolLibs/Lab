@@ -37,7 +37,7 @@ public:
     void show() const override
     {
         ImNodes::BeginInputAttribute(id());
-        ImGui::Text("IN");
+        ImGui::Dummy({0.f, 10.f}); // Makes sure that consecutive input pins are not too close to each other
         ImNodes::EndInputAttribute();
     }
 
@@ -61,7 +61,6 @@ public:
     void show() const override
     {
         ImNodes::BeginOutputAttribute(id());
-        ImGui::Text("OUT");
         ImNodes::EndOutputAttribute();
     }
 
