@@ -17,15 +17,17 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 file(GLOB_RECURSE MY_SOURCES
     src/*
     Cool/src/*
-    lib/imgui-node-editor/*
+)
+list(APPEND IMNODE_SOURCES
+    lib/imnodes/imnodes_internal.h
+    lib/imnodes/imnodes.h
+    lib/imnodes/imnodes.cpp
 )
 
 # Create target executable
 add_executable(${PROJECT_NAME}
     ${MY_SOURCES}
-    lib/imnodes/imnodes_internal.h
-    lib/imnodes/imnodes.h
-    lib/imnodes/imnodes.cpp
+    ${IMNODE_SOURCES}
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CXX_STANDARD})
 

@@ -1,6 +1,3 @@
-[submodule "lib/imgui-node-editor"]
-	path = lib/imgui-node-editor
-	url = https://github.com/JulesFouchy/imgui-node-editor
 [submodule "Cool"]
 	path = Cool
 	url = https://github.com/CoolLibs/Cool
