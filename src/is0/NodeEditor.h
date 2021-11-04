@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Cool/File/File.h>
-#include "EdUniqueContext.h"
 #include "Link.h"
 #include "NodeFactory.h"
+#include "UniqueImNodeContext.h"
 
 class NodeEditor {
 public:
@@ -26,12 +26,12 @@ private:
     void delete_node(NodeId id);
 
 private:
-    EdUniqueContext   _context;
-    NodeFactory       _factory{Cool::File::root_dir() + "/is0 nodes"};
-    std::vector<Node> _nodes;
-    std::vector<Link> _links;
-    std::string       _shader_code;
-    bool              _all_nodes_have_a_valid_template = true;
+    UniqueImNodeContext _context;
+    NodeFactory         _factory{Cool::File::root_dir() + "/is0 nodes"};
+    std::vector<Node>   _nodes;
+    std::vector<Link>   _links;
+    std::string         _shader_code;
+    bool                _all_nodes_have_a_valid_template = true;
 
     std::vector<std::function<void(const std::string&)>> _on_shader_code_change;
 
