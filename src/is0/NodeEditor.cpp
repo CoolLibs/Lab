@@ -1,6 +1,7 @@
 #include "NodeEditor.h"
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameter/ParameterU.h>
+#include <glfw/glfw3.h>
 #include "CodeGen.h"
 #include "NodeEditorU.h"
 
@@ -96,44 +97,44 @@ void NodeEditor::handle_link_creation()
 
 void NodeEditor::handle_link_deletion()
 {
-    // // There may be many links marked for deletion, let's loop over them.
-    // ed::LinkId deletedLinkId;
-    // bool       has_erased_some = false;
-    // while (ed::QueryDeletedLink(&deletedLinkId)) {
-    //     has_erased_some = true;
-    //     // If you agree that link can be deleted, accept deletion.
-    //     if (ed::AcceptDeletedItem()) {
-    //         // Then remove link from your data.
-    //         std::erase_if(_links, [&](const Link& link) {
-    //             return link.id == deletedLinkId;
-    //         });
-    //     }
+    int  link_id;
+    bool has_deleted_some = false;
+    if (ImNodes::IsLinkDestroyed(&link_id)) {
+        std::erase_if(_links, [&](const Link& link) {
+            return link.id == LinkId{link_id};
+        });
+        has_deleted_some = true;
+    }
 
-    //     // You may reject link deletion by calling:
-    //     // ed::RejectDeletedItem();
-    // }
-    // if (has_erased_some) {
-    //     update_shader_code();
-    // }
+    const int num_selected = ImNodes::NumSelectedLinks();
+    if (num_selected > 0 && ImGui::IsKeyReleased(GLFW_KEY_DELETE)) {
+        has_deleted_some = true;
+        static std::vector<int> selected_links;
+        selected_links.resize(static_cast<size_t>(num_selected));
+        ImNodes::GetSelectedLinks(selected_links.data());
+        for (const int edge_id : selected_links) {
+            std::erase_if(_links, [&](const Link& link) {
+                return link.id == LinkId{edge_id};
+            });
+        }
+    }
+    if (has_deleted_some) {
+        update_shader_code();
+    }
 }
 
 void NodeEditor::handle_node_deletion()
 {
-    // ed::NodeId deletedNodeId;
-    // bool       has_erased_some = false;
-    // while (ed::QueryDeletedNode(&deletedNodeId)) {
-    //     has_erased_some = true;
-    //     // If you agree that link can be deleted, accept deletion.
-    //     if (ed::AcceptDeletedItem()) {
-    //         delete_node(deletedNodeId);
-    //     }
-
-    //     // You may reject link deletion by calling:
-    //     // ed::RejectDeletedItem();
-    // }
-    // if (has_erased_some) {
-    //     update_shader_code();
-    // }
+    const int num_selected = ImNodes::NumSelectedNodes();
+    if (num_selected > 0 && ImGui::IsKeyReleased(GLFW_KEY_DELETE)) {
+        static std::vector<int> selected_nodes;
+        selected_nodes.resize(static_cast<size_t>(num_selected));
+        ImNodes::GetSelectedNodes(selected_nodes.data());
+        for (const int node_id : selected_nodes) {
+            delete_node(NodeId{node_id});
+        }
+        update_shader_code();
+    }
 }
 
 void NodeEditor::delete_node(NodeId node_id)
@@ -167,8 +168,6 @@ void NodeEditor::imgui_window()
         imgui_make_node();
         ImGui::EndPopup();
     }
-    // ed::SetCurrentEditor(&*_context);
-    // ed::Begin("My Editor");
     {
         for (auto& node : _nodes) {
             show_node(node, [&]() { update_shader_code(); });
@@ -176,15 +175,11 @@ void NodeEditor::imgui_window()
         for (const auto& link : _links) {
             show_link(link);
         }
-        // if (ed::BeginDelete()) {
-        //     handle_link_deletion();
-        //     handle_node_deletion();
-        // }
-        // ed::EndDelete();
-        // ed::End();
     }
     ImNodes::EndNodeEditor();
     handle_link_creation();
+    handle_link_deletion();
+    handle_node_deletion();
     ImGui::End();
 }
 
