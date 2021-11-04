@@ -83,28 +83,11 @@ static const Pin& find_pin(PinId id, const std::vector<Node>& nodes)
 
 void NodeEditor::handle_link_creation()
 {
-    int tmp_pin_id1, tmp_pin_id2;
-    if (ImNodes::IsLinkCreated(&tmp_pin_id1, &tmp_pin_id2)) {
-        PinId      from_pin_id{tmp_pin_id1};
-        PinId      to_pin_id{tmp_pin_id2};
-        const Pin* from_pin = &find_pin(from_pin_id, _nodes);
-        const Pin* to_pin   = &find_pin(to_pin_id, _nodes);
-
-        if (from_pin->kind() == PinKind::Input) // Reorder so that we always go from an output pin to an input pin
-        {
-            std::swap(from_pin, to_pin);
-            std::swap(from_pin_id, to_pin_id);
-        }
-
-        bool accept_link = from_pin->kind() != to_pin->kind()                                             // One pin is an input and the other an output
-                                                                                                          //    && !PinHadAnyLinks(to_pin_id)                                                  // There isn't already a node connected to the end pin
-                           && NodeEditorU::pins_are_from_different_nodes(from_pin_id, to_pin_id, _nodes); // We are not connecting a node to itself
-
-        if (accept_link) {
-            _links.push_back(Link{.from_pin_id = from_pin_id,
-                                  .to_pin_id   = to_pin_id});
-            update_shader_code();
-        }
+    int from_pin_id, to_pin_id;
+    if (ImNodes::IsLinkCreated(&from_pin_id, &to_pin_id)) {
+        _links.push_back(Link{.from_pin_id = PinId{from_pin_id},
+                              .to_pin_id   = PinId{to_pin_id}});
+        update_shader_code();
     }
 }
 
