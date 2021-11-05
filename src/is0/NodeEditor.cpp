@@ -15,6 +15,13 @@ void NodeEditor::on_tree_change()
     _tree_has_changed = true;
 }
 
+bool NodeEditor::wants_to_delete_selection() const
+{
+    return ImGui::IsKeyReleased(GLFW_KEY_DELETE) ||
+           ImGui::IsKeyReleased(GLFW_KEY_BACKSPACE) ||
+           ImGui::IsKeyReleased(GLFW_KEY_X);
+}
+
 static void show_node_pins(const Node& node)
 {
     ImGui::BeginGroup();
@@ -67,21 +74,25 @@ bool NodeEditor::handle_link_creation()
 
 bool NodeEditor::handle_link_deletion()
 {
-    int  link_id;
     bool has_deleted_some = false;
-    if (ImNodes::IsLinkDestroyed(&link_id)) {
-        _tree.delete_link(LinkId{link_id});
-        has_deleted_some = true;
+    {
+        int link_id;
+        if (ImNodes::IsLinkDestroyed(&link_id)) {
+            _tree.delete_link(LinkId{link_id});
+            has_deleted_some = true;
+        }
     }
 
-    const int num_selected = ImNodes::NumSelectedLinks();
-    if (num_selected > 0 && ImGui::IsKeyReleased(GLFW_KEY_DELETE)) {
-        has_deleted_some = true;
-        static std::vector<int> selected_links;
-        selected_links.resize(static_cast<size_t>(num_selected));
-        ImNodes::GetSelectedLinks(selected_links.data());
-        for (const int link_id : selected_links) {
-            _tree.delete_link(LinkId{link_id});
+    {
+        const int num_selected = ImNodes::NumSelectedLinks();
+        if (num_selected > 0 && wants_to_delete_selection()) {
+            has_deleted_some = true;
+            static std::vector<int> selected_links;
+            selected_links.resize(static_cast<size_t>(num_selected));
+            ImNodes::GetSelectedLinks(selected_links.data());
+            for (const int link_id : selected_links) {
+                _tree.delete_link(LinkId{link_id});
+            }
         }
     }
     return has_deleted_some;
@@ -90,7 +101,7 @@ bool NodeEditor::handle_link_deletion()
 bool NodeEditor::handle_node_deletion()
 {
     const int num_selected = ImNodes::NumSelectedNodes();
-    if (num_selected > 0 && ImGui::IsKeyReleased(GLFW_KEY_DELETE)) {
+    if (num_selected > 0 && wants_to_delete_selection()) {
         static std::vector<int> selected_nodes;
         selected_nodes.resize(static_cast<size_t>(num_selected));
         ImNodes::GetSelectedNodes(selected_nodes.data());
@@ -107,16 +118,15 @@ void NodeEditor::imgui_window()
     bool node_tree_has_changed = false;
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
-
-    ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_BottomRight);
-    if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle)) {
-        ImGui::OpenPopup("_node_templates_list");
-    }
-    if (ImGui::BeginPopup("_node_templates_list")) {
-        node_tree_has_changed |= imgui_nodes_menu();
-        ImGui::EndPopup();
-    }
     {
+        ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_BottomRight);
+        if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle)) {
+            ImGui::OpenPopup("_node_templates_list");
+        }
+        if (ImGui::BeginPopup("_node_templates_list")) {
+            node_tree_has_changed |= imgui_nodes_menu();
+            ImGui::EndPopup();
+        }
         for (auto& node : _tree.nodes) {
             show_node(node, [&]() { on_tree_change(); });
         }
