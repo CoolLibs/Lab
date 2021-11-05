@@ -7,31 +7,26 @@
 
 class NodeEditor {
 public:
-    NodeEditor();
-
+    bool tree_has_changed();
     void imgui_window();
-    bool imgui_nodes_menu();
-    auto shader_code() const -> const std::string& { return _shader_code; }
-
-    /// Calls the callback, and will call it again whenever the shader code changes
-    void subscribe_to_shader_code_changes(std::function<void(const std::string&)> callback);
-
     void update_templates_and_nodes();
+    bool tree_is_valid() const { return _all_nodes_have_a_valid_template; }
+    auto tree() const -> const NodeTree& { return _tree; }
+    auto node_templates() const -> const std::vector<NodeTemplate>& { return _factory.templates(); }
 
 private:
+    void on_tree_change();
+    bool imgui_nodes_menu();
     bool handle_link_creation();
     bool handle_link_deletion();
     bool handle_node_deletion();
-    void update_shader_code();
 
 private:
     UniqueImNodeContext _context;
     NodeFactory         _factory{Cool::File::root_dir() + "/is0 nodes"};
-    std::string         _shader_code;
     NodeTree            _tree;
     bool                _all_nodes_have_a_valid_template = true;
-
-    std::vector<std::function<void(const std::string&)>> _on_shader_code_change;
+    bool                _tree_has_changed                = true;
 
 private:
     //Serialization
@@ -41,6 +36,5 @@ private:
     {
         archive(cereal::make_nvp("Node Tree", _tree));
         update_templates_and_nodes();
-        update_shader_code();
     }
 };

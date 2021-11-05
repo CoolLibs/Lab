@@ -59,6 +59,21 @@ const Node& NodeTree::find_node_with_output_pin(PinId pin_id) const
     });
 }
 
+const Pin& NodeTree::find_pin(PinId id)
+{
+    for (const auto& node : nodes) {
+        if (node.output_pin.id() == id) {
+            return node.output_pin;
+        }
+        for (const auto& pin : node.input_pins) {
+            if (pin.id() == id) {
+                return pin;
+            }
+        }
+    }
+    throw std::invalid_argument("pin not found");
+}
+
 bool NodeTree::has_no_successor(const Node& node) const
 {
     return std::ranges::find_if(links, [&](const Link& link) {

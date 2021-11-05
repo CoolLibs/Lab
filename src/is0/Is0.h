@@ -1,18 +1,17 @@
 #pragma once
 
 #include <Cool/ImGui/ImGuiWindow.h>
-#include "ShaderManager.h"
-#include "is0/NodeEditor.h"
+#include "../ShaderManager/ShaderManager.h"
+#include "NodeEditor.h"
 
-class ShaderManager_FromNodes : public ShaderManager {
+class Is0 : public ShaderManager {
 public:
-    ShaderManager_FromNodes();
-
-    void update() override{};
+    void update() override;
     void imgui_window() override;
 
 private:
-    NodeEditor        _node_editor;
+    NodeEditor        _editor;
+    std::string       _shader_code;
     Cool::ImGuiWindow _shader_code_window{"is0 Shader Code", false};
 
 private:
@@ -21,6 +20,6 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("is0 Node Editor", _node_editor));
+        archive(cereal::make_nvp("Node Editor", _editor));
     }
 };

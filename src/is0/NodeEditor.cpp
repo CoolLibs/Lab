@@ -2,30 +2,17 @@
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameter/ParameterU.h>
 #include <glfw/glfw3.h>
-#include "CodeGen.h"
 
-NodeEditor::NodeEditor()
+bool NodeEditor::tree_has_changed()
 {
-    update_shader_code();
+    bool b            = _tree_has_changed;
+    _tree_has_changed = false;
+    return b;
 }
 
-void NodeEditor::subscribe_to_shader_code_changes(std::function<void(const std::string&)> callback)
+void NodeEditor::on_tree_change()
 {
-    _on_shader_code_change.push_back(callback);
-    callback(_shader_code);
-}
-
-void NodeEditor::update_shader_code()
-{
-    if (_all_nodes_have_a_valid_template) {
-        _shader_code = CodeGen::full_shader_code(_tree, _factory.templates());
-    }
-    else {
-        _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
-    }
-    for (const auto& callback : _on_shader_code_change) {
-        callback(_shader_code);
-    }
+    _tree_has_changed = true;
 }
 
 static void show_node_pins(const Node& node)
@@ -64,21 +51,6 @@ static void show_node(Node& node, std::function<void()> on_change)
 static void show_link(const Link& link)
 {
     ImNodes::Link(link.id, link.from_pin_id, link.to_pin_id);
-}
-
-static const Pin& find_pin(PinId id, const std::vector<Node>& nodes)
-{
-    for (const auto& node : nodes) {
-        if (node.output_pin.id() == id) {
-            return node.output_pin;
-        }
-        for (const auto& pin : node.input_pins) {
-            if (pin.id() == id) {
-                return pin;
-            }
-        }
-    }
-    throw std::invalid_argument("pin not found");
 }
 
 bool NodeEditor::handle_link_creation()
@@ -146,7 +118,7 @@ void NodeEditor::imgui_window()
     }
     {
         for (auto& node : _tree.nodes) {
-            show_node(node, [&]() { update_shader_code(); });
+            show_node(node, [&]() { on_tree_change(); });
         }
         for (const auto& link : _tree.links) {
             show_link(link);
@@ -158,7 +130,7 @@ void NodeEditor::imgui_window()
     node_tree_has_changed |= handle_node_deletion();
     ImGui::End();
     if (node_tree_has_changed) {
-        update_shader_code();
+        on_tree_change();
     }
 }
 
@@ -205,5 +177,5 @@ void NodeEditor::update_templates_and_nodes()
             node.input_pins.resize(nb_pins);
         }
     }
-    update_shader_code();
+    on_tree_change();
 }

@@ -1,21 +1,21 @@
 #pragma once
 
-#include "ShaderManager_FromNodes.h"
 #include "ShaderManager_FromText.h"
+#include "is0/Is0.h"
 
 class ShaderManagerManager {
 public:
     void imgui_windows();
 
     // clang-format off
-    ShaderManager& operator*() { if(_use_nodes) return _from_nodes; else return _from_text; }
+    ShaderManager& operator*() { if(_use_nodes) return _is0; else return _from_text; }
     ShaderManager* operator->() { return &operator*(); }
     // clang-format on
 
 private:
-    bool                    _use_nodes = true;
-    ShaderManager_FromNodes _from_nodes;
-    ShaderManager_FromText  _from_text;
+    bool                   _use_nodes = true;
+    Is0                    _is0;
+    ShaderManager_FromText _from_text;
 
 private:
     //Serialization
@@ -25,7 +25,7 @@ private:
     {
         archive(
             cereal::make_nvp("Is using nodes", _use_nodes),
-            cereal::make_nvp("From Nodes", _from_nodes),
+            cereal::make_nvp("From Nodes", _is0),
             cereal::make_nvp("From Text", _from_text));
     }
 };

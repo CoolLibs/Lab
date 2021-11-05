@@ -19,6 +19,7 @@ struct NodeTree {
      */
     const Node* find_input_node(const Pin& pin) const;
     const Node& find_node_with_output_pin(PinId pin_id) const;
+    const Pin&  find_pin(PinId id);
     bool        has_no_successor(const Node& node) const;
 
 private:
