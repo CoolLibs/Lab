@@ -14,6 +14,13 @@ struct NodeTree {
     void delete_link(LinkId link_id);
     void delete_link_going_to(PinId pin_id);
 
+    /**
+     * @brief Assumes that pin is an input pin and returns the node that is connected to it (or nullptr if there is none)
+     */
+    const Node* find_input_node(const Pin& pin) const;
+    const Node& find_node_with_output_pin(PinId pin_id) const;
+    bool        has_no_successor(const Node& node) const;
+
 private:
     //Serialization
     friend class cereal::access;

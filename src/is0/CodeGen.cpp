@@ -2,7 +2,6 @@
 #include <Cool/String/String.h>
 #include <numeric>
 #include <sstream>
-#include "NodeEditorU.h"
 
 namespace CodeGen {
 
@@ -80,13 +79,13 @@ void main() {
 }
 )";
 
-static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const std::vector<Node>& nodes, const std::vector<Link>& links)
+static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree)
 {
     using namespace std::string_literals;
     std::vector<std::pair<std::string, std::string>> sdf_identifiers;
     sdf_identifiers.reserve(node.input_pins.size());
     for (size_t i = 0; i < node.input_pins.size(); ++i) {
-        const Node* input_node = NodeEditorU::find_input_node(node.input_pins[i], nodes, links);
+        const Node* input_node = node_tree.find_input_node(node.input_pins[i]);
         sdf_identifiers.push_back(std::make_pair(
             node_template.sdf_identifiers[i],
             input_node ? function_name({input_node->node_template_name, input_node->id}) : "is0_default_sdf"s));
@@ -101,12 +100,12 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
 {
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(nodes, links, node_templates) + ray_marcher_end;
+    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + ray_marcher_end;
 }
 
-std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates)
+std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
 {
     std::stringstream declarations;
     std::stringstream definitions;
@@ -114,7 +113,7 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
     main_sdf_definition << R"(float is0_main_sdf(vec3 pos) {
     float d = MAX_DIST;)";
 
-    for (const auto& node : nodes) {
+    for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
                                                                .node_template_name = node.node_template_name,
@@ -125,9 +124,9 @@ std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& li
             .fn_signature_params = fn_signature_params,
             .body                = function_body(node.parameter_list,
                                   node_template.code_template,
-                                  compute_sdf_identifiers(node, node_template, nodes, links))});
+                                  compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
-        if (NodeEditorU::has_no_successor(node, links)) {
+        if (node_tree.has_no_successor(node)) {
             main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
         }
     }

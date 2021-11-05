@@ -1,15 +1,14 @@
 #pragma once
 
 #include <Cool/Parameter/ParameterList.h>
-#include "Link.h"
-#include "Node.h"
 #include "NodeTemplate.h"
+#include "NodeTree.h"
 
 namespace CodeGen {
 
-std::string full_shader_code(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates);
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
 
-std::string main_sdf(const std::vector<Node>& nodes, const std::vector<Link>& links, const std::vector<NodeTemplate>& node_templates);
+std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
 
 struct FnNameParams {
     std::string_view node_template_name;

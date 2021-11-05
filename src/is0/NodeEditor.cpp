@@ -3,7 +3,6 @@
 #include <Cool/Parameter/ParameterU.h>
 #include <glfw/glfw3.h>
 #include "CodeGen.h"
-#include "NodeEditorU.h"
 
 NodeEditor::NodeEditor()
 {
@@ -19,7 +18,7 @@ void NodeEditor::subscribe_to_shader_code_changes(std::function<void(const std::
 void NodeEditor::update_shader_code()
 {
     if (_all_nodes_have_a_valid_template) {
-        _shader_code = CodeGen::full_shader_code(_tree.nodes, _tree.links, _factory.templates());
+        _shader_code = CodeGen::full_shader_code(_tree, _factory.templates());
     }
     else {
         _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
