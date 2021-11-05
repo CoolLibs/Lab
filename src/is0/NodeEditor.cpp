@@ -137,12 +137,8 @@ void NodeEditor::imgui_window()
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
 
-    // static float col[3] = {1, 1, 0};
-    // ImGui::ColorEdit3("col", col);
-    // ImGui::Dummy(ImVec2(80.0f, 45.0f));
-    ImNodes::MiniMap();
-
-    if (ImGui::IsMouseReleased(ImGuiMouseButton_Right)) {
+    ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_BottomRight);
+    if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle)) {
         ImGui::OpenPopup("_node_templates_list");
     }
     if (ImGui::BeginPopup("_node_templates_list")) {
