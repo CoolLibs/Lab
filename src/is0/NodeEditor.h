@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Cool/File/File.h>
-#include "Link.h"
 #include "NodeFactory.h"
+#include "NodeTree.h"
 #include "UniqueImNodeContext.h"
 
 class NodeEditor {
@@ -23,14 +23,12 @@ private:
     void handle_link_deletion();
     void handle_node_deletion();
     void update_shader_code();
-    void delete_node(NodeId id);
 
 private:
     UniqueImNodeContext _context;
     NodeFactory         _factory{Cool::File::root_dir() + "/is0 nodes"};
-    std::vector<Node>   _nodes;
-    std::vector<Link>   _links;
     std::string         _shader_code;
+    NodeTree            _tree;
     bool                _all_nodes_have_a_valid_template = true;
 
     std::vector<std::function<void(const std::string&)>> _on_shader_code_change;
@@ -41,8 +39,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Nodes", _nodes),
-                cereal::make_nvp("Links", _links));
+        archive(cereal::make_nvp("Node Tree", _tree));
         update_templates_and_nodes();
         update_shader_code();
     }

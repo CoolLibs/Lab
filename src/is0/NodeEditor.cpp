@@ -19,7 +19,7 @@ void NodeEditor::subscribe_to_shader_code_changes(std::function<void(const std::
 void NodeEditor::update_shader_code()
 {
     if (_all_nodes_have_a_valid_template) {
-        _shader_code = CodeGen::full_shader_code(_nodes, _links, _factory.templates());
+        _shader_code = CodeGen::full_shader_code(_tree.nodes, _tree.links, _factory.templates());
     }
     else {
         _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
@@ -86,11 +86,9 @@ void NodeEditor::handle_link_creation()
 {
     int from_pin_id, to_pin_id;
     if (ImNodes::IsLinkCreated(&from_pin_id, &to_pin_id)) {
-        std::erase_if(_links, [&](const Link& link) {
-            return link.to_pin_id == PinId{to_pin_id};
-        });
-        _links.push_back(Link{.from_pin_id = PinId{from_pin_id},
-                              .to_pin_id   = PinId{to_pin_id}});
+        _tree.delete_link_going_to(PinId{to_pin_id});
+        _tree.add_link(Link{.from_pin_id = PinId{from_pin_id},
+                            .to_pin_id   = PinId{to_pin_id}});
         update_shader_code();
     }
 }
@@ -100,9 +98,7 @@ void NodeEditor::handle_link_deletion()
     int  link_id;
     bool has_deleted_some = false;
     if (ImNodes::IsLinkDestroyed(&link_id)) {
-        std::erase_if(_links, [&](const Link& link) {
-            return link.id == LinkId{link_id};
-        });
+        _tree.delete_link(LinkId{link_id});
         has_deleted_some = true;
     }
 
@@ -112,10 +108,8 @@ void NodeEditor::handle_link_deletion()
         static std::vector<int> selected_links;
         selected_links.resize(static_cast<size_t>(num_selected));
         ImNodes::GetSelectedLinks(selected_links.data());
-        for (const int edge_id : selected_links) {
-            std::erase_if(_links, [&](const Link& link) {
-                return link.id == LinkId{edge_id};
-            });
+        for (const int link_id : selected_links) {
+            _tree.delete_link(LinkId{link_id});
         }
     }
     if (has_deleted_some) {
@@ -131,24 +125,10 @@ void NodeEditor::handle_node_deletion()
         selected_nodes.resize(static_cast<size_t>(num_selected));
         ImNodes::GetSelectedNodes(selected_nodes.data());
         for (const int node_id : selected_nodes) {
-            delete_node(NodeId{node_id});
+            _tree.delete_node(NodeId{node_id});
         }
         update_shader_code();
     }
-}
-
-void NodeEditor::delete_node(NodeId node_id)
-{
-    const auto node = std::ranges::find_if(_nodes, [&](const Node& node) {
-        return node.id == node_id;
-    });
-    std::erase_if(_links, [&](const Link& link) {
-        return link.from_pin_id == node->output_pin.id() ||
-               std::ranges::any_of(node->input_pins, [&](const auto& pin) {
-                   return link.to_pin_id == pin.id();
-               });
-    });
-    _nodes.erase(node);
 }
 
 void NodeEditor::imgui_window()
@@ -169,10 +149,10 @@ void NodeEditor::imgui_window()
         ImGui::EndPopup();
     }
     {
-        for (auto& node : _nodes) {
+        for (auto& node : _tree.nodes) {
             show_node(node, [&]() { update_shader_code(); });
         }
-        for (const auto& link : _links) {
+        for (const auto& link : _tree.links) {
             show_link(link);
         }
     }
@@ -187,8 +167,8 @@ bool NodeEditor::imgui_make_node()
 {
     const std::optional<Node> node = _factory.imgui();
     if (node.has_value()) {
-        _nodes.push_back(*node);
-        ImNodes::SetNodeScreenSpacePos(_nodes.back().id, ImGui::GetMousePos());
+        _tree.add_node(*node);
+        ImNodes::SetNodeScreenSpacePos(node->id, ImGui::GetMousePos());
         update_shader_code();
         return true;
     }
@@ -201,7 +181,7 @@ void NodeEditor::update_templates_and_nodes()
 {
     _all_nodes_have_a_valid_template = true;
     _factory.reload_templates();
-    for (auto& node : _nodes) {
+    for (auto& node : _tree.nodes) {
         const auto node_template = std::ranges::find_if(_factory.templates(), [&](const NodeTemplate& node_template) {
             return node_template.name == node.node_template_name;
         });
@@ -221,9 +201,7 @@ void NodeEditor::update_templates_and_nodes()
             const auto nb_pins = node_template->sdf_identifiers.size();
             if (nb_pins < node.input_pins.size()) {
                 for (size_t i = nb_pins; i < node.input_pins.size(); ++i) {
-                    std::erase_if(_links, [&](const Link& link) {
-                        return link.to_pin_id == node.input_pins[i].id();
-                    });
+                    _tree.delete_link_going_to(node.input_pins[i].id());
                 }
             }
             node.input_pins.resize(nb_pins);
