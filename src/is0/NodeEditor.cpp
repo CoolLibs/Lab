@@ -82,18 +82,19 @@ static const Pin& find_pin(PinId id, const std::vector<Node>& nodes)
     throw std::invalid_argument("pin not found");
 }
 
-void NodeEditor::handle_link_creation()
+bool NodeEditor::handle_link_creation()
 {
     int from_pin_id, to_pin_id;
     if (ImNodes::IsLinkCreated(&from_pin_id, &to_pin_id)) {
         _tree.delete_link_going_to(PinId{to_pin_id});
         _tree.add_link(Link{.from_pin_id = PinId{from_pin_id},
                             .to_pin_id   = PinId{to_pin_id}});
-        update_shader_code();
+        return true;
     }
+    return false;
 }
 
-void NodeEditor::handle_link_deletion()
+bool NodeEditor::handle_link_deletion()
 {
     int  link_id;
     bool has_deleted_some = false;
@@ -112,12 +113,10 @@ void NodeEditor::handle_link_deletion()
             _tree.delete_link(LinkId{link_id});
         }
     }
-    if (has_deleted_some) {
-        update_shader_code();
-    }
+    return has_deleted_some;
 }
 
-void NodeEditor::handle_node_deletion()
+bool NodeEditor::handle_node_deletion()
 {
     const int num_selected = ImNodes::NumSelectedNodes();
     if (num_selected > 0 && ImGui::IsKeyReleased(GLFW_KEY_DELETE)) {
@@ -127,12 +126,14 @@ void NodeEditor::handle_node_deletion()
         for (const int node_id : selected_nodes) {
             _tree.delete_node(NodeId{node_id});
         }
-        update_shader_code();
+        return true;
     }
+    return false;
 }
 
 void NodeEditor::imgui_window()
 {
+    bool node_tree_has_changed = false;
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
 
@@ -145,7 +146,7 @@ void NodeEditor::imgui_window()
         ImGui::OpenPopup("_node_templates_list");
     }
     if (ImGui::BeginPopup("_node_templates_list")) {
-        imgui_make_node();
+        node_tree_has_changed |= imgui_nodes_menu();
         ImGui::EndPopup();
     }
     {
@@ -157,19 +158,21 @@ void NodeEditor::imgui_window()
         }
     }
     ImNodes::EndNodeEditor();
-    handle_link_creation();
-    handle_link_deletion();
-    handle_node_deletion();
+    node_tree_has_changed |= handle_link_creation();
+    node_tree_has_changed |= handle_link_deletion();
+    node_tree_has_changed |= handle_node_deletion();
     ImGui::End();
+    if (node_tree_has_changed) {
+        update_shader_code();
+    }
 }
 
-bool NodeEditor::imgui_make_node()
+bool NodeEditor::imgui_nodes_menu()
 {
     const std::optional<Node> node = _factory.imgui();
     if (node.has_value()) {
         _tree.add_node(*node);
         ImNodes::SetNodeScreenSpacePos(node->id, ImGui::GetMousePos());
-        update_shader_code();
         return true;
     }
     else {

@@ -10,7 +10,7 @@ public:
     NodeEditor();
 
     void imgui_window();
-    bool imgui_make_node();
+    bool imgui_nodes_menu();
     auto shader_code() const -> const std::string& { return _shader_code; }
 
     /// Calls the callback, and will call it again whenever the shader code changes
@@ -19,9 +19,9 @@ public:
     void update_templates_and_nodes();
 
 private:
-    void handle_link_creation();
-    void handle_link_deletion();
-    void handle_node_deletion();
+    bool handle_link_creation();
+    bool handle_link_deletion();
+    bool handle_node_deletion();
     void update_shader_code();
 
 private:
