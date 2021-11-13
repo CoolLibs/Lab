@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 
 # Set project name
 project(CoolLab)
@@ -19,7 +19,7 @@ set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
 # Grab all the source files
-file(GLOB_RECURSE MY_SOURCES
+file(GLOB_RECURSE MY_SOURCES CONFIGURE_DEPENDS
     src/*
 )
 list(APPEND IMNODE_SOURCES
