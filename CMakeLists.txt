@@ -35,9 +35,9 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 # Add a post build operation to copy shaders to the output folder (where the executable is created)
-include("Cool/cmake/copy_folder_to_the_output_folder.cmake")
-copy_folder_to_the_output_folder("shader-examples")
-copy_folder_to_the_output_folder("is0 nodes")
+include("Cool/cmake/copy_to_output.cmake")
+copy_folder_to_output("shader-examples")
+copy_folder_to_output("is0 nodes")
 
 # Set include directories
 include_directories(
