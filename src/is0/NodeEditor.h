@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Cool/File/File.h>
+#include <Cool/Path/Path.h>
 #include "NodeFactory.h"
 #include "NodeTree.h"
 #include "UniqueImNodeContext.h"
@@ -24,7 +24,7 @@ private:
 
 private:
     UniqueImNodeContext _context;
-    NodeFactory         _factory{Cool::File::root_dir() + "/is0 nodes"};
+    NodeFactory         _factory{Cool::Path::root() + "/is0 nodes"};
     NodeTree            _tree;
     bool                _all_nodes_have_a_valid_template = true;
     bool                _tree_has_changed                = true;
