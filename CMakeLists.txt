@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
+cmake_policy(SET CMP0112 NEW) # Required by Cool__copy_folder_to_output()
 
 # Set project name
 project(CoolLab)
@@ -34,10 +35,10 @@ target_sources(${PROJECT_NAME} PRIVATE
     ${IMNODE_SOURCES}
 )
 
-# Add a post build operation to copy shaders to the output folder (where the executable is created)
+# Add a post build operation to copy resources to the output folder (where the executable is created)
 include("Cool/cmake/copy_to_output.cmake")
-copy_folder_to_output("shader-examples")
-copy_folder_to_output("is0 nodes")
+Cool__copy_folder_to_output("shader-examples")
+Cool__copy_folder_to_output("is0 nodes")
 
 # Set include directories
 include_directories(
