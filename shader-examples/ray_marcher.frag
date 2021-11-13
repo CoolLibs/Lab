@@ -3,7 +3,7 @@
 in vec2       vTexCoords;
 uniform float _time;
 
-#include "Cool/res/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/camera.glsl"
 
 #define MAX_STEPS 100
 #define MAX_DIST  100.

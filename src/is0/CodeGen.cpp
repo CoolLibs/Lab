@@ -15,7 +15,7 @@ static constexpr const char* ray_marcher_begin = R"(#version 430
 
 in vec2 vTexCoords;
 uniform float _time;
-#include "Cool/res/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/camera.glsl"
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
