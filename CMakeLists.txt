@@ -24,9 +24,9 @@ file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
 target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
 
 # Set include directories
-include_directories(src lib)
+target_include_directories(${PROJECT_NAME} PRIVATE src lib)
 
-# Add a post build operation to copy resources to the output folder (where the executable is created)
+# Copy resources to the output folder (where the executable is created) after each build
 include("Cool/cmake/copy_to_output.cmake")
 Cool__copy_folder_to_output("shader-examples")
 Cool__copy_folder_to_output("is0 nodes")
