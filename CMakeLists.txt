@@ -5,6 +5,11 @@ project(CoolLab)
 add_executable(${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /WX /W3)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra -Wpedantic -pedantic-errors -Wconversion -Wsign-conversion)
+endif()
 
 # Choose our GPU API and its version
 # set(COOL_USE_VULKAN 110)

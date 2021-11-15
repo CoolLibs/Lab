@@ -1,7 +1,7 @@
 #include "NodeEditor.h"
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameter/ParameterU.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 bool NodeEditor::tree_has_changed()
 {
