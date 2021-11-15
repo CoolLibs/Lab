@@ -5,10 +5,10 @@
 
 struct Node {
     NodeId                id{};
-    std::string           node_template_name;
+    std::string           node_template_name{};
     Cool::ParameterList   parameter_list{};
-    std::vector<PinSdfIn> input_pins;
-    PinSdfOut             output_pin;
+    std::vector<PinSdfIn> input_pins{};
+    PinSdfOut             output_pin{};
 
 private:
     //Serialization
