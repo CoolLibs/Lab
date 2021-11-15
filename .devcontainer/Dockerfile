@@ -9,4 +9,5 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
         mesa-common-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev pkg-config cmake-data libgtk-3-dev \
         clang-format clang-tidy cppcheck flawfinder ninja-build python3-pip \
-    && pip install lizard
+    && pip install lizard \
+    && pip install cmake
