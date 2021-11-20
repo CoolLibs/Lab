@@ -18,7 +18,9 @@ void Is0::imgui_window()
 {
     _editor.imgui_window();
     _shader_code_window.show([&]() {
-        ImGui::Text("%s", _shader_code.c_str());
+        if (ImGui::InputTextMultiline("##is0 shader code", &_shader_code, ImVec2(ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35))) {
+            _fullscreen_pipeline.compile(_shader_code, "is0 Ray Marcher");
+        }
     });
     ImGui::Begin("is0 Opt");
     _shader_code_window.open_close_checkbox();
