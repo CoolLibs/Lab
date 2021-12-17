@@ -33,5 +33,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE src lib)
 
 # Copy resources to the output folder (where the executable is created) after each build
 include("Cool/cmake/copy_to_output.cmake")
-Cool__copy_folder_to_output("shader-examples")
-Cool__copy_folder_to_output("is0 nodes")
+Cool__target_copy_folder(${PROJECT_NAME} "shader-examples")
+Cool__target_copy_folder(${PROJECT_NAME} "is0 nodes")
