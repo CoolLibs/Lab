@@ -4,7 +4,7 @@ cmake_policy(SET CMP0112 NEW) # Required by Cool__copy_folder_to_output()
 project(CoolLab)
 add_executable(${PROJECT_NAME})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /WX /W3)
 else()
