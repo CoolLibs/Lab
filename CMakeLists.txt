@@ -1,10 +1,11 @@
-cmake_minimum_required(VERSION 3.12)
-cmake_policy(SET CMP0112 NEW) # Required by Cool__copy_folder_to_output()
+cmake_minimum_required(VERSION 3.20)
 
 project(CoolLab)
 add_executable(${PROJECT_NAME})
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
+target_compile_features(${PROJECT_NAME} PRIVATE
+    cxx_std_20)
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /WX /W3)
 else()
@@ -32,6 +33,6 @@ target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE src lib)
 
 # Copy resources to the output folder (where the executable is created) after each build
-include("Cool/cmake/copy_to_output.cmake")
+include("Cool/CMakeUtils/files_and_folders.cmake")
 Cool__target_copy_folder(${PROJECT_NAME} "shader-examples")
 Cool__target_copy_folder(${PROJECT_NAME} "is0 nodes")
