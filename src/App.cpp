@@ -19,7 +19,7 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #if defined(COOL_VULKAN)
 #elif defined(COOL_OPENGL)
     render_target.render([&]() {
-        const auto aspect_ratio = Cool::ImageSizeU::aspect_ratio(render_target.current_size());
+        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.current_size());
         _camera.apply(aspect_ratio);
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
