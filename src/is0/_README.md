@@ -46,6 +46,8 @@ You can watch these videos, in that order:
 
 - [Unity Raymarching Toolkit](https://youtu.be/QDfqgG8HJDQ)
 
+- [RayTK for TouchDesigner](https://t3kt.github.io/raytk/)
+
 ## Other node-based tools
 
 - [Unity's Shadergraph](https://youtu.be/Ar9eIn4z6XE)
@@ -74,7 +76,7 @@ It is independent of any UI library and does not deal with displaying the tree o
 
 It is `NodeEditor` that handles the UI side. We use the [ImNodes](https://github.com/Nelarius/imnodes) library to display our nodes and links and handle user interactions to create or delete nodes and links.
 
-`NodeEditor` owns a `NodeTree` and modifies it accordingly to reflect the user actions provided by `ImNodes`.
+`NodeEditor` owns a `NodeTree` and modifies it to reflect the user actions provided by `ImNodes`.
 
 It also owns a `NodeFactory` to create the `Node`s.
 
