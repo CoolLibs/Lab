@@ -3,6 +3,7 @@
 #include <Cool/Camera/Camera.h>
 #include <Cool/File/File.h>
 #include <Cool/Gpu/FullscreenPipeline.h>
+#include <Cool/Input/KeyboardEvent.h>
 
 class ShaderManager {
 public:
@@ -11,6 +12,7 @@ public:
 
     virtual void update()       = 0;
     virtual void imgui_window() = 0;
+    virtual void on_key_pressed(const Cool::KeyboardEvent&){};
 
 protected:
     Cool::FullscreenPipeline _fullscreen_pipeline{};

@@ -1,4 +1,5 @@
 #include "Is0.h"
+#include <Cool/Input/Input.h>
 #include "CodeGen.h"
 
 void Is0::update()
@@ -28,4 +29,11 @@ void Is0::imgui_window()
         _editor.update_templates_and_nodes();
     }
     ImGui::End();
+}
+
+void Is0::on_key_pressed(const Cool::KeyboardEvent& event)
+{
+    if (event.action == GLFW_PRESS && Cool::Input::matches_char("a", event.key)) {
+        _editor.open_menu();
+    }
 }
