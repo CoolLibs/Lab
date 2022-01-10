@@ -45,6 +45,7 @@ void App::imgui_menus()
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
     DefaultApp::on_keyboard_event(event);
+    _shader_manager->on_key_pressed(event);
 }
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
