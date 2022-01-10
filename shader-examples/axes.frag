@@ -1,6 +1,6 @@
 #version 430
 
-in vec2       vTexCoords;
+in vec2       _uv;
 uniform float _time;
 #include "_COOL_RES_/shaders/camera.glsl"
 

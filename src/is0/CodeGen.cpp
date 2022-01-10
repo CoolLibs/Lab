@@ -13,7 +13,7 @@ static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
 
 static constexpr const char* ray_marcher_begin = R"(#version 430
 
-in vec2 vTexCoords;
+layout(location = 0) in vec2 _uv;
 uniform float _time;
 #include "_COOL_RES_/shaders/camera.glsl"
 
