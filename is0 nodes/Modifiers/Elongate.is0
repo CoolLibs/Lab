@@ -1,0 +1,26 @@
+[SDF](vec3 p) {
+    vec3 elongate = vec3(x_strength, y_strength, z_strength);
+    vec3 q = p - clamp(p, -elongate, elongate);
+    return ${SDF}(q);
+}
+
+float {
+    "Name": "x_strength",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 50.0
+}
+
+float {
+    "Name": "y_strength",
+    "Default": 5.0,
+    "Min": 0.001,
+    "Max": 50.0
+}
+
+float {
+    "Name": "z_strength",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 50.0
+}
