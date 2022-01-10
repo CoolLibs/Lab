@@ -1,0 +1,27 @@
+[] (vec3 pos) {
+    float w = sqrt(r*r-h*h);    
+    vec2 q = vec2( length(pos.xz), pos.y );
+    return ((h*q.x<w*q.y) ? length(q-vec2(w,h)) : 
+                            abs(length(q)-r) ) - t;
+}
+
+float {
+    "Name": "r",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "h",
+    "Default": 0.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "t",
+    "Default": 0.16,
+    "Min": 0.0,
+    "Max": 10.0
+}

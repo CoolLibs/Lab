@@ -1,0 +1,25 @@
+[] (vec3 pos) {
+    vec3 q = vec3( pos.x, max(abs(pos.y)-le,0.0), pos.z );
+    return length(vec2(length(q.xy)-r1,q.z)) - r2;
+}
+
+float {
+    "Name": "le",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "r1",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "r2",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
