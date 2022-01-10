@@ -12,7 +12,7 @@ public:
 
     virtual void update()       = 0;
     virtual void imgui_window() = 0;
-    virtual void on_key_pressed(const Cool::KeyboardEvent& event){};
+    virtual void on_key_pressed(const Cool::KeyboardEvent&){};
 
 protected:
     Cool::FullscreenPipeline _fullscreen_pipeline{};
