@@ -1,0 +1,18 @@
+[] (vec3 pos) {
+    pos.y -= clamp( pos.y, 0.0, h );
+    return length(pos) - r;
+}
+
+float {
+    "Name": "h",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "r",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
