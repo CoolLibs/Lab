@@ -1,0 +1,33 @@
+[SDF] (vec3 p) {
+    vec3 repeat = vec3(x_repetition_number,y_repetition_number,z_repetition_number);
+    vec3 q = p-cell_radius*clamp(round(p/cell_radius),-repeat,repeat);
+    return ${SDF}(q);
+}
+
+float {
+    "Name": "cell_radius",
+    "Default": 10.0,
+    "Min": 0.001,
+    "Max": 30.0
+}
+
+int {
+    "Name": "x_repetition_number",
+    "Default": 2,
+    "Min": 0,
+    "Max": 30
+}
+
+int {
+    "Name": "z_repetition_number",
+    "Default": 2,
+    "Min": 0,
+    "Max": 30
+}
+
+int {
+    "Name": "y_repetition_number",
+    "Default": 2,
+    "Min": 0,
+    "Max": 30
+}
