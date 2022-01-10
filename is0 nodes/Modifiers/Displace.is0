@@ -1,0 +1,19 @@
+[SDF](vec3 p) {
+    float d1 = ${SDF}(p);
+    float d2 = sin(strength*p.x)*sin(strength*p.y)*sin(strength*p.z);
+    return d1 + intensity*d2;
+}
+
+float {
+    "Name": "strength",
+    "Default": 5.0,
+    "Min": 0.001,
+    "Max": 50.0
+}
+
+float {
+    "Name": "intensity",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 20.0
+}
