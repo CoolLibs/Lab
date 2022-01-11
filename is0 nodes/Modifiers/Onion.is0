@@ -1,11 +1,5 @@
 [SDF](vec3 p) {
-    return abs(${SDF}(p)) - thickness;
+    return abs(${SDF}(p));
 }
 
-float {
-    "Name": "thickness",
-    "Default": 1.0,
-    "Min": 0.001,
-    "Max": 10.0
-}
 
