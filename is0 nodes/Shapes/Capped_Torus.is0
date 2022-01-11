@@ -1,0 +1,20 @@
+[] (vec3 pos) {
+    pos.x = abs(pos.x);
+    vec2 sc = vec2(0.713,0.7);
+    float k = (sc.y*pos.x>sc.x*pos.y) ? dot(pos.xy,sc) : length(pos.xy);
+    return sqrt( dot(pos,pos) + ra*ra - 2.0*ra*k ) - rb;
+}
+
+float {
+    "Name": "ra",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "rb",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
