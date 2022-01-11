@@ -1,6 +1,6 @@
 [] (vec3 pos) {
-    pos = abs(pos)-b;
-    vec3 q = abs(pos+e)-e;
+    pos = abs(pos)-dimension;
+    vec3 q = abs(pos+frame)-frame;
     return min(min(
         length(max(vec3(pos.x,q.y,q.z),0.0))+min(max(pos.x,max(q.y,q.z)),0.0),
         length(max(vec3(q.x,pos.y,q.z),0.0))+min(max(q.x,max(pos.y,q.z)),0.0)),
@@ -8,7 +8,7 @@
 }
 
 vec3 {
-    "Name": "b",
+    "Name": "dimension",
     "Default": {
         "x": 1.0,
         "y": 1.0,
@@ -27,8 +27,8 @@ vec3 {
 }
 
 float {
-    "Name": "e",
+    "Name": "frame",
     "Default": 1.0,
     "Min": 0.0,
-    "Max": 10.0
+    "Max": 5.0
 }

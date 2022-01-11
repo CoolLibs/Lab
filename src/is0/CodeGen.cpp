@@ -27,6 +27,42 @@ out vec4 out_Color;
 #define saturate(v) clamp(v, 0., 1.)
 float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 
+float smooth_min(float f1, float f2, float strength) {
+    float h = clamp(0.5 +0.5*(f2-f1)/strength, 0.0, 1.0);
+    return mix(f2, f1, h) - strength*h*(1.0-h);
+}
+
+float smooth_max(float f1, float f2, float strength) {
+    float h = clamp(0.5 - 0.5*(f2-f1)/strength, 0.0, 1.0);
+    return mix(f2, f1, h) + strength*h*(1.0-h);
+}
+
+float hash(uvec3 x){
+    const uint k = 110351524U;
+    x = ((x>>8U)^x.yzx)*k;
+    x = ((x>>8U)^x.yzx)*k;
+    x = ((x>>8U)^x.yzx)*k;
+    return vec3(x)*(1.0/float(0xffffffffU));
+}
+
+float sph(uvec3 i, vec3 f, uvec3 c){
+    float rad = 0.5*hash(i+c);
+    return length(f-vec3(c)) - rad;
+}
+
+float sdBase(vec3 p){
+    uvec3 i = uvec3(floor(p));
+    vec3 f = fract(p);
+    return min(min(min(sph(i,f,uvec3(0,0,0)),
+                       sph(i,f,uvec3(0,0,1))),
+                   min(sph(i,f,uvec3(0,1,0)),
+                       sph(i,f,uvec3(0,1,1)))),
+               min(min(sph(i,f,uvec3(1,0,0)),
+                      sph(i,f,uvec3(1,0,1))),
+                  min(sph(i,f,uvec3(1,1,0)),
+                      sph(i,f,uvec3(1,1,1)))));
+}
+
 )";
 
 static constexpr const char* ray_marcher_end = R"(
