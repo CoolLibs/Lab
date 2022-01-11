@@ -42,7 +42,7 @@ static std::string find_sdf_body(std::string_view source, size_t* end_pos)
 bool apply_is0_fix_artifacts(std::string& code)
 {
     if (code.find("IS0_FIX_ARTIFACTS") != std::string::npos) { // TODO Replace with code.contains(...) when we update to C++23
-        Cool::String::replace_all(code, "IS0_FIX_ARTIFACTS", "(1. - FixArtifacts) * ");
+        Cool::String::replace_all(code, "IS0_FIX_ARTIFACTS", "(1. - Fix_Artifacts) * ");
         return true;
     }
     else {
@@ -65,7 +65,7 @@ void parse_node_template(NodeTemplate& node_template, std::string_view source)
     node_template.parameters = Cool::parse_all_parameter_desc(source);
     if (apply_is0_fix_artifacts(node_template.code_template)) {
         node_template.parameters.emplace_back(Cool::Parameter::FloatDesc{
-            .name          = "FixArtifacts",
+            .name          = "Fix Artifacts",
             .default_value = 0.f,
             .min_value     = 0.f,
             .max_value     = 0.999f,

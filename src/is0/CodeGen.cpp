@@ -142,9 +142,17 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     return declarations.str() + '\n' + definitions.str() + main_sdf_definition.str();
 }
 
+std::string convert_to_valid_glsl_name(std::string name)
+{
+    Cool::String::replace_all(name, " ", "_");
+    Cool::String::replace_all(name, "-", "_");
+    return name;
+}
+
 std::string function_name(const FnNameParams& p)
 {
-    return std::string{p.node_template_name} + "_" + std::to_string(static_cast<unsigned int>(*p.node_id));
+    return convert_to_valid_glsl_name(std::string{p.node_template_name} +
+                                      "_" + std::to_string(*p.node_id));
 }
 
 std::string function_signature(const FnSignatureParams& p)
