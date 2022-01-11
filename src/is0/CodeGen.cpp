@@ -37,31 +37,22 @@ float smooth_max(float f1, float f2, float strength) {
     return mix(f2, f1, h) + strength*h*(1.0-h);
 }
 
-float hash(uvec3 x){
-    const uint k = 110351524U;
-    x = ((x>>8U)^x.yzx)*k;
-    x = ((x>>8U)^x.yzx)*k;
-    x = ((x>>8U)^x.yzx)*k;
-    return vec3(x)*(1.0/float(0xffffffffU));
+
+float hash(vec3 x)
+{
+    // based on: pcg3 by Mark Jarzynski: http://www.jcgt.org/published/0009/03/02/
+    uvec3 v = uvec3(x * 8192.0) * 1664525u + 1013904223u;
+    v += v.yzx * v.zxy;
+    v ^= v >> 16u;
+    return float(v.x + v.y * v.z) * (1.0 / float(0xffffffffu));
 }
 
-float sph(uvec3 i, vec3 f, uvec3 c){
+float sph(vec3 i, vec3 f, vec3 c){
     float rad = 0.5*hash(i+c);
     return length(f-vec3(c)) - rad;
 }
 
-float sdBase(vec3 p){
-    uvec3 i = uvec3(floor(p));
-    vec3 f = fract(p);
-    return min(min(min(sph(i,f,uvec3(0,0,0)),
-                       sph(i,f,uvec3(0,0,1))),
-                   min(sph(i,f,uvec3(0,1,0)),
-                       sph(i,f,uvec3(0,1,1)))),
-               min(min(sph(i,f,uvec3(1,0,0)),
-                      sph(i,f,uvec3(1,0,1))),
-                  min(sph(i,f,uvec3(1,1,0)),
-                      sph(i,f,uvec3(1,1,1)))));
-}
+
 
 )";
 
