@@ -1,8 +1,8 @@
 [SDF NoiseSDF] (vec3 p) {
-    float dist = distance(cool_ray_origin(),p);
     float distance = (${SDF}(p));
     float scale = 1.0;
-    for (int i = 0; i <(min(LoD/(dist),1))*repetition_number; i++){
+    const float LoD = 1;
+    for (int i = 0; i <(min(1/(distance),1))*repetition_number; i++){
         float new_octave = scale*${NoiseSDF}(p);
 
         new_octave = smooth_max(new_octave, distance-0.1*scale,0.3*scale);
@@ -23,11 +23,3 @@ int {
     "Min": 0,
     "Max": 7
 }
-
-float {
-    "Name": "LoD",
-    "Default": 1,
-    "Min": 0.001,
-    "Max": 1
-}
-
