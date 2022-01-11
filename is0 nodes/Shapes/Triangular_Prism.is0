@@ -1,10 +1,10 @@
 [] (vec3 pos) {
     vec3 q = abs(pos);
-    return max(q.z-h.y,max(q.x*0.866025+pos.y*0.5,-pos.y)-h.x*0.5);
+    return max(q.z-dimension.y,max(q.x*0.866025+pos.y*0.5,-pos.y)-dimension.x*0.5);
 }
 
 vec2 {
-    "Name": "h",
+    "Name": "dimension",
     "Default": {
         "x": 1.0,
         "y": 1.0
