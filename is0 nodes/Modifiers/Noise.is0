@@ -5,8 +5,8 @@
     for (int i = 0; i <(min(1/(distance),1))*repetition_number; i++){
         float new_octave = scale*${NoiseSDF}(p);
 
-        new_octave = smooth_max(new_octave, distance-0.1*scale,0.3*scale);
-        distance   = smooth_min(new_octave, distance          ,0.3*scale);
+        new_octave = smooth_max_polynomial(new_octave, distance-0.1*scale,0.3*scale);
+        distance   = smooth_min_polynomial(new_octave, distance          ,0.3*scale);
 
         p = mat3( 0.00, 1.60, 1.20, 
                  -1.60, 0.72, -0.96, 
