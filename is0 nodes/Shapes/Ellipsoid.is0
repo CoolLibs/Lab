@@ -1,0 +1,12 @@
+[] (vec3 pos) {
+    float k0 = length(pos/radius);
+    float k1 = length(pos/(radius*radius));
+    return k0*(k0-1.0)/k1;
+}
+
+float {
+    "Name": "radius",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}

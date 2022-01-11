@@ -1,0 +1,19 @@
+[] (vec3 pos) {
+    pos = abs(pos);
+    float m = pos.x+pos.y+pos.z-s;
+    vec3 q;
+        if( 3.0*pos.x < m ) q = pos.xyz;
+    else if( 3.0*pos.y < m ) q = pos.yzx;
+    else if( 3.0*pos.z < m ) q = pos.zxy;
+    else return m*0.57735027;
+        
+    float k = clamp(0.5*(q.z-q.y+s),0.0,s); 
+    return length(vec3(q.x,q.y-s+k,q.z-k));
+}
+
+float {
+    "Name": "s",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}

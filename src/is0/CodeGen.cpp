@@ -25,6 +25,7 @@ out vec4 out_Color;
 #define NORMAL_DELTA 0.0001
 
 #define saturate(v) clamp(v, 0., 1.)
+float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 
 )";
 

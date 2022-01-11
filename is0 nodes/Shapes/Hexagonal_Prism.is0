@@ -1,0 +1,25 @@
+[] (vec3 pos) {
+    const vec3 k = vec3(-0.8660254, 0.5, 0.57735);
+    pos = abs(pos);
+    pos.xy -= 2.0*min(dot(k.xy, pos.xy), 0.0)*k.xy;
+    vec2 d = vec2(
+        length(pos.xy-vec2(clamp(pos.x,-k.z*h.x,k.z*h.x), h.x))*sign(pos.y-h.x),
+        pos.z-h.y );
+    return min(max(d.x,d.y),0.0) + length(max(d,0.0));
+}
+
+vec2 {
+    "Name": "h",
+    "Default": {
+        "x": 1.0,
+        "y": 1.0
+    },
+    "Min": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "Max": {
+        "x": 10.0,
+        "y": 10.0
+    }
+}

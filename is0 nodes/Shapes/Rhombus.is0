@@ -1,0 +1,35 @@
+[] (vec3 pos) {
+    pos = abs(pos);
+    vec2 b = vec2(la,lb);
+    float f = clamp( (ndot(b,b-2.0*pos.xz))/dot(b,b), -1.0, 1.0 );
+    vec2 q = vec2(length(pos.xz-0.5*b*vec2(1.0-f,1.0+f))*sign(pos.x*b.y+pos.z*b.x-b.x*b.y)-ra, pos.y-h);
+    return min(max(q.x,q.y),0.0) + length(max(q,0.0));
+}
+
+float {
+    "Name": "la",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "lb",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "h",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "ra",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
