@@ -1,5 +1,5 @@
 [] (vec3 pos) {
-    return dot(pos,normal) + h;
+    return dot(pos,normal) + height;
 }
 
 direction3D {
@@ -11,7 +11,7 @@ direction3D {
 }
 
 float {
-    "Name": "h",
+    "Name": "height",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0

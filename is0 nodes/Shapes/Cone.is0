@@ -1,5 +1,5 @@
 [] (vec3 pos) {
-    vec2 q = h*vec2(c.x/c.y,-1.0);  
+    vec2 q = height*vec2(base.x/base.y,-1.0);  
     vec2 w = vec2( length(pos.xz), pos.y );
     vec2 a = w - q*clamp( dot(w,q)/dot(q,q), 0.0, 1.0 );
     vec2 b = w - q*vec2( clamp( w.x/q.x, 0.0, 1.0 ), 1.0 );
@@ -10,7 +10,7 @@
 }
 
 vec2 {
-    "Name": "c",
+    "Name": "base",
     "Default": {
         "x": 1.0,
         "y": 1.0
@@ -26,7 +26,7 @@ vec2 {
 }
 
 float {
-    "Name": "h",
+    "Name": "height",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0

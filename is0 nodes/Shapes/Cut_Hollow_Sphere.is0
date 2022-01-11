@@ -1,26 +1,26 @@
 [] (vec3 pos) {
-    float w = sqrt(r*r-h*h);    
+    float w = sqrt(radius*radius-cut*cut);    
     vec2 q = vec2( length(pos.xz), pos.y );
-    return ((h*q.x<w*q.y) ? length(q-vec2(w,h)) : 
-                            abs(length(q)-r) ) - t;
+    return ((cut*q.x<w*q.y) ? length(q-vec2(w,cut)) : 
+                            abs(length(q)-radius) ) - scale;
 }
 
 float {
-    "Name": "r",
+    "Name": "radius",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0
 }
 
 float {
-    "Name": "h",
+    "Name": "cut",
     "Default": 0.0,
     "Min": 0.0,
     "Max": 10.0
 }
 
 float {
-    "Name": "t",
+    "Name": "scale",
     "Default": 0.16,
     "Min": 0.0,
     "Max": 10.0

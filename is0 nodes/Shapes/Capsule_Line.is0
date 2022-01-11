@@ -1,17 +1,17 @@
 [] (vec3 pos) {
-    pos.y -= clamp( pos.y, 0.0, h );
-    return length(pos) - r;
+    pos.y -= clamp( pos.y, 0.0, height );
+    return length(pos) - radius;
 }
 
 float {
-    "Name": "h",
+    "Name": "height",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0
 }
 
 float {
-    "Name": "r",
+    "Name": "radius",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0

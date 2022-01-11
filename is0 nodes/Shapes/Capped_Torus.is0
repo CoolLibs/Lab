@@ -2,18 +2,18 @@
     pos.x = abs(pos.x);
     vec2 sc = vec2(0.713,0.7);
     float k = (sc.y*pos.x>sc.x*pos.y) ? dot(pos.xy,sc) : length(pos.xy);
-    return sqrt( dot(pos,pos) + ra*ra - 2.0*ra*k ) - rb;
+    return sqrt( dot(pos,pos) + lgth*lgth - 2.0*lgth*k ) - radius;
 }
 
 float {
-    "Name": "ra",
+    "Name": "lgth",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0
 }
 
 float {
-    "Name": "rb",
+    "Name": "radius",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0
