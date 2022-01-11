@@ -1,0 +1,34 @@
+[SDF] (vec3 pos) {
+    float s1 = scale;
+    float d = ${SDF}(pos);
+    for(int m=0; m<steps; m++)
+    {
+        vec3 a = mod(pos*s1, x1)-1.0;
+        s1 *= 3.0;
+        vec3 r =  1.0 - 3.0*abs(a);
+        float c = ${SDF}(r)/s1;
+        d = max(d,c);
+    }   
+    return d;
+}
+
+float {
+    "Name": "scale",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "steps",
+    "Default": 3.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "x1",
+    "Default": 2.0,
+    "Min": 0.0,
+    "Max": 10.0    
+}
