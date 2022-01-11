@@ -8,7 +8,7 @@
     vec2 p_in_plane = vec2(dot(p, plane_axis1), dot(p, plane_axis2));
     vec2 p_in_plane_rot = m*p_in_plane;
     vec3  q = proj * axis + p_in_plane_rot.x * plane_axis1 + p_in_plane_rot.y * plane_axis2; 
-    return march_precision * ${SDF}(q); 
+    return IS0_FIX_ARTIFACTS(${SDF}(q)); 
 }
 
 direction3D {
@@ -24,11 +24,4 @@ float {
     "Default": 1.0,
     "Min": 0.001,
     "Max": 5.0
-}
-
-float {
-    "Name": "march_precision",
-    "Default": 1.0,
-    "Min": 0.001,
-    "Max": 1.0
 }
