@@ -3,10 +3,11 @@
 #include <Cool/Parameter/ParameterList.h>
 #include "NodeTemplate.h"
 #include "NodeTree.h"
+#include "RenderEffects.h"
 
 namespace CodeGen {
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects);
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
 
