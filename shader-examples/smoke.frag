@@ -1,7 +1,8 @@
 #version 430
 
 // SOURCE :
-//
+// https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html
+// https://www.shadertoy.com/view/tsScDG
 
 layout(location = 0) in vec2 _uv;
 uniform float _time;
@@ -186,7 +187,7 @@ float BeerLambert(float absorption, float dist)
 
 vec3 GetAmbientLight()
 {
-    return 0.5 * vec3(1, 1, 1);
+    return 0.7 * vec3(1, 1, 1);
 }
 
 float Luminance(vec3 color)
