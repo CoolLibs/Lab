@@ -47,6 +47,7 @@ float softshadow2(in vec3 ro, in vec3 rd, float mint, float maxt, float k)
     }
     return res;
 }
+
 float rayMarching(vec3 ro, vec3 rd) {
     float t = 0.;
     for (int i = 0; i < MAX_STEPS; i++) {
@@ -82,11 +83,12 @@ vec3 render(vec3 ro, vec3 rd) {
       //float sunFactor = saturate(dot(normal, nSunDir));
       //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
       finalCol = normal * 0.5 + 0.5;
+      }
     
 )";
 static constexpr const char* ray_marcher_end_2 = R"(
       
-    }
+    
     finalCol = saturate(finalCol);
     finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
     return finalCol;
@@ -191,7 +193,7 @@ float ssao(vec3 p)
 }
 )";
 
-static constexpr const char*                            inigo_ao_fct = R"(
+static constexpr const char* inigo_ao_fct = R"(
 vec2 hash2(float n) { return fract(sin(vec2(n, n + 1.0)) * vec2(43758.5453123, 22578.1459123)); }
 
 float calcOcclusion(in vec3 pos, in vec3 nor, float ra)
@@ -206,6 +208,63 @@ float calcOcclusion(in vec3 pos, in vec3 nor, float ra)
     }
     return clamp(occ / 64.0, 0.0, 1.0);
 }
+)";
+
+static constexpr const char* edge_def = R"(
+    
+vec3 edgeColor = vec3(1.0,0.5,0.0);
+
+float edges(vec3 ro, vec3 rd)
+{
+    float EDGE_WIDTH = 0.2;
+    float edge       = 1.0;
+    float lastdS     = is0_default_sdf(ro);
+    float dO         = 0.;
+    float steps      = 0.0;
+    for (int i = 0; i < MAX_STEPS; i++) {
+        steps += 1;
+        vec3  p  = ro + rd * dO;
+        float dS = is0_default_sdf(p);
+        dO += dS;
+        if (dO > MAX_DIST || abs(dS) < SURF_DIST) {
+            break;
+        } 
+        if (lastdS < EDGE_WIDTH && dS > lastdS + 0.001) {
+            edge = 0.0;
+        }
+        lastdS = dS;
+        
+    }
+    return edge;
+}
+
+float edges2(vec3 ro, vec3 rd) {
+
+    float EDGE_WIDTH = 0.1;
+    float edge       = 1.0;
+    float lastd     = is0_default_sdf(ro);
+    float t = 0.;
+    for (int i = 0; i < MAX_STEPS; i++) {
+    	vec3 pos = ro + rd * t;
+        float d = is0_main_sdf(pos);
+        t += d;
+        // If we are very close to the object, consider it as a hit and exit this loop
+        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
+        if (lastd < EDGE_WIDTH+0.04*sqrt(t) && d > lastd + 0.001) {
+            edge = 0.0;
+        }
+        lastd = d;
+    }
+    return edge;
+}
+)";
+
+static constexpr const char*                            edge_fct = R"(
+
+if(edges2(ro,rd) < 0.7){
+    finalCol = edgeColor ;
+}
+
 )";
 static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree)
 {
@@ -230,7 +289,7 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
 {
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + ray_marcher_def + inigo_ao_fct + poisson_pts + ray_marcher_end_1 + soft_shadows + poisson_ao + inigo_ao + ray_marcher_end_2;
+    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + ray_marcher_def + edge_def + inigo_ao_fct + poisson_pts + ray_marcher_end_1 + edge_fct + soft_shadows + poisson_ao + inigo_ao + ray_marcher_end_2;
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
