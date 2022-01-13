@@ -1,50 +1,17 @@
 // See https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html
 // And https://www.shadertoy.com/view/tsScDG
 
-/// LIGHT PART ///
-#define LIGHT_ATTENUATION_FACTOR 1.65
-#define NUM_OCTAVES              3
-#define ABSORPTION_CUTOFF        0.25
-#define ABSORPTION_COEFFICIENT   0.5
-
-struct OrbLight {
-    vec3  Position;
-    float Radius;
-    vec3  LightColor;
-};
-
-vec3 GetLightColor(int lightIndex)
-{
-    return vec3(1.0, 1.0, 1.0);
-}
-
-OrbLight GetLight(int lightIndex)
-{
-    // Create an orb of the selected Index
-    const float lightMultiplier = 17.0f;
-#if UNIFORM_LIGHT_SPEED
-    float theta  = _time * 0.7 + float(lightIndex) * 3.1415926 * 2.0 / float(NUM_LIGHT_COLORS);
-    float radius = 18.5f;
-#else
-    float theta  = _time * 0.4 * (float(lightIndex) + 1.0f);
-    float radius = 19.0f + float(lightIndex) * 2.0;
-#endif
-
-    OrbLight orb;
-    orb.Position   = vec3(radius * cos(theta), 6.0 + sin(theta * 2.0) * 2.5, radius * sin(theta));
-    orb.LightColor = GetLightColor(lightIndex) * lightMultiplier;
-    orb.Radius     = 0.8f;
-
-    return orb;
-}
-
-float GetLightAttenuation(float distanceToLight)
-{
-    // Get the atenuation of the light from a distance
-    return 1.0 / pow(distanceToLight, LIGHT_ATTENUATION_FACTOR);
-}
-
 /// NOISE PART ///
+
+#define NUM_OCTAVES            3
+#define LARGE_NUMBER           1e20
+#define MAX_SDF_SPHERE_STEPS   15
+#define ABSORPTION_COEFFICIENT 0.5
+#define ABSORPTION_CUTOFF      0.25
+
+// Reduce value of the following variable to enhance performance
+#define MAX_VOLUME_MARCH_STEPS 50
+#define MARCH_MULTIPLIER       1.8
 
 float noise(vec3 x)
 {
@@ -109,7 +76,7 @@ float BeerLambert(float absorption, float dist)
 
 vec3 GetAmbientLight()
 {
-    return 0.5 * vec3(1, 1, 1);
+    return 0.7 * vec3(1, 1, 1);
 }
 
 float Luminance(vec3 color)
@@ -134,4 +101,49 @@ float GetFogDensity(vec3 position, float sdfDistance)
 #else
     return sdfMultiplier * abs(fbm(position / 6.0, 0.5));
 #endif
+}
+
+/// LIGHT PART (WIP) ///
+
+#define LIGHT_ATTENUATION_FACTOR     1.65
+#define NUM_LIGHT_COLORS             3
+#define NUM_LIGHTS                   3
+#define UNIFORM_LIGHT_SPEED          1
+#define MAX_VOLUME_LIGHT_MARCH_STEPS 4
+
+struct OrbLight {
+    vec3  Position;
+    float Radius;
+    vec3  LightColor;
+};
+
+vec3 GetLightColor(int lightIndex)
+{
+    return vec3(1.0, 1.0, 1.0);
+}
+
+OrbLight GetLight(int lightIndex)
+{
+    // Create an orb of the selected Index
+    const float lightMultiplier = 17.0f;
+#if UNIFORM_LIGHT_SPEED
+    float theta  = _time * 0.7 + float(lightIndex) * 3.1415926 * 2.0 / float(NUM_LIGHT_COLORS);
+    float radius = 18.5f;
+#else
+    float theta  = _time * 0.4 * (float(lightIndex) + 1.0f);
+    float radius = 19.0f + float(lightIndex) * 2.0;
+#endif
+
+    OrbLight orb;
+    orb.Position   = vec3(radius * cos(theta), 6.0 + sin(theta * 2.0) * 2.5, radius * sin(theta));
+    orb.LightColor = GetLightColor(lightIndex) * lightMultiplier;
+    orb.Radius     = 0.8f;
+
+    return orb;
+}
+
+float GetLightAttenuation(float distanceToLight)
+{
+    // Get the atenuation of the light from a distance
+    return 1.0 / pow(distanceToLight, LIGHT_ATTENUATION_FACTOR);
 }
