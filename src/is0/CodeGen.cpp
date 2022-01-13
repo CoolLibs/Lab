@@ -16,8 +16,12 @@ static constexpr const char* ray_marcher_begin = R"(#version 430
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
+
+// clang-format off
 #include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
+#include "is0 shaders/smoke.glsl"
+// clang-format on
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
@@ -26,57 +30,159 @@ out vec4 out_Color;
 #define NORMAL_DELTA 0.0001
 
 float sph(vec3 i, vec3 f, vec3 c){
-    float rad = 0.5*hash(i+c);
+    float rad = 0.5*hash_0_to_1(i+c);
     return length(f-vec3(c)) - rad;
 }
 
 )";
 
+// static constexpr const char* ray_marcher_impl = R"(
+// float rayMarching(vec3 ro, vec3 rd) {
+//     float t = 0.;
+
+//     for (int i = 0; i < MAX_STEPS; i++) {
+//     	vec3 pos = ro + rd * t;
+//         float d = is0_main_sdf(pos);
+//         t += d;
+//         // If we are very close to the object, consider it as a hit and exit this loop
+//         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
+//     }
+//     return t;
+// }
+
+// vec3 getNormal(vec3 p) {
+//     const float h = NORMAL_DELTA;
+// 	const vec2 k = vec2(1., -1.);
+//     return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) +
+//                       k.yyx * is0_main_sdf( p + k.yyx*h ) +
+//                       k.yxy * is0_main_sdf( p + k.yxy*h ) +
+//                       k.xxx * is0_main_sdf( p + k.xxx*h ) );
+// }
+
+// vec3 render(vec3 ro, vec3 rd) {
+//     vec3 finalCol = vec3(0.3, 0.7, 0.98);
+
+//     float d = rayMarching(ro, rd);
+
+//     if (d < MAX_DIST) {
+//       vec3 p = ro + rd * d;
+//       vec3 normal = getNormal(p);
+//       //vec3 ref = reflect(rd, normal);
+
+//       //float sunFactor = saturate(dot(normal, nSunDir));
+//       //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
+
+//       finalCol = normal * 0.5 + 0.5;
+//     }
+
+//     finalCol = saturate(finalCol);
+//     finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
+//     return finalCol;
+// }
+// )";
+
+static constexpr const char* smoke_impl = R"(
+
+// ----- Smoke options ----- //
+
+#define NUM_LIGHT_COLORS    3
+#define NUM_LIGHTS          3
+#define UNIFORM_LIGHT_SPEED 1
+
+#define LARGE_NUMBER           1e20
+#define MAX_SDF_SPHERE_STEPS   15
+
+// Reduce value of the following variable to enhance performance
+#define MAX_VOLUME_MARCH_STEPS       50
+#define MAX_VOLUME_LIGHT_MARCH_STEPS 4
+#define MARCH_MULTIPLIER             1.8
+
+float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
+{
+    float precis = 0.5;
+    float t      = 0.0f;
+    for (int i = 0; i < MAX_SDF_SPHERE_STEPS; i++) {
+        float result = is0_main_sdf(rayOrigin + rayDirection * t);
+        if (result < (precis) || t > maxT)
+            break;
+        t += result;
+    }
+    return (t >= maxT) ? -1.0 : t;
+}
+
+float GetLightVisiblity(in vec3 rayOrigin, in vec3 rayDirection, in float maxT, in int maxSteps, in float marchSize)
+{
+    float t               = 0.0f;
+    float lightVisibility = 1.0f;
+    float signedDistance  = 0.0;
+    for (int i = 0; i < maxSteps; i++) {
+        t += max(marchSize, signedDistance);
+        if (t > maxT || lightVisibility < ABSORPTION_CUTOFF)
+            break;
+
+        vec3 position = rayOrigin + t * rayDirection;
+
+        signedDistance = is0_main_sdf(position);
+        if (signedDistance < 0.0) {
+            lightVisibility *= BeerLambert(ABSORPTION_COEFFICIENT * GetFogDensity(position, signedDistance), marchSize);
+        }
+    }
+    return lightVisibility;
+}
+
+vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
+{
+    float depth       = LARGE_NUMBER;
+    vec3  opaqueColor = vec3(0.3, 0.7, 0.98);
+
+    vec3  normal;
+    float t;
+
+    float volumeDepth     = IntersectVolumetric(rayOrigin, rayDirection, depth);
+    float opaqueVisiblity = 1.0f;
+    vec3  volumetricColor = vec3(0.0f);
+    if (volumeDepth > 0.0) {
+        const vec3  volumeAlbedo     = vec3(0.8);
+        const float marchSize        = 0.6f * MARCH_MULTIPLIER;
+        float       distanceInVolume = 0.0f;
+        float       signedDistance   = 0.0;
+        for (int i = 0; i < MAX_VOLUME_MARCH_STEPS; i++) {
+            volumeDepth += max(marchSize, signedDistance);
+            if (volumeDepth > depth || opaqueVisiblity < ABSORPTION_CUTOFF)
+                break;
+
+            vec3 position = rayOrigin + volumeDepth * rayDirection;
+
+            signedDistance = is0_main_sdf(position);
+            if (signedDistance < 0.0f) {
+                distanceInVolume += marchSize;
+                float previousOpaqueVisiblity = opaqueVisiblity;
+                opaqueVisiblity *= BeerLambert(ABSORPTION_COEFFICIENT * GetFogDensity(position, signedDistance), marchSize);
+                float absorptionFromMarch = previousOpaqueVisiblity - opaqueVisiblity;
+
+                for (int lightIndex = 0; lightIndex < NUM_LIGHTS; lightIndex++) {
+                    float lightVolumeDepth = 0.0f;
+                    vec3  lightDirection   = (GetLight(lightIndex).Position - position);
+                    float lightDistance    = length(lightDirection);
+                    lightDirection /= lightDistance;
+
+                    vec3 lightColor = GetLight(lightIndex).LightColor * GetLightAttenuation(lightDistance);
+                    if (IsColorInsignificant(lightColor))
+                        continue;
+
+                    const float lightMarchSize = 0.65f;
+                    float       lightVisiblity = GetLightVisiblity(position, lightDirection, lightDistance, MAX_VOLUME_LIGHT_MARCH_STEPS, lightMarchSize);
+                    volumetricColor += absorptionFromMarch * lightVisiblity * volumeAlbedo * lightColor;
+                }
+                volumetricColor += absorptionFromMarch * volumeAlbedo * GetAmbientLight();
+            }
+        }
+    }
+    return min(volumetricColor, 1.0f) + opaqueVisiblity * opaqueColor;
+}
+)";
+
 static constexpr const char* ray_marcher_end = R"(
-
-float rayMarching(vec3 ro, vec3 rd) {
-    float t = 0.;
- 	
-    for (int i = 0; i < MAX_STEPS; i++) {
-    	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos);
-        t += d;
-        // If we are very close to the object, consider it as a hit and exit this loop
-        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
-    }
-    return t;
-}
-
-vec3 getNormal(vec3 p) {
-    const float h = NORMAL_DELTA;
-	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
-                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
-                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
-                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
-}
-
-vec3 render(vec3 ro, vec3 rd) {
-    vec3 finalCol = vec3(0.3, 0.7, 0.98);
-    
-    float d = rayMarching(ro, rd);
-    
-    if (d < MAX_DIST) {
-      vec3 p = ro + rd * d;
-      vec3 normal = getNormal(p); 
-      //vec3 ref = reflect(rd, normal);
-      
-      //float sunFactor = saturate(dot(normal, nSunDir));
-      //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
-    
-      finalCol = normal * 0.5 + 0.5;
-    }
-    
-    finalCol = saturate(finalCol);
-    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
-    return finalCol;
-}
-
 
 void main() {
     vec3 ro = cool_ray_origin();
@@ -108,7 +214,7 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
 {
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + ray_marcher_end;
+    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + smoke_impl + ray_marcher_end;
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
@@ -122,15 +228,15 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
-                                                               .node_template_name = node.node_template_name,
-                                                               .node_id            = node.id},
-                                                           .sdf_param_declaration = node_template.vec3_input_declaration};
+                                                                .node_template_name = node.node_template_name,
+                                                                .node_id            = node.id},
+                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
         declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
             .fn_signature_params = fn_signature_params,
             .body                = function_body(node.parameter_list,
-                                  node_template.code_template,
-                                  compute_sdf_identifiers(node, node_template, node_tree))});
+                                                 node_template.code_template,
+                                                 compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
             main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
