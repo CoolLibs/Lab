@@ -26,11 +26,6 @@ out vec4 out_Color;
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
 
-float sph(vec3 i, vec3 f, vec3 c){
-    float rad = 0.5*hash(i+c);
-    return length(f-vec3(c)) - rad;
-}
-
 struct RayMarchRes {
     float dist;
     float pas;
@@ -38,7 +33,7 @@ struct RayMarchRes {
 
 )";
 
-static constexpr const char* ray_marcher_end = R"(
+static constexpr const char* ray_marcher_marching = R"(
 
 RayMarchRes rayMarching(vec3 ro, vec3 rd, float side) {
     float t = 0.;
@@ -72,59 +67,15 @@ vec3 render(vec3 ro, vec3 rd) {
     if (d < MAX_DIST) {
       vec3 p = ro + rd * d;
       vec3 normal = getNormal(p);
-      float fresnel = pow(clamp(1. - dot(normal, -rd), 0., 1.), fresnel_strength); 
-      vec3 refletOut = reflect(rd, normal);
-      vec3 refractionIn = refract(rd,normal,1./IOR);
-
-      vec3 pEnter = p - normal * SURF_DIST * 3.;
-      RayMarchRes dIn = rayMarching(pEnter,refractionIn, -1.); // Inside
-      float d2 = dIn.dist;
-
-      vec3 pExit = pEnter + refractionIn * d2;
-      vec3 normExit = -getNormal(pExit);
-      vec3 reflectText = vec3(0);
-      vec3 refractionOut = vec3(0);
-      float abb = .01;
-      //Red
-      refractionOut = refract(refractionIn,normExit,IOR-abb);
-      if(dot(refractionOut, refractionOut) == 0.){
-        refractionOut = reflect(refractionIn, normExit);
-      }
-      reflectText.r = refractionOut.r;
-      //Green
-      refractionOut = refract(refractionIn,normExit,IOR);
-      if(dot(refractionOut, refractionOut) == 0.){
-        refractionOut = reflect(refractionIn, normExit);
-      }
-      reflectText.g = refractionOut.g;
-      //Blue
-      refractionOut = refract(refractionIn,normExit,IOR+abb);
-      if(dot(refractionOut, refractionOut) == 0.){
-        refractionOut = reflect(refractionIn, normExit);
-      }
-      reflectText.b = refractionOut.b;
-      
-      float dens = .1;
-      float optDist = exp(-d2*dens);
-      reflectText= reflectText * optDist;
-      float fresnelRefl = pow(1.+dot(rd, normal),5.);
-      
-      //float sunFactor = saturate(dot(normal, nSunDir));
-      //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
     
       finalCol = normal * 0.5 + 0.5;
-      finalCol += fresnel * fresnel_color;
-      finalCol += mix(reflectText, refletOut, fresnelRefl);
-    }
+)";
 
-    float glow = pow(pas*glow_strength,2);
-    finalCol += glow * glow_color;
-    
+static constexpr const char* ray_marcher_end = R"(
     finalCol = saturate(finalCol);
     finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
     return finalCol;
 }
-
 
 void main() {
     vec3 ro = cool_ray_origin();
@@ -160,6 +111,8 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            effectsParameters(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
+           ray_marcher_marching +
+           addParameters(effects) +
            ray_marcher_end;
 }
 

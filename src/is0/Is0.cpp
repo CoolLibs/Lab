@@ -39,13 +39,16 @@ void Is0::effect_imgui_window()
     ImGui::Text("Fresnel");
     bool has_changed = _effects._fresnel.strenght.imgui();
     has_changed |= _effects._fresnel.col.imgui();
+    has_changed |= ImGui::Checkbox("Fresnel Active", &_effects._fresnel.isActive);
     ImGui::Separator();
     ImGui::Text("Glow");
     has_changed |= _effects._glow.strenght.imgui();
     has_changed |= _effects._glow.col.imgui();
+    has_changed |= ImGui::Checkbox("Glow Active", &_effects._glow.isActive);
     ImGui::Separator();
     ImGui::Text("Reflection");
     has_changed |= _effects._reflection.strenght.imgui();
+    has_changed |= ImGui::Checkbox("Reflection Active", &_effects._reflection.isActive);
     ImGui::End();
     if (has_changed) {
         _must_recompile = true;

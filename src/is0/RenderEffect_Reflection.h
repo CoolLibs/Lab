@@ -6,6 +6,8 @@ struct RenderEffect_Reflection {
                                      .default_value = 0.7f,
                                      .min_value     = 0.01f,
                                      .max_value     = 2.5f}};
+    bool                   isActive = true;
 };
 
 std::string reflectionParameters(const RenderEffect_Reflection& reflection);
+std::string reflectionAdd();

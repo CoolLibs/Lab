@@ -7,6 +7,8 @@ struct RenderEffect_Fresnel {
                                      .min_value     = 0.0f,
                                      .max_value     = 10.f}};
     Cool::Parameter::Color col;
+    bool                   isActive = true;
 };
 
 std::string fresnelParameters(const RenderEffect_Fresnel& fresnel);
+std::string fresnelAdd();

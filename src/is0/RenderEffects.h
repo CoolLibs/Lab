@@ -10,3 +10,4 @@ struct RenderEffects {
 };
 
 std::string effectsParameters(const RenderEffects& effects);
+std::string addParameters(const RenderEffects& effects);
