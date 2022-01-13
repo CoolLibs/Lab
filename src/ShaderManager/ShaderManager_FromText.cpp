@@ -52,7 +52,7 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
                         else if (type == "vec2")
                             return Cool::Parameter::Vec2Desc{.name = name};
                         else if (type == "vec3")
-                            return Cool::Parameter::ColorDesc{.name = name};
+                            return Cool::Parameter::Vec3Desc{.name = name};
                         else
                             throw std::invalid_argument(type + " is not a valid parameter type.");
                     }();
