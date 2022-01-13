@@ -11,6 +11,8 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
 
+std::string convert_to_valid_glsl_name(std::string name);
+
 struct FnNameParams {
     std::string_view node_template_name;
     NodeId           node_id;

@@ -1,0 +1,11 @@
+[SDF](vec3 p) {
+    return ${SDF}(p) - rad;
+}
+
+float {
+    "Name": "rad",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 10.0
+}
+

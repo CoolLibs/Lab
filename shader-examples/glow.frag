@@ -1,6 +1,6 @@
 #version 430
 
-layout(location = 0) in vec2 _uv;
+layout(location = 0) in vec2       _uv;
 uniform float _time;
 out vec4      out_Color;
 
@@ -10,16 +10,29 @@ out vec4      out_Color;
 #define MAX_DIST  100.
 #define SURF_DIST .001
 
+// BEGIN DYNAMIC PARAMS
+
+uniform float glow_strength;
+uniform vec3 glow_color;
+
+// END DYNAMIC PARAMS
+
 float sdf(vec3 p)
 {
-    return length(mod(p + 5., vec3(10.)) - 5.) - 1.;
+    return length(p) - 1.;
 }
 
-float ray_march(vec3 ro, vec3 rd)
+struct RayMarchRes {
+    float dist;
+    float pas;
+};
+
+RayMarchRes ray_march(vec3 ro, vec3 rd)
 {
     float dO = 0.;
+    int i = 0;
 
-    for (int i = 0; i < MAX_STEPS; i++) {
+    for (i; i < MAX_STEPS; i++) {
         vec3  p  = ro + rd * dO;
         float dS = sdf(p);
         dO += dS;
@@ -28,7 +41,7 @@ float ray_march(vec3 ro, vec3 rd)
         }
     }
 
-    return dO;
+    return RayMarchRes(dO,i);
 }
 
 vec3 normal(vec3 p)
@@ -46,19 +59,23 @@ vec3 normal(vec3 p)
 
 vec3 render(vec3 ro, vec3 rd)
 {
-    float d   = ray_march(ro, rd);
-    vec3  col = vec3(1.000, 0.711, 0.949);
+    RayMarchRes res = ray_march(ro, rd);
+    vec3  col = vec3(.000, 0.0711, 0.0949);
+    float d = res.dist;
+    float pas = res.pas;
 
     if (d < MAX_DIST) {
         vec3 p = ro + rd * d;
-        col    = normal(p) * 0.5 + 0.5;
+        vec3 norm = normal(p); 
+        col    = norm * 0.5 + 0.5;
         // vec3 n = normal(p);
         // vec3 r = reflect(rd, n);
 
         // float dif = dot(n, normalize(vec3(1,2,3))) * 0.5 + 0.5;
         // col = vec3(dif);
     }
-
+    float glow = pow(pas*glow_strength,2);
+    col += glow * glow_color;
     col = pow(col, vec3(.4545)); // gamma correction
     return col;
 }

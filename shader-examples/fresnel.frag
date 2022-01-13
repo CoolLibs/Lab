@@ -1,6 +1,6 @@
 #version 430
 
-layout(location = 0) in vec2 _uv;
+layout(location = 0) in vec2       _uv;
 uniform float _time;
 out vec4      out_Color;
 
@@ -9,6 +9,13 @@ out vec4      out_Color;
 #define MAX_STEPS 100
 #define MAX_DIST  100.
 #define SURF_DIST .001
+
+// BEGIN DYNAMIC PARAMS
+
+uniform float fresnel_strength;
+uniform vec3 fresnel_color;
+
+// END DYNAMIC PARAMS
 
 float sdf(vec3 p)
 {
@@ -51,7 +58,9 @@ vec3 render(vec3 ro, vec3 rd)
 
     if (d < MAX_DIST) {
         vec3 p = ro + rd * d;
-        col    = normal(p) * 0.5 + 0.5;
+        vec3 norm = normal(p);
+        float fresnel = pow(clamp(1. - dot(norm, -rd), 0., 1.), fresnel_strength);
+        col    = norm * 0.2 + 0.2 + fresnel * fresnel_color;
         // vec3 n = normal(p);
         // vec3 r = reflect(rd, n);
 
@@ -59,7 +68,7 @@ vec3 render(vec3 ro, vec3 rd)
         // col = vec3(dif);
     }
 
-    col = pow(col, vec3(.4545)); // gamma correction
+    col = pow(col, vec3(.8)); // gamma correction
     return col;
 }
 

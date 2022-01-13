@@ -18,6 +18,7 @@ layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
 #include "_COOL_RES_/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/math.glsl"
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
@@ -25,7 +26,10 @@ out vec4 out_Color;
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
 
-#define saturate(v) clamp(v, 0., 1.)
+float sph(vec3 i, vec3 f, vec3 c){
+    float rad = 0.5*hash(i+c);
+    return length(f-vec3(c)) - rad;
+}
 
 struct RayMarchRes {
     float dist;
@@ -135,15 +139,15 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
-                                                                .node_template_name = node.node_template_name,
-                                                                .node_id            = node.id},
-                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
+                                                               .node_template_name = node.node_template_name,
+                                                               .node_id            = node.id},
+                                                           .sdf_param_declaration = node_template.vec3_input_declaration};
         declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
             .fn_signature_params = fn_signature_params,
             .body                = function_body(node.parameter_list,
-                                                 node_template.code_template,
-                                                 compute_sdf_identifiers(node, node_template, node_tree))});
+                                  node_template.code_template,
+                                  compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
             main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
@@ -155,9 +159,17 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     return declarations.str() + '\n' + definitions.str() + main_sdf_definition.str();
 }
 
+std::string convert_to_valid_glsl_name(std::string name)
+{
+    Cool::String::replace_all(name, " ", "_");
+    Cool::String::replace_all(name, "-", "_");
+    return name;
+}
+
 std::string function_name(const FnNameParams& p)
 {
-    return std::string{p.node_template_name} + "_" + std::to_string(static_cast<unsigned int>(*p.node_id));
+    return convert_to_valid_glsl_name(std::string{p.node_template_name} +
+                                      "_" + std::to_string(*p.node_id));
 }
 
 std::string function_signature(const FnSignatureParams& p)

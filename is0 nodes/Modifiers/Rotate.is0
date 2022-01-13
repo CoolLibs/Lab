@@ -1,0 +1,24 @@
+[SDF] (vec3 pos) {
+    const mat3 rotx = mat3(1,           0,           0,
+                     0, cos(axis.x),-sin(axis.x),
+                     0, sin(axis.x), cos(axis.x));
+
+    const mat3 roty = mat3(cos(axis.y), 0, sin(axis.y),
+                     0,           1,           0,
+                    -sin(axis.y), 0, cos(axis.y));
+  
+    const mat3 rotz = mat3(cos(axis.z),-sin(axis.z), 0,
+                     sin(axis.z), cos(axis.z), 0,
+                     0,                     0, 1);
+
+    return ${SDF}(rotx*roty*rotz * pos);
+}
+
+rotation3D {
+    "Name": "axis",
+    "Default" : {
+        "x" : 0.0,
+        "y" : 0.0,
+        "z" : 0.0
+    }
+}

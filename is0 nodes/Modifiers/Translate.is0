@@ -1,0 +1,25 @@
+[SDF] (vec3 pos) {
+    return ${SDF}(pos + vec3(X,Y,Z));
+}
+
+float {
+    "Name": "X",
+    "Default": 0.0,
+    "Min": -10.0,
+    "Max": 10.0
+}   
+
+float {
+    "Name": "Y",
+    "Default": 0.0,
+    "Min": -10.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "Z",
+    "Default": 0.0,
+    "Min": -10.0,
+    "Max": 10.0
+}
+
