@@ -6,7 +6,7 @@ void Is0::update()
 {
     if (_editor.tree_has_changed()) {
         if (_editor.tree_is_valid()) {
-            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates());
+            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _smoke_properties, _define_variables);
         }
         else {
             _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";

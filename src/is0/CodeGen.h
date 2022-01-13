@@ -3,11 +3,11 @@
 #include <Cool/Parameter/ParameterList.h>
 #include "NodeTemplate.h"
 #include "NodeTree.h"
+#include "Renderer_Smoke.h"
 
 namespace CodeGen {
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
-
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const SmokeProperties& parameters, const DefineVariables& defvar);
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
 
 std::string convert_to_valid_glsl_name(std::string name);

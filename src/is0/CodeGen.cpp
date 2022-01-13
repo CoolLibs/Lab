@@ -2,6 +2,7 @@
 #include <Cool/String/String.h>
 #include <numeric>
 #include <sstream>
+#include "Renderer_Smoke.h"
 
 namespace CodeGen {
 
@@ -81,107 +82,6 @@ float sph(vec3 i, vec3 f, vec3 c){
 // }
 // )";
 
-static constexpr const char* smoke_impl = R"(
-
-// ----- Smoke options ----- //
-
-#define NUM_LIGHT_COLORS    3
-#define NUM_LIGHTS          3
-#define UNIFORM_LIGHT_SPEED 1
-
-#define LARGE_NUMBER           1e20
-#define MAX_SDF_SPHERE_STEPS   15
-
-// Reduce value of the following variable to enhance performance
-#define MAX_VOLUME_MARCH_STEPS       50
-#define MAX_VOLUME_LIGHT_MARCH_STEPS 4
-#define MARCH_MULTIPLIER             1.8
-
-float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
-{
-    float precis = 0.5;
-    float t      = 0.0f;
-    for (int i = 0; i < MAX_SDF_SPHERE_STEPS; i++) {
-        float result = is0_main_sdf(rayOrigin + rayDirection * t);
-        if (result < (precis) || t > maxT)
-            break;
-        t += result;
-    }
-    return (t >= maxT) ? -1.0 : t;
-}
-
-float GetLightVisiblity(in vec3 rayOrigin, in vec3 rayDirection, in float maxT, in int maxSteps, in float marchSize)
-{
-    float t               = 0.0f;
-    float lightVisibility = 1.0f;
-    float signedDistance  = 0.0;
-    for (int i = 0; i < maxSteps; i++) {
-        t += max(marchSize, signedDistance);
-        if (t > maxT || lightVisibility < ABSORPTION_CUTOFF)
-            break;
-
-        vec3 position = rayOrigin + t * rayDirection;
-
-        signedDistance = is0_main_sdf(position);
-        if (signedDistance < 0.0) {
-            lightVisibility *= BeerLambert(ABSORPTION_COEFFICIENT * GetFogDensity(position, signedDistance), marchSize);
-        }
-    }
-    return lightVisibility;
-}
-
-vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
-{
-    float depth       = LARGE_NUMBER;
-    vec3  opaqueColor = vec3(0.3, 0.7, 0.98);
-
-    vec3  normal;
-    float t;
-
-    float volumeDepth     = IntersectVolumetric(rayOrigin, rayDirection, depth);
-    float opaqueVisiblity = 1.0f;
-    vec3  volumetricColor = vec3(0.0f);
-    if (volumeDepth > 0.0) {
-        const vec3  volumeAlbedo     = vec3(0.8);
-        const float marchSize        = 0.6f * MARCH_MULTIPLIER;
-        float       distanceInVolume = 0.0f;
-        float       signedDistance   = 0.0;
-        for (int i = 0; i < MAX_VOLUME_MARCH_STEPS; i++) {
-            volumeDepth += max(marchSize, signedDistance);
-            if (volumeDepth > depth || opaqueVisiblity < ABSORPTION_CUTOFF)
-                break;
-
-            vec3 position = rayOrigin + volumeDepth * rayDirection;
-
-            signedDistance = is0_main_sdf(position);
-            if (signedDistance < 0.0f) {
-                distanceInVolume += marchSize;
-                float previousOpaqueVisiblity = opaqueVisiblity;
-                opaqueVisiblity *= BeerLambert(ABSORPTION_COEFFICIENT * GetFogDensity(position, signedDistance), marchSize);
-                float absorptionFromMarch = previousOpaqueVisiblity - opaqueVisiblity;
-
-                for (int lightIndex = 0; lightIndex < NUM_LIGHTS; lightIndex++) {
-                    float lightVolumeDepth = 0.0f;
-                    vec3  lightDirection   = (GetLight(lightIndex).Position - position);
-                    float lightDistance    = length(lightDirection);
-                    lightDirection /= lightDistance;
-
-                    vec3 lightColor = GetLight(lightIndex).LightColor * GetLightAttenuation(lightDistance);
-                    if (IsColorInsignificant(lightColor))
-                        continue;
-
-                    const float lightMarchSize = 0.65f;
-                    float       lightVisiblity = GetLightVisiblity(position, lightDirection, lightDistance, MAX_VOLUME_LIGHT_MARCH_STEPS, lightMarchSize);
-                    volumetricColor += absorptionFromMarch * lightVisiblity * volumeAlbedo * lightColor;
-                }
-                volumetricColor += absorptionFromMarch * volumeAlbedo * GetAmbientLight();
-            }
-        }
-    }
-    return min(volumetricColor, 1.0f) + opaqueVisiblity * opaqueColor;
-}
-)";
-
 static constexpr const char* ray_marcher_end = R"(
 
 void main() {
@@ -212,9 +112,9 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const SmokeProperties& parameters, const DefineVariables& defvar)
 {
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + smoke_impl + ray_marcher_end;
+    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + CodeGen::SmokeRenderer(parameters, defvar) + ray_marcher_end;
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
