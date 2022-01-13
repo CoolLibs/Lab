@@ -40,12 +40,12 @@ struct RayMarchRes {
 
 static constexpr const char* ray_marcher_end = R"(
 
-RayMarchRes rayMarching(vec3 ro, vec3 rd) {
+RayMarchRes rayMarching(vec3 ro, vec3 rd, float side) {
     float t = 0.;
  	int i = 0;
     for (i; i < MAX_STEPS; i++) {
     	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos);
+        float d = is0_main_sdf(pos) * side;
         t += d;
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
@@ -65,7 +65,7 @@ vec3 getNormal(vec3 p) {
 vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
     
-    RayMarchRes res = rayMarching(ro, rd);
+    RayMarchRes res = rayMarching(ro, rd, 1.);
     float d = res.dist;
     float pas = res.pas;
     
@@ -73,13 +73,48 @@ vec3 render(vec3 ro, vec3 rd) {
       vec3 p = ro + rd * d;
       vec3 normal = getNormal(p);
       float fresnel = pow(clamp(1. - dot(normal, -rd), 0., 1.), fresnel_strength); 
-      //vec3 ref = reflect(rd, normal);
+      vec3 refletOut = reflect(rd, normal);
+      vec3 refractionIn = refract(rd,normal,1./IOR);
+
+      vec3 pEnter = p - normal * SURF_DIST * 3.;
+      RayMarchRes dIn = rayMarching(pEnter,refractionIn, -1.); // Inside
+      float d2 = dIn.dist;
+
+      vec3 pExit = pEnter + refractionIn * d2;
+      vec3 normExit = -getNormal(pExit);
+      vec3 reflectText = vec3(0);
+      vec3 refractionOut = vec3(0);
+      float abb = .01;
+      //Red
+      refractionOut = refract(refractionIn,normExit,IOR-abb);
+      if(dot(refractionOut, refractionOut) == 0.){
+        refractionOut = reflect(refractionIn, normExit);
+      }
+      reflectText.r = refractionOut.r;
+      //Green
+      refractionOut = refract(refractionIn,normExit,IOR);
+      if(dot(refractionOut, refractionOut) == 0.){
+        refractionOut = reflect(refractionIn, normExit);
+      }
+      reflectText.g = refractionOut.g;
+      //Blue
+      refractionOut = refract(refractionIn,normExit,IOR+abb);
+      if(dot(refractionOut, refractionOut) == 0.){
+        refractionOut = reflect(refractionIn, normExit);
+      }
+      reflectText.b = refractionOut.b;
+      
+      float dens = .1;
+      float optDist = exp(-d2*dens);
+      reflectText= reflectText * optDist;
+      float fresnelRefl = pow(1.+dot(rd, normal),5.);
       
       //float sunFactor = saturate(dot(normal, nSunDir));
       //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
     
       finalCol = normal * 0.5 + 0.5;
       finalCol += fresnel * fresnel_color;
+      finalCol += mix(reflectText, refletOut, fresnelRefl);
     }
 
     float glow = pow(pas*glow_strength,2);
@@ -139,15 +174,15 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
-                                                               .node_template_name = node.node_template_name,
-                                                               .node_id            = node.id},
-                                                           .sdf_param_declaration = node_template.vec3_input_declaration};
+                                                                .node_template_name = node.node_template_name,
+                                                                .node_id            = node.id},
+                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
         declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
             .fn_signature_params = fn_signature_params,
             .body                = function_body(node.parameter_list,
-                                  node_template.code_template,
-                                  compute_sdf_identifiers(node, node_template, node_tree))});
+                                                 node_template.code_template,
+                                                 compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
             main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";

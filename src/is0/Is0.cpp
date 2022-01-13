@@ -43,6 +43,9 @@ void Is0::effect_imgui_window()
     ImGui::Text("Glow");
     has_changed |= _effects._glow.strenght.imgui();
     has_changed |= _effects._glow.col.imgui();
+    ImGui::Separator();
+    ImGui::Text("Reflection");
+    has_changed |= _effects._reflection.strenght.imgui();
     ImGui::End();
     if (has_changed) {
         _must_recompile = true;
