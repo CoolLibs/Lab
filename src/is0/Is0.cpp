@@ -6,7 +6,7 @@ void Is0::update()
 {
     if (_editor.tree_has_changed()) {
         if (_editor.tree_is_valid()) {
-            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates());
+            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _light, _material);
         }
         else {
             _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
@@ -28,6 +28,8 @@ void Is0::imgui_window()
     if (ImGui::Button("Refresh node templates")) {
         _editor.update_templates_and_nodes();
     }
+    ImGui::End();
+    ImGui::Begin("PBR Opt");
     ImGui::End();
 }
 

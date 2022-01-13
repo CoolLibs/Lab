@@ -3,6 +3,7 @@
 #include <Cool/ImGui/ImGuiWindow.h>
 #include "../ShaderManager/ShaderManager.h"
 #include "NodeEditor.h"
+#include "RendererPBR.h"
 
 class Is0 : public ShaderManager {
 public:
@@ -11,9 +12,11 @@ public:
     void on_key_pressed(const Cool::KeyboardEvent& event) override;
 
 private:
-    NodeEditor        _editor;
-    std::string       _shader_code;
-    Cool::ImGuiWindow _shader_code_window{"is0 Shader Code", false};
+    CodeGen::LightProperties    _light;
+    CodeGen::MaterialProperties _material;
+    NodeEditor                  _editor;
+    std::string                 _shader_code;
+    Cool::ImGuiWindow           _shader_code_window{"is0 Shader Code", false};
 
 private:
     // Serialization
