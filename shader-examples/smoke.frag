@@ -8,6 +8,7 @@ uniform float _time;
 out vec4      out_Color;
 
 #include "_COOL_RES_/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/math.glsl"
 
 #define NUM_LIGHT_COLORS    3
 #define NUM_LIGHTS          3
@@ -35,12 +36,7 @@ struct OrbLight {
 
 vec3 GetLightColor(int lightIndex)
 {
-    // Define the color of the orb. Here : blue/green/red. To Improve
-    switch (lightIndex % NUM_LIGHT_COLORS) {
-    case 0: return vec3(1, 0.0, 1.0);
-    case 1: return vec3(0, 1.0, 0.0);
-    }
-    return vec3(0, 0.0, 1.0);
+    return vec3(1.0, 1.0, 1.0);
 }
 
 OrbLight GetLight(int lightIndex)
@@ -168,6 +164,8 @@ float QueryVolumetricDistanceField(in vec3 pos)
     return sdfValue;
 }
 
+/// RENDER PART ///
+
 float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
 {
     float precis = 0.5;
@@ -180,8 +178,6 @@ float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
     }
     return (t >= maxT) ? -1.0 : t;
 }
-
-/// RENDER PART ///
 
 float BeerLambert(float absorption, float dist)
 {
