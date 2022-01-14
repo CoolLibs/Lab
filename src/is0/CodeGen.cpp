@@ -67,6 +67,34 @@ vec3 getNormal(vec3 p) {
 
 )";
 
+static constexpr std::string render(const RenderEffects& effects)
+{
+    return R"(
+
+vec3 render(vec3 ro, vec3 rd) {
+    vec3 finalCol = vec3(0.3, 0.7, 0.98);
+
+    RayMarchRes res              = rayMarching(ro, rd, DONT_INVERT_SDF);
+    float       d                = res.dist;
+    float       iterations_count = res.iterations_count;
+
+    if (d < MAX_DIST) {
+        vec3 p      = ro + rd * d;
+        vec3 normal = getNormal(p);
+
+        finalCol = normal * 0.5 + 0.5;
+        )" +
+           code_gen_effects_object(effects) +
+           "}" +
+           code_gen_effects_world(effects) + R"(
+    finalCol = saturate(finalCol);
+    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
+    return finalCol;
+}
+
+)";
+}
+
 static constexpr const char* ray_marcher_end = R"(
 
 void main() {
@@ -104,34 +132,8 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
            ray_marcher_impl +
-           [&]() {
-               if (effects.smoke.is_active) {
-                   return CodeGen::addSmoke(effects.smoke);
-               }
-               else {
-                   return R"(
-                vec3 render(vec3 ro, vec3 rd) {
-                vec3 finalCol = vec3(0.3, 0.7, 0.98);
-
-                RayMarchRes res              = rayMarching(ro, rd, DONT_INVERT_SDF);
-                float       d                = res.dist;
-                float       iterations_count = res.iterations_count;
-
-                if (d < MAX_DIST) {
-                    vec3 p      = ro + rd * d;
-                    vec3 normal = getNormal(p);
-
-                    finalCol = normal * 0.5 + 0.5;
-                    )" +
-                          code_gen_effects_object(effects) +
-                          "}" +
-                          code_gen_effects_world(effects) + R"(
-                finalCol = saturate(finalCol);
-                finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
-                return finalCol;
-            })";
-               }
-           }() +
+           (effects.smoke.is_active ? CodeGen::addSmoke(effects.smoke)
+                                    : render(effects)) +
            ray_marcher_end;
 }
 
