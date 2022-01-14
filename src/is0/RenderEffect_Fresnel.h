@@ -12,3 +12,5 @@ struct RenderEffect_Fresnel {
 
 std::string code_gen_fresnel_parameters(const RenderEffect_Fresnel& fresnel);
 std::string code_gen_fresnel();
+
+bool fresnel_imgui(RenderEffect_Fresnel& fresnel);

@@ -11,3 +11,5 @@ struct RenderEffect_Reflection {
 
 std::string code_gen_reflection_parameters(const RenderEffect_Reflection& reflection);
 std::string code_gen_reflection();
+
+bool reflection_imgui(RenderEffect_Reflection& reflection);

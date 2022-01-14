@@ -12,9 +12,6 @@ public:
     void on_key_pressed(const Cool::KeyboardEvent& event) override;
 
 private:
-    void effect_imgui_window();
-
-private:
     NodeEditor        _editor;
     RenderEffects     _effects;
     std::string       _shader_code;

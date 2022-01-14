@@ -12,3 +12,5 @@ struct RenderEffect_Glow {
 
 std::string code_gen_glow_parameters(const RenderEffect_Glow& glow);
 std::string code_gen_glow();
+
+bool glow_imgui(RenderEffect_Glow& glow);

@@ -24,3 +24,15 @@ std::string code_gen_effects_world(const RenderEffects& effects)
         code += code_gen_glow();
     return code;
 };
+
+bool effect_imgui_window(RenderEffects& effects)
+{
+    ImGui::Begin("Shading");
+    bool has_changed = fresnel_imgui(effects.fresnel);
+    ImGui::Separator();
+    has_changed |= glow_imgui(effects.glow);
+    ImGui::Separator();
+    has_changed |= reflection_imgui(effects.reflection);
+    ImGui::End();
+    return has_changed;
+}
