@@ -46,7 +46,7 @@ void NodeFactory::reload_templates()
         if (entry.is_directory()) {
             _folders.push_back({entry.path().stem().string(), 0});
             for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
-                if (file.is_regular_file() && file.path().extension() == ".is0") {
+                if (file.is_regular_file()) {
                     try {
                         NodeTemplate node_template;
                         node_template.name = file.path().stem().string();

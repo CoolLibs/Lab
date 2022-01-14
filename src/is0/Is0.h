@@ -3,6 +3,7 @@
 #include <Cool/ImGui/ImGuiWindow.h>
 #include "../ShaderManager/ShaderManager.h"
 #include "NodeEditor.h"
+#include "RenderEffects.h"
 
 class Is0 : public ShaderManager {
 public:
@@ -12,8 +13,10 @@ public:
 
 private:
     NodeEditor        _editor;
+    RenderEffects     _effects;
     std::string       _shader_code;
     Cool::ImGuiWindow _shader_code_window{"is0 Shader Code", false};
+    bool              _must_recompile = false;
 
 private:
     // Serialization

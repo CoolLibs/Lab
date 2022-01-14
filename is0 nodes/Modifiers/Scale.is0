@@ -1,0 +1,11 @@
+[SDF](vec3 p) {
+    return ${SDF}(p/Size)*Size ;
+}
+
+
+float {
+    "Name": "Size",
+    "Default": 1,
+    "Min": 0.001,
+    "Max": 30.0
+}

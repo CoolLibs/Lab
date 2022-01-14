@@ -1,0 +1,25 @@
+[] (vec3 pos) {
+    return abs(dot(pos,normal) + height) - plane_width;
+}
+
+direction3D {
+    "Name": "normal",
+    "Default": {
+        "x": 0.0,
+        "y": -1.57079632679
+    }
+}
+
+float {
+    "Name": "height",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "plane_width",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 5.0
+}
