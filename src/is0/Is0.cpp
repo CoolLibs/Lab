@@ -16,28 +16,6 @@ void Is0::update()
     }
 }
 
-void Is0::matLight_imgui_window()
-{
-    ImGui::Begin("Lighting");
-    ImGui::Text("Light");
-    bool has_changed = _light.lightColor.imgui();
-    has_changed |= _light.lightDirection.imgui();
-    has_changed |= _light.lightIntensity.imgui();
-    has_changed |= _light.RebondIntensity.imgui();
-    ImGui::Separator();
-    ImGui::Text("Base Color");
-    has_changed |= _material.MaterialBaseColor.imgui();
-    ImGui::Text("Diffuse Color");
-    has_changed |= _material.MaterialDiffuseColor.imgui();
-    ImGui::Text("Specular Color");
-    has_changed |= _material.MaterialSpecularColor.imgui();
-    has_changed |= _material.roughtness.imgui();
-    ImGui::End();
-    if (has_changed) {
-        _must_recompile = true;
-    }
-}
-
 void Is0::imgui_window()
 {
     _editor.imgui_window();
@@ -52,7 +30,8 @@ void Is0::imgui_window()
         _editor.update_templates_and_nodes();
     }
     ImGui::End();
-    matLight_imgui_window();
+    _must_recompile |= CodeGen::material_imgui_window(_material);
+    _must_recompile |= CodeGen::light_imgui_window(_light);
 }
 
 void Is0::on_key_pressed(const Cool::KeyboardEvent& event)

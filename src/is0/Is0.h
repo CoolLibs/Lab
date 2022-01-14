@@ -12,9 +12,6 @@ public:
     void on_key_pressed(const Cool::KeyboardEvent& event) override;
 
 private:
-    void matLight_imgui_window();
-
-private:
     CodeGen::LightProperties    _light;
     CodeGen::MaterialProperties _material;
     NodeEditor                  _editor;

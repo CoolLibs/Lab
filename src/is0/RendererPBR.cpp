@@ -150,4 +150,31 @@ std::string PBRRendererCodeGen(const LightProperties& light, const MaterialPrope
     return rendererDefinition.str();
 }
 
+bool material_imgui_window(MaterialProperties& m)
+{
+    ImGui::Begin("Material");
+    ImGui::Text("Base Color");
+    bool has_changed = m.MaterialBaseColor.imgui();
+    ImGui::Text("Diffuse Color");
+    has_changed |= m.MaterialDiffuseColor.imgui();
+    ImGui::Text("Specular Color");
+    has_changed |= m.MaterialSpecularColor.imgui();
+    has_changed |= m.roughtness.imgui();
+    ImGui::End();
+
+    return has_changed;
+}
+
+bool light_imgui_window(LightProperties& l)
+{
+    ImGui::Begin("Lighting");
+    bool has_changed = l.lightColor.imgui();
+    has_changed |= l.lightDirection.imgui();
+    has_changed |= l.lightIntensity.imgui();
+    has_changed |= l.RebondIntensity.imgui();
+    ImGui::End();
+
+    return has_changed;
+}
+
 } // namespace CodeGen

@@ -34,4 +34,7 @@ std::string lightPropCodeGen(const LightProperties& l);
 std::string MaterialPropCodeGen(const MaterialProperties& m);
 std::string PBRRendererCodeGen(const LightProperties& light, const MaterialProperties& material);
 
+bool material_imgui_window(MaterialProperties& m);
+bool light_imgui_window(LightProperties& l);
+
 } // namespace CodeGen
