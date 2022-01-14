@@ -12,11 +12,15 @@ public:
     void on_key_pressed(const Cool::KeyboardEvent& event) override;
 
 private:
+    void matLight_imgui_window();
+
+private:
     CodeGen::LightProperties    _light;
     CodeGen::MaterialProperties _material;
     NodeEditor                  _editor;
     std::string                 _shader_code;
     Cool::ImGuiWindow           _shader_code_window{"is0 Shader Code", false};
+    bool                        _must_recompile = false;
 
 private:
     // Serialization

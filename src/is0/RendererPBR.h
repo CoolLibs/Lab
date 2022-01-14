@@ -1,23 +1,30 @@
 #pragma once
 
-#include <Cool/Parameter/ParameterList.h>
-#include "NodeTemplate.h"
-#include "NodeTree.h"
+#include <Cool/Parameter/Parameter.h>
 
 namespace CodeGen {
 
 struct LightProperties {
-    glm::vec3 lightDirection = glm::vec3(2.);
-    glm::vec3 lightColor     = glm::vec3(1.);
-    float     lightIntensity = 1.0;
+    Cool::Parameter::Float lightIntensity{{.name          = "Intensity",
+                                           .default_value = 1.0f,
+                                           .min_value     = 0.0f,
+                                           .max_value     = 10.0f}};
+
+    Cool::Parameter::Vec3  lightDirection{{.name          = "Direction",
+                                          .default_value = glm::vec3(2.0f),
+                                          .min_value     = glm::vec3(-10.0f),
+                                          .max_value     = glm::vec3(10.0f)}};
+    Cool::Parameter::Color lightColor;
 };
 
 struct MaterialProperties {
-    glm::vec3 MaterialBaseColor     = glm::vec3(1.);
-    glm::vec3 MaterialDiffuseColor  = glm::vec3(1.);
-    glm::vec3 MaterialSpecularColor = glm::vec3(1.);
-    float     roughtness            = 3.;
-    float     roughtnessL           = (roughtness < .01) ? .01 : roughtness;
+    Cool::Parameter::Color MaterialBaseColor;
+    Cool::Parameter::Color MaterialDiffuseColor;
+    Cool::Parameter::Color MaterialSpecularColor;
+    Cool::Parameter::Float roughtness{{.name          = "Roughness",
+                                       .default_value = 0.5f,
+                                       .min_value     = 0.01f,
+                                       .max_value     = 1.0f}};
 };
 
 std::string lightPropCodeGen(const LightProperties& l);

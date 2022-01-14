@@ -17,11 +17,10 @@ std::string lightPropCodeGen(const LightProperties& l)
 {
     std::stringstream lightDefinition;
 
-    lightDefinition << "    vec3 ld = normalize(vec3(";
-    lightDefinition << l.lightDirection.x << "," << l.lightDirection.y << "," << l.lightDirection.z << "));\n";
-    lightDefinition << "    vec3 lc = normalize(vec3(";
-    lightDefinition << l.lightColor.r << "," << l.lightColor.g << "," << l.lightColor.b << "));\n";
-    lightDefinition << "    float li = " << l.lightIntensity << ";\n";
+    lightDefinition << "    vec3 ld = ";
+    lightDefinition << glm::to_string(*l.lightDirection) << ";\n";
+    lightDefinition << "    vec3 lc = ";
+    lightDefinition << glm::to_string(*l.lightColor) << " * " << std::to_string(*l.lightIntensity) << ";\n";
 
     return lightDefinition.str();
 }
@@ -30,14 +29,13 @@ std::string MaterialPropCodeGen(const MaterialProperties& m)
 {
     std::stringstream materialDefinition;
 
-    materialDefinition << "    vec3 baseColor = normalize(vec3(";
-    materialDefinition << m.MaterialBaseColor.r << "," << m.MaterialBaseColor.g << "," << m.MaterialBaseColor.b << "));\n";
-    materialDefinition << "    vec3 DiffuseColor = normalize(vec3(";
-    materialDefinition << m.MaterialDiffuseColor.r << "," << m.MaterialDiffuseColor.g << "," << m.MaterialDiffuseColor.b << "));\n";
-    materialDefinition << "    vec3 SpecularColor = normalize(vec3(";
-    materialDefinition << m.MaterialSpecularColor.r << "," << m.MaterialSpecularColor.g << "," << m.MaterialSpecularColor.b << "));\n";
-    materialDefinition << "    float roughtness =" << m.roughtness << ";\n";
-    materialDefinition << "    float roughtnessL=" << m.roughtnessL << ";\n";
+    materialDefinition << "    vec3 baseColor = ";
+    materialDefinition << glm::to_string(*m.MaterialBaseColor) << ";\n";
+    materialDefinition << "    vec3 DiffuseColor = ";
+    materialDefinition << glm::to_string(*m.MaterialDiffuseColor) << ";\n";
+    materialDefinition << "    vec3 SpecularColor = ";
+    materialDefinition << glm::to_string(*m.MaterialSpecularColor) << ";\n";
+    materialDefinition << "    float roughtness = " << std::to_string(*m.roughtness) << ";\n";
 
     return materialDefinition.str();
 }
@@ -57,9 +55,9 @@ std::string PBRRendererCodeGen(const LightProperties& light, const MaterialPrope
     rendererDefinition << "        float ndoth = " << clampCodeGen("n", "halfVec");
     rendererDefinition << "        float ndotv = " << clampCodeGen("n", "ro");
     rendererDefinition << "        float ndot1 = " << clampCodeGen("n", "ld");
-    rendererDefinition << "        vec3 envSpecCol = EnvBRDFApprox(SpecularColor, roughtness, ndotv);\n\n        diffuse += DiffuseColor;\n        specular += envSpecCol;\n        diffuse += DiffuseColor * lc * " << clampCodeGen("n", "ld");
-    rendererDefinition << "        vec3 lightF = Fresnel1Term(SpecularColor, vdoth);\n        float lightD = DistributionTerm(roughtnessL, ndoth);\n        float lightV = VisibilityTerm(roughtnessL, ndotv, ndot1);\n";
-    rendererDefinition << "        specular += lc * lightF * (lightD * lightV * 3.1415 * ndot1);\n\n        color = diffuse + specular;\n";
+    rendererDefinition << "        vec3 envSpecCol = EnvBRDFApprox(SpecularColor, roughtness, ndotv);\n\n        diffuse += DiffuseColor;\n        //specular += envSpecCol;\n        diffuse += DiffuseColor * lc * " << clampCodeGen("n", "ld");
+    rendererDefinition << "        vec3 lightF = Fresnel1Term(SpecularColor, vdoth);\n        float lightD = DistributionTerm(roughtness, ndoth);\n        float lightV = VisibilityTerm(roughtness, ndotv, ndot1);\n";
+    rendererDefinition << "        specular += lc * lightF * (lightD * lightV * 3.1415 * ndot1);\n\n        color = baseColor + diffuse + specular;\n";
     rendererDefinition << "    }\n    color = pow(color, vec3(.4545)); //gamma correction\n    return color;\n}";
 
     return rendererDefinition.str();
