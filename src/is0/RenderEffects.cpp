@@ -7,14 +7,19 @@ std::string add_effects_parameters(const RenderEffects& effects)
            code_gen_reflection_parameters(effects.reflection);
 };
 
-std::string code_gen_effects(const RenderEffects& effects)
+std::string code_gen_effects_obj(const RenderEffects& effects)
 {
     std::string code = "";
     if (effects.fresnel.is_active)
         code += code_gen_fresnel();
     if (effects.reflection.is_active)
         code += code_gen_reflection();
-    code += "}";
+    return code;
+};
+
+std::string code_gen_effects_world(const RenderEffects& effects)
+{
+    std::string code = "";
     if (effects.glow.is_active)
         code += code_gen_glow();
     return code;
