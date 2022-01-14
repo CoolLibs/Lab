@@ -16,7 +16,7 @@ bool smoke_imgui_window(RenderEffect_Smoke& prop)
 
 namespace CodeGen {
 
-std::string SmokeParameters(const RenderEffect_Smoke& parameters)
+std::string code_gen_smoke_parameters(const RenderEffect_Smoke& parameters)
 {
     std::stringstream l;
 

@@ -5,7 +5,7 @@ std::string code_gen_effects_parameters(const RenderEffects& effects)
     return code_gen_fresnel_parameters(effects.fresnel) +
            code_gen_glow_parameters(effects.glow) +
            code_gen_reflection_parameters(effects.reflection) +
-           (effects.smoke.is_active ? CodeGen::SmokeParameters(effects.smoke) + "#include \"is0 shaders/smoke.glsl\"\n\n" : "");
+           (effects.smoke.is_active ? CodeGen::code_gen_smoke_parameters(effects.smoke) + "#include \"is0 shaders/smoke.glsl\"\n\n" : "");
 };
 
 std::string code_gen_effects_object(const RenderEffects& effects)
