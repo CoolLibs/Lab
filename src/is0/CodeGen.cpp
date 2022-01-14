@@ -24,12 +24,12 @@ out vec4 out_Color;
 #define MAX_DIST 200.
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
-#define NORMAL_SDF 1.
+#define DONT_INVERT_SDF 1.
 #define INVERSED_SDF -1.
 
 struct RayMarchRes {
     float dist;
-    float iteration;
+    int iterations_count;
 };
 
 )";
@@ -60,9 +60,9 @@ vec3 getNormal(vec3 p) {
 vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
     
-    RayMarchRes res = rayMarching(ro, rd, NORMAL_SDF);
+    RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
     float d = res.dist;
-    float iteration_count = res.iteration;
+    float iterations_count = res.iterations_count;
     
     if (d < MAX_DIST) {
       vec3 p = ro + rd * d;

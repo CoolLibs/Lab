@@ -11,7 +11,7 @@ std::string code_gen_glow_parameters(const RenderEffect_Glow& glow)
 std::string code_gen_glow()
 {
     return R"(
-        float glow = pow(iteration_count * glow_strength, 2.);
+        float glow = pow(iterations_count * glow_strength, 2.);
         finalCol += glow * glow_color;
     )";
 };
