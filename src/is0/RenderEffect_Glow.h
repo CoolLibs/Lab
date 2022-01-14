@@ -11,4 +11,4 @@ struct RenderEffect_Glow {
 };
 
 std::string code_gen_glow_parameters(const RenderEffect_Glow& glow);
-std::string glowAdd();
+std::string code_gen_glow();

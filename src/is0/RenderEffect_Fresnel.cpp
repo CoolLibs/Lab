@@ -8,7 +8,7 @@ std::string code_gen_fresnel_parameters(const RenderEffect_Fresnel& fresnel)
            glm::to_string(*fresnel.col) + ";\n\n";
 };
 
-std::string fresnelAdd()
+std::string code_gen_fresnel()
 {
     return R"(
         float fresnel = pow(clamp(1. - dot(normal, -rd), 0., 1.), fresnel_strength);

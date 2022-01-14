@@ -8,7 +8,7 @@ std::string code_gen_glow_parameters(const RenderEffect_Glow& glow)
            glm::to_string(*glow.col) + ";\n\n";
 };
 
-std::string glowAdd()
+std::string code_gen_glow()
 {
     return R"(
         float glow = pow(iteration * glow_strength, 2.);

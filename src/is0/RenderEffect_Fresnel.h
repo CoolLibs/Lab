@@ -11,4 +11,4 @@ struct RenderEffect_Fresnel {
 };
 
 std::string code_gen_fresnel_parameters(const RenderEffect_Fresnel& fresnel);
-std::string fresnelAdd();
+std::string code_gen_fresnel();

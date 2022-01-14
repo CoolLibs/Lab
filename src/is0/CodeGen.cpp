@@ -112,7 +112,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
            ray_marcher +
-           addParameters(effects) +
+           code_gen_effects(effects) +
            ray_marcher_end;
 }
 

@@ -7,7 +7,7 @@ std::string code_gen_reflection_parameters(const RenderEffect_Reflection& reflec
            ";\n\n";
 };
 
-std::string reflectionAdd()
+std::string code_gen_reflection()
 {
     return R"(
         vec3 refletOut = reflect(rd, normal);

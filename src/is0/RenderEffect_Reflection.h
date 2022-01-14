@@ -10,4 +10,4 @@ struct RenderEffect_Reflection {
 };
 
 std::string code_gen_reflection_parameters(const RenderEffect_Reflection& reflection);
-std::string reflectionAdd();
+std::string code_gen_reflection();
