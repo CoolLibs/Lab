@@ -4,9 +4,10 @@
 
 void Is0::update()
 {
-    if (_editor.tree_has_changed()) {
+    if (_editor.tree_has_changed() || _must_recompile) {
+        _must_recompile = false;
         if (_editor.tree_is_valid()) {
-            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _smoke_properties, _define_variables);
+            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _smoke_properties);
         }
         else {
             _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
@@ -15,7 +16,7 @@ void Is0::update()
     }
 }
 
-void Is0::imgui_window()
+void Is0::imgui_windows()
 {
     _editor.imgui_window();
     _shader_code_window.show([&]() {
@@ -29,6 +30,22 @@ void Is0::imgui_window()
         _editor.update_templates_and_nodes();
     }
     ImGui::End();
+    smoke_imgui_window();
+}
+
+void Is0::smoke_imgui_window()
+{
+    ImGui::Begin("Smoke");
+    ImGui::Text("Smoke");
+    bool has_changed = ImGui::Checkbox("Smoke Active", &_smoke_properties.is_active);
+    has_changed |= _smoke_properties.ABSORPTION_COEFFICIENT.imgui();
+    has_changed |= _smoke_properties.MARCH_MULTIPLIER.imgui();
+    has_changed |= _smoke_properties.MAX_VOLUME_MARCH_STEPS.imgui();
+
+    ImGui::End();
+    if (has_changed) {
+        _must_recompile = true;
+    }
 }
 
 void Is0::on_key_pressed(const Cool::KeyboardEvent& event)

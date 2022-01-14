@@ -3,15 +3,10 @@
 
 /// NOISE PART ///
 
-#define NUM_OCTAVES            3
-#define LARGE_NUMBER           1e20
-#define MAX_SDF_SPHERE_STEPS   15
-#define ABSORPTION_COEFFICIENT 0.5
-#define ABSORPTION_CUTOFF      0.25
-
-// Reduce value of the following variable to enhance performance
-#define MAX_VOLUME_MARCH_STEPS 50
-#define MARCH_MULTIPLIER       1.8
+#define NUM_OCTAVES          3
+#define LARGE_NUMBER         1e20
+#define MAX_SDF_SPHERE_STEPS 15
+#define ABSORPTION_CUTOFF    0.25
 
 float noise(vec3 x)
 {
