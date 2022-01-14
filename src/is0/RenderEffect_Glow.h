@@ -10,5 +10,5 @@ struct RenderEffect_Glow {
     bool                   is_active = true;
 };
 
-std::string glow_parameters(const RenderEffect_Glow& glow);
+std::string code_gen_glow_parameters(const RenderEffect_Glow& glow);
 std::string glowAdd();

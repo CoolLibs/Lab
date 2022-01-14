@@ -2,9 +2,9 @@
 
 std::string add_effects_parameters(const RenderEffects& effects)
 {
-    return fresnel_parameters(effects.fresnel) +
-           glow_parameters(effects.glow) +
-           reflection_parameters(effects.reflection);
+    return code_gen_fresnel_parameters(effects.fresnel) +
+           code_gen_glow_parameters(effects.glow) +
+           code_gen_reflection_parameters(effects.reflection);
 };
 
 std::string addParameters(const RenderEffects& effects)

@@ -1,6 +1,6 @@
 #include "RenderEffect_Glow.h"
 
-std::string glow_parameters(const RenderEffect_Glow& glow)
+std::string code_gen_glow_parameters(const RenderEffect_Glow& glow)
 {
     return "const float glow_strength = " +
            std::to_string(*glow.strenght) +

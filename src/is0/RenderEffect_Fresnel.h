@@ -10,5 +10,5 @@ struct RenderEffect_Fresnel {
     bool                   is_active = true;
 };
 
-std::string fresnel_parameters(const RenderEffect_Fresnel& fresnel);
+std::string code_gen_fresnel_parameters(const RenderEffect_Fresnel& fresnel);
 std::string fresnelAdd();

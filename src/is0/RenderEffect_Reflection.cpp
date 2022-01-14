@@ -1,6 +1,6 @@
 #include "RenderEffect_Reflection.h"
 
-std::string reflection_parameters(const RenderEffect_Reflection& reflection)
+std::string code_gen_reflection_parameters(const RenderEffect_Reflection& reflection)
 {
     return "const float IOR = " +
            std::to_string(*reflection.strenght) +

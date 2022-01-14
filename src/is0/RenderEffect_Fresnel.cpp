@@ -1,6 +1,6 @@
 #include "RenderEffect_Fresnel.h"
 
-std::string fresnel_parameters(const RenderEffect_Fresnel& fresnel)
+std::string code_gen_fresnel_parameters(const RenderEffect_Fresnel& fresnel)
 {
     return "const float fresnel_strength = " +
            std::to_string(*fresnel.strenght) +

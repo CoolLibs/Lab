@@ -9,5 +9,5 @@ struct RenderEffect_Reflection {
     bool                   is_active = true;
 };
 
-std::string reflection_parameters(const RenderEffect_Reflection& reflection);
+std::string code_gen_reflection_parameters(const RenderEffect_Reflection& reflection);
 std::string reflectionAdd();
