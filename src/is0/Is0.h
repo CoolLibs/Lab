@@ -8,7 +8,7 @@
 class Is0 : public ShaderManager {
 public:
     void update() override;
-    void imgui_window() override;
+    void imgui_windows() override;
     void on_key_pressed(const Cool::KeyboardEvent& event) override;
 
 private:

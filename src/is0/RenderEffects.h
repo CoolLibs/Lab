@@ -3,11 +3,13 @@
 #include "RenderEffect_Fresnel.h"
 #include "RenderEffect_Glow.h"
 #include "RenderEffect_Reflection.h"
+#include "RenderEffect_Smoke.h"
 
 struct RenderEffects {
     RenderEffect_Fresnel    fresnel;
     RenderEffect_Glow       glow;
     RenderEffect_Reflection reflection;
+    RenderEffect_Smoke      smoke;
 };
 
 std::string code_gen_effects_parameters(const RenderEffects& effects);

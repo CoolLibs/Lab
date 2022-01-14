@@ -4,7 +4,8 @@ std::string code_gen_effects_parameters(const RenderEffects& effects)
 {
     return code_gen_fresnel_parameters(effects.fresnel) +
            code_gen_glow_parameters(effects.glow) +
-           code_gen_reflection_parameters(effects.reflection);
+           code_gen_reflection_parameters(effects.reflection) +
+           (effects.smoke.is_active ? CodeGen::code_gen_smoke_parameters(effects.smoke) + "#include \"is0 shaders/smoke.glsl\"\n\n" : "");
 };
 
 std::string code_gen_effects_object(const RenderEffects& effects)
@@ -36,6 +37,8 @@ bool effect_imgui_window(RenderEffects& effects)
     has_changed |= glow_imgui(effects.glow);
     ImGui::Separator();
     has_changed |= reflection_imgui(effects.reflection);
+    ImGui::Separator();
+    has_changed |= smoke_imgui_window(effects.smoke);
     ImGui::End();
     return has_changed;
 }

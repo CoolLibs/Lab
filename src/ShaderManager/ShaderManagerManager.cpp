@@ -5,5 +5,5 @@ void ShaderManagerManager::imgui_windows()
     ImGui::Begin("Shader Style");
     ImGui::Checkbox("Use nodes", &_use_nodes);
     ImGui::End();
-    operator*().imgui_window();
+    operator*().imgui_windows();
 }
