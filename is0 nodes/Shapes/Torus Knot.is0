@@ -5,7 +5,7 @@
     float c = cos(knot);
     q *= mat2(c, -s, s, c);
     q.y = abs(q.y) - 0.6;
-    return length(q)-OuterRadius;
+    return ArtefactFix*(length(q)-OuterRadius);
 }
 
 float {
@@ -27,4 +27,11 @@ int {
     "Default": 1,
     "Min": 1,
     "Max": 10
+}
+
+float {
+    "Name": "ArtefactFix",
+    "Default": 1.0,
+    "Min": 0.1,
+    "Max": 1.0
 }
