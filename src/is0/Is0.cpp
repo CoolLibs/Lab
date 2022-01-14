@@ -23,6 +23,7 @@ void Is0::matLight_imgui_window()
     bool has_changed = _light.lightColor.imgui();
     has_changed |= _light.lightDirection.imgui();
     has_changed |= _light.lightIntensity.imgui();
+    has_changed |= _light.RebondIntensity.imgui();
     ImGui::Separator();
     ImGui::Text("Base Color");
     has_changed |= _material.MaterialBaseColor.imgui();

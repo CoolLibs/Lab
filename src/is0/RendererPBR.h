@@ -9,7 +9,10 @@ struct LightProperties {
                                            .default_value = 1.0f,
                                            .min_value     = 0.0f,
                                            .max_value     = 10.0f}};
-
+    Cool::Parameter::Float RebondIntensity{{.name          = "Reflects",
+                                            .default_value = 0.0f,
+                                            .min_value     = 0.0f,
+                                            .max_value     = 1.0f}};
     Cool::Parameter::Vec3  lightDirection{{.name          = "Direction",
                                           .default_value = glm::vec3(2.0f),
                                           .min_value     = glm::vec3(-10.0f),
@@ -30,8 +33,5 @@ struct MaterialProperties {
 std::string lightPropCodeGen(const LightProperties& l);
 std::string MaterialPropCodeGen(const MaterialProperties& m);
 std::string PBRRendererCodeGen(const LightProperties& light, const MaterialProperties& material);
-
-//TODO : updateLight()
-//TODO : updateMaterial()
 
 } // namespace CodeGen
