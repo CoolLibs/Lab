@@ -10,8 +10,8 @@ struct RenderEffects {
     RenderEffect_Reflection reflection;
 };
 
-std::string add_effects_parameters(const RenderEffects& effects);
-std::string code_gen_effects_obj(const RenderEffects& effects);
+std::string code_gen_effects_parameters(const RenderEffects& effects);
+std::string code_gen_effects_object(const RenderEffects& effects);
 std::string code_gen_effects_world(const RenderEffects& effects);
 
 bool effect_imgui_window(RenderEffects& effects);

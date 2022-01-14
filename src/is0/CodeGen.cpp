@@ -2,7 +2,6 @@
 #include <Cool/String/String.h>
 #include <numeric>
 #include <sstream>
-#include "RenderEffect_Fresnel.h"
 
 namespace CodeGen {
 
@@ -28,7 +27,7 @@ out vec4 out_Color;
 
 struct RayMarchRes {
     float dist;
-    float pas;
+    float iteration;
 };
 
 )";
@@ -62,7 +61,7 @@ vec3 render(vec3 ro, vec3 rd) {
     
     RayMarchRes res = rayMarching(ro, rd, 1.);
     float d = res.dist;
-    float iteration = res.pas;
+    float iteration_count = res.iteration;
     
     if (d < MAX_DIST) {
       vec3 p = ro + rd * d;
@@ -108,11 +107,11 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
 {
     return ray_marcher_begin +
-           add_effects_parameters(effects) +
+           code_gen_effects_parameters(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
            ray_marcher +
-           code_gen_effects_obj(effects) +
+           code_gen_effects_object(effects) +
            "}" +
            code_gen_effects_world(effects) +
            ray_marcher_end;

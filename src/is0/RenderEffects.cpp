@@ -1,27 +1,30 @@
 #include "RenderEffects.h"
 
-std::string add_effects_parameters(const RenderEffects& effects)
+std::string code_gen_effects_parameters(const RenderEffects& effects)
 {
     return code_gen_fresnel_parameters(effects.fresnel) +
            code_gen_glow_parameters(effects.glow) +
            code_gen_reflection_parameters(effects.reflection);
 };
 
-std::string code_gen_effects_obj(const RenderEffects& effects)
+std::string code_gen_effects_object(const RenderEffects& effects)
 {
     std::string code = "";
-    if (effects.fresnel.is_active)
+    if (effects.fresnel.is_active) {
         code += code_gen_fresnel();
-    if (effects.reflection.is_active)
+    }
+    if (effects.reflection.is_active) {
         code += code_gen_reflection();
+    }
     return code;
 };
 
 std::string code_gen_effects_world(const RenderEffects& effects)
 {
     std::string code = "";
-    if (effects.glow.is_active)
+    if (effects.glow.is_active) {
         code += code_gen_glow();
+    }
     return code;
 };
 
