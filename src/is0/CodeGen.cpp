@@ -21,7 +21,6 @@ out vec4 out_Color;
 // clang-format off
 #include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
-#include "is0 shaders/smoke.glsl"
 #include "is0 shaders/light.glsl"
 // clang-format on
 
@@ -116,11 +115,11 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffect_Smoke& smoke_parameters)
 {
     return ray_marcher_begin +
-           (smoke_parameters.is_active ? CodeGen::SmokeParameters(smoke_parameters) : "") +
+           (smoke_parameters.is_active ? CodeGen::SmokeParameters(smoke_parameters) + "#include \"is0 shaders/smoke.glsl\"\n\n" : "") +
            default_sdf +
            main_sdf(node_tree, node_templates) +
-           (smoke_parameters.is_active ? CodeGen::addSmoke(smoke_parameters) : "") +
-           (not smoke_parameters.is_active ? ray_marcher_impl : "") +
+           (smoke_parameters.is_active ? CodeGen::addSmoke(smoke_parameters)
+                                       : ray_marcher_impl) +
            ray_marcher_end;
 }
 

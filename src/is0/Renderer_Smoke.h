@@ -1,8 +1,6 @@
 #pragma once
 
-#include <Cool/Parameter/ParameterList.h>
-#include "NodeTemplate.h"
-#include "NodeTree.h"
+#include <Cool/Parameter/Parameter.h>
 
 struct RenderEffect_Smoke {
     Cool::Parameter::Float ABSORPTION_COEFFICIENT{{.name          = "Absorption Coefficient",

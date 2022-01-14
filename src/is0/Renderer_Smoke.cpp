@@ -130,8 +130,9 @@ vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
 
 std::string SmokeRenderer(const RenderEffect_Smoke& p)
 {
-    std::string res = IntersectVolumetricCodeGen() + GetLightVisiblityCodeGen() + Render();
-    return res;
+    return IntersectVolumetricCodeGen() +
+           GetLightVisiblityCodeGen() +
+           Render();
 }
 
 std::string addSmoke(const RenderEffect_Smoke& p)
