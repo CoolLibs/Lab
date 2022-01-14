@@ -3,7 +3,6 @@
 #include <Cool/Parameter/ParameterList.h>
 #include "NodeTemplate.h"
 #include "NodeTree.h"
-#include "RenderEffect_Smoke.h"
 #include "RenderEffects.h"
 
 namespace CodeGen {
