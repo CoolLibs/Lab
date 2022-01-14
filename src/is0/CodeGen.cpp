@@ -22,6 +22,7 @@ out vec4 out_Color;
 #include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "is0 shaders/smoke.glsl"
+#include "is0 shaders/light.glsl"
 // clang-format on
 
 // ----- Ray marching options ----- //
