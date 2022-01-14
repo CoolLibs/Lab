@@ -4,10 +4,10 @@
 #include "RenderEffect_Reflection.h"
 
 struct RenderEffects {
-    RenderEffect_Fresnel    _fresnel;
-    RenderEffect_Glow       _glow;
-    RenderEffect_Reflection _reflection;
+    RenderEffect_Fresnel    fresnel;
+    RenderEffect_Glow       glow;
+    RenderEffect_Reflection reflection;
 };
 
-std::string effectsParameters(const RenderEffects& effects);
+std::string add_effects_parameters(const RenderEffects& effects);
 std::string addParameters(const RenderEffects& effects);

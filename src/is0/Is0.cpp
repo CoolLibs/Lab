@@ -37,18 +37,18 @@ void Is0::effect_imgui_window()
 {
     ImGui::Begin("Shading");
     ImGui::Text("Fresnel");
-    bool has_changed = _effects._fresnel.strenght.imgui();
-    has_changed |= _effects._fresnel.col.imgui();
-    has_changed |= ImGui::Checkbox("Fresnel Active", &_effects._fresnel.isActive);
+    bool has_changed = _effects.fresnel.strenght.imgui();
+    has_changed |= _effects.fresnel.col.imgui();
+    has_changed |= ImGui::Checkbox("Fresnel Active", &_effects.fresnel.is_active);
     ImGui::Separator();
     ImGui::Text("Glow");
-    has_changed |= _effects._glow.strenght.imgui();
-    has_changed |= _effects._glow.col.imgui();
-    has_changed |= ImGui::Checkbox("Glow Active", &_effects._glow.isActive);
+    has_changed |= _effects.glow.strenght.imgui();
+    has_changed |= _effects.glow.col.imgui();
+    has_changed |= ImGui::Checkbox("Glow Active", &_effects.glow.is_active);
     ImGui::Separator();
     ImGui::Text("Reflection");
-    has_changed |= _effects._reflection.strenght.imgui();
-    has_changed |= ImGui::Checkbox("Reflection Active", &_effects._reflection.isActive);
+    has_changed |= _effects.reflection.strenght.imgui();
+    has_changed |= ImGui::Checkbox("Reflection Active", &_effects.reflection.is_active);
     ImGui::End();
     if (has_changed) {
         _must_recompile = true;

@@ -7,8 +7,8 @@ struct RenderEffect_Glow {
                                      .min_value     = 0.0f,
                                      .max_value     = 0.05f}};
     Cool::Parameter::Color col;
-    bool                   isActive = true;
+    bool                   is_active = true;
 };
 
-std::string glowParameters(const RenderEffect_Glow& glow);
+std::string glow_parameters(const RenderEffect_Glow& glow);
 std::string glowAdd();
