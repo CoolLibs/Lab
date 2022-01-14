@@ -14,7 +14,7 @@ std::string code_gen_reflection()
         vec3 refractionIn = refract(rd,normal,1./IOR);
 
         vec3 pEnter = p - normal * SURF_DIST * 3.;
-        RayMarchRes dIn = rayMarching(pEnter, refractionIn, -1.); // Inside
+        RayMarchRes dIn = rayMarching(pEnter, refractionIn, INVERSED_SDF); // Inside
         float d2 = dIn.dist;
 
         vec3 pExit = pEnter + refractionIn * d2;
@@ -44,7 +44,7 @@ std::string code_gen_reflection()
         float dens = .1;
         float optDist = exp(-d2 * dens);
         reflectText= reflectText * optDist;
-        float fresnelRefl = pow(1.+dot(rd, normal), 5.);
+        float fresnelRefl = pow(1. + dot(rd, normal), 5.);
 
         finalCol += mix(reflectText, refletOut, fresnelRefl);
     )";

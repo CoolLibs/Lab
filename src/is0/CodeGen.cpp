@@ -24,6 +24,8 @@ out vec4 out_Color;
 #define MAX_DIST 200.
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
+#define NORMAL_SDF 1.
+#define INVERSED_SDF -1.
 
 struct RayMarchRes {
     float dist;
@@ -33,13 +35,12 @@ struct RayMarchRes {
 )";
 
 static constexpr const char* ray_marcher = R"(
-// 1. : Outside | -1. : Inside (Reflection)
-RayMarchRes rayMarching(vec3 ro, vec3 rd, float inOrOut) {
+RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
  	int i = 0;
     for (i; i < MAX_STEPS; i++) {
     	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos) * inOrOut;
+        float d = is0_main_sdf(pos) * in_or_out;
         t += d;
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
@@ -59,7 +60,7 @@ vec3 getNormal(vec3 p) {
 vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
     
-    RayMarchRes res = rayMarching(ro, rd, 1.);
+    RayMarchRes res = rayMarching(ro, rd, NORMAL_SDF);
     float d = res.dist;
     float iteration_count = res.iteration;
     
