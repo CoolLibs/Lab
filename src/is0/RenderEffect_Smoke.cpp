@@ -1,4 +1,4 @@
-#include "Renderer_Smoke.h"
+#include "RenderEffect_Smoke.h"
 #include <Cool/String/String.h>
 #include <numeric>
 #include <sstream>
@@ -6,14 +6,11 @@
 
 bool smoke_imgui_window(RenderEffect_Smoke& prop)
 {
-    ImGui::Begin("Smoke");
     ImGui::Text("Smoke");
     bool has_changed = ImGui::Checkbox("Smoke Active", &prop.is_active);
     has_changed |= prop.ABSORPTION_COEFFICIENT.imgui();
     has_changed |= prop.MARCH_MULTIPLIER.imgui();
     has_changed |= prop.MAX_VOLUME_MARCH_STEPS.imgui();
-
-    ImGui::End();
     return has_changed;
 };
 

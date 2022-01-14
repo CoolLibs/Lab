@@ -2,7 +2,6 @@
 #include <Cool/String/String.h>
 #include <numeric>
 #include <sstream>
-#include "Renderer_Smoke.h"
 
 namespace CodeGen {
 
@@ -29,26 +28,32 @@ out vec4 out_Color;
 #define MAX_DIST 200.
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
+#define DONT_INVERT_SDF 1.
+#define INVERT_SDF -1.
 
 float sph(vec3 i, vec3 f, vec3 c){
     float rad = 0.5*hash_0_to_1(i+c);
     return length(f-vec3(c)) - rad;
 }
+struct RayMarchRes {
+    float dist;
+    int iterations_count;
+};
 
 )";
 
 static constexpr const char* ray_marcher_impl = R"(
-float rayMarching(vec3 ro, vec3 rd) {
+RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
-
-    for (int i = 0; i < MAX_STEPS; i++) {
+ 	int i = 0;
+    for (i; i < MAX_STEPS; i++) {
     	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos);
+        float d = is0_main_sdf(pos) * in_or_out;
         t += d;
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
-    return t;
+    return RayMarchRes(t,i);
 }
 
 vec3 getNormal(vec3 p) {
@@ -60,26 +65,6 @@ vec3 getNormal(vec3 p) {
                       k.xxx * is0_main_sdf( p + k.xxx*h ) );
 }
 
-vec3 render(vec3 ro, vec3 rd) {
-    vec3 finalCol = vec3(0.3, 0.7, 0.98);
-
-    float d = rayMarching(ro, rd);
-
-    if (d < MAX_DIST) {
-      vec3 p = ro + rd * d;
-      vec3 normal = getNormal(p);
-      //vec3 ref = reflect(rd, normal);
-
-      //float sunFactor = saturate(dot(normal, nSunDir));
-      //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
-
-      finalCol = normal * 0.5 + 0.5;
-    }
-
-    finalCol = saturate(finalCol);
-    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
-    return finalCol;
-}
 )";
 
 static constexpr const char* ray_marcher_end = R"(
@@ -112,14 +97,41 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffect_Smoke& smoke_parameters)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
 {
     return ray_marcher_begin +
-           (smoke_parameters.is_active ? CodeGen::SmokeParameters(smoke_parameters) + "#include \"is0 shaders/smoke.glsl\"\n\n" : "") +
-           default_sdf +
+           code_gen_effects_parameters(effects) +
+           std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
-           (smoke_parameters.is_active ? CodeGen::addSmoke(smoke_parameters)
-                                       : ray_marcher_impl) +
+           ray_marcher_impl +
+           [&]() {
+               if (effects.smoke.is_active) {
+                   return CodeGen::addSmoke(effects.smoke);
+               }
+               else {
+                   return R"(
+                vec3 render(vec3 ro, vec3 rd) {
+                vec3 finalCol = vec3(0.3, 0.7, 0.98);
+
+                RayMarchRes res              = rayMarching(ro, rd, DONT_INVERT_SDF);
+                float       d                = res.dist;
+                float       iterations_count = res.iterations_count;
+
+                if (d < MAX_DIST) {
+                    vec3 p      = ro + rd * d;
+                    vec3 normal = getNormal(p);
+
+                    finalCol = normal * 0.5 + 0.5;
+                    )" +
+                          code_gen_effects_object(effects) +
+                          "}" +
+                          code_gen_effects_world(effects) + R"(
+                finalCol = saturate(finalCol);
+                finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
+                return finalCol;
+            })";
+               }
+           }() +
            ray_marcher_end;
 }
 
@@ -201,5 +213,4 @@ std::string parameter_definition_any(const Cool::Parameter::Any& param)
 {
     return std::visit([](auto&& param) { return parameter_definition(param); }, param);
 }
-
 } // namespace CodeGen
