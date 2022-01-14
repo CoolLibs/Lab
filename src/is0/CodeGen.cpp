@@ -25,7 +25,7 @@ out vec4 out_Color;
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
 #define DONT_INVERT_SDF 1.
-#define INVERSED_SDF -1.
+#define INVERT_SDF -1.
 
 struct RayMarchRes {
     float dist;

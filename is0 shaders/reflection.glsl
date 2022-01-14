@@ -2,7 +2,7 @@ vec3 reflet_out    = reflect(rd, normal);
 vec3 refraction_in = refract(rd, normal, 1. / IOR);
 
 vec3        p_enter = p - normal * SURF_DIST * 3.;
-RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERSED_SDF); // Inside
+RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERT_SDF); // Inside
 float       d2      = d_in.dist;
 
 vec3  p_exit         = p_enter + refraction_in * d2;
