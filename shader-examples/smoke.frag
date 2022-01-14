@@ -21,11 +21,11 @@ out vec4      out_Color;
 #define ABSORPTION_COEFFICIENT 0.5
 
 // Reduce value of the following variable to enhance performance
-#define MAX_VOLUME_MARCH_STEPS       50
+#define MAX_VOLUME_MARCH_STEPS       75
 #define MAX_VOLUME_LIGHT_MARCH_STEPS 4
-#define ABSORPTION_CUTOFF            0.25
+#define ABSORPTION_CUTOFF            0.1
 #define MARCH_MULTIPLIER             1.8
-#define LIGHT_ATTENUATION_FACTOR     1.65
+#define LIGHT_ATTENUATION_FACTOR     1.5
 
 /// LIGHT PART ///
 
@@ -37,7 +37,11 @@ struct OrbLight {
 
 vec3 GetLightColor(int lightIndex)
 {
-    return vec3(1.0, 1.0, 1.0);
+    if (lightIndex % 3 == 0)
+        return vec3(1.0, 0.0, 0.0);
+    if (lightIndex % 3 == 1)
+        return vec3(0.0, 0.0, 1.0);
+    return vec3(0.0, 1.0, 0.0);
 }
 
 OrbLight GetLight(int lightIndex)
