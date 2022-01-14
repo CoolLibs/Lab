@@ -30,22 +30,9 @@ void Is0::imgui_windows()
         _editor.update_templates_and_nodes();
     }
     ImGui::End();
-    smoke_imgui_window();
-}
-
-void Is0::smoke_imgui_window()
-{
-    ImGui::Begin("Smoke");
-    ImGui::Text("Smoke");
-    bool has_changed = ImGui::Checkbox("Smoke Active", &_smoke_properties.is_active);
-    has_changed |= _smoke_properties.ABSORPTION_COEFFICIENT.imgui();
-    has_changed |= _smoke_properties.MARCH_MULTIPLIER.imgui();
-    has_changed |= _smoke_properties.MAX_VOLUME_MARCH_STEPS.imgui();
-
-    ImGui::End();
-    if (has_changed) {
+    if (smoke_imgui_window(_smoke_properties)) {
         _must_recompile = true;
-    }
+    };
 }
 
 void Is0::on_key_pressed(const Cool::KeyboardEvent& event)

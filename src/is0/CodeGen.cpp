@@ -115,10 +115,13 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffect_Smoke& smoke_parameters)
 {
-    if (smoke_parameters.is_active) {
-        return ray_marcher_begin + CodeGen::SmokeParameters(smoke_parameters) + std::string{default_sdf} + main_sdf(node_tree, node_templates) + CodeGen::addSmoke(smoke_parameters) + ray_marcher_end;
-    }
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + ray_marcher_impl + ray_marcher_end;
+    return ray_marcher_begin +
+           (smoke_parameters.is_active ? CodeGen::SmokeParameters(smoke_parameters) : "") +
+           default_sdf +
+           main_sdf(node_tree, node_templates) +
+           (smoke_parameters.is_active ? CodeGen::addSmoke(smoke_parameters) : "") +
+           (not smoke_parameters.is_active ? ray_marcher_impl : "") +
+           ray_marcher_end;
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)

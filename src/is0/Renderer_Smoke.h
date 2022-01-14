@@ -4,8 +4,6 @@
 #include "NodeTemplate.h"
 #include "NodeTree.h"
 
-namespace CodeGen {
-
 struct RenderEffect_Smoke {
     Cool::Parameter::Float ABSORPTION_COEFFICIENT{{.name          = "Absorption Coefficient",
                                                    .default_value = 2.5,
@@ -27,9 +25,13 @@ struct RenderEffect_Smoke {
     bool is_active = true;
 };
 
+bool smoke_imgui_window(RenderEffect_Smoke& prop);
+
+namespace CodeGen {
+
 std::string SmokeParameters(const RenderEffect_Smoke& parameters);
-std::string IntersVolumCodeGen();
-std::string GetLightVisCodeGen();
+std::string IntersectVolumetricCodeGen();
+std::string GetLightVisiblityCodeGen();
 std::string Render();
 std::string SmokeRenderer(const RenderEffect_Smoke& p);
 std::string addSmoke(const RenderEffect_Smoke& p);

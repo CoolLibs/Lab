@@ -4,23 +4,34 @@
 #include <sstream>
 #include "CodeGen.h"
 
+bool smoke_imgui_window(RenderEffect_Smoke& prop)
+{
+    ImGui::Begin("Smoke");
+    ImGui::Text("Smoke");
+    bool has_changed = ImGui::Checkbox("Smoke Active", &prop.is_active);
+    has_changed |= prop.ABSORPTION_COEFFICIENT.imgui();
+    has_changed |= prop.MARCH_MULTIPLIER.imgui();
+    has_changed |= prop.MAX_VOLUME_MARCH_STEPS.imgui();
+
+    ImGui::End();
+    return has_changed;
+};
+
 namespace CodeGen {
 
 std::string SmokeParameters(const RenderEffect_Smoke& parameters)
 {
     std::stringstream l;
 
-    l << "#define ABSORPTION_COEFFICIENT " + std::to_string(*parameters.ABSORPTION_COEFFICIENT) + "\n";
-    l << "#define MAX_VOLUME_MARCH_STEPS " + std::to_string(*parameters.MAX_VOLUME_MARCH_STEPS) + "\n";
-    l << "#define MARCH_MULTIPLIER " + std::to_string(*parameters.MARCH_MULTIPLIER) + "\n\n";
+    l << "#define ABSORPTION_COEFFICIENT " << std::to_string(*parameters.ABSORPTION_COEFFICIENT) << '\n';
+    l << "#define MAX_VOLUME_MARCH_STEPS " << std::to_string(*parameters.MAX_VOLUME_MARCH_STEPS) << '\n';
+    l << "#define MARCH_MULTIPLIER " << std::to_string(*parameters.MARCH_MULTIPLIER) << "\n\n";
     return l.str();
-}
+};
 
-std::string IntersVolumCodeGen()
+std::string IntersectVolumetricCodeGen()
 {
-    std::stringstream IntersecVolum;
-
-    IntersecVolum << R"(
+    return R"(
 float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
 {
     float precis = 0.5f;
@@ -34,15 +45,11 @@ float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
     return (t >= maxT) ? -1.0 : t;
 }
     )";
-
-    return IntersecVolum.str();
 };
 
-std::string GetLightVisCodeGen()
+std::string GetLightVisiblityCodeGen()
 {
-    std::stringstream GetLightVis;
-
-    GetLightVis << R"(
+    return R"(
 float GetLightVisiblity(in vec3 rayOrigin, in vec3 rayDirection, in float maxT, in int maxSteps, in float marchSize) 
 {
     float t               = 0.0f;
@@ -63,15 +70,11 @@ float GetLightVisiblity(in vec3 rayOrigin, in vec3 rayDirection, in float maxT, 
     return lightVisibility;
 }
     )";
-
-    return GetLightVis.str();
 };
 
 std::string Render()
 {
-    std::stringstream Renderer;
-
-    Renderer << R"(
+    return R"(
 vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
 {
     float depth       = LARGE_NUMBER;
@@ -97,10 +100,11 @@ vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
                 distanceInVolume += marchSize;
                 float previousopaqueVisibility = opaqueVisibility;
                 opaqueVisibility *= BeerLambert(ABSORPTION_COEFFICIENT * GetFogDensity(position, signedDistance), marchSize);
-                float absorptionFromMarch = previousopaqueVisibility - opaqueVisibility;)";
+                float absorptionFromMarch = previousopaqueVisibility - opaqueVisibility;
+
 
     /// LIGHT PART (WIP)
-    Renderer << R"(
+
                 for (int lightIndex = 0; lightIndex < NUM_LIGHTS; lightIndex++) {
                     float lightVolumeDepth = 0.0f;
                     vec3  lightDirection   = (GetLight(lightIndex).Position - position);
@@ -114,8 +118,7 @@ vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
                     const float lightMarchSize = 0.65f;
                     float       lightVisiblity = GetLightVisiblity(position, lightDirection, lightDistance, MAX_VOLUME_LIGHT_MARCH_STEPS, lightMarchSize);
                     volumetricColor += absorptionFromMarch * lightVisiblity * volumeAlbedo * lightColor;
-                })";
-    Renderer << R"(
+                }
                 volumetricColor += absorptionFromMarch * volumeAlbedo * GetAmbientLight();
             }
         }
@@ -123,21 +126,20 @@ vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
     return min(volumetricColor, 1.0f) + opaqueVisibility * opaqueColor;
 }
 )";
-    return Renderer.str();
 }
 
 std::string SmokeRenderer(const RenderEffect_Smoke& p)
 {
-    std::string res = IntersVolumCodeGen() + GetLightVisCodeGen() + Render();
+    std::string res = IntersectVolumetricCodeGen() + GetLightVisiblityCodeGen() + Render();
     return res;
 }
 
 std::string addSmoke(const RenderEffect_Smoke& p)
 {
-    std::string code = "";
-    if (p.is_active)
-        code += SmokeRenderer(p);
-    return code;
+    if (p.is_active) {
+        return SmokeRenderer(p);
+    }
+    return "";
 }
 
 }; // namespace CodeGen
