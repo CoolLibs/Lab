@@ -10,31 +10,7 @@ std::string Edgesfct()
     return R"(
     vec3 edgeColor = vec3(1.0,0.5,0.0);
 
-    float edges(vec3 ro, vec3 rd)
-    {
-        float EDGE_WIDTH = 0.2;
-        float edge       = 1.0;
-        float lastdS     = is0_default_sdf(ro);
-        float dO         = 0.;
-        float steps      = 0.0;
-        for (int i = 0; i < MAX_STEPS; i++) {
-            steps += 1;
-            vec3  p  = ro + rd * dO;
-            float dS = is0_default_sdf(p);
-            dO += dS;
-            if (dO > MAX_DIST || abs(dS) < SURF_DIST) {
-                break;
-            } 
-            if (lastdS < EDGE_WIDTH && dS > lastdS + 0.001) {
-                edge = 0.0;
-            }
-            lastdS = dS;
-            
-        }
-        return edge;
-    }
-
-    float edges2(vec3 ro, vec3 rd) {
+    float edges(vec3 ro, vec3 rd) {
 
     float EDGE_WIDTH = 0.1;
     float edge       = 1.0;
@@ -59,7 +35,7 @@ std::string Edgesfct()
 std::string EdgesAdd()
 {
     return R"(
-    if(edges2(ro,rd) < 0.7){
+    if(edges(ro,rd) < 0.7){
         finalCol = edgeColor ;
     }
 };
