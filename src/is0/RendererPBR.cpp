@@ -8,9 +8,7 @@ namespace CodeGen {
 
 std::string clampCodeGen(const std::string& v1, const std::string& v2)
 {
-    std::stringstream clampDefinition;
-    clampDefinition << "clamp(dot(" << v1 << "," << v2 << "), 0., 1.);\n";
-    return clampDefinition.str();
+    return "clamp(dot(" + v1 + "," + v2 + "), 0., 1.);\n";
 }
 
 std::string lightPropCodeGen(const LightProperties& l)
