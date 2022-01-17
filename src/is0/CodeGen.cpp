@@ -18,6 +18,7 @@ uniform float _time;
 out vec4 out_Color;
 #include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
+#include "is0 shaders/hg_sdf.glsl"
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
