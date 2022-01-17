@@ -3,7 +3,10 @@ namespace CodeGen {
 template<Cool::ParameterDesc Desc>
 std::string parameter_definition(const Cool::Parameter_Base<Desc>& param)
 {
-    return "const " + type_to_string<typename Desc::Value>() + " " + param.name() + " = " + value_to_string(*param) + ";";
+    return "const " +
+           type_to_string<typename Desc::Value>() + " " +
+           convert_to_valid_glsl_name(param.name()) +
+           " = " + value_to_string(*param) + ";";
 }
 
 template<typename T>

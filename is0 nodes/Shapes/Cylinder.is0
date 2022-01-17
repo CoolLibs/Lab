@@ -1,0 +1,18 @@
+[] (vec3 pos) {
+    vec2 v = vec2(length(pos.xz)-radius,abs(pos.y)-height);
+    return v.y<0.?v.x:v.x<0.?v.y:length(v);
+}
+
+float {
+    "Name": "radius",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "height",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}

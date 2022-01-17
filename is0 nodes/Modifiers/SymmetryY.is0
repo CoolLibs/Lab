@@ -1,0 +1,10 @@
+[SDF] (vec3 pos) {
+    vec3 p = pos;
+    p.y = abs(p.y);
+    float d1 = ${SDF}(p);
+
+    p.y = -abs(p.y);
+    float d2 = ${SDF}(p);
+
+    return min(d1, d2);
+}

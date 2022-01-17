@@ -83,7 +83,7 @@ void ShaderManager_FromText::set_shader_path(std::string_view path)
     _file_watcher.set_path(path);
 }
 
-void ShaderManager_FromText::imgui_window()
+void ShaderManager_FromText::imgui_windows()
 {
     ImGui::Begin("Shader");
     std::string path = _file_watcher.path().string();
