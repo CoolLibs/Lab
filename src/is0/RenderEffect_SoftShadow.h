@@ -10,7 +10,7 @@ struct RenderEffect_Shadow {
     bool                   is_active = true;
 };
 
-std::string code_gen_softShadow_parameter(const RenderEffect_Shadow& shadow);
-std::string code_gen_softShadow_fct();
-std::string code_gen_softShadow();
-bool        softShadow_imgui(RenderEffect_Shadow& shadow);
+std::string code_gen_soft_shadow_parameter(const RenderEffect_Shadow& shadow);
+std::string code_gen_soft_shadow_function();
+std::string code_gen_soft_shadow();
+bool        soft_shadow_imgui(RenderEffect_Shadow& shadow);

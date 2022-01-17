@@ -1,11 +1,11 @@
 #include "RenderEffect_InigoAO.h"
 
-std::string code_gen_InigoAO_parameter(const RenderEffect_InigoAO& InigoAO)
+std::string code_gen_inigo_ao_parameter(const RenderEffect_InigoAO& InigoAO)
 {
     return "const float InigoAO_size = " + std::to_string(*InigoAO.size) + ";\n\n";
 };
 
-std::string code_gen_InigoAO_fct()
+std::string code_gen_inigo_ao_function()
 {
     return R"(
     vec2 hash2(float n) { return fract(sin(vec2(n, n + 1.0)) * vec2(43758.5453123, 22578.1459123)); }
@@ -25,14 +25,14 @@ std::string code_gen_InigoAO_fct()
 )";
 };
 
-std::string code_gen_InigoAO()
+std::string code_gen_inigo_ao()
 {
     return R"(
-    finalCol = finalCol * calcOcclusion(p, getNormal(p), 1.0);
+    finalCol *= calcOcclusion(p, getNormal(p), 1.0);
     )";
 };
 
-bool InigoAO_imgui(RenderEffect_InigoAO& InigoAO)
+bool inigo_ao_imgui(RenderEffect_InigoAO& InigoAO)
 {
     ImGui::Text("Inigo AO");
     bool has_changed = InigoAO.size.imgui();

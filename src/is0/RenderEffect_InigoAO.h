@@ -10,8 +10,8 @@ struct RenderEffect_InigoAO {
     bool                   is_active = true;
 };
 
-std::string code_gen_InigoAO_parameter(const RenderEffect_InigoAO& InigoAO);
-std::string code_gen_InigoAO_fct();
-std::string code_gen_InigoAO();
+std::string code_gen_inigo_ao_parameter(const RenderEffect_InigoAO& InigoAO);
+std::string code_gen_inigo_ao_function();
+std::string code_gen_inigo_ao();
 
-bool InigoAO_imgui(RenderEffect_InigoAO& InigoAO);
+bool inigo_ao_imgui(RenderEffect_InigoAO& InigoAO);

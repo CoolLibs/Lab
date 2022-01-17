@@ -14,4 +14,4 @@ struct RenderEffect_Edges {
 std::string code_gen_edges_parameter(const RenderEffect_Edges& edges);
 std::string code_gen_edges();
 
-bool Edges_imgui(RenderEffect_Edges& edges);
+bool edges_imgui(RenderEffect_Edges& edges);

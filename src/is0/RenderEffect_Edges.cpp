@@ -2,10 +2,8 @@
 std::string code_gen_edges_parameter(const RenderEffect_Edges& edges)
 {
     return "const float edges_size = " + std::to_string(*edges.size) +
-           ";\nconst vec3 edges_color = " +
-           glm::to_string(*edges.color) + ";\n\n";
+           ";\nconst vec3 edges_color = " + glm::to_string(*edges.color) + ";\n\n";
 };
-
 
 std::string code_gen_edges()
 {
@@ -16,7 +14,7 @@ std::string code_gen_edges()
     )";
 };
 
-bool Edges_imgui(RenderEffect_Edges& edges)
+bool edges_imgui(RenderEffect_Edges& edges)
 {
     ImGui::Text("Edges");
     bool has_changed = edges.size.imgui();

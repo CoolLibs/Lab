@@ -10,8 +10,8 @@ struct RenderEffect_SSAO {
     bool                   is_active = true;
 };
 
-std::string code_gen_SSAO_parameter(const RenderEffect_SSAO& SSAO);
-std::string code_gen_SSAO_fct();
-std::string code_gen_SSAO();
+std::string code_gen_ssao_parameter(const RenderEffect_SSAO& SSAO);
+std::string code_gen_ssao_function();
+std::string code_gen_ssao();
 
-bool SSAO_imgui(RenderEffect_SSAO& SSAO);
+bool ssao_imgui(RenderEffect_SSAO& SSAO);

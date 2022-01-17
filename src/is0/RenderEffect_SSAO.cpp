@@ -1,67 +1,56 @@
 #include "RenderEffect_SSAO.h"
 
-std::string code_gen_SSAO_parameter(const RenderEffect_SSAO& SSAO)
+std::string code_gen_ssao_parameter(const RenderEffect_SSAO& SSAO)
 {
     return "const float SSAO_size = " + std::to_string(*SSAO.size) + ";\n\n";
 };
 
-std::string code_gen_SSAO_fct()
+std::string code_gen_ssao_function()
 {
     return R"(
     vec3 BigRand[32] = {
-        vec3(0.656178f, 0.785943f, 0.0918607f),
-        vec3(0.0980255f, 0.770562f, 0.888882f),
-        vec3(0.353252f, 0.255623f, 0.0786767f),
-        vec3(0.618091f, 0.510575f, 0.594409f),
-        vec3(0.0362255f, 0.71392f, 0.369793f),
-        vec3(0.948057f, 0.122684f, 0.21366f),
-        vec3(0.986175f, 0.0407117f, 0.76928f),
-        vec3(0.248604f, 0.0666524f, 0.984375f),
-        vec3(0.972198f, 0.96704f, 0.662496f),
-        vec3(0.635456f, 0.410657f, 0.909421f),
-        vec3(0.894436f, 0.695456f, 0.351756f),
-        vec3(0.990631f, 0.0898465f, 0.475967f),
-        vec3(0.0231635f, 0.0941496f, 0.698111f),
-        vec3(0.812677f, 0.327525f, 0.700522f),
-        vec3(0.582232f, 0.955535f, 0.728751f),
-        vec3(0.650258f, 0.0143742f, 0.585223f),
-        vec3(0.0383618f, 0.523209f, 0.759117f),
-        vec3(0.446425f, 0.650929f, 0.331828f),
-        vec3(0.106143f, 0.437605f, 0.248207f),
-        vec3(0.710746f, 0.0986663f, 0.133061f),
-        vec3(0.974395f, 0.309458f, 0.915311f),
-        vec3(0.729423f, 0.975402f, 0.962401f),
-        vec3(0.126102f, 0.0279855f, 0.415845f),
-        vec3(0.291726f, 0.862941f, 0.545305f),
-        vec3(0.909604f, 0.409406f, 0.475478f),
-        vec3(0.0169683f, 0.193884f, 0.221442f),
-        vec3(0.388836f, 0.962859f, 0.175787f),
-        vec3(0.160375f, 0.788018f, 0.0573443f),
-        vec3(0.908658f, 0.969634f, 0.0231941f),
-        vec3(0.749901f, 0.74514f, 0.80697f),
-        vec3(0.943968f, 0.634449f, 0.644398f),
-        vec3(0.787225f, 0.353526f, 0.0561541f)};
+        vec3(0.656178, 0.785943, 0.0918607),
+        vec3(0.0980255, 0.770562, 0.888882),
+        vec3(0.353252, 0.255623, 0.0786767),
+        vec3(0.618091, 0.510575, 0.594409),
+        vec3(0.0362255, 0.71392, 0.369793),
+        vec3(0.948057, 0.122684, 0.21366),
+        vec3(0.986175, 0.0407117, 0.76928),
+        vec3(0.248604, 0.0666524, 0.984375),
+        vec3(0.972198, 0.96704, 0.662496),
+        vec3(0.635456, 0.410657, 0.909421),
+        vec3(0.894436, 0.695456, 0.351756),
+        vec3(0.990631, 0.0898465, 0.475967),
+        vec3(0.0231635, 0.0941496, 0.698111),
+        vec3(0.812677, 0.327525, 0.700522),
+        vec3(0.582232, 0.955535, 0.728751),
+        vec3(0.650258, 0.0143742, 0.585223),
+        vec3(0.0383618, 0.523209, 0.759117),
+        vec3(0.446425, 0.650929, 0.331828),
+        vec3(0.106143, 0.437605, 0.248207),
+        vec3(0.710746, 0.0986663, 0.133061),
+        vec3(0.974395, 0.309458, 0.915311),
+        vec3(0.729423, 0.975402, 0.962401),
+        vec3(0.126102, 0.0279855, 0.415845),
+        vec3(0.291726, 0.862941, 0.545305),
+        vec3(0.909604, 0.409406, 0.475478),
+        vec3(0.0169683, 0.193884, 0.221442),
+        vec3(0.388836, 0.962859, 0.175787),
+        vec3(0.160375, 0.788018, 0.0573443),
+        vec3(0.908658, 0.969634, 0.0231941),
+        vec3(0.749901, 0.74514, 0.80697),
+        vec3(0.943968, 0.634449, 0.644398),
+        vec3(0.78722f, 0.353526, 0.0561541)};
 
-    vec3 rotateAxe(vec3 pts, vec3 axe, float angle)
-    {
-        axe     = normalize(axe);
-        float c = cos(angle);
-        float s = sin(angle);
-        mat3  M = mat3(vec3(axe.x * axe.x * (1 - c) + c, axe.x * axe.y * (1 - c) + axe.z * s, axe.x * axe.z * (1 - c) - axe.y * s),
-                    vec3(axe.x * axe.y * (1 - c) - axe.z * s, axe.y * axe.y * (1 - c) + c, axe.y * axe.z * (1 - c) + axe.x * s),
-                    vec3(axe.x * axe.z * (1 - c) + axe.y * s, axe.y * axe.z * (1 - c) - axe.x * s, axe.z * axe.z * (1 - c) + c));
-        return pts * M;
-    }
-    vec3 prodVect(vec3 v, vec3 u)
-    {
-        return vec3(v.y * u.z - v.z * u.y, v.z * u.x - v.x * u.z, v.x * u.y - v.y * u.x);
-    }
+
+
     vec3 rotatePoints(vec3 p, vec3 pts)
     {
         vec3  normalSphere = vec3(0.0, 0.0, 1.0);
-        vec3  axeRot       = prodVect(getNormal(p), normalSphere);
-        float angle        = acos(dot(normalize(getNormal(p)), normalize(normalSphere)));
-        pts                = rotateAxe(pts, axeRot, angle) + 0.05*SSAO_size * axeRot;
+        vec3 normal = getNormal(p);
+        vec3  axeRot       = cross(normal, normalSphere);
+        float angle        = acos(dot(normalize(normal), normalize(normalSphere)));
+        pts                = erot(pts, normalize(axeRot), -angle) + 0.05*SSAO_size * normal;
         return pts;
     }
 
@@ -69,7 +58,7 @@ std::string code_gen_SSAO_fct()
     {
         float bl = 0;
         for (int i = 0; i < 32; i++) {
-            if (is0_main_sdf(p + 1 * (rotatePoints(p, SSAO_size * (BigRand[i] - vec3(0.5, 0.5, 0.0))))) > 0) {
+            if (is0_main_sdf(p +  (rotatePoints(p, SSAO_size * (BigRand[i] - vec3(0.5, 0.5, 0.0))))) > 0) {
                 bl += 1;
             }
         }
@@ -78,14 +67,14 @@ std::string code_gen_SSAO_fct()
     )";
 };
 
-std::string code_gen_SSAO()
+std::string code_gen_ssao()
 {
     return R"(
-    finalCol = finalCol * ssao(p);
+    finalCol *= ssao(p);
     )";
 };
 
-bool SSAO_imgui(RenderEffect_SSAO& SSAO)
+bool ssao_imgui(RenderEffect_SSAO& SSAO)
 {
     ImGui::Text("SSAO");
     bool has_changed = SSAO.size.imgui();
