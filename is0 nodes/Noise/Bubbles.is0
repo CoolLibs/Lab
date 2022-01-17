@@ -1,0 +1,19 @@
+[SDF](vec3 p) {
+    return Strength * sin(Frequency*p.x)
+                    * sin(Frequency*p.y)
+                    * sin(Frequency*p.z) - 0.0;
+}
+
+float {
+    "Name": "Frequency",
+    "Default": 0.35,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Strength",
+    "Default": 4.0,
+    "Min": 0.0,
+    "Max": 20.0
+}

@@ -17,6 +17,7 @@ layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
 #include "_COOL_RES_/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/iqnoise_3D.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "is0 shaders/hg_sdf.glsl"
 
@@ -27,8 +28,32 @@ out vec4 out_Color;
 #define NORMAL_DELTA 0.0001
 
 float sph(vec3 i, vec3 f, vec3 c){
-    float rad = 0.5*hash(i+c);
+    float rad = 0.5*hash_0_to_1(i+c);
     return length(f-vec3(c)) - rad;
+}
+
+float D2Planes(vec3 pos, vec3 p, vec3 pab, vec3 pbc, vec3 pca) {//distance to the 3 faces
+	pos-=p;
+    float d0=dot(pos,pab);
+	float d1=dot(pos,pbc);
+	float d2=dot(pos,pca);
+	return max(max(d0,d1),d2);
+}
+
+float D2Segments(vec3 pos, vec3 p, vec3 nc, float SRadius) {
+	pos-=p;
+	float dla=length_squared(pos-min(0.,pos.x)*vec3(1.,0.,0.));
+	float dlb=length_squared(pos-min(0.,pos.y)*vec3(0.,1.,0.));
+	float dlc=length_squared(pos-min(0.,dot(pos,nc))*nc);
+	return sqrt(min(min(dla,dlb),dlc))-SRadius;
+}
+
+float D2Vertices(vec3 pos, vec3 p, float VRadius) {
+	return length(pos-p) - VRadius;
+}
+
+float half_space_SDF(vec3 pos, vec3 normal, vec3 origin) {
+    return dot(pos - origin, normal);
 }
 
 )";

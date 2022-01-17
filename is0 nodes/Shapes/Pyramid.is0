@@ -1,35 +1,45 @@
 [] (vec3 pos) {
-    pos *= base;
-    const float h = height*base;
-    float m2 = h*h + 0.25;
-    
-    pos.xz = abs(pos.xz);
-    pos.xz = (pos.z>pos.x) ? pos.zx : pos.xz;
-    pos.xz -= 0.5;
+    const vec3 tip = vec3(0., 0., Height);
+    float d = -pos.z; // Distance to the base
+    for (int i = 0; i < Faces_Count; ++i) {
+        const float c1 = Base_Radius * cos( i      * TAU / Faces_Count);
+        const float s1 = Base_Radius * sin( i      * TAU / Faces_Count);
+        const float c2 = Base_Radius * cos((i + 1) * TAU / Faces_Count);
+        const float s2 = Base_Radius * sin((i + 1) * TAU / Faces_Count);
+        const vec3 polygon_vertex_1 = vec3(c1, s1, 0.);
+        const vec3 polygon_vertex_2 = vec3(c2, s2, 0.);
+        d = smooth_max_polynomial(d,
+                half_space_SDF(pos, normalize(cross(polygon_vertex_1 - tip, polygon_vertex_2 - tip)), tip),
+                Smoothing
+        );
+    }
+    return d;
+}
 
-    vec3 q = vec3(pos.z, h*pos.y - 0.5*pos.x, h*pos.x + 0.5*pos.y);
-    
-    float s = max(-q.x,0.0);
-    float t = clamp((q.y-0.5*pos.z)/(m2+0.25), 0.0, 1.0 );
-        
-    float a = m2*(q.x+s)*(q.x+s) + q.y*q.y;
-    float b = m2*(q.x+0.5*t)*(q.x+0.5*t) + (q.y-m2*t)*(q.y-m2*t);
-        
-    float d2 = min(q.y,-q.x*m2-q.y*0.5) > 0.0 ? 0.0 : min(a,b);
-        
-    return sqrt((d2+q.z*q.z)/m2 ) * sign(max(q.z,-pos.y));
+int {
+    "Name": "Faces Count",
+    "Default": 4,
+    "Min": 3,
+    "Max": 20
 }
 
 float {
-    "Name": "height",
+    "Name": "Base Radius",
     "Default": 1.0,
+    "Min": 0.001,
+    "Max": 5
+}
+
+float {
+    "Name": "Height",
+    "Default": 2.5,
     "Min": 0.0,
     "Max": 10.0
 }
 
 float {
-    "Name": "base",
-    "Default": 0.5,
-    "Min": 0.1,
-    "Max": 1
+    "Name": "Smoothing",
+    "Default": 0.0,
+    "Min": 0.0,
+    "Max": 0.5
 }

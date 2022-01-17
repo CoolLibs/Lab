@@ -1,0 +1,41 @@
+[SDF] (vec3 pos) {
+    float s1 = 1.;
+    float d = ${SDF}(pos);
+    for(int m = 0; m < Iterations; m++)
+    {
+        vec3 a = mod(pos * s1, x1) - x1 / 2.;
+        s1 *= lacunarity;
+        vec3 r =  1. - lacunarity * abs(a);
+        float c = ${SDF}(r) / s1;
+        d = smooth_max_polynomial(d, c, Smoothing);
+    }   
+    return IS0_FIX_ARTIFACTS(d);
+}
+
+int {
+    "Name": "Iterations",
+    "Default": 3,
+    "Min": 1,
+    "Max": 10
+}
+
+float {
+    "Name": "x1",
+    "Default": 2.0,
+    "Min": 0.0,
+    "Max": 10.0    
+}
+
+float {
+    "Name": "lacunarity",
+    "Default": 3.0,
+    "Min": 0.0,
+    "Max": 10.0    
+}
+
+float {
+    "Name": "Smoothing",
+    "Default": 0.0,
+    "Min": 0.0,
+    "Max": 0.1
+}

@@ -1,6 +1,6 @@
 [] (vec3 pos) {
-    vec2 v = vec2(length(pos.xy) - Radius, abs(pos.z) - Height);
-    return v.y < 0. ? v.x : v.x < 0. ? v.y : length(v);
+    vec3 q = abs(pos);
+    return max(q.z - Height, max(q.x * 0.866025 + pos.y * 0.5, -pos.y) - Radius * 0.5);
 }
 
 float {

@@ -1,21 +1,27 @@
 [SDF] (vec3 pos) {
-    const mat3 rotx = mat3(1,           0,           0,
-                     0, cos(axis.x),-sin(axis.x),
-                     0, sin(axis.x), cos(axis.x));
+    const float cx = cos(Rotation.x);
+    const float sx = sin(Rotation.x);
+    const float cy = cos(Rotation.y);
+    const float sy = sin(Rotation.y);
+    const float cz = cos(Rotation.z);
+    const float sz = sin(Rotation.z);
+    const mat3 rotx = mat3(1,  0,   0,
+                           0, cx, -sx,
+                           0, sx,  cx);
 
-    const mat3 roty = mat3(cos(axis.y), 0, sin(axis.y),
-                     0,           1,           0,
-                    -sin(axis.y), 0, cos(axis.y));
+    const mat3 roty = mat3( cy, 0, sy,
+                             0, 1,  0,
+                           -sy, 0, cy);
   
-    const mat3 rotz = mat3(cos(axis.z),-sin(axis.z), 0,
-                     sin(axis.z), cos(axis.z), 0,
-                     0,                     0, 1);
+    const mat3 rotz = mat3(cz, -sz, 0,
+                           sz,  cz, 0,
+                            0,   0, 1);
 
-    return ${SDF}(rotx*roty*rotz * pos);
+    return ${SDF}(rotx * roty * rotz * pos);
 }
 
 rotation3D {
-    "Name": "axis",
+    "Name": "Rotation",
     "Default" : {
         "x" : 0.0,
         "y" : 0.0,

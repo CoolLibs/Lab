@@ -1,18 +1,30 @@
 [] (vec3 pos) {
-    vec2 q = vec2(length(pos.xz)-InnerRadius, pos.y);
-    return length(q)-OuterRadius;
+    pos.x = abs(pos.x);
+    const float angle = Fraction * 3.141592653;
+    const vec2 sc = vec2(sin(angle), cos(angle));
+    float k = (sc.y * pos.x > sc.x * pos.y) 
+              ? dot(pos.xy, sc) 
+              : length(pos.xy);
+    return sqrt(dot(pos, pos) + Radius * Radius - 2. * Radius * k) - Thickness;
 }
 
 float {
-    "Name": "InnerRadius",
+    "Name": "Radius",
     "Default": 1.0,
-    "Min": 0.001,
+    "Min": 0.0,
     "Max": 5.0
 }
 
 float {
-    "Name": "OuterRadius",
+    "Name": "Thickness",
+    "Default": 0.1,
+    "Min": 0.0,
+    "Max": 2.5
+}
+
+float {
+    "Name": "Fraction",
     "Default": 1.0,
-    "Min": 0.001,
-    "Max": 5.0
+    "Min": 0.0,
+    "Max": 1.0
 }
