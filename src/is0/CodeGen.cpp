@@ -152,8 +152,7 @@ std::string convert_to_valid_glsl_name(std::string name)
 
 std::string function_name(const FnNameParams& p)
 {
-    return convert_to_valid_glsl_name(std::string{p.node_template_name} +
-                                      "_" + std::to_string(*p.node_id));
+    return convert_to_valid_glsl_name(std::string{p.node_template_name} + std::to_string(*p.node_id));
 }
 
 std::string function_signature(const FnSignatureParams& p)
