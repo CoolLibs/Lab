@@ -17,7 +17,7 @@ layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
 #include "_COOL_RES_/shaders/camera.glsl"
-#include "_COOL_RES_/shaders/pbrcalc.glsl"
+#include "_COOL_RES_/shaders/pbr_calc.glsl"
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
@@ -86,7 +86,7 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
 
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const LightProperties& light, const MaterialProperties& material)
 {
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + PBRRendererCodeGen(light, material) + ray_marcher_end;
+    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + pbr_renderer_codegen(light, material) + ray_marcher_end;
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)

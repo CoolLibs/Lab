@@ -30,9 +30,9 @@ struct MaterialProperties {
                                        .max_value     = 1.0f}};
 };
 
-std::string lightPropCodeGen(const LightProperties& l);
-std::string MaterialPropCodeGen(const MaterialProperties& m);
-std::string PBRRendererCodeGen(const LightProperties& light, const MaterialProperties& material);
+std::string light_prop_codegen(const LightProperties& l);
+std::string material_prop_codegen(const MaterialProperties& m);
+std::string pbr_renderer_codegen(const LightProperties& light, const MaterialProperties& material);
 
 bool material_imgui_window(MaterialProperties& m);
 bool light_imgui_window(LightProperties& l);

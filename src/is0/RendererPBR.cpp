@@ -6,12 +6,7 @@
 
 namespace CodeGen {
 
-std::string clampCodeGen(const std::string& v1, const std::string& v2)
-{
-    return "clamp(dot(" + v1 + "," + v2 + "), 0., 1.);\n";
-}
-
-std::string lightPropCodeGen(const LightProperties& l)
+std::string light_prop_codegen(const LightProperties& l)
 {
     std::stringstream lightDefinition;
 
@@ -25,7 +20,7 @@ std::string lightPropCodeGen(const LightProperties& l)
     return lightDefinition.str();
 }
 
-std::string MaterialPropCodeGen(const MaterialProperties& m)
+std::string material_prop_codegen(const MaterialProperties& m)
 {
     std::stringstream materialDefinition;
 
@@ -40,7 +35,7 @@ std::string MaterialPropCodeGen(const MaterialProperties& m)
     return materialDefinition.str();
 }
 
-std::string PBRRendererCodeGen(const LightProperties& light, const MaterialProperties& material)
+std::string pbr_renderer_codegen(const LightProperties& light, const MaterialProperties& material)
 {
     std::stringstream rendererDefinition;
 
@@ -79,8 +74,8 @@ std::string PBRRendererCodeGen(const LightProperties& light, const MaterialPrope
             vec3 n = getNormal(p);
             vec3 r = reflect(rd,n);
             )";
-    rendererDefinition << lightPropCodeGen(light);
-    rendererDefinition << MaterialPropCodeGen(material);
+    rendererDefinition << light_prop_codegen(light);
+    rendererDefinition << material_prop_codegen(material);
     rendererDefinition << R"(    
         if (d < MAX_DIST) 
         {
@@ -95,7 +90,8 @@ std::string PBRRendererCodeGen(const LightProperties& light, const MaterialPrope
     rendererDefinition << R"(        
             diffuse += DiffuseColor;
             //specular += envSpecCol;
-            diffuse += DiffuseColor * lc * "clamp(dot(n, ld), 0., 1.);\n)";
+            diffuse += DiffuseColor * lc * clamp(dot(n, ld), 0., 1.);
+            )";
     rendererDefinition << R"(        vec3 lightF = Fresnel1Term(SpecularColor, vdoth);
             float lightD = DistributionTerm(roughtness, ndoth);
             float lightV = VisibilityTerm(roughtness, ndotv, ndot1);
@@ -115,25 +111,24 @@ std::string PBRRendererCodeGen(const LightProperties& light, const MaterialPrope
         vec3 n = getNormal(p);
         vec3 r = reflect(rd,n);
     )";
-    rendererDefinition << lightPropCodeGen(light);
-    rendererDefinition << MaterialPropCodeGen(material);
+    rendererDefinition << light_prop_codegen(light);
+    rendererDefinition << material_prop_codegen(material);
     rendererDefinition << R"(    if (d < MAX_DIST) 
         { 
             vec3 diffuse = vec3(0.);
             vec3 specular = vec3(0.);
             
             vec3 halfVec = normalize(ro + ld);
-            float vdoth = )";
-    rendererDefinition << clampCodeGen("ro", "halfVec");
-    rendererDefinition << "        float ndoth = " << clampCodeGen("n", "halfVec");
-    rendererDefinition << "        float ndotv = " << clampCodeGen("n", "ro");
-    rendererDefinition << "        float ndot1 = " << clampCodeGen("n", "ld");
+            float vdoth = clamp(dot(ro, halfVec), 0., 1.);)";
+    rendererDefinition << "        float ndoth = clamp(dot( n, halfVec), 0., 1.);\n";
+    rendererDefinition << "        float ndotv = clamp(dot( n, ro ), 0., 1.);\n";
+    rendererDefinition << "        float ndot1 = clamp(dot( n, ld), 0., 1.);\n";
     rendererDefinition << R"(        vec3 envSpecCol = EnvBRDFApprox(SpecularColor, roughtness, ndotv);
     
         diffuse += DiffuseColor;
         //specular += envSpecCol;
-        diffuse += DiffuseColor * lc * )"
-                       << clampCodeGen("n", "ld");
+        diffuse += DiffuseColor * lc * clamp(dot(n, ld), 0., 1.);
+        )";
     rendererDefinition << R"(        vec3 lightF = Fresnel1Term(SpecularColor, vdoth);
         float lightD = DistributionTerm(roughtness, ndoth);
         float lightV = VisibilityTerm(roughtness, ndotv, ndot1);
