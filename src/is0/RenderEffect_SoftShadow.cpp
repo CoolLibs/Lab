@@ -1,10 +1,10 @@
 #include "RenderEffect_SoftShadow.h"
 
-std::string SoftShadowParameters(const RenderEffect_Shadow& shadow)
+std::string code_gen_softShadow_parameter(const RenderEffect_Shadow& shadow)
 {
     return "const float shadow_strength = " + std::to_string(*shadow.strenght) + ";\n\n";
 };
-std::string SoftShadowfct()
+std::string code_gen_softShadow_fct()
 {
     return R"(
 float softshadow2(in vec3 ro, in vec3 rd, float mint, float maxt, float k)
@@ -26,7 +26,7 @@ float softshadow2(in vec3 ro, in vec3 rd, float mint, float maxt, float k)
 )";
 };
 
-std::string SoftShadowAdd()
+std::string code_gen_softShadow()
 {
     return R"(
     vec3  sun  = vec3(100.0, 100.0, 100.0);
@@ -37,4 +37,12 @@ std::string SoftShadowAdd()
         }
     finalCol = finalCol * shad;
     )";
+};
+
+bool softShadow_imgui(RenderEffect_Shadow& shadow)
+{
+    ImGui::Text("Shadow");
+    bool has_changed = shadow.strenght.imgui();
+    has_changed |= ImGui::Checkbox("Shadow Active", &shadow.is_active);
+    return has_changed;
 };

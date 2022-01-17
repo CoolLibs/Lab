@@ -1,11 +1,11 @@
 #include "RenderEffect_SSAO.h"
 
-std::string SSAOParameters(const RenderEffect_SSAO& SSAO)
+std::string code_gen_SSAO_parameter(const RenderEffect_SSAO& SSAO)
 {
     return "const float SSAO_size = " + std::to_string(*SSAO.size) + ";\n\n";
 };
 
-std::string SSAOfct()
+std::string code_gen_SSAO_fct()
 {
     return R"(
     vec3 BigRand[32] = {
@@ -58,10 +58,10 @@ std::string SSAOfct()
     }
     vec3 rotatePoints(vec3 p, vec3 pts)
     {
-        vec3  normalSphere = vec3(0.0, 0.000001, 1.0);
+        vec3  normalSphere = vec3(0.0, 0.0, 1.0);
         vec3  axeRot       = prodVect(getNormal(p), normalSphere);
         float angle        = acos(dot(normalize(getNormal(p)), normalize(normalSphere)));
-        pts                = rotateAxe(pts, axeRot, angle) + 0.05 * axeRot;
+        pts                = rotateAxe(pts, axeRot, angle) + 0.05*SSAO_size * axeRot;
         return pts;
     }
 
@@ -69,7 +69,7 @@ std::string SSAOfct()
     {
         float bl = 0;
         for (int i = 0; i < 32; i++) {
-            if (is0_default_sdf(p + 1 * (rotatePoints(p, 0.3 * (BigRand[i] - vec3(0.5, 0.5, 0.0))))) > 0) {
+            if (is0_main_sdf(p + 1 * (rotatePoints(p, SSAO_size * (BigRand[i] - vec3(0.5, 0.5, 0.0))))) > 0) {
                 bl += 1;
             }
         }
@@ -78,9 +78,17 @@ std::string SSAOfct()
     )";
 };
 
-std::string SSAOAdd()
+std::string code_gen_SSAO()
 {
     return R"(
     finalCol = finalCol * ssao(p);
     )";
+};
+
+bool SSAO_imgui(RenderEffect_SSAO& SSAO)
+{
+    ImGui::Text("SSAO");
+    bool has_changed = SSAO.size.imgui();
+    has_changed |= ImGui::Checkbox("SSAO Active", &SSAO.is_active);
+    return has_changed;
 };

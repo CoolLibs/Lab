@@ -7,9 +7,11 @@ struct RenderEffect_InigoAO {
                                  .default_value = 0.1,
                                  .min_value     = 0.001,
                                  .max_value     = 2.0}};
-    bool                   isActive = true;
+    bool                   is_active = true;
 };
 
-std::string InigoAOParameter(const RenderEffect_InigoAO& InigoAO);
-std::string InigoAOfct();
-std::string InigoAOAdd();
+std::string code_gen_InigoAO_parameter(const RenderEffect_InigoAO& InigoAO);
+std::string code_gen_InigoAO_fct();
+std::string code_gen_InigoAO();
+
+bool InigoAO_imgui(RenderEffect_InigoAO& InigoAO);

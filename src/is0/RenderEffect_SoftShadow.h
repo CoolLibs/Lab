@@ -7,9 +7,10 @@ struct RenderEffect_Shadow {
                                      .default_value = 8.0,
                                      .min_value     = 2.0,
                                      .max_value     = 124.0}};
-    bool                   isActive = true;
+    bool                   is_active = true;
 };
 
-std::string SoftShadowParameter(const RenderEffect_Shadow& shadow);
-std::string SoftShadowfct();
-std::string SoftShadowAdd();
+std::string code_gen_softShadow_parameter(const RenderEffect_Shadow& shadow);
+std::string code_gen_softShadow_fct();
+std::string code_gen_softShadow();
+bool        softShadow_imgui(RenderEffect_Shadow& shadow);

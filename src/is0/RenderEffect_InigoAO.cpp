@@ -1,12 +1,11 @@
 #include "RenderEffect_InigoAO.h"
 
-
-std::string InigoAOParameters(const RenderEffect_InigoAO& InigoAO)
+std::string code_gen_InigoAO_parameter(const RenderEffect_InigoAO& InigoAO)
 {
     return "const float InigoAO_size = " + std::to_string(*InigoAO.size) + ";\n\n";
 };
 
-std::string InigoAOfct()
+std::string code_gen_InigoAO_fct()
 {
     return R"(
     vec2 hash2(float n) { return fract(sin(vec2(n, n + 1.0)) * vec2(43758.5453123, 22578.1459123)); }
@@ -19,16 +18,24 @@ std::string InigoAOfct()
             vec2  an  = hash2(ra + float(i) * 13.1) * vec2(3.14159, 6.2831);
             vec3  dir = vec3(sin(an.x) * sin(an.y), sin(an.x) * cos(an.y), cos(an.x));
             dir *= sign(dot(dir, nor));
-            occ += clamp(5.0 * is0_default_sdf(pos + h * dir).x / h, -1.0, 1.0);
+            occ += clamp(5.0 * is0_main_sdf(pos + h * dir).x / h, -1.0, 1.0);
         }
         return clamp(occ / 64.0, 0.0, 1.0);
     }
 )";
 };
 
-std::string InigoAOAdd()
+std::string code_gen_InigoAO()
 {
     return R"(
     finalCol = finalCol * calcOcclusion(p, getNormal(p), 1.0);
     )";
+};
+
+bool InigoAO_imgui(RenderEffect_InigoAO& InigoAO)
+{
+    ImGui::Text("Inigo AO");
+    bool has_changed = InigoAO.size.imgui();
+    has_changed |= ImGui::Checkbox("Inigo AO Active", &InigoAO.is_active);
+    return has_changed;
 };

@@ -7,9 +7,11 @@ struct RenderEffect_SSAO {
                                  .default_value = 0.1,
                                  .min_value     = 0.001,
                                  .max_value     = 2.0}};
-    bool                   isActive = true;
+    bool                   is_active = true;
 };
 
-std::string SSAOParameter(const RenderEffect_SSAO& SSAO);
-std::string SSAOfct();
-std::string SSAOAdd();
+std::string code_gen_SSAO_parameter(const RenderEffect_SSAO& SSAO);
+std::string code_gen_SSAO_fct();
+std::string code_gen_SSAO();
+
+bool SSAO_imgui(RenderEffect_SSAO& SSAO);

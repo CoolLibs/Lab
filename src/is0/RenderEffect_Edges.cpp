@@ -1,41 +1,26 @@
 #include "RenderEffect_Edges.h"
-
-std::string EdgesParameter(const RenderEffect_Edges& edges)
+std::string code_gen_edges_parameter(const RenderEffect_Edges& edges)
 {
-    return "const float edges_size = " + std::to_string(*edges.size) + ";\n\n";
+    return "const float edges_size = " + std::to_string(*edges.size) +
+           ";\nconst vec3 edges_color = " +
+           glm::to_string(*edges.color) + ";\n\n";
 };
 
-std::string Edgesfct()
+
+std::string code_gen_edges()
 {
     return R"(
-    vec3 edgeColor = vec3(1.0,0.5,0.0);
-
-    float edges(vec3 ro, vec3 rd) {
-
-    float EDGE_WIDTH = 0.1;
-    float edge       = 1.0;
-    float lastd     = is0_default_sdf(ro);
-    float t = 0.;
-    for (int i = 0; i < MAX_STEPS; i++) {
-    	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos);
-        t += d;
-        // If we are very close to the object, consider it as a hit and exit this loop
-        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
-        if (lastd < EDGE_WIDTH+0.04*sqrt(t) && d > lastd + 0.001) {
-            edge = 0.0;
-        }
-        lastd = d;
-    }
-    return edge;
+    if(res.edge == true){
+        finalCol = edges_color ;
     }
     )";
 };
 
-std::string EdgesAdd()
+bool Edges_imgui(RenderEffect_Edges& edges)
 {
-    return R"(
-    if(edges(ro,rd) < 0.7){
-        finalCol = edgeColor ;
-    }
+    ImGui::Text("Edges");
+    bool has_changed = edges.size.imgui();
+    has_changed |= edges.color.imgui();
+    has_changed |= ImGui::Checkbox("Edges Active", &edges.is_active);
+    return has_changed;
 };
