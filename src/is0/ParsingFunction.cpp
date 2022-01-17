@@ -1,5 +1,17 @@
 #include "ParsingFunction.h"
 
+std::string find_extra_code(std::string_view source, size_t* end_pos)
+{
+    const auto extra_code_pos = Cool::String::find_matching_pair(source, '`', '`');
+    if (!extra_code_pos.has_value()) {
+        return "";
+    }
+    else {
+        *end_pos = extra_code_pos->second + 1;
+        return std::string{source.substr(extra_code_pos->first + 1, extra_code_pos->second - extra_code_pos->first - 1)};
+    }
+}
+
 std::string_view find_capture(std::string_view source, size_t* end_pos)
 {
     const auto capture_pos = Cool::String::find_matching_pair(source, '[', ']');

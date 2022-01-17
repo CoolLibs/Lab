@@ -16,10 +16,12 @@ bool apply_is0_fix_artifacts(std::string& code)
 
 void parse_node_template(NodeTemplate& node_template, std::string_view source)
 {
-    size_t     next_pos;
+    size_t     next_pos    = 0;
     const auto trim_source = [&]() {
         source = source.substr(next_pos, source.length() - next_pos);
     };
+    node_template.extra_code = find_extra_code(source, &next_pos);
+    trim_source();
     node_template.sdf_identifiers = parse_capture(find_capture(source, &next_pos));
     trim_source();
     node_template.vec3_input_declaration = find_input_declaration(source, &next_pos);
