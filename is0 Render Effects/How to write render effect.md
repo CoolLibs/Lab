@@ -22,10 +22,10 @@ then it will be used as `fresnel_strenght`:
 At this moment there only two types of render effects, `Object` and `World`. They aren't used at the same place so it's really important to know what affects your effect.
 
 The `Object` render effects are applied to the object of the scene. Among them, we can find effect like fresnel or reflection.
-(./object.png)
+![Objects render effects](./object.png)
 
 The `World` render effects are applied to the world around the object. Among them, we can find the glow.
-(./world.png)
+![World render effects](./world.png)
 
 ## Parameters
 
@@ -68,3 +68,13 @@ struct RayMarchRes {
     vec3 normal;
 };
 ```
+
+`dist` : Distance between the rayon's origin and the object
+
+`iterations_count` : Number of iteration before stoping the ray marching
+
+`rd` : Rayon direction
+
+`hit_position` : Position where the rayon hit the object
+
+`normal` : Normal of the hit_position
