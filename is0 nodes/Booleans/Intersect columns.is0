@@ -1,0 +1,16 @@
+[SDF1 SDF2] (vec3 pos) {
+    return fOpIntersectionColumns(${SDF1}(pos), ${SDF2}(pos), StepsSize, Steps);
+}
+
+float {
+    "Name": "StepsSize",
+    "Default": 0.1,
+    "Min": 0.0,
+    "Max": 1.0
+}
+float {
+    "Name": "Steps",
+    "Default": 2,
+    "Min": 0.0,
+    "Max": 20.0
+}
