@@ -37,6 +37,19 @@ static std::string find_sdf_body(std::string_view source, size_t* end_pos)
     return std::string{source.substr(pos->first, pos->second - pos->first + 1)};
 }
 
+/// Replaces IS0_FIX_ARTIFACTS with the actual code that fixes the artifacts
+/// Returns true iff IS0_FIX_ARTIFACTS was found in the code
+bool apply_is0_fix_artifacts(std::string& code)
+{
+    if (code.find("IS0_FIX_ARTIFACTS") != std::string::npos) { // TODO Replace with code.contains(...) when we update to C++23
+        Cool::String::replace_all(code, "IS0_FIX_ARTIFACTS", "(1. - Fix_Artifacts) * ");
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void parse_node_template(NodeTemplate& node_template, std::string_view source)
 {
     size_t     next_pos;
@@ -50,6 +63,14 @@ void parse_node_template(NodeTemplate& node_template, std::string_view source)
     node_template.code_template = find_sdf_body(source, &next_pos);
     trim_source();
     node_template.parameters = Cool::parse_all_parameter_desc(source);
+    if (apply_is0_fix_artifacts(node_template.code_template)) {
+        node_template.parameters.emplace_back(Cool::Parameter::FloatDesc{
+            .name          = "Fix Artifacts",
+            .default_value = 0.f,
+            .min_value     = 0.f,
+            .max_value     = 0.999f,
+        });
+    }
 }
 
 TEST_CASE("[is0::NodeParsing] parse_node_template()")

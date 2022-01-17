@@ -13,6 +13,7 @@ public:
     PinId           id() const { return _id; }
     virtual PinKind kind() const = 0;
     virtual void    show() const = 0;
+    virtual ~Pin() = default;
 
 private:
     PinId _id;

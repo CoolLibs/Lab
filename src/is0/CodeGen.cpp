@@ -16,14 +16,21 @@ static constexpr const char* ray_marcher_begin = R"(#version 430
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
+
+// clang-format off
 #include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/pbr_calc.glsl"
+#include "_COOL_RES_/shaders/math.glsl"
+#include "is0 shaders/light.glsl"
+// clang-format on
 
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
 #define MAX_DIST 200.
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
+#define DONT_INVERT_SDF 1.
+#define INVERT_SDF -1.
 
 #define saturate(v) clamp(v, 0., 1.)
 float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
@@ -38,6 +45,7 @@ float smooth_max(float f1, float f2, float strength) {
     return mix(f2, f1, h) + strength*h*(1.0-h);
 }
 
+
 float hash(vec3 x)
 {
     // based on: pcg3 by Mark Jarzynski: http://www.jcgt.org/published/0009/03/02/
@@ -48,13 +56,61 @@ float hash(vec3 x)
 }
 
 float sph(vec3 i, vec3 f, vec3 c){
-    float rad = 0.5*hash(i+c);
+    float rad = 0.5*hash_0_to_1(i+c);
     return length(f-vec3(c)) - rad;
 }
+struct RayMarchRes {
+    float dist;
+    int iterations_count;
+};
 
 )";
 
 static constexpr const char* ray_marcher_end = R"(
+
+float rayMarching(vec3 ro, vec3 rd) {
+    float t = 0.;
+ 	
+    for (int i = 0; i < MAX_STEPS; i++) {
+    	vec3 pos = ro + rd * t;
+        float d = is0_main_sdf(pos);
+        t += d;
+        // If we are very close to the object, consider it as a hit and exit this loop
+        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
+    }
+    return t;
+}
+
+vec3 getNormal(vec3 p) {
+    const float h = NORMAL_DELTA;
+	const vec2 k = vec2(1., -1.);
+    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
+                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
+                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
+                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
+}
+
+vec3 render(vec3 ro, vec3 rd) {
+    vec3 finalCol = vec3(0.3, 0.7, 0.98);
+    
+    float d = rayMarching(ro, rd);
+    
+    if (d < MAX_DIST) {
+      vec3 p = ro + rd * d;
+      vec3 normal = getNormal(p); 
+      //vec3 ref = reflect(rd, normal);
+      
+      //float sunFactor = saturate(dot(normal, nSunDir));
+      //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
+    
+      finalCol = normal * 0.5 + 0.5;
+    }
+    
+    finalCol = saturate(finalCol);
+    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
+    return finalCol;
+}
+
 
 void main() {
     vec3 ro = cool_ray_origin();
@@ -84,9 +140,17 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const LightProperties& light, const MaterialProperties& material)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material)
 {
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + pbr_renderer_codegen(light, material) + ray_marcher_end;
+    return ray_marcher_begin +
+           code_gen_effects_parameters(effects) +
+           std::string{default_sdf} +
+           main_sdf(node_tree, node_templates) +
+           ray_marcher_impl +
+           (effects.smoke.is_active ? CodeGen::addSmoke(effects.smoke)
+                                    : render(effects)) +
+            pbr_renderer_codegen(light, material) +
+           ray_marcher_end;
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
@@ -120,9 +184,17 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     return declarations.str() + '\n' + definitions.str() + main_sdf_definition.str();
 }
 
+std::string convert_to_valid_glsl_name(std::string name)
+{
+    Cool::String::replace_all(name, " ", "_");
+    Cool::String::replace_all(name, "-", "_");
+    return name;
+}
+
 std::string function_name(const FnNameParams& p)
 {
-    return std::string{p.node_template_name} + "_" + std::to_string(static_cast<unsigned int>(*p.node_id));
+    return convert_to_valid_glsl_name(std::string{p.node_template_name} +
+                                      "_" + std::to_string(*p.node_id));
 }
 
 std::string function_signature(const FnSignatureParams& p)
@@ -159,5 +231,4 @@ std::string parameter_definition_any(const Cool::Parameter::Any& param)
 {
     return std::visit([](auto&& param) { return parameter_definition(param); }, param);
 }
-
 } // namespace CodeGen

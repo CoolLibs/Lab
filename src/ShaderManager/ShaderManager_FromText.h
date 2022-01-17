@@ -11,7 +11,7 @@ public:
     void setup_for_rendering(const Cool::Camera& camera, float time) override;
 
     inline void update() override { _file_watcher.update(); }
-    void        imgui_window() override;
+    void        imgui_windows() override;
 
     void set_shader_path(std::string_view path);
 
@@ -24,7 +24,7 @@ private:
     Cool::ParameterList _parameters;
 
 private:
-    //Serialization
+    // Serialization
     friend class cereal::access;
     template<class Archive>
     void save(Archive& archive) const
