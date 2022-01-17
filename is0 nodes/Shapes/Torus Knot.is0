@@ -1,37 +1,37 @@
 [] (vec3 pos) {
-    vec2 q = vec2(length(pos.xz)-InnerRadius, pos.y);
-    float knot = atan(pos.x, pos.z)*KnotNumber;
-    float s = sin(knot);
-    float c = cos(knot);
-    q *= mat2(c, -s, s, c);
-    q.y = abs(q.y) - 0.6;
-    return ArtefactFix*(length(q)-OuterRadius);
+    vec2 q = vec2(length(pos.xy) - Size, pos.z);
+    float knot = atan(pos.x, pos.y) * Twists;
+    q *= rotation_2D(knot);
+    q.y = abs(q.y) - Spacing;
+    return IS0_FIX_ARTIFACTS(
+        length(q) - Thickness
+    );
 }
 
 float {
-    "Name": "InnerRadius",
-    "Default": 1.0,
-    "Min": 0.001,
+    "Name": "Size",
+    "Default": 3.0,
+    "Min": 0.0,
     "Max": 5.0
 }
 
 float {
-    "Name": "OuterRadius",
-    "Default": 1.0,
-    "Min": 0.001,
-    "Max": 5.0
+    "Name": "Thickness",
+    "Default": 0.175,
+    "Min": 0.0,
+    "Max": 2.5
 }
 
 int {
-    "Name": "KnotNumber",
-    "Default": 1,
+    "Name": "Twists",
+    "Default": 3,
     "Min": 1,
     "Max": 10
 }
 
 float {
-    "Name": "ArtefactFix",
-    "Default": 1.0,
-    "Min": 0.1,
-    "Max": 1.0
+    "Name": "Spacing",
+    "Default": 0.4,
+    "Min": 0.0,
+    "Max": 2.0
 }
