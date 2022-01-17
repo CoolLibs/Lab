@@ -7,6 +7,7 @@
 
 class NodeEditor {
 public:
+    explicit NodeEditor(std::string_view factory_folder_path);
     void imgui_window();
     void update_templates_and_nodes();
     void open_menu();
@@ -24,8 +25,9 @@ private:
     bool handle_node_deletion();
 
 private:
+    std::string         _factory_folder_path;
     UniqueImNodeContext _context;
-    NodeFactory         _factory{Cool::Path::root() + "/is0 nodes"};
+    NodeFactory         _factory{_factory_folder_path};
     NodeTree            _tree;
     bool                _all_nodes_have_a_valid_template = true;
     bool                _tree_has_changed                = true;

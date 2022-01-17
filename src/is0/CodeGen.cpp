@@ -30,11 +30,23 @@ out vec4 out_Color;
 struct RayMarchRes {
     float dist;
     int iterations_count;
+    vec3 rd;
+    vec3 hit_position;
+    vec3 normal;
 };
 
 )";
 
 static constexpr const char* ray_marcher = R"(
+vec3 getNormal(vec3 p) {
+    const float h = NORMAL_DELTA;
+	const vec2 k = vec2(1., -1.);
+    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
+                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
+                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
+                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
+}
+
 RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
  	int i = 0;
@@ -45,16 +57,8 @@ RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
-    return RayMarchRes(t,i);
-}
-
-vec3 getNormal(vec3 p) {
-    const float h = NORMAL_DELTA;
-	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
-                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
-                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
-                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
+    vec3 pos_final = ro + rd * t;
+    return RayMarchRes(t, i, rd, pos_final, getNormal(pos_final));
 }
 
 vec3 render(vec3 ro, vec3 rd) {
@@ -63,11 +67,9 @@ vec3 render(vec3 ro, vec3 rd) {
     RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
     float d = res.dist;
     float iterations_count = res.iterations_count;
-    
+    vec3 p = res.hit_position;
+    vec3 normal = res.normal;
     if (d < MAX_DIST) {
-      vec3 p = ro + rd * d;
-      vec3 normal = getNormal(p);
-    
       finalCol = normal * 0.5 + 0.5;
 )";
 
@@ -105,7 +107,7 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffectsManager& effects)
 {
     return ray_marcher_begin +
            code_gen_effects_parameters(effects) +

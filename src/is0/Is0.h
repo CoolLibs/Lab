@@ -3,7 +3,7 @@
 #include <Cool/ImGui/ImGuiWindow.h>
 #include "../ShaderManager/ShaderManager.h"
 #include "NodeEditor.h"
-#include "RenderEffects.h"
+#include "RenderEffectsManager.h"
 
 class Is0 : public ShaderManager {
 public:
@@ -12,11 +12,11 @@ public:
     void on_key_pressed(const Cool::KeyboardEvent& event) override;
 
 private:
-    NodeEditor        _editor;
-    RenderEffects     _effects;
-    std::string       _shader_code;
-    Cool::ImGuiWindow _shader_code_window{"is0 Shader Code", false};
-    bool              _must_recompile = false;
+    NodeEditor           _editor{Cool::Path::root() + "/is0 nodes"};
+    RenderEffectsManager _effects{Cool::Path::root() + "/is0 Render Effects"};
+    std::string          _shader_code;
+    Cool::ImGuiWindow    _shader_code_window{"is0 Shader Code", false};
+    bool                 _must_recompile = false;
 
 private:
     // Serialization

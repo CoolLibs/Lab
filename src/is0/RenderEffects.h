@@ -1,13 +1,12 @@
 #pragma once
 #include <Cool/ImGui/ImGuiWindow.h>
-#include "RenderEffect_Fresnel.h"
-#include "RenderEffect_Glow.h"
-#include "RenderEffect_Reflection.h"
+#include "RenderEffect.h"
+// #include "RenderEffect_Fresnel.h"
+// #include "RenderEffect_Glow.h"
+// #include "RenderEffect_Reflection.h"
 
 struct RenderEffects {
-    RenderEffect_Fresnel    fresnel;
-    RenderEffect_Glow       glow;
-    RenderEffect_Reflection reflection;
+    RenderEffect effect;
 };
 
 std::string code_gen_effects_parameters(const RenderEffects& effects);
