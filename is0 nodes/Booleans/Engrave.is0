@@ -1,0 +1,11 @@
+[SDF1 SDF2] (vec3 p) {
+    return fOpEngrave(${SDF1}(p), ${SDF2}(p), Radius);
+}
+
+float {
+    "Name": "Radius",
+    "Default": 0.07,
+    "Min": 0.0,
+    "Max": 0.2
+}
+
