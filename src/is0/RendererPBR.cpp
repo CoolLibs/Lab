@@ -88,15 +88,14 @@ std::string PBRRendererCodeGen(const LightProperties& light, const MaterialPrope
             vec3 specular = vec3(0.);
             vec3 halfVec = normalize(ro + ld);
             float vdoth = )";
-    rendererDefinition << clampCodeGen("ro", "halfVec");
-    rendererDefinition << "        float ndoth = " << clampCodeGen("n", "halfVec");
-    rendererDefinition << "        float ndotv = " << clampCodeGen("n", "ro");
-    rendererDefinition << "        float ndot1 = " << clampCodeGen("n", "ld");
+    rendererDefinition << "clamp(dot(ro, halfVec), 0., 1.);\n";
+    rendererDefinition << "        float ndoth = clamp(dot( n, halfVec), 0., 1.);\n";
+    rendererDefinition << "        float ndotv = clamp(dot( n, ro ), 0., 1.);\n";
+    rendererDefinition << "        float ndot1 = clamp(dot( n, ld), 0., 1.);\n";
     rendererDefinition << R"(        
             diffuse += DiffuseColor;
             //specular += envSpecCol;
-            diffuse += DiffuseColor * lc * )"
-                       << clampCodeGen("n", "ld");
+            diffuse += DiffuseColor * lc * "clamp(dot(n, ld), 0., 1.);\n)";
     rendererDefinition << R"(        vec3 lightF = Fresnel1Term(SpecularColor, vdoth);
             float lightD = DistributionTerm(roughtness, ndoth);
             float lightV = VisibilityTerm(roughtness, ndotv, ndot1);
