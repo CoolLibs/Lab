@@ -1,3 +1,25 @@
+`
+float _polyhedron_D2Planes(vec3 pos, vec3 p, vec3 pab, vec3 pbc, vec3 pca) {//distance to the 3 faces
+	pos-=p;
+    float d0=dot(pos,pab);
+	float d1=dot(pos,pbc);
+	float d2=dot(pos,pca);
+	return max(max(d0,d1),d2);
+}
+
+float _polyhedron_D2Segments(vec3 pos, vec3 p, vec3 nc, float SRadius) {
+	pos-=p;
+	float dla=length_squared(pos-min(0.,pos.x)*vec3(1.,0.,0.));
+	float dlb=length_squared(pos-min(0.,pos.y)*vec3(0.,1.,0.));
+	float dlc=length_squared(pos-min(0.,dot(pos,nc))*nc);
+	return sqrt(min(min(dla,dlb),dlc))-SRadius;
+}
+
+float _polyhedron_D2Vertices(vec3 pos, vec3 p, float VRadius) {
+	return length(pos-p) - VRadius;
+}
+`
+
 [] (vec3 pos) {
     // Thanks to https://www.shadertoy.com/view/XlX3zB
     pos /= Radius;
@@ -15,9 +37,9 @@
 		pos -= 2. * min(0., dot(pos,nc)) * nc; //fold about nc plane
 	}
 
-	float d = D2Planes(pos, p, pab, pbc, pca);
-	      d = min(d, D2Segments(pos, p, nc, Edges_Thickness));
-	      d = min(d, D2Vertices(pos, p, Vertices_Radius));
+	float d = _polyhedron_D2Planes(pos, p, pab, pbc, pca);
+	      d = min(d, _polyhedron_D2Segments(pos, p, nc, Edges_Thickness));
+	      d = min(d, _polyhedron_D2Vertices(pos, p, Vertices_Radius));
 	return IS0_FIX_ARTIFACTS(d);
 }
 
