@@ -26,7 +26,16 @@ out vec4 out_Color;
 #define MAX_DIST 200.
 #define SURF_DIST 0.0001
 #define NORMAL_DELTA 0.0001
+#define DONT_INVERT_SDF 1.
+#define INVERT_SDF -1.
 
+struct RayMarchRes {
+    float dist;
+    int iterations_count;
+    vec3 rd;
+    vec3 hit_position;
+    vec3 normal;
+};
 float sph(vec3 i, vec3 f, vec3 c){
     float rad = 0.5*hash_0_to_1(i+c);
     return length(f-vec3(c)) - rad;
@@ -58,21 +67,7 @@ float half_space_SDF(vec3 pos, vec3 normal, vec3 origin) {
 
 )";
 
-static constexpr const char* ray_marcher_end = R"(
-
-float rayMarching(vec3 ro, vec3 rd) {
-    float t = 0.;
- 	
-    for (int i = 0; i < MAX_STEPS; i++) {
-    	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos);
-        t += d;
-        // If we are very close to the object, consider it as a hit and exit this loop
-        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
-    }
-    return t;
-}
-
+static constexpr const char* ray_marcher = R"(
 vec3 getNormal(vec3 p) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
@@ -82,27 +77,37 @@ vec3 getNormal(vec3 p) {
                       k.xxx * is0_main_sdf( p + k.xxx*h ) );
 }
 
+RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
+    float t = 0.;
+ 	int i = 0;
+    for (i; i < MAX_STEPS; i++) {
+    	vec3 pos = ro + rd * t;
+        float d = is0_main_sdf(pos) * in_or_out;
+        t += d;
+        // If we are very close to the object, consider it as a hit and exit this loop
+        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
+    }
+    vec3 pos_final = ro + rd * t;
+    return RayMarchRes(t, i, rd, pos_final, getNormal(pos_final));
+}
+
 vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
     
-    float d = rayMarching(ro, rd);
-    
+    RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
+    float d = res.dist;
+    float iterations_count = res.iterations_count;
+    vec3 p = res.hit_position;
+    vec3 normal = res.normal;
     if (d < MAX_DIST) {
-      vec3 p = ro + rd * d;
-      vec3 normal = getNormal(p); 
-      //vec3 ref = reflect(rd, normal);
-      
-      //float sunFactor = saturate(dot(normal, nSunDir));
-      //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
-    
       finalCol = normal * 0.5 + 0.5;
-    }
-    
+)";
+
+static constexpr const char* ray_marcher_end = R"(
     finalCol = saturate(finalCol);
     finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
     return finalCol;
 }
-
 
 void main() {
     vec3 ro = cool_ray_origin();
@@ -132,9 +137,26 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
+static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) -> std::string
 {
-    return ray_marcher_begin + std::string{default_sdf} + main_sdf(node_tree, node_templates) + ray_marcher_end;
+    return std::accumulate(
+        node_templates.begin(), node_templates.end(), std::string{}, [](const std::string& acc, const NodeTemplate& node_template) {
+            return acc + node_template.extra_code;
+        });
+}
+
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffectsManager& effects)
+{
+    return ray_marcher_begin +
+           nodes_extra_code(node_templates) +
+           code_gen_effects_parameters(effects) +
+           std::string{default_sdf} +
+           main_sdf(node_tree, node_templates) +
+           ray_marcher +
+           code_gen_effects_object(effects) +
+           "}" +
+           code_gen_effects_world(effects) +
+           ray_marcher_end;
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)

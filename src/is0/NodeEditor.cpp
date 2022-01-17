@@ -3,6 +3,11 @@
 #include <Cool/Parameter/ParameterU.h>
 #include <GLFW/glfw3.h>
 
+NodeEditor::NodeEditor(std::string_view factory_folder_path)
+    : _factory_folder_path{factory_folder_path}
+{
+}
+
 bool NodeEditor::tree_has_changed()
 {
     bool b            = _tree_has_changed;
