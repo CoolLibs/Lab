@@ -53,15 +53,7 @@ std::string pbr_renderer_codegen(const LightProperties& light, const MaterialPro
             }
             return t;
         };
-        
-        vec3 getNormal(vec3 p) {
-            const float h = NORMAL_DELTA;
-        	const vec2 k = vec2(1., -1.);
-            return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
-                              k.yyx * is0_main_sdf( p + k.yyx*h ) + 
-                              k.yxy * is0_main_sdf( p + k.yxy*h ) + 
-                              k.xxx * is0_main_sdf( p + k.xxx*h ) );
-        })";
+        )";
 
     rendererDefinition << R"(
         

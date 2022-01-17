@@ -33,7 +33,6 @@ out vec4 out_Color;
 #define INVERT_SDF -1.
 
 #define saturate(v) clamp(v, 0., 1.)
-float ndot(vec2 a, vec2 b ) { return a.x*b.x - a.y*b.y; }
 
 float smooth_min(float f1, float f2, float strength) {
     float h = clamp(0.5 +0.5*(f2-f1)/strength, 0.0, 1.0);
@@ -66,29 +65,54 @@ struct RayMarchRes {
 
 )";
 
-static constexpr const char* ray_marcher_end = R"(
+static std::string render(const RenderEffects& effects)
+{
+    return R"(
+vec3 render(vec3 ro, vec3 rd) {
+    vec3 finalCol = vec3(0.3, 0.7, 0.98);
+    RayMarchRes res              = rayMarching(ro, rd, DONT_INVERT_SDF);
+    float       d                = res.dist;
+    float       iterations_count = res.iterations_count;
+    if (d < MAX_DIST) {
+        vec3 p      = ro + rd * d;
+        vec3 normal = getNormal(p);
+        finalCol = normal * 0.5 + 0.5;
+        )" +
+           code_gen_effects_object(effects) +
+           "}" +
+           code_gen_effects_world(effects) + R"(
+    finalCol = saturate(finalCol);
+    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
+    return finalCol;
+}
 
-float rayMarching(vec3 ro, vec3 rd) {
+)";
+}
+
+static constexpr const char* ray_marcher_impl = R"(
+RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
- 	
-    for (int i = 0; i < MAX_STEPS; i++) {
+ 	int i = 0;
+    for (i; i < MAX_STEPS; i++) {
     	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos);
+        float d = is0_main_sdf(pos) * in_or_out;
         t += d;
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
-    return t;
+    return RayMarchRes(t,i);
 }
-
 vec3 getNormal(vec3 p) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
-                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
-                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
+    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) +
+                      k.yyx * is0_main_sdf( p + k.yyx*h ) +
+                      k.yxy * is0_main_sdf( p + k.yxy*h ) +
                       k.xxx * is0_main_sdf( p + k.xxx*h ) );
 }
+)";
+
+static constexpr const char* ray_marcher_end = R"(
 
 vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
@@ -149,7 +173,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            ray_marcher_impl +
            (effects.smoke.is_active ? CodeGen::addSmoke(effects.smoke)
                                     : render(effects)) +
-            pbr_renderer_codegen(light, material) +
+           pbr_renderer_codegen(light, material) +
            ray_marcher_end;
 }
 

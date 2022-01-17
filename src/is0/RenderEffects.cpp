@@ -6,7 +6,7 @@ std::string code_gen_effects_parameters(const RenderEffects& effects)
            code_gen_glow_parameters(effects.glow) +
            code_gen_reflection_parameters(effects.reflection) +
            (effects.smoke.is_active ? CodeGen::code_gen_smoke_parameters(effects.smoke) + "#include \"is0 shaders/smoke.glsl\"\n\n" : "");
-};
+}
 
 std::string code_gen_effects_object(const RenderEffects& effects)
 {
@@ -18,7 +18,7 @@ std::string code_gen_effects_object(const RenderEffects& effects)
         code += code_gen_reflection();
     }
     return code;
-};
+}
 
 std::string code_gen_effects_world(const RenderEffects& effects)
 {
@@ -27,7 +27,7 @@ std::string code_gen_effects_world(const RenderEffects& effects)
         code += code_gen_glow();
     }
     return code;
-};
+}
 
 bool effect_imgui_window(RenderEffects& effects)
 {

@@ -12,7 +12,7 @@ bool smoke_imgui_window(RenderEffect_Smoke& prop)
     has_changed |= prop.MARCH_MULTIPLIER.imgui();
     has_changed |= prop.MAX_VOLUME_MARCH_STEPS.imgui();
     return has_changed;
-};
+}
 
 namespace CodeGen {
 
@@ -24,7 +24,7 @@ std::string code_gen_smoke_parameters(const RenderEffect_Smoke& parameters)
     l << "#define MAX_VOLUME_MARCH_STEPS " << std::to_string(*parameters.MAX_VOLUME_MARCH_STEPS) << '\n';
     l << "#define MARCH_MULTIPLIER " << std::to_string(*parameters.MARCH_MULTIPLIER) << "\n\n";
     return l.str();
-};
+}
 
 std::string IntersectVolumetricCodeGen()
 {
@@ -42,7 +42,7 @@ float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
     return (t >= maxT) ? -1.0 : t;
 }
     )";
-};
+}
 
 std::string GetLightVisiblityCodeGen()
 {
@@ -67,7 +67,7 @@ float GetLightVisiblity(in vec3 rayOrigin, in vec3 rayDirection, in float maxT, 
     return lightVisibility;
 }
     )";
-};
+}
 
 std::string Render()
 {
@@ -125,7 +125,7 @@ vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
 )";
 }
 
-std::string SmokeRenderer(const RenderEffect_Smoke& p)
+std::string SmokeRenderer(const RenderEffect_Smoke&)
 {
     return IntersectVolumetricCodeGen() +
            GetLightVisiblityCodeGen() +
@@ -140,4 +140,4 @@ std::string addSmoke(const RenderEffect_Smoke& p)
     return "";
 }
 
-}; // namespace CodeGen
+} // namespace CodeGen

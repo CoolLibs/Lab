@@ -6,7 +6,7 @@ std::string code_gen_glow_parameters(const RenderEffect_Glow& glow)
            std::to_string(*glow.strenght) +
            ";\nconst vec3 glow_color = " +
            glm::to_string(*glow.col) + ";\n\n";
-};
+}
 
 std::string code_gen_glow()
 {
@@ -14,7 +14,7 @@ std::string code_gen_glow()
         float glow = pow(iterations_count * glow_strength, 2.);
         finalCol += glow * glow_color;
     )";
-};
+}
 
 bool glow_imgui(RenderEffect_Glow& glow)
 {
@@ -23,4 +23,4 @@ bool glow_imgui(RenderEffect_Glow& glow)
     has_changed |= glow.col.imgui();
     has_changed |= ImGui::Checkbox("Glow Active", &glow.is_active);
     return has_changed;
-};
+}
