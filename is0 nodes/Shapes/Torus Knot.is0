@@ -3,9 +3,17 @@
     float knot = atan(pos.x, pos.y) * Twists;
     q *= rotation_2D(knot);
     q.y = abs(q.y) - Spacing;
-    return IS0_FIX_ARTIFACTS(
-        length(q) - Thickness
-    );
+    if (Square) {
+        q = abs(q) - vec2(Thickness);
+        return IS0_FIX_ARTIFACTS(
+            length(max(q, 0.)) + min(max(q.x, q.y), 0.)
+        );
+    }
+    else {
+        return IS0_FIX_ARTIFACTS(
+            length(q) - Thickness
+        );
+    }
 }
 
 float {
@@ -34,4 +42,9 @@ float {
     "Default": 0.4,
     "Min": 0.0,
     "Max": 2.0
+}
+
+bool {
+    "Name": "Square",
+    "Default": false
 }
