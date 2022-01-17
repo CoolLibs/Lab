@@ -46,12 +46,14 @@ std::string code_gen_effects_parameters(const RenderEffectsManager& effects)
         if (effect.is_active) {
             code += CodeGen::parameters_definitions(effect.parameters);
             code += "\n";
+            code += effect.extra_code;
         }
     }
     for (const auto& effect : effects._render_effects._render_effects_world) {
         if (effect.is_active) {
             code += CodeGen::parameters_definitions(effect.parameters);
             code += "\n";
+            code += effect.extra_code;
         }
     }
     return code;

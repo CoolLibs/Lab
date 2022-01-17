@@ -5,6 +5,7 @@
 
 struct RenderEffect {
     std::string         name;
+    std::string         extra_code;
     std::string         parameters_declaration;
     std::string         code_template;
     Cool::ParameterList parameters;
