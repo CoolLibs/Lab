@@ -24,7 +24,7 @@ At this moment there only two types of render effects, `Object` and `World`. The
 The `Object` render effects are applied to the object of the scene. Among them, we can find effect like fresnel or reflection.
 ![Objects render effects](./object.png)
 
-The `World` render effects are applied to the world around the object. Among them, we can find the glow.
+The `World` render effects always applies no matter if the ray touches the object or not. Among them, we can find the glow.
 ![World render effects](./world.png)
 
 ## Parameters
