@@ -22,7 +22,7 @@ then it will be used as `fresnel_strenght`:
 }
 ```
 
-## Object or World ?
+## Render effects types ?
 
 At this moment there only two types of render effects, `Object` and `World`. They aren't used at the same place so it's really important to know what affects your effect.
 

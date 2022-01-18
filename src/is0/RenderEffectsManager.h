@@ -3,14 +3,14 @@
 #include "RenderEffect.h"
 
 struct RenderEffectsGestion {
-    std::vector<RenderEffect> _render_effects_objects;
-    std::vector<RenderEffect> _render_effects_world;
+    std::vector<RenderEffect> render_effects_objects;
+    std::vector<RenderEffect> render_effects_world;
 };
 
 class RenderEffectsManager {
 public:
-    RenderEffectsGestion _render_effects;
-    std::string          _render_effects_folder_path;
+    RenderEffectsGestion render_effects;
+    std::string          render_effects_folder_path;
     explicit RenderEffectsManager(std::string_view render_effects_folder_path);
 };
 
