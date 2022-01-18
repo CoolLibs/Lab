@@ -18,7 +18,7 @@
 
 float {
     "Name": "Size",
-    "Default": 3.0,
+    "Default": 1.0,
     "Min": 0.0,
     "Max": 5.0
 }

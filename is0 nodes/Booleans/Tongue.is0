@@ -7,14 +7,14 @@ float {
     "Name": "Thickness",
     "Default": 0.07,
     "Min": 0.0,
-    "Max": 0.2
+    "Max": 1.0
 }
 
 float {
     "Name": "Size",
     "Default": 0.07,
     "Min": 0.0,
-    "Max": 0.2
+    "Max": 1.0
 }
 
 

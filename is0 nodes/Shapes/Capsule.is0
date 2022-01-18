@@ -5,7 +5,7 @@
 
 float {
     "Name": "Length",
-    "Default": 6.0,
+    "Default": 2.0,
     "Min": 0.0,
     "Max": 10.0
 }

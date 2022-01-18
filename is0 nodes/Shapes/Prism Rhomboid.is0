@@ -10,21 +10,21 @@
 
 float {
     "Name": "X Radius",
-    "Default": 2.0,
-    "Min": 0.001,
-    "Max": 10.0
-}
-
-float {
-    "Name": "Y Radius",
     "Default": 1.0,
     "Min": 0.001,
     "Max": 10.0
 }
 
 float {
+    "Name": "Y Radius",
+    "Default": 0.5,
+    "Min": 0.001,
+    "Max": 10.0
+}
+
+float {
     "Name": "Height",
-    "Default": 3.0,
+    "Default": 1.0,
     "Min": 0.001,
     "Max": 10.0
 }

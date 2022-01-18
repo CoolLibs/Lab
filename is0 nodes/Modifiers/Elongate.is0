@@ -6,7 +6,7 @@
 
 float {
     "Name": "X Elongation",
-    "Default": 5.0,
+    "Default": 1.0,
     "Min": 0.0,
     "Max": 50.0
 }
