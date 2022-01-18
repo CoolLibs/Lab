@@ -16,8 +16,6 @@ RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folde
 RenderEffectsGestion load_effect(std::string_view render_effects_folder_path)
 {
     RenderEffectsGestion effects_gestion;
-    effects_gestion.render_effects_objects.reserve(100);
-    effects_gestion.render_effects_always.reserve(100);
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
         if (entry.is_directory()) {
             std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
@@ -52,7 +50,7 @@ std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effe
         else {
             effect.is_active = effect_here->is_active;
             Cool::ParameterList new_parameters{};
-            new_parameters->reserve(100);
+            new_parameters->reserve(effect_here->parameters->size());
             for (auto& param : *effect_here->parameters) {
                 const auto desc = std::visit([&](auto&& param) { return Cool::Parameter::AnyDesc(param.description()); }, param);
                 new_parameters->push_back(Cool::ParameterU::make_param(effect_here->parameters, desc));
