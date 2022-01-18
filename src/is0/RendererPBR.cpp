@@ -95,7 +95,7 @@ std::string pbr_renderer_codegen(const LightProperties& light, const MaterialPro
     })";
 
     rendererDefinition << R"(
-    vec3 render(vec3 ro, vec3 rd)
+    vec3 render_pbr(vec3 ro, vec3 rd)
     {
         float d = rayMarching(ro,rd);
         vec3 color = vec3(0.020,0.711,0.949);

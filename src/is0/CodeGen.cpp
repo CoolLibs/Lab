@@ -61,6 +61,7 @@ float sph(vec3 i, vec3 f, vec3 c){
 struct RayMarchRes {
     float dist;
     int iterations_count;
+    int render;
 };
 
 )";
@@ -68,7 +69,7 @@ struct RayMarchRes {
 static std::string render(const RenderEffects& effects)
 {
     return R"(
-vec3 render(vec3 ro, vec3 rd) {
+vec3 render_effects(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
     RayMarchRes res              = rayMarching(ro, rd, DONT_INVERT_SDF);
     float       d                = res.dist;
@@ -100,7 +101,7 @@ RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
-    return RayMarchRes(t,i);
+    return RayMarchRes(t,i,0);
 }
 vec3 getNormal(vec3 p) {
     const float h = NORMAL_DELTA;
@@ -171,8 +172,8 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
            ray_marcher_impl +
-           (effects.smoke.is_active ? CodeGen::addSmoke(effects.smoke)
-                                    : render(effects)) +
+           CodeGen::addSmoke(effects.smoke) +
+           render(effects) +
            pbr_renderer_codegen(light, material) +
            ray_marcher_end;
 }

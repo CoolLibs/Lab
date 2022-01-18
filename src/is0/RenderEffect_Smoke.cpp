@@ -72,7 +72,7 @@ float GetLightVisiblity(in vec3 rayOrigin, in vec3 rayDirection, in float maxT, 
 std::string Render()
 {
     return R"(
-vec3 render(in vec3 rayOrigin, in vec3 rayDirection)
+vec3 render_smoke(in vec3 rayOrigin, in vec3 rayDirection)
 {
     float depth       = LARGE_NUMBER;
     vec3  opaqueColor = vec3(0.3, 0.7, 0.98);
