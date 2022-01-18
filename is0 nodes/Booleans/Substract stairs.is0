@@ -1,16 +1,16 @@
 [SDF1 SDF2] (vec3 pos) {
-    return fOpDifferenceStairs(${SDF1}(pos), ${SDF2}(pos), StepsSize, Steps);
+    return fOpDifferenceStairs(${SDF1}(pos), ${SDF2}(pos), Steps_size, Steps+1);
 }
 
 float {
-    "Name": "StepsSize",
+    "Name": "Steps size",
     "Default": 0.1,
     "Min": 0.0,
     "Max": 1.0
 }
-float {
+int {
     "Name": "Steps",
     "Default": 2,
-    "Min": 0.0,
-    "Max": 20.0
+    "Min": 0,
+    "Max": 20
 }

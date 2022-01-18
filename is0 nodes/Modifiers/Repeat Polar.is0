@@ -1,10 +1,10 @@
 [SDF] (vec3 p) {
-    pModPolar(p.xy, repetitions);
+    pModPolar(p.xy, Repetitions_number);
     returnIS0_FIX_ARTIFACTS(${SDF}(p));
 }
 
 int {
-    "Name": "repetitions",
+    "Name": "Repetitions number",
     "Default": 6,
     "Min": 0,
     "Max": 20

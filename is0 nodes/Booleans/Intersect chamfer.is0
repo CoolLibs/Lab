@@ -1,9 +1,9 @@
 [SDF1 SDF2] (vec3 pos) {
-    return fOpIntersectionChamfer (${SDF1}(pos), ${SDF2}(pos), ChamferSize);
+    return fOpIntersectionChamfer (${SDF1}(pos), ${SDF2}(pos), Chamfer_size);
 }
 
 float {
-    "Name": "ChamferSize",
+    "Name": "Chamfer size",
     "Default": 0.1,
     "Min": 0.0,
     "Max": 1.0

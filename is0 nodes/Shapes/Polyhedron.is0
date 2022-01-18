@@ -29,7 +29,7 @@ float _polyhedron_D2Vertices(vec3 pos, vec3 p, float VRadius) {
 	vec3 pab = vec3(0., 0., 1.);
 	vec3 pbc = vec3(scospin, 0., 0.5); // No normalization in order to have 'barycentric' coordinates work evenly
 	vec3 pca = vec3(0., scospin, cospin);
-	vec3 p = normalize((U * pab + V * pbc + W * pca)); // U, V and W are the 'barycentric' coordinates (quoted barycentric word because I'm not sure if they are really barycentric... have to check)
+	vec3 p = normalize((Roundness * pab + Faces_Size * pbc + Sharpness * pca)); // Roundness, Faces_Size and Sharpness are the 'barycentric' coordinates (quoted barycentric word because I'm not sure if they are really barycentric... have to check)
 	pbc = normalize(pbc); // For slightly better DE. In reality it's not necesary to apply normalization :) 
     pca = normalize(pca); // For slightly better DE. In reality it's not necesary to apply normalization :) 
 	for (int i = 0; i < Kind; i++){
@@ -65,21 +65,21 @@ float {
 }
 
 float {
-    "Name": "U",
+    "Name": "Roundness",
     "Default": 0.27,
     "Min": 0.0,
     "Max": 1.0
 }
 
 float {
-    "Name": "V",
+    "Name": "Faces Size",
     "Default": 0.41,
     "Min": 0.0,
     "Max": 1.0
 }
 
 float {
-    "Name": "W",
+    "Name": "Sharpness",
     "Default": 0.19,
     "Min": 0.0,
     "Max": 1.0

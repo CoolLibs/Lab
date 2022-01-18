@@ -1,9 +1,9 @@
 [SDF1 SDF2] (vec3 pos) {
-    float s1 = s;
+    float s1 = 1/Scale;
     float d = ${SDF1}(pos);
-    for(int m=0; m<steps; m++)
+    for(int m=0; m<Steps; m++)
     {
-        vec3 a = mod(pos*s1, x1)-1.0;
+        vec3 a = mod(pos*s1, Offset)-1.0;
         s1 *= 3.0;
         vec3 r =  1.0 - 3.0*abs(a);
         float c = ${SDF2}(r)/s1;
@@ -14,21 +14,21 @@
 }
 
 float {
-    "Name": "s",
+    "Name": "Scale",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0
 }
 
-float {
-    "Name": "steps",
-    "Default": 3.0,
-    "Min": 0.0,
-    "Max": 10.0
+int {
+    "Name": "Steps",
+    "Default": 3,
+    "Min": 0,
+    "Max": 10
 }
 
 float {
-    "Name": "x1",
+    "Name": "Offset",
     "Default": 2.0,
     "Min": 0.0,
     "Max": 10.0    
