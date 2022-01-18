@@ -69,21 +69,15 @@ struct RayMarchRes {
 static std::string render(const RenderEffects& effects)
 {
     return R"(
-vec3 render_effects(vec3 ro, vec3 rd) {
-    vec3 finalCol = vec3(0.3, 0.7, 0.98);
-    RayMarchRes res              = rayMarching(ro, rd, DONT_INVERT_SDF);
+vec3 render_effects(vec3 rd, vec3 p, vec3 normal, RayMarchRes res) {
     float       d                = res.dist;
     float       iterations_count = res.iterations_count;
+    vec3 finalCol = normal * 0.5 + 0.5;
     if (d < MAX_DIST) {
-        vec3 p      = ro + rd * d;
-        vec3 normal = getNormal(p);
-        finalCol = normal * 0.5 + 0.5;
         )" +
            code_gen_effects_object(effects) +
            "}" +
            code_gen_effects_world(effects) + R"(
-    finalCol = saturate(finalCol);
-    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
     return finalCol;
 }
 
@@ -115,25 +109,23 @@ vec3 getNormal(vec3 p) {
 
 static constexpr const char* ray_marcher_end = R"(
 
-vec3 render(vec3 ro, vec3 rd) {
-    vec3 finalCol = vec3(0.3, 0.7, 0.98);
-    
-    float d = rayMarching(ro, rd);
-    
-    if (d < MAX_DIST) {
-      vec3 p = ro + rd * d;
-      vec3 normal = getNormal(p); 
-      //vec3 ref = reflect(rd, normal);
-      
-      //float sunFactor = saturate(dot(normal, nSunDir));
-      //float sunSpecular = pow(saturate(dot(nSunDir, ref)), specularStrength); // Phong
-    
-      finalCol = normal * 0.5 + 0.5;
-    }
-    
-    finalCol = saturate(finalCol);
-    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
-    return finalCol;
+vec3 render( vec3 ro, vec3 rd) 
+{
+	vec3 finalColor = vec3(0.3, 0.7, 0.98);
+	RayMarchRes res = rayMarching(ro, rd, 1);
+	float d         = res.dist;
+	int render_use  = res.render;
+	if(render_use == 3) {finalColor = render_smoke(ro, rd);}                                                             //SMOKE   renderer
+	else {
+		vec3 p      = ro + rd * d;
+		vec3 normal = getNormal(p);
+		if(render_use == 0){finalColor = normal * 0.5 + 0.5;}                                                           //NORMAL  renderer
+		else if(render_use == 1){finalColor = render_effects(rd, p, normal, res = rayMarching(ro, rd, DONT_INVERT_SDF));}   //EFFECTS renderer
+		else if(render_use == 2){finalColor = render_pbr(ro, rd, p, normal, res);}                                                   //PBR     renderer
+	}
+	finalColor = saturate(finalColor);
+	finalColor = pow(finalColor, vec3(0.4545)); // Gamma correction
+	return finalColor;
 }
 
 

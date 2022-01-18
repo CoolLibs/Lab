@@ -41,26 +41,10 @@ std::string pbr_renderer_codegen(const LightProperties& light, const MaterialPro
 
     rendererDefinition << R"(
         
-        float rayMarching(vec3 ro, vec3 rd) {
-            float t = 0.;
-            
-            for (int i = 0; i < MAX_STEPS; i++) {
-            	vec3 pos = ro + rd * t;
-                float d = is0_main_sdf(pos);
-                t += d;
-                // If we are very close to the object, consider it as a hit and exit this loop
-                if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
-            }
-            return t;
-        };
-        )";
-
-    rendererDefinition << R"(
-        
         //Based on : https://www.shadertoy.com/view/4sSfzK\n";
         vec3 rebond(vec3 ro, vec3 rd)
         {
-            float d = rayMarching(ro,rd);
+            float d = rayMarching(ro,rd, 1).dist;
             vec3 color = vec3(0.020,0.711,0.949);
             vec3 p = ro + rd * d;
             vec3 n = getNormal(p);
@@ -95,31 +79,29 @@ std::string pbr_renderer_codegen(const LightProperties& light, const MaterialPro
     })";
 
     rendererDefinition << R"(
-    vec3 render_pbr(vec3 ro, vec3 rd)
+    vec3 render_pbr(vec3 ro, vec3 rd, vec3 p, vec3 normal, RayMarchRes res)
     {
-        float d = rayMarching(ro,rd);
+        float d = res.dist;
         vec3 color = vec3(0.020,0.711,0.949);
-        vec3 p = ro + rd * d;
-        vec3 n = getNormal(p);
-        vec3 r = reflect(rd,n);
+        vec3 r = reflect(rd,normal);
     )";
     rendererDefinition << light_prop_codegen(light);
     rendererDefinition << material_prop_codegen(material);
     rendererDefinition << R"(    if (d < MAX_DIST) 
         { 
-            vec3 diffuse = vec3(0.);
-            vec3 specular = vec3(0.);
+        vec3 diffuse = vec3(0.);
+        vec3 specular = vec3(0.);
             
-            vec3 halfVec = normalize(ro + ld);
-            float vdoth = clamp(dot(ro, halfVec), 0., 1.);)";
-    rendererDefinition << "        float ndoth = clamp(dot( n, halfVec), 0., 1.);\n";
-    rendererDefinition << "        float ndotv = clamp(dot( n, ro ), 0., 1.);\n";
-    rendererDefinition << "        float ndot1 = clamp(dot( n, ld), 0., 1.);\n";
+        vec3 halfVec = normalize(ro + ld);
+        float vdoth = clamp(dot(ro, halfVec), 0., 1.);)";
+    rendererDefinition << "        float ndoth = clamp(dot( normal, halfVec), 0., 1.);\n";
+    rendererDefinition << "        float ndotv = clamp(dot( normal, ro ), 0., 1.);\n";
+    rendererDefinition << "        float ndot1 = clamp(dot( normal, ld), 0., 1.);\n";
     rendererDefinition << R"(        vec3 envSpecCol = EnvBRDFApprox(SpecularColor, roughtness, ndotv);
     
         diffuse += DiffuseColor;
         //specular += envSpecCol;
-        diffuse += DiffuseColor * lc * clamp(dot(n, ld), 0., 1.);
+        diffuse += DiffuseColor * lc * clamp(dot(normal, ld), 0., 1.);
         )";
     rendererDefinition << R"(        vec3 lightF = Fresnel1Term(SpecularColor, vdoth);
         float lightD = DistributionTerm(roughtness, ndoth);
