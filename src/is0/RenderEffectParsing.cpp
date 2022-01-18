@@ -14,5 +14,5 @@ void parse_render_effect(RenderEffect& render_effect, std::string_view source)
     render_effect.code_template = find_body(source, &next_pos);
     trim_source();
     const auto parameters    = Cool::parse_all_parameter_desc(source);
-    render_effect.parameters = Cool::ParameterList::ParameterList(parameters);
+    render_effect.parameters = Cool::ParameterList(parameters);
 }

@@ -1,0 +1,53 @@
+`
+float _prism_Half_Space_SDF(vec3 pos, vec3 normal, vec3 origin)
+{
+    return dot(pos - origin, normal);
+}
+`
+
+[] (vec3 pos) {
+    float d = -pos.z-Height/2; 
+    for (int i = 0; i < Faces_Count; ++i) {
+        const float c1 = Base_Radius/2 * cos( i * TAU / Faces_Count);
+        const float s1 = Base_Radius/2 * sin( i * TAU / Faces_Count);
+        const vec3 polygon_vertex_1 = vec3(c1, s1, 0.);
+        d = smooth_max_polynomial(d,
+                _prism_Half_Space_SDF(pos, polygon_vertex_1, polygon_vertex_1),
+                Smoothing
+        );
+    }
+    d = smooth_max_polynomial(d,
+                _prism_Half_Space_SDF(pos, vec3(0,0,1), vec3(0,0,Height/2)),
+                Smoothing
+        );
+    return d;
+}
+
+int {
+    "Name": "Faces Count",
+    "Default": 4,
+    "Min": 3,
+    "Max": 20
+}
+
+float {
+    "Name": "Base Radius",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 5
+}
+
+float {
+    "Name": "Height",
+    "Default": 2.5,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "Smoothing",
+    "Default": 0.0,
+    "Min": 0.0,
+    "Max": 0.5
+}
+

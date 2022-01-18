@@ -85,7 +85,7 @@ std::string code_gen_effects_world(const RenderEffectsManager& effects)
 
 bool effect_imgui(RenderEffect& effect)
 {
-    ImGui::Text(effect.name.c_str());
+    ImGui::Text("%s", effect.name.c_str());
     bool has_changed = false;
     ImGui::PushID(&effect);
     effect.parameters.imgui([&has_changed]() { has_changed |= true; });
