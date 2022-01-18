@@ -1,7 +1,9 @@
 #include "RenderEffectsManager.h"
 #include <Cool/File/File.h>
 #include <Cool/Log/ToUser.h>
+#include <Cool/Parameter/ParameterU.h>
 #include <filesystem>
+#include <ranges>
 #include "CodeGen.h"
 #include "RenderEffectParsing.h"
 
@@ -15,12 +17,12 @@ RenderEffectsGestion load_effect(std::string_view render_effects_folder_path)
 {
     RenderEffectsGestion effects_gestion;
     effects_gestion.render_effects_objects.reserve(100);
-    effects_gestion.render_effects_world.reserve(100);
+    effects_gestion.render_effects_always.reserve(100);
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
         if (entry.is_directory()) {
             std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
                                                      ? effects_gestion.render_effects_objects
-                                                     : effects_gestion.render_effects_world;
+                                                     : effects_gestion.render_effects_always;
             for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
                 if (file.is_regular_file()) {
                     try {
@@ -39,6 +41,43 @@ RenderEffectsGestion load_effect(std::string_view render_effects_folder_path)
     return effects_gestion;
 };
 
+std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect)
+{
+    for (auto& effect : new_render_effect) {
+        const auto effect_here = std::ranges::find_if(old_render_effect, [&](const RenderEffect& effect_here) {
+            return effect_here.name == effect.name;
+        });
+        if (effect_here == old_render_effect.end()) {
+        }
+        else {
+            effect.is_active = effect_here->is_active;
+            Cool::ParameterList new_parameters{};
+            new_parameters->reserve(100);
+            for (auto& param : *effect_here->parameters) {
+                const auto desc = std::visit([&](auto&& param) { return Cool::Parameter::AnyDesc(param.description()); }, param);
+                new_parameters->push_back(Cool::ParameterU::make_param(effect_here->parameters, desc));
+            }
+            effect.parameters = std::move(new_parameters);
+        }
+    }
+    return new_render_effect;
+}
+
+RenderEffectsGestion merge(RenderEffectsGestion old_render_effects, RenderEffectsGestion new_render_effects)
+{
+    new_render_effects.render_effects_always  = merge_effect(old_render_effects.render_effects_always, new_render_effects.render_effects_always);
+    new_render_effects.render_effects_objects = merge_effect(old_render_effects.render_effects_objects, new_render_effects.render_effects_objects);
+    return new_render_effects;
+}
+
+RenderEffectsGestion RenderEffectsManager::reload()
+{
+    RenderEffectsGestion new_render_effect = load_effect(render_effects_folder_path);
+    return merge(render_effects, new_render_effect);
+    // update_render_effects(render_effects.render_effects_objects);
+    // update_render_effects(render_effects.render_effects_always);
+}
+
 std::string code_gen_effects_parameters(const RenderEffectsManager& effects)
 {
     std::string code = "";
@@ -49,7 +88,7 @@ std::string code_gen_effects_parameters(const RenderEffectsManager& effects)
             code += effect.extra_code;
         }
     }
-    for (const auto& effect : effects.render_effects.render_effects_world) {
+    for (const auto& effect : effects.render_effects.render_effects_always) {
         if (effect.is_active) {
             code += CodeGen::parameters_definitions(effect.parameters);
             code += "\n";
@@ -71,10 +110,10 @@ std::string code_gen_effects_object(const RenderEffectsManager& effects)
     return code;
 };
 
-std::string code_gen_effects_world(const RenderEffectsManager& effects)
+std::string code_gen_effects_always(const RenderEffectsManager& effects)
 {
     std::string code = "";
-    for (const auto& effect : effects.render_effects.render_effects_world) {
+    for (const auto& effect : effects.render_effects.render_effects_always) {
         if (effect.is_active) {
             code += effect.code_template;
             code += "\n";
@@ -102,7 +141,7 @@ bool effect_imgui_window(RenderEffectsManager& effects)
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }
-    for (auto& param : effects.render_effects.render_effects_world) {
+    for (auto& param : effects.render_effects.render_effects_always) {
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }

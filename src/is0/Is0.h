@@ -24,6 +24,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Node Editor", _editor));
+        archive(cereal::make_nvp("Node Editor", _editor),
+                cereal::make_nvp("Render Effects Manager", _effects));
     }
 };

@@ -24,13 +24,13 @@ then it will be used as `fresnel_strenght`:
 
 ## Render effects types ?
 
-At this moment there only two types of render effects, `Object` and `World`. They aren't used at the same place so it's really important to know what affects your effect.
+At this moment there only two types of render effects, `Object` and `Always`. They aren't used at the same place so it's really important to know what affects your effect.
 
 The `Object` render effects are applied to the object of the scene. Among them, we can find effect like fresnel or reflection.
 ![Objects render effects](./object.png)
 
-The `World` render effects always applies no matter if the ray touches the object or not. Among them, we can find the glow.
-![World render effects](./world.png)
+The `Always` render effects always applies no matter if the ray touches the object or not. Among them, we can find the glow.
+![Always render effects](./always.png)
 
 ## Parameters
 
@@ -86,7 +86,7 @@ struct RayMarchRes {
 
 ## Create your own render effect
 
-Before creating yout render effect file, you have to ask yourself what type of effect you want to create. Will it be an `Object` effect or a `World` one. Then you can create the file in the correct folder.
+Before creating yout render effect file, you have to ask yourself what type of effect you want to create. Will it be an `Object` effect, a `Always` one or a new one. Then you can create the file in the correct folder if it already exist else create the new folder.
 
 If you don't know how to start, take a look at the files already here. Then create your effect in the function body and remenber that if you want to use modular parameters declare them below the function body.
 
