@@ -108,6 +108,7 @@ bool NodeEditor::handle_node_deletion()
         for (const int node_id : selected_nodes) {
             _tree.delete_node(NodeId{node_id});
         }
+        ImNodes::ClearNodeSelection();
         return true;
     }
     return false;
