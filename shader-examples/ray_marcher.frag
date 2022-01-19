@@ -1,6 +1,6 @@
 #version 430
 
-in vec2       _uv;
+layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4      out_Color;
 
