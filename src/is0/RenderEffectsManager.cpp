@@ -72,8 +72,6 @@ RenderEffectsGestion RenderEffectsManager::reload()
 {
     RenderEffectsGestion new_render_effect = load_effect(render_effects_folder_path);
     return merge(render_effects, new_render_effect);
-    // update_render_effects(render_effects.render_effects_objects);
-    // update_render_effects(render_effects.render_effects_always);
 }
 
 std::string code_gen_effects_parameters(const RenderEffectsManager& effects)

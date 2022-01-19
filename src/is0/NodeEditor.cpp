@@ -182,11 +182,6 @@ void NodeEditor::update_templates_and_nodes()
         }
         else {
             // Update params
-            /*Cool::ParameterList new_parameters{};
-            new_parameters->reserve(node.parameter_list->size());
-            for (const auto& desc : node_template->parameters) {
-                new_parameters->push_back(Cool::ParameterU::make_param(node.parameter_list, desc));
-            }*/
             node.parameter_list = Cool::ParameterU::parameters_update(node_template->parameters, node.parameter_list);
             // Update input pins
             const auto nb_pins = node_template->sdf_identifiers.size();
