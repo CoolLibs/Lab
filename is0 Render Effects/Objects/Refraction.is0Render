@@ -9,12 +9,12 @@ float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberati
 `
 
 [] (RayMarchRes res) {
-    vec3 reflet_out    = reflect(res.rd, res.normal);
-    vec3 refraction_in = refract(res.rd, res.normal, 1. / IOR);
+    vec3 reflet_out    = reflect(res.ray_direction, res.normal);
+    vec3 refraction_in = refract(res.ray_direction, res.normal, 1. / IOR);
 
     vec3        p_enter = res.hit_position - res.normal * SURF_DIST * 3.;
     RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERT_SDF); // Inside
-    float       d2      = d_in.dist;
+    float       d2      = d_in.distance;
 
     vec3  p_exit         = p_enter + refraction_in * d2;
     vec3  norm_exit      = -getNormal(p_exit);
@@ -29,7 +29,7 @@ float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberati
 
     float optical_distance   = exp(-d2 * Density);
     reflect_text             = reflect_text * optical_distance;
-    float fresnel_reflection = pow(1. + dot(rd, normal), 5.);
+    float fresnel_reflection = pow(1. + dot(res.ray_direction, res.normal), 5.);
 
     finalCol += mix(reflect_text, reflet_out, fresnel_reflection);
 }

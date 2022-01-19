@@ -28,9 +28,9 @@ out vec4 out_Color;
 #define INVERT_SDF -1.
 
 struct RayMarchRes {
-    float dist;
+    float distance;
     int iterations_count;
-    vec3 rd;
+    vec3 ray_direction;
     vec3 hit_position;
     vec3 normal;
 };
@@ -65,7 +65,7 @@ vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
     
     RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
-    float d = res.dist;
+    float d = res.distance;
     float iterations_count = res.iterations_count;
     vec3 p = res.hit_position;
     vec3 normal = res.normal;

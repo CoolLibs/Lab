@@ -25,9 +25,8 @@ private:
     bool handle_node_deletion();
 
 private:
-    std::string         _factory_folder_path;
     UniqueImNodeContext _context;
-    NodeFactory         _factory{_factory_folder_path};
+    NodeFactory         _factory;
     NodeTree            _tree;
     bool                _all_nodes_have_a_valid_template = true;
     bool                _tree_has_changed                = true;

@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 NodeEditor::NodeEditor(std::string_view factory_folder_path)
-    : _factory_folder_path{factory_folder_path}
+    : _factory{factory_folder_path}
 {
 }
 
