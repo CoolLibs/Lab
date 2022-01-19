@@ -5,8 +5,8 @@ App::App(Cool::WindowManager& windows)
 {
     _clock.pause();
 #if IS0_TEST_NODES
-    for (const auto& node_templates : _shader_manager.nodes_templates()) {
-        _shader_manager.add_node(NodeFactoryU::node_from_template(node_templates));
+    for (const auto& node_template : _shader_manager.nodes_templates()) {
+        _shader_manager.add_node(NodeFactoryU::node_from_template(node_template));
     }
 #endif
 }
