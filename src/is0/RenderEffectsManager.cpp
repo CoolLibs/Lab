@@ -62,7 +62,7 @@ RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_r
     return new_render_effects;
 }
 
-RenderEffects reload(std::string_view render_effects_folder_path, const RenderEffects& render_effects)
+RenderEffects reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects)
 {
     RenderEffects new_render_effect = load_effects(render_effects_folder_path);
     return merge(render_effects, new_render_effect);

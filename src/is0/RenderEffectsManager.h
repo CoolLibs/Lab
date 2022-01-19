@@ -20,7 +20,7 @@ private:
 RenderEffects             load_effects(std::string_view render_effects_folder_path);
 std::vector<RenderEffect> merge_effects(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect);
 RenderEffects             merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects);
-RenderEffects             reload(std::string_view render_effects_folder_path, const RenderEffects& render_effects);
+RenderEffects             reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects);
 
 class RenderEffectsManager {
 public:
@@ -35,7 +35,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::make_nvp("Render Effects", render_effects));
-        render_effects = reload(render_effects_folder_path, render_effects);
+        render_effects = reload_effects(render_effects_folder_path, render_effects);
     }
 };
 
