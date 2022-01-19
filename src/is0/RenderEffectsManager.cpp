@@ -94,22 +94,10 @@ std::string code_gen_effects_parameters(const RenderEffectsManager& effects)
     return code;
 };
 
-std::string code_gen_effects_object(const RenderEffectsManager& effects)
+std::string code_gen_effects(const std::vector<RenderEffect>& render_effects)
 {
     std::string code = "";
-    for (const auto& effect : effects.render_effects.render_effects_objects) {
-        if (effect.is_active) {
-            code += effect.code_template;
-            code += "\n";
-        }
-    }
-    return code;
-};
-
-std::string code_gen_effects_always(const RenderEffectsManager& effects)
-{
-    std::string code = "";
-    for (const auto& effect : effects.render_effects.render_effects_always) {
+    for (const auto& effect : render_effects) {
         if (effect.is_active) {
             code += effect.code_template;
             code += "\n";
