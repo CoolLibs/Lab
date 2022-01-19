@@ -1,4 +1,5 @@
 #include "RenderEffects.h"
+#include "CodeGen.h"
 
 std::string code_gen_effects_parameters(const RenderEffects& effects)
 {

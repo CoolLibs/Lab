@@ -1,4 +1,11 @@
-## Parameter name
+## The structure of the file
+
+
+## Error: `rapidjson internal assertion failure: IsObject()`
+
+This means that one of your parameters isn't specified in valid JSON: maybe you are missing a `,`, a `}`, or you have a `,` after the last value of your parameter? It might also be that floats need to have a decimal part: `0.` is not valid but `0.0` is.
+
+## Parameter names
 
 You can put spaces and `-` in the names of your parameters; just know that you have to replace them with an `_` when using your parameter in your function body. For example if you have this parameter:
 ```json

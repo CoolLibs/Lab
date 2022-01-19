@@ -1,10 +1,10 @@
 [] (vec3 pos) {
-	vec3 q = abs(pos) - radius;  
+	vec3 q = abs(pos) - Radius;  
 	return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.);  
 }
 
 float {
-    "Name": "radius",
+    "Name": "Radius",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0

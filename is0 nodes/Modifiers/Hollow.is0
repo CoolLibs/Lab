@@ -1,0 +1,12 @@
+[SDF](vec3 p) {
+    return IS0_FIX_ARTIFACTS(
+        abs(${SDF}(p)) - Surface_Thickness
+    );
+}
+
+float {
+    "Name": "Surface Thickness",
+    "Default": 0.01,
+    "Min": 0.0,
+    "Max": 1.0
+}

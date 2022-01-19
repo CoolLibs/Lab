@@ -1,0 +1,33 @@
+`
+float menger_sponge_cross_dist(vec3 p)
+{
+    vec3 absp = abs(p);
+    // get the distance to the closest axis
+    float maxyz = max(absp.y, absp.z);
+    float maxxz = max(absp.x, absp.z);
+    float maxxy = max(absp.x, absp.y);
+    float cr = 1.0 - (step(maxyz, absp.x) * maxyz + step(maxxz, absp.y) * maxxz + step(maxxy, absp.z) * maxxy);
+    // cube
+    float cu = max(maxxy, absp.z) - 3.0;
+    // remove the cross from the cube
+    return max(cr, cu);
+}
+`
+
+[] (vec3 p) {
+    float scale = 1.0;
+    float dist = -MAX_DIST;
+    for (int i = 0; i < Iterations; i++) {
+        dist = max(dist, menger_sponge_cross_dist(p) * scale);
+        p = fract((p - 1.0) * 0.5) * 6.0 - 3.0;
+        scale /= 3.0;
+    }
+    return dist;
+}
+
+int {
+    "Name": "Iterations",
+    "Default": 5,
+    "Min": 1,
+    "Max": 8
+}

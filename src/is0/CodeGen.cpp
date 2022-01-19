@@ -12,18 +12,17 @@ static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
 )";
 
 static constexpr const char* ray_marcher_begin = R"(#version 430
-
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
-
 // clang-format off
 #include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/pbr_calc.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
+#include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
 #include "is0 shaders/light.glsl"
+#include "is0 shaders/hg_sdf.glsl" 
 // clang-format on
-
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
 #define MAX_DIST 200.
@@ -31,8 +30,6 @@ out vec4 out_Color;
 #define NORMAL_DELTA 0.0001
 #define DONT_INVERT_SDF 1.
 #define INVERT_SDF -1.
-
-
 float sph(vec3 i, vec3 f, vec3 c){
     float rad = 0.5*hash_0_to_1(i+c);
     return length(f-vec3(c)) - rad;
@@ -42,7 +39,6 @@ struct RayMarchRes {
     int iterations_count;
     int render;
 };
-
 )";
 
 static std::string render(const RenderEffects& effects)
@@ -80,7 +76,6 @@ RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     return RayMarchRes(t,i,)" +
                       std::to_string(rend) + R"();
 }
-
 vec3 getNormal(vec3 p) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
@@ -89,7 +84,6 @@ vec3 getNormal(vec3 p) {
                       k.yxy * is0_main_sdf( p + k.yxy*h ) +
                       k.xxx * is0_main_sdf( p + k.xxx*h ) );
 }
-
 )";
     return rmi;
 }
@@ -144,9 +138,18 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
+static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) -> std::string
+{
+    return std::accumulate(
+        node_templates.begin(), node_templates.end(), std::string{}, [](const std::string& acc, const NodeTemplate& node_template) {
+            return acc + node_template.extra_code;
+        });
+}
+
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material, int rend)
 {
     return ray_marcher_begin +
+           nodes_extra_code(node_templates) +
            code_gen_effects_parameters(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
@@ -197,8 +200,7 @@ std::string convert_to_valid_glsl_name(std::string name)
 
 std::string function_name(const FnNameParams& p)
 {
-    return convert_to_valid_glsl_name(std::string{p.node_template_name} +
-                                      "_" + std::to_string(*p.node_id));
+    return convert_to_valid_glsl_name(std::string{p.node_template_name} + std::to_string(*p.node_id));
 }
 
 std::string function_signature(const FnSignatureParams& p)

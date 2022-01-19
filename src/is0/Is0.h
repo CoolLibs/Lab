@@ -8,9 +8,11 @@
 
 class Is0 : public ShaderManager {
 public:
-    void update() override;
-    void imgui_windows() override;
-    void on_key_pressed(const Cool::KeyboardEvent& event) override;
+    void                             update() override;
+    void                             imgui_windows() override;
+    void                             on_key_pressed(const Cool::KeyboardEvent& event) override;
+    void                             add_node(const Node& node) { _editor.add_node(node); }
+    const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
 
 private:
     NodeEditor                  _editor;

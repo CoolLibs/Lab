@@ -4,5 +4,5 @@
 int main()
 {
     Cool::run<App>({Cool::WindowConfig{.title                  = "Cool Lab",
-                                       .maximize_on_startup_if = Cool::is_building_as(Cool::BuildMode::Release)}});
+                                       .maximize_on_startup_if = true}});
 }

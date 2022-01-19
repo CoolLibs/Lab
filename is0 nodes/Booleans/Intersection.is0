@@ -1,3 +1,0 @@
-[SDF1 SDF2] (vec3 pos) {
-    return max(${SDF1}(pos), ${SDF2}(pos));
-}
