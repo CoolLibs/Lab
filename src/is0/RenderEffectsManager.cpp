@@ -48,14 +48,8 @@ std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effe
         if (effect_here == old_render_effect.end()) {
         }
         else {
-            effect.is_active = effect_here->is_active;
-            Cool::ParameterList new_parameters{};
-            new_parameters->reserve(effect_here->parameters->size());
-            for (auto& param : *effect_here->parameters) {
-                const auto desc = std::visit([&](auto&& param) { return Cool::Parameter::AnyDesc(param.description()); }, param);
-                new_parameters->push_back(Cool::ParameterU::make_param(effect_here->parameters, desc));
-            }
-            effect.parameters = std::move(new_parameters);
+            effect.is_active  = effect_here->is_active;
+            effect.parameters = Cool::ParameterU::parameters_update(*effect_here->parameters, effect_here->parameters);
         }
     }
     return new_render_effect;
