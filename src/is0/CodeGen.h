@@ -8,7 +8,7 @@
 
 namespace CodeGen {
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material, const int& rend);
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material, int rend);
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates);
 

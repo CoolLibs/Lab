@@ -7,7 +7,6 @@
 bool smoke_imgui_window(RenderEffect_Smoke& prop)
 {
     ImGui::Text("Smoke");
-    //bool has_changed = ImGui::Checkbox("Smoke Active", &prop.is_active);
     bool has_changed = prop.ABSORPTION_COEFFICIENT.imgui();
     has_changed |= prop.MARCH_MULTIPLIER.imgui();
     has_changed |= prop.MAX_VOLUME_MARCH_STEPS.imgui();

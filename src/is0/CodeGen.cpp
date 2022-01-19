@@ -32,27 +32,6 @@ out vec4 out_Color;
 #define DONT_INVERT_SDF 1.
 #define INVERT_SDF -1.
 
-#define saturate(v) clamp(v, 0., 1.)
-
-float smooth_min(float f1, float f2, float strength) {
-    float h = clamp(0.5 +0.5*(f2-f1)/strength, 0.0, 1.0);
-    return mix(f2, f1, h) - strength*h*(1.0-h);
-}
-
-float smooth_max(float f1, float f2, float strength) {
-    float h = clamp(0.5 - 0.5*(f2-f1)/strength, 0.0, 1.0);
-    return mix(f2, f1, h) + strength*h*(1.0-h);
-}
-
-
-float hash(vec3 x)
-{
-    // based on: pcg3 by Mark Jarzynski: http://www.jcgt.org/published/0009/03/02/
-    uvec3 v = uvec3(x * 8192.0) * 1664525u + 1013904223u;
-    v += v.yzx * v.zxy;
-    v ^= v >> 16u;
-    return float(v.x + v.y * v.z) * (1.0 / float(0xffffffffu));
-}
 
 float sph(vec3 i, vec3 f, vec3 c){
     float rad = 0.5*hash_0_to_1(i+c);
@@ -165,7 +144,7 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material, const int& rend)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material, int rend)
 {
     return ray_marcher_begin +
            code_gen_effects_parameters(effects) +
