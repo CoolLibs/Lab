@@ -1,7 +1,7 @@
 [] (vec3 pos) {
     pos.z -= Height;
     vec2 q = vec2(Base_Radius, -Height);  
-    vec2 w = vec2(length(pos.xy), pos.z +Height/2);
+    vec2 w = vec2(length(pos.xy), pos.z + Height / 2.);
     vec2 a = w - q * clamp(dot(w, q) / dot(q, q), 0., 1.);
     vec2 b = w - q * vec2(clamp(w.x / q.x, 0., 1.), 1.);
     float d = min(dot(a, a), dot(b, b));

@@ -1,9 +1,9 @@
 [SDF1 SDF2] (vec3 p) {
-    return fOpEngrave(${SDF1}(p), ${SDF2}(p), Deepness);
+    return fOpEngrave(${SDF1}(p), ${SDF2}(p), Depth);
 }
 
 float {
-    "Name": "Deepness",
+    "Name": "Depth",
     "Default": 0.07,
     "Min": 0.0,
     "Max": 1.0

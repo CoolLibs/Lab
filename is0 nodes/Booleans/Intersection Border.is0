@@ -1,5 +1,5 @@
 [SDF1 SDF2] (vec3 p) {
-    return fOpPipe(${SDF1}(p), ${SDF2}(p), Thickness);
+    return IS0_FIX_ARTIFACTS(fOpPipe(${SDF1}(p), ${SDF2}(p), Thickness));
 }
 
 float {

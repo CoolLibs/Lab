@@ -1,5 +1,5 @@
 [SDF1 SDF2] (vec3 pos) {
-    return fOpIntersectionStairs(${SDF1}(pos), ${SDF2}(pos), Step_Size, Steps + 1);
+    return fOpUnionColumns(${SDF1}(pos), ${SDF2}(pos), Step_Size, Steps + 1);
 }
 
 float {
@@ -8,7 +8,6 @@ float {
     "Min": 0.0,
     "Max": 1.0
 }
-
 int {
     "Name": "Steps",
     "Default": 4,

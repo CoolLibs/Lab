@@ -6,8 +6,8 @@ float _pyramid_Half_Space_SDF(vec3 pos, vec3 normal, vec3 origin)
 `
 
 [] (vec3 pos) {
-    const vec3 tip = vec3(0., 0., Height/2);
-    float d = -pos.z-Height/2; // Distance to the base
+    const vec3 tip = vec3(0., 0., Height / 2.);
+    float d = -pos.z - Height / 2.; // Distance to the base
     for (int i = 0; i < Faces_Count; ++i) {
         const float c1 = Base_Radius * cos( i      * TAU / Faces_Count);
         const float s1 = Base_Radius * sin( i      * TAU / Faces_Count);

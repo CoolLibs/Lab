@@ -5,14 +5,14 @@
 
 float {
     "Name": "Radius",
-    "Default": 0.5,
+    "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0
 }
 
 float {
     "Name": "Height",
-    "Default": 1.0,
+    "Default": 2.0,
     "Min": 0.0,
     "Max": 10.0
 }

@@ -12,7 +12,7 @@ float {
 
 float {
     "Name": "Height",
-    "Default": 1.0,
+    "Default": 2.0,
     "Min": 0.0,
     "Max": 10.0
 }
