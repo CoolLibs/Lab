@@ -17,7 +17,7 @@ float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberati
     float       d2      = d_in.distance;
 
     vec3  p_exit         = p_enter + refraction_in * d2;
-    vec3  norm_exit      = -getNormal(p_exit);
+    vec3  norm_exit      = -get_normal(p_exit);
     vec3  reflect_text   = vec3(0);
 
     // Red

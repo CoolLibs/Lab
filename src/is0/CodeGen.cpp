@@ -38,7 +38,7 @@ struct RayMarchRes {
 )";
 
 static constexpr const char* ray_marcher = R"(
-vec3 getNormal(vec3 p) {
+vec3 get_normal(vec3 p) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
     return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
@@ -57,8 +57,8 @@ RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
-    vec3 pos_final = ro + rd * t;
-    return RayMarchRes(t, i, rd, pos_final, getNormal(pos_final));
+    vec3 final_pos = ro + rd * t;
+    return RayMarchRes(t, i, rd, final_pos, get_normal(final_pos));
 }
 
 vec3 render(vec3 ro, vec3 rd) {
