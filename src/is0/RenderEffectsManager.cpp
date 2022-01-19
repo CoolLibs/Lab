@@ -55,14 +55,14 @@ std::vector<RenderEffect> merge_effects(std::vector<RenderEffect> old_render_eff
     return new_render_effect;
 }
 
-RenderEffects merge(RenderEffects old_render_effects, RenderEffects new_render_effects)
+RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects)
 {
     new_render_effects.always_applied = merge_effects(old_render_effects.always_applied, new_render_effects.always_applied);
     new_render_effects.for_objects    = merge_effects(old_render_effects.for_objects, new_render_effects.for_objects);
     return new_render_effects;
 }
 
-RenderEffects RenderEffectsManager::reload()
+RenderEffects reload(std::string_view render_effects_folder_path, const RenderEffects& render_effects)
 {
     RenderEffects new_render_effect = load_effects(render_effects_folder_path);
     return merge(render_effects, new_render_effect);
