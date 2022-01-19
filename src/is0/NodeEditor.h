@@ -14,6 +14,7 @@ public:
     bool tree_is_valid() const { return _all_nodes_have_a_valid_template; }
     auto tree() const -> const NodeTree& { return _tree; }
     auto node_templates() const -> const std::vector<NodeTemplate>& { return _factory.templates(); }
+    void add_node(Node node);
 
 private:
     bool wants_to_delete_selection() const;

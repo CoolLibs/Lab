@@ -2,6 +2,16 @@
 #include <Cool/Input/Input.h>
 #include "CodeGen.h"
 
+void Is0::add_node(Node node)
+{
+    _editor.add_node(node);
+}
+
+const std::vector<NodeTemplate>& Is0::nodes()
+{
+    return _editor.node_templates();
+}
+
 void Is0::update()
 {
     if (_editor.tree_has_changed() || _must_recompile) {

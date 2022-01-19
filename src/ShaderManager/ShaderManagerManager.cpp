@@ -7,3 +7,13 @@ void ShaderManagerManager::imgui_windows()
     ImGui::End();
     operator*().imgui_windows();
 }
+
+void ShaderManagerManager::add_node(Node node)
+{
+    _is0.add_node(node);
+}
+
+const std::vector<NodeTemplate>& ShaderManagerManager::nodes()
+{
+    return _is0.nodes();
+}

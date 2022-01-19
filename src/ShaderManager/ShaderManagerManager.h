@@ -12,13 +12,16 @@ public:
     ShaderManager* operator->() { return &operator*(); }
     // clang-format on
 
+    void                             add_node(Node node);
+    const std::vector<NodeTemplate>& nodes();
+
 private:
     bool                   _use_nodes = true;
     Is0                    _is0;
     ShaderManager_FromText _from_text;
 
 private:
-    //Serialization
+    // Serialization
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)

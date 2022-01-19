@@ -37,3 +37,10 @@ include("Cool/CMakeUtils/files_and_folders.cmake")
 Cool__target_copy_folder(${PROJECT_NAME} "shader-examples")
 Cool__target_copy_folder(${PROJECT_NAME} "is0 nodes")
 Cool__target_copy_folder(${PROJECT_NAME} "is0 shaders")
+
+option(TestIs0Shaders "Test all Is0 shaders" OFF)
+if (TestIs0Shaders)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        IS0_TEST_NODES
+    )
+endif()

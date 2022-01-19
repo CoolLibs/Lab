@@ -3,6 +3,11 @@
 #include <Cool/Parameter/ParameterU.h>
 #include <GLFW/glfw3.h>
 
+void NodeEditor::add_node(Node node)
+{
+    _tree.add_node(node);
+}
+
 bool NodeEditor::tree_has_changed()
 {
     bool b            = _tree_has_changed;

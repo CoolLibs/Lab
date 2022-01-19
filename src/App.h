@@ -23,7 +23,9 @@ private:
 private:
     ShaderManagerManager _shader_manager;
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
+    #if !IS0_TEST_NODES
     Cool::AutoSerializer<App> _auto_serializer{Cool::Path::root() + "/last-session-cache.json", "App", *this};
+    #endif
 
 private:
     // Serialization

@@ -7,9 +7,11 @@
 
 class Is0 : public ShaderManager {
 public:
-    void update() override;
-    void imgui_windows() override;
-    void on_key_pressed(const Cool::KeyboardEvent& event) override;
+    void                             update() override;
+    void                             imgui_windows() override;
+    void                             on_key_pressed(const Cool::KeyboardEvent& event) override;
+    void                             add_node(Node node);
+    const std::vector<NodeTemplate>& nodes();
 
 private:
     NodeEditor        _editor;
