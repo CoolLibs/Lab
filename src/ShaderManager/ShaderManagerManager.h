@@ -12,8 +12,8 @@ public:
     ShaderManager* operator->() { return &operator*(); }
     // clang-format on
 
-    inline void                             add_node(const Node& node) { _is0.add_node(node); }
-    inline const std::vector<NodeTemplate>& nodes_templates() { return _is0.nodes_templates(); }
+    void                             add_node(const Node& node) { _is0.add_node(node); }
+    const std::vector<NodeTemplate>& nodes_templates() { return _is0.nodes_templates(); }
 
 private:
     bool                   _use_nodes = true;

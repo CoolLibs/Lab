@@ -38,7 +38,7 @@ Cool__target_copy_folder(${PROJECT_NAME} "shader-examples")
 Cool__target_copy_folder(${PROJECT_NAME} "is0 nodes")
 Cool__target_copy_folder(${PROJECT_NAME} "is0 shaders")
 
-option(TEST_IS0_NODES "Test all Is0 NODES" OFF)
+option(TEST_IS0_NODES "Test all Is0 Nodes" OFF)
 if (TEST_IS0_NODES)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         IS0_TEST_NODES
