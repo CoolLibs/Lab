@@ -12,16 +12,7 @@ exports/
 myShaders/
 
 last-session-cache.json
-<<<<<<< Updated upstream
 
 NodeEditor.json
 
 is0_node_editor.ini
-=======
-
-NodeEditor.json
-
-is0_node_editor.ini
-
-imgui.ini
->>>>>>> Stashed changes
