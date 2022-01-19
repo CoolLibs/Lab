@@ -3,8 +3,8 @@
 #include <Cool/Parameter/ParameterU.h>
 #include <GLFW/glfw3.h>
 
-NodeEditor::NodeEditor(std::string_view factory_folder_path)
-    : _factory{factory_folder_path}
+NodeEditor::NodeEditor(std::string_view nodes_folder_path)
+    : _factory{nodes_folder_path}
 {
 }
 
@@ -182,7 +182,7 @@ void NodeEditor::update_templates_and_nodes()
         }
         else {
             // Update params
-            node.parameter_list = Cool::ParameterU::parameters_update(node_template->parameters, node.parameter_list);
+            node.parameter_list = Cool::ParameterU::update_parameters(node_template->parameters, node.parameter_list);
             // Update input pins
             const auto nb_pins = node_template->sdf_identifiers.size();
             if (nb_pins < node.input_pins.size()) {

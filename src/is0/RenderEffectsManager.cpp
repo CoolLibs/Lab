@@ -49,7 +49,7 @@ std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effe
         }
         else {
             effect.is_active  = effect_here->is_active;
-            effect.parameters = Cool::ParameterU::parameters_update(*effect_here->parameters, effect_here->parameters);
+            effect.parameters = Cool::ParameterU::update_parameters(*effect_here->parameters, effect_here->parameters);
         }
     }
     return new_render_effect;

@@ -7,7 +7,7 @@
 
 class NodeEditor {
 public:
-    explicit NodeEditor(std::string_view factory_folder_path);
+    explicit NodeEditor(std::string_view nodes_folder_path);
     void imgui_window();
     void update_templates_and_nodes();
     void open_menu();
