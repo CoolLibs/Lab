@@ -67,7 +67,7 @@ vec3 getNormal(vec3 p) {
 
 )";
 
-static constexpr std::string render(const RenderEffects& effects)
+static std::string render(const RenderEffects& effects)
 {
     return R"(
 
