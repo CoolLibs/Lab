@@ -7,7 +7,7 @@ struct NodeTree {
     std::vector<Node> nodes;
     std::vector<Link> links;
 
-    void add_node(const Node& node); // TODO const&
+    void add_node(const Node& node);
     void add_link(Link link);
 
     void delete_node(NodeId node_id);
