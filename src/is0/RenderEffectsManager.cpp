@@ -9,11 +9,11 @@
 
 RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folder_path)
     : render_effects_folder_path{render_effects_folder_path}
-    , render_effects{load_effect(render_effects_folder_path)}
+    , render_effects{load_effects(render_effects_folder_path)}
 {
 }
 
-RenderEffects load_effect(std::string_view render_effects_folder_path)
+RenderEffects load_effects(std::string_view render_effects_folder_path)
 {
     RenderEffects effects_gestion;
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
@@ -39,7 +39,7 @@ RenderEffects load_effect(std::string_view render_effects_folder_path)
     return effects_gestion;
 };
 
-std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect)
+std::vector<RenderEffect> merge_effects(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect)
 {
     for (auto& effect : new_render_effect) {
         const auto effect_here = std::ranges::find_if(old_render_effect, [&](const RenderEffect& effect_here) {
@@ -57,14 +57,14 @@ std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effe
 
 RenderEffects merge(RenderEffects old_render_effects, RenderEffects new_render_effects)
 {
-    new_render_effects.always_applied = merge_effect(old_render_effects.always_applied, new_render_effects.always_applied);
-    new_render_effects.for_objects    = merge_effect(old_render_effects.for_objects, new_render_effects.for_objects);
+    new_render_effects.always_applied = merge_effects(old_render_effects.always_applied, new_render_effects.always_applied);
+    new_render_effects.for_objects    = merge_effects(old_render_effects.for_objects, new_render_effects.for_objects);
     return new_render_effects;
 }
 
 RenderEffects RenderEffectsManager::reload()
 {
-    RenderEffects new_render_effect = load_effect(render_effects_folder_path);
+    RenderEffects new_render_effect = load_effects(render_effects_folder_path);
     return merge(render_effects, new_render_effect);
 }
 

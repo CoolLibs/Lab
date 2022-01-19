@@ -17,8 +17,8 @@ private:
     }
 };
 
-RenderEffects             load_effect(std::string_view render_effects_folder_path);
-std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect);
+RenderEffects             load_effects(std::string_view render_effects_folder_path);
+std::vector<RenderEffect> merge_effects(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect);
 RenderEffects             merge(RenderEffects old_render_effects, RenderEffects new_render_effects);
 
 class RenderEffectsManager {
