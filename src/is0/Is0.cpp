@@ -16,7 +16,7 @@ void Is0::update()
     }
 }
 
-void Is0::imgui_window()
+void Is0::imgui_windows()
 {
     _editor.imgui_window();
     _shader_code_window.show([&]() {
