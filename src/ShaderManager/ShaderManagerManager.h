@@ -13,11 +13,7 @@ public:
     // clang-format on
 
     inline void                             add_node(const Node& node) { _is0.add_node(node); }
-<<<<<<< HEAD
     inline const std::vector<NodeTemplate>& nodes_templates() { return _is0.nodes_templates(); }
-=======
-    inline const std::vector<NodeTemplate>& nodes_template() { return _is0.nodes_template(); }
->>>>>>> Is0_Shader_test
 
 private:
     bool                   _use_nodes = true;

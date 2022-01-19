@@ -11,11 +11,7 @@ public:
     void                                    imgui_windows() override;
     void                                    on_key_pressed(const Cool::KeyboardEvent& event) override;
     inline void                             add_node(const Node& node) { _editor.add_node(node); }
-<<<<<<< HEAD
     inline const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
-=======
-    inline const std::vector<NodeTemplate>& nodes_template() { return _editor.node_templates(); }
->>>>>>> Is0_Shader_test
 
 private:
     NodeEditor        _editor;
