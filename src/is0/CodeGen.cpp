@@ -119,13 +119,13 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
 {
     return ray_marcher_begin +
            nodes_extra_code(node_templates) +
-           code_gen_effects_parameters(effects) +
+           code_gen_render_effects_extra_code(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
            ray_marcher +
-           code_gen_effects(effects.for_objects) +
+           code_gen_render_effects(effects.for_objects) +
            "}" +
-           code_gen_effects(effects.always_applied) +
+           code_gen_render_effects(effects.always_applied) +
            ray_marcher_end;
 }
 

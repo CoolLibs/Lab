@@ -39,15 +39,13 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
     return effects_gestion;
 };
 
-std::vector<RenderEffect> merge_effects(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect)
+std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_render_effect, std::vector<RenderEffect> new_render_effect)
 {
     for (auto& effect : new_render_effect) {
         const auto effect_here = std::ranges::find_if(old_render_effect, [&](const RenderEffect& effect_here) {
             return effect_here.name == effect.name;
         });
-        if (effect_here == old_render_effect.end()) {
-        }
-        else {
+        if (effect_here != old_render_effect.end()) {
             effect.is_active  = effect_here->is_active;
             effect.parameters = Cool::ParameterU::update_parameters(*effect_here->parameters, effect_here->parameters);
         }
@@ -64,11 +62,10 @@ RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_r
 
 RenderEffects reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects)
 {
-    RenderEffects new_render_effect = load_effects(render_effects_folder_path);
-    return merge(render_effects, new_render_effect);
+    return merge(render_effects, load_effects(render_effects_folder_path));
 }
 
-std::string code_gen_effects_parameters(const RenderEffects& effects)
+std::string code_gen_render_effects_extra_code(const RenderEffects& effects)
 {
     std::string code = "";
     for (const auto& effect : effects.for_objects) {
@@ -84,14 +81,14 @@ std::string code_gen_effects_parameters(const RenderEffects& effects)
     return code;
 };
 
-std::string code_gen_effects(const std::vector<RenderEffect>& render_effects)
+std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effects)
 {
     std::string code = "";
     for (const auto& effect : render_effects) {
         if (effect.is_active) {
             code += CodeGen::parameters_definitions(effect.parameters);
             code += effect.code;
-            code += "\n";
+            code += '\n';
         }
     }
     return code;
@@ -102,7 +99,7 @@ bool effect_imgui(RenderEffect& effect)
     ImGui::Text(effect.name.c_str());
     bool has_changed = false;
     ImGui::PushID(&effect);
-    effect.parameters.imgui([&has_changed]() { has_changed |= true; });
+    effect.parameters.imgui([&has_changed]() { has_changed = true; });
     has_changed |= ImGui::Checkbox("Enabled", &effect.is_active);
     ImGui::PopID();
     return has_changed;

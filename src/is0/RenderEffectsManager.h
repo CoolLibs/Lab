@@ -18,7 +18,7 @@ private:
 };
 
 RenderEffects             load_effects(std::string_view render_effects_folder_path);
-std::vector<RenderEffect> merge_effects(std::vector<RenderEffect> old_render_effect, std::vector<RenderEffect> new_render_effect);
+std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_render_effect, std::vector<RenderEffect> new_render_effect);
 RenderEffects             merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects);
 RenderEffects             reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects);
 
@@ -39,8 +39,8 @@ private:
     }
 };
 
-std::string code_gen_effects_parameters(const RenderEffects& effects);
-std::string code_gen_effects(const std::vector<RenderEffect>& render_effects);
+std::string code_gen_render_effects_extra_code(const RenderEffects& effects);
+std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effects);
 
 bool effect_imgui(RenderEffect& effect);
 bool effect_imgui_window(RenderEffects& effects);
