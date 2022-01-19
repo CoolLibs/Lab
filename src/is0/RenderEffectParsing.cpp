@@ -9,7 +9,7 @@ void parse_render_effect(RenderEffect& render_effect, std::string_view source)
     };
     render_effect.extra_code = find_extra_code(source, &next_pos);
     trim_source();
-    render_effect.parameters_declaration = find_input_declaration(source, &next_pos);
+    render_effect.parameters_declaration = find_parameters_declaration(source, &next_pos);
     trim_source();
     render_effect.code = find_body(source, &next_pos);
     trim_source();
