@@ -1,0 +1,21 @@
+[SDF](vec3 p) {
+    return IS0_FIX_ARTIFACTS(
+        Amplitude * sin(Frequency * p.x)
+                  * sin(Frequency * p.y)
+                  * sin(Frequency * p.z)
+    );
+}
+
+float {
+    "Name": "Frequency",
+    "Default": 0.4,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Amplitude",
+    "Default": 4.0,
+    "Min": 0.0,
+    "Max": 20.0
+}

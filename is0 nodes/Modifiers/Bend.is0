@@ -1,14 +1,14 @@
 [SDF](vec3 p) {
-    float c = cos(bending*p.x);
-    float s = sin(bending*p.x);
+    float c = cos(Bending*p.x);
+    float s = sin(Bending*p.x);
     mat2 m = mat2(c,-s,s,c);
     vec3 q = vec3(m*p.xy, p.z);
-    return ${SDF}(q);
+    return IS0_FIX_ARTIFACTS(${SDF}(q));
 }
 
 float {
-    "Name": "bending",
-    "Default": 1.0,
-    "Min": 0.001,
+    "Name": "Bending",
+    "Default": 0.2,
+    "Min": 0.0,
     "Max": 2.0
 }

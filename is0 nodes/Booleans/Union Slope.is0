@@ -1,0 +1,10 @@
+[SDF1 SDF2] (vec3 pos) {
+    return fOpUnionChamfer(${SDF1}(pos), ${SDF2}(pos), Size);
+}
+
+float {
+    "Name": "Size",
+    "Default": 0.1,
+    "Min": 0.0,
+    "Max": 1.0
+}

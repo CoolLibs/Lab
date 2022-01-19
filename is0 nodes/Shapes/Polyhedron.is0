@@ -1,0 +1,93 @@
+`
+float _polyhedron_D2Planes(vec3 pos, vec3 p, vec3 pab, vec3 pbc, vec3 pca) {//distance to the 3 faces
+	pos-=p;
+    float d0=dot(pos,pab);
+	float d1=dot(pos,pbc);
+	float d2=dot(pos,pca);
+	return max(max(d0,d1),d2);
+}
+
+float _polyhedron_D2Segments(vec3 pos, vec3 p, vec3 nc, float SRadius) {
+	pos-=p;
+	float dla=length_squared(pos-min(0.,pos.x)*vec3(1.,0.,0.));
+	float dlb=length_squared(pos-min(0.,pos.y)*vec3(0.,1.,0.));
+	float dlc=length_squared(pos-min(0.,dot(pos,nc))*nc);
+	return sqrt(min(min(dla,dlb),dlc))-SRadius;
+}
+
+float _polyhedron_D2Vertices(vec3 pos, vec3 p, float VRadius) {
+	return length(pos-p) - VRadius;
+}
+`
+
+[] (vec3 pos) {
+    // Thanks to https://www.shadertoy.com/view/XlX3zB
+    pos /= Radius;
+    const float cospin = cos(PI / Kind);
+    const float scospin = sqrt(0.75 - cospin * cospin);
+	vec3 nc = vec3(-0.5, -cospin, scospin); // 3rd folding plane. The two others are xz and yz planes
+	vec3 pab = vec3(0., 0., 1.);
+	vec3 pbc = vec3(scospin, 0., 0.5); // No normalization in order to have 'barycentric' coordinates work evenly
+	vec3 pca = vec3(0., scospin, cospin);
+	vec3 p = normalize((Faces_Roundness * pab + Faces_Size * pbc + Faces_Sharpness * pca)); // Faces_Roundness, Faces_Size and Faces_Sharpness are the 'barycentric' coordinates (quoted barycentric word because I'm not sure if they are really barycentric... have to check)
+	pbc = normalize(pbc); // For slightly better DE. In reality it's not necesary to apply normalization :) 
+    pca = normalize(pca); // For slightly better DE. In reality it's not necesary to apply normalization :) 
+	for (int i = 0; i < Kind; i++){
+		pos.xy = abs(pos.xy); //fold about xz and yz planes
+		pos -= 2. * min(0., dot(pos,nc)) * nc; //fold about nc plane
+	}
+
+	float d = _polyhedron_D2Planes(pos, p, pab, pbc, pca);
+	      d = min(d, _polyhedron_D2Segments(pos, p, nc, Edges_Thickness));
+	      d = min(d, _polyhedron_D2Vertices(pos, p, Vertices_Radius));
+	return IS0_FIX_ARTIFACTS(d);
+}
+
+float {
+    "Name": "Radius",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "Vertices Radius",
+    "Default": 0.0,
+    "Min": 0.0,
+    "Max": 0.2
+}
+
+float {
+    "Name": "Edges Thickness",
+    "Default": 0.026,
+    "Min": 0.0,
+    "Max": 0.2
+}
+
+float {
+    "Name": "Faces Roundness",
+    "Default": 0.27,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Faces Size",
+    "Default": 0.41,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Faces Sharpness",
+    "Default": 0.19,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+int {
+    "Name": "Kind",
+    "Default": 5,
+    "Min": 3,
+    "Max": 5
+}

@@ -1,5 +1,0 @@
-[SDF](vec3 p) {
-    return abs(${SDF}(p));
-}
-
-

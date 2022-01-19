@@ -1,0 +1,23 @@
+[] (vec3 pos) {
+    const vec3 k = vec3(-0.8660254, 0.5, 0.57735);
+    pos = abs(pos);
+    pos.xy -= 2.0 * min(dot(k.xy, pos.xy), 0.) * k.xy;
+    vec2 d = vec2(
+        length(pos.xy - vec2(clamp(pos.x, -k.z * Radius, k.z * Radius), Radius)) * sign(pos.y - Radius),
+        pos.z - Height );
+    return min(max(d.x, d.y), 0.) + length(max(d,0.));
+}
+
+float {
+    "Name": "Radius",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "Height",
+    "Default": 2.0,
+    "Min": 0.0,
+    "Max": 10.0
+}

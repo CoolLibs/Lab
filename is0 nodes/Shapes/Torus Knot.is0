@@ -1,0 +1,50 @@
+[] (vec3 pos) {
+    vec2 q = vec2(length(pos.xy) - Size, pos.z);
+    float knot = atan(pos.x, pos.y) * Twists;
+    q *= rotation_2D(knot);
+    q.y = abs(q.y) - Spacing;
+    if (Square) {
+        q = abs(q) - vec2(Thickness);
+        return IS0_FIX_ARTIFACTS(
+            length(max(q, 0.)) + min(max(q.x, q.y), 0.)
+        );
+    }
+    else {
+        return IS0_FIX_ARTIFACTS(
+            length(q) - Thickness
+        );
+    }
+}
+
+float {
+    "Name": "Size",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 5.0
+}
+
+float {
+    "Name": "Thickness",
+    "Default": 0.175,
+    "Min": 0.0,
+    "Max": 2.5
+}
+
+int {
+    "Name": "Twists",
+    "Default": 3,
+    "Min": 1,
+    "Max": 10
+}
+
+float {
+    "Name": "Spacing",
+    "Default": 0.4,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+bool {
+    "Name": "Square",
+    "Default": false
+}

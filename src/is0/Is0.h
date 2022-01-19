@@ -14,7 +14,7 @@ public:
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
 
 private:
-    NodeEditor        _editor;
+    NodeEditor        _editor{Cool::Path::root() + "/is0 nodes"};
     RenderEffects     _effects;
     std::string       _shader_code;
     Cool::ImGuiWindow _shader_code_window{"is0 Shader Code", false};
