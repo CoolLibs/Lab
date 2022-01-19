@@ -7,14 +7,14 @@
 
 class NodeEditor {
 public:
-    void imgui_window();
-    void update_templates_and_nodes();
-    void open_menu();
-    bool tree_has_changed();
-    bool tree_is_valid() const { return _all_nodes_have_a_valid_template; }
-    auto tree() const -> const NodeTree& { return _tree; }
-    auto node_templates() const -> const std::vector<NodeTemplate>& { return _factory.templates(); }
-    void add_node(Node node);
+    void        imgui_window();
+    void        update_templates_and_nodes();
+    void        open_menu();
+    bool        tree_has_changed();
+    bool        tree_is_valid() const { return _all_nodes_have_a_valid_template; }
+    auto        tree() const -> const NodeTree& { return _tree; }
+    auto        node_templates() const -> const std::vector<NodeTemplate>& { return _factory.templates(); }
+    inline void add_node(const Node& node) { _tree.add_node(node); }
 
 private:
     bool wants_to_delete_selection() const;
