@@ -115,7 +115,7 @@ static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) ->
         });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffectsManager& effects)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
 {
     return ray_marcher_begin +
            nodes_extra_code(node_templates) +
@@ -123,9 +123,9 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
            ray_marcher +
-           code_gen_effects(effects.render_effects.render_effects_objects) +
+           code_gen_effects(effects.for_objects) +
            "}" +
-           code_gen_effects(effects.render_effects.render_effects_always) +
+           code_gen_effects(effects.always_applied) +
            ray_marcher_end;
 }
 

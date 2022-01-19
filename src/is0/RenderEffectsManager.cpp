@@ -13,14 +13,14 @@ RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folde
 {
 }
 
-RenderEffectsGestion load_effect(std::string_view render_effects_folder_path)
+RenderEffects load_effect(std::string_view render_effects_folder_path)
 {
-    RenderEffectsGestion effects_gestion;
+    RenderEffects effects_gestion;
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
         if (entry.is_directory()) {
             std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
-                                                     ? effects_gestion.render_effects_objects
-                                                     : effects_gestion.render_effects_always;
+                                                     ? effects_gestion.for_objects
+                                                     : effects_gestion.always_applied;
             for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
                 if (file.is_regular_file()) {
                     try {
@@ -55,33 +55,29 @@ std::vector<RenderEffect> merge_effect(std::vector<RenderEffect> old_render_effe
     return new_render_effect;
 }
 
-RenderEffectsGestion merge(RenderEffectsGestion old_render_effects, RenderEffectsGestion new_render_effects)
+RenderEffects merge(RenderEffects old_render_effects, RenderEffects new_render_effects)
 {
-    new_render_effects.render_effects_always  = merge_effect(old_render_effects.render_effects_always, new_render_effects.render_effects_always);
-    new_render_effects.render_effects_objects = merge_effect(old_render_effects.render_effects_objects, new_render_effects.render_effects_objects);
+    new_render_effects.always_applied = merge_effect(old_render_effects.always_applied, new_render_effects.always_applied);
+    new_render_effects.for_objects    = merge_effect(old_render_effects.for_objects, new_render_effects.for_objects);
     return new_render_effects;
 }
 
-RenderEffectsGestion RenderEffectsManager::reload()
+RenderEffects RenderEffectsManager::reload()
 {
-    RenderEffectsGestion new_render_effect = load_effect(render_effects_folder_path);
+    RenderEffects new_render_effect = load_effect(render_effects_folder_path);
     return merge(render_effects, new_render_effect);
 }
 
-std::string code_gen_effects_parameters(const RenderEffectsManager& effects)
+std::string code_gen_effects_parameters(const RenderEffects& effects)
 {
     std::string code = "";
-    for (const auto& effect : effects.render_effects.render_effects_objects) {
+    for (const auto& effect : effects.for_objects) {
         if (effect.is_active) {
-            code += CodeGen::parameters_definitions(effect.parameters);
-            code += "\n";
             code += effect.extra_code;
         }
     }
-    for (const auto& effect : effects.render_effects.render_effects_always) {
+    for (const auto& effect : effects.always_applied) {
         if (effect.is_active) {
-            code += CodeGen::parameters_definitions(effect.parameters);
-            code += "\n";
             code += effect.extra_code;
         }
     }
@@ -93,7 +89,8 @@ std::string code_gen_effects(const std::vector<RenderEffect>& render_effects)
     std::string code = "";
     for (const auto& effect : render_effects) {
         if (effect.is_active) {
-            code += effect.code_template;
+            code += CodeGen::parameters_definitions(effect.parameters);
+            code += effect.code;
             code += "\n";
         }
     }
@@ -111,15 +108,15 @@ bool effect_imgui(RenderEffect& effect)
     return has_changed;
 }
 
-bool effect_imgui_window(RenderEffectsManager& effects)
+bool effect_imgui_window(RenderEffects& effects)
 {
     bool has_changed = false;
     ImGui::Begin("Shading");
-    for (auto& param : effects.render_effects.render_effects_objects) {
+    for (auto& param : effects.for_objects) {
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }
-    for (auto& param : effects.render_effects.render_effects_always) {
+    for (auto& param : effects.always_applied) {
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }
