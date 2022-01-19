@@ -72,8 +72,9 @@ static std::string render(const RenderEffects& effects)
 vec3 render_effects(vec3 rd, vec3 p, vec3 normal, RayMarchRes res) {
     float       d                = res.dist;
     float       iterations_count = res.iterations_count;
-    vec3 finalCol = normal * 0.5 + 0.5;
+    vec3 finalCol = vec3(0.3, 0.7, 0.98);
     if (d < MAX_DIST) {
+        finalCol = normal * 0.5 + 0.5;
         )" +
            code_gen_effects_object(effects) +
            "}" +
@@ -84,7 +85,9 @@ vec3 render_effects(vec3 rd, vec3 p, vec3 normal, RayMarchRes res) {
 )";
 }
 
-static constexpr const char* ray_marcher_impl = R"(
+static std::string ray_marcher_impl(const int rend)
+{
+    std::string rmi = R"(
 RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
  	int i = 0;
@@ -95,8 +98,10 @@ RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
-    return RayMarchRes(t,i,0);
+    return RayMarchRes(t,i,)" +
+                      std::to_string(rend) + R"();
 }
+
 vec3 getNormal(vec3 p) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
@@ -105,7 +110,10 @@ vec3 getNormal(vec3 p) {
                       k.yxy * is0_main_sdf( p + k.yxy*h ) +
                       k.xxx * is0_main_sdf( p + k.xxx*h ) );
 }
+
 )";
+    return rmi;
+}
 
 static constexpr const char* ray_marcher_end = R"(
 
@@ -115,13 +123,13 @@ vec3 render( vec3 ro, vec3 rd)
 	RayMarchRes res = rayMarching(ro, rd, 1);
 	float d         = res.dist;
 	int render_use  = res.render;
-	if(render_use == 3) {finalColor = render_smoke(ro, rd);}                                                             //SMOKE   renderer
+	if(render_use == 2) {finalColor = render_smoke(ro, rd);}                                                             //SMOKE   renderer
 	else {
 		vec3 p      = ro + rd * d;
 		vec3 normal = getNormal(p);
-		if(render_use == 0){finalColor = normal * 0.5 + 0.5;}                                                           //NORMAL  renderer
+		if(render_use == 0){if (d < MAX_DIST) {finalColor = normal * 0.5 + 0.5;}}                                                           //NORMAL  renderer
 		else if(render_use == 1){finalColor = render_effects(rd, p, normal, res = rayMarching(ro, rd, DONT_INVERT_SDF));}   //EFFECTS renderer
-		else if(render_use == 2){finalColor = render_pbr(ro, rd, p, normal, res);}                                                   //PBR     renderer
+		else if(render_use == 3){finalColor = render_pbr(ro, rd, p, normal, res);}                                                   //PBR     renderer
 	}
 	finalColor = saturate(finalColor);
 	finalColor = pow(finalColor, vec3(0.4545)); // Gamma correction
@@ -157,13 +165,13 @@ static const NodeTemplate& find_node_template(const Node& node, const std::vecto
     });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material, const int& rend)
 {
     return ray_marcher_begin +
            code_gen_effects_parameters(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
-           ray_marcher_impl +
+           ray_marcher_impl(rend) +
            CodeGen::addSmoke(effects.smoke) +
            render(effects) +
            pbr_renderer_codegen(light, material) +

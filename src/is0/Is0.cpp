@@ -7,7 +7,7 @@ void Is0::update()
     if (_editor.tree_has_changed() || _must_recompile) {
         _must_recompile = false;
         if (_editor.tree_is_valid()) {
-            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _effects, _light, _material);
+            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _effects, _light, _material, _in_use_render);
         }
         else {
             _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
@@ -30,6 +30,7 @@ void Is0::imgui_windows()
         _editor.update_templates_and_nodes();
     }
     ImGui::End();
+    _must_recompile = effect_imgui_window(_effects, _in_use_render, _material, _light);
 }
 
 void Is0::on_key_pressed(const Cool::KeyboardEvent& event)

@@ -21,6 +21,6 @@ bool glow_imgui(RenderEffect_Glow& glow)
     ImGui::Text("Glow");
     bool has_changed = glow.strenght.imgui();
     has_changed |= glow.col.imgui();
-    has_changed |= ImGui::Checkbox("Glow Active", &glow.is_active);
+    //has_changed |= ImGui::Checkbox("Glow Active", &glow.is_active);
     return has_changed;
 }

@@ -16,6 +16,6 @@ bool reflection_imgui(RenderEffect_Reflection& reflection)
 {
     ImGui::Text("Reflection");
     bool has_changed = reflection.strenght.imgui();
-    has_changed |= ImGui::Checkbox("Reflection Active", &reflection.is_active);
+    //has_changed |= ImGui::Checkbox("Reflection Active", &reflection.is_active);
     return has_changed;
 }
