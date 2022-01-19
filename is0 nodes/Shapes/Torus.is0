@@ -1,0 +1,18 @@
+[] (vec3 pos) {
+    vec2 q = vec2(length(pos.xz)-InnerRadius, pos.y);
+    return length(q)-OuterRadius;
+}
+
+float {
+    "Name": "InnerRadius",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 5.0
+}
+
+float {
+    "Name": "OuterRadius",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 5.0
+}

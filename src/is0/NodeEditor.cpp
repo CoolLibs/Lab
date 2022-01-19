@@ -15,6 +15,11 @@ void NodeEditor::on_tree_change()
     _tree_has_changed = true;
 }
 
+void NodeEditor::open_menu()
+{
+    _should_open_menu = true;
+}
+
 bool NodeEditor::wants_to_delete_selection() const
 {
     return ImGui::IsKeyReleased(GLFW_KEY_DELETE) ||
@@ -121,8 +126,10 @@ void NodeEditor::imgui_window()
     ImNodes::BeginNodeEditor();
     {
         ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_BottomRight);
-        if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle)) {
+        if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle) || _should_open_menu) {
+            _should_open_menu = false;
             ImGui::OpenPopup("_node_templates_list");
+            _next_node_position = ImGui::GetMousePosOnOpeningCurrentPopup();
         }
         if (ImGui::BeginPopup("_node_templates_list")) {
             node_tree_has_changed |= imgui_nodes_menu();
@@ -150,7 +157,7 @@ bool NodeEditor::imgui_nodes_menu()
     const std::optional<Node> node = _factory.imgui();
     if (node.has_value()) {
         _tree.add_node(*node);
-        ImNodes::SetNodeScreenSpacePos(node->id, ImGui::GetMousePos());
+        ImNodes::SetNodeScreenSpacePos(node->id, _next_node_position);
         return true;
     }
     else {

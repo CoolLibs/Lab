@@ -1,7 +1,8 @@
 #version 430
 
-in vec2       _uv;
+layout(location = 0) in vec2 _uv;
 uniform float _time;
+out vec4      out_Color;
 
 #include "_COOL_RES_/shaders/camera.glsl"
 
@@ -67,5 +68,5 @@ void main()
     vec3 ro = cool_ray_origin();
     vec3 rd = cool_ray_direction();
 
-    gl_FragColor = vec4(render(ro, rd), 1.);
+    out_Color = vec4(render(ro, rd), 1.);
 }
