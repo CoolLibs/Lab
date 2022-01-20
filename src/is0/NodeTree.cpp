@@ -1,6 +1,6 @@
 #include "NodeTree.h"
 
-void NodeTree::add_node(Node node)
+void NodeTree::add_node(const Node& node)
 {
     nodes.push_back(node);
 }

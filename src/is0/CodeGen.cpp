@@ -12,13 +12,17 @@ static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
 )";
 
 static constexpr const char* ray_marcher_begin = R"(#version 430
-
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
+// clang-format off
 #include "_COOL_RES_/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/pbr_calc.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
-
+#include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
+#include "is0 shaders/light.glsl"
+#include "is0 shaders/hg_sdf.glsl" 
+// clang-format on
 // ----- Ray marching options ----- //
 #define MAX_STEPS 1500
 #define MAX_DIST 200.
@@ -34,7 +38,6 @@ struct RayMarchRes {
     vec3 hit_position;
     vec3 normal;
 };
-
 )";
 
 static constexpr const char* ray_marcher = R"(
@@ -60,7 +63,6 @@ RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     vec3 final_pos = ro + rd * t;
     return RayMarchRes(t, i, rd, final_pos, get_normal(final_pos));
 }
-
 vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
     
@@ -71,14 +73,15 @@ vec3 render(vec3 ro, vec3 rd) {
     vec3 normal = res.normal;
     if (d < MAX_DIST) {
       finalCol = normal * 0.5 + 0.5;
+
 )";
 
 static constexpr const char* ray_marcher_end = R"(
-    finalCol = saturate(finalCol);
+
+finalCol = saturate(finalCol);
     finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
     return finalCol;
 }
-
 void main() {
     vec3 ro = cool_ray_origin();
     vec3 rd = cool_ray_direction();
@@ -86,7 +89,7 @@ void main() {
 }
 )";
 
-static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree)
+static auto compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree) -> std::vector<std::pair<std::string, std::string>>
 {
     using namespace std::string_literals;
     std::vector<std::pair<std::string, std::string>> sdf_identifiers;
@@ -169,8 +172,7 @@ std::string convert_to_valid_glsl_name(std::string name)
 
 std::string function_name(const FnNameParams& p)
 {
-    return convert_to_valid_glsl_name(std::string{p.node_template_name} +
-                                      "_" + std::to_string(*p.node_id));
+    return convert_to_valid_glsl_name(std::string{p.node_template_name} + std::to_string(*p.node_id));
 }
 
 std::string function_signature(const FnSignatureParams& p)
@@ -207,5 +209,4 @@ std::string parameter_definition_any(const Cool::Parameter::Any& param)
 {
     return std::visit([](auto&& param) { return parameter_definition(param); }, param);
 }
-
 } // namespace CodeGen

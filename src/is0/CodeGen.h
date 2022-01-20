@@ -4,6 +4,7 @@
 #include "NodeTemplate.h"
 #include "NodeTree.h"
 #include "RenderEffectsManager.h"
+#include "RendererPBR.h"
 
 namespace CodeGen {
 
@@ -58,10 +59,10 @@ TEST_CASE("[is0::CodeGen] Function generation")
     const auto definition_params = CodeGen::FnDefinitionParams{signature_params,
                                                                "{ return 1.; }"};
     // Then
-    CHECK(CodeGen::function_name(name_params) == "my_sdf_42");
-    CHECK(CodeGen::function_signature(signature_params) == "float my_sdf_42(vec3 pos)");
-    CHECK(CodeGen::function_declaration(signature_params) == "float my_sdf_42(vec3 pos);");
-    CHECK(CodeGen::function_definition(definition_params) == "float my_sdf_42(vec3 pos){ return 1.; }");
+    CHECK(CodeGen::function_name(name_params) == "my_sdf42");
+    CHECK(CodeGen::function_signature(signature_params) == "float my_sdf42(vec3 pos)");
+    CHECK(CodeGen::function_declaration(signature_params) == "float my_sdf42(vec3 pos);");
+    CHECK(CodeGen::function_definition(definition_params) == "float my_sdf42(vec3 pos){ return 1.; }");
 }
 
 TEST_CASE("[is0::CodeGen] Parameter definition")
@@ -84,4 +85,24 @@ TEST_CASE("[is0::CodeGen] Parameter definition")
     const vec2 my_param_vec2 = vec2(1.000000, 2.000000);
     return my_sdf(pos);
 })");
+}
+
+#if DEBUG
+namespace CodeGen {
+inline doctest::String toString(const FnNameParams& params)
+{
+    return ("{ Name: \"" + std::string{params.node_template_name} + "\", Id: \"" + std::to_string(params.node_id) + "\" }").c_str();
+}
+} // namespace CodeGen
+#endif
+
+TEST_CASE("[is0::CodeGen::function_name] glsl names must not contain __ (these are reserved names)")
+{
+    // Given
+    const auto params         = CodeGen::FnNameParams{"my_sdf", NodeId{-42}};
+    const auto generated_name = CodeGen::function_name(params);
+    // Then
+    CAPTURE(params);
+    CAPTURE(generated_name);
+    CHECK(generated_name.find("__") == std::string::npos);
 }

@@ -1,0 +1,18 @@
+[] (vec3 pos) {
+    pos.z -= clamp(pos.z, -Length * 0.5, Length * 0.5);
+    return length(pos) - Thickness;
+}
+
+float {
+    "Name": "Length",
+    "Default": 2.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "Thickness",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 1.5
+}

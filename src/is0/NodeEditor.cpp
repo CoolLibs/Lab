@@ -118,6 +118,7 @@ bool NodeEditor::handle_node_deletion()
         for (const int node_id : selected_nodes) {
             _tree.delete_node(NodeId{node_id});
         }
+        ImNodes::ClearNodeSelection();
         return true;
     }
     return false;
@@ -133,6 +134,7 @@ void NodeEditor::imgui_window()
         if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle) || _should_open_menu) {
             _should_open_menu = false;
             ImGui::OpenPopup("_node_templates_list");
+            _next_node_position = ImGui::GetMousePosOnOpeningCurrentPopup();
         }
         if (ImGui::BeginPopup("_node_templates_list")) {
             node_tree_has_changed |= imgui_nodes_menu();
@@ -160,7 +162,7 @@ bool NodeEditor::imgui_nodes_menu()
     const std::optional<Node> node = _factory.imgui();
     if (node.has_value()) {
         _tree.add_node(*node);
-        ImNodes::SetNodeScreenSpacePos(node->id, ImGui::GetMousePos());
+        ImNodes::SetNodeScreenSpacePos(node->id, _next_node_position);
         return true;
     }
     else {

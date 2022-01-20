@@ -12,6 +12,9 @@ std::string parameter_definition(const Cool::Parameter_Base<Desc>& param)
 template<typename T>
 std::string type_to_string()
 {
+    if constexpr (std::is_same_v<T, bool>) {
+        return "bool";
+    }
     if constexpr (std::is_same_v<T, int>) {
         return "int";
     }
@@ -32,6 +35,9 @@ std::string type_to_string()
 template<typename T>
 std::string value_to_string(const T&& x)
 {
+    if constexpr (std::is_same_v<T, bool>) {
+        return x ? "true" : "false";
+    }
     if constexpr (std::is_same_v<T, int>) {
         return std::to_string(x);
     }

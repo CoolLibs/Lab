@@ -37,7 +37,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
         }
     }
     return effects_gestion;
-};
+}
 
 std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_render_effect, std::vector<RenderEffect> new_render_effect)
 {
@@ -79,7 +79,7 @@ std::string code_gen_render_effects_extra_code(const RenderEffects& effects)
         }
     }
     return code;
-};
+}
 
 std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effects)
 {
@@ -92,11 +92,11 @@ std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effe
         }
     }
     return code;
-};
+}
 
 bool effect_imgui(RenderEffect& effect)
 {
-    ImGui::Text(effect.name.c_str());
+    ImGui::Text("%s", effect.name.c_str());
     bool has_changed = false;
     ImGui::PushID(&effect);
     effect.parameters.imgui([&has_changed]() { has_changed = true; });

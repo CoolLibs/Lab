@@ -10,7 +10,8 @@ enum class PinKind {
 
 class Pin {
 public:
-    PinId           id() const { return _id; }
+    PinId id() const { return _id; }
+    virtual ~Pin()               = default;
     virtual PinKind kind() const = 0;
     virtual void    show() const = 0;
 

@@ -1,18 +1,18 @@
 [] (vec3 pos) {
     pos = abs(pos);
-    float m = pos.x+pos.y+pos.z-scale;
+    float m = pos.x + pos.y + pos.z - Size;
     vec3 q;
-        if( 3.0*pos.x < m ) q = pos.xyz;
-    else if( 3.0*pos.y < m ) q = pos.yzx;
-    else if( 3.0*pos.z < m ) q = pos.zxy;
-    else return m*0.57735027;
-        
-    float k = clamp(0.5*(q.z-q.y+scale),0.0,scale); 
-    return length(vec3(q.x,q.y-scale+k,q.z-k));
+         if( 3. * pos.x < m ) q = pos.xyz;
+    else if( 3. * pos.y < m ) q = pos.yzx;
+    else if( 3. * pos.z < m ) q = pos.zxy;
+    else return m * 0.57735027;
+
+    float k = clamp(0.5 * (q.z - q.y + Size), 0., Size); 
+    return length(vec3(q.x, q.y - Size + k, q.z - k));
 }
 
 float {
-    "Name": "scale",
+    "Name": "Size",
     "Default": 1.0,
     "Min": 0.0,
     "Max": 10.0

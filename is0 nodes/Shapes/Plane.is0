@@ -1,25 +1,10 @@
 [] (vec3 pos) {
-    return abs(dot(pos,normal) + height) - plane_width;
-}
-
-direction3D {
-    "Name": "normal",
-    "Default": {
-        "x": 0.0,
-        "y": -1.57079632679
-    }
+    return abs(pos.z) - Thickness;
 }
 
 float {
-    "Name": "height",
-    "Default": 1.0,
-    "Min": 0.0,
-    "Max": 10.0
-}
-
-float {
-    "Name": "plane_width",
-    "Default": 1.0,
-    "Min": 0.0,
-    "Max": 5.0
+    "Name": "Thickness",
+    "Default": 0.001,
+    "Min": 0.001,
+    "Max": 1.0
 }

@@ -16,7 +16,7 @@ void Is0::update()
     }
 }
 
-void Is0::imgui_window()
+void Is0::imgui_windows()
 {
     _editor.imgui_window();
     _shader_code_window.show([&]() {
@@ -30,9 +30,7 @@ void Is0::imgui_window()
         _editor.update_templates_and_nodes();
     }
     ImGui::End();
-    if (effect_imgui_window(_effects.render_effects)) {
-        _must_recompile = true;
-    }
+    _must_recompile |= effect_imgui_window(_effects.render_effects);
 }
 
 void Is0::on_key_pressed(const Cool::KeyboardEvent& event)

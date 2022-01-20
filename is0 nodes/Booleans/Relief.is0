@@ -1,0 +1,20 @@
+
+[SDF1 SDF2] (vec3 p) {
+    return fOpTongue(${SDF1}(p), ${SDF2}(p), Size, Thickness);
+}
+
+float {
+    "Name": "Size",
+    "Default": 0.07,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Thickness",
+    "Default": 0.07,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+
