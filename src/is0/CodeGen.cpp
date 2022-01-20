@@ -17,6 +17,7 @@ uniform float _time;
 out vec4 out_Color;
 // clang-format off
 #include "_COOL_RES_/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/pbr_calc.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
 #include "is0 shaders/light.glsl"
@@ -36,10 +37,32 @@ float sph(vec3 i, vec3 f, vec3 c){
 struct RayMarchRes {
     float dist;
     int iterations_count;
+    int render;
 };
 )";
 
-static constexpr const char* ray_marcher_impl = R"(
+static std::string render(const RenderEffects& effects)
+{
+    return R"(
+vec3 render_effects(vec3 rd, vec3 p, vec3 normal, RayMarchRes res) {
+    float       d                = res.dist;
+    float       iterations_count = res.iterations_count;
+    vec3 finalCol = vec3(0.3, 0.7, 0.98);
+    if (d < MAX_DIST) {
+        finalCol = normal * 0.5 + 0.5;
+        )" +
+           code_gen_effects_object(effects) +
+           "}" +
+           code_gen_effects_world(effects) + R"(
+    return finalCol;
+}
+
+)";
+}
+
+static std::string ray_marcher_impl(const int rend)
+{
+    std::string rmi = R"(
 RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
  	int i = 0;
@@ -50,7 +73,8 @@ RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
-    return RayMarchRes(t,i);
+    return RayMarchRes(t,i,)" +
+                      std::to_string(rend) + R"();
 }
 vec3 getNormal(vec3 p) {
     const float h = NORMAL_DELTA;
@@ -61,31 +85,31 @@ vec3 getNormal(vec3 p) {
                       k.xxx * is0_main_sdf( p + k.xxx*h ) );
 }
 )";
-
-static std::string render(const RenderEffects& effects)
-{
-    return R"(
-vec3 render(vec3 ro, vec3 rd) {
-    vec3 finalCol = vec3(0.3, 0.7, 0.98);
-    RayMarchRes res              = rayMarching(ro, rd, DONT_INVERT_SDF);
-    float       d                = res.dist;
-    float       iterations_count = res.iterations_count;
-    if (d < MAX_DIST) {
-        vec3 p      = ro + rd * d;
-        vec3 normal = getNormal(p);
-        finalCol = normal * 0.5 + 0.5;
-        )" +
-           code_gen_effects_object(effects) +
-           "}" +
-           code_gen_effects_world(effects) + R"(
-    finalCol = saturate(finalCol);
-    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
-    return finalCol;
-}
-)";
+    return rmi;
 }
 
 static constexpr const char* ray_marcher_end = R"(
+
+vec3 render( vec3 ro, vec3 rd) 
+{
+	vec3 finalColor = vec3(0.3, 0.7, 0.98);
+	RayMarchRes res = rayMarching(ro, rd, 1);
+	float d         = res.dist;
+	int render_use  = res.render;
+	if(render_use == 2) {finalColor = render_smoke(ro, rd);}                                                             //SMOKE   renderer
+	else {
+		vec3 p      = ro + rd * d;
+		vec3 normal = getNormal(p);
+		if(render_use == 0){if (d < MAX_DIST) {finalColor = normal * 0.5 + 0.5;}}                                                           //NORMAL  renderer
+		else if(render_use == 1){finalColor = render_effects(rd, p, normal, res = rayMarching(ro, rd, DONT_INVERT_SDF));}   //EFFECTS renderer
+		else if(render_use == 3){finalColor = render_pbr(ro, rd, p, normal, res);}                                                   //PBR     renderer
+	}
+	finalColor = saturate(finalColor);
+	finalColor = pow(finalColor, vec3(0.4545)); // Gamma correction
+	return finalColor;
+}
+
+
 void main() {
     vec3 ro = cool_ray_origin();
     vec3 rd = cool_ray_direction();
@@ -93,7 +117,7 @@ void main() {
 }
 )";
 
-static std::vector<std::pair<std::string, std::string>> compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree)
+static auto compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree) -> std::vector<std::pair<std::string, std::string>>
 {
     using namespace std::string_literals;
     std::vector<std::pair<std::string, std::string>> sdf_identifiers;
@@ -122,16 +146,17 @@ static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) ->
         });
 }
 
-std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
+std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects, const LightProperties& light, const MaterialProperties& material, int rend)
 {
     return ray_marcher_begin +
            nodes_extra_code(node_templates) +
            code_gen_effects_parameters(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
-           ray_marcher_impl +
-           (effects.smoke.is_active ? CodeGen::addSmoke(effects.smoke)
-                                    : render(effects)) +
+           ray_marcher_impl(rend) +
+           CodeGen::addSmoke(effects.smoke) +
+           render(effects) +
+           pbr_renderer_codegen(light, material) +
            ray_marcher_end;
 }
 
@@ -146,15 +171,15 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
-                                                                .node_template_name = node.node_template_name,
-                                                                .node_id            = node.id},
-                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
+                                                               .node_template_name = node.node_template_name,
+                                                               .node_id            = node.id},
+                                                           .sdf_param_declaration = node_template.vec3_input_declaration};
         declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
             .fn_signature_params = fn_signature_params,
             .body                = function_body(node.parameter_list,
-                                                 node_template.code_template,
-                                                 compute_sdf_identifiers(node, node_template, node_tree))});
+                                  node_template.code_template,
+                                  compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
             main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
