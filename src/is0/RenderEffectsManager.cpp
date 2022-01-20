@@ -37,7 +37,7 @@ RenderEffectsGestion load_effect(std::string_view render_effects_folder_path)
         }
     }
     return effects_gestion;
-};
+}
 
 std::string code_gen_effects_parameters(const RenderEffectsManager& effects)
 {
@@ -57,7 +57,7 @@ std::string code_gen_effects_parameters(const RenderEffectsManager& effects)
         }
     }
     return code;
-};
+}
 
 std::string code_gen_effects_object(const RenderEffectsManager& effects)
 {
@@ -69,7 +69,7 @@ std::string code_gen_effects_object(const RenderEffectsManager& effects)
         }
     }
     return code;
-};
+}
 
 std::string code_gen_effects_world(const RenderEffectsManager& effects)
 {
@@ -81,7 +81,7 @@ std::string code_gen_effects_world(const RenderEffectsManager& effects)
         }
     }
     return code;
-};
+}
 
 bool effect_imgui(RenderEffect& effect)
 {
