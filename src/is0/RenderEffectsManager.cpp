@@ -4,8 +4,9 @@
 #include <Cool/Parameter/ParameterU.h>
 #include <filesystem>
 #include <ranges>
+#include "BaseCodeParsing.h"
 #include "CodeGen.h"
-#include "RenderEffectParsing.h"
+
 
 RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folder_path)
     : render_effects_folder_path{render_effects_folder_path}
@@ -26,7 +27,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
                     try {
                         RenderEffect render_effect;
                         render_effect.base.name = file.path().stem().string();
-                        parse_render_effect(render_effect, Cool::File::to_string(file.path().string()));
+                        parse_base_code(render_effect.base, Cool::File::to_string(file.path().string()));
                         effects.push_back(render_effect);
                     }
                     catch (const std::exception& e) {
