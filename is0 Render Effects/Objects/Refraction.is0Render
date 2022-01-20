@@ -8,7 +8,7 @@ float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberati
 }
 `
 
-[] (RayMarchRes res) {
+(RayMarchRes res) {
     vec3 reflet_out    = reflect(res.ray_direction, res.normal);
     vec3 refraction_in = refract(res.ray_direction, res.normal, 1. / IOR);
 
