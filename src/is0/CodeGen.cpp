@@ -39,19 +39,11 @@ static std::string ray_marcher_parameters()
     return "#define MAX_DIST 200. \n";
 }
 
-static std::string get_normal()
+static std::string get_normal(BaseCode normal_code)
 {
-    return R"(
-        #define NORMAL_DELTA 0.0001
-        vec3 get_normal(vec3 p) {
-            const float h = NORMAL_DELTA;
-            const vec2 k = vec2(1., -1.);
-            return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
-                            k.yyx * is0_main_sdf( p + k.yyx*h ) + 
-                            k.yxy * is0_main_sdf( p + k.yxy*h ) + 
-                            k.xxx * is0_main_sdf( p + k.xxx*h ) );
-        }
-    )";
+    return "\n" + normal_code.extra_code +
+           "vec3 get_normal" + normal_code.parameters_declaration +
+           normal_code.code + '\n';
 }
 
 static std::string ray_marcher()
@@ -177,7 +169,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            code_gen_render_effects_extra_code(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
-           get_normal() +
+           get_normal(effects.normal[0]) +
            ray_marcher() +
            apply_material(effects.for_objects) +
            apply_background() +

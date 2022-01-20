@@ -7,7 +7,6 @@
 #include "BaseCodeParsing.h"
 #include "CodeGen.h"
 
-
 RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folder_path)
     : render_effects_folder_path{render_effects_folder_path}
     , render_effects{load_effects(render_effects_folder_path)}
@@ -19,19 +18,37 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
     RenderEffects effects_gestion;
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
         if (entry.is_directory()) {
-            std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
-                                                     ? effects_gestion.for_objects
-                                                     : effects_gestion.always_applied;
-            for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
-                if (file.is_regular_file()) {
-                    try {
-                        RenderEffect render_effect;
-                        render_effect.base.name = file.path().stem().string();
-                        parse_base_code(render_effect.base, Cool::File::to_string(file.path().string()));
-                        effects.push_back(render_effect);
+            if (entry.path().stem() != "Normals") {
+                std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
+                                                         ? effects_gestion.for_objects
+                                                         : effects_gestion.always_applied;
+                for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
+                    if (file.is_regular_file()) {
+                        try {
+                            RenderEffect render_effect;
+                            render_effect.base.name = file.path().stem().string();
+                            parse_base_code(render_effect.base, Cool::File::to_string(file.path().string()));
+                            effects.push_back(render_effect);
+                        }
+                        catch (const std::exception& e) {
+                            Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse effects from file '{}':\n{}", file.path().string(), e.what());
+                        }
                     }
-                    catch (const std::exception& e) {
-                        Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse node from file '{}':\n{}", file.path().string(), e.what());
+                }
+            }
+            else {
+                std::vector<BaseCode>& norm = effects_gestion.normal;
+                for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
+                    if (file.is_regular_file()) {
+                        try {
+                            BaseCode normals;
+                            normals.name = file.path().stem().string();
+                            parse_base_code(normals, Cool::File::to_string(file.path().string()));
+                            norm.push_back(normals);
+                        }
+                        catch (const std::exception& e) {
+                            Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse normal from file '{}':\n{}", file.path().string(), e.what());
+                        }
                     }
                 }
             }
