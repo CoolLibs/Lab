@@ -1,6 +1,6 @@
 (RayMarchRes res) {
     float fresnel = pow(clamp(1. - dot(res.normal, -res.ray_direction), 0., 1.), fresnel_strength);
-    finalCol += fresnel * fresnel_color;
+    material_color += fresnel * fresnel_color;
 }
 
 float {

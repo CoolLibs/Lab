@@ -1,6 +1,6 @@
 (RayMarchRes res) {
     float glow = pow(float(res.iterations_count) * glow_strength, 2.);
-    finalCol += glow * glow_color;
+    color += glow * glow_color;
 }
 
 float {
