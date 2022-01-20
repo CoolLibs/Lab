@@ -1,22 +1,17 @@
 #pragma once
 
 #include <Cool/Parameter/ParameterList.h>
-
+#include "BaseCode.h"
 struct RenderEffect {
-    std::string         name;
-    std::string         extra_code;
-    std::string         parameters_declaration;
-    std::string         code;
-    Cool::ParameterList parameters;
-    bool                is_active = true;
+    BaseCode base;
+    bool     is_active = true;
 
 private:
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Effect", name),
-                cereal::make_nvp("Parameters", parameters),
+        archive(cereal::make_nvp("Effect", base),
                 cereal::make_nvp("Enabled", is_active));
     }
 };

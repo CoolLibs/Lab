@@ -5,6 +5,7 @@
 struct RenderEffects {
     std::vector<RenderEffect> for_objects;
     std::vector<RenderEffect> always_applied;
+    std::vector<BaseCode>     normal;
 
 private:
     // Serialization
@@ -13,7 +14,8 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::make_nvp("Objects", for_objects),
-                cereal::make_nvp("Always", always_applied));
+                cereal::make_nvp("Always", always_applied),
+                cereal::make_nvp("Normal", normal));
     }
 };
 
@@ -38,6 +40,8 @@ private:
         render_effects = reload_effects(render_effects_folder_path, render_effects);
     }
 };
+
+std::string code_gen_base_code(const BaseCode& base_code);
 
 std::string code_gen_render_effects_extra_code(const RenderEffects& effects);
 std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effects);

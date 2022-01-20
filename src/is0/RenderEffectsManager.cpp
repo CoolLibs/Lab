@@ -25,7 +25,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
                 if (file.is_regular_file()) {
                     try {
                         RenderEffect render_effect;
-                        render_effect.name = file.path().stem().string();
+                        render_effect.base.name = file.path().stem().string();
                         parse_render_effect(render_effect, Cool::File::to_string(file.path().string()));
                         effects.push_back(render_effect);
                     }
@@ -43,11 +43,11 @@ std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_ren
 {
     for (auto& effect : new_render_effect) {
         const auto effect_here = std::ranges::find_if(old_render_effect, [&](const RenderEffect& effect_here) {
-            return effect_here.name == effect.name;
+            return effect_here.base.name == effect.base.name;
         });
         if (effect_here != old_render_effect.end()) {
-            effect.is_active  = effect_here->is_active;
-            effect.parameters = Cool::ParameterU::update_parameters(*effect_here->parameters, effect_here->parameters);
+            effect.is_active       = effect_here->is_active;
+            effect.base.parameters = Cool::ParameterU::update_parameters(*effect_here->base.parameters, effect_here->base.parameters);
         }
     }
     return new_render_effect;
@@ -70,14 +70,22 @@ std::string code_gen_render_effects_extra_code(const RenderEffects& effects)
     std::string code = "";
     for (const auto& effect : effects.for_objects) {
         if (effect.is_active) {
-            code += effect.extra_code;
+            code += effect.base.extra_code;
         }
     }
     for (const auto& effect : effects.always_applied) {
         if (effect.is_active) {
-            code += effect.extra_code;
+            code += effect.base.extra_code;
         }
     }
+    return code;
+}
+
+std::string code_gen_base_code(const BaseCode& base_code)
+{
+    std::string code = "";
+    code += CodeGen::parameters_definitions(base_code.parameters);
+    code += base_code.code;
     return code;
 }
 
@@ -86,8 +94,7 @@ std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effe
     std::string code = "";
     for (const auto& effect : render_effects) {
         if (effect.is_active) {
-            code += CodeGen::parameters_definitions(effect.parameters);
-            code += effect.code;
+            code += code_gen_base_code(effect.base);
             code += '\n';
         }
     }
@@ -96,10 +103,10 @@ std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effe
 
 bool effect_imgui(RenderEffect& effect)
 {
-    ImGui::Text("%s", effect.name.c_str());
+    ImGui::Text("%s", effect.base.name.c_str());
     bool has_changed = false;
     ImGui::PushID(&effect);
-    effect.parameters.imgui([&has_changed]() { has_changed = true; });
+    effect.base.parameters.imgui([&has_changed]() { has_changed = true; });
     has_changed |= ImGui::Checkbox("Enabled", &effect.is_active);
     ImGui::PopID();
     return has_changed;

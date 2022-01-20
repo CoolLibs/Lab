@@ -13,7 +13,7 @@ static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
 
 static std::string version_glsl()
 {
-    return "#version " + COOL_OPENGL_VERSION;
+    return "#version " + std::to_string(COOL_OPENGL_VERSION) + '\n';
 }
 
 static constexpr const char* input_and_output_parameters = R"(
@@ -36,7 +36,7 @@ static std::string include()
 
 static std::string ray_marcher_parameters()
 {
-    return "#define MAX_DIST 200.";
+    return "#define MAX_DIST 200. \n";
 }
 
 static std::string get_normal()
