@@ -24,8 +24,8 @@ RenderEffects             reload_effects(std::string_view render_effects_folder_
 
 class RenderEffectsManager {
 public:
-    RenderEffects render_effects;
     std::string   render_effects_folder_path;
+    RenderEffects render_effects;
     explicit RenderEffectsManager(std::string_view render_effects_folder_path);
 
 private:
