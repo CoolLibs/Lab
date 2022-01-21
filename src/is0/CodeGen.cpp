@@ -179,7 +179,7 @@ std::string main_material(const NodeTree& node_tree, const std::vector<NodeTempl
     std::stringstream main_material_definition;
     main_material_definition << R"(MaterialData is0_main_material(vec3 pos) {
     MaterialData md();
-    )";
+    float d = MAX_DIST;)";
 
     for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
@@ -195,7 +195,7 @@ std::string main_material(const NodeTree& node_tree, const std::vector<NodeTempl
                                                  compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
-            main_material_definition << "\n    md = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
+            main_material_definition << "\n    md = min_material(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
         }
     }
     main_material_definition << R"(
