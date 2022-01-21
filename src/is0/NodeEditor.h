@@ -39,9 +39,18 @@ private:
     // Serialization
     friend class cereal::access;
     template<class Archive>
-    void serialize(Archive& archive)
+    void save(Archive& archive) const
     {
-        archive(cereal::make_nvp("Node Tree", _tree));
+        archive(cereal::make_nvp("Node Tree", _tree),
+                cereal::make_nvp("Editor State", std::string{ImNodes::SaveCurrentEditorStateToIniString()}));
+    }
+    template<class Archive>
+    void load(Archive& archive)
+    {
+        std::string editor_state;
+        archive(cereal::make_nvp("Node Tree", _tree),
+                cereal::make_nvp("Editor State", editor_state));
+        ImNodes::LoadCurrentEditorStateFromIniString(editor_state.c_str(), editor_state.size());
         update_templates_and_nodes();
     }
 };

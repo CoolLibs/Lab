@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Cool/File/File.h>
+#include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/ImGui/ImGuiWindow.h>
 #include "../ShaderManager/ShaderManager.h"
 #include "NodeEditor.h"
@@ -23,6 +25,9 @@ private:
     CodeGen::LightProperties    _light;
     CodeGen::MaterialProperties _material;
     int                         _in_use_render = 0;
+    std::string                 _folder_path_for_save;
+    std::string                 _path_for_load;
+    std::string                 _file_name_for_save;
 
 private:
     // Serialization

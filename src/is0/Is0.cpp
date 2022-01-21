@@ -1,6 +1,9 @@
 #include "Is0.h"
 #include <Cool/Input/Input.h>
+#include <Cool/NfdFileFilter/NfdFileFilter.h>
 #include "CodeGen.h"
+#include "Cool\Serialization\as_json.h"
+#include "NodeEditorSerialization.h"
 
 void Is0::update()
 {
@@ -29,6 +32,26 @@ void Is0::imgui_windows()
     if (ImGui::Button("Refresh node templates")) {
         _editor.update_templates_and_nodes();
     }
+    // To save a file
+    const std::vector<nfdfilteritem_t> is0geometry = {
+        {"Save", "is0geometry"},
+    };
+    pick_file_path_to_save(_folder_path_for_save, _file_name_for_save);
+    if (Cool::File::exists(_folder_path_for_save + "/" + _file_name_for_save + ".is0geometry")) {
+        Cool::ImGuiExtras::warning_text("This file already exists. Are you sure you want to overwrite it ?");
+    }
+    if (ImGui::Button("Save")) {
+        Cool::Serialization::to_json(_editor, _folder_path_for_save + "/" + _file_name_for_save + ".is0geometry");
+    }
+    // To load a file
+    ImGui::Text("Load a save");
+    ImGui::SameLine();
+    ImGui::PushID(485);
+    if (Cool::ImGuiExtras::open_file_dialog(&_path_for_load, is0geometry, Cool::File::whithout_file_name(_folder_path_for_save))) {
+        Cool::Serialization::from_json(_editor, _path_for_load);
+    }
+    ImGui::PopID();
+
     ImGui::End();
     _must_recompile |= effect_imgui_window(_effects, _in_use_render, _material, _light);
 }
