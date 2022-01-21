@@ -79,7 +79,7 @@ std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_ren
         });
         if (effect_here != old_render_effect.end()) {
             effect.is_active       = effect_here->is_active;
-            effect.base.parameters = Cool::ParameterU::update_parameters(*effect_here->base.parameters, effect_here->base.parameters);
+            effect.base.parameters = Cool::ParameterU::update_parameters(*effect.base.parameters, effect_here->base.parameters);
         }
     }
     return new_render_effect;
@@ -92,7 +92,7 @@ std::vector<BaseCode> merge_base_code(const std::vector<BaseCode>& old_base_code
             return base_here.name == base.name;
         });
         if (base_here != old_base_code.end()) {
-            base.parameters = Cool::ParameterU::update_parameters(*base_here->parameters, base_here->parameters);
+            base.parameters = Cool::ParameterU::update_parameters(*base.parameters, base_here->parameters);
         }
     }
     return new_base_code;
