@@ -18,7 +18,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
     RenderEffects effects_gestion;
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
         if (entry.is_directory()) {
-            if (entry.path().stem() != "Normals") {
+            if (entry.path().stem() == "Objects" || entry.path().stem() == "Always") {
                 std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
                                                          ? effects_gestion.for_objects
                                                          : effects_gestion.always_applied;
@@ -36,18 +36,20 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
                     }
                 }
             }
-            else if (entry.path().stem() == "Normals") {
-                std::vector<BaseCode>& norm = effects_gestion.normal;
+            else if (entry.path().stem() == "Normals" || entry.path().stem() == "RayMarching") {
+                std::vector<BaseCode>& param = entry.path().stem() == "Normals"
+                                                   ? effects_gestion.normal
+                                                   : effects_gestion.ray_marching;
                 for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
                     if (file.is_regular_file()) {
                         try {
-                            BaseCode normals;
-                            normals.name = file.path().stem().string();
-                            parse_base_code(normals, Cool::File::to_string(file.path().string()));
-                            norm.push_back(normals);
+                            BaseCode params;
+                            params.name = file.path().stem().string();
+                            parse_base_code(params, Cool::File::to_string(file.path().string()));
+                            param.push_back(params);
                         }
                         catch (const std::exception& e) {
-                            Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse normal from file '{}':\n{}", file.path().string(), e.what());
+                            Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse normal or ray marching from file '{}':\n{}", file.path().string(), e.what());
                         }
                     }
                 }
@@ -89,6 +91,7 @@ RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_r
     new_render_effects.always_applied = merge_effects(old_render_effects.always_applied, new_render_effects.always_applied);
     new_render_effects.for_objects    = merge_effects(old_render_effects.for_objects, new_render_effects.for_objects);
     new_render_effects.normal         = merge_base_code(old_render_effects.normal, new_render_effects.normal);
+    new_render_effects.ray_marching   = merge_base_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
     return new_render_effects;
 }
 
@@ -160,6 +163,12 @@ bool effect_imgui_window(RenderEffects& effects)
     ImGui::End();
     ImGui::Begin("Normal");
     for (auto& param : effects.normal) {
+        has_changed |= base_code_imgui(param);
+        ImGui::Separator();
+    }
+    ImGui::End();
+    ImGui::Begin("RayMarcher");
+    for (auto& param : effects.ray_marching) {
         has_changed |= base_code_imgui(param);
         ImGui::Separator();
     }

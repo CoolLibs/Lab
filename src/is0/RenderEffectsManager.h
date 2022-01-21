@@ -6,6 +6,7 @@ struct RenderEffects {
     std::vector<RenderEffect> for_objects;
     std::vector<RenderEffect> always_applied;
     std::vector<BaseCode>     normal;
+    std::vector<BaseCode>     ray_marching;
 
 private:
     // Serialization
@@ -15,7 +16,8 @@ private:
     {
         archive(cereal::make_nvp("Objects", for_objects),
                 cereal::make_nvp("Always", always_applied),
-                cereal::make_nvp("Normal", normal));
+                cereal::make_nvp("Normal", normal),
+                cereal::make_nvp("RayMarcher", ray_marching));
     }
 };
 

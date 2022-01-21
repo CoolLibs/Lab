@@ -46,37 +46,11 @@ static std::string get_normal(BaseCode normal_code)
            "{" + code_gen_base_code(normal_code) + "}\n";
 }
 
-static std::string ray_marcher()
+static std::string ray_marcher(BaseCode ray_marching_code)
 {
-    return R"(
-        #define MAX_STEPS 1500
-        #define SURF_DIST 0.0001
-        #define DONT_INVERT_SDF 1.
-        #define INVERT_SDF -1.
-
-        struct RayMarchRes {
-            float distance;
-            int iterations_count;
-            vec3 ray_direction;
-            vec3 ray_origin;
-            vec3 hit_position;
-            vec3 normal;
-        };
-
-        RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
-            float t = 0.;
-            int i = 0;
-            for (i; i < MAX_STEPS; i++) {
-                vec3 pos = ro + rd * t;
-                float d = is0_main_sdf(pos) * in_or_out;
-                t += d;
-                // If we are very close to the object, consider it as a hit and exit this loop
-                if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
-            }
-            vec3 final_pos = ro + rd * t;
-            return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos));
-        }
-    )";
+    return "\n" + ray_marching_code.extra_code +
+           "RayMarchRes rayMarching" + ray_marching_code.parameters_declaration +
+           "{" + code_gen_base_code(ray_marching_code) + "}\n";
 }
 
 static std::string apply_background()
@@ -170,7 +144,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
            get_normal(effects.normal[0]) +
-           ray_marcher() +
+           ray_marcher(effects.ray_marching[0]) +
            apply_material(effects.for_objects) +
            apply_background() +
            post_process(effects.always_applied) +
