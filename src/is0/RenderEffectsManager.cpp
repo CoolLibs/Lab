@@ -8,8 +8,9 @@
 #include "RenderEffectParsing.h"
 
 RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folder_path)
-    : render_effects_folder_path{render_effects_folder_path}
-    , render_effects{load_effects(render_effects_folder_path)}
+    : render_effects{load_effects(render_effects_folder_path)}
+    , render_effects_folder_path{render_effects_folder_path}
+
 {
 }
 
