@@ -1,4 +1,4 @@
-#include "RendererPBR.h"
+#include "RenderEffectPBR.h"
 #include <Cool/String/String.h>
 #include <numeric>
 #include <sstream>

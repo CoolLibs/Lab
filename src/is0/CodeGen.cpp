@@ -163,6 +163,18 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     return declarations.str() + '\n' + definitions.str() + main_sdf_definition.str();
 }
 
+std::string main_material()
+{
+    std::stringstream declaration;
+    std::stringstream definition;
+    std::stringstream main_material_definition;
+    main_material_definition << R"(MaterialData is0_main_material(vec3 pos) {
+    
+    )";
+
+    return declaration.str() + '\n' + definition.str() + main_material_definition.str();
+}
+
 std::string convert_to_valid_glsl_name(std::string name)
 {
     Cool::String::replace_all(name, " ", "_");

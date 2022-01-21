@@ -4,7 +4,7 @@
 #include "../ShaderManager/ShaderManager.h"
 #include "NodeEditor.h"
 #include "RenderEffectsManager.h"
-#include "RendererPBR.h"
+#include "RenderEffectPBR.h"
 
 class Is0 : public ShaderManager {
 public:
