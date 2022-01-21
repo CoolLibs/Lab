@@ -38,6 +38,15 @@ struct RayMarchRes {
     vec3 hit_position;
     vec3 normal;
 };
+
+struct MaterialData {
+    //Material
+    vec3 material_color_base;
+    vec3 material_color_diffuse;
+    vec3 material_color_specular;
+    float material_roughtnes;
+    //Effects : where are fresnel and refract params ?? T_T
+};
 )";
 
 static constexpr const char* ray_marcher = R"(
@@ -163,16 +172,37 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     return declarations.str() + '\n' + definitions.str() + main_sdf_definition.str();
 }
 
-std::string main_material()
+std::string main_material(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
 {
-    std::stringstream declaration;
-    std::stringstream definition;
+    std::stringstream declarations;
+    std::stringstream definitions;
     std::stringstream main_material_definition;
     main_material_definition << R"(MaterialData is0_main_material(vec3 pos) {
-    
+    MaterialData md();
     )";
 
-    return declaration.str() + '\n' + definition.str() + main_material_definition.str();
+    for (const auto& node : node_tree.nodes) {
+        const auto& node_template       = find_node_template(node, node_templates);
+        const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
+                                                                .node_template_name = node.node_template_name,
+                                                                .node_id            = node.id},
+                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
+        declarations << function_declaration(fn_signature_params) << '\n';
+        definitions << function_definition(FnDefinitionParams{
+            .fn_signature_params = fn_signature_params,
+            .body                = function_body(node.parameter_list,
+                                                 node_template.code_template,
+                                                 compute_sdf_identifiers(node, node_template, node_tree))});
+        definitions << "\n\n";
+        if (node_tree.has_no_successor(node)) {
+            main_material_definition << "\n    md = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
+        }
+    }
+    main_material_definition << R"(
+    return md;
+})";
+
+    return declarations.str() + '\n' + definitions.str() + main_material_definition.str();
 }
 
 std::string convert_to_valid_glsl_name(std::string name)
