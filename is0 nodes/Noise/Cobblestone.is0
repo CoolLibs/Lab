@@ -1,4 +1,4 @@
-[SDF](vec3 p) {
+[](vec3 p) {
     return IS0_FIX_ARTIFACTS(
         Amplitude * sin(Frequency * p.x)
                   * sin(Frequency * p.y)
