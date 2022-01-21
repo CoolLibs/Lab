@@ -46,5 +46,5 @@ std::string code_gen_base_code(const BaseCode& base_code);
 std::string code_gen_render_effects_extra_code(const RenderEffects& effects);
 std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effects);
 
-bool effect_imgui(RenderEffect& effect);
+bool base_code_imgui(BaseCode& base_code);
 bool effect_imgui_window(RenderEffects& effects);

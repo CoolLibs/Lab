@@ -43,7 +43,7 @@ static std::string get_normal(BaseCode normal_code)
 {
     return "\n" + normal_code.extra_code +
            "vec3 get_normal" + normal_code.parameters_declaration +
-           normal_code.code + '\n';
+           "{" + code_gen_base_code(normal_code) + "}\n";
 }
 
 static std::string ray_marcher()

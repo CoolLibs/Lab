@@ -119,13 +119,12 @@ std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effe
     return code;
 }
 
-bool effect_imgui(RenderEffect& effect)
+bool base_code_imgui(BaseCode& base_code)
 {
-    ImGui::Text("%s", effect.base.name.c_str());
+    ImGui::Text("%s", base_code.name.c_str());
     bool has_changed = false;
-    ImGui::PushID(&effect);
-    effect.base.parameters.imgui([&has_changed]() { has_changed = true; });
-    has_changed |= ImGui::Checkbox("Enabled", &effect.is_active);
+    ImGui::PushID(&base_code);
+    base_code.parameters.imgui([&has_changed]() { has_changed = true; });
     ImGui::PopID();
     return has_changed;
 }
@@ -135,11 +134,19 @@ bool effect_imgui_window(RenderEffects& effects)
     bool has_changed = false;
     ImGui::Begin("Shading");
     for (auto& param : effects.for_objects) {
-        has_changed |= effect_imgui(param);
+        has_changed |= base_code_imgui(param.base);
+        has_changed |= ImGui::Checkbox("Enabled", &param.is_active);
         ImGui::Separator();
     }
     for (auto& param : effects.always_applied) {
-        has_changed |= effect_imgui(param);
+        has_changed |= base_code_imgui(param.base);
+        has_changed |= ImGui::Checkbox("Enabled", &param.is_active);
+        ImGui::Separator();
+    }
+    ImGui::End();
+    ImGui::Begin("Normal");
+    for (auto& param : effects.normal) {
+        has_changed |= base_code_imgui(param);
         ImGui::Separator();
     }
     ImGui::End();
