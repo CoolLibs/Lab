@@ -36,7 +36,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
                     }
                 }
             }
-            else {
+            else if (entry.path().stem() == "Normals") {
                 std::vector<BaseCode>& norm = effects_gestion.normal;
                 for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
                     if (file.is_regular_file()) {
@@ -71,10 +71,24 @@ std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_ren
     return new_render_effect;
 }
 
+std::vector<BaseCode> merge_base_code(const std::vector<BaseCode>& old_base_code, std::vector<BaseCode> new_base_code)
+{
+    for (auto& base : new_base_code) {
+        const auto base_here = std::ranges::find_if(old_base_code, [&](const BaseCode& base_here) {
+            return base_here.name == base.name;
+        });
+        if (base_here != old_base_code.end()) {
+            base.parameters = Cool::ParameterU::update_parameters(*base_here->parameters, base_here->parameters);
+        }
+    }
+    return new_base_code;
+}
+
 RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects)
 {
     new_render_effects.always_applied = merge_effects(old_render_effects.always_applied, new_render_effects.always_applied);
     new_render_effects.for_objects    = merge_effects(old_render_effects.for_objects, new_render_effects.for_objects);
+    new_render_effects.normal         = merge_base_code(old_render_effects.normal, new_render_effects.normal);
     return new_render_effects;
 }
 
