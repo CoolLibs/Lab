@@ -36,6 +36,9 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::make_nvp("Node Editor", _editor),
+                cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
+                cereal::make_nvp("Path For Load", _path_for_load),
+                cereal::make_nvp("File Name For Save", _file_name_for_save),
                 cereal::make_nvp("Render Effects Manager", _effects));
     }
 };
