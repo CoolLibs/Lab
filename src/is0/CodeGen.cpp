@@ -36,7 +36,7 @@ static std::string include()
 
 static std::string ray_marcher_parameters()
 {
-    return "#define MAX_DIST 200. \n";
+    return "float MAX_DIST = cool_camera_far_plane; \n";
 }
 
 static std::string get_normal(BaseCode normal_code)
