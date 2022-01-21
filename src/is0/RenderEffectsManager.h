@@ -7,8 +7,10 @@ struct RenderEffects {
     std::vector<RenderEffect> always_applied;
     std::vector<BaseCode>     normal;
     std::vector<BaseCode>     ray_marching;
-    int                       normal_index = 0;
-    int                       ray_index    = 0;
+    std::vector<BaseCode>     background;
+    int                       normal_index     = 0;
+    int                       ray_index        = 0;
+    int                       background_index = 0;
 
 private:
     // Serialization
@@ -19,7 +21,11 @@ private:
         archive(cereal::make_nvp("Objects", for_objects),
                 cereal::make_nvp("Always", always_applied),
                 cereal::make_nvp("Normal", normal),
-                cereal::make_nvp("RayMarcher", ray_marching));
+                cereal::make_nvp("RayMarcher", ray_marching),
+                cereal::make_nvp("Background", background),
+                cereal::make_nvp("NormalIndex", normal_index),
+                cereal::make_nvp("RayIndex", ray_index),
+                cereal::make_nvp("BackgroundIndex", background_index));
     }
 };
 

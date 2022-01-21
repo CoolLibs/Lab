@@ -53,12 +53,11 @@ static std::string ray_marcher(BaseCode ray_marching_code)
            "{" + code_gen_base_code(ray_marching_code) + "}\n";
 }
 
-static std::string apply_background()
+static std::string apply_background(BaseCode background_code)
 {
-    return R"(
-        vec3 apply_background(){
-        return vec3(0.3, 0.7, 0.98);
-    })";
+    return "\n" + background_code.extra_code +
+           "vec3 apply_background" + background_code.parameters_declaration +
+           "{" + code_gen_base_code(background_code) + "}\n";
 }
 
 static std::string apply_material(const std::vector<RenderEffect>& render_effects)
@@ -146,7 +145,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            get_normal(effects.normal[effects.normal_index]) +
            ray_marcher(effects.ray_marching[effects.ray_index]) +
            apply_material(effects.for_objects) +
-           apply_background() +
+           apply_background(effects.background[effects.background_index]) +
            post_process(effects.always_applied) +
            main();
 }

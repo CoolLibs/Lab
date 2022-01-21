@@ -13,6 +13,40 @@ RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folde
 {
 }
 
+static void load_render(std::vector<RenderEffect>& effects, const std::filesystem::directory_entry& entry)
+{
+    for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
+        if (file.is_regular_file()) {
+            try {
+                RenderEffect render_effect;
+                render_effect.base.name = file.path().stem().string();
+                parse_base_code(render_effect.base, Cool::File::to_string(file.path().string()));
+                effects.push_back(render_effect);
+            }
+            catch (const std::exception& e) {
+                Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse effects from file '{}':\n{}", file.path().string(), e.what());
+            }
+        }
+    }
+}
+
+static void load_base(std::vector<BaseCode>& param, const std::filesystem::directory_entry& entry)
+{
+    for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
+        if (file.is_regular_file()) {
+            try {
+                BaseCode params;
+                params.name = file.path().stem().string();
+                parse_base_code(params, Cool::File::to_string(file.path().string()));
+                param.push_back(params);
+            }
+            catch (const std::exception& e) {
+                Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse normal or ray marching from file '{}':\n{}", file.path().string(), e.what());
+            }
+        }
+    }
+}
+
 RenderEffects load_effects(std::string_view render_effects_folder_path)
 {
     RenderEffects effects_gestion;
@@ -22,37 +56,15 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
                 std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
                                                          ? effects_gestion.for_objects
                                                          : effects_gestion.always_applied;
-                for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
-                    if (file.is_regular_file()) {
-                        try {
-                            RenderEffect render_effect;
-                            render_effect.base.name = file.path().stem().string();
-                            parse_base_code(render_effect.base, Cool::File::to_string(file.path().string()));
-                            effects.push_back(render_effect);
-                        }
-                        catch (const std::exception& e) {
-                            Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse effects from file '{}':\n{}", file.path().string(), e.what());
-                        }
-                    }
-                }
+                load_render(effects, entry);
             }
-            else if (entry.path().stem() == "Normals" || entry.path().stem() == "RayMarching") {
+            else if (entry.path().stem() == "Normals" || entry.path().stem() == "RayMarching" || entry.path().stem() == "Backgrounds") {
                 std::vector<BaseCode>& param = entry.path().stem() == "Normals"
                                                    ? effects_gestion.normal
-                                                   : effects_gestion.ray_marching;
-                for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
-                    if (file.is_regular_file()) {
-                        try {
-                            BaseCode params;
-                            params.name = file.path().stem().string();
-                            parse_base_code(params, Cool::File::to_string(file.path().string()));
-                            param.push_back(params);
-                        }
-                        catch (const std::exception& e) {
-                            Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse normal or ray marching from file '{}':\n{}", file.path().string(), e.what());
-                        }
-                    }
-                }
+                                               : entry.path().stem() == "RayMarching"
+                                                   ? effects_gestion.ray_marching
+                                                   : effects_gestion.background;
+                load_base(param, entry);
             }
         }
     }
@@ -88,10 +100,14 @@ std::vector<BaseCode> merge_base_code(const std::vector<BaseCode>& old_base_code
 
 RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects)
 {
-    new_render_effects.always_applied = merge_effects(old_render_effects.always_applied, new_render_effects.always_applied);
-    new_render_effects.for_objects    = merge_effects(old_render_effects.for_objects, new_render_effects.for_objects);
-    new_render_effects.normal         = merge_base_code(old_render_effects.normal, new_render_effects.normal);
-    new_render_effects.ray_marching   = merge_base_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
+    new_render_effects.always_applied   = merge_effects(old_render_effects.always_applied, new_render_effects.always_applied);
+    new_render_effects.for_objects      = merge_effects(old_render_effects.for_objects, new_render_effects.for_objects);
+    new_render_effects.normal           = merge_base_code(old_render_effects.normal, new_render_effects.normal);
+    new_render_effects.ray_marching     = merge_base_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
+    new_render_effects.background       = merge_base_code(old_render_effects.background, new_render_effects.background);
+    new_render_effects.normal_index     = old_render_effects.normal_index;
+    new_render_effects.ray_index        = old_render_effects.ray_index;
+    new_render_effects.background_index = old_render_effects.background_index;
     return new_render_effects;
 }
 
@@ -193,6 +209,11 @@ bool effect_imgui_window(RenderEffects& effects)
     ImGui::Begin("RayMarcher");
     has_changed |= get_index(effects.ray_marching, effects.ray_index);
     has_changed |= base_code_imgui(effects.ray_marching[effects.ray_index]);
+    ImGui::Separator();
+    ImGui::End();
+    ImGui::Begin("Background");
+    has_changed |= get_index(effects.background, effects.background_index);
+    has_changed |= base_code_imgui(effects.background[effects.background_index]);
     ImGui::Separator();
     ImGui::End();
     return has_changed;
