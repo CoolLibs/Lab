@@ -33,7 +33,23 @@ private:
     // Serialization
     friend class cereal::access;
     template<class Archive>
-    void serialize(Archive& archive)
+    void save(Archive& archive) const
+    {
+        archive(cereal::make_nvp("Node Editor", _editor),
+                cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
+                cereal::make_nvp("Path For Load", _path_for_load),
+                cereal::make_nvp("File Name For Save", _file_name_for_save),
+                cereal::make_nvp("Render Effects Manager", _effects));
+        if (_file_name_for_save != "") {
+            std::string      message = "Do you want to save your work in " + _folder_path_for_save + "\\" + _file_name_for_save + ".is0geometry " + "?";
+            boxer::Selection sel     = boxer::show(message.c_str(), "", boxer::Style::Warning, boxer::Buttons::YesNo);
+            if (sel == boxer::Selection::Yes) {
+                Cool::Serialization::to_json(_editor, _folder_path_for_save + "\\" + _file_name_for_save + ".is0geometry");
+            }
+        }
+    }
+    template<class Archive>
+    void load(Archive& archive)
     {
         archive(cereal::make_nvp("Node Editor", _editor),
                 cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
