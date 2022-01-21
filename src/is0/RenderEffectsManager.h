@@ -7,6 +7,7 @@ struct RenderEffects {
     std::vector<RenderEffect> always_applied;
     std::vector<BaseCode>     normal;
     std::vector<BaseCode>     ray_marching;
+    int                       combo_index = 0;
 
 private:
     // Serialization
@@ -50,4 +51,5 @@ std::string code_gen_render_effects_extra_code(const RenderEffects& effects);
 std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effects);
 
 bool base_code_imgui(BaseCode& base_code);
+bool get_index(std::vector<BaseCode>& base_code, int& index);
 bool effect_imgui_window(RenderEffects& effects);

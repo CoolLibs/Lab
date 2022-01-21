@@ -143,7 +143,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            code_gen_render_effects_extra_code(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
-           get_normal(effects.normal[0]) +
+           get_normal(effects.normal[effects.combo_index]) +
            ray_marcher(effects.ray_marching[0]) +
            apply_material(effects.for_objects) +
            apply_background() +

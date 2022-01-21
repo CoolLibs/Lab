@@ -146,6 +146,26 @@ bool base_code_imgui(BaseCode& base_code)
     return has_changed;
 }
 
+bool get_index(std::vector<BaseCode>& base_code, int& index)
+{
+    bool        has_changed         = false;
+    const char* combo_preview_value = base_code[index].name.c_str();
+    if (ImGui::BeginCombo("Select", combo_preview_value)) {
+        for (int n = 0; n < base_code.size(); n++) {
+            const bool is_selected = (index == n);
+            if (ImGui::Selectable(base_code[n].name.c_str(), is_selected)) {
+                index       = n;
+                has_changed = true;
+            }
+            if (is_selected) {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    return has_changed;
+}
+
 bool effect_imgui_window(RenderEffects& effects)
 {
     bool has_changed = false;
@@ -166,10 +186,9 @@ bool effect_imgui_window(RenderEffects& effects)
     }
     ImGui::End();
     ImGui::Begin("Normal");
-    for (auto& param : effects.normal) {
-        has_changed |= base_code_imgui(param);
-        ImGui::Separator();
-    }
+    has_changed |= get_index(effects.normal, effects.combo_index);
+    has_changed |= base_code_imgui(effects.normal[effects.combo_index]);
+    ImGui::Separator();
     ImGui::End();
     ImGui::Begin("RayMarcher");
     for (auto& param : effects.ray_marching) {
