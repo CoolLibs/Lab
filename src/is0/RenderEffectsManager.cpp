@@ -186,15 +186,14 @@ bool effect_imgui_window(RenderEffects& effects)
     }
     ImGui::End();
     ImGui::Begin("Normal");
-    has_changed |= get_index(effects.normal, effects.combo_index);
-    has_changed |= base_code_imgui(effects.normal[effects.combo_index]);
+    has_changed |= get_index(effects.normal, effects.normal_index);
+    has_changed |= base_code_imgui(effects.normal[effects.normal_index]);
     ImGui::Separator();
     ImGui::End();
     ImGui::Begin("RayMarcher");
-    for (auto& param : effects.ray_marching) {
-        has_changed |= base_code_imgui(param);
-        ImGui::Separator();
-    }
+    has_changed |= get_index(effects.ray_marching, effects.ray_index);
+    has_changed |= base_code_imgui(effects.ray_marching[effects.ray_index]);
+    ImGui::Separator();
     ImGui::End();
     return has_changed;
 }

@@ -7,7 +7,8 @@ struct RenderEffects {
     std::vector<RenderEffect> always_applied;
     std::vector<BaseCode>     normal;
     std::vector<BaseCode>     ray_marching;
-    int                       combo_index = 0;
+    int                       normal_index = 0;
+    int                       ray_index    = 0;
 
 private:
     // Serialization
