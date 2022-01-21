@@ -152,12 +152,16 @@ bool effect_imgui_window(RenderEffects& effects)
     ImGui::Begin("Shading");
     for (auto& param : effects.for_objects) {
         has_changed |= base_code_imgui(param.base);
+        ImGui::PushID(&param);
         has_changed |= ImGui::Checkbox("Enabled", &param.is_active);
+        ImGui::PopID();
         ImGui::Separator();
     }
     for (auto& param : effects.always_applied) {
         has_changed |= base_code_imgui(param.base);
+        ImGui::PushID(&param);
         has_changed |= ImGui::Checkbox("Enabled", &param.is_active);
+        ImGui::PopID();
         ImGui::Separator();
     }
     ImGui::End();
