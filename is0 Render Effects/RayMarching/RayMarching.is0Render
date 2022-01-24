@@ -1,0 +1,33 @@
+`
+#define SURF_DIST 0.0001
+#define DONT_INVERT_SDF 1.
+#define INVERT_SDF -1.
+
+struct RayMarchRes {
+            float distance;
+            int iterations_count;
+            vec3 ray_direction;
+            vec3 ray_origin;
+            vec3 hit_position;
+            vec3 normal;
+};
+`
+(vec3 ro, vec3 rd, float in_or_out) {
+    float t = 0.;
+    int i = 0;
+    for (i; i < MAX_STEPS; i++) {
+        vec3 pos = ro + rd * t;
+        float d = is0_main_sdf(pos) * in_or_out;
+        t += d;
+        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
+    }
+    vec3 final_pos = ro + rd * t;
+    return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos));
+}
+
+float {
+    "Name": "MAX_STEPS",
+    "Default": 800,
+    "Min": 1,
+    "Max": 1200
+}

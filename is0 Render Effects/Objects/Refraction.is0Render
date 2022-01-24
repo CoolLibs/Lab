@@ -31,7 +31,7 @@ float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberati
     reflect_text             = reflect_text * optical_distance;
     float fresnel_reflection = pow(1. + dot(res.ray_direction, res.normal), 5.);
 
-    finalCol += mix(reflect_text, reflet_out, fresnel_reflection);
+    material_color += mix(reflect_text, reflet_out, fresnel_reflection);
 }
 
 float {

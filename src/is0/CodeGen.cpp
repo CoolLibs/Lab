@@ -11,83 +11,84 @@ static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
 
 )";
 
-static constexpr const char* ray_marcher_begin = R"(#version 430
+static std::string glsl_version()
+{
+    return "#version " + std::to_string(COOL_OPENGL_VERSION) + '\n';
+}
+
+static constexpr const char* input_and_output_parameters = R"(
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 out vec4 out_Color;
-// clang-format off
-#include "_COOL_RES_/shaders/camera.glsl"
-#include "_COOL_RES_/shaders/pbr_calc.glsl"
-#include "_COOL_RES_/shaders/math.glsl"
-#include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
-#include "is0 shaders/light.glsl"
-#include "is0 shaders/hg_sdf.glsl" 
-// clang-format on
-// ----- Ray marching options ----- //
-#define MAX_STEPS 1500
-#define MAX_DIST 200.
-#define SURF_DIST 0.0001
-#define NORMAL_DELTA 0.0001
-#define DONT_INVERT_SDF 1.
-#define INVERT_SDF -1.
-
-struct RayMarchRes {
-    float distance;
-    int iterations_count;
-    vec3 ray_direction;
-    vec3 hit_position;
-    vec3 normal;
-};
 )";
 
-static constexpr const char* ray_marcher = R"(
-vec3 get_normal(vec3 p) {
-    const float h = NORMAL_DELTA;
-	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
-                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
-                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
-                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
+static std::string includes()
+{
+    return R"(
+        #include "_COOL_RES_/shaders/camera.glsl"
+        #include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
+        #include "_COOL_RES_/shaders/math.glsl"
+        #include "_COOL_RES_/shaders/pbr_calc.glsl"
+        #include "is0 shaders/hg_sdf.glsl" 
+        #include "is0 shaders/light.glsl"
+    )";
 }
 
-RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
-    float t = 0.;
- 	int i = 0;
-    for (i; i < MAX_STEPS; i++) {
-    	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos) * in_or_out;
-        t += d;
-        // If we are very close to the object, consider it as a hit and exit this loop
-        if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
-    }
-    vec3 final_pos = ro + rd * t;
-    return RayMarchRes(t, i, rd, final_pos, get_normal(final_pos));
+static std::string ray_marcher_parameters()
+{
+    return "float MAX_DIST = cool_camera_far_plane; \n";
 }
-vec3 render(vec3 ro, vec3 rd) {
-    vec3 finalCol = vec3(0.3, 0.7, 0.98);
-    
-    RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
-    float d = res.distance;
-    float iterations_count = res.iterations_count;
-    vec3 p = res.hit_position;
-    vec3 normal = res.normal;
-    if (d < MAX_DIST) {
-      finalCol = normal * 0.5 + 0.5;
 
-)";
-
-static constexpr const char* ray_marcher_end = R"(
-
-finalCol = saturate(finalCol);
-    finalCol = pow(finalCol, vec3(0.4545)); // Gamma correction
-    return finalCol;
+static std::string apply_function(const std::string& type_and_function_names, BaseCode base_code)
+{
+    return "\n" + base_code.extra_code +
+           type_and_function_names +
+           base_code.parameters_declaration +
+           "{" + code_gen_base_code(base_code) + "}\n";
 }
-void main() {
-    vec3 ro = cool_ray_origin();
-    vec3 rd = cool_ray_direction();
-    out_Color = vec4(render(ro, rd), 1.);
+
+static std::string apply_material(const std::vector<RenderEffect>& render_effects)
+{
+    return R"(
+        vec3 apply_material(RayMarchRes res){
+            vec3 material_color = vec3(0., 0., 0.);)" +
+           code_gen_render_effects(render_effects) +
+           R"(return material_color;
+        }
+    )";
 }
-)";
+
+static std::string post_process(const std::vector<RenderEffect>& render_effects)
+{
+    return R"(
+        vec3 post_process(RayMarchRes res, vec3 color){)" +
+           code_gen_render_effects(render_effects) +
+           R"(color = saturate(color);
+            color = pow(color, vec3(0.4545)); // Gamma correction
+            return color;
+        }
+    )";
+}
+
+static std::string main()
+{
+    return R"(
+        void main() {
+            vec3 ro = cool_ray_origin();
+            vec3 rd = cool_ray_direction();
+            RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
+            vec3 color = vec3(0., 0., 0.);
+            if (res.distance < MAX_DIST){
+                color += apply_material(res);
+            }
+            else {
+                color += apply_background(res);
+            }
+            color = post_process(res,color);
+            out_Color = vec4(color, 1.);
+        }
+    )";
+}
 
 static auto compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree) -> std::vector<std::pair<std::string, std::string>>
 {
@@ -120,16 +121,20 @@ static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) ->
 
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
 {
-    return ray_marcher_begin +
+    return glsl_version() +
+           input_and_output_parameters +
+           includes() +
+           ray_marcher_parameters() +
            nodes_extra_code(node_templates) +
            code_gen_render_effects_extra_code(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
-           ray_marcher +
-           code_gen_render_effects(effects.for_objects) +
-           "}" +
-           code_gen_render_effects(effects.always_applied) +
-           ray_marcher_end;
+           apply_function("vec3 get_normal", effects.normal[effects.normal_index]) +
+           apply_function("RayMarchRes rayMarching", effects.ray_marching[effects.ray_index]) +
+           apply_material(effects.for_objects) +
+           apply_function("vec3 apply_background", effects.background[effects.background_index]) +
+           post_process(effects.post_processing) +
+           main();
 }
 
 std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates)
