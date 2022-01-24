@@ -13,35 +13,25 @@ RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folde
 {
 }
 
-static void load_render(std::vector<RenderEffect>& effects, const std::filesystem::directory_entry& entry)
+template<typename T>
+static void load_code(std::vector<T>& code, const std::filesystem::directory_entry& entry)
 {
     for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
         if (file.is_regular_file()) {
             try {
-                RenderEffect render_effect;
-                render_effect.base.name = file.path().stem().string();
-                parse_base_code(render_effect.base, Cool::File::to_string(file.path().string()));
-                effects.push_back(render_effect);
+                T params;
+                if constexpr (std::is_same_v<T, BaseCode>) {
+                    params.name = file.path().stem().string();
+                    parse_base_code(params, Cool::File::to_string(file.path().string()));
+                }
+                else {
+                    params.base.name = file.path().stem().string();
+                    parse_base_code(params.base, Cool::File::to_string(file.path().string()));
+                }
+                code.push_back(params);
             }
             catch (const std::exception& e) {
-                Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse effects from file '{}':\n{}", file.path().string(), e.what());
-            }
-        }
-    }
-}
-
-static void load_base(std::vector<BaseCode>& param, const std::filesystem::directory_entry& entry)
-{
-    for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
-        if (file.is_regular_file()) {
-            try {
-                BaseCode params;
-                params.name = file.path().stem().string();
-                parse_base_code(params, Cool::File::to_string(file.path().string()));
-                param.push_back(params);
-            }
-            catch (const std::exception& e) {
-                Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse normal or ray marching from file '{}':\n{}", file.path().string(), e.what());
+                Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse effect, normal or ray marching from file '{}':\n{}", file.path().string(), e.what());
             }
         }
     }
@@ -56,7 +46,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
                 std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
                                                          ? effects_gestion.for_objects
                                                          : effects_gestion.always_applied;
-                load_render(effects, entry);
+                load_code(effects, entry);
             }
             else if (entry.path().stem() == "Normals" || entry.path().stem() == "RayMarching" || entry.path().stem() == "Backgrounds") {
                 std::vector<BaseCode>& param = entry.path().stem() == "Normals"
@@ -64,47 +54,45 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
                                                : entry.path().stem() == "RayMarching"
                                                    ? effects_gestion.ray_marching
                                                    : effects_gestion.background;
-                load_base(param, entry);
+                load_code(param, entry);
             }
         }
     }
     return effects_gestion;
 }
 
-std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_render_effect, std::vector<RenderEffect> new_render_effect)
+template<typename T>
+static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> new_code)
 {
-    for (auto& effect : new_render_effect) {
-        const auto effect_here = std::ranges::find_if(old_render_effect, [&](const RenderEffect& effect_here) {
-            return effect_here.base.name == effect.base.name;
+    for (auto& code : new_code) {
+        const auto code_here = std::ranges::find_if(old_code, [&](const T& code_here) {
+            if constexpr (std::is_same_v<T, BaseCode>) {
+                return code_here.name == code.name;
+            }
+            else {
+                return code_here.base.name == code.base.name;
+            }
         });
-        if (effect_here != old_render_effect.end()) {
-            effect.is_active       = effect_here->is_active;
-            effect.base.parameters = Cool::ParameterU::update_parameters(*effect.base.parameters, effect_here->base.parameters);
+        if (code_here != old_code.end()) {
+            if constexpr (std::is_same_v<T, BaseCode>) {
+                code.parameters = Cool::ParameterU::update_parameters(*code.parameters, code_here->parameters);
+            }
+            else {
+                code.is_active       = code_here->is_active;
+                code.base.parameters = Cool::ParameterU::update_parameters(*code.base.parameters, code_here->base.parameters);
+            }
         }
     }
-    return new_render_effect;
-}
-
-std::vector<BaseCode> merge_base_code(const std::vector<BaseCode>& old_base_code, std::vector<BaseCode> new_base_code)
-{
-    for (auto& base : new_base_code) {
-        const auto base_here = std::ranges::find_if(old_base_code, [&](const BaseCode& base_here) {
-            return base_here.name == base.name;
-        });
-        if (base_here != old_base_code.end()) {
-            base.parameters = Cool::ParameterU::update_parameters(*base.parameters, base_here->parameters);
-        }
-    }
-    return new_base_code;
+    return new_code;
 }
 
 RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects)
 {
-    new_render_effects.always_applied   = merge_effects(old_render_effects.always_applied, new_render_effects.always_applied);
-    new_render_effects.for_objects      = merge_effects(old_render_effects.for_objects, new_render_effects.for_objects);
-    new_render_effects.normal           = merge_base_code(old_render_effects.normal, new_render_effects.normal);
-    new_render_effects.ray_marching     = merge_base_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
-    new_render_effects.background       = merge_base_code(old_render_effects.background, new_render_effects.background);
+    new_render_effects.always_applied   = merge_code(old_render_effects.always_applied, new_render_effects.always_applied);
+    new_render_effects.for_objects      = merge_code(old_render_effects.for_objects, new_render_effects.for_objects);
+    new_render_effects.normal           = merge_code(old_render_effects.normal, new_render_effects.normal);
+    new_render_effects.ray_marching     = merge_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
+    new_render_effects.background       = merge_code(old_render_effects.background, new_render_effects.background);
     new_render_effects.normal_index     = old_render_effects.normal_index;
     new_render_effects.ray_index        = old_render_effects.ray_index;
     new_render_effects.background_index = old_render_effects.background_index;

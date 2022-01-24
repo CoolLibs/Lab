@@ -29,11 +29,9 @@ private:
     }
 };
 
-RenderEffects             load_effects(std::string_view render_effects_folder_path);
-std::vector<RenderEffect> merge_effects(const std::vector<RenderEffect>& old_render_effect, std::vector<RenderEffect> new_render_effect);
-std::vector<BaseCode>     merge_base_code(const std::vector<BaseCode>& old_base_code, std::vector<BaseCode> new_base_code);
-RenderEffects             merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects);
-RenderEffects             reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects);
+RenderEffects load_effects(std::string_view render_effects_folder_path);
+RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects);
+RenderEffects reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects);
 
 class RenderEffectsManager {
 public:
