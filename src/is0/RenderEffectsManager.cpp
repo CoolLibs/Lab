@@ -46,7 +46,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
             if (entry.path().stem() == "Objects" || entry.path().stem() == "PostProcessing") {
                 std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
                                                          ? effects_gestion.for_objects
-                                                         : effects_gestion.always_applied;
+                                                         : effects_gestion.post_processing;
                 load_code(effects, entry);
             }
             else if (entry.path().stem() == "Normals" || entry.path().stem() == "RayMarching" || entry.path().stem() == "Backgrounds") {
@@ -103,7 +103,7 @@ static size_t merge_index(const BaseCode& old_parameter, const std::vector<BaseC
 
 RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects)
 {
-    new_render_effects.always_applied   = merge_code(old_render_effects.always_applied, new_render_effects.always_applied);
+    new_render_effects.post_processing  = merge_code(old_render_effects.post_processing, new_render_effects.post_processing);
     new_render_effects.for_objects      = merge_code(old_render_effects.for_objects, new_render_effects.for_objects);
     new_render_effects.normal           = merge_code(old_render_effects.normal, new_render_effects.normal);
     new_render_effects.ray_marching     = merge_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
@@ -127,7 +127,7 @@ std::string code_gen_render_effects_extra_code(const RenderEffects& effects)
             code += effect.base.extra_code;
         }
     }
-    for (const auto& effect : effects.always_applied) {
+    for (const auto& effect : effects.post_processing) {
         if (effect.is_active) {
             code += effect.base.extra_code;
         }
@@ -211,7 +211,7 @@ bool effect_imgui_window(RenderEffects& effects)
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }
-    for (auto& param : effects.always_applied) {
+    for (auto& param : effects.post_processing) {
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }

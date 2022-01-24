@@ -133,7 +133,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            apply_function("RayMarchRes rayMarching", effects.ray_marching[effects.ray_index]) +
            apply_material(effects.for_objects) +
            apply_function("vec3 apply_background", effects.background[effects.background_index]) +
-           post_process(effects.always_applied) +
+           post_process(effects.post_processing) +
            main();
 }
 
