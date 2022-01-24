@@ -86,6 +86,19 @@ static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> 
     return new_code;
 }
 
+static size_t merge_index(const std::vector<BaseCode>& old_parameters, const std::vector<BaseCode>& new_parameters, const size_t& old_index)
+{
+    BaseCode   old_parameter  = old_parameters[old_index];
+    size_t     new_index      = 0;
+    const auto parameter_here = std::ranges::find_if(new_parameters, [&](const BaseCode& parameter_here) {
+        return parameter_here.name == old_parameter.name;
+    });
+    if (parameter_here != new_parameters.end()) {
+        new_index = (size_t)std::distance(new_parameters.begin(), parameter_here);
+    }
+    return new_index;
+}
+
 RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects)
 {
     new_render_effects.always_applied   = merge_code(old_render_effects.always_applied, new_render_effects.always_applied);
@@ -93,9 +106,9 @@ RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_r
     new_render_effects.normal           = merge_code(old_render_effects.normal, new_render_effects.normal);
     new_render_effects.ray_marching     = merge_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
     new_render_effects.background       = merge_code(old_render_effects.background, new_render_effects.background);
-    new_render_effects.normal_index     = old_render_effects.normal_index;
-    new_render_effects.ray_index        = old_render_effects.ray_index;
-    new_render_effects.background_index = old_render_effects.background_index;
+    new_render_effects.normal_index     = merge_index(old_render_effects.normal, new_render_effects.normal, old_render_effects.normal_index);
+    new_render_effects.ray_index        = merge_index(old_render_effects.ray_marching, new_render_effects.ray_marching, old_render_effects.ray_index);
+    new_render_effects.background_index = merge_index(old_render_effects.background, new_render_effects.background, old_render_effects.background_index);
     return new_render_effects;
 }
 
@@ -160,7 +173,7 @@ bool effect_imgui(RenderEffect& render_effect)
     return has_changed;
 }
 
-bool get_index(const std::vector<BaseCode>& base_code, int& index)
+bool get_index(const std::vector<BaseCode>& base_code, size_t& index)
 {
     bool        has_changed         = false;
     const char* combo_preview_value = base_code[index].name.c_str();
@@ -180,7 +193,7 @@ bool get_index(const std::vector<BaseCode>& base_code, int& index)
     return has_changed;
 }
 
-bool parameters_imgui(std::vector<BaseCode>& base_code, int& index)
+bool parameters_imgui(std::vector<BaseCode>& base_code, size_t& index)
 {
     bool has_changed = false;
     has_changed |= get_index(base_code, index);
