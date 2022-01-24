@@ -1,10 +1,12 @@
 [SDF1 SDF2] (vec3 pos) {
-    return mix(${SDF1}(pos), ${SDF2}(pos), progression);
+    return IS0_FIX_ARTIFACTS(
+        mix(${SDF1}(pos), ${SDF2}(pos), Progression)
+    );
 }
 
 float {
-    "Name": "progression",
-    "Default": 0.8,
+    "Name": "Progression",
+    "Default": 0.5,
     "Min": -3.0,
     "Max": 4.0
 }

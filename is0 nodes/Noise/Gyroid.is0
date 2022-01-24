@@ -1,0 +1,12 @@
+[] (vec3 p) {
+    return IS0_FIX_ARTIFACTS(
+        dot(sin(p * Frequency), cos(p.zxy * Frequency))
+    );
+}
+
+float {
+    "Name": "Frequency",
+    "Default": 2.0,
+    "Min": 0.0,
+    "Max": 10.0
+}

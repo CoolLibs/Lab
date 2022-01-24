@@ -1,0 +1,56 @@
+`
+float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberation, int channel){
+    vec3 refraction_out = refract(refraction_in, norm_exit, IOR - Abberation);
+    if (dot(refraction_out, refraction_out) == 0.) {
+        refraction_out = reflect(refraction_in, norm_exit);
+    }
+    return refraction_out[channel];
+}
+`
+
+(RayMarchRes res) {
+    vec3 reflet_out    = reflect(res.ray_direction, res.normal);
+    vec3 refraction_in = refract(res.ray_direction, res.normal, 1. / IOR);
+
+    vec3        p_enter = res.hit_position - res.normal * SURF_DIST * 3.;
+    RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERT_SDF); // Inside
+    float       d2      = d_in.distance;
+
+    vec3  p_exit         = p_enter + refraction_in * d2;
+    vec3  norm_exit      = -get_normal(p_exit);
+    vec3  reflect_text   = vec3(0);
+
+    // Red
+    reflect_text.r = render_color(refraction_in, norm_exit, IOR, Abberation, 0);
+    // Green
+    reflect_text.g = render_color(refraction_in, norm_exit, IOR, 0., 1);
+    // Blue
+    reflect_text.b = render_color(refraction_in, norm_exit, IOR, -Abberation, 2);
+
+    float optical_distance   = exp(-d2 * Density);
+    reflect_text             = reflect_text * optical_distance;
+    float fresnel_reflection = pow(1. + dot(res.ray_direction, res.normal), 5.);
+
+    finalCol += mix(reflect_text, reflet_out, fresnel_reflection);
+}
+
+float {
+    "Name": "IOR",
+    "Default": 0.7,
+    "Min": 0.01,
+    "Max": 2.5
+}
+
+float {
+    "Name": "Abberation",
+    "Default": 0.01,
+    "Min": 0.001,
+    "Max": 0.5
+}
+
+float {
+    "Name": "Density",
+    "Default": 0.1,
+    "Min": 0.01,
+    "Max": 1.0
+}

@@ -14,7 +14,7 @@ endif()
 
 # Choose our GPU API and its version
 # set(COOL_USE_VULKAN 110)
-set(COOL_USE_OPENGL $<$<NOT:$<PLATFORM_ID:Darwin>>:430> $<$<PLATFORM_ID:Darwin>:330>) # Must be >= 330 for ImGui to work properly # We use 330 when building on Mac because they don't support higher versions of OpenGL
+set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,330,430>) # Must be >= 330 for ImGui to work properly # We use 330 when building on Mac because it doesn't support higher versions of OpenGL
 
 # Include Cool
 add_subdirectory(Cool)
@@ -37,3 +37,10 @@ include("Cool/CMakeUtils/files_and_folders.cmake")
 Cool__target_copy_folder(${PROJECT_NAME} "shader-examples")
 Cool__target_copy_folder(${PROJECT_NAME} "is0 nodes")
 Cool__target_copy_folder(${PROJECT_NAME} "is0 shaders")
+
+option(TEST_IS0_NODES "Test all Is0 Nodes" OFF)
+if (TEST_IS0_NODES)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        IS0_TEST_NODES
+    )
+endif()

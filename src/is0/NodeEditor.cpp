@@ -3,6 +3,11 @@
 #include <Cool/Parameter/ParameterU.h>
 #include <GLFW/glfw3.h>
 
+NodeEditor::NodeEditor(std::string_view nodes_folder_path)
+    : _factory{nodes_folder_path}
+{
+}
+
 bool NodeEditor::tree_has_changed()
 {
     bool b            = _tree_has_changed;
@@ -113,6 +118,7 @@ bool NodeEditor::handle_node_deletion()
         for (const int node_id : selected_nodes) {
             _tree.delete_node(NodeId{node_id});
         }
+        ImNodes::ClearNodeSelection();
         return true;
     }
     return false;
@@ -128,6 +134,7 @@ void NodeEditor::imgui_window()
         if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle) || _should_open_menu) {
             _should_open_menu = false;
             ImGui::OpenPopup("_node_templates_list");
+            _next_node_position = ImGui::GetMousePosOnOpeningCurrentPopup();
         }
         if (ImGui::BeginPopup("_node_templates_list")) {
             node_tree_has_changed |= imgui_nodes_menu();
@@ -155,7 +162,7 @@ bool NodeEditor::imgui_nodes_menu()
     const std::optional<Node> node = _factory.imgui();
     if (node.has_value()) {
         _tree.add_node(*node);
-        ImNodes::SetNodeScreenSpacePos(node->id, ImGui::GetMousePos());
+        ImNodes::SetNodeScreenSpacePos(node->id, _next_node_position);
         return true;
     }
     else {
@@ -177,12 +184,7 @@ void NodeEditor::update_templates_and_nodes()
         }
         else {
             // Update params
-            Cool::ParameterList new_parameters{};
-            new_parameters->reserve(node.parameter_list->size());
-            for (const auto& desc : node_template->parameters) {
-                new_parameters->push_back(Cool::ParameterU::make_param(node.parameter_list, desc));
-            }
-            node.parameter_list = std::move(new_parameters);
+            node.parameter_list = Cool::ParameterU::update_parameters(node_template->parameters, node.parameter_list);
             // Update input pins
             const auto nb_pins = node_template->sdf_identifiers.size();
             if (nb_pins < node.input_pins.size()) {

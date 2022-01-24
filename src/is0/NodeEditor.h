@@ -7,6 +7,7 @@
 
 class NodeEditor {
 public:
+    explicit NodeEditor(std::string_view nodes_folder_path);
     void imgui_window();
     void update_templates_and_nodes();
     void open_menu();
@@ -14,6 +15,7 @@ public:
     bool tree_is_valid() const { return _all_nodes_have_a_valid_template; }
     auto tree() const -> const NodeTree& { return _tree; }
     auto node_templates() const -> const std::vector<NodeTemplate>& { return _factory.templates(); }
+    void add_node(const Node& node) { _tree.add_node(node); }
 
 private:
     bool wants_to_delete_selection() const;
@@ -25,11 +27,12 @@ private:
 
 private:
     UniqueImNodeContext _context;
-    NodeFactory         _factory{Cool::Path::root() + "/is0 nodes"};
+    NodeFactory         _factory;
     NodeTree            _tree;
     bool                _all_nodes_have_a_valid_template = true;
     bool                _tree_has_changed                = true;
     bool                _should_open_menu                = false;
+    ImVec2              _next_node_position              = {0.f, 0.f};
 
 private:
     // Serialization

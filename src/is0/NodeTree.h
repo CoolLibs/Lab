@@ -7,7 +7,7 @@ struct NodeTree {
     std::vector<Node> nodes;
     std::vector<Link> links;
 
-    void add_node(Node node);
+    void add_node(const Node& node);
     void add_link(Link link);
 
     void delete_node(NodeId node_id);
@@ -23,12 +23,19 @@ struct NodeTree {
     bool        has_no_successor(const Node& node) const;
 
 private:
-    //Serialization
+    // Serialization
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Nodes", nodes),
-                cereal::make_nvp("Links", links));
+        try {
+            archive(cereal::make_nvp("Nodes", nodes),
+                    cereal::make_nvp("Links", links));
+        }
+        catch (const std::exception&) {
+            nodes.clear();
+            links.clear();
+            throw;
+        }
     }
 };

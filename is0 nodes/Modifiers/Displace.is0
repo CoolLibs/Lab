@@ -1,19 +1,19 @@
-[SDF](vec3 p) {
-    float d1 = ${SDF}(p);
-    float d2 = sin(strength*p.x)*sin(strength*p.y)*sin(strength*p.z);
-    return d1 + intensity*d2;
+[SDF Displacement](vec3 p) {
+    return IS0_FIX_ARTIFACTS(
+        ${SDF}(p) + ${Displacement}(p * Frequency) * Strength
+    );
 }
 
 float {
-    "Name": "strength",
-    "Default": 5.0,
-    "Min": 0.001,
-    "Max": 50.0
+    "Name": "Frequency",
+    "Default": 0.35,
+    "Min": 0.0,
+    "Max": 1.0
 }
 
 float {
-    "Name": "intensity",
-    "Default": 1.0,
-    "Min": 0.001,
-    "Max": 20.0
+    "Name": "Strength",
+    "Default": 0.1,
+    "Min": 0.0,
+    "Max": 1.0
 }

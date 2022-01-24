@@ -1,11 +1,24 @@
 [SDF](vec3 p) {
-    return ${SDF}(p/Size)*Size ;
+    return IS0_FIX_ARTIFACTS(${SDF}(p / vec3(X, Y, Z)));
 }
 
+float {
+    "Name": "X",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
 
 float {
-    "Name": "Size",
-    "Default": 1,
-    "Min": 0.001,
-    "Max": 30.0
+    "Name": "Y",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
+}
+
+float {
+    "Name": "Z",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 10.0
 }

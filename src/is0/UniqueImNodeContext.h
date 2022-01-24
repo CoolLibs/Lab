@@ -17,7 +17,7 @@ public:
     {
         if (_context) {
             ImNodes::SaveCurrentEditorStateToIniFile("is0_node_editor.ini");
-            ImNodes::DestroyContext();
+            ImNodes::DestroyContext(_context);
         }
     }
     UniqueImNodeContext(const UniqueImNodeContext&) = delete;
@@ -30,6 +30,7 @@ public:
     UniqueImNodeContext& operator=(UniqueImNodeContext&& rhs) noexcept
     {
         if (this != &rhs) {
+            ImNodes::DestroyContext(_context);
             _context     = rhs._context;
             rhs._context = nullptr;
         }

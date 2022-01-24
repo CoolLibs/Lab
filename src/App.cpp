@@ -4,6 +4,11 @@ App::App(Cool::WindowManager& windows)
     : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
 {
     _clock.pause();
+#if IS0_TEST_NODES
+    for (const auto& node_template : _shader_manager.nodes_templates()) {
+        _shader_manager.add_node(NodeFactoryU::node_from_template(node_template));
+    }
+#endif
 }
 
 void App::update()
@@ -12,12 +17,18 @@ void App::update()
     if (inputs_are_allowed()) {
         _shader_manager->update();
     }
+#if IS0_TEST_NODES
+    glfwSetWindowShouldClose(_main_window.glfw(), true);
+#endif
 }
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
 #if defined(COOL_VULKAN)
 #elif defined(COOL_OPENGL)
+#if IS0_TEST_NODES
+    render_target.set_size({1, 1});
+#endif
     render_target.render([&]() {
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.current_size());
         _camera.apply(aspect_ratio);
