@@ -1,4 +1,4 @@
-() {
+(RayMarchRes res) {
     return background_color;
 }
 

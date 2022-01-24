@@ -95,7 +95,7 @@ static std::string main()
                 color += apply_material(res);
             }
             else {
-                color += apply_background();
+                color += apply_background(res);
             }
             color = post_process(res,color);
             out_Color = vec4(color, 1.);
