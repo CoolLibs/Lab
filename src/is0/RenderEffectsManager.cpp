@@ -16,6 +16,7 @@ RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folde
 template<typename T>
 static void load_code(std::vector<T>& code, const std::filesystem::directory_entry& entry)
 {
+    static_assert(std::is_same_v<T, BaseCode> || std::is_same_v<T, RenderEffect>, "Only BaseCode and RenderEffect are supported");
     for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
         if (file.is_regular_file()) {
             try {
@@ -64,6 +65,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
 template<typename T>
 static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> new_code)
 {
+    static_assert(std::is_same_v<T, BaseCode> || std::is_same_v<T, RenderEffect>, "Only BaseCode and RenderEffect are supported");
     for (auto& code : new_code) {
         const auto code_here = std::ranges::find_if(old_code, [&](const T& code_here) {
             if constexpr (std::is_same_v<T, BaseCode>) {
