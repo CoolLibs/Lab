@@ -24,6 +24,10 @@ then it will be used as `My_Amazing_Radius`:
 }
 ```
 
+## Available functions 
+ 
+TODO List all functions available in math.glsl, hg_sdf.glsl etc. 
+
 ## Fixing artifacts
 
 Some nodes might not be perfect euclidian distance fields. In such cases visual artifacts can appear:
