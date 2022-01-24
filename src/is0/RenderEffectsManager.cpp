@@ -25,6 +25,7 @@ static void load_code(std::vector<T>& code, const std::filesystem::directory_ent
                     parse_base_code(params, Cool::File::to_string(file.path().string()));
                 }
                 else {
+                    // T is RenderEffect
                     params.base.name = file.path().stem().string();
                     parse_base_code(params.base, Cool::File::to_string(file.path().string()));
                 }
@@ -70,6 +71,7 @@ static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> 
                 return code_here.name == code.name;
             }
             else {
+                // T is RenderEffect
                 return code_here.base.name == code.base.name;
             }
         });
@@ -78,6 +80,7 @@ static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> 
                 code.parameters = Cool::ParameterU::update_parameters(*code.parameters, code_here->parameters);
             }
             else {
+                // T is RenderEffect
                 code.is_active       = code_here->is_active;
                 code.base.parameters = Cool::ParameterU::update_parameters(*code.base.parameters, code_here->base.parameters);
             }
