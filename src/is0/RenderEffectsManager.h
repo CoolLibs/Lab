@@ -19,7 +19,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::make_nvp("Objects", for_objects),
-                cereal::make_nvp("Always", always_applied),
+                cereal::make_nvp("PostProcessing", always_applied),
                 cereal::make_nvp("Normal", normal),
                 cereal::make_nvp("RayMarcher", ray_marching),
                 cereal::make_nvp("Background", background),
