@@ -43,7 +43,7 @@ RenderEffects load_effects(std::string_view render_effects_folder_path)
     RenderEffects effects_gestion;
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
         if (entry.is_directory()) {
-            if (entry.path().stem() == "Objects" || entry.path().stem() == "Always") {
+            if (entry.path().stem() == "Objects" || entry.path().stem() == "PostProcessing") {
                 std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
                                                          ? effects_gestion.for_objects
                                                          : effects_gestion.always_applied;
