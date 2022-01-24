@@ -44,16 +44,21 @@ struct NodeRes {
     float d;
     MaterialData md;
 };
+
+NodeRes min_noderes(NodeRes n1, NodeRes n2) {
+    return (n1.d<n2.d) ? n1 : n2;
+}
+
 )";
 
 static constexpr const char* ray_marcher = R"(
-vec3 get_normal(vec3 p) {
+vec3 get_normal(NodeRes ndr) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) + 
-                      k.yyx * is0_main_sdf( p + k.yyx*h ) + 
-                      k.yxy * is0_main_sdf( p + k.yxy*h ) + 
-                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
+    return normalize( k.xyy * is0_main_sdf(NodeRes(ndr.pos + k.xyy*h, ndr.d, ndr.md)) + 
+                      k.yyx * is0_main_sdf(NodeRes(ndr.pos + k.yyx*h, ndr.d, ndr.md)) + 
+                      k.yxy * is0_main_sdf(NodeRes(ndr.pos + k.yxy*h, ndr.d, ndr.md)) + 
+                      k.xxx * is0_main_sdf(NodeRes(ndr.pos + k.xxx*h, ndr.d, ndr.md)) );
 }
 
 RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
@@ -143,8 +148,8 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     std::stringstream declarations;
     std::stringstream definitions;
     std::stringstream main_sdf_definition;
-    main_sdf_definition << R"(float is0_main_sdf(vec3 pos) {
-    float d = MAX_DIST;)";
+    main_sdf_definition << R"(NodeRes is0_main_sdf(NodeRes ndr) {
+    ndr.d = MAX_DIST;)";
 
     for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
@@ -160,11 +165,11 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
                                                  compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
-            main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
+            main_sdf_definition << "\n    ndr.d = min_noderes(ndr, " << function_name({node.node_template_name, node.id}) << "(ndr));";
         }
     }
     main_sdf_definition << R"(
-    return d;
+    return ndr;
 })";
     return declarations.str() + '\n' + definitions.str() + main_sdf_definition.str();
 }
@@ -183,7 +188,7 @@ std::string function_name(const FnNameParams& p)
 
 std::string function_signature(const FnSignatureParams& p)
 {
-    return "float " + function_name(p.fn_name_params) + std::string{p.sdf_param_declaration};
+    return "NodeRes " + function_name(p.fn_name_params) + std::string{p.sdf_param_declaration};
 }
 
 std::string function_declaration(const FnSignatureParams& p)
