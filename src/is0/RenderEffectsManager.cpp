@@ -86,17 +86,17 @@ static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> 
     return new_code;
 }
 
-static size_t merge_index(const std::vector<BaseCode>& old_parameters, const std::vector<BaseCode>& new_parameters, const size_t& old_index)
+static size_t merge_index(const BaseCode& old_parameter, const std::vector<BaseCode>& new_parameters)
 {
-    BaseCode   old_parameter  = old_parameters[old_index];
-    size_t     new_index      = 0;
     const auto parameter_here = std::ranges::find_if(new_parameters, [&](const BaseCode& parameter_here) {
         return parameter_here.name == old_parameter.name;
     });
     if (parameter_here != new_parameters.end()) {
-        new_index = std::distance(new_parameters.begin(), parameter_here);
+        return std::distance(new_parameters.begin(), parameter_here);
     }
-    return new_index;
+    else {
+        return 0;
+    }
 }
 
 RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects)
@@ -106,9 +106,9 @@ RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_r
     new_render_effects.normal           = merge_code(old_render_effects.normal, new_render_effects.normal);
     new_render_effects.ray_marching     = merge_code(old_render_effects.ray_marching, new_render_effects.ray_marching);
     new_render_effects.background       = merge_code(old_render_effects.background, new_render_effects.background);
-    new_render_effects.normal_index     = merge_index(old_render_effects.normal, new_render_effects.normal, old_render_effects.normal_index);
-    new_render_effects.ray_index        = merge_index(old_render_effects.ray_marching, new_render_effects.ray_marching, old_render_effects.ray_index);
-    new_render_effects.background_index = merge_index(old_render_effects.background, new_render_effects.background, old_render_effects.background_index);
+    new_render_effects.normal_index     = merge_index(old_render_effects.normal[old_render_effects.normal_index], new_render_effects.normal);
+    new_render_effects.ray_index        = merge_index(old_render_effects.ray_marching[old_render_effects.ray_index], new_render_effects.ray_marching);
+    new_render_effects.background_index = merge_index(old_render_effects.background[old_render_effects.background_index], new_render_effects.background);
     return new_render_effects;
 }
 
