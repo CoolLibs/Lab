@@ -39,25 +39,12 @@ static std::string ray_marcher_parameters()
     return "float MAX_DIST = cool_camera_far_plane; \n";
 }
 
-static std::string get_normal(BaseCode normal_code)
+static std::string apply_function(const std::string& type_and_function_names, BaseCode base_code)
 {
-    return "\n" + normal_code.extra_code +
-           "vec3 get_normal" + normal_code.parameters_declaration +
-           "{" + code_gen_base_code(normal_code) + "}\n";
-}
-
-static std::string ray_marcher(BaseCode ray_marching_code)
-{
-    return "\n" + ray_marching_code.extra_code +
-           "RayMarchRes rayMarching" + ray_marching_code.parameters_declaration +
-           "{" + code_gen_base_code(ray_marching_code) + "}\n";
-}
-
-static std::string apply_background(BaseCode background_code)
-{
-    return "\n" + background_code.extra_code +
-           "vec3 apply_background" + background_code.parameters_declaration +
-           "{" + code_gen_base_code(background_code) + "}\n";
+    return "\n" + base_code.extra_code +
+           type_and_function_names +
+           base_code.parameters_declaration +
+           "{" + code_gen_base_code(base_code) + "}\n";
 }
 
 static std::string apply_material(const std::vector<RenderEffect>& render_effects)
@@ -142,10 +129,10 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            code_gen_render_effects_extra_code(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
-           get_normal(effects.normal[effects.normal_index]) +
-           ray_marcher(effects.ray_marching[effects.ray_index]) +
+           apply_function("vec3 get_normal", effects.normal[effects.normal_index]) +
+           apply_function("RayMarchRes rayMarching", effects.ray_marching[effects.ray_index]) +
            apply_material(effects.for_objects) +
-           apply_background(effects.background[effects.background_index]) +
+           apply_function("vec3 apply_background", effects.background[effects.background_index]) +
            post_process(effects.always_applied) +
            main();
 }
