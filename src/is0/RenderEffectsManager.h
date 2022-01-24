@@ -60,4 +60,5 @@ std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effe
 bool base_code_imgui(BaseCode& base_code);
 bool effect_imgui(RenderEffect& render_effect);
 bool get_index(const std::vector<BaseCode>& base_code, int& index);
+bool parameters_imgui(std::vector<BaseCode>& base_code, int& index);
 bool effect_imgui_window(RenderEffects& effects);
