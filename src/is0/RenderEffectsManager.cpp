@@ -162,7 +162,7 @@ bool base_code_imgui(BaseCode& base_code)
     return has_changed;
 }
 
-bool get_index(std::vector<BaseCode>& base_code, int& index)
+bool get_index(const std::vector<BaseCode>& base_code, int& index)
 {
     bool        has_changed         = false;
     const char* combo_preview_value = base_code[index].name.c_str();
