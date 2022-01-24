@@ -94,7 +94,7 @@ static size_t merge_index(const std::vector<BaseCode>& old_parameters, const std
         return parameter_here.name == old_parameter.name;
     });
     if (parameter_here != new_parameters.end()) {
-        new_index = (size_t)std::distance(new_parameters.begin(), parameter_here);
+        new_index = std::distance(new_parameters.begin(), parameter_here);
     }
     return new_index;
 }
