@@ -162,6 +162,16 @@ bool base_code_imgui(BaseCode& base_code)
     return has_changed;
 }
 
+bool effect_imgui(RenderEffect& render_effect)
+{
+    bool has_changed = false;
+    has_changed |= base_code_imgui(render_effect.base);
+    ImGui::PushID(&render_effect);
+    has_changed |= ImGui::Checkbox("Enabled", &render_effect.is_active);
+    ImGui::PopID();
+    return has_changed;
+}
+
 bool get_index(const std::vector<BaseCode>& base_code, int& index)
 {
     bool        has_changed         = false;
@@ -187,17 +197,11 @@ bool effect_imgui_window(RenderEffects& effects)
     bool has_changed = false;
     ImGui::Begin("Shading");
     for (auto& param : effects.for_objects) {
-        has_changed |= base_code_imgui(param.base);
-        ImGui::PushID(&param);
-        has_changed |= ImGui::Checkbox("Enabled", &param.is_active);
-        ImGui::PopID();
+        has_changed |= effect_imgui(param);
         ImGui::Separator();
     }
     for (auto& param : effects.always_applied) {
-        has_changed |= base_code_imgui(param.base);
-        ImGui::PushID(&param);
-        has_changed |= ImGui::Checkbox("Enabled", &param.is_active);
-        ImGui::PopID();
+        has_changed |= effect_imgui(param);
         ImGui::Separator();
     }
     ImGui::End();
