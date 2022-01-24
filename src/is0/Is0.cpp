@@ -26,8 +26,9 @@ void Is0::imgui_windows()
     });
     ImGui::Begin("is0 Opt");
     _shader_code_window.open_close_checkbox();
-    if (ImGui::Button("Refresh node templates")) {
+    if (ImGui::Button("Refresh node templates and effects")) {
         _editor.update_templates_and_nodes();
+        _effects.render_effects = reload_effects(_effects.render_effects_folder_path, _effects.render_effects);
     }
     ImGui::End();
     _must_recompile |= effect_imgui_window(_effects.render_effects);
