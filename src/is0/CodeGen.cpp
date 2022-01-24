@@ -17,10 +17,10 @@ uniform float _time;
 out vec4 out_Color;
 // clang-format off
 #include "_COOL_RES_/shaders/camera.glsl"
-#include "_COOL_RES_/shaders/pbr_calc.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
 #include "is0 shaders/light.glsl"
+#include "is0 shaders/pbr_calc.glsl"
 #include "is0 shaders/hg_sdf.glsl" 
 // clang-format on
 // ----- Ray marching options ----- //
@@ -39,25 +39,10 @@ struct RayMarchRes {
     vec3 normal;
 };
 
-struct MaterialData {
-    //Material
-    vec3  material_color_base;
-    vec3  material_color_diffuse;
-    vec3  material_color_specular;
-    float material_roughtnes;
-
-    //Fresnel
-    float fresnel_strength;
-    vec3  fresnel_color;
-
-    //Refraction
-    float refraction_Density;
-    float refraction_abberation;
-    float refraction_density;
-
-    //Glow
-    float glow_strength;
-    vec3  glow_color;
+struct NodeRes {
+    vec3 pos;
+    float d;
+    MaterialData md;
 };
 )";
 
