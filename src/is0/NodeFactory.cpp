@@ -12,13 +12,17 @@ NodeFactory::NodeFactory(std::string_view nodes_folder_path)
 
 std::optional<Node> NodeFactory::imgui()
 {
-    std::optional<Node> res{};
-    size_t              nodes_counts = 0;
+    std::optional<Node>    res{};
+    size_t                 nodes_counts = 0;
+    static ImGuiTextFilter filter;
+    filter.Draw("Search");
     for (const auto& folder : _folders) {
         if (ImGui::BeginMenu(folder.name.c_str())) {
             for (size_t i = 0; i < folder.nodes_count; ++i) {
-                if (ImGui::MenuItem(_node_templates[nodes_counts].name.c_str())) {
-                    res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
+                if (filter.PassFilter(_node_templates[nodes_counts].name.c_str())) {
+                    if (ImGui::MenuItem(_node_templates[nodes_counts].name.c_str())) {
+                        res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
+                    }
                 }
                 nodes_counts++;
             }
