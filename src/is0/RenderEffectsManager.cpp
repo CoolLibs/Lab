@@ -173,7 +173,7 @@ bool effect_imgui(RenderEffect& render_effect)
     return has_changed;
 }
 
-bool get_index(const std::vector<BaseCode>& base_code, size_t& index)
+bool get_index_imgui(const std::vector<BaseCode>& base_code, size_t& index)
 {
     bool        has_changed         = false;
     const char* combo_preview_value = base_code[index].name.c_str();
@@ -196,7 +196,7 @@ bool get_index(const std::vector<BaseCode>& base_code, size_t& index)
 bool parameters_imgui(std::vector<BaseCode>& base_code, size_t& index)
 {
     bool has_changed = false;
-    has_changed |= get_index(base_code, index);
+    has_changed |= get_index_imgui(base_code, index);
     has_changed |= base_code_imgui(base_code[index]);
     return has_changed;
 }
@@ -216,15 +216,12 @@ bool effect_imgui_window(RenderEffects& effects)
     ImGui::End();
     ImGui::Begin("Normal");
     has_changed |= parameters_imgui(effects.normal, effects.normal_index);
-    ImGui::Separator();
     ImGui::End();
     ImGui::Begin("RayMarcher");
     has_changed |= parameters_imgui(effects.ray_marching, effects.ray_index);
-    ImGui::Separator();
     ImGui::End();
     ImGui::Begin("Background");
     has_changed |= parameters_imgui(effects.background, effects.background_index);
-    ImGui::Separator();
     ImGui::End();
     return has_changed;
 }
