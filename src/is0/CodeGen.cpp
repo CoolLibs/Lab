@@ -11,7 +11,7 @@ static constexpr const char* default_sdf = R"(float is0_default_sdf(vec3 pos) {
 
 )";
 
-static std::string version_glsl()
+static std::string glsl_version()
 {
     return "#version " + std::to_string(COOL_OPENGL_VERSION) + '\n';
 }
@@ -22,7 +22,7 @@ uniform float _time;
 out vec4 out_Color;
 )";
 
-static std::string include()
+static std::string includes()
 {
     return R"(
         #include "_COOL_RES_/shaders/camera.glsl"
@@ -134,9 +134,9 @@ static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) ->
 
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
 {
-    return version_glsl() +
+    return glsl_version() +
            input_and_output_parameters +
-           include() +
+           includes() +
            ray_marcher_parameters() +
            nodes_extra_code(node_templates) +
            code_gen_render_effects_extra_code(effects) +
