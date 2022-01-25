@@ -1,0 +1,45 @@
+`
+float softshadow(vec3 ro, vec3 rd, float k)
+{   
+    float res = 1.0;
+    float ph  = 1e20;
+    for (float t = 0.001; t < MAX_DIST;) {
+        float h = is0_main_sdf(ro + rd * t);
+        if (h < 0.001)
+            return 0.0;
+        float y = h * h / (2.0 * ph);
+        float d = sqrt(h * h - y * y);
+        res     = min(res, k * d / max(0.0, t - y));
+        ph      = h;
+        t += h;
+    }
+    return res;
+}
+`
+
+(RayMarchRes res) {
+    vec3  sun  = vec3(sun_position, sun_position, sun_position);
+    RayMarchRes d_in    = rayMarching(res.hit_position, normalize(sun - res.hit_position), DONT_INVERT_SDF);
+    material_color *= softshadow(res.hit_position, normalize(sun - res.hit_position), shadow_softness)*shadow_strength;   
+}
+
+float {
+    "Name": "shadow_softness",
+    "Default": 8.0,
+    "Min": 2.0,
+    "Max": 124.0
+}
+
+float {
+    "Name": "shadow_strength",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 1.0
+}
+
+float {
+    "Name": "sun_position",
+    "Default": 100.0,
+    "Min": 2.0,
+    "Max": 1000.0
+}
