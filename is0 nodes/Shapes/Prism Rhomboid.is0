@@ -1,11 +1,11 @@
-[] (vec3 pos) {
-    pos = abs(pos);
+[] (NodeRes ndr) {
+    ndr.pos = abs(ndr.pos);
     vec2 b = vec2(X_Radius, Y_Radius);
-    float f = clamp((ndot(b, b - 2. * pos.xy)) / dot(b, b), -1., 1.);
-    vec2 q = vec2(length(pos.xy - 0.5 * b * vec2(1. - f, 1. + f))
-                  * sign(pos.x * b.y + pos.y * b.x - b.x * b.y),
-                  pos.z - Height);
-    return min(max(q.x, q.y), 0.) + length(max(q, 0.));
+    float f = clamp((ndot(b, b - 2. * ndr.pos.xy)) / dot(b, b), -1., 1.);
+    vec2 q = vec2(length(ndr.pos.xy - 0.5 * b * vec2(1. - f, 1. + f))
+                  * sign(ndr.pos.x * b.y + ndr.pos.y * b.x - b.x * b.y),
+                  ndr.pos.z - Height);
+    return NodeRes(ndr.pos, min(max(q.x, q.y), 0.) + length(max(q, 0.)), ndr.md);
 }
 
 float {

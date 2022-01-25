@@ -1,10 +1,10 @@
-[] (vec3 pos) {
+[] (NodeRes ndr) {
     const float cut = (Fraction * 2. -1.) * Radius;
     float w = sqrt(Radius * Radius - cut * cut);
-    vec2 q = vec2(length(pos.xy), pos.z);
-    return (cut * q.x < w * q.y
+    vec2 q = vec2(length(ndr.pos.xy), ndr.pos.z);
+    return NodeRes(ndr.pos, (cut * q.x < w * q.y
              ? length(q - vec2(w, cut))
-             : abs(length(q) - Radius)) - Thickness;
+             : abs(length(q) - Radius)) - Thickness, ndr.md);
 }
 
 float {

@@ -1,14 +1,14 @@
-[] (vec3 pos) {
-    pos = abs(pos);
-    float m = pos.x + pos.y + pos.z - Size;
+[] (NodeRes ndr) {
+    ndr.pos = abs(ndr.pos);
+    float m = ndr.pos.x + ndr.pos.y + ndr.pos.z - Size;
     vec3 q;
-         if( 3. * pos.x < m ) q = pos.xyz;
-    else if( 3. * pos.y < m ) q = pos.yzx;
-    else if( 3. * pos.z < m ) q = pos.zxy;
+         if( 3. * ndr.pos.x < m ) q = ndr.pos.xyz;
+    else if( 3. * ndr.pos.y < m ) q = ndr.pos.yzx;
+    else if( 3. * ndr.pos.z < m ) q = ndr.pos.zxy;
     else return m * 0.57735027;
 
     float k = clamp(0.5 * (q.z - q.y + Size), 0., Size); 
-    return length(vec3(q.x, q.y - Size + k, q.z - k));
+    return NodeRes(ndr.pos, length(vec3(q.x, q.y - Size + k, q.z - k)), ndr.md);
 }
 
 float {

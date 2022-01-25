@@ -20,9 +20,9 @@ float _polyhedron_D2Vertices(vec3 pos, vec3 p, float VRadius) {
 }
 `
 
-[] (vec3 pos) {
+[] (NodeRes ndr) {
     // Thanks to https://www.shadertoy.com/view/XlX3zB
-    pos /= Radius;
+    ndr.pos /= Radius;
     const float cospin = cos(PI / Kind);
     const float scospin = sqrt(0.75 - cospin * cospin);
 	vec3 nc = vec3(-0.5, -cospin, scospin); // 3rd folding plane. The two others are xz and yz planes
@@ -33,14 +33,14 @@ float _polyhedron_D2Vertices(vec3 pos, vec3 p, float VRadius) {
 	pbc = normalize(pbc); // For slightly better DE. In reality it's not necesary to apply normalization :) 
     pca = normalize(pca); // For slightly better DE. In reality it's not necesary to apply normalization :) 
 	for (int i = 0; i < Kind; i++){
-		pos.xy = abs(pos.xy); //fold about xz and yz planes
-		pos -= 2. * min(0., dot(pos,nc)) * nc; //fold about nc plane
+		ndr.pos.xy = abs(ndr.pos.xy); //fold about xz and yz planes
+		pos -= 2. * min(0., dot(ndr.pos,nc)) * nc; //fold about nc plane
 	}
 
-	float d = _polyhedron_D2Planes(pos, p, pab, pbc, pca);
-	      d = min(d, _polyhedron_D2Segments(pos, p, nc, Edges_Thickness));
-	      d = min(d, _polyhedron_D2Vertices(pos, p, Vertices_Radius));
-	return IS0_FIX_ARTIFACTS(d);
+	float d = _polyhedron_D2Planes(ndr.pos, p, pab, pbc, pca);
+	      d = min(d, _polyhedron_D2Segments(ndr.pos, p, nc, Edges_Thickness));
+	      d = min(d, _polyhedron_D2Vertices(ndr.pos, p, Vertices_Radius));
+	return NodeRes(ndr.pos, IS0_FIX_ARTIFACTS(d), ndr.md);
 }
 
 float {

@@ -1,6 +1,6 @@
-[] (vec3 pos) {
-    pos.z -= clamp(pos.z, -Length * 0.5, Length * 0.5);
-    return length(pos) - Thickness;
+[] (NodeRes ndr) {
+    ndr.pos.z -= clamp(ndr.pos.z, -Length * 0.5, Length * 0.5);
+    return NodeRes(ndr.pos, length(ndr.pos) - Thickness, ndr.md);
 }
 
 float {

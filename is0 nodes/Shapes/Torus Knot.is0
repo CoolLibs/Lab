@@ -1,18 +1,18 @@
-[] (vec3 pos) {
-    vec2 q = vec2(length(pos.xy) - Size, pos.z);
-    float knot = atan(pos.x, pos.y) * Twists;
+[] (NodeRes ndr) {
+    vec2 q = vec2(length(ndr.pos.xy) - Size, ndr.pos.z);
+    float knot = atan(ndr.pos.x, ndr.pos.y) * Twists;
     q *= rotation_2D(knot);
     q.y = abs(q.y) - Spacing;
     if (Square) {
         q = abs(q) - vec2(Thickness);
-        return IS0_FIX_ARTIFACTS(
+        return NodeRes(ndr.pos, IS0_FIX_ARTIFACTS(
             length(max(q, 0.)) + min(max(q.x, q.y), 0.)
-        );
+        ), ndr.md);
     }
     else {
-        return IS0_FIX_ARTIFACTS(
+        return NodeRes(ndr.pos, IS0_FIX_ARTIFACTS(
             length(q) - Thickness
-        );
+        ), ndr.md);
     }
 }
 

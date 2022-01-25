@@ -1,6 +1,6 @@
-[] (vec3 pos) {
-    vec3 q = abs(pos);
-    return max(q.z - Height, max(q.x * 0.866025 + pos.y * 0.5, -pos.y) - Radius * 0.5);
+[] (NodeRes ndr) {
+    vec3 q = abs(ndr.pos);
+    return NodeRes(ndr.pos, max(q.z - Height, max(q.x * 0.866025 + ndr.pos.y * 0.5, -pos.y) - Radius * 0.5), ndr.md);
 }
 
 float {

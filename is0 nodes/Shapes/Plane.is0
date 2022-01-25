@@ -1,5 +1,5 @@
-[] (vec3 pos) {
-    return abs(pos.z) - Thickness;
+[] (NodeRes ndr) {
+    return NodeRes(ndr.pos, abs(ndr.pos.z) - Thickness; ndr.md);
 }
 
 float {

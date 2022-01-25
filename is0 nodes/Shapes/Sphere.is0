@@ -1,5 +1,5 @@
-[] (vec3 pos) {
-    return length(pos) - radius;
+[] (NodeRes ndr) {
+    return NodeRes(ndr.pos, length(ndr.pos) - radius, ndr.md);
 }
 
 float {

@@ -55,27 +55,32 @@ static constexpr const char* ray_marcher = R"(
 vec3 get_normal(NodeRes ndr) {
     const float h = NORMAL_DELTA;
 	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * is0_main_sdf(NodeRes(ndr.pos + k.xyy*h, ndr.d, ndr.md)) + 
-                      k.yyx * is0_main_sdf(NodeRes(ndr.pos + k.yyx*h, ndr.d, ndr.md)) + 
-                      k.yxy * is0_main_sdf(NodeRes(ndr.pos + k.yxy*h, ndr.d, ndr.md)) + 
-                      k.xxx * is0_main_sdf(NodeRes(ndr.pos + k.xxx*h, ndr.d, ndr.md)) );
+    return normalize( k.xyy * is0_main_sdf(NodeRes(ndr.pos + k.xyy*h, ndr.d, ndr.md)).pos + 
+                      k.yyx * is0_main_sdf(NodeRes(ndr.pos + k.yyx*h, ndr.d, ndr.md)).pos + 
+                      k.yxy * is0_main_sdf(NodeRes(ndr.pos + k.yxy*h, ndr.d, ndr.md)).pos + 
+                      k.xxx * is0_main_sdf(NodeRes(ndr.pos + k.xxx*h, ndr.d, ndr.md)).pos );
 }
 
 RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
- 	int i = 0;
+    float d = 0.;
+    int   i = 0;
+    MaterialData md = MaterialData(vec3(0.), vec3(0.), vec3(0.), 0., 0., vec3(0.), 0., 0., 0., 0., vec3(0.));
+
     for (i; i < MAX_STEPS; i++) {
     	vec3 pos = ro + rd * t;
-        float d = is0_main_sdf(pos) * in_or_out;
+        NodeRes ndr = is0_main_sdf(NodeRes(pos, d, md));
+        float d = ndr.d * in_or_out;
         t += d;
         // If we are very close to the object, consider it as a hit and exit this loop
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
     }
     vec3 final_pos = ro + rd * t;
-    return RayMarchRes(t, i, rd, final_pos, get_normal(final_pos));
+    return RayMarchRes(t, i, rd, final_pos, get_normal(NodeRes(final_pos, 0, md)));
 }
 vec3 render(vec3 ro, vec3 rd) {
     vec3 finalCol = vec3(0.3, 0.7, 0.98);
+    MaterialData md = MaterialData(vec3(0.), vec3(0.), vec3(0.), 0., 0., vec3(0.), 0., 0., 0., 0., vec3(0.));
     
     RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
     float d = res.distance;
@@ -83,7 +88,7 @@ vec3 render(vec3 ro, vec3 rd) {
     vec3 p = res.hit_position;
     vec3 normal = res.normal;
     if (d < MAX_DIST) {
-      finalCol = normal * 0.5 + 0.5;
+        finalCol = normal * 0.5 + 0.5;
 
 )";
 
@@ -165,7 +170,7 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
                                                  compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
-            main_sdf_definition << "\n    ndr.d = min_noderes(ndr, " << function_name({node.node_template_name, node.id}) << "(ndr));";
+            main_sdf_definition << "\n    ndr.d = min_noderes(ndr, " << function_name({node.node_template_name, node.id}) << "(ndr)).d;";
         }
     }
     main_sdf_definition << R"(

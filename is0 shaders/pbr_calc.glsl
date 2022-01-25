@@ -41,7 +41,7 @@ struct MaterialData {
     vec3  fresnel_color;
 
     //Refraction
-    float refraction_Density;
+    float refraction_index;
     float refraction_abberation;
     float refraction_density;
 

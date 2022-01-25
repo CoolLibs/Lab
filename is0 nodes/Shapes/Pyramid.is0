@@ -5,9 +5,9 @@ float _pyramid_Half_Space_SDF(vec3 pos, vec3 normal, vec3 origin)
 }
 `
 
-[] (vec3 pos) {
+[] (NodeRes ndr) {
     const vec3 tip = vec3(0., 0., Height / 2.);
-    float d = -pos.z - Height / 2.; // Distance to the base
+    float d = -ndr.pos.z - Height / 2.; // Distance to the base
     for (int i = 0; i < Faces_Count; ++i) {
         const float c1 = Base_Radius * cos( i      * TAU / Faces_Count);
         const float s1 = Base_Radius * sin( i      * TAU / Faces_Count);
@@ -16,11 +16,11 @@ float _pyramid_Half_Space_SDF(vec3 pos, vec3 normal, vec3 origin)
         const vec3 polygon_vertex_1 = vec3(c1, s1, 0.);
         const vec3 polygon_vertex_2 = vec3(c2, s2, 0.);
         d = smooth_max_polynomial(d,
-                _pyramid_Half_Space_SDF(pos, normalize(cross(polygon_vertex_1 - tip, polygon_vertex_2 - tip)), tip),
+                _pyramid_Half_Space_SDF(ndr.pos, normalize(cross(polygon_vertex_1 - tip, polygon_vertex_2 - tip)), tip),
                 Smoothing
         );
     }
-    return d;
+    return NodeRes(ndr.pos, d, ndr.md);
 }
 
 int {

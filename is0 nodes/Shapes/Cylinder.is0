@@ -1,6 +1,6 @@
-[] (vec3 pos) {
-    vec2 v = vec2(length(pos.xy) - Radius, abs(pos.z) - Height);
-    return v.y < 0. ? v.x : v.x < 0. ? v.y : length(v);
+[] (NodeRes ndr) {
+    vec2 v = vec2(length(ndr.pos.xy) - Radius, abs(ndr.pos.z) - Height);
+    return NodeRes(ndr.pos, v.y < 0. ? v.x : v.x < 0. ? v.y : length(v), ndr.md);
 }
 
 float {

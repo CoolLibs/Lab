@@ -1,0 +1,80 @@
+[SDF] (NodeRes ndr) {
+
+}
+
+color {
+    "Name" : "Base Color",
+    "Default": 1.0,
+    "Min": 1.0,
+    "Max": 1.0
+}
+
+color {
+    "Name" : "Diffuse Color",
+    "Default": 1.0,
+    "Min": 1.0,
+    "Max": 1.0
+}
+
+color {
+    "Name" : "Specular",
+    "Default": 1.0,
+    "Min": 1.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Roughtness",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Fresnel strength",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+color {
+    "Name" : "Fresnel Color",
+    "Default": 1.0,
+    "Min": 1.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Refraction Index",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Refraction abberation",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Refraction density",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Glow strength",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+color {
+    "Name" : "Glow Color",
+    "Default": 1.0,
+    "Min": 1.0,
+    "Max": 1.0
+}
