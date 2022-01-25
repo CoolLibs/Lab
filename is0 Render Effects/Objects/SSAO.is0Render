@@ -71,5 +71,5 @@ float {
     "Name": "SSAO_Size",
     "Default": 0.1,
     "Min": 0.001,
-    "Max": 2.0
+    "Max": 10.0
 }
