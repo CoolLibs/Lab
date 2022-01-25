@@ -16,7 +16,7 @@ public:
     void                             on_key_pressed(const Cool::KeyboardEvent& event) override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
-    const std::string                saving_path_string() const;
+    std::string                      saving_path_string() const;
 
 private:
     NodeEditor                  _editor{Cool::Path::root() + "/is0 nodes"};
@@ -41,9 +41,9 @@ private:
                 cereal::make_nvp("File Name For Save", _file_name_for_save),
                 cereal::make_nvp("Render Effects Manager", _effects));
         if (!_file_name_for_save.empty()) {
-            const std::string saving_path = saving_path_string();
-            const std::string message     = "Do you want to save your work in " + saving_path + "?";
-            boxer::Selection  sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
+            const std::string      saving_path = saving_path_string();
+            const std::string      message     = "Do you want to save your work in " + saving_path + "?";
+            const boxer::Selection sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
             if (sel == boxer::Selection::Yes) {
                 Cool::Serialization::to_json(_editor, saving_path);
             }

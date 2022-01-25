@@ -64,9 +64,7 @@ void Is0::on_key_pressed(const Cool::KeyboardEvent& event)
     }
 }
 
-const std::string Is0::saving_path_string() const
+std::string Is0::saving_path_string() const
 {
-    const std::string           path_string = _folder_path_for_save + "/" + _file_name_for_save + ".is0geometry";
-    const std::filesystem::path path        = std::filesystem::weakly_canonical(path_string);
-    return path.string();
+    return std::filesystem::weakly_canonical(_folder_path_for_save + "/" + _file_name_for_save + ".is0geometry").string();
 }
