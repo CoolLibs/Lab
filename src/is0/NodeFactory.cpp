@@ -60,7 +60,7 @@ std::optional<Node> NodeFactory::imgui()
             if (_filter.PassFilter(folder.name.c_str())) {
                 if (ImGui::BeginMenu(folder.name.c_str())) {
                     for (size_t i = 0; i < folder.nodes_count; ++i) {
-                        if (ImGui::MenuItem(_node_templates[nodes_counts].name.c_str())) {
+                        if (ImGui::Selectable(_node_templates[nodes_counts].name.c_str())) {
                             select_current_node();
                         }
                         nodes_counts++;
