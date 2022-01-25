@@ -1,13 +1,4 @@
 `
-vec3 getNormal(vec3 p) {
-    const float h = 0.0001;
-	const vec2 k = vec2(1., -1.);
-    return normalize( k.xyy * is0_main_sdf( p + k.xyy*h ) +
-                      k.yyx * is0_main_sdf( p + k.yyx*h ) +
-                      k.yxy * is0_main_sdf( p + k.yxy*h ) +
-                      k.xxx * is0_main_sdf( p + k.xxx*h ) );
-}
-
 vec2 hash2(float n) { return fract(sin(vec2(n, n + 1.0)) * vec2(43758.5453123, 22578.1459123)); }
 
 float calcOcclusion(in vec3 pos, in vec3 nor, float ra)
@@ -24,7 +15,7 @@ float calcOcclusion(in vec3 pos, in vec3 nor, float ra)
 }
 `
 (RayMarchRes res) {
-    material_color *= calcOcclusion(res.hit_position, getNormal(res.hit_position), AO_Size);
+    material_color *= calcOcclusion(res.hit_position, get_normal(res.hit_position), AO_Size);
 }
 
 float {
