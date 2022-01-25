@@ -133,7 +133,7 @@ void NodeEditor::imgui_window()
         if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle) || _should_open_menu) {
             _should_open_menu = false;
             ImGui::OpenPopup("_node_templates_list");
-            _factory.filter_clear();
+            _factory.clear_filter();
             _next_node_position = ImGui::GetMousePosOnOpeningCurrentPopup();
         }
         if (ImGui::BeginPopup("_node_templates_list")) {
