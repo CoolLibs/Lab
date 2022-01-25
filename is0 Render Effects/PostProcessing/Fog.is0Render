@@ -1,12 +1,12 @@
 (RayMarchRes res)
 {
     /*float fog_amount = (fog_at_ground_level / fog_dissipation_speed) * exp(-(res.ray_origin.y - ground_level) * fog_dissipation_speed) * (1.0 - exp( -res.distance * res.ray_direction.y * fog_dissipation_speed )) / res.ray_direction.y;*/
-    //float fog_amount = 1.0 - exp( -res.distance * fog_dissipation_speed);
+    float fog_amount = 1.0 - exp( -res.distance * fog_dissipation_speed);
     vec3  fog_color  = fog_color;
-    vec3 ext_color = vec3(exp(-res.distance * be.x), exp(-res.distance * be.y), exp(-res.distance * be.z) );
+    /*vec3 ext_color = vec3(exp(-res.distance * be.x), exp(-res.distance * be.y), exp(-res.distance * be.z) );
     vec3 ins_color = vec3(exp(-res.distance * bi.x), exp(-res.distance * bi.y), exp(-res.distance * bi.z) );
-    color = color * (1.0 - ext_color) + fog_color * ins_color;
-    //color = mix(color, fog_color, fog_amount) ;
+    color = color * (1.0 - ext_color) + fog_color * ins_color;*/
+    color = mix(color, fog_color, fog_amount) ;
 }
 
 vec3 {
