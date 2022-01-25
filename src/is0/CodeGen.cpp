@@ -125,10 +125,10 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            input_and_output_parameters +
            includes() +
            ray_marcher_parameters() +
-           nodes_extra_code(node_templates) +
-           code_gen_render_effects_extra_code(effects) +
            std::string{default_sdf} +
            main_sdf(node_tree, node_templates) +
+           nodes_extra_code(node_templates) +
+           code_gen_render_effects_extra_code(effects) +
            apply_function("vec3 get_normal", effects.normal[effects.normal_index]) +
            apply_function("RayMarchRes rayMarching", effects.ray_marching[effects.ray_index]) +
            apply_material(effects.for_objects) +
