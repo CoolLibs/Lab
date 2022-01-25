@@ -41,7 +41,6 @@ std::optional<Node> NodeFactory::imgui()
             }
         }
     }
-    _filter.Clear();
     return res;
 }
 

@@ -14,12 +14,13 @@ public:
     std::optional<Node>              imgui();
     const std::vector<NodeTemplate>& templates() const { return _node_templates; }
     void                             reload_templates();
+    void                             filter_clear() { _filter.Clear(); }
 
 private:
     std::vector<NodeTemplate>        _node_templates;
     std::vector<NodeTemplatesFolder> _folders;
     std::string                      _nodes_folder_path;
-    ImGuiTextFilter     _filter;
+    ImGuiTextFilter                  _filter;
 };
 
 namespace NodeFactoryU {
