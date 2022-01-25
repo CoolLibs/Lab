@@ -54,8 +54,9 @@ std::optional<Node> NodeFactory::imgui()
             }
         }
     }
-    nodes_counts = 0;
+    
     if (_filter.IsActive()) {
+        nodes_counts = 0;
         for (const auto& folder : _folders) {
             if (_filter.PassFilter(folder.name.c_str())) {
                 if (ImGui::BeginMenu(folder.name.c_str())) {
