@@ -1,6 +1,5 @@
 #include "Is0.h"
 #include <Cool/Input/Input.h>
-#include <Cool/NfdFileFilter/NfdFileFilter.h>
 #include "CodeGen.h"
 #include "NodeEditorSerialization.h"
 
@@ -33,21 +32,23 @@ void Is0::imgui_windows()
         _effects.render_effects = reload_effects(_effects.render_effects_folder_path, _effects.render_effects);
     }
     // To save a file
-    const std::vector<nfdfilteritem_t> is0geometry = {
+    const std::vector<nfdfilteritem_t> is0geometry_file_filter = {
         {"Save", "is0geometry"},
     };
     pick_file_path_to_save(_folder_path_for_save, _file_name_for_save);
-    if (Cool::File::exists(_folder_path_for_save + "/" + _file_name_for_save + ".is0geometry")) {
-        Cool::ImGuiExtras::warning_text("This file already exists. Are you sure you want to overwrite it ?");
+    const std::string saving_path = saving_path_string();
+    if (Cool::File::exists(saving_path + ".is0geometry")) {
+        Cool::ImGuiExtras::warning_text("This file already exists. Are you sure you want to overwrite it?");
     }
     if (ImGui::Button("Save")) {
-        Cool::Serialization::to_json(_editor, _folder_path_for_save + "/" + _file_name_for_save + ".is0geometry");
+        Cool::Serialization::to_json(_editor, saving_path + ".is0geometry");
     }
     // To load a file
     ImGui::Text("Load a save");
     ImGui::SameLine();
     ImGui::PushID(485);
-    if (Cool::ImGuiExtras::open_file_dialog(&_path_for_load, is0geometry, Cool::File::whithout_file_name(_folder_path_for_save))) {
+    std::string _path_for_load;
+    if (Cool::ImGuiExtras::open_file_dialog(&_path_for_load, is0geometry_file_filter, _folder_path_for_save)) {
         Cool::Serialization::from_json(_editor, _path_for_load);
     }
     ImGui::PopID();
@@ -61,4 +62,11 @@ void Is0::on_key_pressed(const Cool::KeyboardEvent& event)
     if (event.action == GLFW_PRESS && Cool::Input::matches_char("a", event.key)) {
         _editor.open_menu();
     }
+}
+
+const std::string Is0::saving_path_string() const
+{
+    const std::string           path_string = _folder_path_for_save + "/" + _file_name_for_save;
+    const std::filesystem::path path        = std::filesystem::weakly_canonical(path_string);
+    return path.string();
 }
