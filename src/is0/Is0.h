@@ -42,10 +42,10 @@ private:
                 cereal::make_nvp("Render Effects Manager", _effects));
         if (!_file_name_for_save.empty()) {
             const std::string saving_path = saving_path_string();
-            const std::string message     = "Do you want to save your work in " + saving_path + ".is0geometry" + "?";
+            const std::string message     = "Do you want to save your work in " + saving_path + "?";
             boxer::Selection  sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
             if (sel == boxer::Selection::Yes) {
-                Cool::Serialization::to_json(_editor, saving_path + ".is0geometry");
+                Cool::Serialization::to_json(_editor, saving_path);
             }
         }
     }

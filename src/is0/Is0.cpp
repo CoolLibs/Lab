@@ -37,11 +37,11 @@ void Is0::imgui_windows()
     };
     pick_file_path_to_save(_folder_path_for_save, _file_name_for_save);
     const std::string saving_path = saving_path_string();
-    if (Cool::File::exists(saving_path + ".is0geometry")) {
+    if (Cool::File::exists(saving_path)) {
         Cool::ImGuiExtras::warning_text("This file already exists. Are you sure you want to overwrite it?");
     }
     if (ImGui::Button("Save")) {
-        Cool::Serialization::to_json(_editor, saving_path + ".is0geometry");
+        Cool::Serialization::to_json(_editor, saving_path);
     }
     // To load a file
     ImGui::Text("Load a save");
@@ -66,7 +66,7 @@ void Is0::on_key_pressed(const Cool::KeyboardEvent& event)
 
 const std::string Is0::saving_path_string() const
 {
-    const std::string           path_string = _folder_path_for_save + "/" + _file_name_for_save;
+    const std::string           path_string = _folder_path_for_save + "/" + _file_name_for_save + ".is0geometry";
     const std::filesystem::path path        = std::filesystem::weakly_canonical(path_string);
     return path.string();
 }
