@@ -13,14 +13,17 @@ NodeFactory::NodeFactory(std::string_view nodes_folder_path)
 std::optional<Node> NodeFactory::imgui()
 {
     std::optional<Node> res{};
-    size_t              nodes_counts = 0;
+    size_t              nodes_counts        = 0;
+    const auto          select_current_node = [&]() {
+        res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
+    };
     _filter.Draw("Search");
     for (const auto& folder : _folders) {
         if (!_filter.IsActive()) {
             if (ImGui::BeginMenu(folder.name.c_str())) {
                 for (size_t i = 0; i < folder.nodes_count; ++i) {
                     if (ImGui::MenuItem(_node_templates[nodes_counts].name.c_str())) {
-                        res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
+                        select_current_node();
                     }
                     nodes_counts++;
                 }
@@ -34,7 +37,7 @@ std::optional<Node> NodeFactory::imgui()
             for (size_t i = 0; i < folder.nodes_count; ++i) {
                 if (_filter.PassFilter(_node_templates[nodes_counts].name.c_str())) {
                     if (ImGui::Selectable(_node_templates[nodes_counts].name.c_str())) {
-                        res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
+                        select_current_node();
                     }
                 }
                 nodes_counts++;
