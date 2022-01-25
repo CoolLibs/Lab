@@ -2,7 +2,6 @@
 #include <Cool/Input/Input.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
 #include "CodeGen.h"
-#include "Cool\Serialization\as_json.h"
 #include "NodeEditorSerialization.h"
 
 void Is0::update()

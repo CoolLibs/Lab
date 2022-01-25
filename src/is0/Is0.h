@@ -3,6 +3,7 @@
 #include <Cool/File/File.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/ImGui/ImGuiWindow.h>
+#include <Cool/Serialization/as_json.h>
 #include "../ShaderManager/ShaderManager.h"
 #include "NodeEditor.h"
 #include "RenderEffectsManager.h"
