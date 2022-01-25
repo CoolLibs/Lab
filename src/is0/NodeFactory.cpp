@@ -12,26 +12,36 @@ NodeFactory::NodeFactory(std::string_view nodes_folder_path)
 
 std::optional<Node> NodeFactory::imgui()
 {
-    std::optional<Node>    res{};
-    size_t                 nodes_counts = 0;
-    static ImGuiTextFilter filter;
-    filter.Draw("Search");
+    std::optional<Node> res{};
+    size_t              nodes_counts = 0;
+    _filter.Draw("Search");
     for (const auto& folder : _folders) {
-        if (ImGui::BeginMenu(folder.name.c_str())) {
-            for (size_t i = 0; i < folder.nodes_count; ++i) {
-                if (filter.PassFilter(_node_templates[nodes_counts].name.c_str())) {
+        if (!_filter.IsActive()) {
+            if (ImGui::BeginMenu(folder.name.c_str())) {
+                for (size_t i = 0; i < folder.nodes_count; ++i) {
                     if (ImGui::MenuItem(_node_templates[nodes_counts].name.c_str())) {
+                        res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
+                    }
+                    nodes_counts++;
+                }
+                ImGui::EndMenu();
+            }
+            else {
+                nodes_counts += folder.nodes_count;
+            }
+        }
+        else {
+            for (size_t i = 0; i < folder.nodes_count; ++i) {
+                if (_filter.PassFilter(_node_templates[nodes_counts].name.c_str())) {
+                    if (ImGui::Selectable(_node_templates[nodes_counts].name.c_str())) {
                         res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
                     }
                 }
                 nodes_counts++;
             }
-            ImGui::EndMenu();
-        }
-        else {
-            nodes_counts += folder.nodes_count;
         }
     }
+    _filter.Clear();
     return res;
 }
 
