@@ -45,7 +45,7 @@ private:
             std::string           path_string = _folder_path_for_save + "//" + _file_name_for_save;
             std::filesystem::path path        = std::filesystem::weakly_canonical(path_string);
             std::string           message     = "Do you want to save your work in " + path.string() + ".is0geometry " + "?";
-            boxer::Selection      sel         = boxer::show(message.c_str(), "Warning", boxer::Style::Warning, boxer::Buttons::YesNo);
+            boxer::Selection      sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
             if (sel == boxer::Selection::Yes) {
                 Cool::Serialization::to_json(_editor, _folder_path_for_save + "/" + _file_name_for_save + ".is0geometry");
             }
