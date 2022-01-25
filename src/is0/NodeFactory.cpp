@@ -10,6 +10,12 @@ NodeFactory::NodeFactory(std::string_view nodes_folder_path)
     reload_templates();
 }
 
+void NodeFactory::clear_filter()
+{
+    _filter.Clear();
+    _focus_on_filter = true;
+}
+
 std::optional<Node> NodeFactory::imgui()
 {
     std::optional<Node> res{};
@@ -17,6 +23,10 @@ std::optional<Node> NodeFactory::imgui()
     const auto          select_current_node = [&]() {
         res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
     };
+    if (_focus_on_filter) {
+        ImGui::SetKeyboardFocusHere();
+        _focus_on_filter = false;
+    }
     _filter.Draw("Search");
     for (const auto& folder : _folders) {
         if (!_filter.IsActive()) {
