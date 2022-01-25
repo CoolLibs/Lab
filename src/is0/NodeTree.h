@@ -28,7 +28,14 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Nodes", nodes),
-                cereal::make_nvp("Links", links));
+        try {
+            archive(cereal::make_nvp("Nodes", nodes),
+                    cereal::make_nvp("Links", links));
+        }
+        catch (const std::exception&) {
+            nodes.clear();
+            links.clear();
+            throw;
+        }
     }
 };

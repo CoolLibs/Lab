@@ -3,4 +3,4 @@
 	url = https://github.com/CoolLibs/Cool
 [submodule "lib/imnodes"]
 	path = lib/imnodes
-	url = https://github.com/Nelarius/imnodes
+	url = https://github.com/CoolLibs/imnodes

@@ -130,7 +130,6 @@ void NodeEditor::imgui_window()
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
     {
-        ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_BottomRight);
         if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle) || _should_open_menu) {
             _should_open_menu = false;
             ImGui::OpenPopup("_node_templates_list");
@@ -147,6 +146,7 @@ void NodeEditor::imgui_window()
             show_link(link);
         }
     }
+    ImNodes::MiniMap(0.2f, ImNodesMiniMapLocation_BottomRight);
     ImNodes::EndNodeEditor();
     node_tree_has_changed |= handle_link_creation();
     node_tree_has_changed |= handle_link_deletion();
