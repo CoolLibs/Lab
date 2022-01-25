@@ -82,6 +82,7 @@ static std::string main()
                 color += apply_material(res);
             }
             else {
+                res.distance = MAX_DIST;
                 color += apply_background(res);
             }
             color = post_process(res,color);
