@@ -1,10 +1,10 @@
 (RayMarchRes res) {
-    float fresnel = pow(clamp(1. - dot(res.normal, -res.ray_direction), 0., 1.), Strenght);
+    float fresnel = pow(clamp(1. - dot(res.normal, -res.ray_direction), 0., 1.), Strength);
     material_color += fresnel * Color;
 }
 
 float {
-    "Name": "Strenght",
+    "Name": "Strength",
     "Default": 0.9,
     "Min": 0.0,
     "Max": 10.0
