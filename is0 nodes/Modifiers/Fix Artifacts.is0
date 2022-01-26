@@ -1,0 +1,3 @@
+[SDF] (vec3 p) {
+    return IS0_FIX_ARTIFACTS(${SDF}(p));
+}
