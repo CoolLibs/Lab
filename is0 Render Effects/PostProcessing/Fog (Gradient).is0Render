@@ -1,18 +1,26 @@
+`
+float fog_amount(float base_density, float falloff, float ground_height, float ray_origin_z, float distance, float ray_direction_z) {
+    return (base_density / falloff) * exp(-(ray_origin_z - ground_height) * falloff) * (1.0 - exp( -distance * ray_direction_z * falloff )) / ray_direction_z;
+}
+`
+
 (RayMarchRes res)
 {
-    float fog_amount = (Density / Falloff) * exp(-(res.ray_origin.z - Ground_Height) * Falloff) * (1.0 - exp( -res.distance * res.ray_direction.z * Falloff )) / res.ray_direction.z;
-    color = mix(color, Color, min(fog_amount, Max_Absorption));
+    float fog_extinction   = fog_amount(Absorption, Absorption_Falloff, Ground_Height, res.ray_origin.z, res.distance, res.ray_direction.z);
+    float fog_inscattering = fog_amount(Emission,     Emission_Falloff, Ground_Height, res.ray_origin.z, res.distance, res.ray_direction.z);
+    color = color * (1. - min(fog_extinction, Max_Absorption))
+          + Color *       fog_inscattering;
 }
 
 float {
-    "Name": "Density",
+    "Name": "Absorption",
     "Default": 0.036,
     "Min": 0.0,
     "Max": 0.05
 }
 
 float {
-    "Name": "Falloff",
+    "Name": "Absorption Falloff",
     "Default": 0.233,
     "Min": 0.001,
     "Max": 0.5
@@ -23,6 +31,20 @@ float {
     "Default": 1.0,
     "Min": 0.0,
     "Max": 2.0
+}
+
+float {
+    "Name": "Emission",
+    "Default": 0.036,
+    "Min": 0.0,
+    "Max": 0.05
+}
+
+float {
+    "Name": "Emission Falloff",
+    "Default": 0.233,
+    "Min": 0.001,
+    "Max": 0.5
 }
 
 float {
