@@ -33,7 +33,7 @@ float {
 float {
     "Name": "Strength",
     "Default": 1.0,
-    "Min": 0.001,
+    "Min": 0.0,
     "Max": 1.0
 }
 
