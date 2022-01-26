@@ -1,0 +1,42 @@
+(RayMarchRes res)
+{
+    float fog_amount = (Density / Falloff) * exp(-(res.ray_origin.z - Ground_Height) * Falloff) * (1.0 - exp( -res.distance * res.ray_direction.z * Falloff )) / res.ray_direction.z;
+    color = mix(color, Color, min(fog_amount, Max_Absorption));
+}
+
+float {
+    "Name": "Density",
+    "Default": 0.036,
+    "Min": 0.0,
+    "Max": 0.05
+}
+
+float {
+    "Name": "Falloff",
+    "Default": 0.233,
+    "Min": 0.001,
+    "Max": 0.5
+}
+
+float {
+    "Name": "Max Absorption",
+    "Default": 1.0,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Ground Height",
+    "Default": 0.0,
+    "Min": -10.0,
+    "Max": 10.0
+}
+
+color {
+    "Name": "Color",
+    "Default": {
+        "x": 1.0,
+        "y": 0.944,
+        "z": 0.684
+    }
+}
