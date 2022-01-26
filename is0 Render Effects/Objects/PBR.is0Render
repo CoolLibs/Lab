@@ -14,7 +14,7 @@
     vec3 SpecCol = S * Light_Color;
     vec3 DiffCol = D * Light_Color * (1.0 - F);
     const float cAmbiantMin = 0.04;
-    vec3 reflectCol = AmbReflect();
+    vec3 reflectCol = AmbReflect() + Ambiant_Color;
 
     vec3 AmbiantColor = reflectCol * cAmbiantMin;
     vec3 lights = max((DiffCol + SpecCol)*(1.0 - cAmbiantMin), vec3(0.0,0.0,0.0));
@@ -37,6 +37,15 @@ float {
 
 color {
     "Name": "Light_Color",
+    "Default": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+    }
+}
+
+color {
+    "Name": "Ambiant_Color",
     "Default": {
         "x": 1.0,
         "y": 1.0,
