@@ -1,0 +1,30 @@
+(RayMarchRes res)
+{
+    float fog_extinction   = 1.0 - exp(-res.distance * Absorption);
+    float fog_inscattering = 1.0 - exp(-res.distance * Emission);
+    color = color * (1. - fog_extinction)
+          + Color *       fog_inscattering;
+}
+
+float {
+    "Name": "Absorption",
+    "Default": 0.07,
+    "Min": 0.0,
+    "Max": 0.5
+}
+
+float {
+    "Name": "Emission",
+    "Default": 0.056,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+color {
+    "Name": "Color",
+    "Default": {
+        "x": 0.632,
+        "y": 0.784,
+        "z": 1.0
+    }
+}

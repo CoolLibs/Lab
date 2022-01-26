@@ -25,18 +25,18 @@ out vec4 out_Color;
 static std::string includes()
 {
     return R"(
-        #include "_COOL_RES_/shaders/camera.glsl"
-        #include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
-        #include "_COOL_RES_/shaders/math.glsl"
-        #include "_COOL_RES_/shaders/pbr_calc.glsl"
-        #include "is0 shaders/hg_sdf.glsl" 
-        #include "is0 shaders/light.glsl"
+#include "_COOL_RES_/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
+#include "_COOL_RES_/shaders/math.glsl"
+#include "_COOL_RES_/shaders/pbr_calc.glsl"
+#include "is0 shaders/hg_sdf.glsl" 
+#include "is0 shaders/light.glsl"
     )";
 }
 
 static std::string ray_marcher_parameters()
 {
-    return "float MAX_DIST = cool_camera_far_plane; \n";
+    return "\nfloat MAX_DIST = cool_camera_far_plane; \n";
 }
 
 static std::string apply_function(const std::string& type_and_function_names, BaseCode base_code)
@@ -44,49 +44,52 @@ static std::string apply_function(const std::string& type_and_function_names, Ba
     return "\n" + base_code.extra_code +
            type_and_function_names +
            base_code.parameters_declaration +
-           "{" + code_gen_base_code(base_code) + "}\n";
+           "{\n" + code_gen_base_code(base_code) + "}\n";
 }
 
 static std::string apply_material(const std::vector<RenderEffect>& render_effects)
 {
     return R"(
-        vec3 apply_material(RayMarchRes res){
-            vec3 material_color = vec3(0., 0., 0.);)" +
+vec3 apply_material(RayMarchRes res){
+    vec3 material_color = vec3(0., 0., 0.);)" +
            code_gen_render_effects(render_effects) +
-           R"(return material_color;
-        }
+           R"(
+    return material_color;
+}
     )";
 }
 
 static std::string post_process(const std::vector<RenderEffect>& render_effects)
 {
     return R"(
-        vec3 post_process(RayMarchRes res, vec3 color){)" +
+vec3 post_process(RayMarchRes res, vec3 color){)" +
            code_gen_render_effects(render_effects) +
-           R"(color = saturate(color);
-            color = pow(color, vec3(0.4545)); // Gamma correction
-            return color;
-        }
+           R"(
+    color = saturate(color);
+    color = pow(color, vec3(0.4545)); // Gamma correction
+    return color;
+}
     )";
 }
 
 static std::string main()
 {
     return R"(
-        void main() {
-            vec3 ro = cool_ray_origin();
-            vec3 rd = cool_ray_direction();
-            RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
-            vec3 color = vec3(0., 0., 0.);
-            if (res.distance < MAX_DIST){
-                color += apply_material(res);
-            }
-            else {
-                color += apply_background(res);
-            }
-            color = post_process(res,color);
-            out_Color = vec4(color, 1.);
-        }
+void main() {
+    vec3 ro = cool_ray_origin();
+    vec3 rd = cool_ray_direction();
+    RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
+    vec3 color = vec3(0., 0., 0.);
+    if (res.distance < MAX_DIST){
+        color += apply_material(res);
+    }
+    else {
+        res.distance = MAX_DIST;
+        color += apply_background(res);
+    }
+    color = post_process(res,color);
+    out_Color = vec4(color, 1.);
+}
     )";
 }
 
