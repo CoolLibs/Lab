@@ -53,7 +53,8 @@ static std::string apply_material(const std::vector<RenderEffect>& render_effect
 vec3 apply_material(RayMarchRes res){
     vec3 material_color = vec3(0., 0., 0.);)" +
            code_gen_render_effects(render_effects) +
-           R"(return material_color;
+           R"(
+    return material_color;
 }
     )";
 }
