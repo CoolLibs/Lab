@@ -1,5 +1,5 @@
 (RayMarchRes res) {
-    float glow = pow(float(res.iterations_count) * Strenght, 2.);
+    float glow = pow(float(res.iterations_count) * Strenght, Power);
     color += glow * Color;
 }
 
@@ -8,6 +8,13 @@ float {
     "Default": 0.005,
     "Min": 0.0,
     "Max": 0.05
+}
+
+float {
+    "Name": "Power",
+    "Default": 2.0,
+    "Min": 1.0,
+    "Max": 5.0
 }
 
 color {
