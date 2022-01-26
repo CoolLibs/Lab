@@ -1,5 +1,5 @@
 `
-vec3 BigRand[32] = {
+vec3 ssao_big_rand[32] = {
     vec3(0.656178, 0.785943, 0.0918607),
     vec3(0.0980255, 0.770562, 0.888882),
     vec3(0.353252, 0.255623, 0.0786767),
@@ -33,25 +33,25 @@ vec3 BigRand[32] = {
     vec3(0.943968, 0.634449, 0.644398),
     vec3(0.78722f, 0.353526, 0.0561541)};
 
-vec3 rotatePoints(vec3 p, vec3 pts)
+vec3 ssao_rotate_points(vec3 p, vec3 pts)
 {
     vec3  normalSphere = vec3(0.0, 0.0, 1.0);
     vec3  normal = get_normal(p);
     vec3  axeRot       = cross(normal, normalSphere);
     float angle        = acos(dot(normal, normalize(normalSphere)));
-    pts                = erot(pts, normalize(axeRot), -angle);
+    pts                = rotation_around_axis(pts, normalize(axeRot), -angle);
     return pts;
 }
 
 float ssao(vec3 p, float SSAO_Size)
 {
-    float bl = 0;
+    float bl = 0.0;
     for (int i = 0; i < 32; i++) {
-        if (is0_main_sdf(p +  (rotatePoints(p, SSAO_Size * (BigRand[i] - vec3(0.5, 0.5, 0.0))))) > 0) {
-            bl += 1;
+        if (is0_main_sdf(p +  (ssao_rotate_points(p, SSAO_Size * (ssao_big_rand[i] - vec3(0.5, 0.5, 0.0))))) > 0.0) {
+            bl += 1.0;
         }
     }
-    return bl / 32;
+    return bl / 32.0;
 }
 `
 (RayMarchRes res) {
