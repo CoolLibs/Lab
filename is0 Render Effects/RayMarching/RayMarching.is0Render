@@ -16,7 +16,7 @@ struct RayMarchRes {
 (vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
     int i = 0;
-    bool edges;
+    bool edges = false;
     float lastd = is0_main_sdf(ro);
     for (i; i < MAX_STEPS; i++) {
         vec3 pos = ro + rd * t;
@@ -40,7 +40,7 @@ float {
 }
 
 float {
-    "Name": "Edges_Size",
+    "Name": "Edges Size",
     "Default": 0.1,
     "Min": 0.0,
     "Max": 2.0
