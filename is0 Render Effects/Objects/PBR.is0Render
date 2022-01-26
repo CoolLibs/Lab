@@ -1,0 +1,35 @@
+`
+#include "_COOL_RES_/shaders/pbr_calc.glsl"
+//PBR RENDERING thx to : https://www.shadertoy.com/view/4tXXzM
+`
+
+(RayMarchRes res) {
+    vec3 ligthDir = vec3(0.0,-2.0,-1.0);
+    vec3 lightCol = vec3(1.0, 1.0, 1.0);
+    vec3 normal   = res.normal;
+
+    float F = fresnel(normal, Metalicness);
+    float D = dot(normal, ligthDir);
+    float S = specular(normal, ligthDir, Roughtness, Metalicness);
+
+    vec3 SpecCol = S * lightCol;
+    vec3 DiffCol = D * lightCol * (1.0 - F);
+
+    material_color += DiffCol + SpecCol;
+}
+
+float {
+    "Name": "Roughtness",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Metalicness",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+

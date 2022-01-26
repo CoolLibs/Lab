@@ -181,7 +181,7 @@ bool get_index_imgui(const std::vector<BaseCode>& base_code, size_t& index)
     bool        has_changed         = false;
     const char* combo_preview_value = base_code[index].name.c_str();
     if (ImGui::BeginCombo("Select", combo_preview_value)) {
-        for (int n = 0; n < base_code.size(); n++) {
+        for (size_t n = 0; n < base_code.size(); n++) {
             const bool is_selected = (index == n);
             if (ImGui::Selectable(base_code[n].name.c_str(), is_selected)) {
                 index       = n;
