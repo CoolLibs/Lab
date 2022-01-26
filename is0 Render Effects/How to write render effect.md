@@ -72,10 +72,11 @@ struct RayMarchRes {
     vec3 ray_origin;
     vec3 hit_position;
     vec3 normal;
+    bool edges;
 };
 ```
 
-`dist` : Distance between the rayon's origin and the object
+`distance` : Distance between the rayon's origin and the object
 
 `iterations_count` : Number of iteration before stoping the ray marching
 
@@ -87,9 +88,11 @@ struct RayMarchRes {
 
 `normal` : Normal of the hit_position
 
+`edges` : 
+
 ## Create your own render effect
 
-Before creating yout render effect file, you have to ask yourself what type of effect you want to create. Will it be an `Object` effect, a `Always` one or a new one. Then you can create the file in the correct folder if it already exist else create the new folder.
+Before creating your render effect file, you have to ask yourself what type of effect you want to create. Will it be an `Object` effect or a `Always`. Then you can create the file in the correct folder.
 
 If you don't know how to start, take a look at the files already here. Then create your effect in the function body and remenber that if you want to use modular parameters declare them below the function body.
 
