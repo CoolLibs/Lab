@@ -23,7 +23,7 @@ struct RayMarchRes {
         float d = is0_main_sdf(pos) * in_or_out;
         t += d;
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
-        if (lastd < Edges_Size+0.04*sqrt(t)*Edges_Size && d > lastd + 0.001) {
+        if (lastd < Edges_Size + Edges_Size_Growth * pow(t, Edges_Function_Power)*Edges_Size && d > lastd + 0.001) {
             edges = true;
         }
         lastd = d;
@@ -42,6 +42,20 @@ float {
 float {
     "Name": "Edges Size",
     "Default": 0.1,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Edges Size Growth",
+    "Default": 0.04,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Edges Function Power",
+    "Default": 0.5,
     "Min": 0.0,
     "Max": 2.0
 }
