@@ -10,19 +10,26 @@ struct RayMarchRes {
             vec3 ray_origin;
             vec3 hit_position;
             vec3 normal;
+            bool edges;
 };
 `
 (vec3 ro, vec3 rd, float in_or_out) {
     float t = 0.;
     int i = 0;
+    bool edges = false;
+    float lastd = is0_main_sdf(ro);
     for (i; i < MAX_STEPS; i++) {
         vec3 pos = ro + rd * t;
         float d = is0_main_sdf(pos) * in_or_out;
         t += d;
         if( t > MAX_DIST || abs(d) < SURF_DIST*0.99) break;
+        if (lastd < Edges_Size + Edges_Size_Growth * pow(t, Edges_Function_Power)*Edges_Size && d > lastd + 0.001) {
+            edges = true;
+        }
+        lastd = d;
     }
     vec3 final_pos = ro + rd * t;
-    return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos));
+    return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos),edges);
 }
 
 float {
@@ -30,4 +37,25 @@ float {
     "Default": 800,
     "Min": 1,
     "Max": 1200
+}
+
+float {
+    "Name": "Edges Size",
+    "Default": 0.1,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Edges Size Growth",
+    "Default": 0.04,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Edges Function Power",
+    "Default": 0.5,
+    "Min": 0.0,
+    "Max": 2.0
 }

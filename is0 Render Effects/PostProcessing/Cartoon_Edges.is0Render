@@ -1,0 +1,14 @@
+(RayMarchRes res) {
+    if (res.edges) {
+        color = Edges_Color;
+    }
+}
+
+color {
+    "Name": "Edges Color",
+    "Default": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+    }
+}
