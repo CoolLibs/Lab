@@ -66,9 +66,10 @@ If you look at the files already present in the Objects and World's directories,
 
 ```c++
 struct RayMarchRes {
-    float dist;
+    float distance;
     int iterations_count;
-    vec3 rd;
+    vec3 ray_direction;
+    vec3 ray_origin;
     vec3 hit_position;
     vec3 normal;
 };
@@ -78,7 +79,9 @@ struct RayMarchRes {
 
 `iterations_count` : Number of iteration before stoping the ray marching
 
-`rd` : Rayon direction
+`ray_direction` : Rayon direction
+
+`ray_origin` : Rayon origin
 
 `hit_position` : Position where the rayon hit the object
 
