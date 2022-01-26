@@ -25,14 +25,14 @@ float soft_shadow(vec3 ro, vec3 rd, float k)
 
 float {
     "Name": "Softness",
-    "Default": 8.0,
+    "Default": 9.0,
     "Min": 2.0,
     "Max": 124.0
 }
 
 float {
     "Name": "Strength",
-    "Default": 1.0,
+    "Default": 0.9,
     "Min": 0.0,
     "Max": 1.0
 }
