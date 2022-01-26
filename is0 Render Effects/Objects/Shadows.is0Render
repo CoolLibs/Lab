@@ -1,0 +1,59 @@
+// Based on the article https://iquilezles.org/www/articles/rmshadows/rmshadows.htm by Inigo Quilez
+`
+float soft_shadow(vec3 ro, vec3 rd, float k)
+{   
+    float res = 1.0;
+    float ph  = 1e20;
+    for (float t = 0.01; t < MAX_DIST;) {
+        float h = is0_main_sdf(ro + rd * t);
+        if (h < 0.0001)
+            return 0.0;
+        float y = h * h / (2.0 * ph);
+        float d = sqrt(h * h - y * y);
+        res     = min(res, k * d / max(0.0, t - y));
+        ph      = h;
+        t += h;
+    }
+    return res;
+}
+`
+
+(RayMarchRes res) {
+    const vec3 sun  = vec3(Sun_Position_x, Sun_Position_y, Sun_Position_z);
+    material_color *= (1.0-Strength) + Strength * soft_shadow(res.hit_position, normalize(sun - res.hit_position), Softness);   
+}
+
+float {
+    "Name": "Softness",
+    "Default": 9.0,
+    "Min": 2.0,
+    "Max": 124.0
+}
+
+float {
+    "Name": "Strength",
+    "Default": 0.9,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Sun Position x",
+    "Default": 100.0,
+    "Min": -1000.0,
+    "Max": 1000.0
+}
+
+float {
+    "Name": "Sun Position y",
+    "Default": 200.0,
+    "Min": -1000.0,
+    "Max": 1000.0
+}
+
+float {
+    "Name": "Sun Position z",
+    "Default": 300.0,
+    "Min": -1000.0,
+    "Max": 1000.0
+}

@@ -7,7 +7,6 @@ public:
     UniqueImNodeContext()
         : _context{ImNodes::CreateContext()}
     {
-        ImNodes::LoadCurrentEditorStateFromIniFile("is0_node_editor.ini");
         static const bool b                                   = true;
         ImNodes::GetIO().LinkDetachWithModifierClick.Modifier = &b;
         ImNodes::GetIO().AltMouseButton                       = ImGuiMouseButton_Right;
@@ -16,7 +15,6 @@ public:
     ~UniqueImNodeContext()
     {
         if (_context) {
-            ImNodes::SaveCurrentEditorStateToIniFile("is0_node_editor.ini");
             ImNodes::DestroyContext(_context);
         }
     }

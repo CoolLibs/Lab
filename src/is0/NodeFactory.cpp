@@ -10,24 +10,70 @@ NodeFactory::NodeFactory(std::string_view nodes_folder_path)
     reload_templates();
 }
 
+void NodeFactory::clear_filter()
+{
+    _filter.Clear();
+    _focus_on_filter = true;
+}
+
 std::optional<Node> NodeFactory::imgui()
 {
     std::optional<Node> res{};
-    size_t              nodes_counts = 0;
-    for (const auto& folder : _folders) {
-        if (ImGui::BeginMenu(folder.name.c_str())) {
+    const auto          select_node_template = [&](const NodeTemplate& node_template) {
+        res = NodeFactoryU::node_from_template(node_template);
+    };
+    const auto for_each_node_template = [&](std::function<void(const NodeTemplate&)>        callback,
+                                            std::function<bool(const NodeTemplatesFolder&)> filter) {
+        size_t nodes_counts = 0;
+        for (const auto& folder : _folders) {
+            if (filter(folder)) {
+                if (ImGui::BeginMenu(folder.name.c_str())) {
+                    for (size_t i = 0; i < folder.nodes_count; ++i) {
+                        callback(_node_templates[nodes_counts]);
+                        nodes_counts++;
+                    }
+                    ImGui::EndMenu();
+                }
+                else {
+                    nodes_counts += folder.nodes_count;
+                }
+            }
+            else {
+                nodes_counts += folder.nodes_count;
+            }
+        }
+    };
+
+    // ImGui
+    if (_focus_on_filter) {
+        ImGui::SetKeyboardFocusHere();
+        _focus_on_filter = false;
+    }
+    _filter.Draw("Search");
+    if (!_filter.IsActive()) {
+        for_each_node_template([&](const NodeTemplate& node_template) {
+            if (ImGui::MenuItem(node_template.name.c_str())) {
+                        select_node_template(node_template);
+                    } }, [&](const NodeTemplatesFolder&) { return true; });
+    }
+    else {
+        size_t nodes_counts = 0;
+        for (const auto& folder : _folders) {
             for (size_t i = 0; i < folder.nodes_count; ++i) {
-                if (ImGui::MenuItem(_node_templates[nodes_counts].name.c_str())) {
-                    res = NodeFactoryU::node_from_template(_node_templates[nodes_counts]);
+                if (_filter.PassFilter(_node_templates[nodes_counts].name.c_str())) {
+                    if (ImGui::Selectable(_node_templates[nodes_counts].name.c_str())) {
+                        select_node_template(_node_templates[nodes_counts]);
+                    }
                 }
                 nodes_counts++;
             }
-            ImGui::EndMenu();
         }
-        else {
-            nodes_counts += folder.nodes_count;
-        }
+        for_each_node_template([&](const NodeTemplate& node_template) {
+            if (ImGui::Selectable(node_template.name.c_str())) {
+                select_node_template(node_template);
+            } }, [&](const NodeTemplatesFolder& folder) { return _filter.PassFilter(folder.name.c_str()); });
     }
+
     return res;
 }
 
