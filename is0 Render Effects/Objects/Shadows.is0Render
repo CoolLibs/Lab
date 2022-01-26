@@ -18,40 +18,40 @@ float softshadow(vec3 ro, vec3 rd, float k)
 `
 
 (RayMarchRes res) {
-    vec3  sun  = vec3(sun_position_x, sun_position_y, sun_position_z);
-    material_color *= (1.0-shadow_strength) + shadow_strength * softshadow(res.hit_position, normalize(sun - res.hit_position), shadow_softness);   
+    vec3  sun  = vec3(Sun_Position_x, Sun_Position_y, Sun_Position_z);
+    material_color *= (1.0-Shadow_Strength) + Shadow_Strength * softshadow(res.hit_position, normalize(sun - res.hit_position), Shadow_Softness);   
 }
 
 float {
-    "Name": "shadow_softness",
+    "Name": "Shadow Softness",
     "Default": 8.0,
     "Min": 2.0,
     "Max": 124.0
 }
 
 float {
-    "Name": "shadow_strength",
+    "Name": "Shadow Strength",
     "Default": 1.0,
     "Min": 0.001,
     "Max": 1.0
 }
 
 float {
-    "Name": "sun_position_x",
+    "Name": "Sun Position x",
     "Default": 100.0,
     "Min": -1000.0,
     "Max": 1000.0
 }
 
 float {
-    "Name": "sun_position_y",
+    "Name": "Sun Position y",
     "Default": 100.0,
     "Min": -1000.0,
     "Max": 1000.0
 }
 
 float {
-    "Name": "sun_position_z",
+    "Name": "Sun Position z",
     "Default": 100.0,
     "Min": -1000.0,
     "Max": 1000.0
