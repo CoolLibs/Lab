@@ -27,7 +27,7 @@ float {
 
 float {
     "Name": "Ground Height",
-    "Default": 0.0,
+    "Default": -10.0,
     "Min": -10.0,
     "Max": 10.0
 }
