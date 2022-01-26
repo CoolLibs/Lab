@@ -1,7 +1,7 @@
 
-// Occlusion calcul as defined by Inigo Quilez there : https://www.shadertoy.com/view/wdKSzd
+// Occlusion calculation as defined by Inigo Quilez there : https://www.shadertoy.com/view/wdKSzd
 `
-float calcOcclusion(in vec3 pos, in vec3 nor, float ra)
+float calc_occlusion(in vec3 pos, in vec3 nor, float ra)
 {
     float occ = 0.0;
     for (int i = 0; i < 64; i++) {
@@ -15,7 +15,7 @@ float calcOcclusion(in vec3 pos, in vec3 nor, float ra)
 }
 `
 (RayMarchRes res) {
-    material_color *= calcOcclusion(res.hit_position, get_normal(res.hit_position), AO_Size);
+    material_color *= calc_occlusion(res.hit_position, get_normal(res.hit_position), AO_Size);
 }
 
 float {
