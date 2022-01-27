@@ -14,7 +14,7 @@
     vec3 SpecCol = S * Light_Color;
     vec3 DiffCol = D * Light_Color * (1.0 - F);
     const float cAmbiantMin = 0.04;
-    vec3 reflectCol = AmbReflect() + Ambiant_Color;
+    vec3 reflectCol = res.reflection_color +  Ambiant_Color;
 
     vec3 AmbiantColor = reflectCol * cAmbiantMin;
     vec3 lights = max((DiffCol + SpecCol)*(1.0 - cAmbiantMin), vec3(0.0,0.0,0.0));

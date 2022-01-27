@@ -11,6 +11,7 @@ struct RayMarchRes {
             vec3 hit_position;
             vec3 normal;
             bool edges;
+            vec3 reflection_color;
 };
 `
 (vec3 ro, vec3 rd, float in_or_out) {
@@ -29,7 +30,7 @@ struct RayMarchRes {
         lastd = d;
     }
     vec3 final_pos = ro + rd * t;
-    return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos),edges);
+    return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos),edges, vec3(0.));
 }
 
 float {

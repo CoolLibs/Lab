@@ -1,8 +1,14 @@
 #pragma once
 
+#include <Cool/Parameter/Parameter.h>
 #include "RenderEffect.h"
 
 struct RenderEffects {
+    Cool::Parameter::Int bounces_count{
+        {.name          = "Bounces Count",
+         .default_value = 2,
+         .min_value     = 0,
+         .max_value     = 5}};
     std::vector<RenderEffect> for_objects;
     std::vector<RenderEffect> post_processing;
     std::vector<BaseCode>     normal;

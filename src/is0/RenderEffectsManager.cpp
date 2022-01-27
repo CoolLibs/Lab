@@ -208,6 +208,8 @@ bool effect_imgui_window(RenderEffects& effects)
 {
     bool has_changed = false;
     ImGui::Begin("Shading");
+    effects.bounces_count.imgui({}, [&]() { has_changed = true; });
+    ImGui::Separator();
     for (auto& param : effects.for_objects) {
         has_changed |= effect_imgui(param);
         ImGui::Separator();
