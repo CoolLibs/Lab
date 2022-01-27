@@ -163,8 +163,8 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            apply_function("vec3 get_normal", effects.normal[effects.normal_index]) +
            code_gen_render_effects_extra_code(effects) +
            apply_function("RayMarchRes rayMarching", effects.ray_marching[effects.ray_index]) +
-           apply_material(effects.for_objects) +
            apply_function("vec3 apply_background", effects.background[effects.background_index]) +
+           apply_material(effects.for_objects) +
            post_process(effects.post_processing) +
            compute_color(std::max(*effects.bounces_count, 0)) +
            main();
@@ -181,15 +181,15 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     for (const auto& node : node_tree.nodes) {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
-                                                               .node_template_name = node.node_template_name,
-                                                               .node_id            = node.id},
-                                                           .sdf_param_declaration = node_template.vec3_input_declaration};
+                                                                .node_template_name = node.node_template_name,
+                                                                .node_id            = node.id},
+                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
         declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
             .fn_signature_params = fn_signature_params,
             .body                = function_body(node.parameter_list,
-                                  node_template.code_template,
-                                  compute_sdf_identifiers(node, node_template, node_tree))});
+                                                 node_template.code_template,
+                                                 compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
         if (node_tree.has_no_successor(node)) {
             main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
