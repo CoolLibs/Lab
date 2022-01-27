@@ -25,11 +25,11 @@ out vec4 out_Color;
 static std::string includes()
 {
     return R"(
-        #include "_COOL_RES_/shaders/camera.glsl"
-        #include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
-        #include "_COOL_RES_/shaders/math.glsl"
-        #include "is0 shaders/hg_sdf.glsl" 
-        #include "is0 shaders/light.glsl"
+#include "_COOL_RES_/shaders/camera.glsl"
+#include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
+#include "_COOL_RES_/shaders/math.glsl"
+#include "is0 shaders/hg_sdf.glsl" 
+#include "is0 shaders/light.glsl"
     )";
 }
 
