@@ -1,0 +1,27 @@
+(RayMarchRes res) {
+    float glow = Strength * exp(-res.closest_grazed_object * Falloff);
+    color += glow * Color;
+}
+
+float {
+    "Name": "Strength",
+    "Default": 9.189,
+    "Min": 0.0,
+    "Max": 20.0
+}
+
+float {
+    "Name": "Falloff",
+    "Default": 2.129,
+    "Min": 0.0,
+    "Max": 20.0
+}
+
+color {
+    "Name": "Color",
+    "Default": {
+        "x": 0.0,
+        "y": 0.118,
+        "z": 1.0
+    }
+}
