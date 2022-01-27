@@ -1,0 +1,35 @@
+(RayMarchRes res) {
+    color = res.closest_grazed_object < Size + Size_Growth * pow(res.distance_when_grazing_closest_object, Size_Power) * Size
+                ? Color 
+                : color;
+}
+
+color {
+    "Name": "Color",
+    "Default": {
+        "x": 0.01,
+        "y": 0.0,
+        "z": 0.353
+    }
+}
+
+float {
+    "Name": "Size",
+    "Default": 0.043,
+    "Min": 0.0,
+    "Max": 2.0
+}
+
+float {
+    "Name": "Size Growth",
+    "Default": 0.04,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
+float {
+    "Name": "Size Power",
+    "Default": 1.293,
+    "Min": 0.0,
+    "Max": 2.0
+}
