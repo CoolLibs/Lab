@@ -69,7 +69,7 @@ vec3 post_process(RayMarchRes res, vec3 color){)" +
     color = pow(color, vec3(0.4545)); // Gamma correction
     return color;
 }
-    )";
+)";
 }
 
 static std::string main()
@@ -78,19 +78,49 @@ static std::string main()
 void main() {
     vec3 ro = cool_ray_origin();
     vec3 rd = cool_ray_direction();
+    out_Color = vec4(compute_color(ro, rd), 1.);
+}
+    )";
+}
+
+static std::string function_definition_recursive(int              max_recursions,
+                                                 std::string_view return_type,
+                                                 std::string_view name,
+                                                 std::string_view parameters,
+                                                 std::string_view body,
+                                                 std::string_view default_body)
+{
+    assert(max_recursions >= 0);
+    std::stringstream ss{};
+    const auto        gen_func = [&](int index, std::string_view actual_body) {
+        ss << return_type << ' ' << name << (index == 0 ? "" : std::to_string(index)) << parameters << "{\n"
+           << actual_body << "\n}\n";
+    };
+    gen_func(max_recursions + 1, default_body);
+    for (int i{max_recursions}; i >= 0; --i) {
+        std::string actual_body{body};
+        Cool::String::replace_all(actual_body, "${" + std::string{name} + "}", std::string{name} + std::to_string(i + 1));
+        gen_func(i, actual_body);
+    }
+    return ss.str();
+}
+
+static std::string compute_color()
+{
+    return function_definition_recursive(1, "vec3", "compute_color", "(vec3 ro, vec3 rd)", R"(
     RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
-    vec3 color = vec3(0., 0., 0.);
+    vec3 color = vec3(0.);
     if (res.distance < MAX_DIST){
         color += apply_material(res);
+        color += 0.5 * ${compute_color}(res.hit_position + res.normal * 0.001, reflect(rd, res.normal));
     }
     else {
         res.distance = MAX_DIST;
         color += apply_background(res);
     }
-    color = post_process(res,color);
-    out_Color = vec4(color, 1.);
-}
-    )";
+    return post_process(res,color);
+)",
+                                         "  return vec3(0.);");
 }
 
 static auto compute_sdf_identifiers(const Node& node, const NodeTemplate& node_template, const NodeTree& node_tree) -> std::vector<std::pair<std::string, std::string>>
@@ -137,6 +167,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            apply_material(effects.for_objects) +
            apply_function("vec3 apply_background", effects.background[effects.background_index]) +
            post_process(effects.post_processing) +
+           compute_color() +
            main();
 }
 
