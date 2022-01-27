@@ -28,7 +28,6 @@ static std::string includes()
 #include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/iqnoise_3D.glsl" 
 #include "_COOL_RES_/shaders/math.glsl"
-#include "_COOL_RES_/shaders/pbr_calc.glsl"
 #include "is0 shaders/hg_sdf.glsl" 
 #include "is0 shaders/light.glsl"
     )";
