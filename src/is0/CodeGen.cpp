@@ -110,7 +110,7 @@ static std::string compute_color(int bounce_count)
     RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
     vec3 color = vec3(0.);
     if (res.distance < MAX_DIST){
-        res.reflection_color = ${compute_color}(res.hit_position + res.normal * 0.001, reflect(rd, res.normal));
+        res.reflection_color = ${compute_color}(res.hit_position + res.normal * SURF_DIST, reflect(rd, res.normal));
         color += apply_material(res);
     }
     else {
