@@ -23,7 +23,7 @@ struct NodeTree {
     bool        has_no_successor(const Node& node) const;
 
 private:
-    //Serialization
+    // Serialization
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)

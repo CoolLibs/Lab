@@ -1,0 +1,7 @@
+[SDF] (vec3 pos) {
+    return ${SDF}((inverse(Yolo) * vec4(pos, 1.)).xyz);
+}
+
+transform3D {
+    "Name": "Yolo"
+}

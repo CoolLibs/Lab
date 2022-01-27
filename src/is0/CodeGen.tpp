@@ -27,6 +27,12 @@ std::string type_to_string()
     if constexpr (std::is_same_v<T, glm::vec4>) {
         return "vec4";
     }
+    if constexpr (std::is_same_v<T, glm::mat4>) {
+        return "mat4";
+    }
+    if constexpr (std::is_same_v<T, bool>) {
+        return "bool";
+    }
 }
 
 template<typename T>
@@ -46,6 +52,23 @@ std::string value_to_string(const T&& x)
     }
     if constexpr (std::is_same_v<T, glm::vec4>) {
         return glm::to_string(x);
+    }
+    if constexpr (std::is_same_v<T, bool>) {
+        return x ? "true" : "false";
+    }
+    if constexpr (std::is_same_v<T, glm::mat4>) {
+        std::string end = "mat4(";
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (j == 3 && i == 3) {
+                    end += std::to_string(x[i][j]) + ")";
+                }
+                else {
+                    end += std::to_string(x[i][j]) + ", ";
+                }
+            }
+        }
+        return end;
     }
 }
 
