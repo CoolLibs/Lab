@@ -13,6 +13,7 @@ void Is0::update()
         else {
             _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
         }
+
         _fullscreen_pipeline.compile(_shader_code, "is0 Ray Marcher");
     }
 }

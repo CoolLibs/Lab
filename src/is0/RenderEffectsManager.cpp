@@ -148,7 +148,7 @@ std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effe
     std::string code = "";
     for (const auto& effect : render_effects) {
         if (effect.is_active) {
-            code += '{';
+            code += "{\n";
             code += code_gen_base_code(effect.base);
             code += "}\n";
         }
