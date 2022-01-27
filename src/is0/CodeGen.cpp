@@ -105,9 +105,9 @@ static std::string function_definition_recursive(int              max_recursions
     return ss.str();
 }
 
-static std::string compute_color()
+static std::string compute_color(int bounce_count)
 {
-    return function_definition_recursive(1, "vec3", "compute_color", "(vec3 ro, vec3 rd)", R"(
+    return function_definition_recursive(bounce_count, "vec3", "compute_color", "(vec3 ro, vec3 rd)", R"(
     RayMarchRes res = rayMarching(ro, rd, DONT_INVERT_SDF);
     vec3 color = vec3(0.);
     if (res.distance < MAX_DIST){
@@ -167,7 +167,7 @@ std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTe
            apply_material(effects.for_objects) +
            apply_function("vec3 apply_background", effects.background[effects.background_index]) +
            post_process(effects.post_processing) +
-           compute_color() +
+           compute_color(std::max(*effects.bounces_count, 0)) +
            main();
 }
 
