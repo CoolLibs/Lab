@@ -53,6 +53,11 @@ void Is0::imgui_windows()
         Cool::Serialization::from_json(_editor, _path_for_load);
     }
     ImGui::PopID();
+    // Random
+    if (ImGui::Button("Generate a random object")) {
+        _editor.generate_a_random_scene();
+        _must_recompile = true;
+    }
 
     ImGui::End();
     _must_recompile |= effect_imgui_window(_effects.render_effects);

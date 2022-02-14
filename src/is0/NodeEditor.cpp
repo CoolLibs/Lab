@@ -2,6 +2,7 @@
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameter/ParameterU.h>
 #include <GLFW/glfw3.h>
+#include "Randomizer.h"
 
 NodeEditor::NodeEditor(std::string_view nodes_folder_path)
     : _factory{nodes_folder_path}
@@ -197,4 +198,9 @@ void NodeEditor::update_templates_and_nodes()
         }
     }
     on_tree_change();
+}
+
+void NodeEditor::generate_a_random_scene()
+{
+    _tree = random_node_tree(_factory);
 }

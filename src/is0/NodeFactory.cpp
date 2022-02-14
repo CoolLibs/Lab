@@ -108,3 +108,18 @@ void NodeFactory::reload_templates()
         }
     }
 }
+
+std::optional<FolderRange> NodeFactory::templates_from_folder(std::string_view folder_name) const
+{
+    size_t first = 0;
+    for (const auto& folder : _folders) {
+        if (folder.name == folder_name) {
+            return FolderRange{first,
+                               first + folder.nodes_count - 1};
+        }
+        else {
+            first += folder.nodes_count;
+        }
+    }
+    return std::nullopt;
+}

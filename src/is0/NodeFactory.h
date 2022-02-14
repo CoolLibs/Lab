@@ -8,11 +8,17 @@ struct NodeTemplatesFolder {
     size_t      nodes_count{};
 };
 
+struct FolderRange {
+    size_t first;
+    size_t last;
+};
+
 class NodeFactory {
 public:
     explicit NodeFactory(std::string_view nodes_folder_path);
     std::optional<Node>              imgui();
     const std::vector<NodeTemplate>& templates() const { return _node_templates; }
+    std::optional<FolderRange>       templates_from_folder(std::string_view folder_name) const;
     void                             reload_templates();
     void                             clear_filter();
 
