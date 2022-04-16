@@ -4,3 +4,6 @@
 [submodule "lib/imnodes"]
 	path = lib/imnodes
 	url = https://github.com/CoolLibs/imnodes
+[submodule "lib/reg"]
+	path = lib/reg
+	url = https://github.com/CoolLibs/reg
