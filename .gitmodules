@@ -7,3 +7,6 @@
 [submodule "lib/reg"]
 	path = lib/reg
 	url = https://github.com/CoolLibs/reg
+[submodule "lib/cmd"]
+	path = lib/cmd
+	url = https://github.com/CoolLibs/cmd
