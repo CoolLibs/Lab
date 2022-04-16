@@ -33,7 +33,9 @@ std::string function_name(const FnNameParams& p);
 std::string function_signature(const FnSignatureParams& p);
 std::string function_declaration(const FnSignatureParams& p);
 std::string function_definition(const FnDefinitionParams& p);
-std::string function_body(const Cool::ParameterList& list, const std::string& code_template, const std::vector<std::pair<std::string, std::string>>& sdf_identifiers);
+std::string function_body(const Cool::ParameterList&                              list,
+                          const std::string&                                      code_template,
+                          const std::vector<std::pair<std::string, std::string>>& sdf_identifiers);
 
 std::string parameters_definitions(const Cool::ParameterList& list);
 std::string parameter_definition_any(const Cool::Parameter::Any& param);
