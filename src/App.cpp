@@ -56,6 +56,9 @@ void App::imgui_windows()
         auto commands  = ReversibleCommandDispatcher{_registries, set_dirty};
         auto ui        = Ui{_registries, commands};
         _current_module->imgui_windows(ui);
+        Ui::window({.name = "Registry of vec3"}, [&]() {
+            imgui_show(_registries.of<glm::vec3>());
+        });
         // _shader_manager.imgui_windows();
     }
 }

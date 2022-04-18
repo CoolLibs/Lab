@@ -122,4 +122,18 @@ private:
     ReversibleCommandDispatcher& _commands;
 };
 
+inline void imgui_show(const glm::vec3& value)
+{
+    ImGui::Text("%s", glm::to_string(value).c_str());
+}
+
+template<typename T>
+void imgui_show(const reg::Registry<T>& registry)
+{
+    std::shared_lock lock{registry.mutex()};
+    for (const auto& [id, value] : registry) {
+        imgui_show(value);
+    }
+}
+
 } // namespace Lab
