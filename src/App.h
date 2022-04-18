@@ -1,7 +1,11 @@
 #pragma once
 
 #include <Cool/Default/DefaultApp.h>
+#include "Module.h"
+#include "Registries.h"
 #include "ShaderManager/ShaderManagerManager.h"
+
+namespace Lab {
 
 class App : public CoolDefault::DefaultApp {
 public:
@@ -21,11 +25,9 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
 
 private:
-    ShaderManagerManager _shader_manager;
-#if !IS0_TEST_NODES
-    // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
-    Cool::AutoSerializer<App> _auto_serializer{Cool::Path::root() + "/last-session-cache.json", "App", *this};
-#endif
+    Registries              _registries; // First because modules need the registries when they get created
+    ShaderManagerManager    _shader_manager;
+    std::unique_ptr<Module> _current_module;
 
 private:
     // Serialization
@@ -36,4 +38,10 @@ private:
         archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
                 cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)));
     }
+#if !IS0_TEST_NODES
+    // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
+    Cool::AutoSerializer<App> _auto_serializer{Cool::Path::root() + "/last-session-cache.json", "App", *this};
+#endif
 };
+
+} // namespace Lab
