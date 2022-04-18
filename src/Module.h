@@ -62,9 +62,10 @@ private:
     Module& _module;
 };
 
-inline void handle_command(Registries& registries, SetDirty& set_dirty, ReversibleCommand_SetValue<glm::vec3> cmd)
+template<typename T>
+inline void handle_command(Registries& registries, SetDirty& set_dirty, ReversibleCommand_SetValue<T> cmd)
 {
-    registries.vec3s.set(cmd.id, cmd.value);
+    registries.set(cmd.id, cmd.value);
     set_dirty(cmd.id);
 }
 
@@ -105,7 +106,7 @@ public:
 
     void widget(const char* name, reg::Id<glm::vec3> colorId)
     {
-        const auto color = _registries.vec3s.get(colorId);
+        const auto color = _registries.get(colorId);
         if (color) {
             auto color_value = *color;
             if (ImGui::ColorEdit3(name, glm::value_ptr(color_value))) {

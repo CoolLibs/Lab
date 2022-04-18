@@ -4,7 +4,7 @@
 namespace Lab {
 
 TestModule::TestModule(Registries& registries)
-    : _colorId{registries.vec3s.create({1.f, 0.5f, 0.1f})}
+    : _colorId{registries.create(glm::vec3{1.f, 0.5f, 0.1f})}
 {
 }
 
@@ -20,7 +20,7 @@ void TestModule::render(const Registries& registries)
     Cool::Log::ToUser::info("TestModule", "Re-rendering");
     if (_fullscreen_pipeline.shader()) {
         _fullscreen_pipeline.shader()->bind();
-        const auto color = registries.vec3s.get(_colorId);
+        const auto color = registries.get(_colorId);
         if (color) {
             _fullscreen_pipeline.shader()->set_uniform("_color", *color);
         }
