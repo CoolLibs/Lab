@@ -122,9 +122,18 @@ private:
     ReversibleCommandDispatcher& _commands;
 };
 
-inline void imgui_show(const glm::vec3& value)
+template<typename T>
+inline void imgui_show(const T& value)
 {
-    ImGui::Text("%s", glm::to_string(value).c_str());
+    if constexpr (requires { std::to_string(value); }) {
+        ImGui::Text("%s", std::to_string(value).c_str());
+    }
+    else if constexpr (requires { glm::to_string(value); }) {
+        ImGui::Text("%s", glm::to_string(value).c_str());
+    }
+    else {
+        ImGui::Text("[imgui_show] ERROR: Unknown type");
+    }
 }
 
 template<typename T>

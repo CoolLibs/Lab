@@ -59,6 +59,9 @@ void App::imgui_windows()
         Ui::window({.name = "Registry of vec3"}, [&]() {
             imgui_show(_registries.of<glm::vec3>());
         });
+        Ui::window({.name = "Registry of float"}, [&]() {
+            imgui_show(_registries.of<float>());
+        });
         // _shader_manager.imgui_windows();
     }
 }
