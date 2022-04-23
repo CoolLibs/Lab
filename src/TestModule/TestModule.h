@@ -9,6 +9,7 @@ namespace Lab {
 
 class TestModule : public Module {
 public:
+    TestModule() = default;
     explicit TestModule(Registries& registries);
 
     void render(const Registries& registries) override;
@@ -19,6 +20,16 @@ private:
         Cool::File::to_string(Cool::Path::root() + "/shader-examples/monochrome.frag"),
         "Test Module's Shader"};
     reg::Id<glm::vec3> _colorId;
+
+private:
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(cereal::base_class<Module>(this), _colorId);
+    }
 };
 
 } // namespace Lab
+
+CEREAL_REGISTER_TYPE(Lab::TestModule);

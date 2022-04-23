@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/Default/DefaultApp.h>
+#include <reg/Cereal.hpp>
 #include "Module.h"
 #include "Registries.h"
 #include "ShaderManager/ShaderManagerManager.h"
@@ -36,7 +37,9 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
-                cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)));
+                cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)),
+                cereal::make_nvp("Registries", _registries),
+                cereal::make_nvp("Module", _current_module));
     }
 #if !IS0_TEST_NODES
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive

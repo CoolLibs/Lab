@@ -1,4 +1,5 @@
 #pragma once
+#include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include "Commands.h"
 #include "Dependencies.h"
@@ -7,6 +8,10 @@
 namespace Lab {
 
 /// We need to do the polymorphism of Modules through inheritance to allow for plugins to create their own modules.
+
+/// Each module has a State struct, and that's what is serialized / modified through commands / stored in presets.
+/// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level)
+/// Rendering only has const access to the registries: creating / updating values is done trough ui()
 
 class Ui;
 
@@ -42,6 +47,14 @@ protected:
 private:
     // Dependencies _dependencies;
     bool _is_dirty = true;
+
+private:
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        // archive();
+    }
 };
 
 class SetDirty {
@@ -125,11 +138,11 @@ private:
 template<typename T>
 inline void imgui_show(const T& value)
 {
-    if constexpr (requires { std::to_string(value); }) {
-        ImGui::Text("%s", std::to_string(value).c_str());
+    if constexpr (requires { to_string(value); }) {
+        ImGui::Text("%s", to_string(value).c_str());
     }
-    else if constexpr (requires { glm::to_string(value); }) {
-        ImGui::Text("%s", glm::to_string(value).c_str());
+    else if constexpr (requires { std::to_string(value); }) {
+        ImGui::Text("%s", std::to_string(value).c_str());
     }
     else {
         ImGui::Text("[imgui_show] ERROR: Unknown type");
@@ -137,11 +150,27 @@ inline void imgui_show(const T& value)
 }
 
 template<typename T>
+inline void imgui_show(const reg::Id<T>& id)
+{
+    ImGui::Text("%s", reg::to_string(id).c_str());
+}
+
+template<typename T>
 void imgui_show(const reg::Registry<T>& registry)
 {
-    std::shared_lock lock{registry.mutex()};
-    for (const auto& [id, value] : registry) {
-        imgui_show(value);
+    std::shared_lock       lock{registry.mutex()};
+    static ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_Resizable | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_ContextMenuInBody;
+
+    if (ImGui::BeginTable("table1", 2, flags)) {
+        for (const auto& [id, value] : registry) {
+            ImGui::TableNextRow();
+
+            ImGui::TableSetColumnIndex(0);
+            imgui_show(value);
+            ImGui::TableSetColumnIndex(1);
+            imgui_show(id);
+        }
+        ImGui::EndTable();
     }
 }
 
