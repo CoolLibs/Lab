@@ -8,7 +8,7 @@ TestModule::TestModule(Registries& registries)
 {
 }
 
-void TestModule::imgui_windows(Ui& ui)
+void TestModule::imgui_windows(Ui ui)
 {
     Ui::window({.name = "Test Module"}, [&]() {
         ui.widget("Color", _colorId);

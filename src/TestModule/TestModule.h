@@ -13,7 +13,7 @@ public:
     explicit TestModule(Registries& registries);
 
     void render(const Registries& registries) override;
-    void imgui_windows(Ui& ui) override;
+    void imgui_windows(Ui ui) override;
 
 private:
     Cool::FullscreenPipeline _fullscreen_pipeline{

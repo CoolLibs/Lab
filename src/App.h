@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/Default/DefaultApp.h>
+#include <cmd/cmd.hpp>
 #include <reg/Cereal.hpp>
 #include "Module.h"
 #include "Registries.h"
@@ -25,10 +26,16 @@ public:
 private:
     void render(Cool::RenderTarget& render_target, float time);
 
+    auto set_dirty() { return SetDirty{*_current_module}; }
+    auto commands_executor() { return ReversibleCommandExecutor{_registries, set_dirty()}; }
+    auto commands_dispatcher() { return ReversibleCommandDispatcher{commands_executor(), _history}; }
+    auto ui() { return Ui{_registries, commands_dispatcher()}; }
+
 private:
-    Registries              _registries; // First because modules need the registries when they get created
-    ShaderManagerManager    _shader_manager;
-    std::unique_ptr<Module> _current_module;
+    Registries                      _registries; // First because modules need the registries when they get created
+    ShaderManagerManager            _shader_manager;
+    std::unique_ptr<Module>         _current_module;
+    cmd::History<ReversibleCommand> _history;
 
 private:
     // Serialization

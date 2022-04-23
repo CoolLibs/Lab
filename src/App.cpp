@@ -1,4 +1,5 @@
 #include "App.h"
+#include <Cool/Input/Input.h>
 #include "TestModule/TestModule.h"
 
 namespace Lab {
@@ -52,10 +53,7 @@ void App::imgui_windows()
 {
     DefaultApp::imgui_windows();
     if (inputs_are_allowed()) {
-        auto set_dirty = SetDirty{*_current_module};
-        auto commands  = ReversibleCommandDispatcher{_registries, set_dirty};
-        auto ui        = Ui{_registries, commands};
-        _current_module->imgui_windows(ui);
+        _current_module->imgui_windows(ui());
         Ui::window({.name = "Registry of vec3"}, [&]() {
             imgui_show(_registries.of<glm::vec3>());
         });
@@ -75,6 +73,15 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
     DefaultApp::on_keyboard_event(event);
     _shader_manager->on_key_pressed(event);
+    if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
+        auto exec = commands_executor();
+        if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
+            _history.move_backward(exec);
+        }
+        if (Cool::Input::matches_char("y", event.key) && event.mods.ctrl()) {
+            _history.move_forward(exec);
+        }
+    }
 }
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)

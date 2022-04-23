@@ -1,5 +1,6 @@
 #pragma once
 #include <cereal/types/polymorphic.hpp>
+#include <cmd/cmd.hpp>
 #include <glm/glm.hpp>
 #include "Commands.h"
 #include "Dependencies.h"
@@ -23,7 +24,7 @@ public:
         render(registries);
         _is_dirty = false;
     }
-    virtual void imgui_windows(Ui& ui) = 0;
+    virtual void imgui_windows(Ui ui) = 0;
     virtual void update(){};
 
     auto needs_rendering() const -> bool { return _is_dirty || force_rendering(); };
@@ -66,43 +67,72 @@ public:
     template<typename T>
     void operator()(reg::Id<T> id)
     {
-        if (_module.depends_on(id)) {
-            _module.set_dirty();
+        if (_module.get().depends_on(id)) {
+            _module.get().set_dirty();
         }
     }
 
 private:
-    Module& _module;
+    std::reference_wrapper<Module> _module;
 };
 
 template<typename T>
-inline void handle_command(Registries& registries, SetDirty& set_dirty, ReversibleCommand_SetValue<T> cmd)
+void execute_command(Registries& registries, SetDirty& set_dirty, ReversibleCommand_SetValue<T> cmd)
 {
     registries.set(cmd.id, cmd.value);
     set_dirty(cmd.id);
 }
 
+template<typename T>
+void revert_command(Registries& registries, SetDirty& set_dirty, ReversibleCommand_SetValue<T> cmd)
+{
+    registries.set(cmd.id, cmd.old_value);
+    set_dirty(cmd.id);
+}
+
+class ReversibleCommandExecutor {
+public:
+    ReversibleCommandExecutor(Registries& registries, SetDirty set_dirty)
+        : _registries{registries}, _set_dirty{set_dirty}
+    {
+    }
+
+    void execute(const ReversibleCommand& command)
+    {
+        std::visit([&](auto cmd) { execute_command(_registries, _set_dirty, cmd); }, command);
+    }
+
+    void revert(const ReversibleCommand& command)
+    {
+        std::visit([&](auto cmd) { revert_command(_registries, _set_dirty, cmd); }, command);
+    }
+
+private:
+    std::reference_wrapper<Registries> _registries;
+    SetDirty                           _set_dirty;
+};
+
 class ReversibleCommandDispatcher {
 public:
-    ReversibleCommandDispatcher(Registries& registries, SetDirty& set_dirty)
-        : _registries{registries}, _set_dirty{set_dirty}
+    ReversibleCommandDispatcher(ReversibleCommandExecutor executor, cmd::History<ReversibleCommand>& history)
+        : _executor{executor}, _history{history}
     {
     }
 
     void dispatch(const ReversibleCommand& command)
     {
-        std::visit([&](auto cmd) { handle_command(_registries, _set_dirty, cmd); }, command);
+        _executor.execute(command);
+        _history.get().push(command);
     }
 
 private:
-    Registries& _registries;
-    SetDirty&   _set_dirty;
-    //History& _history;
+    ReversibleCommandExecutor                               _executor;
+    std::reference_wrapper<cmd::History<ReversibleCommand>> _history;
 };
 
 class Ui {
 public:
-    Ui(const Registries& registries, Lab::ReversibleCommandDispatcher& commands)
+    Ui(const Registries& registries, Lab::ReversibleCommandDispatcher commands)
         : _registries{registries}, _commands{commands} {}
 
     struct WindowParams {
@@ -119,7 +149,7 @@ public:
 
     void widget(const char* name, reg::Id<glm::vec3> colorId)
     {
-        const auto color = _registries.get(colorId);
+        const auto color = _registries.get().get(colorId);
         if (color) {
             auto color_value = *color;
             if (ImGui::ColorEdit3(name, glm::value_ptr(color_value))) {
@@ -131,8 +161,8 @@ public:
     }
 
 private:
-    const Registries&            _registries;
-    ReversibleCommandDispatcher& _commands;
+    std::reference_wrapper<const Registries> _registries;
+    ReversibleCommandDispatcher              _commands;
 };
 
 template<typename T>

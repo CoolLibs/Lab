@@ -24,6 +24,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Cool::Core)
 add_subdirectory(lib/reg)
 target_link_libraries(${PROJECT_NAME} PRIVATE reg::reg)
 
+# Include cmd
+add_subdirectory(lib/cmd)
+target_link_libraries(${PROJECT_NAME} PRIVATE cmd::cmd)
+
 # Include ImNodes
 add_library(ImNodes lib/imnodes/imnodes.cpp)
 target_include_directories(ImNodes PRIVATE Cool/lib/imgui)
