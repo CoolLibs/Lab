@@ -1,5 +1,6 @@
 #include "App.h"
 #include <Cool/Input/Input.h>
+#include <cmd/imgui.hpp>
 #include "TestModule/TestModule.h"
 
 namespace Lab {
@@ -49,6 +50,12 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #endif
 }
 
+template<typename T>
+static auto command_to_string(const ReversibleCommand_SetValue<T> command) -> std::string
+{
+    return "Set " + reg::to_string(command.id) + " to " + to_string(command.value);
+}
+
 void App::imgui_windows()
 {
     DefaultApp::imgui_windows();
@@ -59,6 +66,11 @@ void App::imgui_windows()
         });
         Ui::window({.name = "Registry of float"}, [&]() {
             imgui_show(_registries.of<float>());
+        });
+        Ui::window({.name = "History"}, [&]() {
+            cmd::imgui_show_history(_history, [](const ReversibleCommand& command) {
+                return std::visit([](const auto& cmd) { return command_to_string(cmd); }, command);
+            });
         });
         // _shader_manager.imgui_windows();
     }
