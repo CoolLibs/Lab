@@ -3,7 +3,7 @@
 #include <Cool/Default/DefaultApp.h>
 #include <cmd/cereal.hpp>
 #include <cmd/cmd.hpp>
-#include <reg/Cereal.hpp>
+#include <reg/cereal.hpp>
 #include "Module.h"
 #include "Registries.h"
 #include "ShaderManager/ShaderManagerManager.h"
