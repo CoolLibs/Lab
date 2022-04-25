@@ -175,7 +175,7 @@ auto value_to_string(const T& value) -> std::string
         return std::to_string(value);
     }
     else {
-        return "[value_to_string] ERROR: Couldn't find a stringification function for this type" + typeid(T).name();
+        return std::string{"[value_to_string] ERROR: Couldn't find a stringification function for this type: "} + typeid(T).name();
     }
 }
 
