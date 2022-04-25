@@ -34,6 +34,7 @@ private:
 
 private:
     Registries                      _registries; // First because modules need the registries when they get created
+    reg::Id<int>                    _intId;
     ShaderManagerManager            _shader_manager;
     std::unique_ptr<Module>         _current_module;
     cmd::History<ReversibleCommand> _history;
@@ -47,6 +48,7 @@ private:
         archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
                 cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)),
                 cereal::make_nvp("Registries", _registries),
+                cereal::make_nvp("Int ID", _intId),
                 cereal::make_nvp("History", _history),
                 cereal::make_nvp("Module", _current_module));
     }

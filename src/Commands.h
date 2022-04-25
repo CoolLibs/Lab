@@ -11,9 +11,9 @@ struct ReversibleCommand_SetValue {
 };
 
 using ReversibleCommand = std::variant<
-    // ReversibleCommand_SetValue<int>,
-    // ReversibleCommand_SetValue<float>,
-    // ReversibleCommand_SetValue<glm::vec2>,
+    ReversibleCommand_SetValue<int>,
+    ReversibleCommand_SetValue<float>,
+    ReversibleCommand_SetValue<glm::vec2>,
     ReversibleCommand_SetValue<glm::vec3>>;
 
 } // namespace Lab

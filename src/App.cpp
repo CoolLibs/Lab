@@ -7,6 +7,7 @@ namespace Lab {
 
 App::App(Cool::WindowManager& windows)
     : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
+    , _intId{_registries.create(0)}
     , _current_module{std::make_unique<TestModule>(_registries)}
 {
     _clock.pause();
@@ -53,7 +54,7 @@ void App::render(Cool::RenderTarget& render_target, float time)
 template<typename T>
 static auto command_to_string(const ReversibleCommand_SetValue<T> command) -> std::string
 {
-    return "Set " + reg::to_string(command.id) + " to " + to_string(command.value);
+    return "Set " + reg::to_string(command.id) + " to " + value_to_string(command.value);
 }
 
 void App::imgui_windows()
@@ -67,10 +68,21 @@ void App::imgui_windows()
         Ui::window({.name = "Registry of float"}, [&]() {
             imgui_show(_registries.of<float>());
         });
+        Ui::window({.name = "Registry of int"}, [&]() {
+            imgui_show(_registries.of<int>());
+        });
         Ui::window({.name = "History"}, [&]() {
             cmd::imgui_show_history(_history, [](const ReversibleCommand& command) {
                 return std::visit([](const auto& cmd) { return command_to_string(cmd); }, command);
             });
+        });
+        Ui::window({.name = "TMP"}, [&]() {
+            static int n = 1;
+            ImGui::InputInt("Value", &n);
+            if (ImGui::Button("Set")) {
+                commands_dispatcher().dispatch(ReversibleCommand_SetValue{_intId, n, *_registries.get(_intId)});
+                n++;
+            }
         });
         // _shader_manager.imgui_windows();
     }

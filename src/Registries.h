@@ -8,7 +8,9 @@
 namespace Lab {
 
 using Registries = reg::Registries<Cool::Camera,
+                                   int,
                                    float,
+                                   glm::vec2,
                                    glm::vec3>;
 
 } // namespace Lab
