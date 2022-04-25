@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/Default/DefaultApp.h>
+#include <cmd/cereal.hpp>
 #include <cmd/cmd.hpp>
 #include <reg/Cereal.hpp>
 #include "Module.h"
@@ -46,6 +47,7 @@ private:
         archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
                 cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)),
                 cereal::make_nvp("Registries", _registries),
+                cereal::make_nvp("History", _history),
                 cereal::make_nvp("Module", _current_module));
     }
 #if !IS0_TEST_NODES
