@@ -72,7 +72,7 @@ void App::imgui_windows()
             imgui_show(_registries.of<int>());
         });
         Ui::window({.name = "History"}, [&]() {
-            cmd::imgui_show_history(_history, [](const ReversibleCommand& command) {
+            _history.imgui_show([](const ReversibleCommand& command) {
                 return std::visit([](const auto& cmd) { return command_to_string(cmd); }, command);
             });
         });
@@ -91,6 +91,12 @@ void App::imgui_windows()
 void App::imgui_menus()
 {
     DefaultApp::imgui_menus();
+    if (ImGui::BeginMenu("Settings")) {
+        if (_history.imgui_max_size("Maximum history size")) {
+            Cool::Log::info("Resized history");
+        }
+        ImGui::EndMenu();
+    }
 }
 
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
