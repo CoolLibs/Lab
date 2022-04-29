@@ -14,6 +14,7 @@ namespace Lab {
 class App : public CoolDefault::DefaultApp {
 public:
     explicit App(Cool::WindowManager& windows);
+    ~App();
 
     void update() override;
 

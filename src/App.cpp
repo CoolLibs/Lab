@@ -1,6 +1,8 @@
 #include "App.h"
 #include <Cool/Input/Input.h>
+#include <Cool/Log/ToUser.h>
 #include <cmd/imgui.hpp>
+#include <serv/serv.hpp>
 #include "TestModule/TestModule.h"
 
 namespace Lab {
@@ -10,12 +12,20 @@ App::App(Cool::WindowManager& windows)
     , _intId{_registries.create(0)}
     , _current_module{std::make_unique<TestModule>(_registries)}
 {
+    serv::init([](std::string_view request) {
+        Cool::Log::ToUser::info("Scripting", "{}", request);
+    });
     _clock.pause();
 #if IS0_TEST_NODES
     for (const auto& node_template : _shader_manager.nodes_templates()) {
         _shader_manager.add_node(NodeFactoryU::node_from_template(node_template));
     }
 #endif
+}
+
+App::~App()
+{
+    serv::shut_down();
 }
 
 void App::update()
