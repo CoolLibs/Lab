@@ -1,9 +1,9 @@
 #pragma once
 #include <cereal/types/polymorphic.hpp>
-#include <cmd/cmd.hpp>
 #include <glm/glm.hpp>
 #include "Commands.h"
 #include "Dependencies.h"
+#include "History.h"
 #include "Registries.h"
 
 namespace Lab {
@@ -114,7 +114,7 @@ private:
 
 class ReversibleCommandDispatcher {
 public:
-    ReversibleCommandDispatcher(ReversibleCommandExecutor executor, cmd::History<ReversibleCommand>& history)
+    ReversibleCommandDispatcher(ReversibleCommandExecutor executor, History& history)
         : _executor{executor}, _history{history}
     {
     }
@@ -126,8 +126,8 @@ public:
     }
 
 private:
-    ReversibleCommandExecutor                               _executor;
-    std::reference_wrapper<cmd::History<ReversibleCommand>> _history;
+    ReversibleCommandExecutor       _executor;
+    std::reference_wrapper<History> _history;
 };
 
 class Ui {

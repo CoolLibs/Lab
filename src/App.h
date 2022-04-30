@@ -1,10 +1,8 @@
 #pragma once
 
 #include <Cool/Default/DefaultApp.h>
-#include <cmd/cereal.hpp>
-#include <cmd/cmd.hpp>
-#include <cmd/imgui.hpp>
 #include <reg/cereal.hpp>
+#include "History.h"
 #include "Module.h"
 #include "Registries.h"
 #include "ShaderManager/ShaderManagerManager.h"
@@ -35,11 +33,11 @@ private:
     auto ui() { return Ui{_registries, commands_dispatcher()}; }
 
 private:
-    Registries                            _registries; // First because modules need the registries when they get created
-    reg::Id<int>                          _intId;
-    ShaderManagerManager                  _shader_manager;
-    std::unique_ptr<Module>               _current_module;
-    cmd::HistoryWithUi<ReversibleCommand> _history{5000};
+    Registries              _registries; // First because modules need the registries when they get created
+    reg::Id<int>            _intId;
+    ShaderManagerManager    _shader_manager;
+    std::unique_ptr<Module> _current_module;
+    History                 _history{};
 
 private:
     // Serialization

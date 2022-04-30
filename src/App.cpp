@@ -102,9 +102,11 @@ void App::imgui_menus()
 {
     DefaultApp::imgui_menus();
     if (ImGui::BeginMenu("Settings")) {
-        if (_history.imgui_max_size("Maximum history size")) {
-            Cool::Log::info("Resized history");
-        }
+        _history.imgui_max_size();
+        ImGui::Separator();
+        ImGui::Separator();
+        ImGui::Separator();
+        _history.imgui_max_saved_size();
         ImGui::EndMenu();
     }
 }
