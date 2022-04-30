@@ -1,4 +1,5 @@
 #pragma once
+#include <Cool/Camera/Camera.h>
 #include <reg/reg.hpp>
 
 namespace Lab {
@@ -13,6 +14,7 @@ struct ReversibleCommand_SetValue {
 using ReversibleCommand = std::variant<
     ReversibleCommand_SetValue<int>,
     ReversibleCommand_SetValue<float>,
+    ReversibleCommand_SetValue<Cool::Camera>,
     ReversibleCommand_SetValue<glm::vec2>,
     ReversibleCommand_SetValue<glm::vec3>>;
 

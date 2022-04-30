@@ -40,7 +40,7 @@ void App::update()
 #endif
 }
 
-void App::render(Cool::RenderTarget& render_target, float time)
+void App::render(Cool::RenderTarget& render_target, float)
 {
 #if IS0_TEST_NODES
     render_target.set_size({1, 1});
@@ -90,7 +90,7 @@ void App::imgui_windows()
             static int n = 1;
             ImGui::InputInt("Value", &n);
             if (ImGui::Button("Set")) {
-                commands_dispatcher().dispatch(ReversibleCommand_SetValue{_intId, n, *_registries.get(_intId)});
+                commands_dispatcher().dispatch(ReversibleCommand_SetValue<int>{_intId, n, *_registries.get(_intId)});
                 n++;
             }
         });

@@ -153,9 +153,9 @@ public:
         if (color) {
             auto color_value = *color;
             if (ImGui::ColorEdit3(name, glm::value_ptr(color_value))) {
-                _commands.dispatch(ReversibleCommand_SetValue{.id        = colorId,
-                                                              .value     = color_value,
-                                                              .old_value = *color});
+                _commands.dispatch(ReversibleCommand_SetValue<glm::vec3>{.id        = colorId,
+                                                                         .value     = color_value,
+                                                                         .old_value = *color});
             }
         }
     }
