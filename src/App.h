@@ -6,6 +6,7 @@
 #include "Module.h"
 #include "Registries.h"
 #include "ShaderManager/ShaderManagerManager.h"
+#include "UI/ThemeManager.h"
 
 namespace Lab {
 
@@ -40,6 +41,7 @@ private:
     ShaderManagerManager    _shader_manager;
     std::unique_ptr<Module> _current_module;
     History                 _history{};
+    ThemeManager            _theme_manager{};
 
 private:
     // Serialization

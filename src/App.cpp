@@ -108,6 +108,10 @@ void App::imgui_menus()
         ImGui::Separator();
         ImGui::Separator();
         _history.imgui_max_saved_size();
+        ImGui::Separator();
+        ImGui::Separator();
+        ImGui::Separator();
+        _theme_manager.imgui();
         ImGui::EndMenu();
     }
 }
