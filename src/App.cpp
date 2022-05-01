@@ -90,7 +90,8 @@ void App::imgui_windows()
             static int n = 1;
             ImGui::InputInt("Value", &n);
             if (ImGui::Button("Set")) {
-                commands_dispatcher().dispatch(ReversibleCommand_SetValue<int>{_intId, n, *_registries.get(_intId)});
+                commands_dispatcher().dispatch(Command_SetValue<int>{_intId, n});
+                commands_dispatcher().dispatch(Command_FinishedEditingValue{});
                 n++;
             }
         });
@@ -116,7 +117,7 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
     DefaultApp::on_keyboard_event(event);
     _shader_manager->on_key_pressed(event);
     if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
-        auto exec = commands_executor();
+        auto exec = reversible_commands_executor();
         if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
             _history.move_backward(exec);
         }

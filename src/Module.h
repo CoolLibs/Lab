@@ -76,40 +76,96 @@ private:
     std::reference_wrapper<Module> _module;
 };
 
-template<typename T>
-void execute_command(Registries& registries, SetDirty& set_dirty, ReversibleCommand_SetValue<T> cmd)
+// This is a class rather than a struct because we want to use methods to access the different members
+// this will make it easier to track who is using what
+// and since this class is a big thing that makes everything accessible to everyone, it is especially important to be able to track the use that is made of each member
+class CommandExecutionContext {
+public:
+    auto history() -> const History& { return _data.history; }
+    auto registries() -> Registries& { return _data.registries; }
+    template<typename T>
+    void set_dirty(const reg::Id<T>& id)
+    {
+        _data.set_dirty(id);
+    }
+
+    struct Data { // We wrap our members in a struct to get a constructor automatically
+        std::reference_wrapper<const History> history;
+        std::reference_wrapper<Registries>    registries;
+        SetDirty                              set_dirty;
+    };
+    explicit CommandExecutionContext(Data data)
+        : _data{data} {}
+
+private:
+    Data _data;
+};
+
+inline void execute_command(CommandExecutionContext ctx, Command_FinishedEditingValue cmd)
 {
-    registries.set(cmd.id, cmd.value);
-    set_dirty(cmd.id);
+    ctx.history().dont_merge_next_command();
 }
 
 template<typename T>
-void revert_command(Registries& registries, SetDirty& set_dirty, ReversibleCommand_SetValue<T> cmd)
+void set_value(CommandExecutionContext ctx, const reg::Id<T>& id, const T& value)
 {
-    registries.set(cmd.id, cmd.old_value);
-    set_dirty(cmd.id);
+    ctx.registries().set(id, value);
+    ctx.set_dirty(id);
 }
+
+template<typename T>
+void execute_command(CommandExecutionContext ctx, Command_SetValue<T> cmd)
+{
+    set_value(ctx, cmd.id, cmd.value);
+}
+
+template<typename T>
+void execute_command(CommandExecutionContext ctx, ReversibleCommand_SetValue<T> cmd)
+{
+    set_value(ctx, cmd.id, cmd.value);
+}
+
+template<typename T>
+void revert_command(CommandExecutionContext ctx, ReversibleCommand_SetValue<T> cmd)
+{
+    set_value(ctx, cmd.id, cmd.old_value);
+}
+
+class CommandExecutor {
+public:
+    explicit CommandExecutor(CommandExecutionContext context)
+        : _context{context}
+    {
+    }
+
+    void execute(const Command& command)
+    {
+        std::visit([&](auto&& cmd) { execute_command(_context, cmd); }, command);
+    }
+
+private:
+    CommandExecutionContext _context;
+};
 
 class ReversibleCommandExecutor {
 public:
-    ReversibleCommandExecutor(Registries& registries, SetDirty set_dirty)
-        : _registries{registries}, _set_dirty{set_dirty}
+    explicit ReversibleCommandExecutor(CommandExecutionContext context)
+        : _context{context}
     {
     }
 
     void execute(const ReversibleCommand& command)
     {
-        std::visit([&](auto cmd) { execute_command(_registries, _set_dirty, cmd); }, command);
+        std::visit([&](auto&& cmd) { execute_command(_context, cmd); }, command);
     }
 
     void revert(const ReversibleCommand& command)
     {
-        std::visit([&](auto cmd) { revert_command(_registries, _set_dirty, cmd); }, command);
+        std::visit([&](auto&& cmd) { revert_command(_context, cmd); }, command);
     }
 
 private:
-    std::reference_wrapper<Registries> _registries;
-    SetDirty                           _set_dirty;
+    CommandExecutionContext _context;
 };
 
 template<typename T>
@@ -144,27 +200,64 @@ public:
     }
 };
 
-class ReversibleCommandDispatcher {
+struct MakeReversibleCommandContext {
+    std::reference_wrapper<Registries> registries;
+};
+
+template<typename T>
+auto make_reversible_command_impl(MakeReversibleCommandContext ctx, const Command_SetValue<T>& cmd) -> std::optional<ReversibleCommand>
+{
+    const auto old_value = ctx.registries.get().get(cmd.id);
+    if (old_value) {
+        return ReversibleCommand_SetValue<T>{
+            .id        = cmd.id,
+            .value     = cmd.value,
+            .old_value = *old_value,
+        };
+    }
+    else {
+        Cool::Log::error("[make_reversible_command_impl] Trying to create a command for an id that isn't valid; I don't think this should happen.");
+        return std::nullopt;
+    }
+}
+
+// Fallback if we don't find a function to make a reversible command
+template<typename T>
+auto make_reversible_command_impl(MakeReversibleCommandContext, const T&) -> std::optional<ReversibleCommand>
+{
+    return std::nullopt;
+}
+
+inline auto make_reversible_command(MakeReversibleCommandContext ctx, const Command& command) -> std::optional<ReversibleCommand>
+{
+    return std::visit([ctx](auto&& cmd) { return make_reversible_command_impl(ctx, cmd); }, command);
+}
+
+class CommandDispatcher {
 public:
-    ReversibleCommandDispatcher(ReversibleCommandExecutor executor, History& history)
-        : _executor{executor}, _history{history}
+    CommandDispatcher(CommandExecutor executor, History& history, Registries& registries)
+        : _executor{executor}, _history{history}, _registries{registries}
     {
     }
 
-    void dispatch(const ReversibleCommand& command)
+    void dispatch(const Command& command)
     {
+        const auto reversible = make_reversible_command({_registries}, command); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
         _executor.execute(command);
-        _history.get().push(command, ReversibleCommandMerger{});
+        if (reversible) {
+            _history.get().push(*reversible, ReversibleCommandMerger{});
+        }
     }
 
 private:
-    ReversibleCommandExecutor       _executor;
-    std::reference_wrapper<History> _history;
+    CommandExecutor                    _executor;
+    std::reference_wrapper<History>    _history;
+    std::reference_wrapper<Registries> _registries;
 };
 
 class Ui {
 public:
-    Ui(const Registries& registries, Lab::ReversibleCommandDispatcher commands)
+    Ui(const Registries& registries, CommandDispatcher commands)
         : _registries{registries}, _commands{commands} {}
 
     struct WindowParams {
@@ -181,20 +274,21 @@ public:
 
     void widget(const char* name, reg::Id<glm::vec3> colorId)
     {
-        const auto color = _registries.get().get(colorId);
+        auto color = _registries.get().get(colorId);
         if (color) {
-            auto color_value = *color;
-            if (ImGui::ColorEdit3(name, glm::value_ptr(color_value))) {
-                _commands.dispatch(ReversibleCommand_SetValue<glm::vec3>{.id        = colorId,
-                                                                         .value     = color_value,
-                                                                         .old_value = *color});
+            if (ImGui::ColorEdit3(name, glm::value_ptr(*color))) {
+                _commands.dispatch(Command_SetValue<glm::vec3>{.id    = colorId,
+                                                               .value = *color});
+            }
+            if (ImGui::IsItemDeactivatedAfterEdit()) {
+                _commands.dispatch(Command_FinishedEditingValue{});
             }
         }
     }
 
 private:
     std::reference_wrapper<const Registries> _registries;
-    ReversibleCommandDispatcher              _commands;
+    CommandDispatcher                        _commands;
 };
 
 template<typename T>

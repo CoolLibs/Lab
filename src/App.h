@@ -28,8 +28,10 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
 
     auto set_dirty() { return SetDirty{*_current_module}; }
-    auto commands_executor() { return ReversibleCommandExecutor{_registries, set_dirty()}; }
-    auto commands_dispatcher() { return ReversibleCommandDispatcher{commands_executor(), _history}; }
+    auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_dirty()}}; }
+    auto commands_executor() { return CommandExecutor{commands_execution_context()}; }
+    auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
+    auto commands_dispatcher() { return CommandDispatcher{commands_executor(), _history, _registries}; }
     auto ui() { return Ui{_registries, commands_dispatcher()}; }
 
 private:
