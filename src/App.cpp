@@ -10,8 +10,11 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
     , _intId{_registries.create(0)}
-    , _current_module{std::make_unique<TestModule>(_registries)}
+    , _current_module{std::make_unique<TestModule>("Test Module", _registries)}
+    , _current_module2{std::make_unique<TestModule>("Test Module 2", _registries)}
+    , _view2{_views.make_view("View2")}
 {
+    _camera.hook_events(_view2.view.mouse_events());
     serv::init([](std::string_view request) {
         Cool::Log::ToUser::info("Scripting", "{}", request);
     });
@@ -33,7 +36,21 @@ void App::update()
     DefaultApp::update();
     if (inputs_are_allowed()) {
         _current_module->update();
+        _current_module2->update();
         _shader_manager->update();
+
+        if (_current_module2->needs_rendering()) {
+            auto& render_target = _view2.render_target;
+            render_target.render([&]() {
+                const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.current_size());
+                _camera.apply(aspect_ratio);
+                glClearColor(0.f, 0.f, 0.f, 0.f);
+                glClear(GL_COLOR_BUFFER_BIT);
+                // _shader_manager->setup_for_rendering(*_camera, time);
+                // _shader_manager->render();
+                _current_module2->do_rendering(_registries);
+            });
+        }
     }
 #if IS0_TEST_NODES
     glfwSetWindowShouldClose(_main_window.glfw(), true);
@@ -72,6 +89,7 @@ void App::imgui_windows()
     DefaultApp::imgui_windows();
     if (inputs_are_allowed()) {
         _current_module->imgui_windows(ui());
+        _current_module2->imgui_windows(ui());
         Ui::window({.name = "Registry of vec3"}, [&]() {
             imgui_show(_registries.of<glm::vec3>());
         });

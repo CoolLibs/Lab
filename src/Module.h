@@ -60,8 +60,9 @@ private:
 
 class SetDirty {
 public:
-    SetDirty(Module& module)
+    SetDirty(Module& module, Module& module2)
         : _module{module}
+        , _module2{module2}
     {
     }
     template<typename T>
@@ -70,10 +71,14 @@ public:
         if (_module.get().depends_on(id)) {
             _module.get().set_dirty();
         }
+        if (_module2.get().depends_on(id)) {
+            _module2.get().set_dirty();
+        }
     }
 
 private:
     std::reference_wrapper<Module> _module;
+    std::reference_wrapper<Module> _module2;
 };
 
 // This is a class rather than a struct because we want to use methods to access the different members
@@ -261,19 +266,20 @@ public:
         : _registries{registries}, _commands{commands} {}
 
     struct WindowParams {
-        std::string name;
+        std::string_view name;
     };
 
     template<typename UiFunction>
     static void window(const WindowParams& params, UiFunction&& ui_function)
     {
-        ImGui::Begin(params.name.c_str());
+        ImGui::Begin(params.name.data());
         ui_function();
         ImGui::End();
     }
 
     void widget(const char* name, reg::Id<glm::vec3> colorId)
     {
+        ImGui::PushID(this);
         auto color = _registries.get().get(colorId);
         if (color) {
             if (ImGui::ColorEdit3(name, glm::value_ptr(*color))) {
@@ -284,6 +290,7 @@ public:
                 _commands.dispatch(Command_FinishedEditingValue{});
             }
         }
+        ImGui::PopID();
     }
 
 private:

@@ -28,7 +28,7 @@ public:
 private:
     void render(Cool::RenderTarget& render_target, float time);
 
-    auto set_dirty() { return SetDirty{*_current_module}; }
+    auto set_dirty() { return SetDirty{*_current_module, *_current_module2}; }
     auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_dirty()}}; }
     auto commands_executor() { return CommandExecutor{commands_execution_context()}; }
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
@@ -40,8 +40,10 @@ private:
     reg::Id<int>            _intId;
     ShaderManagerManager    _shader_manager;
     std::unique_ptr<Module> _current_module;
+    std::unique_ptr<Module> _current_module2;
     History                 _history{};
     ThemeManager            _theme_manager{};
+    Cool::RenderableView&   _view2;
 
 private:
     // Serialization
@@ -54,7 +56,8 @@ private:
                 cereal::make_nvp("Registries", _registries),
                 cereal::make_nvp("Int ID", _intId),
                 cereal::make_nvp("History", _history),
-                cereal::make_nvp("Module", _current_module));
+                cereal::make_nvp("Module", _current_module),
+                cereal::make_nvp("Module2", _current_module2));
     }
 #if !IS0_TEST_NODES
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
