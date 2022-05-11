@@ -4,27 +4,23 @@
 namespace Lab {
 
 TestModule::TestModule(std::string_view name, Registries& registries)
-    : _colorId{registries.create(glm::vec3{1.f, 0.5f, 0.1f})}
-    , _name{name}
+    : _name{name}
 {
 }
 
 void TestModule::imgui_windows(Ui ui)
 {
     Ui::window({.name = _name}, [&]() {
-        ui.widget("Color", _colorId);
+        ui.widget("Color", _color);
     });
 }
 
-void TestModule::render(const Registries& registries)
+void TestModule::render(InputProvider provider)
 {
     Cool::Log::ToUser::info(_name, "Re-rendering");
     if (_fullscreen_pipeline.shader()) {
         _fullscreen_pipeline.shader()->bind();
-        const auto color = registries.get(_colorId);
-        if (color) {
-            _fullscreen_pipeline.shader()->set_uniform("_color", *color);
-        }
+        _fullscreen_pipeline.shader()->set_uniform("_color", provider(_color));
         _fullscreen_pipeline.draw();
     }
 }

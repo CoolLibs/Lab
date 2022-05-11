@@ -48,7 +48,7 @@ void App::update()
                 glClear(GL_COLOR_BUFFER_BIT);
                 // _shader_manager->setup_for_rendering(*_camera, time);
                 // _shader_manager->render();
-                _current_module2->do_rendering(_registries);
+                _current_module2->do_rendering(input_provider());
             });
         }
     }
@@ -72,7 +72,7 @@ void App::render(Cool::RenderTarget& render_target, float)
             glClear(GL_COLOR_BUFFER_BIT);
             // _shader_manager->setup_for_rendering(*_camera, time);
             // _shader_manager->render();
-            _current_module->do_rendering(_registries);
+            _current_module->do_rendering(input_provider());
         });
     }
 #endif

@@ -4,6 +4,7 @@
 #include "Commands.h"
 #include "Dependencies.h"
 #include "History.h"
+#include "InputSlot.h"
 #include "Registries.h"
 
 namespace Lab {
@@ -16,12 +17,29 @@ namespace Lab {
 
 class Ui;
 
+class InputProvider {
+public:
+    explicit InputProvider(const Registries& registries)
+        : _registries{registries}
+    {
+    }
+
+    glm::vec3 operator()(const InputSlot<glm::vec3>& slot)
+    {
+        const auto maybe_color = _registries.get().get(slot.id);
+        return maybe_color.value_or(glm::vec3{});
+    }
+
+private:
+    std::reference_wrapper<const Registries> _registries;
+};
+
 class Module {
 public:
     virtual ~Module() = default;
-    void do_rendering(const Registries& registries)
+    void do_rendering(InputProvider provider)
     {
-        render(registries);
+        render(provider);
         _is_dirty = false;
     }
     virtual void imgui_windows(Ui ui) = 0;
@@ -29,10 +47,7 @@ public:
 
     auto needs_rendering() const -> bool { return _is_dirty || force_rendering(); };
 
-    auto depends_on(reg::AnyId) const -> bool
-    {
-        return true;
-    }
+    virtual auto depends_on(reg::AnyId) const -> bool = 0;
 
     void set_dirty()
     {
@@ -40,7 +55,7 @@ public:
     }
 
 protected:
-    virtual void render(const Registries& registries) = 0;
+    virtual void render(InputProvider provider) = 0;
     virtual auto force_rendering() const -> bool { return false; }
     // template<typename T>
     // T get();
@@ -262,7 +277,7 @@ private:
 
 class Ui {
 public:
-    Ui(const Registries& registries, CommandDispatcher commands)
+    Ui(Registries& registries, CommandDispatcher commands)
         : _registries{registries}, _commands{commands} {}
 
     struct WindowParams {
@@ -277,25 +292,42 @@ public:
         ImGui::End();
     }
 
-    void widget(const char* name, reg::Id<glm::vec3> colorId)
+    void widget(const char* name, reg::Id<glm::vec3> color_id, glm::vec3 current_value)
+    {
+        if (ImGui::ColorEdit3(name, glm::value_ptr(current_value))) {
+            _commands.dispatch(Command_SetValue<glm::vec3>{.id    = color_id,
+                                                           .value = current_value});
+        }
+        if (ImGui::IsItemDeactivatedAfterEdit()) {
+            _commands.dispatch(Command_FinishedEditingValue{});
+        }
+    }
+
+    void widget(const char* name, reg::Id<glm::vec3> color_id)
     {
         ImGui::PushID(this);
-        auto color = _registries.get().get(colorId);
+        auto color = _registries.get().get(color_id);
         if (color) {
-            if (ImGui::ColorEdit3(name, glm::value_ptr(*color))) {
-                _commands.dispatch(Command_SetValue<glm::vec3>{.id    = colorId,
-                                                               .value = *color});
-            }
-            if (ImGui::IsItemDeactivatedAfterEdit()) {
-                _commands.dispatch(Command_FinishedEditingValue{});
-            }
+            widget(name, color_id, *color);
         }
         ImGui::PopID();
     }
 
+    void widget(const char* name, InputSlot<glm::vec3>& color_slot)
+    {
+        ImGui::PushID(this);
+        auto color = _registries.get().get(color_slot.id);
+        if (!color) {
+            color         = glm::vec3{};
+            color_slot.id = _registries.get().create(*color);
+        }
+        widget(name, color_slot.id, *color);
+        ImGui::PopID();
+    }
+
 private:
-    std::reference_wrapper<const Registries> _registries;
-    CommandDispatcher                        _commands;
+    std::reference_wrapper<Registries> _registries;
+    CommandDispatcher                  _commands;
 };
 
 template<typename T>
