@@ -27,6 +27,7 @@ public:
 
 private:
     void render(Cool::RenderTarget& render_target, float time);
+    void render_impl(Cool::RenderTarget&, Module&);
 
     auto set_dirty() { return SetDirty{*_current_module, *_current_module2}; }
     auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_dirty()}}; }
