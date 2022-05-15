@@ -28,6 +28,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE reg::reg)
 add_subdirectory(lib/cmd)
 target_link_libraries(${PROJECT_NAME} PRIVATE cmd::cmd)
 
+# Include range-v3
+target_include_directories(${PROJECT_NAME} PRIVATE lib/range-v3/include)
+
 # Include ImNodes
 add_library(ImNodes lib/imnodes/imnodes.cpp)
 target_include_directories(ImNodes PRIVATE Cool/lib/imgui)
