@@ -3,7 +3,7 @@
 
 namespace Lab {
 
-TestModule::TestModule(std::string_view name, Registries& registries)
+TestModule::TestModule(std::string_view name)
     : _name{name}
 {
 }

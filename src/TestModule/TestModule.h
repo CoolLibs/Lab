@@ -11,7 +11,7 @@ namespace Lab {
 class TestModule : public Module {
 public:
     TestModule() = default;
-    TestModule(std::string_view name, Registries& registries);
+    explicit TestModule(std::string_view name);
 
     void render(InputProvider provider) override;
     void imgui_windows(Ui ui) override;
