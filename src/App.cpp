@@ -34,7 +34,7 @@ App::~App()
 void App::render_impl(Cool::RenderTarget& render_target, Module& some_module)
 {
     render_target.render([&]() {
-        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.current_size());
+        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         // _camera.apply(aspect_ratio);
@@ -47,6 +47,12 @@ void App::render_impl(Cool::RenderTarget& render_target, Module& some_module)
 void App::update()
 {
     DefaultApp::update();
+    if (_view.render_target.needs_resizing()) {
+        _current_module->set_dirty();
+    }
+    if (_view2.render_target.needs_resizing()) {
+        _current_module2->set_dirty();
+    }
     if (inputs_are_allowed()) {
         _current_module->update();
         _current_module2->update();
@@ -113,9 +119,22 @@ void App::imgui_windows()
     }
 }
 
-void App::imgui_menus()
+void App::menu_preview()
 {
-    DefaultApp::imgui_menus();
+    if (ImGui::BeginMenu("Preview")) {
+        if (_preview_constraint.imgui()) {
+            render_impl(_view.render_target, *_current_module);
+            render_impl(_view2.render_target, *_current_module2);
+        }
+        ImGui::EndMenu();
+    }
+}
+
+void App::menu_windows() { DefaultApp::menu_windows(); }
+void App::menu_export() { DefaultApp::menu_export(); }
+
+void App::menu_settings()
+{
     if (ImGui::BeginMenu("Settings")) {
         _history.imgui_max_size();
         ImGui::Separator();
@@ -128,6 +147,14 @@ void App::imgui_menus()
         _theme_manager.imgui();
         ImGui::EndMenu();
     }
+}
+
+void App::imgui_menus()
+{
+    menu_preview();
+    menu_windows();
+    menu_export();
+    menu_settings();
 }
 
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)

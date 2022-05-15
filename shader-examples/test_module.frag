@@ -11,6 +11,6 @@ uniform float _aspect_ratio;
 void main()
 {
     vec2  uv       = (_uv - 0.5) * vec2(_aspect_ratio, 1.);
-    float presence = smoothstep(-0.001, 0.001, length(uv) - _circle_radius);
+    float presence = smoothstep(-0.001, 0.001, abs(length(uv) - _circle_radius) - 0.02);
     out_Color      = presence * vec4(mix(_color, _color2, uv.y), 1.f);
 }

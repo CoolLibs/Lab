@@ -37,6 +37,11 @@ private:
     auto ui() { return Ui{_registries, commands_dispatcher()}; }
     auto input_provider(float render_target_aspect_ratio) { return InputProvider(_registries, render_target_aspect_ratio); }
 
+    void menu_preview();
+    void menu_windows();
+    void menu_export();
+    void menu_settings();
+
 private:
     Registries              _registries; // First because modules need the registries when they get created
     reg::Id<int>            _intId;
