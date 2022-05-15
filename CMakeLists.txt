@@ -56,3 +56,7 @@ if (TEST_IS0_NODES)
         IS0_TEST_NODES
     )
 endif()
+
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /bigobj) # We use too many templates apparently so we need this flag O:)
+endif()
