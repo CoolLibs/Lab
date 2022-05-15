@@ -11,7 +11,9 @@ TestModule::TestModule(std::string_view name)
 void TestModule::imgui_windows(Ui ui)
 {
     Ui::window({.name = _name}, [&]() {
-        ui.widget("Color", _color);
+        for (auto& dep : dependencies()) {
+            ui.widget(dep.get().name(), dep.get());
+        }
     });
 }
 
