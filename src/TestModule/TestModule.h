@@ -22,16 +22,16 @@ public:
     auto dependencies()
     {
         return ranges::views::concat(
-            ranges::single_view(AnyInputSlotRef(_color)),
             ranges::single_view(AnyInputSlotRef(_testFloat)),
+            ranges::single_view(AnyInputSlotRef(_color)),
             ranges::single_view(AnyInputSlotRef(_color2)));
     }
 
     auto dependencies() const
     {
         return ranges::views::concat(
-            ranges::single_view(AnyInputSlotRefToConst(_color)),
             ranges::single_view(AnyInputSlotRefToConst(_testFloat)),
+            ranges::single_view(AnyInputSlotRefToConst(_color)),
             ranges::single_view(AnyInputSlotRefToConst(_color2)));
     }
 
@@ -44,11 +44,11 @@ public:
 
 private:
     Cool::FullscreenPipeline _fullscreen_pipeline{
-        Cool::File::to_string(Cool::Path::root() + "/shader-examples/monochrome.frag"),
+        Cool::File::to_string(Cool::Path::root() + "/shader-examples/test_module.frag"),
         "Test Module's Shader"};
     InputSlot<glm::vec3> _color{"Color"};
     InputSlot<glm::vec3> _color2{"Color2"};
-    InputSlot<float>     _testFloat{"Test"};
+    InputSlot<float>     _testFloat{"Radius"};
     std::string          _name;
 
 private:

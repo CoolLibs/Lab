@@ -17,21 +17,32 @@ namespace Lab {
 
 class Ui;
 
+struct InputSlot_AspectRatio {
+};
+
 class InputProvider {
 public:
-    explicit InputProvider(const Registries& registries)
+    InputProvider(const Registries& registries, float render_target_aspect_ratio)
         : _registries{registries}
+        , _render_target_aspect_ratio{render_target_aspect_ratio}
     {
     }
 
-    glm::vec3 operator()(const InputSlot<glm::vec3>& slot)
+    template<typename T>
+    T operator()(const InputSlot<T>& slot)
     {
-        const auto maybe_color = _registries.get().get(slot.id);
-        return maybe_color.value_or(glm::vec3{});
+        const auto maybe_value = _registries.get().get(slot.id);
+        return maybe_value.value_or(T{});
+    }
+
+    float operator()(const InputSlot_AspectRatio&)
+    {
+        return _render_target_aspect_ratio;
     }
 
 private:
     std::reference_wrapper<const Registries> _registries;
+    float                                    _render_target_aspect_ratio;
 };
 
 class Module {

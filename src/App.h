@@ -34,7 +34,7 @@ private:
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
     auto commands_dispatcher() { return CommandDispatcher{commands_executor(), _history, _registries}; }
     auto ui() { return Ui{_registries, commands_dispatcher()}; }
-    auto input_provider() { return InputProvider(_registries); }
+    auto input_provider(float render_target_aspect_ratio) { return InputProvider(_registries, render_target_aspect_ratio); }
 
 private:
     Registries              _registries; // First because modules need the registries when they get created
