@@ -313,6 +313,17 @@ public:
         ImGui::PopID();
     }
 
+    void widget(std::string_view name, reg::Id<float> float_id, float current_value)
+    {
+        if (ImGui::SliderFloat(name.data(), &current_value, 0.f, 1.f)) {
+            _commands.dispatch(Command_SetValue<float>{.id    = float_id,
+                                                       .value = current_value});
+        }
+        if (ImGui::IsItemDeactivatedAfterEdit()) {
+            _commands.dispatch(Command_FinishedEditingValue{});
+        }
+    }
+
     void widget(std::string_view name, InputSlot<glm::vec3>& color_slot)
     {
         ImGui::PushID(this);
@@ -322,6 +333,18 @@ public:
             color_slot.id = _registries.get().create(*color);
         }
         widget(name, color_slot.id, *color);
+        ImGui::PopID();
+    }
+
+    void widget(std::string_view name, InputSlot<float>& float_slot)
+    {
+        ImGui::PushID(this);
+        auto value = _registries.get().get(float_slot.id);
+        if (!value) {
+            value         = float{};
+            float_slot.id = _registries.get().create(*value);
+        }
+        widget(name, float_slot.id, *value);
         ImGui::PopID();
     }
 

@@ -34,4 +34,11 @@ private:
     }
 };
 
+using AnyInputSlotRef = std::variant<
+    std::reference_wrapper<InputSlot<float>>,
+    std::reference_wrapper<InputSlot<glm::vec3>>>;
+using AnyInputSlotRefToConst = std::variant<
+    std::reference_wrapper<const InputSlot<float>>,
+    std::reference_wrapper<const InputSlot<glm::vec3>>>;
+
 } // namespace Lab

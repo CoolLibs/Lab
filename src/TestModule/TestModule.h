@@ -22,21 +22,23 @@ public:
     auto dependencies()
     {
         return ranges::views::concat(
-            ranges::single_view(std::reference_wrapper(_color)),
-            ranges::single_view(std::reference_wrapper(_color2)));
+            ranges::single_view(AnyInputSlotRef(_color)),
+            ranges::single_view(AnyInputSlotRef(_testFloat)),
+            ranges::single_view(AnyInputSlotRef(_color2)));
     }
 
     auto dependencies() const
     {
         return ranges::views::concat(
-            ranges::single_view(std::reference_wrapper(_color)),
-            ranges::single_view(std::reference_wrapper(_color2)));
+            ranges::single_view(AnyInputSlotRefToConst(_color)),
+            ranges::single_view(AnyInputSlotRefToConst(_testFloat)),
+            ranges::single_view(AnyInputSlotRefToConst(_color2)));
     }
 
     auto depends_on(reg::AnyId id) const -> bool override
     {
         return std::ranges::any_of(dependencies(), [&id](auto&& dep) {
-            return dep.get().id == id;
+            return std::visit([&id](auto&& dep) { return dep.get().id == id; }, dep);
         });
     }
 
@@ -46,6 +48,7 @@ private:
         "Test Module's Shader"};
     InputSlot<glm::vec3> _color{"Color"};
     InputSlot<glm::vec3> _color2{"Color2"};
+    InputSlot<float>     _testFloat{"Test"};
     std::string          _name;
 
 private:
@@ -56,6 +59,7 @@ private:
         archive(cereal::base_class<Module>(this),
                 _color,
                 _color2,
+                _testFloat,
                 _name);
     }
 };

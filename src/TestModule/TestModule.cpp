@@ -12,7 +12,10 @@ void TestModule::imgui_windows(Ui ui)
 {
     Ui::window({.name = _name}, [&]() {
         for (auto& dep : dependencies()) {
-            ui.widget(dep.get().name(), dep.get());
+            std::visit([&ui](auto&& dep) {
+                ui.widget(dep.get().name(), dep.get());
+            },
+                       dep);
         }
     });
 }
