@@ -1,6 +1,7 @@
 #pragma once
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
+#include <stringify/stringify.hpp>
 #include "Commands.h"
 #include "Dependencies.h"
 #include "History.h"
@@ -374,23 +375,9 @@ private:
 };
 
 template<typename T>
-auto value_to_string(const T& value) -> std::string
-{
-    if constexpr (requires { to_string(value); }) {
-        return to_string(value);
-    }
-    else if constexpr (requires { std::to_string(value); }) {
-        return std::to_string(value);
-    }
-    else {
-        return std::string{"[value_to_string] ERROR: Couldn't find a stringification function for this type: "} + typeid(T).name();
-    }
-}
-
-template<typename T>
 void imgui_show(const T& value)
 {
-    ImGui::Text("%s", value_to_string(value).c_str());
+    ImGui::Text("%s", Cool::stringify(value).c_str());
 }
 
 template<typename T>

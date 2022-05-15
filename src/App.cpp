@@ -3,6 +3,7 @@
 #include <Cool/Log/ToUser.h>
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
+#include <stringify/stringify.hpp>
 #include "TestModule/TestModule.h"
 
 namespace Lab {
@@ -88,7 +89,7 @@ void App::render(Cool::RenderTarget& render_target, float time)
 template<typename T>
 static auto command_to_string(const ReversibleCommand_SetValue<T> command) -> std::string
 {
-    return "Set " + reg::to_string(command.id) + " to " + value_to_string(command.value);
+    return "Set " + reg::to_string(command.id) + " to " + Cool::stringify(command.value);
 }
 
 void App::imgui_windows()
