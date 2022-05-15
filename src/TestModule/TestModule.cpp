@@ -29,6 +29,7 @@ void TestModule::render(InputProvider provider)
         _fullscreen_pipeline.shader()->set_uniform("_color2", provider(_color2));
         _fullscreen_pipeline.shader()->set_uniform("_circle_radius", provider(_testFloat));
         _fullscreen_pipeline.shader()->set_uniform("_aspect_ratio", provider(InputSlot_AspectRatio{}));
+        _fullscreen_pipeline.shader()->set_uniform("_time", provider(InputSlot_Time{}));
         _fullscreen_pipeline.draw();
     }
 }

@@ -19,12 +19,15 @@ class Ui;
 
 struct InputSlot_AspectRatio {
 };
+struct InputSlot_Time {
+};
 
 class InputProvider {
 public:
-    InputProvider(const Registries& registries, float render_target_aspect_ratio)
+    InputProvider(const Registries& registries, float render_target_aspect_ratio, float time)
         : _registries{registries}
         , _render_target_aspect_ratio{render_target_aspect_ratio}
+        , _time{time}
     {
     }
 
@@ -40,9 +43,15 @@ public:
         return _render_target_aspect_ratio;
     }
 
+    float operator()(const InputSlot_Time&)
+    {
+        return _time;
+    }
+
 private:
     std::reference_wrapper<const Registries> _registries;
     float                                    _render_target_aspect_ratio;
+    float                                    _time;
 };
 
 class Module {

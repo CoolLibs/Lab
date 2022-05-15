@@ -31,7 +31,7 @@ App::~App()
     serv::shut_down();
 }
 
-void App::render_impl(Cool::RenderTarget& render_target, Module& some_module)
+void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, float time)
 {
     render_target.render([&]() {
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
@@ -40,13 +40,18 @@ void App::render_impl(Cool::RenderTarget& render_target, Module& some_module)
         // _camera.apply(aspect_ratio);
         // _shader_manager->setup_for_rendering(*_camera, time);
         // _shader_manager->render();
-        some_module.do_rendering(input_provider(aspect_ratio));
+        some_module.do_rendering(input_provider(aspect_ratio, time));
     });
 }
 
 void App::update()
 {
     DefaultApp::update();
+    if (_last_time != _clock.time()) {
+        _last_time = _clock.time();
+        _current_module->set_dirty();
+        _current_module2->set_dirty();
+    }
     if (_view.render_target.needs_resizing()) {
         _current_module->set_dirty();
     }
@@ -59,7 +64,7 @@ void App::update()
         _shader_manager->update();
 
         if (_current_module2->needs_rendering()) {
-            render_impl(_view2.render_target, *_current_module2);
+            render_impl(_view2.render_target, *_current_module2, _clock.time());
         }
     }
 #if IS0_TEST_NODES
@@ -67,7 +72,7 @@ void App::update()
 #endif
 }
 
-void App::render(Cool::RenderTarget& render_target, float)
+void App::render(Cool::RenderTarget& render_target, float time)
 {
 #if IS0_TEST_NODES
     render_target.set_size({1, 1});
@@ -75,7 +80,7 @@ void App::render(Cool::RenderTarget& render_target, float)
 #if defined(COOL_VULKAN)
 #elif defined(COOL_OPENGL)
     if (_current_module->needs_rendering()) {
-        render_impl(render_target, *_current_module);
+        render_impl(render_target, *_current_module, time);
     }
 #endif
 }
@@ -123,8 +128,8 @@ void App::menu_preview()
 {
     if (ImGui::BeginMenu("Preview")) {
         if (_preview_constraint.imgui()) {
-            render_impl(_view.render_target, *_current_module);
-            render_impl(_view2.render_target, *_current_module2);
+            render_impl(_view.render_target, *_current_module, _clock.time());
+            render_impl(_view2.render_target, *_current_module2, _clock.time());
         }
         ImGui::EndMenu();
     }

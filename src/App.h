@@ -27,7 +27,7 @@ public:
 
 private:
     void render(Cool::RenderTarget& render_target, float time);
-    void render_impl(Cool::RenderTarget&, Module&);
+    void render_impl(Cool::RenderTarget&, Module&, float time);
 
     auto set_dirty() { return SetDirty{*_current_module, *_current_module2}; }
     auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_dirty()}}; }
@@ -35,7 +35,7 @@ private:
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
     auto commands_dispatcher() { return CommandDispatcher{commands_executor(), _history, _registries}; }
     auto ui() { return Ui{_registries, commands_dispatcher()}; }
-    auto input_provider(float render_target_aspect_ratio) { return InputProvider(_registries, render_target_aspect_ratio); }
+    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider(_registries, render_target_aspect_ratio, time); }
 
     void menu_preview();
     void menu_windows();
@@ -51,6 +51,7 @@ private:
     History                 _history{};
     ThemeManager            _theme_manager{};
     Cool::RenderableView&   _view2;
+    float                   _last_time{0.f};
 
 private:
     // Serialization
