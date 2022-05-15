@@ -121,7 +121,7 @@ private:
     Data _data;
 };
 
-inline void execute_command(CommandExecutionContext ctx, Command_FinishedEditingValue cmd)
+inline void execute_command(CommandExecutionContext ctx, Command_FinishedEditingValue)
 {
     ctx.history().dont_merge_next_command();
 }
