@@ -292,9 +292,9 @@ public:
         ImGui::End();
     }
 
-    void widget(const char* name, reg::Id<glm::vec3> color_id, glm::vec3 current_value)
+    void widget(std::string_view name, reg::Id<glm::vec3> color_id, glm::vec3 current_value)
     {
-        if (ImGui::ColorEdit3(name, glm::value_ptr(current_value))) {
+        if (ImGui::ColorEdit3(name.data(), glm::value_ptr(current_value))) {
             _commands.dispatch(Command_SetValue<glm::vec3>{.id    = color_id,
                                                            .value = current_value});
         }
@@ -303,17 +303,17 @@ public:
         }
     }
 
-    void widget(const char* name, reg::Id<glm::vec3> color_id)
+    void widget(std::string_view name, reg::Id<glm::vec3> color_id)
     {
         ImGui::PushID(this);
         auto color = _registries.get().get(color_id);
         if (color) {
-            widget(name, color_id, *color);
+            widget(name.data(), color_id, *color);
         }
         ImGui::PopID();
     }
 
-    void widget(const char* name, InputSlot<glm::vec3>& color_slot)
+    void widget(std::string_view name, InputSlot<glm::vec3>& color_slot)
     {
         ImGui::PushID(this);
         auto color = _registries.get().get(color_slot.id);
