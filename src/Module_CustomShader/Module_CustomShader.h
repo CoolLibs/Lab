@@ -13,6 +13,7 @@ namespace Lab {
 
 class Module_CustomShader : public Module {
 public:
+    Module_CustomShader() = default;
     explicit Module_CustomShader(Registries&);
 
     void render(InputProvider provider) override;
@@ -50,23 +51,14 @@ private:
 
 private:
     // Serialization
-    // friend class cereal::access;
-    // template<class Archive>
-    // void save(Archive& archive) const
-    // {
-    //     archive(
-    //         cereal::make_nvp("Shader Path", _file_watcher.path().string()),
-    //         cereal::make_nvp("Parameters", _parameters));
-    // }
-    // template<class Archive>
-    // void load(Archive& archive)
-    // {
-    //     std::string path;
-    //     archive(
-    //         path,
-    //         _parameters);
-    //     set_shader_path(path);
-    // }
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(cereal::base_class<Module>(this),
+                _shader_is_dirty,
+                _file);
+    }
 };
 
 } // namespace Lab

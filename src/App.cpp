@@ -4,6 +4,7 @@
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
+#include "Module_CustomShader/Module_CustomShader.h"
 #include "TestModule/TestModule.h"
 
 namespace Lab {
@@ -11,7 +12,7 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
     , _intId{_registries.create(0)}
-    , _current_module{std::make_unique<TestModule>("Test Module")}
+    , _current_module{std::make_unique<Module_CustomShader>(_registries)}
     , _current_module2{std::make_unique<TestModule>("Test Module 2")}
     , _view2{_views.make_view("View2")}
 {

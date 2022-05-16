@@ -34,7 +34,7 @@ private:
 
 class InputSlot_File {
 public:
-    InputSlot_File(reg::Id<DirtyFlag> dirty_flag)
+    InputSlot_File(reg::Id<DirtyFlag> dirty_flag = {})
         : file_watcher{"",
                        {.on_file_changed = [dirty_flag](std::string_view path) { /*registries.set(dirty_flag, true);*/ },
                         .on_path_invalid = [](std::string_view path) { Cool::Log::ToUser::error("Input File", "Invalid path: \"{}\"", path); }}}
@@ -46,6 +46,19 @@ private:
     Cool::FileWatcher file_watcher;
 
 private:
+    friend class cereal::access;
+    template<class Archive>
+    void save(Archive& archive) const
+    {
+        archive(cereal::make_nvp("File Path", file_watcher.path().string()));
+    }
+    template<class Archive>
+    void load(Archive& archive)
+    {
+        std::string path;
+        archive(path);
+        file_watcher.set_path(path);
+    }
 };
 
 using AnyInputSlotRef = std::variant<
