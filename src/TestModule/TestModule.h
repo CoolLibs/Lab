@@ -5,9 +5,9 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/single.hpp>
-#include "../InputSlot.h"
-#include "../Module.h"
-#include "../Registries.h"
+#include "Dependencies/InputSlot.h"
+#include "Dependencies/Registries.h"
+#include "Module.h"
 
 namespace Lab {
 

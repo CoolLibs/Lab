@@ -2,9 +2,9 @@
 
 #include <Cool/Default/DefaultApp.h>
 #include <reg/cereal.hpp>
-#include "History.h"
+#include "Dependencies/History.h"
+#include "Dependencies/Registries.h"
 #include "Module.h"
-#include "Registries.h"
 #include "ShaderManager/ShaderManagerManager.h"
 #include "UI/ThemeManager.h"
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <Cool/Camera/Camera.h>
 #include <reg/reg.hpp>
+#include "AllParameterTypes.h"
 
 namespace Lab {
 
@@ -23,21 +24,16 @@ struct Command_SetValue {
 struct Command_FinishedEditingValue {
 };
 
-using Command = std::variant<
-    Command_FinishedEditingValue,
+using Command =
+    AllParameterTypes::
+        wrap<Command_SetValue>::
+            append<Command_FinishedEditingValue>::
+                to<std::variant>;
 
-    Command_SetValue<int>,
-    Command_SetValue<float>,
-    Command_SetValue<Cool::Camera>,
-    Command_SetValue<glm::vec2>,
-    Command_SetValue<glm::vec3>>;
-
-using ReversibleCommand = std::variant<
-    ReversibleCommand_SetValue<int>,
-    ReversibleCommand_SetValue<float>,
-    ReversibleCommand_SetValue<Cool::Camera>,
-    ReversibleCommand_SetValue<glm::vec2>,
-    ReversibleCommand_SetValue<glm::vec3>>;
+using ReversibleCommand =
+    AllParameterTypes::
+        wrap<ReversibleCommand_SetValue>::
+            to<std::variant>;
 
 } // namespace Lab
 
