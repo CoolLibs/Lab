@@ -1,6 +1,6 @@
 name: Feature Suggestion
-description: Ask for new or improved feature
-title: "[Feature]: "
+description: Tell us how we could we improve CoolLab
+title: "[Feature] "
 labels: ["feature", "triage"]
 body:
   - type: markdown
@@ -19,7 +19,7 @@ body:
     id: what-is-your-suggestion
     attributes:
       label: What is your suggestion?
-      description: How can we improve CoolLab?
+      description: Tell us how we could we improve CoolLab
       placeholder: It would be nice if ...
       value: "It would be nice if ..."
     validations:
