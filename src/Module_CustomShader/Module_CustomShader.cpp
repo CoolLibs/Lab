@@ -3,8 +3,8 @@
 
 namespace Lab {
 
-Module_CustomShader::Module_CustomShader(Registries& registries)
-    : _shader_is_dirty{registries.create(DirtyFlag{true})}
+Module_CustomShader::Module_CustomShader(DirtyFlagFactory dirty_flag_factory)
+    : _shader_is_dirty{dirty_flag_factory.create()}
     , _file{_shader_is_dirty}
 {
 }
@@ -24,24 +24,37 @@ void Module_CustomShader::imgui_windows(Ui ui)
     });
 }
 
-void Module_CustomShader::render(InputProvider provider)
+void Module_CustomShader::render(InputProvider provider, DirtyManager dirty_manager)
 {
-    Cool::Log::ToUser::info("Custom Shader", "Re-rendering");
+    refresh_pipeline_if_necessary(provider, dirty_manager);
+    Cool::Log::ToUser::info("Custom Shader Render", "Re-rendering");
     if (_fullscreen_pipeline.shader()) {
         _fullscreen_pipeline.shader()->bind();
         _fullscreen_pipeline.shader()->set_uniform("_time", provider(InputSlot_Time{}));
         // Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), camera);
         _fullscreen_pipeline.draw();
     }
+    _is_dirty = false;
 }
 
-void Module_CustomShader::compile_shader(std::string_view path)
+void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager)
 {
-    _fullscreen_pipeline.compile(Cool::File::to_string(path), path);
-    parse_shader_for_params(path);
+    if (dirty_manager.is_dirty(_shader_is_dirty)) {
+        Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
+        const auto file_path = provider(_file);
+        compile_shader(Cool::File::to_string(file_path.string()),
+                       file_path.string());
+        dirty_manager.set_clean(_shader_is_dirty);
+    }
 }
 
-void Module_CustomShader::parse_shader_for_params(std::string_view path)
+void Module_CustomShader::compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name)
+{
+    _fullscreen_pipeline.compile(fragment_shader_source_code, shader_name);
+    parse_shader_for_params(fragment_shader_source_code);
+}
+
+void Module_CustomShader::parse_shader_for_params(std::string_view fragment_shader_source_code)
 {
     // Cool::ParameterList new_params;
     // std::ifstream       stream{std::string{path}};

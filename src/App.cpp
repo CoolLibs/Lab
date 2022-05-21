@@ -12,7 +12,7 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
     , _intId{_registries.create(0)}
-    , _current_module{std::make_unique<Module_CustomShader>(_registries)}
+    , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
     , _current_module2{std::make_unique<TestModule>("Test Module 2")}
     , _view2{_views.make_view("View2")}
 {
@@ -42,7 +42,7 @@ void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, fl
         // _camera.apply(aspect_ratio);
         // _shader_manager->setup_for_rendering(*_camera, time);
         // _shader_manager->render();
-        some_module.do_rendering(input_provider(aspect_ratio, time));
+        some_module.do_rendering(input_provider(aspect_ratio, time), dirty_manager());
     });
 }
 
@@ -65,7 +65,7 @@ void App::update()
         _current_module2->update();
         _shader_manager->update();
 
-        if (_current_module2->needs_rendering()) {
+        if (_current_module2->is_dirty(dirty_manager())) {
             render_impl(_view2.render_target, *_current_module2, _clock.time());
         }
     }
@@ -81,7 +81,7 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #endif
 #if defined(COOL_VULKAN)
 #elif defined(COOL_OPENGL)
-    if (_current_module->needs_rendering()) {
+    if (_current_module->is_dirty(dirty_manager())) {
         render_impl(render_target, *_current_module, time);
     }
 #endif
@@ -107,6 +107,9 @@ void App::imgui_windows()
         });
         Ui::window({.name = "Registry of int"}, [&]() {
             imgui_show(_registries.of<int>());
+        });
+        Ui::window({.name = "Registry of DirtyFlag"}, [&]() {
+            imgui_show(_dirty_registry);
         });
         Ui::window({.name = "History"}, [&]() {
             _history.imgui_show([](const ReversibleCommand& command) {

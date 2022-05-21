@@ -14,9 +14,9 @@ namespace Lab {
 class Module_CustomShader : public Module {
 public:
     Module_CustomShader() = default;
-    explicit Module_CustomShader(Registries&);
+    explicit Module_CustomShader(DirtyFlagFactory);
 
-    void render(InputProvider provider) override;
+    void render(InputProvider provider, DirtyManager dirty_manager) override;
     void imgui_windows(Ui ui) override;
 
     // auto dependencies()
@@ -34,19 +34,26 @@ public:
 
     auto depends_on(reg::AnyId id) const -> bool override
     {
-        return std::ranges::any_of(_parameters, [&id](auto&& dep) {
-            return std::visit([&id](auto&& dep) { return dep.id == id; }, dep);
-        });
+        return true;
+        // return std::ranges::any_of(_parameters, [&id](auto&& dep) {
+        //     return std::visit([&id](auto&& dep) { return dep.id == id; }, dep);
+        // });
+    }
+
+    auto is_dirty(DirtyManager dirty_manager) const -> bool override
+    {
+        return _is_dirty || dirty_manager.is_dirty(_shader_is_dirty);
     }
 
 private:
-    void compile_shader(std::string_view path);
-    void parse_shader_for_params(std::string_view path);
+    void refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager);
+    void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name);
+    void parse_shader_for_params(std::string_view fragment_shader_source_code);
 
 private:
     Cool::FullscreenPipeline  _fullscreen_pipeline{};
     std::vector<AnyInputSlot> _parameters;
-    reg::Id<DirtyFlag>        _shader_is_dirty; // Must be before _file because it is used to construct it
+    DirtyFlag                 _shader_is_dirty; // Must be before _file because it is used to construct it
     InputSlot_File            _file;
 
 private:

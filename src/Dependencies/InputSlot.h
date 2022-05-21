@@ -1,7 +1,8 @@
 #pragma once
 #include <Cool/FileWatcher/FileWatcher.h>
 #include <reg/reg.hpp>
-#include "DirtyFlag.h"
+#include "Dirty.h"
+#include "Registries.h"
 
 namespace Lab {
 
@@ -34,29 +35,39 @@ private:
 
 class InputSlot_File {
 public:
-    InputSlot_File(reg::Id<DirtyFlag> dirty_flag = {})
-        : file_watcher{"",
-                       {.on_file_changed = [dirty_flag](std::string_view path) { /*registries.set(dirty_flag, true);*/ },
-                        .on_path_invalid = [](std::string_view path) { Cool::Log::ToUser::error("Input File", "Invalid path: \"{}\"", path); }}}
+    InputSlot_File() = default; // For serialization :( Remove whenever possible
+    explicit InputSlot_File(DirtyFlag dirty_flag)
+        : _dirty_flag{dirty_flag}
     {
+    }
+
+    void update(SetDirtyFlag set_dirty)
+    {
+        file_watcher.update(
+            {.on_file_changed = [&](std::string_view) { set_dirty(_dirty_flag); },
+             .on_path_invalid = [](std::string_view path) { Cool::Log::ToUser::error("Input File", "Invalid path: \"{}\"", path); }});
     }
 
 private:
     friend class Ui;
-    Cool::FileWatcher file_watcher;
+    friend class InputProvider;
+    Cool::FileWatcher file_watcher{};
+    DirtyFlag         _dirty_flag;
 
 private:
     friend class cereal::access;
     template<class Archive>
     void save(Archive& archive) const
     {
-        archive(cereal::make_nvp("File Path", file_watcher.path().string()));
+        archive(cereal::make_nvp("File Path", file_watcher.path().string()),
+                _dirty_flag);
     }
     template<class Archive>
     void load(Archive& archive)
     {
         std::string path;
-        archive(path);
+        archive(path,
+                _dirty_flag);
         file_watcher.set_path(path);
     }
 };

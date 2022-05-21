@@ -9,7 +9,6 @@
 #include "Dependencies/Registries.h"
 #include "Dependencies/Ui.h"
 
-
 namespace Lab {
 
 /// We need to do the polymorphism of Modules through inheritance to allow for plugins to create their own modules.
@@ -35,20 +34,25 @@ public:
     }
 
     template<typename T>
-    T operator()(const InputSlot<T>& slot)
+    T operator()(const InputSlot<T>& slot) const
     {
         const auto maybe_value = _registries.get().get(slot.id);
         return maybe_value.value_or(T{});
     }
 
-    float operator()(const InputSlot_AspectRatio&)
+    float operator()(const InputSlot_AspectRatio&) const
     {
         return _render_target_aspect_ratio;
     }
 
-    float operator()(const InputSlot_Time&)
+    float operator()(const InputSlot_Time&) const
     {
         return _time;
+    }
+
+    auto operator()(const InputSlot_File& file_input) const -> std::filesystem::path
+    {
+        return file_input.file_watcher.path();
     }
 
 private:
@@ -60,15 +64,15 @@ private:
 class Module {
 public:
     virtual ~Module() = default;
-    void do_rendering(InputProvider provider)
+    void do_rendering(InputProvider provider, DirtyManager dirty_manager)
     {
-        render(provider);
+        render(provider, dirty_manager);
         _is_dirty = false;
     }
     virtual void imgui_windows(Ui ui) = 0;
     virtual void update(){};
 
-    auto needs_rendering() const -> bool { return _is_dirty || force_rendering(); };
+    virtual auto is_dirty(DirtyManager) const -> bool { return _is_dirty; }
 
     virtual auto depends_on(reg::AnyId) const -> bool = 0;
 
@@ -78,12 +82,11 @@ public:
     }
 
 protected:
-    virtual void render(InputProvider provider) = 0;
-    virtual auto force_rendering() const -> bool { return false; }
+    virtual void render(InputProvider provider, DirtyManager dirty_manager) = 0;
     // template<typename T>
     // T get();
 
-private:
+protected:
     // Dependencies _dependencies;
     bool _is_dirty = true;
 

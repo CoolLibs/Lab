@@ -16,7 +16,7 @@ public:
     TestModule() = default;
     explicit TestModule(std::string_view name);
 
-    void render(InputProvider provider) override;
+    void render(InputProvider provider, DirtyManager) override;
     void imgui_windows(Ui ui) override;
 
     auto dependencies()

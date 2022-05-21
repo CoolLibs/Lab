@@ -6,9 +6,9 @@ namespace Lab {
 
 class Module;
 
-class SetDirty {
+class SetVariableDirty {
 public:
-    SetDirty(Module& module, Module& module2)
+    SetVariableDirty(Module& module, Module& module2)
         : _module{module}
         , _module2{module2}
     {
@@ -45,7 +45,7 @@ public:
     struct Data { // We wrap our members in a struct to get a constructor automatically
         std::reference_wrapper<const History> history;
         std::reference_wrapper<Registries>    registries;
-        SetDirty                              set_dirty;
+        SetVariableDirty                      set_dirty;
     };
     explicit CommandExecutionContext(Data data)
         : _data{data} {}

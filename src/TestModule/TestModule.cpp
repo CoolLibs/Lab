@@ -20,7 +20,7 @@ void TestModule::imgui_windows(Ui ui)
     });
 }
 
-void TestModule::render(InputProvider provider)
+void TestModule::render(InputProvider provider, DirtyManager)
 {
     Cool::Log::ToUser::info(_name, "Re-rendering");
     if (_fullscreen_pipeline.shader()) {

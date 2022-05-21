@@ -2,6 +2,7 @@
 
 #include <Cool/Default/DefaultApp.h>
 #include <reg/cereal.hpp>
+#include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Registries.h"
 #include "Module.h"
@@ -29,13 +30,16 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_impl(Cool::RenderTarget&, Module&, float time);
 
-    auto set_dirty() { return SetDirty{*_current_module, *_current_module2}; }
-    auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_dirty()}}; }
+    auto set_variable_dirty() { return SetVariableDirty{*_current_module, *_current_module2}; }
+    auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_variable_dirty()}}; }
     auto commands_executor() { return CommandExecutor{commands_execution_context()}; }
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
     auto commands_dispatcher() { return CommandDispatcher{commands_executor(), _history, _registries}; }
-    auto ui() { return Ui{_registries, commands_dispatcher()}; }
-    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider(_registries, render_target_aspect_ratio, time); }
+    auto set_dirty_flag() { return SetDirtyFlag{_dirty_registry}; }
+    auto ui() { return Ui{_registries, commands_dispatcher(), set_dirty_flag()}; }
+    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time}; }
+    auto dirty_flag_factory() { return DirtyFlagFactory{_dirty_registry}; }
+    auto dirty_manager() { return DirtyManager{_dirty_registry}; }
 
     void menu_preview();
     void menu_windows();
@@ -44,6 +48,7 @@ private:
 
 private:
     Registries              _registries; // First because modules need the registries when they get created
+    DirtyRegistry           _dirty_registry;
     reg::Id<int>            _intId;
     ShaderManagerManager    _shader_manager;
     std::unique_ptr<Module> _current_module;
@@ -62,6 +67,7 @@ private:
         archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
                 cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)),
                 cereal::make_nvp("Registries", _registries),
+                cereal::make_nvp("Dirty Registry", _dirty_registry),
                 cereal::make_nvp("Int ID", _intId),
                 cereal::make_nvp("History", _history),
                 cereal::make_nvp("Module", _current_module),
