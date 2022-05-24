@@ -46,6 +46,12 @@ public:
         }
         ImGui::PopID();
     }
+    void widget(std::string_view name, reg::Id<glm::vec2> color_id)
+    {
+    }
+    void widget(std::string_view name, reg::Id<Cool::Camera> color_id)
+    {
+    }
 
     void widget(std::string_view name, reg::Id<float> float_id, float current_value)
     {
@@ -68,6 +74,15 @@ public:
         }
         widget(name, color_slot.id, *color);
         ImGui::PopID();
+    }
+    void widget(std::string_view name, InputSlot<Cool::Camera>& color_slot)
+    {
+    }
+    void widget(std::string_view name, InputSlot<int>& color_slot)
+    {
+    }
+    void widget(std::string_view name, InputSlot<glm::vec2>& color_slot)
+    {
     }
 
     void widget(std::string_view name, InputSlot<float>& float_slot)

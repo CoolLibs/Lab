@@ -1,5 +1,7 @@
 #include "Module_CustomShader.h"
+#include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Log/ToUser.h>
+#include <sstream>
 
 namespace Lab {
 
@@ -24,6 +26,17 @@ void Module_CustomShader::imgui_windows(Ui ui)
     });
 }
 
+template<typename T>
+void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
+{
+    shader.set_uniform(name, value);
+}
+
+void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::Camera& value)
+{
+    Cool::CameraShaderU::set_uniform(shader, value);
+}
+
 void Module_CustomShader::render(InputProvider provider, DirtyManager dirty_manager)
 {
     refresh_pipeline_if_necessary(provider, dirty_manager);
@@ -31,7 +44,14 @@ void Module_CustomShader::render(InputProvider provider, DirtyManager dirty_mana
     if (_fullscreen_pipeline.shader()) {
         _fullscreen_pipeline.shader()->bind();
         _fullscreen_pipeline.shader()->set_uniform("_time", provider(InputSlot_Time{}));
-        // Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), camera);
+
+        for (auto& dep : _parameters) {
+            std::visit([&](auto&& dep) {
+                set_uniform(*_fullscreen_pipeline.shader(), dep.name(), provider(dep));
+            },
+                       dep);
+        }
+        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), provider(InputSlot_Camera{}));
         _fullscreen_pipeline.draw();
     }
     _is_dirty = false;
@@ -56,49 +76,49 @@ void Module_CustomShader::compile_shader(std::string_view fragment_shader_source
 
 void Module_CustomShader::parse_shader_for_params(std::string_view fragment_shader_source_code)
 {
-    // Cool::ParameterList new_params;
-    // std::ifstream       stream{std::string{path}};
-    // std::string         line;
-    // bool                has_begun = false;
-    // while (getline(stream, line)) {
-    //     if (has_begun) {
-    //         if (!line.compare("// END DYNAMIC PARAMS")) {
-    //             break;
-    //         }
-    //         try {
-    //             const auto uniform_pos = line.find("uniform");
-    //             if (uniform_pos != std::string::npos) {
-    //                 const auto        type_pos     = uniform_pos + 8;
-    //                 const auto        type_pos_end = line.find(' ', type_pos);
-    //                 const std::string type         = line.substr(type_pos, type_pos_end - type_pos);
-    //                 const auto        name_pos     = type_pos_end + 1;
-    //                 const auto        name_pos_end = line.find_first_of(" ;", name_pos);
-    //                 const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
-    //                 //
-    //                 const auto desc = [&]() -> Cool::Parameter::AnyDesc {
-    //                     if (type == "int")
-    //                         return Cool::Parameter::IntDesc{.name = name};
-    //                     else if (type == "float")
-    //                         return Cool::Parameter::FloatDesc{.name = name};
-    //                     else if (type == "vec2")
-    //                         return Cool::Parameter::Vec2Desc{.name = name};
-    //                     else if (type == "vec3")
-    //                         return Cool::Parameter::ColorDesc{.name = name};
-    //                     else
-    //                         throw std::invalid_argument(type + " is not a valid parameter type.");
-    //                 }();
-    //                 new_params->push_back(Cool::ParameterU::make_param(_parameters, desc));
-    //             }
-    //         }
-    //         catch (const std::exception& e) {
-    //             Cool::Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
-    //         }
-    //     }
-    //     if (!line.compare("// BEGIN DYNAMIC PARAMS")) {
-    //         has_begun = true;
-    //     }
-    // }
-    // *_parameters = std::move(*new_params);
+    std::vector<AnyInputSlot> new_params;
+    std::stringstream         stream{std::string{fragment_shader_source_code}};
+    std::string               line;
+    bool                      has_begun = false;
+    while (getline(stream, line)) {
+        if (has_begun) {
+            if (line == "// END DYNAMIC PARAMS") {
+                break;
+            }
+            try {
+                const auto uniform_pos = line.find("uniform");
+                if (uniform_pos != std::string::npos) {
+                    const auto        type_pos     = uniform_pos + 8;
+                    const auto        type_pos_end = line.find(' ', type_pos);
+                    const std::string type         = line.substr(type_pos, type_pos_end - type_pos);
+                    const auto        name_pos     = type_pos_end + 1;
+                    const auto        name_pos_end = line.find_first_of(" ;", name_pos);
+                    const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
+                    //
+                    const auto input_slot = [&]() -> AnyInputSlot {
+                        if (type == "int")
+                            return InputSlot<int>{name};
+                        else if (type == "float")
+                            return InputSlot<float>{name};
+                        else if (type == "vec2")
+                            return InputSlot<glm::vec2>{name};
+                        else if (type == "vec3")
+                            return InputSlot<glm::vec3>{name};
+                        else
+                            throw std::invalid_argument(type + " is not a valid parameter type.");
+                    }();
+                    new_params.push_back(input_slot);
+                }
+            }
+            catch (const std::exception& e) {
+                Cool::Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
+            }
+        }
+        if (line == "// BEGIN DYNAMIC PARAMS") {
+            has_begun = true;
+        }
+    }
+    _parameters = std::move(new_params);
 }
 
 } // namespace Lab

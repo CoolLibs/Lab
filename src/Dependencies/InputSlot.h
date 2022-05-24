@@ -1,6 +1,7 @@
 #pragma once
 #include <Cool/FileWatcher/FileWatcher.h>
 #include <reg/reg.hpp>
+#include "AllParameterTypes.h"
 #include "Dirty.h"
 #include "Registries.h"
 
@@ -72,14 +73,30 @@ private:
     }
 };
 
-using AnyInputSlotRef = std::variant<
-    std::reference_wrapper<InputSlot<float>>,
-    std::reference_wrapper<InputSlot<glm::vec3>>>;
+using AnyInputSlotRef =
+    AllParameterTypes::
+        wrap<InputSlot>::
+            wrap<std::reference_wrapper>::
+                to<std::variant>;
+
+template<typename T>
+struct wrap_in_const {
+    using type = const T;
+};
+
+// using AnyInputSlotRefToConst =
+//     AllParameterTypes::
+//         map<wrap_in_const>::
+//             wrap<InputSlot>::
+//                 wrap<std::reference_wrapper>::
+//                     to<std::variant>;
 using AnyInputSlotRefToConst = std::variant<
     std::reference_wrapper<const InputSlot<float>>,
     std::reference_wrapper<const InputSlot<glm::vec3>>>;
-using AnyInputSlot = std::variant<
-    InputSlot<float>,
-    InputSlot<glm::vec3>>;
+
+using AnyInputSlot =
+    AllParameterTypes::
+        wrap<InputSlot>::
+            to<std::variant>;
 
 } // namespace Lab

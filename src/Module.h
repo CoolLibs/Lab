@@ -23,13 +23,16 @@ struct InputSlot_AspectRatio {
 };
 struct InputSlot_Time {
 };
+struct InputSlot_Camera {
+};
 
 class InputProvider {
 public:
-    InputProvider(const Registries& registries, float render_target_aspect_ratio, float time)
+    InputProvider(const Registries& registries, float render_target_aspect_ratio, float time, const Cool::Camera& camera)
         : _registries{registries}
         , _render_target_aspect_ratio{render_target_aspect_ratio}
         , _time{time}
+        , _camera{camera}
     {
     }
 
@@ -45,7 +48,7 @@ public:
         return _render_target_aspect_ratio;
     }
 
-    float operator()(const InputSlot_Time&) const
+    auto operator()(const InputSlot_Time&) const -> float
     {
         return _time;
     }
@@ -55,10 +58,16 @@ public:
         return file_input.file_watcher.path();
     }
 
+    auto operator()(const InputSlot_Camera&) const -> Cool::Camera
+    {
+        return _camera;
+    }
+
 private:
     std::reference_wrapper<const Registries> _registries;
     float                                    _render_target_aspect_ratio;
     float                                    _time;
+    Cool::Camera                             _camera;
 };
 
 class Module {

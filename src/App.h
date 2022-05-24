@@ -37,7 +37,7 @@ private:
     auto commands_dispatcher() { return CommandDispatcher{commands_executor(), _history, _registries}; }
     auto set_dirty_flag() { return SetDirtyFlag{_dirty_registry}; }
     auto ui() { return Ui{_registries, commands_dispatcher(), set_dirty_flag()}; }
-    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time}; }
+    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time, *_camera}; }
     auto dirty_flag_factory() { return DirtyFlagFactory{_dirty_registry}; }
     auto dirty_manager() { return DirtyManager{_dirty_registry}; }
 
