@@ -79,20 +79,17 @@ using AnyInputSlotRef =
             wrap<std::reference_wrapper>::
                 to<std::variant>;
 
+namespace internal {
 template<typename T>
-struct wrap_in_const {
-    using type = const T;
+struct make_ref_to_const_input_slot {
+    using type = std::reference_wrapper<const InputSlot<T>>;
 };
+} // namespace internal
 
-// using AnyInputSlotRefToConst =
-//     AllParameterTypes::
-//         map<wrap_in_const>::
-//             wrap<InputSlot>::
-//                 wrap<std::reference_wrapper>::
-//                     to<std::variant>;
-using AnyInputSlotRefToConst = std::variant<
-    std::reference_wrapper<const InputSlot<float>>,
-    std::reference_wrapper<const InputSlot<glm::vec3>>>;
+using AnyInputSlotRefToConst =
+    AllParameterTypes::
+        map<internal::make_ref_to_const_input_slot>::
+            to<std::variant>;
 
 using AnyInputSlot =
     AllParameterTypes::
