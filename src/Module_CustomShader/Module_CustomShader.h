@@ -63,6 +63,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::base_class<Module>(this),
+                _parameters,
                 _shader_is_dirty,
                 _file);
     }

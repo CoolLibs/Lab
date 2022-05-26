@@ -10,7 +10,7 @@ namespace Lab {
 template<typename T>
 class InputSlot {
 public:
-    explicit InputSlot(std::string_view name)
+    explicit InputSlot(std::string_view name = "")
         : _name{name}
     {
     }
