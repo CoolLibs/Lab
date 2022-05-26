@@ -10,3 +10,6 @@
 [submodule "lib/cmd"]
 	path = lib/cmd
 	url = https://github.com/CoolLibs/cmd
+[submodule "tooling"]
+	path = tooling
+	url = https://github.com/CoolLibs/tooling
