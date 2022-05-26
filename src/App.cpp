@@ -16,6 +16,7 @@ App::App(Cool::WindowManager& windows)
     , _current_module2{std::make_unique<TestModule>("Test Module 2")}
     , _view2{_views.make_view("View2")}
 {
+    _camera.hook_events(_view.view.mouse_events());
     _camera.hook_events(_view2.view.mouse_events());
     serv::init([](std::string_view request) {
         Cool::Log::ToUser::info("Scripting", "{}", request);
@@ -36,12 +37,10 @@ App::~App()
 void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, float time)
 {
     render_target.render([&]() {
-        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        // _camera.apply(aspect_ratio);
-        // _shader_manager->setup_for_rendering(*_camera, time);
-        // _shader_manager->render();
+        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
+        _camera.apply(aspect_ratio);
         some_module.do_rendering(input_provider(aspect_ratio, time), dirty_manager());
     });
 }
