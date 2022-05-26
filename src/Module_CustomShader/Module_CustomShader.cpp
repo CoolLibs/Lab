@@ -1,6 +1,7 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Log/ToUser.h>
+#include <ranges>
 #include <sstream>
 
 namespace Lab {
@@ -74,6 +75,34 @@ void Module_CustomShader::compile_shader(std::string_view fragment_shader_source
     parse_shader_for_params(fragment_shader_source_code);
 }
 
+static auto name(const AnyInputSlot& slot)
+{
+    return std::visit(([](auto&& slot) { return slot.name(); }), slot);
+}
+
+static auto input_slots_have_the_same_type_and_name(const AnyInputSlot& slot1, const AnyInputSlot& slot2) -> bool
+{
+    return slot1.index() == slot2.index() &&
+           name(slot1) == name(slot2);
+}
+
+static auto iterator_to_same_slot(const AnyInputSlot& slot, const std::vector<AnyInputSlot>& old_slots)
+{
+    return std::ranges::find_if(old_slots, [&](const AnyInputSlot& other_slot) {
+        return input_slots_have_the_same_type_and_name(other_slot, slot);
+    });
+}
+
+static void keep_values_of_slots_that_already_existed(const std::vector<AnyInputSlot>& old_slots, std::vector<AnyInputSlot>& new_slots)
+{
+    for (auto& slot : new_slots) {
+        const auto it = iterator_to_same_slot(slot, old_slots);
+        if (it != old_slots.end()) {
+            slot = std::move(*it);
+        }
+    }
+}
+
 void Module_CustomShader::parse_shader_for_params(std::string_view fragment_shader_source_code)
 {
     std::vector<AnyInputSlot> new_params;
@@ -118,6 +147,7 @@ void Module_CustomShader::parse_shader_for_params(std::string_view fragment_shad
             has_begun = true;
         }
     }
+    keep_values_of_slots_that_already_existed(_parameters, new_params);
     _parameters = std::move(new_params);
 }
 
