@@ -30,7 +30,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(id);
+        archive(id, _name);
     }
 };
 
