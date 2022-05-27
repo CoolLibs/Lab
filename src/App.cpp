@@ -1,6 +1,8 @@
 #include "App.h"
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
+#include <Cool/Parameter/ParametersHistory.h>
+#include <Cool/Time/ClockU.h>
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
@@ -10,11 +12,12 @@
 namespace Lab {
 
 App::App(Cool::WindowManager& windows)
-    : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
-    , _intId{_registries.create(0)}
+    : _intId{_registries.create(0)}
     , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
     , _current_module2{std::make_unique<TestModule>("Test Module 2")}
     , _view2{_views.make_view("View2")}
+    , _main_window{windows.main_window()}
+    , _view{_views.make_view("View")}
 {
     _camera.hook_events(_view.view.mouse_events());
     _camera.hook_events(_view2.view.mouse_events());
@@ -47,7 +50,17 @@ void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, fl
 
 void App::update()
 {
-    DefaultApp::update();
+    if (!_exporter.is_exporting()) {
+        _clock.update();
+        for (auto& view : _views) {
+            view.update_size(_preview_constraint);
+        }
+        polaroid().render(_clock.time());
+    }
+    else {
+        _exporter.update(polaroid());
+    }
+
     if (_last_time != _clock.time()) {
         _last_time = _clock.time();
         _current_module->set_dirty();
@@ -87,6 +100,29 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #endif
 }
 
+Cool::Polaroid App::polaroid()
+{
+    return {
+        .render_target = _view.render_target,
+        .render_fn     = [this](Cool::RenderTarget& render_target, float time) { render(render_target, time); }};
+}
+
+auto App::aspect_ratio_is_constrained() const -> bool
+{
+    return _exporter.is_exporting() ||
+           _preview_constraint.wants_to_constrain_aspect_ratio();
+}
+
+auto App::inputs_are_allowed() const -> bool
+{
+    return !_exporter.is_exporting();
+}
+
+auto App::wants_to_show_menu_bar() const -> bool
+{
+    return !_exporter.is_exporting();
+}
+
 template<typename T>
 static auto command_to_string(const ReversibleCommand_SetValue<T> command) -> std::string
 {
@@ -95,7 +131,40 @@ static auto command_to_string(const ReversibleCommand_SetValue<T> command) -> st
 
 void App::imgui_windows()
 {
-    DefaultApp::imgui_windows();
+    // Views
+    for (auto& view : _views) {
+        view.imgui_window(aspect_ratio_is_constrained());
+    }
+    // Exporter
+    _exporter.imgui_windows(polaroid(), _clock.time());
+    //
+    if (inputs_are_allowed()) {
+        // Console
+        Cool::Log::ToUser::imgui_console_window();
+        // Time
+        ImGui::Begin("Time");
+        Cool::ClockU::imgui_timeline(_clock);
+        ImGui::End();
+        // Camera
+        ImGui::Begin("Camera");
+        _camera.imgui();
+        ImGui::End();
+#if DEBUG
+        if (_show_imgui_debug) {
+            ImGui::Begin("Debug", &_show_imgui_debug);
+            ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+            _main_window.imgui_cap_framerate();
+            ImGui::Checkbox("Show Demo Window", &_show_imgui_demo);
+            ImGui::End();
+        }
+        if (_show_imgui_demo) { // Show the big demo window (Most of the sample code is
+                                // in ImGui::ShowDemoWindow()! You can browse its code
+                                // to learn more about Dear ImGui!).
+            ImGui::ShowDemoWindow(&_show_imgui_demo);
+        }
+#endif
+    }
+
     if (inputs_are_allowed()) {
         _current_module->imgui_windows(ui());
         _current_module2->imgui_windows(ui());
@@ -140,8 +209,28 @@ void App::menu_preview()
     }
 }
 
-void App::menu_windows() { DefaultApp::menu_windows(); }
-void App::menu_export() { DefaultApp::menu_export(); }
+void App::menu_windows()
+{
+    if (ImGui::BeginMenu("Windows")) {
+        Cool::Log::ToUser::imgui_toggle_console();
+        for (auto& view : _views) {
+            view.view.imgui_open_close_checkbox();
+        }
+#if defined(DEBUG)
+        ImGui::Separator();
+        ImGui::Checkbox("Debug", &_show_imgui_debug);
+#endif
+        ImGui::EndMenu();
+    }
+}
+
+void App::menu_export()
+{
+    if (ImGui::BeginMenu("Export")) {
+        _exporter.imgui_menu_items();
+        ImGui::EndMenu();
+    }
+}
 
 void App::menu_settings()
 {
@@ -169,7 +258,22 @@ void App::imgui_menus()
 
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
-    DefaultApp::on_keyboard_event(event);
+    if (event.action == GLFW_RELEASE) {
+        if (Cool::Input::matches_char("s", event.key) && event.mods.ctrl()) {
+            _exporter.image_export_window().open();
+        }
+        if (Cool::Input::matches_char("e", event.key) && event.mods.ctrl()) {
+            _exporter.video_export_window().open();
+        }
+    }
+    if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
+        if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
+            Cool::ParametersHistory::get().move_backward();
+        }
+        if (Cool::Input::matches_char("y", event.key) && event.mods.ctrl()) {
+            Cool::ParametersHistory::get().move_forward();
+        }
+    }
     _shader_manager->on_key_pressed(event);
     if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
         auto exec = reversible_commands_executor();
@@ -184,17 +288,23 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
 {
-    DefaultApp::on_mouse_button(event);
+    for (auto& view : _views) {
+        view.view.dispatch_mouse_button_event(view_event(event, view));
+    }
 }
 
 void App::on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event)
 {
-    DefaultApp::on_mouse_scroll(event);
+    for (auto& view : _views) {
+        view.view.dispatch_mouse_scroll_event(view_event(event, view));
+    }
 }
 
 void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event)
 {
-    DefaultApp::on_mouse_move(event);
+    for (auto& view : _views) {
+        view.view.dispatch_mouse_move_event(view_event(event, view));
+    }
 }
 
 } // namespace Lab

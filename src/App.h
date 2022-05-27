@@ -1,6 +1,14 @@
 #pragma once
 
-#include <Cool/Default/DefaultApp.h>
+#include <Cool/AppManager/IApp.h>
+#include <Cool/Camera/CameraManager.h>
+#include <Cool/Exporter/Exporter.h>
+#include <Cool/Exporter/internal/Polaroid.h>
+#include <Cool/Gpu/RenderTarget.h>
+#include <Cool/Serialization/AutoSerializer.h>
+#include <Cool/Time/Clock_Realtime.h>
+#include <Cool/View/RenderableViewManager.h>
+#include <Cool/Window/WindowManager.h>
 #include <reg/cereal.hpp>
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
@@ -11,12 +19,14 @@
 
 namespace Lab {
 
-class App : public CoolDefault::DefaultApp {
+class App : public Cool::IApp {
 public:
     explicit App(Cool::WindowManager& windows);
     ~App();
 
     void update() override;
+    bool inputs_are_allowed() const override;
+    bool wants_to_show_menu_bar() const override;
 
     void imgui_windows() override;
     void imgui_menus() override;
@@ -42,12 +52,32 @@ private:
     auto dirty_flag_factory() { return DirtyFlagFactory{_dirty_registry}; }
     auto dirty_manager() { return DirtyManager{_dirty_registry}; }
 
+    Cool::Polaroid polaroid();
+
     void menu_preview();
     void menu_windows();
     void menu_export();
     void menu_settings();
 
+    bool aspect_ratio_is_constrained() const;
+    template<typename Event>
+    Cool::ViewEvent<Event> view_event(const Event& event, const Cool::RenderableView& view)
+    {
+        return {event,
+                _main_window.glfw(),
+                {view.render_target.current_size(),
+                 aspect_ratio_is_constrained()}};
+    }
+
 private:
+    Cool::Window&               _main_window;
+    Cool::CameraManager         _camera;
+    Cool::Clock_Realtime        _clock;
+    Cool::ImageSizeConstraint   _preview_constraint;
+    Cool::RenderableViewManager _views; // Must be before the views because it is used to construct them
+    Cool::RenderableView&       _view;
+    Cool::Exporter              _exporter;
+
     Registries              _registries; // First because modules need the registries when they get created
     DirtyRegistry           _dirty_registry;
     reg::Id<int>            _intId;
@@ -59,6 +89,11 @@ private:
     Cool::RenderableView&   _view2;
     float                   _last_time{0.f};
 
+#if DEBUG
+    bool _show_imgui_debug = true;
+    bool _show_imgui_demo  = false;
+#endif
+
 private:
     // Serialization
     friend class cereal::access;
@@ -66,13 +101,13 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
-                cereal::make_nvp("Default App", *reinterpret_cast<DefaultApp*>(this)),
                 cereal::make_nvp("Registries", _registries),
                 cereal::make_nvp("Dirty Registry", _dirty_registry),
                 cereal::make_nvp("Int ID", _intId),
                 cereal::make_nvp("History", _history),
                 cereal::make_nvp("Module", _current_module),
-                cereal::make_nvp("Module2", _current_module2));
+                cereal::make_nvp("Module2", _current_module2),
+                cereal::make_nvp("Camera Manager", _camera));
     }
 #if !IS0_TEST_NODES
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
