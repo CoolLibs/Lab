@@ -2,6 +2,7 @@
 #include <Cool/Camera/Camera.h>
 #include <reg/reg.hpp>
 #include "AllParameterTypes.h"
+#include "Registries.h"
 
 namespace Lab {
 
@@ -34,6 +35,71 @@ using ReversibleCommand =
     AllParameterTypes::
         wrap<ReversibleCommand_SetValue>::
             to<std::variant>;
+
+template<typename T>
+auto merge_commands(const ReversibleCommand_SetValue<T>& prev, const ReversibleCommand_SetValue<T>& curr)
+    -> std::optional<ReversibleCommand>
+{
+    if (prev.id == curr.id) {
+        return ReversibleCommand_SetValue<T>{
+            .id        = curr.id,
+            .value     = curr.value,
+            .old_value = prev.old_value,
+        };
+    }
+    else {
+        return std::nullopt;
+    }
+}
+
+// Fallback if we don't find a function to merge the commands
+template<typename T, typename U>
+auto merge_commands(const T&, const U&) -> std::optional<ReversibleCommand>
+{
+    return std::nullopt;
+}
+
+class ReversibleCommandMerger {
+public:
+    static auto merge(const ReversibleCommand& prev, const ReversibleCommand& curr) -> std::optional<ReversibleCommand>
+    {
+        return std::visit([](const auto& p, const auto& c) { return merge_commands(p, c); },
+                          prev, curr);
+    }
+};
+
+struct MakeReversibleCommandContext {
+    std::reference_wrapper<Registries> registries;
+};
+
+template<typename T>
+auto make_reversible_command_impl(MakeReversibleCommandContext ctx, const Command_SetValue<T>& cmd) -> std::optional<ReversibleCommand>
+{
+    const auto old_value = ctx.registries.get().get(cmd.id);
+    if (old_value) {
+        return ReversibleCommand_SetValue<T>{
+            .id        = cmd.id,
+            .value     = cmd.value,
+            .old_value = *old_value,
+        };
+    }
+    else {
+        Cool::Log::error("[make_reversible_command_impl] Trying to create a command for an id that isn't valid; I don't think this should happen.");
+        return std::nullopt;
+    }
+}
+
+// Fallback if we don't find a function to make a reversible command
+template<typename T>
+auto make_reversible_command_impl(MakeReversibleCommandContext, const T&) -> std::optional<ReversibleCommand>
+{
+    return std::nullopt;
+}
+
+inline auto make_reversible_command(MakeReversibleCommandContext ctx, const Command& command) -> std::optional<ReversibleCommand>
+{
+    return std::visit([ctx](auto&& cmd) { return make_reversible_command_impl(ctx, cmd); }, command);
+}
 
 } // namespace Lab
 

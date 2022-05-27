@@ -1,32 +1,30 @@
 #pragma once
 
+#include "Commands.h"
 #include "History.h"
+#include "Registries.h"
 
 namespace Lab {
 
-class Module;
-
 class SetVariableDirty {
 public:
-    SetVariableDirty(Module& module, Module& module2)
-        : _module{module}
-        , _module2{module2}
+    SetVariableDirty()
     {
     }
     template<typename T>
-    void operator()(reg::Id<T> id)
+    void operator()(reg::Id<T>)
     {
-        if (_module.get().depends_on(id)) {
-            _module.get().set_dirty();
-        }
-        if (_module2.get().depends_on(id)) {
-            _module2.get().set_dirty();
-        }
+        // if (_module.get().depends_on(id)) {
+        //     _module.get().set_dirty();
+        // }
+        // if (_module2.get().depends_on(id)) {
+        //     _module2.get().set_dirty();
+        // }
     }
 
 private:
-    std::reference_wrapper<Module> _module;
-    std::reference_wrapper<Module> _module2;
+    // std::reference_wrapper<Module> _module;
+    // std::reference_wrapper<Module> _module2;
 };
 
 // This is a class rather than a struct because we want to use methods to access the different members
@@ -120,71 +118,6 @@ public:
 private:
     CommandExecutionContext _context;
 };
-
-template<typename T>
-auto merge_commands(const ReversibleCommand_SetValue<T>& prev, const ReversibleCommand_SetValue<T>& curr)
-    -> std::optional<ReversibleCommand>
-{
-    if (prev.id == curr.id) {
-        return ReversibleCommand_SetValue<T>{
-            .id        = curr.id,
-            .value     = curr.value,
-            .old_value = prev.old_value,
-        };
-    }
-    else {
-        return std::nullopt;
-    }
-}
-
-// Fallback if we don't find a function to merge the commands
-template<typename T, typename U>
-auto merge_commands(const T&, const U&) -> std::optional<ReversibleCommand>
-{
-    return std::nullopt;
-}
-
-class ReversibleCommandMerger {
-public:
-    static auto merge(const ReversibleCommand& prev, const ReversibleCommand& curr) -> std::optional<ReversibleCommand>
-    {
-        return std::visit([](const auto& p, const auto& c) { return merge_commands(p, c); },
-                          prev, curr);
-    }
-};
-
-struct MakeReversibleCommandContext {
-    std::reference_wrapper<Registries> registries;
-};
-
-template<typename T>
-auto make_reversible_command_impl(MakeReversibleCommandContext ctx, const Command_SetValue<T>& cmd) -> std::optional<ReversibleCommand>
-{
-    const auto old_value = ctx.registries.get().get(cmd.id);
-    if (old_value) {
-        return ReversibleCommand_SetValue<T>{
-            .id        = cmd.id,
-            .value     = cmd.value,
-            .old_value = *old_value,
-        };
-    }
-    else {
-        Cool::Log::error("[make_reversible_command_impl] Trying to create a command for an id that isn't valid; I don't think this should happen.");
-        return std::nullopt;
-    }
-}
-
-// Fallback if we don't find a function to make a reversible command
-template<typename T>
-auto make_reversible_command_impl(MakeReversibleCommandContext, const T&) -> std::optional<ReversibleCommand>
-{
-    return std::nullopt;
-}
-
-inline auto make_reversible_command(MakeReversibleCommandContext ctx, const Command& command) -> std::optional<ReversibleCommand>
-{
-    return std::visit([ctx](auto&& cmd) { return make_reversible_command_impl(ctx, cmd); }, command);
-}
 
 class CommandDispatcher {
 public:

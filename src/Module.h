@@ -17,8 +17,6 @@ namespace Lab {
 /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level)
 /// Rendering only has const access to the registries: creating / updating values is done trough ui()
 
-class Ui;
-
 struct InputSlot_AspectRatio {
 };
 struct InputSlot_Time {

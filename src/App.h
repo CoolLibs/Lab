@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Cool/AppManager/IApp.h>
-#include <Cool/Camera/CameraManager.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/RenderTarget.h>
@@ -10,6 +9,7 @@
 #include <Cool/View/RenderableViewManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <reg/cereal.hpp>
+#include "CameraManager.h"
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Registries.h"
@@ -40,7 +40,7 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_impl(Cool::RenderTarget&, Module&, float time);
 
-    auto set_variable_dirty() { return SetVariableDirty{*_current_module, *_current_module2}; }
+    auto set_variable_dirty() { return SetVariableDirty{}; }
     auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_variable_dirty()}}; }
     auto commands_executor() { return CommandExecutor{commands_execution_context()}; }
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
