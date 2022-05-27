@@ -16,7 +16,7 @@ public:
     Module_CustomShader() = default;
     explicit Module_CustomShader(DirtyFlagFactory);
 
-    void render(InputProvider provider, DirtyManager dirty_manager) override;
+    void render(RenderParams) override;
     void imgui_windows(Ui ui) override;
 
     // auto dependencies()
@@ -46,9 +46,9 @@ public:
     }
 
 private:
-    void refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager);
+    void refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputSlotDestructorRef input_slot_destructor);
     void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name);
-    void parse_shader_for_params(std::string_view fragment_shader_source_code);
+    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputSlotDestructorRef input_slot_destructor);
 
 private:
     Cool::FullscreenPipeline  _fullscreen_pipeline{};

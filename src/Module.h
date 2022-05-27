@@ -72,10 +72,16 @@ private:
 
 class Module {
 public:
+    struct RenderParams {
+        InputProvider          provider;
+        InputSlotDestructorRef input_slot_destructor;
+        DirtyManager           dirty_manager;
+    };
+
     virtual ~Module() = default;
-    void do_rendering(InputProvider provider, DirtyManager dirty_manager)
+    void do_rendering(RenderParams params)
     {
-        render(provider, dirty_manager);
+        render(params);
         _is_dirty = false;
     }
     virtual void imgui_windows(Ui ui) = 0;
@@ -91,7 +97,7 @@ public:
     }
 
 protected:
-    virtual void render(InputProvider provider, DirtyManager dirty_manager) = 0;
+    virtual void render(RenderParams) = 0;
     // template<typename T>
     // T get();
 

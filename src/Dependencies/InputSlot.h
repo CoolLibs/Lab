@@ -20,6 +20,7 @@ public:
 public: // This section is used by the InputProvider to do its job
     friend class InputProvider;
     friend class Ui;
+    friend class InputSlotDestructorRef;
     reg::Id<T> id;
 
 private: // This section is really private
@@ -52,6 +53,7 @@ public:
 private:
     friend class Ui;
     friend class InputProvider;
+    friend class InputSlotDestructorRef;
     Cool::FileWatcher file_watcher{};
     DirtyFlag         _dirty_flag;
 
@@ -95,5 +97,21 @@ using AnyInputSlot =
     AllParameterTypes::
         wrap<InputSlot>::
             to<std::variant>;
+
+class InputSlotDestructorRef {
+public:
+    explicit InputSlotDestructorRef(Registries& registries)
+        : _registries{registries}
+    {
+    }
+
+    void operator()(const AnyInputSlot& slot)
+    {
+        std::visit([&](auto&& slot) { _registries.get().destroy(slot.id); }, slot);
+    }
+
+private:
+    std::reference_wrapper<Registries> _registries;
+};
 
 } // namespace Lab

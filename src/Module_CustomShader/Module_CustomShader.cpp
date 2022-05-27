@@ -38,33 +38,34 @@ void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, cons
     Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-void Module_CustomShader::render(InputProvider provider, DirtyManager dirty_manager)
+void Module_CustomShader::render(RenderParams in)
 {
-    refresh_pipeline_if_necessary(provider, dirty_manager);
+    refresh_pipeline_if_necessary(in.provider, in.dirty_manager, in.input_slot_destructor);
     Cool::Log::ToUser::info("Custom Shader Render", "Re-rendering");
     if (_fullscreen_pipeline.shader()) {
         _fullscreen_pipeline.shader()->bind();
-        _fullscreen_pipeline.shader()->set_uniform("_time", provider(InputSlot_Time{}));
+        _fullscreen_pipeline.shader()->set_uniform("_time", in.provider(InputSlot_Time{}));
 
         for (auto& dep : _parameters) {
             std::visit([&](auto&& dep) {
-                set_uniform(*_fullscreen_pipeline.shader(), dep.name(), provider(dep));
+                set_uniform(*_fullscreen_pipeline.shader(), dep.name(), in.provider(dep));
             },
                        dep);
         }
-        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), provider(InputSlot_Camera{}));
+        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(InputSlot_Camera{}));
         _fullscreen_pipeline.draw();
     }
     _is_dirty = false;
 }
 
-void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager)
+void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputSlotDestructorRef input_slot_destructor)
 {
     if (dirty_manager.is_dirty(_shader_is_dirty)) {
         Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
-        const auto file_path = provider(_file);
-        compile_shader(Cool::File::to_string(file_path.string()),
-                       file_path.string());
+        const auto file_path   = provider(_file);
+        const auto source_code = Cool::File::to_string(file_path.string());
+        compile_shader(source_code, file_path.string());
+        parse_shader_for_params(source_code, input_slot_destructor);
         dirty_manager.set_clean(_shader_is_dirty);
     }
 }
@@ -72,7 +73,6 @@ void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider provider, 
 void Module_CustomShader::compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name)
 {
     _fullscreen_pipeline.compile(fragment_shader_source_code, shader_name);
-    parse_shader_for_params(fragment_shader_source_code);
 }
 
 static auto name(const AnyInputSlot& slot)
@@ -86,27 +86,34 @@ static auto input_slots_have_the_same_type_and_name(const AnyInputSlot& slot1, c
            name(slot1) == name(slot2);
 }
 
-static auto iterator_to_same_slot(const AnyInputSlot& slot, const std::vector<AnyInputSlot>& old_slots)
+static auto iterator_to_same_slot(const AnyInputSlot& slot, std::vector<AnyInputSlot>& old_slots)
 {
     return std::ranges::find_if(old_slots, [&](const AnyInputSlot& other_slot) {
         return input_slots_have_the_same_type_and_name(other_slot, slot);
     });
 }
 
-static void keep_values_of_slots_that_already_existed(const std::vector<AnyInputSlot>& old_slots, std::vector<AnyInputSlot>& new_slots)
+static void keep_values_of_slots_that_already_existed_and_destroy_unused_ones(
+    std::vector<AnyInputSlot>& old_slots,
+    std::vector<AnyInputSlot>& new_slots,
+    InputSlotDestructorRef     destroy)
 {
-    for (auto& slot : new_slots) {
-        const auto it = iterator_to_same_slot(slot, old_slots);
-        if (it != old_slots.end()) {
-            slot = std::move(*it);
+    for (auto& slot : old_slots) {
+        const auto it = iterator_to_same_slot(slot, new_slots);
+        if (it != new_slots.end()) {
+            *it = std::move(slot);
+        }
+        else {
+            destroy(slot);
         }
     }
 }
 
-void Module_CustomShader::parse_shader_for_params(std::string_view fragment_shader_source_code)
+static auto get_slots_from_shader_code(std::string_view source_code)
+    -> std::vector<AnyInputSlot>
 {
     std::vector<AnyInputSlot> new_params;
-    std::stringstream         stream{std::string{fragment_shader_source_code}};
+    std::stringstream         stream{std::string{source_code}};
     std::string               line;
     bool                      has_begun = false;
     while (getline(stream, line)) {
@@ -147,8 +154,14 @@ void Module_CustomShader::parse_shader_for_params(std::string_view fragment_shad
             has_begun = true;
         }
     }
-    keep_values_of_slots_that_already_existed(_parameters, new_params);
-    _parameters = std::move(new_params);
+    return new_params;
+}
+
+void Module_CustomShader::parse_shader_for_params(std::string_view source_code, InputSlotDestructorRef input_slot_destructor)
+{
+    auto new_slots = get_slots_from_shader_code(source_code);
+    keep_values_of_slots_that_already_existed_and_destroy_unused_ones(_parameters, new_slots, input_slot_destructor);
+    _parameters = std::move(new_slots);
 }
 
 } // namespace Lab

@@ -41,7 +41,7 @@ void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, fl
         glClear(GL_COLOR_BUFFER_BIT);
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         _camera.apply(aspect_ratio);
-        some_module.do_rendering(input_provider(aspect_ratio, time), dirty_manager());
+        some_module.do_rendering({input_provider(aspect_ratio, time), input_slot_destructor(), dirty_manager()});
     });
 }
 
@@ -80,7 +80,8 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #endif
 #if defined(COOL_VULKAN)
 #elif defined(COOL_OPENGL)
-    if (_current_module->is_dirty(dirty_manager())) {
+    // if (_current_module->is_dirty(dirty_manager()))
+    {
         render_impl(render_target, *_current_module, time);
     }
 #endif

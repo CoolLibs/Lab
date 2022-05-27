@@ -20,16 +20,16 @@ void TestModule::imgui_windows(Ui ui)
     });
 }
 
-void TestModule::render(InputProvider provider, DirtyManager)
+void TestModule::render(RenderParams in)
 {
     Cool::Log::ToUser::info(_name, "Re-rendering");
     if (_fullscreen_pipeline.shader()) {
         _fullscreen_pipeline.shader()->bind();
-        _fullscreen_pipeline.shader()->set_uniform("_color", provider(_color));
-        _fullscreen_pipeline.shader()->set_uniform("_color2", provider(_color2));
-        _fullscreen_pipeline.shader()->set_uniform("_circle_radius", provider(_testFloat));
-        _fullscreen_pipeline.shader()->set_uniform("_aspect_ratio", provider(InputSlot_AspectRatio{}));
-        _fullscreen_pipeline.shader()->set_uniform("_time", provider(InputSlot_Time{}));
+        _fullscreen_pipeline.shader()->set_uniform("_color", in.provider(_color));
+        _fullscreen_pipeline.shader()->set_uniform("_color2", in.provider(_color2));
+        _fullscreen_pipeline.shader()->set_uniform("_circle_radius", in.provider(_testFloat));
+        _fullscreen_pipeline.shader()->set_uniform("_aspect_ratio", in.provider(InputSlot_AspectRatio{}));
+        _fullscreen_pipeline.shader()->set_uniform("_time", in.provider(InputSlot_Time{}));
         _fullscreen_pipeline.draw();
     }
 }
