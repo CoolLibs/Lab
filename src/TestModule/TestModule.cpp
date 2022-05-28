@@ -12,7 +12,7 @@ TestModule::TestModule(std::string_view name, DirtyFlagFactory dirty_flag_factor
 void TestModule::imgui_windows(Ui ui)
 {
     Ui::window({.name = _name}, [&]() {
-        for (auto& dep : dependencies()) {
+        for (auto& dep : all_input_slots()) {
             std::visit([&ui](auto&& dep) {
                 ui.widget(dep.get().name(), dep.get());
             },

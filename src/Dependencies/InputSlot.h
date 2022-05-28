@@ -18,12 +18,21 @@ public:
 
     std::string_view name() const { return _name; }
 
+    void set_dirty_if_depends_on(const reg::Id<T>& variable_id, SetDirtyFlag set_dirty) const
+    {
+        auto name          = reg::to_string(id);
+        auto variable_name = reg::to_string(variable_id);
+        if (id == variable_id) {
+            set_dirty(_dirty_flag);
+        }
+    }
+
 public: // This section is used by the InputProvider to do its job
     friend class InputProvider;
     friend class Ui;
     friend class InputSlotDestructorRef;
-    reg::Id<T> id;
-    DirtyFlag  _dirty_flag;
+    mutable reg::Id<T> id;
+    DirtyFlag          _dirty_flag;
 
 private: // This section is really private
     std::string _name;
@@ -33,7 +42,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(id, _name);
+        archive(id, _name, _dirty_flag);
     }
 };
 

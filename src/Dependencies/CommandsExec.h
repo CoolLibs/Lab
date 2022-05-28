@@ -2,30 +2,36 @@
 
 #include "CameraManager.h"
 #include "Commands.h"
+#include "Dependencies/InputSlot.h"
 #include "History.h"
 #include "Registries.h"
 
 namespace Lab {
 
+using AllInputSlots = std::vector<AnyInputSlotRefToConst>;
+
 class SetVariableDirty {
 public:
-    SetVariableDirty()
+    SetVariableDirty(AllInputSlots slots, SetDirtyFlag set_dirty)
+        : _slots{slots}
+        , _set_dirty{set_dirty}
     {
     }
+
     template<typename T>
-    void operator()(reg::Id<T>)
+    void operator()(reg::Id<T> variable_id)
     {
-        // if (_module.get().depends_on(id)) {
-        //     _module.get().set_dirty();
-        // }
-        // if (_module2.get().depends_on(id)) {
-        //     _module2.get().set_dirty();
-        // }
+        for (const auto& slot : _slots) {
+            const auto* slot_of_right_type = std::get_if<std::reference_wrapper<const Lab::InputSlot<T>>>(&slot);
+            if (slot_of_right_type) {
+                slot_of_right_type->get().set_dirty_if_depends_on(variable_id, _set_dirty);
+            }
+        }
     }
 
 private:
-    // std::reference_wrapper<Module> _module;
-    // std::reference_wrapper<Module> _module2;
+    AllInputSlots _slots;
+    SetDirtyFlag  _set_dirty;
 };
 
 // This is a class rather than a struct because we want to use methods to access the different members
@@ -63,6 +69,7 @@ inline void execute_command(CommandExecutionContext ctx, Command_FinishedEditing
 template<typename T>
 void set_value_default_impl(CommandExecutionContext ctx, const reg::Id<T>& id, const T& value)
 {
+    auto name = reg::to_string(id);
     ctx.registries().set(id, value);
     ctx.set_dirty(id);
 }

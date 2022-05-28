@@ -40,17 +40,20 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_impl(Cool::RenderTarget&, Module&, float time);
 
-    auto set_variable_dirty() { return SetVariableDirty{}; }
-    auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, _camera, set_variable_dirty()}}; }
-    auto commands_executor() { return CommandExecutor{commands_execution_context()}; }
+    // clang-format off
+    auto all_input_slots() -> AllInputSlots;
+    auto set_dirty_flag              () { return SetDirtyFlag{_dirty_registry}; }
+    auto set_variable_dirty          () { return SetVariableDirty{all_input_slots(), set_dirty_flag()}; }
+    auto commands_execution_context  () { return CommandExecutionContext{{_history, _registries, _camera, set_variable_dirty()}}; }
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
-    auto commands_dispatcher() { return CommandDispatcher{commands_executor(), _history, _registries}; }
-    auto set_dirty_flag() { return SetDirtyFlag{_dirty_registry}; }
-    auto ui() { return Ui{_registries, commands_dispatcher(), set_dirty_flag()}; }
-    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time, _camera.id()}; }
-    auto input_slot_destructor() { return InputSlotDestructorRef{_registries}; }
-    auto dirty_flag_factory() { return DirtyFlagFactory{_dirty_registry}; }
-    auto dirty_manager() { return DirtyManager{_dirty_registry}; }
+    auto commands_executor           () { return CommandExecutor{commands_execution_context()}; }
+    auto commands_dispatcher         () { return CommandDispatcher{commands_executor(), _history, _registries}; }
+    auto ui                          () { return Ui{_registries, commands_dispatcher(), set_dirty_flag()}; }
+    auto input_provider              (float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time, _camera.id()}; }
+    auto input_slot_destructor       () { return InputSlotDestructorRef{_registries}; }
+    auto dirty_flag_factory          () { return DirtyFlagFactory{_dirty_registry}; }
+    auto dirty_manager               () { return DirtyManager{_dirty_registry}; }
+    // clang-format on
 
     Cool::Polaroid polaroid();
 

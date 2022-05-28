@@ -21,8 +21,6 @@ struct InputSlot_AspectRatio {
 };
 struct InputSlot_Time {
 };
-struct InputSlot_Camera {
-};
 
 class InputProvider {
 public:
@@ -56,8 +54,10 @@ public:
         return file_input.file_watcher.path();
     }
 
-    auto operator()(const InputSlot_Camera&) const -> Cool::Camera
+    template<>
+    auto operator()(const InputSlot<Cool::Camera>& slot) const -> Cool::Camera
     {
+        slot.id = _camera_id;
         return _registries.get().get(_camera_id).value_or(Cool::Camera{});
     }
 
@@ -91,12 +91,12 @@ public:
     virtual void imgui_windows(Ui ui) = 0;
     virtual void update(){};
 
+    virtual auto all_input_slots() const -> AllInputSlots = 0;
+
     virtual auto is_dirty(DirtyManager dirty_manager) const -> bool // No need for the whole DirtyManager, just DirtyChecker
     {
         return dirty_manager.is_dirty(_dirty_flag);
     };
-
-    virtual auto depends_on(reg::AnyId) const -> bool = 0;
 
     auto dirty_flag() { return _dirty_flag; }
 

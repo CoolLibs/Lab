@@ -20,27 +20,18 @@ public:
     void render(RenderParams) override;
     void imgui_windows(Ui ui) override;
 
-    auto dependencies()
+    auto all_input_slots()
     {
-        return ranges::views::concat(
-            ranges::single_view(AnyInputSlotRef(_testFloat)),
-            ranges::single_view(AnyInputSlotRef(_color)),
-            ranges::single_view(AnyInputSlotRef(_color2)));
+        return std::vector{AnyInputSlotRef(_testFloat),
+                           AnyInputSlotRef(_color),
+                           AnyInputSlotRef(_color2)};
     }
 
-    auto dependencies() const
+    auto all_input_slots() const -> AllInputSlots override
     {
-        return ranges::views::concat(
-            ranges::single_view(AnyInputSlotRefToConst(_testFloat)),
-            ranges::single_view(AnyInputSlotRefToConst(_color)),
-            ranges::single_view(AnyInputSlotRefToConst(_color2)));
-    }
-
-    auto depends_on(reg::AnyId id) const -> bool override
-    {
-        return std::ranges::any_of(dependencies(), [&id](auto&& dep) {
-            return std::visit([&id](auto&& dep) { return dep.get().id == id; }, dep);
-        });
+        return {AnyInputSlotRefToConst(_testFloat),
+                AnyInputSlotRefToConst(_color),
+                AnyInputSlotRefToConst(_color2)};
     }
 
 private:

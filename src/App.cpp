@@ -101,6 +101,18 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #endif
 }
 
+auto App::all_input_slots() -> AllInputSlots
+{
+    auto vec  = _current_module->all_input_slots();
+    auto vec2 = _current_module2->all_input_slots();
+    for (const auto& x : vec2) {
+        vec.push_back(x);
+    }
+    // vec.insert(std::back_inserter(vec), vec2.begin(), vec2.end());
+    // std::copy(vec2.begin(), vec2.end(), std::back_inserter(vec));
+    return vec;
+}
+
 Cool::Polaroid App::polaroid()
 {
     return {

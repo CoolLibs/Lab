@@ -2,9 +2,6 @@
 #include <Cool/File/File.h>
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/Path/Path.h>
-#include <range/v3/core.hpp>
-#include <range/v3/view/concat.hpp>
-#include <range/v3/view/single.hpp>
 #include "../Module.h"
 #include "Dependencies/InputSlot.h"
 #include "Dependencies/Registries.h"
@@ -19,25 +16,20 @@ public:
     void render(RenderParams) override;
     void imgui_windows(Ui ui) override;
 
-    // auto dependencies()
-    // {
-    //     return ranges::views::concat(
-    //         ranges::single_view(AnyInputSlotRef(_testFloat)),
-    //         ranges::single_view(AnyInputSlotRef(_color)),
-    //         ranges::single_view(AnyInputSlotRef(_color2)));
-    // }
-
-    // auto dependencies() const
-    // {
-    //     return ranges::views::view(_parameters);
-    // }
-
-    auto depends_on(reg::AnyId id) const -> bool override
+    auto all_input_slots()
     {
-        return true;
-        // return std::ranges::any_of(_parameters, [&id](auto&& dep) {
-        //     return std::visit([&id](auto&& dep) { return dep.id == id; }, dep);
-        // });
+        return _parameters;
+    }
+
+    auto all_input_slots() const -> AllInputSlots override
+    {
+        AllInputSlots slots;
+        slots.push_back(AnyInputSlotRefToConst{_camera_slot});
+        for (const auto& x : _parameters) {
+            slots.push_back(
+                std::visit([](auto&& x) { return AnyInputSlotRefToConst{x}; }, x));
+        }
+        return slots;
     }
 
     auto is_dirty(DirtyManager dirty_manager) const -> bool override
@@ -54,7 +46,7 @@ private:
 private:
     Cool::FullscreenPipeline  _fullscreen_pipeline{};
     std::vector<AnyInputSlot> _parameters;
-    DirtyFlag                 _is_dirty;
+    InputSlot<Cool::Camera>   _camera_slot;
     DirtyFlag                 _shader_is_dirty; // Must be before _file because it is used to construct it
     InputSlot_File            _file;
 

@@ -10,6 +10,7 @@ Module_CustomShader::Module_CustomShader(DirtyFlagFactory dirty_flag_factory)
     : Module{dirty_flag_factory}
     , _shader_is_dirty{dirty_flag_factory.create()}
     , _file{_shader_is_dirty}
+    , _camera_slot{dirty_flag()}
 {
 }
 
@@ -53,10 +54,10 @@ void Module_CustomShader::render(RenderParams in)
             },
                        dep);
         }
-        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(InputSlot_Camera{}));
+        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(_camera_slot));
         _fullscreen_pipeline.draw();
     }
-    in.dirty_manager.set_clean(_is_dirty);
+    in.dirty_manager.set_clean(dirty_flag());
 }
 
 void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputSlotDestructorRef input_slot_destructor)
@@ -160,7 +161,7 @@ static auto get_slots_from_shader_code(std::string_view source_code, DirtyFlag d
 
 void Module_CustomShader::parse_shader_for_params(std::string_view source_code, InputSlotDestructorRef input_slot_destructor)
 {
-    auto new_slots = get_slots_from_shader_code(source_code, _is_dirty);
+    auto new_slots = get_slots_from_shader_code(source_code, dirty_flag());
     keep_values_of_slots_that_already_existed_and_destroy_unused_ones(_parameters, new_slots, input_slot_destructor);
     _parameters = std::move(new_slots);
 }
