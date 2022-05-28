@@ -75,11 +75,11 @@ private:
     CameraManager               _camera;
     Cool::Clock_Realtime        _clock;
     Cool::ImageSizeConstraint   _preview_constraint;
-    Cool::RenderableViewManager _views; // Must be before the views because it is used to construct them
+    Cool::RenderableViewManager _views; // Must be before the views because it is used to create them
     Cool::RenderableView&       _view;
     Cool::Exporter              _exporter;
 
-    DirtyRegistry           _dirty_registry;
+    DirtyRegistry           _dirty_registry; // Before the modules because it is used to create them
     reg::Id<int>            _intId;
     ShaderManagerManager    _shader_manager;
     std::unique_ptr<Module> _current_module;

@@ -10,8 +10,9 @@ namespace Lab {
 template<typename T>
 class InputSlot {
 public:
-    explicit InputSlot(std::string_view name = "")
-        : _name{name}
+    explicit InputSlot(DirtyFlag dirty_flag = {}, std::string_view name = "")
+        : _dirty_flag{dirty_flag}
+        , _name{name}
     {
     }
 
@@ -22,6 +23,7 @@ public: // This section is used by the InputProvider to do its job
     friend class Ui;
     friend class InputSlotDestructorRef;
     reg::Id<T> id;
+    DirtyFlag  _dirty_flag;
 
 private: // This section is really private
     std::string _name;

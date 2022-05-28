@@ -42,7 +42,8 @@ public:
 
     auto is_dirty(DirtyManager dirty_manager) const -> bool override
     {
-        return _is_dirty || dirty_manager.is_dirty(_shader_is_dirty);
+        return Module::is_dirty(dirty_manager) ||
+               dirty_manager.is_dirty(_shader_is_dirty);
     }
 
 private:
@@ -53,6 +54,7 @@ private:
 private:
     Cool::FullscreenPipeline  _fullscreen_pipeline{};
     std::vector<AnyInputSlot> _parameters;
+    DirtyFlag                 _is_dirty;
     DirtyFlag                 _shader_is_dirty; // Must be before _file because it is used to construct it
     InputSlot_File            _file;
 

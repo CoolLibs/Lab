@@ -76,39 +76,44 @@ public:
         DirtyManager           dirty_manager;
     };
 
+    Module() = default;
+    explicit Module(DirtyFlagFactory dirty_flag_factory)
+        : _dirty_flag{dirty_flag_factory.create()}
+    {
+    }
+
     virtual ~Module() = default;
     void do_rendering(RenderParams params)
     {
         render(params);
-        _is_dirty = false;
+        params.dirty_manager.set_clean(_dirty_flag);
     }
     virtual void imgui_windows(Ui ui) = 0;
     virtual void update(){};
 
-    virtual auto is_dirty(DirtyManager) const -> bool { return _is_dirty; }
+    virtual auto is_dirty(DirtyManager dirty_manager) const -> bool // No need for the whole DirtyManager, just DirtyChecker
+    {
+        return dirty_manager.is_dirty(_dirty_flag);
+    };
 
     virtual auto depends_on(reg::AnyId) const -> bool = 0;
 
-    void set_dirty()
-    {
-        _is_dirty = true;
-    }
+    auto dirty_flag() { return _dirty_flag; }
 
 protected:
     virtual void render(RenderParams) = 0;
     // template<typename T>
     // T get();
 
-protected:
-    // Dependencies _dependencies;
-    bool _is_dirty = true;
+private:
+    DirtyFlag _dirty_flag;
 
 private:
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
-        // archive();
+        archive(cereal::make_nvp("Dirty Flag", _dirty_flag));
     }
 };
 

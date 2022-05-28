@@ -3,8 +3,9 @@
 
 namespace Lab {
 
-TestModule::TestModule(std::string_view name)
-    : _name{name}
+TestModule::TestModule(std::string_view name, DirtyFlagFactory dirty_flag_factory)
+    : Module{dirty_flag_factory}
+    , _name{name}
 {
 }
 

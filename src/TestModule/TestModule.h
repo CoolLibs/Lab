@@ -5,6 +5,7 @@
 #include <range/v3/core.hpp>
 #include <range/v3/view/concat.hpp>
 #include <range/v3/view/single.hpp>
+#include "Dependencies/Dirty.h"
 #include "Dependencies/InputSlot.h"
 #include "Dependencies/Registries.h"
 #include "Module.h"
@@ -14,7 +15,7 @@ namespace Lab {
 class TestModule : public Module {
 public:
     TestModule() = default;
-    explicit TestModule(std::string_view name);
+    TestModule(std::string_view name, DirtyFlagFactory dirty_flag_factory);
 
     void render(RenderParams) override;
     void imgui_windows(Ui ui) override;
@@ -46,9 +47,9 @@ private:
     Cool::FullscreenPipeline _fullscreen_pipeline{
         Cool::File::to_string(Cool::Path::root() + "/shader-examples/test_module.frag"),
         "Test Module's Shader"};
-    InputSlot<glm::vec3> _color{"Color"};
-    InputSlot<glm::vec3> _color2{"Color2"};
-    InputSlot<float>     _testFloat{"Radius"};
+    InputSlot<glm::vec3> _color{dirty_flag(), "Color"};
+    InputSlot<glm::vec3> _color2{dirty_flag(), "Color2"};
+    InputSlot<float>     _testFloat{dirty_flag(), "Radius"};
     std::string          _name;
 
 private:

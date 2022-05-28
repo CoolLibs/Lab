@@ -7,7 +7,8 @@
 namespace Lab {
 
 Module_CustomShader::Module_CustomShader(DirtyFlagFactory dirty_flag_factory)
-    : _shader_is_dirty{dirty_flag_factory.create()}
+    : Module{dirty_flag_factory}
+    , _shader_is_dirty{dirty_flag_factory.create()}
     , _file{_shader_is_dirty}
 {
 }
@@ -55,7 +56,7 @@ void Module_CustomShader::render(RenderParams in)
         Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(InputSlot_Camera{}));
         _fullscreen_pipeline.draw();
     }
-    _is_dirty = false;
+    in.dirty_manager.set_clean(_is_dirty);
 }
 
 void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputSlotDestructorRef input_slot_destructor)
@@ -109,7 +110,7 @@ static void keep_values_of_slots_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-static auto get_slots_from_shader_code(std::string_view source_code)
+static auto get_slots_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag)
     -> std::vector<AnyInputSlot>
 {
     std::vector<AnyInputSlot> new_params;
@@ -133,13 +134,13 @@ static auto get_slots_from_shader_code(std::string_view source_code)
                     //
                     const auto input_slot = [&]() -> AnyInputSlot {
                         if (type == "int")
-                            return InputSlot<int>{name};
+                            return InputSlot<int>{dirty_flag, name};
                         else if (type == "float")
-                            return InputSlot<float>{name};
+                            return InputSlot<float>{dirty_flag, name};
                         else if (type == "vec2")
-                            return InputSlot<glm::vec2>{name};
+                            return InputSlot<glm::vec2>{dirty_flag, name};
                         else if (type == "vec3")
-                            return InputSlot<glm::vec3>{name};
+                            return InputSlot<glm::vec3>{dirty_flag, name};
                         else
                             throw std::invalid_argument(type + " is not a valid parameter type.");
                     }();
@@ -159,7 +160,7 @@ static auto get_slots_from_shader_code(std::string_view source_code)
 
 void Module_CustomShader::parse_shader_for_params(std::string_view source_code, InputSlotDestructorRef input_slot_destructor)
 {
-    auto new_slots = get_slots_from_shader_code(source_code);
+    auto new_slots = get_slots_from_shader_code(source_code, _is_dirty);
     keep_values_of_slots_that_already_existed_and_destroy_unused_ones(_parameters, new_slots, input_slot_destructor);
     _parameters = std::move(new_slots);
 }

@@ -14,7 +14,7 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _intId{_registries.create(0)}
     , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
-    , _current_module2{std::make_unique<TestModule>("Test Module 2")}
+    , _current_module2{std::make_unique<TestModule>("Test Module 2", dirty_flag_factory())}
     , _view2{_views.make_view("View2")}
     , _main_window{windows.main_window()}
     , _view{_views.make_view("View")}
@@ -65,14 +65,14 @@ void App::update()
 
     if (_last_time != _clock.time()) {
         _last_time = _clock.time();
-        _current_module->set_dirty();
-        _current_module2->set_dirty();
+        set_dirty_flag()(_current_module->dirty_flag());
+        set_dirty_flag()(_current_module2->dirty_flag());
     }
     if (_view.render_target.needs_resizing()) {
-        _current_module->set_dirty();
+        set_dirty_flag()(_current_module->dirty_flag());
     }
     if (_view2.render_target.needs_resizing()) {
-        _current_module2->set_dirty();
+        set_dirty_flag()(_current_module2->dirty_flag());
     }
     if (inputs_are_allowed()) {
         _current_module->update();
