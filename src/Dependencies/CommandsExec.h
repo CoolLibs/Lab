@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CameraManager.h"
 #include "Commands.h"
 #include "History.h"
 #include "Registries.h"
@@ -32,8 +33,9 @@ private:
 // and since this class is a big thing that makes everything accessible to everyone, it is especially important to be able to track the use that is made of each member
 class CommandExecutionContext {
 public:
-    auto history() -> const History& { return _data.history; }
+    auto history() const -> const History& { return _data.history; }
     auto registries() -> Registries& { return _data.registries; }
+    auto camera_manager() -> CameraManager& { return _data.camera_manager; }
     template<typename T>
     void set_dirty(const reg::Id<T>& id)
     {
@@ -41,9 +43,10 @@ public:
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        std::reference_wrapper<const History> history;
-        std::reference_wrapper<Registries>    registries;
-        SetVariableDirty                      set_dirty;
+        std::reference_wrapper<const History>      history;
+        std::reference_wrapper<Registries>         registries;
+        std::reference_wrapper<Lab::CameraManager> camera_manager;
+        SetVariableDirty                           set_dirty;
     };
     explicit CommandExecutionContext(Data data)
         : _data{data} {}
@@ -58,10 +61,23 @@ inline void execute_command(CommandExecutionContext ctx, Command_FinishedEditing
 }
 
 template<typename T>
-void set_value(CommandExecutionContext ctx, const reg::Id<T>& id, const T& value)
+void set_value_default_impl(CommandExecutionContext ctx, const reg::Id<T>& id, const T& value)
 {
     ctx.registries().set(id, value);
     ctx.set_dirty(id);
+}
+
+template<typename T>
+void set_value(CommandExecutionContext ctx, const reg::Id<T>& id, const T& value)
+{
+    set_value_default_impl(ctx, id, value);
+}
+
+template<>
+inline void set_value(CommandExecutionContext ctx, const reg::Id<Cool::Camera>& id, const Cool::Camera& value)
+{
+    set_value_default_impl(ctx, id, value);
+    ctx.camera_manager().set_camera(value);
 }
 
 template<typename T>
@@ -126,7 +142,7 @@ public:
     {
     }
 
-    void dispatch(const Command& command)
+    void dispatch(const Command& command) const
     {
         const auto reversible = make_reversible_command({_registries}, command); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
         _executor.execute(command);
@@ -136,7 +152,7 @@ public:
     }
 
 private:
-    CommandExecutor                    _executor;
+    mutable CommandExecutor            _executor;
     std::reference_wrapper<History>    _history;
     std::reference_wrapper<Registries> _registries;
 };

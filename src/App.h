@@ -41,13 +41,13 @@ private:
     void render_impl(Cool::RenderTarget&, Module&, float time);
 
     auto set_variable_dirty() { return SetVariableDirty{}; }
-    auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, set_variable_dirty()}}; }
+    auto commands_execution_context() { return CommandExecutionContext{{_history, _registries, _camera, set_variable_dirty()}}; }
     auto commands_executor() { return CommandExecutor{commands_execution_context()}; }
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
     auto commands_dispatcher() { return CommandDispatcher{commands_executor(), _history, _registries}; }
     auto set_dirty_flag() { return SetDirtyFlag{_dirty_registry}; }
     auto ui() { return Ui{_registries, commands_dispatcher(), set_dirty_flag()}; }
-    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time, *_camera}; }
+    auto input_provider(float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time, _camera.id()}; }
     auto input_slot_destructor() { return InputSlotDestructorRef{_registries}; }
     auto dirty_flag_factory() { return DirtyFlagFactory{_dirty_registry}; }
     auto dirty_manager() { return DirtyManager{_dirty_registry}; }
@@ -70,15 +70,15 @@ private:
     }
 
 private:
+    Registries                  _registries; // First because modules need the registries when they get created
     Cool::Window&               _main_window;
-    Cool::CameraManager         _camera;
+    CameraManager               _camera;
     Cool::Clock_Realtime        _clock;
     Cool::ImageSizeConstraint   _preview_constraint;
     Cool::RenderableViewManager _views; // Must be before the views because it is used to construct them
     Cool::RenderableView&       _view;
     Cool::Exporter              _exporter;
 
-    Registries              _registries; // First because modules need the registries when they get created
     DirtyRegistry           _dirty_registry;
     reg::Id<int>            _intId;
     ShaderManagerManager    _shader_manager;

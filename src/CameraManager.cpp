@@ -1,9 +1,10 @@
 #include "CameraManager.h"
 #include "Dependencies/Commands.h"
+#include "Dependencies/CommandsExec.h"
 
 namespace Lab {
 
-void CameraManager::update(CommandDispatcher dispatcher) const
+void CameraManager::update(const CommandDispatcher& dispatcher) const
 {
     if (_previous_camera != *_camera_manager) {
         dispatcher.dispatch(Command_SetValue{_id, *_camera_manager});

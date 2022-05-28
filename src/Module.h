@@ -26,11 +26,11 @@ struct InputSlot_Camera {
 
 class InputProvider {
 public:
-    InputProvider(const Registries& registries, float render_target_aspect_ratio, float time, const Cool::Camera& camera)
+    InputProvider(const Registries& registries, float render_target_aspect_ratio, float time, const reg::Id<Cool::Camera>& camera_id)
         : _registries{registries}
         , _render_target_aspect_ratio{render_target_aspect_ratio}
         , _time{time}
-        , _camera{camera}
+        , _camera_id{camera_id}
     {
     }
 
@@ -58,14 +58,14 @@ public:
 
     auto operator()(const InputSlot_Camera&) const -> Cool::Camera
     {
-        return _camera;
+        return _registries.get().get(_camera_id).value_or(Cool::Camera{});
     }
 
 private:
     std::reference_wrapper<const Registries> _registries;
     float                                    _render_target_aspect_ratio;
     float                                    _time;
-    Cool::Camera                             _camera;
+    reg::Id<Cool::Camera>                    _camera_id;
 };
 
 class Module {
