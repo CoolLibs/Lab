@@ -58,6 +58,7 @@ private:
     {
         archive(cereal::base_class<Module>(this),
                 _parameters,
+                _camera_slot,
                 _shader_is_dirty,
                 _file);
     }
