@@ -1,7 +1,13 @@
 #pragma once
 
-#include <Cool/Camera/CameraManager.h>
+#include <Cool/Camera/Camera.h>
+#include <Cool/Camera/ProjectionController_Perspective.h>
+#include <Cool/Camera/ViewController_Orbital.h>
+#include <Cool/Input/MouseCoordinates.h>
+#include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
+#include "Dependencies/CommandsExec.h"
+#include "Dependencies/Registries.h"
 
 namespace Lab {
 
@@ -9,25 +15,27 @@ class CommandDispatcher;
 
 class CameraManager {
 public:
-    explicit CameraManager(const reg::Id<Cool::Camera>& id)
-        : _id{id}
+    explicit CameraManager(const reg::Id<Cool::Camera>& camera_id)
+        : _camera_id{camera_id}
     {
     }
 
     CameraManager() = default;
 
-    void update(const CommandDispatcher&) const;
+    void hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates>&, std::reference_wrapper<Registries>, CommandDispatcher);
 
-    void set_camera(const Cool::Camera&);
+    auto id() const -> const reg::Id<Cool::Camera>& { return _camera_id; }
 
-    auto manager() -> Cool::CameraManager& { return _camera_manager; }
+    void imgui();
 
-    auto id() const -> const reg::Id<Cool::Camera>& { return _id; }
+    void apply(float                              aspect_ratio,
+               std::reference_wrapper<Registries> registries,
+               CommandDispatcher                  commander);
 
 private:
-    Cool::CameraManager   _camera_manager;
-    Cool::Camera          _previous_camera;
-    reg::Id<Cool::Camera> _id;
+    reg::Id<Cool::Camera>                  _camera_id;
+    Cool::ViewController_Orbital           _view_controller;
+    Cool::ProjectionController_Perspective _projection_controller;
 
 private:
     // Serialization
@@ -35,8 +43,9 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("CameraManager", _camera_manager),
-                cereal::make_nvp("ID", _id));
+        archive(cereal::make_nvp("Camera ID", _camera_id),
+                cereal::make_nvp("ViewController", _view_controller),
+                cereal::make_nvp("ProjectionController", _projection_controller));
     }
 };
 

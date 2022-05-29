@@ -44,7 +44,7 @@ private:
     auto all_input_slots() -> AllInputSlots;
     auto set_dirty_flag              () { return SetDirtyFlag{_dirty_registry}; }
     auto set_variable_dirty          () { return SetVariableDirty{all_input_slots(), set_dirty_flag()}; }
-    auto commands_execution_context  () { return CommandExecutionContext{{_history, _registries, _camera, set_variable_dirty()}}; }
+    auto commands_execution_context  () { return CommandExecutionContext{{_history, _registries, set_variable_dirty()}}; }
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
     auto commands_executor           () { return CommandExecutor{commands_execution_context()}; }
     auto commands_dispatcher         () { return CommandDispatcher{commands_executor(), _history, _registries}; }

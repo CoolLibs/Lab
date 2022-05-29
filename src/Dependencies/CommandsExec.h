@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CameraManager.h"
 #include "Commands.h"
 #include "Dependencies/InputSlot.h"
 #include "History.h"
@@ -41,7 +40,6 @@ class CommandExecutionContext {
 public:
     auto history() const -> const History& { return _data.history; }
     auto registries() -> Registries& { return _data.registries; }
-    auto camera_manager() -> CameraManager& { return _data.camera_manager; }
     template<typename T>
     void set_dirty(const reg::Id<T>& id)
     {
@@ -49,10 +47,9 @@ public:
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        std::reference_wrapper<const History>      history;
-        std::reference_wrapper<Registries>         registries;
-        std::reference_wrapper<Lab::CameraManager> camera_manager;
-        SetVariableDirty                           set_dirty;
+        std::reference_wrapper<const History> history;
+        std::reference_wrapper<Registries>    registries;
+        SetVariableDirty                      set_dirty;
     };
     explicit CommandExecutionContext(Data data)
         : _data{data} {}
@@ -78,13 +75,6 @@ template<typename T>
 void set_value(CommandExecutionContext ctx, const reg::Id<T>& id, const T& value)
 {
     set_value_default_impl(ctx, id, value);
-}
-
-template<>
-inline void set_value(CommandExecutionContext ctx, const reg::Id<Cool::Camera>& id, const Cool::Camera& value)
-{
-    set_value_default_impl(ctx, id, value);
-    ctx.camera_manager().set_camera(value);
 }
 
 template<typename T>

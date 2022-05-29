@@ -20,8 +20,8 @@ App::App(Cool::WindowManager& windows)
     , _view{_views.make_view("View")}
     , _camera{_registries.of<Cool::Camera>().create({})}
 {
-    _camera.manager().hook_events(_view.view.mouse_events());
-    _camera.manager().hook_events(_view2.view.mouse_events());
+    _camera.hook_events(_view.view.mouse_events(), _registries, commands_dispatcher());
+    _camera.hook_events(_view2.view.mouse_events(), _registries, commands_dispatcher());
     serv::init([](std::string_view request) {
         Cool::Log::ToUser::info("Scripting", "{}", request);
     });
@@ -44,14 +44,12 @@ void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, fl
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        _camera.manager().apply(aspect_ratio);
         some_module.do_rendering({input_provider(aspect_ratio, time), input_slot_destructor(), dirty_manager()});
     });
 }
 
 void App::update()
 {
-    _camera.update(commands_dispatcher());
     if (!_exporter.is_exporting()) {
         _clock.update();
         for (auto& view : _views) {
@@ -65,11 +63,13 @@ void App::update()
 
     if (_last_time != _clock.time()) {
         _last_time = _clock.time();
+
         set_dirty_flag()(_current_module->dirty_flag());
         set_dirty_flag()(_current_module2->dirty_flag());
     }
     if (_view.render_target.needs_resizing()) {
-        set_dirty_flag()(_current_module->dirty_flag());
+        const auto aspect_ratio = img::SizeU::aspect_ratio(_view.render_target.desired_size());
+        _camera.apply(aspect_ratio, _registries, commands_dispatcher());
     }
     if (_view2.render_target.needs_resizing()) {
         set_dirty_flag()(_current_module2->dirty_flag());
@@ -160,7 +160,7 @@ void App::imgui_windows()
         ImGui::End();
         // Camera
         ImGui::Begin("Camera");
-        _camera.manager().imgui();
+        _camera.imgui();
         ImGui::End();
 #if DEBUG
         if (_show_imgui_debug) {
