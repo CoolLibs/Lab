@@ -160,7 +160,7 @@ void App::imgui_windows()
         ImGui::End();
         // Camera
         ImGui::Begin("Camera");
-        _camera.imgui();
+        _camera.imgui(_registries, commands_dispatcher());
         ImGui::End();
 #if DEBUG
         if (_show_imgui_debug) {

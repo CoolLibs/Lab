@@ -26,7 +26,8 @@ public:
 
     auto id() const -> const reg::Id<Cool::Camera>& { return _camera_id; }
 
-    void imgui();
+    void imgui(std::reference_wrapper<Registries> registries,
+               CommandDispatcher                  commander);
 
     void apply(float                              aspect_ratio,
                std::reference_wrapper<Registries> registries,
@@ -39,6 +40,7 @@ private:
     reg::Id<Cool::Camera>                  _camera_id;
     Cool::ViewController_Orbital           _view_controller;
     Cool::ProjectionController_Perspective _projection_controller;
+    float                                  _last_aspect_ratio{};
 
 private:
     // Serialization

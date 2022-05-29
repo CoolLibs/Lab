@@ -1,4 +1,5 @@
 #include "CameraManager.h"
+#include <Cool/Camera/ViewController_OrbitalU.h>
 #include "Dependencies/Commands.h"
 
 namespace Lab {
@@ -7,7 +8,8 @@ void CameraManager::apply(float                              aspect_ratio,
                           std::reference_wrapper<Registries> registries,
                           CommandDispatcher                  commander)
 {
-    auto camera = *registries.get().get(_camera_id);
+    auto camera        = *registries.get().get(_camera_id);
+    _last_aspect_ratio = aspect_ratio;
     _projection_controller.apply_to(camera, aspect_ratio);
     commander.dispatch(Command_SetValue{_camera_id, camera});
 }
@@ -51,16 +53,31 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
         });
 }
 
-void CameraManager::imgui()
+void CameraManager::imgui(std::reference_wrapper<Registries> registries,
+                          CommandDispatcher                  commander)
 {
-    // _view_controller.ImGui(_camera);
-    // if (ImGui::Button("Look at the origin")) {
-    //     _view_controller.set_orbit_center({0, 0, 0}, _camera);
-    // }
-    // if (ImGui::Button("Reset transform")) {
-    //     reset_transform();
-    // }
-    // _projection_controller.ImGui();
+    maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+        return _view_controller.ImGui(camera);
+    });
+    if (ImGui::Button("Look at the origin")) {
+        maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+            _view_controller.set_orbit_center({0, 0, 0}, camera);
+            return true;
+        });
+    }
+    if (ImGui::Button("Reset transform")) {
+        maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+            Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
+            _projection_controller.apply_to(camera, _last_aspect_ratio);
+            return true;
+        });
+    }
+    if (_projection_controller.ImGui()) {
+        maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+            _projection_controller.apply_to(camera, _last_aspect_ratio);
+            return true;
+        });
+    }
 }
 
 void CameraManager::maybe_update_camera(
