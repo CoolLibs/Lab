@@ -33,6 +33,9 @@ public:
                CommandDispatcher                  commander);
 
 private:
+    void maybe_update_camera(std::reference_wrapper<Registries>, CommandDispatcher, std::function<bool(Cool::Camera&)> fun);
+
+private:
     reg::Id<Cool::Camera>                  _camera_id;
     Cool::ViewController_Orbital           _view_controller;
     Cool::ProjectionController_Perspective _projection_controller;

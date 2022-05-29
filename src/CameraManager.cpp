@@ -19,38 +19,34 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
     events
         .scroll_event()
         .subscribe([registries, camera_id = _camera_id, this, commander](const auto& event) {
-            auto camera = *registries.get().get(camera_id);
-            if (_view_controller.on_wheel_scroll(camera, event.dy)) {
-                commander.dispatch(Command_SetValue{camera_id, camera});
-                commander.dispatch(Command_FinishedEditingValue{});
-            }
+            maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+                return _view_controller.on_wheel_scroll(camera, event.dy);
+            });
+            commander.dispatch(Command_FinishedEditingValue{});
         });
     events
         .drag()
         .start()
         .subscribe([registries, camera_id = _camera_id, this, commander](const auto& event) {
-            auto camera = *registries.get().get(camera_id);
-            if (_view_controller.on_drag_start(camera, event.mods)) {
-                commander.dispatch(Command_SetValue{camera_id, camera});
-            }
+            maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+                return _view_controller.on_drag_start(camera, event.mods);
+            });
         });
     events
         .drag()
         .update()
         .subscribe([registries, camera_id = _camera_id, this, commander](const auto& event) {
-            auto camera = *registries.get().get(camera_id);
-            if (_view_controller.on_drag(camera, event.delta)) {
-                commander.dispatch(Command_SetValue{camera_id, camera});
-            }
+            maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+                return _view_controller.on_drag(camera, event.delta);
+            });
         });
     events
         .drag()
         .stop()
-        .subscribe([registries, camera_id = _camera_id, this, commander](const auto& event) {
-            auto camera = *registries.get().get(camera_id);
-            if (_view_controller.on_drag_stop(camera)) {
-                commander.dispatch(Command_SetValue{camera_id, camera});
-            }
+        .subscribe([registries, this, commander](const auto& event) {
+            maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+                return _view_controller.on_drag_stop(camera);
+            });
             commander.dispatch(Command_FinishedEditingValue{});
         });
 }
@@ -65,6 +61,17 @@ void CameraManager::imgui()
     //     reset_transform();
     // }
     // _projection_controller.ImGui();
+}
+
+void CameraManager::maybe_update_camera(
+    std::reference_wrapper<Registries> registries,
+    CommandDispatcher                  commander,
+    std::function<bool(Cool::Camera&)> fun)
+{
+    auto camera = *registries.get().get(_camera_id);
+    if (fun(camera)) {
+        commander.dispatch(Command_SetValue{_camera_id, camera});
+    }
 }
 
 } // namespace Lab
