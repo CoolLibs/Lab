@@ -10,7 +10,7 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
 {
     events
         .scroll_event()
-        .subscribe([registries, camera_id = _camera_id, this, commander](const auto& event) {
+        .subscribe([registries, this, commander](const auto& event) {
             maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
                 return _view_controller.on_wheel_scroll(camera, event.dy);
             });
@@ -19,7 +19,7 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
     events
         .drag()
         .start()
-        .subscribe([registries, camera_id = _camera_id, this, commander](const auto& event) {
+        .subscribe([registries, this, commander](const auto& event) {
             maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag_start(camera, event.mods);
             });
@@ -27,7 +27,7 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
     events
         .drag()
         .update()
-        .subscribe([registries, camera_id = _camera_id, this, commander](const auto& event) {
+        .subscribe([registries, this, commander](const auto& event) {
             maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag(camera, event.delta);
             });
@@ -35,7 +35,7 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
     events
         .drag()
         .stop()
-        .subscribe([registries, this, commander](const auto& event) {
+        .subscribe([registries, this, commander](auto&&) {
             maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag_stop(camera);
             });
@@ -73,7 +73,7 @@ void CameraManager::maybe_update_camera(
 {
     auto camera = *registries.get().get(_camera_id);
     if (fun(camera)) {
-        commander.dispatch(Command_SetValue{_camera_id, camera});
+        commander.dispatch(Command_SetValue<Cool::Camera>{_camera_id, camera});
     }
 }
 

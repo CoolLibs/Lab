@@ -47,10 +47,10 @@ public:
         }
         ImGui::PopID();
     }
-    void widget(std::string_view name, reg::Id<glm::vec2> color_id)
+    void widget(std::string_view, reg::Id<glm::vec2>)
     {
     }
-    void widget(std::string_view name, reg::Id<Cool::Camera> color_id)
+    void widget(std::string_view, reg::Id<Cool::Camera>)
     {
     }
 
@@ -76,13 +76,13 @@ public:
         widget(name, color_slot.id, *color);
         ImGui::PopID();
     }
-    void widget(std::string_view name, InputSlot<Cool::Camera>& color_slot)
+    void widget(std::string_view, InputSlot<Cool::Camera>&)
     {
     }
-    void widget(std::string_view name, InputSlot<int>& color_slot)
+    void widget(std::string_view, InputSlot<int>&)
     {
     }
-    void widget(std::string_view name, InputSlot<glm::vec2>& color_slot)
+    void widget(std::string_view, InputSlot<glm::vec2>&)
     {
     }
 
@@ -98,7 +98,7 @@ public:
         ImGui::PopID();
     }
 
-    void widget(std::string_view name, InputSlot_File& slot)
+    void widget(std::string_view, InputSlot_File& slot)
     {
         slot.update(_set_dirty); // TODO shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
         std::string path = slot.file_watcher.path().string();

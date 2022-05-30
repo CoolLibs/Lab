@@ -12,13 +12,13 @@
 namespace Lab {
 
 App::App(Cool::WindowManager& windows)
-    : _intId{_registries.create(0)}
+    : _main_window{windows.main_window()}
+    , _camera{_registries.of<Cool::Camera>().create({})}
+    , _view{_views.make_view("View")}
+    , _intId{_registries.create(0)}
     , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
     , _current_module2{std::make_unique<TestModule>("Test Module 2", dirty_flag_factory())}
     , _view2{_views.make_view("View2")}
-    , _main_window{windows.main_window()}
-    , _view{_views.make_view("View")}
-    , _camera{_registries.of<Cool::Camera>().create({})}
 {
     _camera.hook_events(_view.view.mouse_events(), _registries, commands_dispatcher());
     _camera.hook_events(_view2.view.mouse_events(), _registries, commands_dispatcher());

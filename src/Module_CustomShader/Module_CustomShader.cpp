@@ -8,9 +8,9 @@ namespace Lab {
 
 Module_CustomShader::Module_CustomShader(DirtyFlagFactory dirty_flag_factory)
     : Module{dirty_flag_factory}
+    , _camera_slot{dirty_flag()}
     , _shader_is_dirty{dirty_flag_factory.create()}
     , _file{_shader_is_dirty}
-    , _camera_slot{dirty_flag()}
 {
 }
 
@@ -35,7 +35,7 @@ void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, cons
     shader.set_uniform(name, value);
 }
 
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::Camera& value)
+void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
 {
     assert(false); // This isn't used at the moment because we set the camera3d manually for all shaders, but this should be changed
     // Cool::CameraShaderU::set_uniform(shader, value);
