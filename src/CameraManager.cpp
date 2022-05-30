@@ -4,16 +4,6 @@
 
 namespace Lab {
 
-void CameraManager::apply(float                              aspect_ratio,
-                          std::reference_wrapper<Registries> registries,
-                          CommandDispatcher                  commander)
-{
-    auto camera        = *registries.get().get(_camera_id);
-    _last_aspect_ratio = aspect_ratio;
-    _projection_controller.apply_to(camera, aspect_ratio);
-    commander.dispatch(Command_SetValue{_camera_id, camera});
-}
-
 void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates>& events,
                                 std::reference_wrapper<Registries>                 registries,
                                 CommandDispatcher                                  commander)
@@ -68,16 +58,12 @@ void CameraManager::imgui(std::reference_wrapper<Registries> registries,
     if (ImGui::Button("Reset transform")) {
         maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
             Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
-            _projection_controller.apply_to(camera, _last_aspect_ratio);
             return true;
         });
     }
-    if (_projection_controller.ImGui()) {
-        maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
-            _projection_controller.apply_to(camera, _last_aspect_ratio);
-            return true;
-        });
-    }
+    maybe_update_camera(registries, commander, [&](Cool::Camera& camera) {
+        return Cool::imgui(camera.projection());
+    });
 }
 
 void CameraManager::maybe_update_camera(

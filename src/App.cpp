@@ -68,8 +68,7 @@ void App::update()
         set_dirty_flag()(_current_module2->dirty_flag());
     }
     if (_view.render_target.needs_resizing()) {
-        const auto aspect_ratio = img::SizeU::aspect_ratio(_view.render_target.desired_size());
-        _camera.apply(aspect_ratio, _registries, commands_dispatcher());
+        set_dirty_flag()(_current_module->dirty_flag());
     }
     if (_view2.render_target.needs_resizing()) {
         set_dirty_flag()(_current_module2->dirty_flag());

@@ -37,7 +37,8 @@ void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, cons
 
 void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::Camera& value)
 {
-    Cool::CameraShaderU::set_uniform(shader, value);
+    assert(false); // This isn't used at the moment because we set the camera3d manually for all shaders, but this should be changed
+    // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
 void Module_CustomShader::render(RenderParams in)
@@ -54,7 +55,7 @@ void Module_CustomShader::render(RenderParams in)
             },
                        dep);
         }
-        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(_camera_slot));
+        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(_camera_slot), in.provider(InputSlot_AspectRatio{}));
         _fullscreen_pipeline.draw();
     }
     in.dirty_manager.set_clean(dirty_flag());
