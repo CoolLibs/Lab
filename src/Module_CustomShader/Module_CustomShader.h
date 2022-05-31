@@ -2,9 +2,8 @@
 #include <Cool/File/File.h>
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/Path/Path.h>
-#include "../Module.h"
 #include "Dependencies/InputSlot.h"
-#include "Dependencies/Registries.h"
+#include "Dependencies/Module.h"
 
 namespace Lab {
 

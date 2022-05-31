@@ -1,9 +1,9 @@
 #pragma once
 #include <Cool/FileWatcher/FileWatcher.h>
 #include <reg/reg.hpp>
-#include "AllParameterTypes.h"
+#include "AllVariableTypes.h"
 #include "Dirty.h"
-#include "Registries.h"
+#include "VariableRegistries.h"
 
 namespace Lab {
 
@@ -86,8 +86,13 @@ private:
     }
 };
 
+struct InputSlot_AspectRatio {
+};
+struct InputSlot_Time {
+};
+
 using AnyInputSlotRef =
-    AllParameterTypes::
+    AllVariableTypes::
         wrap<InputSlot>::
             wrap<std::reference_wrapper>::
                 to<std::variant>;
@@ -100,18 +105,18 @@ struct make_ref_to_const_input_slot {
 } // namespace internal
 
 using AnyInputSlotRefToConst =
-    AllParameterTypes::
+    AllVariableTypes::
         map<internal::make_ref_to_const_input_slot>::
             to<std::variant>;
 
 using AnyInputSlot =
-    AllParameterTypes::
+    AllVariableTypes::
         wrap<InputSlot>::
             to<std::variant>;
 
 class InputSlotDestructorRef {
 public:
-    explicit InputSlotDestructorRef(Registries& registries)
+    explicit InputSlotDestructorRef(VariableRegistries& registries)
         : _variable_registries{registries}
     {
     }
@@ -122,7 +127,7 @@ public:
     }
 
 private:
-    std::reference_wrapper<Registries> _variable_registries;
+    std::reference_wrapper<VariableRegistries> _variable_registries;
 };
 
 } // namespace Lab

@@ -10,11 +10,11 @@
 #include <Cool/View/RenderableViewManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <reg/cereal.hpp>
-#include "CameraManager.h"
+#include "Dependencies/CameraManager.h"
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
-#include "Dependencies/Registries.h"
-#include "Module.h"
+#include "Dependencies/Module.h"
+#include "Dependencies/VariableRegistries.h"
 #include "UI/ThemeManager.h"
 
 namespace Lab {
@@ -73,7 +73,7 @@ private:
     }
 
 private:
-    Registries                  _variable_registries; // First because modules need the registries when they get created
+    VariableRegistries          _variable_registries; // First because modules need the registries when they get created
     Cool::Window&               _main_window;
     CameraManager               _camera_manager;
     Cool::Clock_Realtime        _clock;

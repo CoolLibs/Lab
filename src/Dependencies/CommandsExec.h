@@ -3,7 +3,7 @@
 #include "Commands.h"
 #include "Dependencies/InputSlot.h"
 #include "History.h"
-#include "Registries.h"
+#include "VariableRegistries.h"
 
 namespace Lab {
 
@@ -39,7 +39,7 @@ private:
 class CommandExecutionContext {
 public:
     auto history() const -> const History& { return _data.history; }
-    auto registries() -> Registries& { return _data.registries; }
+    auto registries() -> VariableRegistries& { return _data.registries; }
     template<typename T>
     void set_dirty(const reg::Id<T>& id)
     {
@@ -47,9 +47,9 @@ public:
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        std::reference_wrapper<const History> history;
-        std::reference_wrapper<Registries>    registries;
-        SetVariableDirty                      set_dirty;
+        std::reference_wrapper<const History>      history;
+        std::reference_wrapper<VariableRegistries> registries;
+        SetVariableDirty                           set_dirty;
     };
     explicit CommandExecutionContext(Data data)
         : _data{data} {}
@@ -134,7 +134,7 @@ private:
 
 class CommandDispatcher {
 public:
-    CommandDispatcher(CommandExecutor executor, History& history, Registries& registries)
+    CommandDispatcher(CommandExecutor executor, History& history, VariableRegistries& registries)
         : _executor{executor}, _history{history}, _variable_registries{registries}
     {
     }
@@ -149,9 +149,9 @@ public:
     }
 
 private:
-    mutable CommandExecutor            _executor;
-    std::reference_wrapper<History>    _history;
-    std::reference_wrapper<Registries> _variable_registries;
+    mutable CommandExecutor                    _executor;
+    std::reference_wrapper<History>            _history;
+    std::reference_wrapper<VariableRegistries> _variable_registries;
 };
 
 } // namespace Lab

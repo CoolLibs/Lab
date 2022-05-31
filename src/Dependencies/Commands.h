@@ -1,8 +1,8 @@
 #pragma once
 #include <Cool/Camera/Camera.h>
 #include <reg/reg.hpp>
-#include "AllParameterTypes.h"
-#include "Registries.h"
+#include "AllVariableTypes.h"
+#include "VariableRegistries.h"
 
 namespace Lab {
 
@@ -26,13 +26,13 @@ struct Command_FinishedEditingValue {
 };
 
 using Command =
-    AllParameterTypes::
+    AllVariableTypes::
         wrap<Command_SetValue>::
             append<Command_FinishedEditingValue>::
                 to<std::variant>;
 
 using ReversibleCommand =
-    AllParameterTypes::
+    AllVariableTypes::
         wrap<ReversibleCommand_SetValue>::
             to<std::variant>;
 
@@ -69,7 +69,7 @@ public:
 };
 
 struct MakeReversibleCommandContext {
-    std::reference_wrapper<Registries> registries;
+    std::reference_wrapper<VariableRegistries> registries;
 };
 
 template<typename T>

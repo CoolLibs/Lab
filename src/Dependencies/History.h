@@ -6,6 +6,6 @@
 
 namespace Lab {
 
-using History = cmd::HistoryWithUiAndSerialization<ReversibleCommand>;
+using History = cmd::HistoryWithUiAndSerialization<Lab::ReversibleCommand>;
 
 }

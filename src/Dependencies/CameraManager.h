@@ -6,7 +6,7 @@
 #include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
 #include "Dependencies/CommandsExec.h"
-#include "Dependencies/Registries.h"
+#include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
 
@@ -21,15 +21,15 @@ public:
 
     CameraManager() = default;
 
-    void hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates>&, std::reference_wrapper<Registries>, CommandDispatcher);
+    void hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates>&, std::reference_wrapper<VariableRegistries>, CommandDispatcher);
 
     auto id() const -> const reg::Id<Cool::Camera>& { return _camera_id; }
 
-    void imgui(std::reference_wrapper<Registries> registries,
-               CommandDispatcher                  commander);
+    void imgui(std::reference_wrapper<VariableRegistries> registries,
+               CommandDispatcher                          commander);
 
 private:
-    void maybe_update_camera(std::reference_wrapper<Registries>, CommandDispatcher, std::function<bool(Cool::Camera&)> fun);
+    void maybe_update_camera(std::reference_wrapper<VariableRegistries>, CommandDispatcher, std::function<bool(Cool::Camera&)> fun);
 
 private:
     reg::Id<Cool::Camera>        _camera_id;

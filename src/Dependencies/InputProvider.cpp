@@ -1,4 +1,4 @@
-#include "Module.h" // TODO(JF) only include InputProvider.h
+#include "InputProvider.h"
 
 namespace Lab {
 

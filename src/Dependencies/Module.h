@@ -2,12 +2,10 @@
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
-// #include "Commands.h"
-#include "Dependencies.h"
-#include "Dependencies/History.h"
-#include "Dependencies/InputSlot.h"
-#include "Dependencies/Registries.h"
-#include "Dependencies/Ui.h"
+#include "History.h"
+#include "InputProvider.h"
+#include "InputSlot.h"
+#include "Ui.h"
 
 namespace Lab {
 
@@ -16,53 +14,6 @@ namespace Lab {
 /// Each module has a State struct, and that's what is serialized / modified through commands / stored in presets.
 /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level)
 /// Rendering only has const access to the registries: creating / updating values is done trough ui()
-
-struct InputSlot_AspectRatio {
-};
-struct InputSlot_Time {
-};
-
-class InputProvider {
-public:
-    InputProvider(const Registries& registries, float render_target_aspect_ratio, float time, const reg::Id<Cool::Camera>& camera_id)
-        : _variable_registries{registries}
-        , _render_target_aspect_ratio{render_target_aspect_ratio}
-        , _time{time}
-        , _camera_id{camera_id}
-    {
-    }
-
-    template<typename T>
-    auto operator()(const InputSlot<T>& slot) const -> T
-    {
-        const auto maybe_value = _variable_registries.get().get(slot.id);
-        return maybe_value.value_or(T{});
-    }
-
-    template<>
-    auto operator()(const InputSlot<Cool::Camera>& slot) const -> Cool::Camera;
-
-    float operator()(const InputSlot_AspectRatio&) const
-    {
-        return _render_target_aspect_ratio;
-    }
-
-    auto operator()(const InputSlot_Time&) const -> float
-    {
-        return _time;
-    }
-
-    auto operator()(const InputSlot_File& file_input) const -> std::filesystem::path
-    {
-        return file_input.file_watcher.path();
-    }
-
-private:
-    std::reference_wrapper<const Registries> _variable_registries;
-    float                                    _render_target_aspect_ratio;
-    float                                    _time;
-    reg::Id<Cool::Camera>                    _camera_id;
-};
 
 class Module {
 public:

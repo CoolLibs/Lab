@@ -4,13 +4,13 @@
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
 #include "CommandsExec.h"
 #include "InputSlot.h"
-#include "Registries.h"
+#include "VariableRegistries.h"
 
 namespace Lab {
 
 class Ui {
 public:
-    Ui(Registries& registries, CommandDispatcher commands, SetDirtyFlag set_dirty)
+    Ui(VariableRegistries& registries, CommandDispatcher commands, SetDirtyFlag set_dirty)
         : _variable_registries{registries}, _commands{commands}, _set_dirty{set_dirty}
     {
     }
@@ -118,9 +118,9 @@ public:
     }
 
 private:
-    std::reference_wrapper<Registries> _variable_registries;
-    CommandDispatcher                  _commands;
-    SetDirtyFlag                       _set_dirty;
+    std::reference_wrapper<VariableRegistries> _variable_registries;
+    CommandDispatcher                          _commands;
+    SetDirtyFlag                               _set_dirty;
 };
 
 } // namespace Lab
