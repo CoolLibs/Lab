@@ -30,6 +30,7 @@ public:
     }
 
     virtual ~Module() = default;
+
     void do_rendering(RenderParams params)
     {
         render(params);
@@ -49,8 +50,6 @@ public:
 
 protected:
     virtual void render(RenderParams) = 0;
-    // template<typename T>
-    // T get();
 
 private:
     DirtyFlag _dirty_flag;
