@@ -271,7 +271,7 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
         }
     }
     if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
-        auto exec = reversible_commands_executor();
+        auto exec = reversible_command_executor();
         if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
             _history.move_backward(exec);
         }
