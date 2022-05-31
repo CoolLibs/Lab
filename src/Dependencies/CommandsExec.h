@@ -135,13 +135,13 @@ private:
 class CommandDispatcher {
 public:
     CommandDispatcher(CommandExecutor executor, History& history, Registries& registries)
-        : _executor{executor}, _history{history}, _registries{registries}
+        : _executor{executor}, _history{history}, _variable_registries{registries}
     {
     }
 
     void dispatch(const Command& command) const
     {
-        const auto reversible = make_reversible_command({_registries}, command); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
+        const auto reversible = make_reversible_command({_variable_registries}, command); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
         _executor.execute(command);
         if (reversible) {
             _history.get().push(*reversible, ReversibleCommandMerger{});
@@ -151,7 +151,7 @@ public:
 private:
     mutable CommandExecutor            _executor;
     std::reference_wrapper<History>    _history;
-    std::reference_wrapper<Registries> _registries;
+    std::reference_wrapper<Registries> _variable_registries;
 };
 
 } // namespace Lab

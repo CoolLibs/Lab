@@ -25,7 +25,7 @@ struct InputSlot_Time {
 class InputProvider {
 public:
     InputProvider(const Registries& registries, float render_target_aspect_ratio, float time, const reg::Id<Cool::Camera>& camera_id)
-        : _registries{registries}
+        : _variable_registries{registries}
         , _render_target_aspect_ratio{render_target_aspect_ratio}
         , _time{time}
         , _camera_id{camera_id}
@@ -33,11 +33,14 @@ public:
     }
 
     template<typename T>
-    T operator()(const InputSlot<T>& slot) const
+    auto operator()(const InputSlot<T>& slot) const -> T
     {
-        const auto maybe_value = _registries.get().get(slot.id);
+        const auto maybe_value = _variable_registries.get().get(slot.id);
         return maybe_value.value_or(T{});
     }
+
+    template<>
+    auto operator()(const InputSlot<Cool::Camera>& slot) const -> Cool::Camera;
 
     float operator()(const InputSlot_AspectRatio&) const
     {
@@ -54,15 +57,8 @@ public:
         return file_input.file_watcher.path();
     }
 
-    template<>
-    auto operator()(const InputSlot<Cool::Camera>& slot) const -> Cool::Camera
-    {
-        slot.id = _camera_id;
-        return _registries.get().get(_camera_id).value_or(Cool::Camera{});
-    }
-
 private:
-    std::reference_wrapper<const Registries> _registries;
+    std::reference_wrapper<const Registries> _variable_registries;
     float                                    _render_target_aspect_ratio;
     float                                    _time;
     reg::Id<Cool::Camera>                    _camera_id;

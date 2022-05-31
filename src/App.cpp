@@ -7,24 +7,19 @@
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
 #include "Module_CustomShader/Module_CustomShader.h"
-#include "TestModule/TestModule.h"
 
 namespace Lab {
 
 App::App(Cool::WindowManager& windows)
     : _main_window{windows.main_window()}
-    , _camera{_registries.of<Cool::Camera>().create({})}
+    , _camera_manager{_variable_registries.of<Cool::Camera>().create({})}
     , _view{_views.make_view("View")}
-    , _intId{_registries.create(0)}
     , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
-    , _current_module2{std::make_unique<TestModule>("Test Module 2", dirty_flag_factory())}
-    , _view2{_views.make_view("View2")}
 {
-    _camera.hook_events(_view.view.mouse_events(), _registries, commands_dispatcher());
-    _camera.hook_events(_view2.view.mouse_events(), _registries, commands_dispatcher());
-    serv::init([](std::string_view request) {
-        Cool::Log::ToUser::info("Scripting", "{}", request);
-    });
+    _camera_manager.hook_events(_view.view.mouse_events(), _variable_registries, commands_dispatcher());
+    // serv::init([](std::string_view request) {
+    //     Cool::Log::ToUser::info("Scripting", "{}", request);
+    // });
     _clock.pause();
 #if IS0_TEST_NODES
     for (const auto& node_template : _shader_manager.nodes_templates()) {
@@ -35,7 +30,7 @@ App::App(Cool::WindowManager& windows)
 
 App::~App()
 {
-    serv::shut_down();
+    // serv::shut_down();
 }
 
 void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, float time)
@@ -65,22 +60,12 @@ void App::update()
         _last_time = _clock.time();
 
         set_dirty_flag()(_current_module->dirty_flag());
-        set_dirty_flag()(_current_module2->dirty_flag());
     }
     if (_view.render_target.needs_resizing()) {
         set_dirty_flag()(_current_module->dirty_flag());
     }
-    if (_view2.render_target.needs_resizing()) {
-        set_dirty_flag()(_current_module2->dirty_flag());
-    }
     if (inputs_are_allowed()) {
         _current_module->update();
-        _current_module2->update();
-        _shader_manager->update();
-
-        if (_current_module2->is_dirty(dirty_manager())) {
-            render_impl(_view2.render_target, *_current_module2, _clock.time());
-        }
     }
 #if IS0_TEST_NODES
     glfwSetWindowShouldClose(_main_window.glfw(), true);
@@ -92,23 +77,18 @@ void App::render(Cool::RenderTarget& render_target, float time)
 #if IS0_TEST_NODES
     render_target.set_size({1, 1});
 #endif
-#if defined(COOL_VULKAN)
-#elif defined(COOL_OPENGL)
     if (_current_module->is_dirty(dirty_manager())) {
         render_impl(render_target, *_current_module, time);
     }
-#endif
 }
 
 auto App::all_input_slots() -> AllInputSlots
 {
-    auto vec  = _current_module->all_input_slots();
-    auto vec2 = _current_module2->all_input_slots();
-    for (const auto& x : vec2) {
-        vec.push_back(x);
-    }
-    // vec.insert(std::back_inserter(vec), vec2.begin(), vec2.end());
-    // std::copy(vec2.begin(), vec2.end(), std::back_inserter(vec));
+    auto vec = _current_module->all_input_slots();
+    // auto vec2 = _current_module2->all_input_slots();
+    // for (const auto& x : vec2) {
+    //     vec.push_back(x);
+    // }
     return vec;
 }
 
@@ -141,25 +121,37 @@ static auto command_to_string(const ReversibleCommand_SetValue<T> command) -> st
     return "Set " + reg::to_string(command.id) + " to " + Cool::stringify(command.value);
 }
 
+static void imgui_window_console()
+{
+    Cool::Log::ToUser::imgui_console_window();
+}
+
+static void imgui_window_views(Cool::RenderableViewManager& views, bool aspect_ratio_is_constrained)
+{
+    for (auto& view : views) {
+        view.imgui_window(aspect_ratio_is_constrained);
+    }
+}
+
+static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time)
+{
+    exporter.imgui_windows(polaroid, time);
+}
+
 void App::imgui_windows()
 {
-    // Views
-    for (auto& view : _views) {
-        view.imgui_window(aspect_ratio_is_constrained());
-    }
-    // Exporter
-    _exporter.imgui_windows(polaroid(), _clock.time());
-    //
+    imgui_window_views(_views, aspect_ratio_is_constrained());
+    imgui_window_exporter(_exporter, polaroid(), _clock.time());
     if (inputs_are_allowed()) {
         // Console
-        Cool::Log::ToUser::imgui_console_window();
+        imgui_window_console();
         // Time
         ImGui::Begin("Time");
         Cool::ClockU::imgui_timeline(_clock);
         ImGui::End();
         // Camera
         ImGui::Begin("Camera");
-        _camera.imgui(_registries, commands_dispatcher());
+        _camera_manager.imgui(_variable_registries, commands_dispatcher());
         ImGui::End();
 #if DEBUG
         if (_show_imgui_debug) {
@@ -179,18 +171,17 @@ void App::imgui_windows()
 
     if (inputs_are_allowed()) {
         _current_module->imgui_windows(ui());
-        _current_module2->imgui_windows(ui());
         Ui::window({.name = "Registry of vec3"}, [&]() {
-            imgui_show(_registries.of<glm::vec3>());
+            imgui_show(_variable_registries.of<glm::vec3>());
         });
         Ui::window({.name = "Registry of float"}, [&]() {
-            imgui_show(_registries.of<float>());
+            imgui_show(_variable_registries.of<float>());
         });
         Ui::window({.name = "Registry of int"}, [&]() {
-            imgui_show(_registries.of<int>());
+            imgui_show(_variable_registries.of<int>());
         });
         Ui::window({.name = "Registry of Camera"}, [&]() {
-            imgui_show(_registries.of<Cool::Camera>());
+            imgui_show(_variable_registries.of<Cool::Camera>());
         });
         Ui::window({.name = "Registry of DirtyFlag"}, [&]() {
             imgui_show(_dirty_registry);
@@ -199,15 +190,6 @@ void App::imgui_windows()
             _history.imgui_show([](const ReversibleCommand& command) {
                 return std::visit([](const auto& cmd) { return command_to_string(cmd); }, command);
             });
-        });
-        Ui::window({.name = "TMP"}, [&]() {
-            static int n = 1;
-            ImGui::InputInt("Value", &n);
-            if (ImGui::Button("Set")) {
-                commands_dispatcher().dispatch(Command_SetValue<int>{_intId, n});
-                commands_dispatcher().dispatch(Command_FinishedEditingValue{});
-                n++;
-            }
         });
         // _shader_manager.imgui_windows();
     }
@@ -218,7 +200,6 @@ void App::menu_preview()
     if (ImGui::BeginMenu("Preview")) {
         if (_preview_constraint.imgui()) {
             render_impl(_view.render_target, *_current_module, _clock.time());
-            render_impl(_view2.render_target, *_current_module2, _clock.time());
         }
         ImGui::EndMenu();
     }
@@ -289,7 +270,6 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
             Cool::ParametersHistory::get().move_forward();
         }
     }
-    _shader_manager->on_key_pressed(event);
     if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
         auto exec = reversible_commands_executor();
         if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {

@@ -11,7 +11,7 @@ namespace Lab {
 class Ui {
 public:
     Ui(Registries& registries, CommandDispatcher commands, SetDirtyFlag set_dirty)
-        : _registries{registries}, _commands{commands}, _set_dirty{set_dirty}
+        : _variable_registries{registries}, _commands{commands}, _set_dirty{set_dirty}
     {
     }
 
@@ -41,7 +41,7 @@ public:
     void widget(std::string_view name, reg::Id<glm::vec3> color_id)
     {
         ImGui::PushID(this);
-        auto color = _registries.get().get(color_id);
+        auto color = _variable_registries.get().get(color_id);
         if (color) {
             widget(name.data(), color_id, *color);
         }
@@ -68,10 +68,10 @@ public:
     void widget(std::string_view name, InputSlot<glm::vec3>& color_slot)
     {
         ImGui::PushID(this);
-        auto color = _registries.get().get(color_slot.id);
+        auto color = _variable_registries.get().get(color_slot.id);
         if (!color) {
             color         = glm::vec3{};
-            color_slot.id = _registries.get().create(*color);
+            color_slot.id = _variable_registries.get().create(*color);
         }
         widget(name, color_slot.id, *color);
         ImGui::PopID();
@@ -89,10 +89,10 @@ public:
     void widget(std::string_view name, InputSlot<float>& float_slot)
     {
         ImGui::PushID(this);
-        auto value = _registries.get().get(float_slot.id);
+        auto value = _variable_registries.get().get(float_slot.id);
         if (!value) {
             value         = float{};
-            float_slot.id = _registries.get().create(*value);
+            float_slot.id = _variable_registries.get().create(*value);
         }
         widget(name, float_slot.id, *value);
         ImGui::PopID();
@@ -118,7 +118,7 @@ public:
     }
 
 private:
-    std::reference_wrapper<Registries> _registries;
+    std::reference_wrapper<Registries> _variable_registries;
     CommandDispatcher                  _commands;
     SetDirtyFlag                       _set_dirty;
 };

@@ -4,6 +4,7 @@
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/RenderTarget.h>
+#include <Cool/Path/Path.h>
 #include <Cool/Serialization/AutoSerializer.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderableViewManager.h>
@@ -14,7 +15,6 @@
 #include "Dependencies/History.h"
 #include "Dependencies/Registries.h"
 #include "Module.h"
-#include "ShaderManager/ShaderManagerManager.h"
 #include "UI/ThemeManager.h"
 
 namespace Lab {
@@ -44,13 +44,13 @@ private:
     auto all_input_slots() -> AllInputSlots;
     auto set_dirty_flag              () { return SetDirtyFlag{_dirty_registry}; }
     auto set_variable_dirty          () { return SetVariableDirty{all_input_slots(), set_dirty_flag()}; }
-    auto commands_execution_context  () { return CommandExecutionContext{{_history, _registries, set_variable_dirty()}}; }
+    auto commands_execution_context  () { return CommandExecutionContext{{_history, _variable_registries, set_variable_dirty()}}; }
     auto reversible_commands_executor() { return ReversibleCommandExecutor{commands_execution_context()}; }
     auto commands_executor           () { return CommandExecutor{commands_execution_context()}; }
-    auto commands_dispatcher         () { return CommandDispatcher{commands_executor(), _history, _registries}; }
-    auto ui                          () { return Ui{_registries, commands_dispatcher(), set_dirty_flag()}; }
-    auto input_provider              (float render_target_aspect_ratio, float time) { return InputProvider{_registries, render_target_aspect_ratio, time, _camera.id()}; }
-    auto input_slot_destructor       () { return InputSlotDestructorRef{_registries}; }
+    auto commands_dispatcher         () { return CommandDispatcher{commands_executor(), _history, _variable_registries}; }
+    auto ui                          () { return Ui{_variable_registries, commands_dispatcher(), set_dirty_flag()}; }
+    auto input_provider              (float render_target_aspect_ratio, float time) { return InputProvider{_variable_registries, render_target_aspect_ratio, time, _camera_manager.id()}; }
+    auto input_slot_destructor       () { return InputSlotDestructorRef{_variable_registries}; }
     auto dirty_flag_factory          () { return DirtyFlagFactory{_dirty_registry}; }
     auto dirty_manager               () { return DirtyManager{_dirty_registry}; }
     // clang-format on
@@ -73,24 +73,19 @@ private:
     }
 
 private:
-    Registries                  _registries; // First because modules need the registries when they get created
+    Registries                  _variable_registries; // First because modules need the registries when they get created
     Cool::Window&               _main_window;
-    CameraManager               _camera;
+    CameraManager               _camera_manager;
     Cool::Clock_Realtime        _clock;
     Cool::ImageSizeConstraint   _preview_constraint;
     Cool::RenderableViewManager _views; // Must be before the views because it is used to create them
     Cool::RenderableView&       _view;
     Cool::Exporter              _exporter;
-
-    DirtyRegistry           _dirty_registry; // Before the modules because it is used to create them
-    reg::Id<int>            _intId;
-    ShaderManagerManager    _shader_manager;
-    std::unique_ptr<Module> _current_module;
-    std::unique_ptr<Module> _current_module2;
-    History                 _history{};
-    ThemeManager            _theme_manager{};
-    Cool::RenderableView&   _view2;
-    float                   _last_time{0.f};
+    DirtyRegistry               _dirty_registry; // Before the modules because it is used to create them
+    History                     _history{};
+    ThemeManager                _theme_manager{};
+    float                       _last_time{0.f};
+    std::unique_ptr<Module>     _current_module;
 
 #if DEBUG
     bool _show_imgui_debug = true;
@@ -103,14 +98,11 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Shader Manager Manager", _shader_manager),
-                cereal::make_nvp("Registries", _registries),
+        archive(cereal::make_nvp("Variable Registries", _variable_registries),
                 cereal::make_nvp("Dirty Registry", _dirty_registry),
-                cereal::make_nvp("Int ID", _intId),
                 cereal::make_nvp("History", _history),
                 cereal::make_nvp("Module", _current_module),
-                cereal::make_nvp("Module2", _current_module2),
-                cereal::make_nvp("Camera Manager", _camera));
+                cereal::make_nvp("Camera Manager", _camera_manager));
     }
 #if !IS0_TEST_NODES
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive

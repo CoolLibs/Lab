@@ -112,17 +112,17 @@ using AnyInputSlot =
 class InputSlotDestructorRef {
 public:
     explicit InputSlotDestructorRef(Registries& registries)
-        : _registries{registries}
+        : _variable_registries{registries}
     {
     }
 
     void operator()(const AnyInputSlot& slot)
     {
-        std::visit([&](auto&& slot) { _registries.get().destroy(slot.id); }, slot);
+        std::visit([&](auto&& slot) { _variable_registries.get().destroy(slot.id); }, slot);
     }
 
 private:
-    std::reference_wrapper<Registries> _registries;
+    std::reference_wrapper<Registries> _variable_registries;
 };
 
 } // namespace Lab
