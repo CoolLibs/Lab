@@ -1,6 +1,6 @@
 #include "CameraManager.h"
 #include <Cool/Camera/ViewController_OrbitalU.h>
-#include "Dependencies/Commands.h"
+#include "Commands/Commands.h"
 
 namespace Lab {
 

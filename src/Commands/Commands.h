@@ -1,8 +1,8 @@
 #pragma once
 #include <Cool/Camera/Camera.h>
 #include <reg/reg.hpp>
-#include "AllVariableTypes.h"
-#include "VariableRegistries.h"
+#include "Dependencies/AllVariableTypes.h"
+#include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
 

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Commands.h"
-#include "Dependencies/InputSlot.h"
+#include "Commands/Commands.h"
 #include "History.h"
+#include "InputSlot.h"
 #include "VariableRegistries.h"
+
 
 namespace Lab {
 

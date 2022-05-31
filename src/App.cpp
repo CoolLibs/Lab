@@ -6,6 +6,7 @@
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
+#include "Commands/command_to_string.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "UI/imgui_show.h"
 
@@ -114,12 +115,6 @@ auto App::inputs_are_allowed() const -> bool
 auto App::wants_to_show_menu_bar() const -> bool
 {
     return !_exporter.is_exporting();
-}
-
-template<typename T>
-static auto command_to_string(const ReversibleCommand_SetValue<T> command) -> std::string
-{
-    return "Set " + reg::to_string(command.id) + " to " + Cool::stringify(command.value);
 }
 
 static void imgui_window_console()
