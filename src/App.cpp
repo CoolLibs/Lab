@@ -212,7 +212,7 @@ void App::menu_windows()
         for (auto& view : _views) {
             view.view.imgui_open_close_checkbox();
         }
-#if defined(DEBUG)
+#if DEBUG
         ImGui::Separator();
         ImGui::Checkbox("Debug", &_show_imgui_debug);
 #endif
