@@ -13,6 +13,9 @@ public:
     {
         _texts.push_back(command_to_string(command));
         _should_scroll_down = true;
+        if (_texts.size() > 100) {
+            _texts.pop_front();
+        }
     }
 
     void imgui_show()
@@ -27,8 +30,8 @@ public:
     }
 
 private:
-    std::vector<std::string> _texts{};
-    bool                     _should_scroll_down = true;
+    std::list<std::string> _texts{};
+    bool                   _should_scroll_down = true;
 };
 
 } // namespace Lab
