@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Commands/Commands.h"
+#include "Dependencies/CommandLogger.h"
 #include "History.h"
 #include "InputSlot.h"
 #include "VariableRegistries.h"
-
 
 namespace Lab {
 
@@ -135,13 +135,20 @@ private:
 
 class CommandDispatcher {
 public:
-    CommandDispatcher(CommandExecutor executor, History& history, VariableRegistries& registries)
-        : _executor{executor}, _history{history}, _variable_registries{registries}
+    CommandDispatcher(CommandExecutor     executor,
+                      History&            history,
+                      VariableRegistries& registries,
+                      CommandLogger&      command_logger)
+        : _executor{executor}
+        , _history{history}
+        , _variable_registries{registries}
+        , _command_logger{command_logger}
     {
     }
 
     void dispatch(const Command& command) const
     {
+        _command_logger.get().push(command);
         const auto reversible = make_reversible_command({_variable_registries}, command); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
         _executor.execute(command);
         if (reversible) {
@@ -153,6 +160,7 @@ private:
     mutable CommandExecutor                    _executor;
     std::reference_wrapper<History>            _history;
     std::reference_wrapper<VariableRegistries> _variable_registries;
+    std::reference_wrapper<CommandLogger>      _command_logger;
 };
 
 } // namespace Lab

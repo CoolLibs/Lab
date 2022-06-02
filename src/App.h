@@ -11,6 +11,7 @@
 #include <Cool/Window/WindowManager.h>
 #include <reg/cereal.hpp>
 #include "Dependencies/CameraManager.h"
+#include "Dependencies/CommandLogger.h"
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
@@ -47,7 +48,7 @@ private:
     auto command_execution_context  () { return CommandExecutionContext{{_history, _variable_registries, set_variable_dirty()}}; }
     auto reversible_command_executor() { return ReversibleCommandExecutor{command_execution_context()}; }
     auto command_executor           () { return CommandExecutor{command_execution_context()}; }
-    auto commands_dispatcher        () { return CommandDispatcher{command_executor(), _history, _variable_registries}; }
+    auto commands_dispatcher        () { return CommandDispatcher{command_executor(), _history, _variable_registries, _command_logger}; }
     auto ui                         () { return Ui{_variable_registries, commands_dispatcher(), set_dirty_flag()}; }
     auto input_provider             (float render_target_aspect_ratio, float time) { return InputProvider{_variable_registries, render_target_aspect_ratio, time, _camera_manager.id()}; }
     auto input_slot_destructor      () { return InputSlotDestructorRef{_variable_registries}; }
@@ -86,6 +87,7 @@ private:
     ThemeManager                _theme_manager{};
     float                       _last_time{0.f};
     std::unique_ptr<Module>     _current_module;
+    CommandLogger               _command_logger{};
 
 #if DEBUG
     bool _show_imgui_debug = true;

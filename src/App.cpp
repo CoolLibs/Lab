@@ -187,6 +187,9 @@ void App::imgui_windows()
                 return std::visit([](const auto& cmd) { return command_to_string(cmd); }, command);
             });
         });
+        Ui::window({.name = "Command Logger"}, [&]() {
+            _command_logger.imgui_show();
+        });
         // _shader_manager.imgui_windows();
     }
 }
