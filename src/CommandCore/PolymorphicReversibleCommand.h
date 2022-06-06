@@ -8,7 +8,7 @@ namespace Lab {
 template<ConcreteReversibleCommand ConcreteReversibleCommandT>
 class PolymorphicReversibleCommand final : public IReversibleCommand {
 public:
-    explicit PolymorphicReversibleCommand(ConcreteReversibleCommandT concrete_reversible_command)
+    explicit PolymorphicReversibleCommand(const ConcreteReversibleCommandT& concrete_reversible_command)
         : _concrete_reversible_command{concrete_reversible_command}
     {
     }
