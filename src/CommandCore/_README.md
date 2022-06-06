@@ -1,7 +1,3 @@
-## How to write a new command
-
-### If you want it to be stored in the history (ReversibleCommand)
-
 ## Understanding all the abstractions
 
 There are a lot of abstractions to wrap your head around in order to understand how the communication inside the application happens. This might hurt your head a little bit at first, but this gives us a very powerful way to handle user actions, and it minimizes code duplication and boilerplate in other parts of the code. Basically all the systems only have to know about Commands, and then submit them to the Dispatcher; the later is responsible for all the magic like History, Recording, etc.
