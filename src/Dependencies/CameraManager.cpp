@@ -56,16 +56,21 @@ void CameraManager::imgui(std::reference_wrapper<VariableRegistries> registries,
             _view_controller.set_orbit_center({0, 0, 0}, camera);
             return true;
         });
+        executor.execute(Command_FinishedEditingValue{});
     }
     if (ImGui::Button("Reset transform")) {
         maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
             Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
             return true;
         });
+        executor.execute(Command_FinishedEditingValue{});
     }
     maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
         return Cool::imgui(camera.projection());
     });
+    if (ImGui::IsItemDeactivatedAfterEdit()) {
+        executor.execute(Command_FinishedEditingValue{});
+    }
 }
 
 void CameraManager::maybe_update_camera(
