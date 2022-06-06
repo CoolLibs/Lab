@@ -18,7 +18,7 @@ public:
 
     std::string_view name() const { return _name; }
 
-    void set_dirty_if_depends_on(const reg::Id<T>& variable_id, SetDirtyFlag set_dirty) const
+    void set_dirty_if_depends_on(const reg::Id<T>& variable_id, SetDirtyFlag_Ref set_dirty) const
     {
         auto name          = reg::to_string(id);
         auto variable_name = reg::to_string(variable_id);
@@ -54,7 +54,7 @@ public:
     {
     }
 
-    void update(SetDirtyFlag set_dirty)
+    void update(SetDirtyFlag_Ref set_dirty)
     {
         file_watcher.update(
             {.on_file_changed = [&](std::string_view) { set_dirty(_dirty_flag); },
@@ -129,5 +129,7 @@ public:
 private:
     std::reference_wrapper<VariableRegistries> _variable_registries;
 };
+
+using AllInputSlots = std::vector<AnyInputSlotRefToConst>;
 
 } // namespace Lab

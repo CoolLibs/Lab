@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Commands/Commands.h"
-#include "Commands/command_to_string.h"
+#include "CommandCore/Command.h"
+#include "CommandCore/command_to_string.h"
 
 namespace Lab {
 

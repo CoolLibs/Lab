@@ -2,7 +2,7 @@
 
 #include <cmd/cmd.hpp>
 #include <cmd/imgui_and_cereal.hpp>
-#include "Commands/Commands.h"
+#include "CommandCore/ReversibleCommand.h"
 
 namespace Lab {
 

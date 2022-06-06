@@ -28,7 +28,7 @@ public:
     DirtyFlag() = default; // For serialization :( Remove whenever possible
 private:
     friend class DirtyManager;
-    friend class SetDirtyFlag;
+    friend class SetDirtyFlag_Ref;
     friend class DirtyFlagFactory;
 
     explicit DirtyFlag(reg::Id<internal::IsDirty> id)
@@ -65,9 +65,9 @@ private:
     std::reference_wrapper<DirtyRegistry> _registry;
 };
 
-class SetDirtyFlag {
+class SetDirtyFlag_Ref {
 public:
-    explicit SetDirtyFlag(DirtyRegistry& registry)
+    explicit SetDirtyFlag_Ref(DirtyRegistry& registry)
         : _registry{registry}
     {
     }

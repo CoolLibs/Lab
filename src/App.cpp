@@ -6,7 +6,7 @@
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
-#include "Commands/command_to_string.h"
+#include "CommandCore/command_to_string.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "UI/imgui_show.h"
 
@@ -18,7 +18,7 @@ App::App(Cool::WindowManager& windows)
     , _view{_views.make_view("View")}
     , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
 {
-    _camera_manager.hook_events(_view.view.mouse_events(), _variable_registries, commands_dispatcher());
+    _camera_manager.hook_events(_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::ToUser::info("Scripting", "{}", request);
     // });
@@ -147,7 +147,7 @@ void App::imgui_windows()
         ImGui::End();
         // Camera
         ImGui::Begin("Camera");
-        _camera_manager.imgui(_variable_registries, commands_dispatcher());
+        _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
 #if DEBUG
         if (_show_imgui_debug) {
@@ -184,7 +184,7 @@ void App::imgui_windows()
         });
         Ui::window({.name = "History"}, [&]() {
             _history.imgui_show([](const ReversibleCommand& command) {
-                return std::visit([](const auto& cmd) { return command_to_string(cmd); }, command);
+                return command_to_string(command);
             });
         });
         Ui::window({.name = "Command Logger"}, [&]() {
@@ -270,7 +270,7 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
         }
     }
     if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
-        auto exec = reversible_command_executor();
+        auto exec = reversible_command_executor_without_history();
         if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
             _history.move_backward(exec);
         }

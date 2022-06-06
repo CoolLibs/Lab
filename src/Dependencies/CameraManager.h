@@ -5,12 +5,11 @@
 #include <Cool/Input/MouseCoordinates.h>
 #include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
-#include "Dependencies/CommandsExec.h"
 #include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
 
-class CommandDispatcher;
+class CommandExecutor_TopLevel_Ref;
 
 class CameraManager {
 public:
@@ -21,15 +20,19 @@ public:
 
     CameraManager() = default;
 
-    void hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates>&, std::reference_wrapper<VariableRegistries>, CommandDispatcher);
+    void hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates>&,
+                     std::reference_wrapper<VariableRegistries>,
+                     CommandExecutor_TopLevel_Ref);
 
     auto id() const -> const reg::Id<Cool::Camera>& { return _camera_id; }
 
     void imgui(std::reference_wrapper<VariableRegistries> registries,
-               CommandDispatcher                          commander);
+               CommandExecutor_TopLevel_Ref               commander);
 
 private:
-    void maybe_update_camera(std::reference_wrapper<VariableRegistries>, CommandDispatcher, std::function<bool(Cool::Camera&)> fun);
+    void maybe_update_camera(std::reference_wrapper<VariableRegistries>,
+                             CommandExecutor_TopLevel_Ref,
+                             std::function<bool(Cool::Camera&)> fun);
 
 private:
     reg::Id<Cool::Camera>        _camera_id;

@@ -2,7 +2,9 @@
 #include <Cool/File/File.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
-#include "CommandsExec.h"
+#include "CommandCore/CommandExecutor_TopLevel_Ref.h"
+#include "Commands/Command_FinishedEditingValue.h"
+#include "Commands/Command_SetValue.h"
 #include "InputSlot.h"
 #include "VariableRegistries.h"
 
@@ -10,8 +12,12 @@ namespace Lab {
 
 class Ui {
 public:
-    Ui(VariableRegistries& registries, CommandDispatcher commands, SetDirtyFlag set_dirty)
-        : _variable_registries{registries}, _commands{commands}, _set_dirty{set_dirty}
+    Ui(VariableRegistries&          registries,
+       CommandExecutor_TopLevel_Ref command_executor,
+       SetDirtyFlag_Ref             set_dirty)
+        : _variable_registries{registries}
+        , _command_executor{command_executor}
+        , _set_dirty{set_dirty}
     {
     }
 
@@ -30,11 +36,13 @@ public:
     void widget(std::string_view name, reg::Id<glm::vec3> color_id, glm::vec3 current_value)
     {
         if (ImGui::ColorEdit3(name.data(), glm::value_ptr(current_value), ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float)) {
-            _commands.dispatch(Command_SetValue<glm::vec3>{.id    = color_id,
-                                                           .value = current_value});
+            _command_executor.execute(
+                Command_SetValue<glm::vec3>{.id    = color_id,
+                                            .value = current_value});
         }
         if (ImGui::IsItemDeactivatedAfterEdit()) {
-            _commands.dispatch(Command_FinishedEditingValue{});
+            _command_executor.execute(
+                Command_FinishedEditingValue{});
         }
     }
 
@@ -57,11 +65,13 @@ public:
     void widget(std::string_view name, reg::Id<float> float_id, float current_value)
     {
         if (ImGui::SliderFloat(name.data(), &current_value, 0.f, 1.f)) {
-            _commands.dispatch(Command_SetValue<float>{.id    = float_id,
-                                                       .value = current_value});
+            _command_executor.execute(
+                Command_SetValue<float>{.id    = float_id,
+                                        .value = current_value});
         }
         if (ImGui::IsItemDeactivatedAfterEdit()) {
-            _commands.dispatch(Command_FinishedEditingValue{});
+            _command_executor.execute(
+                Command_FinishedEditingValue{});
         }
     }
 
@@ -119,8 +129,8 @@ public:
 
 private:
     std::reference_wrapper<VariableRegistries> _variable_registries;
-    CommandDispatcher                          _commands;
-    SetDirtyFlag                               _set_dirty;
+    CommandExecutor_TopLevel_Ref               _command_executor;
+    SetDirtyFlag_Ref                           _set_dirty;
 };
 
 } // namespace Lab
