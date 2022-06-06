@@ -64,13 +64,13 @@ public:
     void execute(const ReversibleCommand& command)
     {
         command->execute(_context);
-        // _command_logger.get().push(command); // TODO support the reversible commands in the logger
+        _command_logger.get().push(command);
     }
 
     void revert(const ReversibleCommand& command)
     {
         command->revert(_context);
-        // _command_logger.get().push(command); // TODO support the reversible commands in the logger
+        _command_logger.get().push(command);
     }
 
 private:
