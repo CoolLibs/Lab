@@ -2,7 +2,8 @@
 
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
-#include "CommandCore/make_reversible_command.h"
+#include "CommandCore/LAB_REGISTER_COMMAND.h"
+#include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
 
 namespace Lab {
 
@@ -22,8 +23,8 @@ struct ReversibleCommand_SetValue;
 
 template<typename T>
 struct Command_SetValue {
-    reg::Id<T> id;
-    T          value;
+    reg::Id<T> id{};
+    T          value{};
 
     void execute(CommandExecutionContext_Ref& ctx) const
     {
@@ -47,8 +48,8 @@ struct Command_SetValue {
 
 template<typename T>
 struct ReversibleCommand_SetValue {
-    Command_SetValue<T> forward_command;
-    T                   old_value;
+    Command_SetValue<T> forward_command{};
+    T                   old_value{};
 
     void execute(CommandExecutionContext_Ref& ctx) const
     {
@@ -101,6 +102,16 @@ void serialize(Archive& archive, Lab::ReversibleCommand_SetValue<T>& command)
 
 } // namespace cereal
 
-#include "CommandCore/PolymorphicReversibleCommand.h"
+LAB_REGISTER_COMMAND(Lab::Command_SetValue<int>)
+LAB_REGISTER_COMMAND(Lab::Command_SetValue<float>)
+LAB_REGISTER_COMMAND(Lab::Command_SetValue<glm::vec2>)
+LAB_REGISTER_COMMAND(Lab::Command_SetValue<glm::vec3>)
+// LAB_REGISTER_COMMAND(Lab::Command_SetValue<glm::vec4>)
+LAB_REGISTER_COMMAND(Lab::Command_SetValue<Cool::Camera>)
 
-CEREAL_REGISTER_TYPE(Lab::PolymorphicReversibleCommand<Lab::ReversibleCommand_SetValue<glm::vec3>>);
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<int>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<float>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<glm::vec2>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<glm::vec3>)
+// LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<glm::vec4>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<Cool::Camera>)

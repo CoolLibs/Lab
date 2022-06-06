@@ -8,6 +8,8 @@ namespace Lab {
 template<ConcreteReversibleCommand ConcreteReversibleCommandT>
 class PolymorphicReversibleCommand final : public IReversibleCommand {
 public:
+    PolymorphicReversibleCommand() = default;
+
     explicit PolymorphicReversibleCommand(const ConcreteReversibleCommandT& concrete_reversible_command)
         : _concrete_reversible_command{concrete_reversible_command}
     {
@@ -40,6 +42,15 @@ public:
 
 private:
     ConcreteReversibleCommandT _concrete_reversible_command;
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(_concrete_reversible_command);
+    }
 };
 
 } // namespace Lab
