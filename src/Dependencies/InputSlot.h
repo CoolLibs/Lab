@@ -1,7 +1,6 @@
 #pragma once
 #include <Cool/FileWatcher/FileWatcher.h>
 #include <reg/reg.hpp>
-#include "AllVariableTypes.h"
 #include "Dirty.h"
 #include "VariableRegistries.h"
 
@@ -91,28 +90,9 @@ struct InputSlot_AspectRatio {
 struct InputSlot_Time {
 };
 
-using AnyInputSlotRef =
-    AllVariableTypes::
-        wrap<InputSlot>::
-            wrap<std::reference_wrapper>::
-                to<std::variant>;
-
-namespace internal {
-template<typename T>
-struct make_ref_to_const_input_slot {
-    using type = std::reference_wrapper<const InputSlot<T>>;
-};
-} // namespace internal
-
-using AnyInputSlotRefToConst =
-    AllVariableTypes::
-        map<internal::make_ref_to_const_input_slot>::
-            to<std::variant>;
-
-using AnyInputSlot =
-    AllVariableTypes::
-        wrap<InputSlot>::
-            to<std::variant>;
+#include "generated/AnyInputSlot.inl"
+#include "generated/AnyInputSlotRef.inl"
+#include "generated/AnyInputSlotRefToConst.inl"
 
 class InputSlotDestructorRef {
 public:

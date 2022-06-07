@@ -102,16 +102,4 @@ void serialize(Archive& archive, Lab::ReversibleCommand_SetValue<T>& command)
 
 } // namespace cereal
 
-LAB_REGISTER_COMMAND(Lab::Command_SetValue<int>)
-LAB_REGISTER_COMMAND(Lab::Command_SetValue<float>)
-LAB_REGISTER_COMMAND(Lab::Command_SetValue<glm::vec2>)
-LAB_REGISTER_COMMAND(Lab::Command_SetValue<glm::vec3>)
-// LAB_REGISTER_COMMAND(Lab::Command_SetValue<glm::vec4>)
-LAB_REGISTER_COMMAND(Lab::Command_SetValue<Cool::Camera>)
-
-LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<int>)
-LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<float>)
-LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<glm::vec2>)
-LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<glm::vec3>)
-// LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<glm::vec4>)
-LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<Cool::Camera>)
+#include "generated/register_set_value_commands.inl"
