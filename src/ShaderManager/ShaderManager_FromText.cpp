@@ -70,10 +70,10 @@ void ShaderManager_FromText::parse_shader_for_params(std::string_view path)
     *_parameters = std::move(*new_params);
 }
 
-void ShaderManager_FromText::setup_for_rendering(const Cool::Camera& camera, float time)
+void ShaderManager_FromText::setup_for_rendering(const Cool::Camera& camera, float time, float aspect_ratio)
 {
     if (_fullscreen_pipeline.shader().has_value()) {
-        ShaderManager::setup_for_rendering(camera, time);
+        ShaderManager::setup_for_rendering(camera, time, aspect_ratio);
         set_uniforms(*_fullscreen_pipeline.shader(), _parameters);
     }
 }

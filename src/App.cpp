@@ -34,7 +34,7 @@ void App::render(Cool::RenderTarget& render_target, float time)
         _camera.apply(aspect_ratio);
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        _shader_manager->setup_for_rendering(*_camera, time);
+        _shader_manager->setup_for_rendering(*_camera, time, aspect_ratio);
         _shader_manager->render();
     });
 #endif

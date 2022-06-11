@@ -8,7 +8,7 @@ class ShaderManager_FromText : public ShaderManager {
 public:
     ShaderManager_FromText();
 
-    void setup_for_rendering(const Cool::Camera& camera, float time) override;
+    void setup_for_rendering(const Cool::Camera& camera, float time, float aspect_ratio) override;
 
     inline void update() override { _file_watcher.update(); }
     void        imgui_windows() override;
