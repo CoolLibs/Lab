@@ -19,9 +19,11 @@ public:
 
 private:
     void render(Cool::RenderTarget& render_target, float time);
+    void render_one_module(ShaderManager&, Cool::RenderTarget&, float time);
 
 private:
     ShaderManagerManager _shader_manager;
+    Cool::RenderTarget   _intermediate_render_target;
 #if !IS0_TEST_NODES
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
     Cool::AutoSerializer<App> _auto_serializer{Cool::Path::root() + "/last-session-cache.json", "App", *this};

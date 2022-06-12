@@ -15,10 +15,12 @@ public:
     void                             add_node(const Node& node) { _is0.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _is0.nodes_templates(); }
 
-private:
-    bool                   _use_nodes = true;
+public:
     Is0                    _is0;
     ShaderManager_FromText _from_text;
+
+private:
+    bool _use_nodes = true;
 
 private:
     // Serialization

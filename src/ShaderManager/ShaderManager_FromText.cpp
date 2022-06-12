@@ -7,6 +7,7 @@
 #include <Cool/Parameter/set_uniform.h>
 #include <Cool/Path/Path.h>
 #include <fstream>
+#include <glpp/glpp.hpp>
 
 ShaderManager_FromText::ShaderManager_FromText()
     : _file_watcher{Cool::Path::root() + "/shader-examples/axes.frag",
@@ -74,6 +75,17 @@ void ShaderManager_FromText::setup_for_rendering(const Cool::Camera& camera, flo
 {
     if (_fullscreen_pipeline.shader().has_value()) {
         ShaderManager::setup_for_rendering(camera, time, aspect_ratio);
+        set_uniforms(*_fullscreen_pipeline.shader(), _parameters);
+    }
+}
+
+void ShaderManager_FromText::set_image_in_shader(GLuint texture_id)
+{
+    if (_fullscreen_pipeline.shader().has_value()) {
+        _fullscreen_pipeline.shader()->bind();
+        glpp::active_texture(0);
+        glpp::bind_texture<glpp::TextureKind::Tex2D>(texture_id);
+        _fullscreen_pipeline.shader()->set_uniform("_image", 0);
         set_uniforms(*_fullscreen_pipeline.shader(), _parameters);
     }
 }

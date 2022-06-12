@@ -22,7 +22,7 @@ void App::update()
 #endif
 }
 
-void App::render(Cool::RenderTarget& render_target, float time)
+void App::render_one_module(ShaderManager& shader_manager, Cool::RenderTarget& render_target, float time)
 {
 #if defined(COOL_VULKAN)
 #elif defined(COOL_OPENGL)
@@ -32,12 +32,27 @@ void App::render(Cool::RenderTarget& render_target, float time)
     render_target.render([&]() {
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.current_size());
         _camera.apply(aspect_ratio);
-        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClearColor(1.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        _shader_manager->setup_for_rendering(*_camera, time, aspect_ratio);
-        _shader_manager->render();
+        shader_manager.setup_for_rendering(*_camera, time, aspect_ratio);
+        shader_manager.render();
     });
 #endif
+}
+
+void App::render(Cool::RenderTarget& render_target, float time)
+{
+    if (&(*_shader_manager) == &_shader_manager._from_text) {
+        if (_intermediate_render_target.current_size() != render_target.desired_size()) {
+            _intermediate_render_target.set_size(render_target.desired_size());
+        }
+        render_one_module(_shader_manager._is0, _intermediate_render_target, time);
+        _shader_manager._from_text.set_image_in_shader(_intermediate_render_target.get().texture_id());
+        render_one_module(_shader_manager._from_text, render_target, time);
+    }
+    else {
+        render_one_module(_shader_manager._is0, render_target, time);
+    }
 }
 
 void App::imgui_windows()
