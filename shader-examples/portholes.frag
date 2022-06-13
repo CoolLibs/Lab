@@ -11,7 +11,9 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
+uniform float Square_mode;
 uniform float Size;
+uniform float Space_to_border;
 uniform float Speed;
 uniform float Movement;
 uniform float Time_mode;
@@ -46,6 +48,23 @@ struct VoronoiRes {
     float minDist2;
 };
 
+vec2 is_circle_mode(vec2 n, float t, vec2 offs)
+{
+    float radius = Space_to_border * 0.5 * sqrt(n.x);
+    float theta  = n.x * 2 * radians(180) * sin(t);
+    vec2  p_circle;
+    p_circle.x = radius * cos(theta);
+    p_circle.y = radius * sin(theta);
+    vec2 p     = offs + p_circle;
+    return p;
+}
+
+vec2 is_square_mode(vec2 n, vec2 offs)
+{
+    vec2 p = offs + sin(n) * Space_to_border * .5;
+    return p;
+}
+
 VoronoiRes voronoi(vec2 uv)
 {
     float t = 0;
@@ -70,10 +89,17 @@ VoronoiRes voronoi(vec2 uv)
             vec2 offs = vec2(x, y);
 
             vec2 n = N22(id + offs);
-            vec2 p = offs + sin(n * t) * .5;
-            p -= gv;
-            float d = pow(
-                pow(abs(p.x), Distance_mode) + pow(abs(p.y), Distance_mode),
+            vec2 p;
+            if (Square_mode > .5) {
+                p = is_square_mode(n, offs);
+            }
+            else {
+                p = is_circle_mode(n, t, offs);
+            }
+
+            vec2  p_to_gv = p - gv;
+            float d       = pow(
+                pow(abs(p_to_gv.x), Distance_mode) + pow(abs(p_to_gv.y), Distance_mode),
                 1 / Distance_mode);
 
             if (d < res.minDist) {
@@ -129,4 +155,5 @@ void main()
                                               smoothe)));
 
     out_Color = vec4(color, 1.);
+    // out_Color = vec4(vec3(res.minDist), 1.);
 }
