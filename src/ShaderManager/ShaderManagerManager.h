@@ -18,9 +18,7 @@ public:
 public:
     Is0                    _is0;
     ShaderManager_FromText _from_text;
-
-private:
-    bool _use_nodes = true;
+    bool                   _use_nodes = true;
 
 private:
     // Serialization

@@ -13,6 +13,18 @@ App::App(Cool::WindowManager& windows)
 
 void App::update()
 {
+    /// TODO(JF) Remove this ugly quick fix
+    static int  framecount = 0;
+    static bool backup     = _shader_manager._use_nodes;
+    if (framecount == 0) {
+        _shader_manager._use_nodes = true;
+    }
+    else if (framecount == 1) {
+        _shader_manager._use_nodes = backup;
+    }
+    framecount++;
+    /// --- End of ugly quick fix
+
     DefaultApp::update();
     if (inputs_are_allowed()) {
         _shader_manager->update();
@@ -42,10 +54,21 @@ void App::render_one_module(ShaderManager& shader_manager, Cool::RenderTarget& r
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    if (&(*_shader_manager) == &_shader_manager._from_text) {
-        if (_intermediate_render_target.current_size() != render_target.desired_size()) {
+    if (!_shader_manager._use_nodes) {
+        /// TODO(JF) Remove this ugly quick fix
+        if (render_target.current_size() != render_target.desired_size()) {
+            _shader_manager._use_nodes = true;
+            render_one_module(_shader_manager._is0, render_target, time);
             _intermediate_render_target.set_size(render_target.desired_size());
+            render_one_module(_shader_manager._is0, _intermediate_render_target, time);
+
+            _shader_manager._use_nodes = false;
+            _shader_manager._from_text.set_image_in_shader(_intermediate_render_target.get().texture_id());
+            render_one_module(_shader_manager._from_text, render_target, time);
         }
+        /// --- End of ugly quick fix
+
+        _intermediate_render_target.set_size(render_target.desired_size());
         render_one_module(_shader_manager._is0, _intermediate_render_target, time);
         _shader_manager._from_text.set_image_in_shader(_intermediate_render_target.get().texture_id());
         render_one_module(_shader_manager._from_text, render_target, time);
