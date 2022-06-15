@@ -138,7 +138,7 @@ void main()
     VoronoiRes resX = voronoi(uv + vec2(0.001, 0.));
     VoronoiRes resY = voronoi(uv + vec2(0., 0.001));
     vec2       grad = vec2(resX.minDist - res.minDist,
-                           resY.minDist - res.minDist) /
+                     resY.minDist - res.minDist) /
                 0.001;
     float distance_to_center = res.minDist / res.minDist2;
     float distance_to_edges  = 1. - distance_to_center;

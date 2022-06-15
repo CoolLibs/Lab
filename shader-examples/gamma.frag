@@ -20,7 +20,8 @@ vec4 image(vec2 uv)
 
 vec3 gamma_modifier(vec3 image)
 {
-    return vec3(pow(abs(image.r), Gamma), pow(abs(image.g), Gamma), pow(abs(image.b), Gamma));
+    // return vec3(pow(abs(image.r), Gamma), pow(abs(image.g), Gamma), pow(abs(image.b), Gamma));
+    return pow(abs(image), vec3(Gamma));
 }
 
 void main()
