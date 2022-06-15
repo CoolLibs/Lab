@@ -1,6 +1,6 @@
 #pragma once
 
-#include "InputSlot.h"
+#include "Input.h"
 #include "VariableRegistries.h"
 
 namespace Lab {
@@ -16,26 +16,26 @@ public:
     }
 
     template<typename T>
-    auto operator()(const InputSlot<T>& slot) const -> T
+    auto operator()(const Input<T>& input) const -> T
     {
-        const auto maybe_value = _variable_registries.get().get(slot.id);
+        const auto maybe_value = _variable_registries.get().get(input.id);
         return maybe_value.value_or(T{});
     }
 
     template<>
-    auto operator()(const InputSlot<Cool::Camera>& slot) const -> Cool::Camera;
+    auto operator()(const Input<Cool::Camera>&) const -> Cool::Camera;
 
-    float operator()(const InputSlot_AspectRatio&) const
+    float operator()(const Input_AspectRatio&) const
     {
         return _render_target_aspect_ratio;
     }
 
-    auto operator()(const InputSlot_Time&) const -> float
+    auto operator()(const Input_Time&) const -> float
     {
         return _time;
     }
 
-    auto operator()(const InputSlot_File& file_input) const -> std::filesystem::path
+    auto operator()(const Input_File& file_input) const -> std::filesystem::path
     {
         return file_input.file_watcher.path();
     }

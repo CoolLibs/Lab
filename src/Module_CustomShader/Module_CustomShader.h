@@ -2,7 +2,7 @@
 #include <Cool/File/File.h>
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/Path/Path.h>
-#include "Dependencies/InputSlot.h"
+#include "Dependencies/Input.h"
 #include "Dependencies/Module.h"
 
 namespace Lab {
@@ -15,20 +15,20 @@ public:
     void render(RenderParams) override;
     void imgui_windows(Ui ui) override;
 
-    auto all_input_slots()
+    auto all_inputs()
     {
-        return _parameters;
+        return _inputs;
     }
 
-    auto all_input_slots() const -> AllInputSlots override
+    auto all_inputs() const -> AllInputRefsToConst override
     {
-        AllInputSlots slots;
-        slots.push_back(AnyInputSlotRefToConst{_camera_slot});
-        for (const auto& x : _parameters) {
-            slots.push_back(
-                std::visit([](auto&& x) { return AnyInputSlotRefToConst{x}; }, x));
+        AllInputRefsToConst inputs;
+        inputs.push_back(AnyInputRefToConst{_camera_input});
+        for (const auto& input : _inputs) {
+            inputs.push_back(
+                std::visit([](auto&& input) { return AnyInputRefToConst{input}; }, input));
         }
-        return slots;
+        return inputs;
     }
 
     auto is_dirty(DirtyManager dirty_manager) const -> bool override
@@ -38,16 +38,16 @@ public:
     }
 
 private:
-    void refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputSlotDestructorRef input_slot_destructor);
+    void refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputDestructorRef input_slot_destructor);
     void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name);
-    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputSlotDestructorRef input_slot_destructor);
+    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputDestructorRef input_slot_destructor);
 
 private:
-    Cool::FullscreenPipeline  _fullscreen_pipeline{};
-    std::vector<AnyInputSlot> _parameters;
-    InputSlot<Cool::Camera>   _camera_slot;
-    DirtyFlag                 _shader_is_dirty; // Must be before _file because it is used to construct it
-    InputSlot_File            _file;
+    Cool::FullscreenPipeline _fullscreen_pipeline{};
+    std::vector<AnyInput>    _inputs;
+    Input<Cool::Camera>      _camera_input;
+    DirtyFlag                _shader_is_dirty; // Must be before _file because it is used to construct it
+    Input_File               _file;
 
 private:
     // Serialization
@@ -56,8 +56,8 @@ private:
     void serialize(Archive& archive)
     {
         archive(cereal::base_class<Module>(this),
-                _parameters,
-                _camera_slot,
+                _inputs,
+                _camera_input,
                 _shader_is_dirty,
                 _file);
     }

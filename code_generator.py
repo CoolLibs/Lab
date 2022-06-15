@@ -76,25 +76,25 @@ def VariableRegistries():
         map(lambda var_type: f"    {var_type}", all_variable_types())) + "\n>;"
 
 
-def AnyInputSlot():
-    return "\n" + "using AnyInputSlot = std::variant<\n" + ",\n".join(
-        map(lambda var_type: f"    InputSlot<{var_type}>", all_variable_types())) + "\n>;"
+def AnyInput():
+    return "\n" + "using AnyInput = std::variant<\n" + ",\n".join(
+        map(lambda var_type: f"    Input<{var_type}>", all_variable_types())) + "\n>;"
 
 
-def AnyInputSlotRef():
-    return "\n" + "using AnyInputSlotRef = std::variant<\n" + ",\n".join(
-        map(lambda var_type: f"    std::reference_wrapper<InputSlot<{var_type}>>", all_variable_types())) + "\n>;"
+def AnyInputRef():
+    return "\n" + "using AnyInputRef = std::variant<\n" + ",\n".join(
+        map(lambda var_type: f"    std::reference_wrapper<Input<{var_type}>>", all_variable_types())) + "\n>;"
 
 
-def AnyInputSlotRefToConst():
-    return "\n" + "using AnyInputSlotRefToConst = std::variant<\n" + ",\n".join(
-        map(lambda var_type: f"    std::reference_wrapper<const InputSlot<{var_type}>>", all_variable_types())) + "\n>;"
+def AnyInputRefToConst():
+    return "\n" + "using AnyInputRefToConst = std::variant<\n" + ",\n".join(
+        map(lambda var_type: f"    std::reference_wrapper<const Input<{var_type}>>", all_variable_types())) + "\n>;"
 
 
 clear_generated_folder()
 generate("register_set_value_commands")
 generate("VariableRegistries")
-generate("AnyInputSlot")
-generate("AnyInputSlotRef")
-generate("AnyInputSlotRefToConst")
+generate("AnyInput")
+generate("AnyInputRef")
+generate("AnyInputRefToConst")
 generate("all_variable_includes")

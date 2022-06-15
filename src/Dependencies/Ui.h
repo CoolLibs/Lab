@@ -5,7 +5,7 @@
 #include "CommandCore/CommandExecutor_TopLevel_Ref.h"
 #include "Commands/Command_FinishedEditingValue.h"
 #include "Commands/Command_SetValue.h"
-#include "InputSlot.h"
+#include "Input.h"
 #include "VariableRegistries.h"
 
 namespace Lab {
@@ -75,7 +75,7 @@ public:
         }
     }
 
-    void widget(std::string_view name, InputSlot<glm::vec3>& color_slot)
+    void widget(std::string_view name, Input<glm::vec3>& color_slot)
     {
         ImGui::PushID(this);
         auto color = _variable_registries.get().get(color_slot.id);
@@ -86,17 +86,17 @@ public:
         widget(name, color_slot.id, *color);
         ImGui::PopID();
     }
-    void widget(std::string_view, InputSlot<Cool::Camera>&)
+    void widget(std::string_view, Input<Cool::Camera>&)
     {
     }
-    void widget(std::string_view, InputSlot<int>&)
+    void widget(std::string_view, Input<int>&)
     {
     }
-    void widget(std::string_view, InputSlot<glm::vec2>&)
+    void widget(std::string_view, Input<glm::vec2>&)
     {
     }
 
-    void widget(std::string_view name, InputSlot<float>& float_slot)
+    void widget(std::string_view name, Input<float>& float_slot)
     {
         ImGui::PushID(this);
         auto value = _variable_registries.get().get(float_slot.id);
@@ -108,22 +108,22 @@ public:
         ImGui::PopID();
     }
 
-    void widget(std::string_view, InputSlot_File& slot)
+    void widget(std::string_view, Input_File& input)
     {
-        slot.update(_set_dirty); // TODO shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
-        std::string path = slot.file_watcher.path().string();
+        input.update(_set_dirty); // TODO shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
+        std::string path = input.file_watcher.path().string();
         ImGui::Text("Path : ");
         ImGui::SameLine();
         ImGui::PushID(2132541);
         if (ImGui::InputText("", &path)) {
-            slot.file_watcher.set_path(path);
-            _set_dirty(slot._dirty_flag);
+            input.file_watcher.set_path(path);
+            _set_dirty(input._dirty_flag);
         }
         ImGui::PopID();
         ImGui::SameLine();
         if (Cool::ImGuiExtras::open_file_dialog(&path, Cool::NfdFileFilter::FragmentShader, Cool::File::whithout_file_name(path))) {
-            slot.file_watcher.set_path(path);
-            _set_dirty(slot._dirty_flag);
+            input.file_watcher.set_path(path);
+            _set_dirty(input._dirty_flag);
         }
     }
 

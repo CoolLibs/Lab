@@ -43,16 +43,16 @@ private:
     void render_impl(Cool::RenderTarget&, Module&, float time);
 
     // clang-format off
-    auto all_input_slots() -> AllInputSlots;
+    auto all_inputs() -> AllInputRefsToConst;
     auto set_dirty_flag                             () { return SetDirtyFlag_Ref{_dirty_registry}; }
-    auto set_variable_dirty                         () { return SetVariableDirty{all_input_slots(), set_dirty_flag()}; }
+    auto set_variable_dirty                         () { return SetVariableDirty{all_inputs(), set_dirty_flag()}; }
     auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, set_variable_dirty()}}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, _variable_registries}; }
     auto ui                                         () { return Ui{_variable_registries, command_executor(), set_dirty_flag()}; }
     auto input_provider                             (float render_target_aspect_ratio, float time) { return InputProvider{_variable_registries, render_target_aspect_ratio, time, _camera_manager.id()}; }
-    auto input_slot_destructor                      () { return InputSlotDestructorRef{_variable_registries}; }
+    auto input_slot_destructor                      () { return InputDestructorRef{_variable_registries}; }
     auto dirty_flag_factory                         () { return DirtyFlagFactory{_dirty_registry}; }
     auto dirty_manager                              () { return DirtyManager{_dirty_registry}; }
     // clang-format on

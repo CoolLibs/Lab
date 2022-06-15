@@ -7,9 +7,9 @@
 namespace Lab {
 
 template<typename T>
-class InputSlot {
+class Input {
 public:
-    explicit InputSlot(DirtyFlag dirty_flag = {}, std::string_view name = "")
+    explicit Input(DirtyFlag dirty_flag = {}, std::string_view name = "")
         : _dirty_flag{dirty_flag}
         , _name{name}
     {
@@ -29,7 +29,7 @@ public:
 public: // This section is used by the InputProvider to do its job
     friend class InputProvider;
     friend class Ui;
-    friend class InputSlotDestructorRef;
+    friend class InputDestructorRef;
     mutable reg::Id<T> id;
     DirtyFlag          _dirty_flag;
 
@@ -45,10 +45,10 @@ private:
     }
 };
 
-class InputSlot_File {
+class Input_File {
 public:
-    InputSlot_File() = default; // For serialization :( Remove whenever possible
-    explicit InputSlot_File(DirtyFlag dirty_flag)
+    Input_File() = default; // For serialization :( Remove whenever possible
+    explicit Input_File(DirtyFlag dirty_flag)
         : _dirty_flag{dirty_flag}
     {
     }
@@ -63,7 +63,7 @@ public:
 private:
     friend class Ui;
     friend class InputProvider;
-    friend class InputSlotDestructorRef;
+    friend class InputDestructorRef;
     Cool::FileWatcher file_watcher{};
     DirtyFlag         _dirty_flag;
 
@@ -85,31 +85,31 @@ private:
     }
 };
 
-struct InputSlot_AspectRatio {
+struct Input_AspectRatio {
 };
-struct InputSlot_Time {
+struct Input_Time {
 };
 
-#include "generated/AnyInputSlot.inl"
-#include "generated/AnyInputSlotRef.inl"
-#include "generated/AnyInputSlotRefToConst.inl"
+#include "generated/AnyInput.inl"
+#include "generated/AnyInputRef.inl"
+#include "generated/AnyInputRefToConst.inl"
 
-class InputSlotDestructorRef {
+class InputDestructorRef {
 public:
-    explicit InputSlotDestructorRef(VariableRegistries& registries)
+    explicit InputDestructorRef(VariableRegistries& registries)
         : _variable_registries{registries}
     {
     }
 
-    void operator()(const AnyInputSlot& slot)
+    void operator()(const AnyInput& input)
     {
-        std::visit([&](auto&& slot) { _variable_registries.get().destroy(slot.id); }, slot);
+        std::visit([&](auto&& input) { _variable_registries.get().destroy(input.id); }, input);
     }
 
 private:
     std::reference_wrapper<VariableRegistries> _variable_registries;
 };
 
-using AllInputSlots = std::vector<AnyInputSlotRefToConst>;
+using AllInputRefsToConst = std::vector<AnyInputRefToConst>;
 
 } // namespace Lab

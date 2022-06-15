@@ -3,9 +3,9 @@
 namespace Lab {
 
 template<>
-auto InputProvider::operator()(const InputSlot<Cool::Camera>& slot) const -> Cool::Camera
+auto InputProvider::operator()(const Input<Cool::Camera>& input) const -> Cool::Camera
 {
-    slot.id = _camera_id;
+    input.id = _camera_id;
     return _variable_registries.get().get(_camera_id).value_or(Cool::Camera{});
 }
 

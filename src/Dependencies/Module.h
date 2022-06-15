@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
 #include "History.h"
+#include "Input.h"
 #include "InputProvider.h"
-#include "InputSlot.h"
 #include "Ui.h"
 
 namespace Lab {
@@ -18,9 +18,9 @@ namespace Lab {
 class Module {
 public:
     struct RenderParams {
-        InputProvider          provider;
-        InputSlotDestructorRef input_slot_destructor;
-        DirtyManager           dirty_manager;
+        InputProvider      provider;
+        InputDestructorRef input_slot_destructor;
+        DirtyManager       dirty_manager;
     };
 
     Module() = default;
@@ -39,7 +39,7 @@ public:
     virtual void imgui_windows(Ui ui) = 0;
     virtual void update(){};
 
-    virtual auto all_input_slots() const -> AllInputSlots = 0;
+    virtual auto all_inputs() const -> AllInputRefsToConst = 0;
 
     virtual auto is_dirty(DirtyManager dirty_manager) const -> bool // No need for the whole DirtyManager, just DirtyChecker
     {

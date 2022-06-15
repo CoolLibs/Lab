@@ -84,9 +84,9 @@ void App::render(Cool::RenderTarget& render_target, float time)
     }
 }
 
-auto App::all_input_slots() -> AllInputSlots
+auto App::all_inputs() -> AllInputRefsToConst
 {
-    auto vec = _current_module->all_input_slots();
+    auto vec = _current_module->all_inputs();
     // auto vec2 = _current_module2->all_input_slots();
     // for (const auto& x : vec2) {
     //     vec.push_back(x);
