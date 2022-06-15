@@ -59,9 +59,9 @@ vec2 is_circle_mode(vec2 n, float t, vec2 offs)
     return p;
 }
 
-vec2 is_square_mode(vec2 n, vec2 offs)
+vec2 is_square_mode(vec2 n, float t, vec2 offs)
 {
-    vec2 p = offs + sin(n) * Space_to_border * .5;
+    vec2 p = offs + sin(n * t) * Space_to_border * .5;
     return p;
 }
 
@@ -91,7 +91,7 @@ VoronoiRes voronoi(vec2 uv)
             vec2 n = N22(id + offs);
             vec2 p;
             if (Square_mode > .5) {
-                p = is_square_mode(n, offs);
+                p = is_square_mode(n, t, offs);
             }
             else {
                 p = is_circle_mode(n, t, offs);
@@ -99,8 +99,8 @@ VoronoiRes voronoi(vec2 uv)
 
             vec2  p_to_gv = p - gv;
             float d       = pow(
-                pow(abs(p_to_gv.x), Distance_mode) + pow(abs(p_to_gv.y), Distance_mode),
-                1 / Distance_mode);
+                      pow(abs(p_to_gv.x), Distance_mode) + pow(abs(p_to_gv.y), Distance_mode),
+                      1 / Distance_mode);
 
             if (d < res.minDist) {
                 res.minDist2 = res.minDist;

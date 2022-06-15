@@ -7,6 +7,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/math.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float Size;
@@ -20,13 +22,6 @@ uniform float Distance_mode;
 vec3 image(vec2 uv)
 {
     return texture2D(_image, uv).rgb;
-}
-
-vec2 N22(vec2 p)
-{
-    vec3 a = fract(p.xyx * vec3(123.34, 234.34, 345.65));
-    a += dot(a, a + 34.45);
-    return fract(vec2(a.x * a.y, a.y * a.z));
 }
 
 void main()
@@ -48,48 +43,31 @@ void main()
 
     vec3 col = vec3(0);
 
-    if (false) {
-        for (float i = 0.; i < 50.; i++) {
-            vec2 n = N22(vec2(i));
-            vec2 p = sin(n * t);
+    uv *= Size;
+    vec2 gv  = fract(uv) - .5;
+    vec2 id  = floor(uv);
+    vec2 cid = vec2(0);
 
-            float d = length(uv - p);
-            m += smoothstep(.02, .01, d);
+    for (float y = -1.; y <= 1.; y++) {
+        for (float x = -1.; x <= 1.; x++) {
+            vec2 offs = vec2(x, y);
+
+            vec2 n = hash_0_to_1_2D_to_2D(id + offs);
+            vec2 p = offs + sin(n * t) * .5;
+            p -= gv;
+            float d = pow(
+                pow(abs(p.x), Distance_mode) + pow(abs(p.y), Distance_mode),
+                1 / Distance_mode);
 
             if (d < minDist) {
-                minDist   = d;
-                cellIndex = i;
+                minDist = d;
+                cid     = id + offs;
             }
         }
-        col = vec3(minDist);
     }
-    else {
-        uv *= Size;
-        vec2 gv  = fract(uv) - .5;
-        vec2 id  = floor(uv);
-        vec2 cid = vec2(0);
-
-        for (float y = -1.; y <= 1.; y++) {
-            for (float x = -1.; x <= 1.; x++) {
-                vec2 offs = vec2(x, y);
-
-                vec2 n = N22(id + offs);
-                vec2 p = offs + sin(n * t) * .5;
-                p -= gv;
-                float d = pow(
-                    pow(abs(p.x), Distance_mode) + pow(abs(p.y), Distance_mode),
-                    1 / Distance_mode);
-
-                if (d < minDist) {
-                    minDist = d;
-                    cid     = id + offs;
-                }
-            }
-        }
-        vec2 image_uv = cid / Size;
-        image_uv.x /= _aspect_ratio;
-        col = image(image_uv);
-    }
+    vec2 image_uv = cid / Size;
+    image_uv.x /= _aspect_ratio;
+    col = image(image_uv);
 
     out_Color = vec4(col, 1.);
 }

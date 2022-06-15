@@ -9,10 +9,10 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform float Red_coeficient;     // default 0.2126
-uniform float Green_coeficient;   // default 0.7152
-uniform float Blue_coeficient;    // default 0.0722
-uniform float Normalize_checkbox; // default 0.0722
+uniform float Red_contribution;   // default 0.2126
+uniform float Green_contribution; // default 0.7152
+uniform float Blue_contribution;  // default 0.0722
+uniform float Normalize_checkbox;
 
 // END DYNAMIC PARAMS
 
@@ -23,12 +23,12 @@ vec4 image(vec2 uv)
 
 void main()
 {
-    float total_colors_coeficients   = Red_coeficient + Green_coeficient + Blue_coeficient;
-    vec3  black_and_white_coeficient = vec3(Red_coeficient, Green_coeficient, Blue_coeficient);
+    vec3 channels_contribution = vec3(Red_contribution, Green_contribution, Blue_contribution);
     if (Normalize_checkbox >= 0.5) {
-        black_and_white_coeficient /= total_colors_coeficients;
+        float sum_of_channels_contribution = dot(channels_contribution, vec3(1.));
+        channels_contribution /= sum_of_channels_contribution;
     }
-    out_Color = vec4(
-        vec3(dot(image(_uv).rgb, black_and_white_coeficient)),
-        1.);
+    float luminosity = dot(image(_uv).rgb, channels_contribution);
+
+    out_Color = vec4(vec3(luminosity), 1.);
 }
