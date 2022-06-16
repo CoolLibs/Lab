@@ -79,6 +79,9 @@ uniform sampler2D _image;
 // BEGIN DYNAMIC PARAMS
 
 uniform float scale;
+uniform float gain;       // default = 0.5
+uniform float lacunarity; // default =2
+uniform float octaves;    // min=1
 
 // END DYNAMIC PARAMS
 
@@ -497,10 +500,28 @@ float snoise(vec2 pos)
     return srnoise(pos, 0.0);
 }
 
+// https://thebookofshaders.com/13/
+
+float fbm(in vec2 st)
+{
+    // Initial values
+    float value     = 0.0;
+    float amplitude = .5;
+    float frequency = 0.;
+    //
+    // Loop of octaves
+    for (int i = 0; i < octaves; i++) {
+        value += amplitude * (snoise(st * scale) * 0.5 + 0.5);
+        st *= lacunarity;
+        amplitude *= gain;
+    }
+    return value;
+}
+
 void main()
 {
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
     float noise = snoise(uv * scale) * 0.5 + 0.5;
-    out_Color   = vec4(vec3(noise), 1.);
+    out_Color   = vec4(vec3(fbm(uv)), 1.);
 }
