@@ -14,7 +14,7 @@ public:
     }
 
     template<typename T>
-    void operator()(VariableId<T> variable_id)
+    void operator()(const VariableId<T>& variable_id)
     {
         for (const auto& input : _inputs) {
             const auto* input_of_right_type = std::get_if<std::reference_wrapper<const Lab::Input<T>>>(&input);
