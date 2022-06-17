@@ -2,10 +2,11 @@
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
-#include "History.h"
-#include "Input.h"
-#include "InputProvider.h"
-#include "Ui.h"
+#include "Dependencies/History.h"
+#include "Dependencies/Input.h"
+#include "Dependencies/InputFactory_Ref.h"
+#include "Dependencies/InputProvider.h"
+#include "Dependencies/Ui.h"
 
 namespace Lab {
 
@@ -18,14 +19,15 @@ namespace Lab {
 class Module {
 public:
     struct RenderParams {
-        InputProvider      provider;
-        InputDestructorRef input_slot_destructor;
-        DirtyManager       dirty_manager;
+        InputProvider       provider;
+        InputFactory_Ref    input_factory;
+        InputDestructor_Ref input_destructor;
+        DirtyManager        dirty_manager;
     };
 
     Module() = default;
-    explicit Module(DirtyFlagFactory dirty_flag_factory)
-        : _dirty_flag{dirty_flag_factory.create()}
+    explicit Module(DirtyFlagFactory_Ref dirty_flag_factory)
+        : _dirty_flag{dirty_flag_factory.make()}
     {
     }
 

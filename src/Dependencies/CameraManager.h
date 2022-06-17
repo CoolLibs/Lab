@@ -14,7 +14,7 @@ class CommandExecutor_TopLevel_Ref;
 
 class CameraManager {
 public:
-    explicit CameraManager(const reg::Id<Cool::Variable<Cool::Camera>>& camera_id)
+    explicit CameraManager(const VariableId<Cool::Camera>& camera_id)
         : _camera_id{camera_id}
     {
     }
@@ -25,7 +25,7 @@ public:
                      std::reference_wrapper<VariableRegistries>,
                      CommandExecutor_TopLevel_Ref);
 
-    auto id() const -> const reg::Id<Cool::Variable<Cool::Camera>>& { return _camera_id; }
+    auto id() const -> const VariableId<Cool::Camera>& { return _camera_id; }
 
     void imgui(std::reference_wrapper<VariableRegistries> registries,
                CommandExecutor_TopLevel_Ref               commander);

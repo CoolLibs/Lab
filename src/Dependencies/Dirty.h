@@ -26,10 +26,11 @@ inline auto to_string(IsDirty is_dirty) -> std::string
 class DirtyFlag {
 public:
     DirtyFlag() = default; // For serialization :( Remove whenever possible
+
 private:
     friend class DirtyManager;
     friend class SetDirtyFlag_Ref;
-    friend class DirtyFlagFactory;
+    friend class DirtyFlagFactory_Ref;
 
     explicit DirtyFlag(reg::Id<internal::IsDirty> id)
         : id{id}
@@ -49,14 +50,14 @@ private:
 
 using DirtyRegistry = reg::Registry<internal::IsDirty>;
 
-class DirtyFlagFactory {
+class DirtyFlagFactory_Ref {
 public:
-    explicit DirtyFlagFactory(DirtyRegistry& registry)
+    explicit DirtyFlagFactory_Ref(DirtyRegistry& registry)
         : _registry{registry}
     {
     }
 
-    auto create()
+    auto make()
     {
         return DirtyFlag{_registry.get().create({})};
     }

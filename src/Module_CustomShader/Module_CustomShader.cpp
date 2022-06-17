@@ -6,10 +6,10 @@
 
 namespace Lab {
 
-Module_CustomShader::Module_CustomShader(DirtyFlagFactory dirty_flag_factory)
+Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
     : Module{dirty_flag_factory}
-    , _camera_input{dirty_flag()}
-    , _shader_is_dirty{dirty_flag_factory.create()}
+    , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
+    , _shader_is_dirty{dirty_flag_factory.make()}
     , _file{_shader_is_dirty}
 {
 }
@@ -49,7 +49,7 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
 
 void Module_CustomShader::render(RenderParams in)
 {
-    refresh_pipeline_if_necessary(in.provider, in.dirty_manager, in.input_slot_destructor);
+    refresh_pipeline_if_necessary(in.provider, in.dirty_manager, in.input_factory, in.input_destructor);
     Cool::Log::ToUser::info("Custom Shader Render", "Re-rendering");
     if (_fullscreen_pipeline.shader()) {
         _fullscreen_pipeline.shader()->bind();
@@ -67,14 +67,17 @@ void Module_CustomShader::render(RenderParams in)
     in.dirty_manager.set_clean(dirty_flag());
 }
 
-void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputDestructorRef input_slot_destructor)
+void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider       provider,
+                                                        DirtyManager        dirty_manager,
+                                                        InputFactory_Ref    input_factory,
+                                                        InputDestructor_Ref input_destructor)
 {
     if (dirty_manager.is_dirty(_shader_is_dirty)) {
         Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
         compile_shader(source_code, file_path.string());
-        parse_shader_for_params(source_code, input_slot_destructor);
+        parse_shader_for_params(source_code, input_factory, input_destructor);
         dirty_manager.set_clean(_shader_is_dirty);
     }
 }
@@ -105,7 +108,7 @@ static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>&
 static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<AnyInput>& old_inputs,
     std::vector<AnyInput>& new_inputs,
-    InputDestructorRef     destroy)
+    InputDestructor_Ref    destroy)
 {
     for (auto& input : old_inputs) {
         const auto it = iterator_to_same_input(input, new_inputs);
@@ -118,7 +121,7 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag)
+static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory)
     -> std::vector<AnyInput>
 {
     std::vector<AnyInput> new_inputs;
@@ -142,13 +145,13 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
                     //
                     const auto input = [&]() -> AnyInput {
                         if (type == "int")
-                            return Input<int>{dirty_flag, name};
+                            return input_factory.make<int>(dirty_flag, name);
                         else if (type == "float")
-                            return Input<float>{dirty_flag, name};
+                            return input_factory.make<float>(dirty_flag, name);
                         else if (type == "vec2")
-                            return Input<glm::vec2>{dirty_flag, name};
+                            return input_factory.make<glm::vec2>(dirty_flag, name);
                         else if (type == "vec3")
-                            return Input<Cool::Color>{dirty_flag, name};
+                            return input_factory.make<Cool::Color>(dirty_flag, name);
                         else
                             throw std::invalid_argument(type + " is not a valid parameter type.");
                     }();
@@ -166,9 +169,11 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
     return new_inputs;
 }
 
-void Module_CustomShader::parse_shader_for_params(std::string_view source_code, InputDestructorRef input_destructor)
+void Module_CustomShader::parse_shader_for_params(std::string_view    source_code,
+                                                  InputFactory_Ref    input_factory,
+                                                  InputDestructor_Ref input_destructor)
 {
-    auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag());
+    auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }

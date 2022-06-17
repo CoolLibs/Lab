@@ -13,10 +13,10 @@
 namespace Lab {
 
 App::App(Cool::WindowManager& windows)
-    : _main_window{windows.main_window()}
-    , _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
+    : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
+    , _main_window{windows.main_window()}
     , _view{_views.make_view("View")}
-    , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
+    , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
@@ -41,7 +41,7 @@ void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, fl
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        some_module.do_rendering({input_provider(aspect_ratio, time), input_slot_destructor(), dirty_manager()});
+        some_module.do_rendering({input_provider(aspect_ratio, time), input_factory(), input_destructor(), dirty_manager()});
     });
 }
 

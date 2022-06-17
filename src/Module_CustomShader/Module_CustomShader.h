@@ -3,6 +3,7 @@
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/Path/Path.h>
 #include "Dependencies/Input.h"
+#include "Dependencies/InputFactory_Ref.h"
 #include "Dependencies/Module.h"
 
 namespace Lab {
@@ -10,7 +11,7 @@ namespace Lab {
 class Module_CustomShader : public Module {
 public:
     Module_CustomShader() = default;
-    explicit Module_CustomShader(DirtyFlagFactory);
+    Module_CustomShader(DirtyFlagFactory_Ref, InputFactory_Ref);
 
     void render(RenderParams) override;
     void imgui_windows(Ui ui) override;
@@ -38,9 +39,9 @@ public:
     }
 
 private:
-    void refresh_pipeline_if_necessary(InputProvider provider, DirtyManager dirty_manager, InputDestructorRef input_slot_destructor);
+    void refresh_pipeline_if_necessary(InputProvider, DirtyManager, InputFactory_Ref, InputDestructor_Ref);
     void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name);
-    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputDestructorRef input_slot_destructor);
+    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref);
 
 private:
     Cool::FullscreenPipeline _fullscreen_pipeline{};

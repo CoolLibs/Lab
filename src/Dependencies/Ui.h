@@ -35,45 +35,15 @@ public:
     }
 
     template<typename T>
-    void widget(const VariableId<T>& id, Cool::Variable<T> variable)
-    {
-        Cool::imgui(variable,
-                    {.on_value_changed =
-                         [&]() { _command_executor.execute(
-                                     Command_SetVariable<T>{.id    = id,
-                                                            .value = variable.value}); },
-                     .on_metadata_changed =
-                         [&]() { _command_executor.execute(
-                                     Command_SetVariableMetadata<T>{.id       = id,
-                                                                    .metadata = variable.metadata}); },
-                     .on_value_editing_finished =
-                         [&]() {
-                             _command_executor.execute(
-                                 Command_FinishedEditingVariable{});
-                         }});
-    }
-
-    template<typename T>
-    void widget(const VariableId<T>& id)
-    {
-        ImGui::PushID(&id);
-        const auto variable = _variable_registries.get().get(id);
-        if (variable) {
-            widget(id, variable->value);
-        }
-        ImGui::PopID();
-    }
-
-    template<typename T>
     void widget(Input<T>& input)
     {
         ImGui::PushID(&input);
-        auto value = _variable_registries.get().get(input._variable_id);
-        if (!value) {
-            value              = Cool::Variable<T>{.name = input.name()};
-            input._variable_id = _variable_registries.get().create(*value);
+        // TODO add a way to change the current_variable
+        // And show the UI of the current_variable if it is set
+        const auto variable = _variable_registries.get().get(input._default_variable_id);
+        if (variable) {
+            widget<T>(input._default_variable_id, *variable);
         }
-        widget(input._variable_id, *value);
         ImGui::PopID();
     }
 
@@ -94,6 +64,26 @@ public:
             input.file_watcher.set_path(path);
             _set_dirty(input._dirty_flag);
         }
+    }
+
+private:
+    template<typename T>
+    void widget(const VariableId<T>& id, Cool::Variable<T> variable)
+    {
+        Cool::imgui(variable,
+                    {.on_value_changed =
+                         [&]() { _command_executor.execute(
+                                     Command_SetVariable<T>{.id    = id,
+                                                            .value = variable.value}); },
+                     .on_metadata_changed =
+                         [&]() { _command_executor.execute(
+                                     Command_SetVariableMetadata<T>{.id       = id,
+                                                                    .metadata = variable.metadata}); },
+                     .on_value_editing_finished =
+                         [&]() {
+                             _command_executor.execute(
+                                 Command_FinishedEditingVariable{});
+                         }});
     }
 
 private:

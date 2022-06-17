@@ -51,9 +51,10 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, _variable_registries}; }
     auto ui                                         () { return Ui{_variable_registries, command_executor(), set_dirty_flag()}; }
-    auto input_provider                             (float render_target_aspect_ratio, float time) { return InputProvider{_variable_registries, render_target_aspect_ratio, time, _camera_manager.id()}; }
-    auto input_slot_destructor                      () { return InputDestructorRef{_variable_registries}; }
-    auto dirty_flag_factory                         () { return DirtyFlagFactory{_dirty_registry}; }
+    auto input_provider                             (float render_target_aspect_ratio, float time) { return InputProvider{_variable_registries, render_target_aspect_ratio, time}; }
+    auto input_destructor                           () { return InputDestructor_Ref{_variable_registries}; }
+    auto input_factory                              () { return InputFactory_Ref{_variable_registries, _camera_manager.id()}; }
+    auto dirty_flag_factory                         () { return DirtyFlagFactory_Ref{_dirty_registry}; }
     auto dirty_manager                              () { return DirtyManager{_dirty_registry}; }
     // clang-format on
 
@@ -76,8 +77,8 @@ private:
 
 private:
     VariableRegistries          _variable_registries; // First because modules need the registries when they get created
+    CameraManager               _camera_manager;      // First because modules need the camera id when they get created
     Cool::Window&               _main_window;
-    CameraManager               _camera_manager;
     Cool::Clock_Realtime        _clock;
     Cool::ImageSizeConstraint   _preview_constraint;
     Cool::RenderableViewManager _views; // Must be before the views because it is used to create them
