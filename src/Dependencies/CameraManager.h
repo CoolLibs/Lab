@@ -5,6 +5,7 @@
 #include <Cool/Input/MouseCoordinates.h>
 #include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
+#include "Dependencies/VariableId.h"
 #include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
@@ -13,7 +14,7 @@ class CommandExecutor_TopLevel_Ref;
 
 class CameraManager {
 public:
-    explicit CameraManager(const reg::Id<Cool::Camera>& camera_id)
+    explicit CameraManager(const reg::Id<Cool::Variable<Cool::Camera>>& camera_id)
         : _camera_id{camera_id}
     {
     }
@@ -24,7 +25,7 @@ public:
                      std::reference_wrapper<VariableRegistries>,
                      CommandExecutor_TopLevel_Ref);
 
-    auto id() const -> const reg::Id<Cool::Camera>& { return _camera_id; }
+    auto id() const -> const reg::Id<Cool::Variable<Cool::Camera>>& { return _camera_id; }
 
     void imgui(std::reference_wrapper<VariableRegistries> registries,
                CommandExecutor_TopLevel_Ref               commander);
@@ -35,7 +36,7 @@ private:
                              std::function<bool(Cool::Camera&)> fun);
 
 private:
-    reg::Id<Cool::Camera>        _camera_id;
+    VariableId<Cool::Camera>     _camera_id;
     Cool::ViewController_Orbital _view_controller;
     float                        _last_aspect_ratio{};
 

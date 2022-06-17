@@ -7,8 +7,8 @@ namespace Lab {
 
 /// Submit this when for example you finished dragging a slider (e.g. when ImGui::IsItemDeactivatedAfterEdit() is true).
 /// It will make sure that the commit will be locked in the history and future commands modifying the same value
-/// won't be merged with the ones that were issued before Command_FinishedEditingValue.
-struct Command_FinishedEditingValue {
+/// won't be merged with the ones that were issued before Command_FinishedEditingVariable.
+struct Command_FinishedEditingVariable {
     void execute(CommandExecutionContext_Ref& ctx) const
     {
         ctx.history().dont_merge_next_command();
@@ -16,7 +16,7 @@ struct Command_FinishedEditingValue {
 
     auto to_string() const -> std::string
     {
-        return "Finished editing value";
+        return "Finished editing variable";
     }
 };
 
@@ -25,10 +25,10 @@ struct Command_FinishedEditingValue {
 namespace cereal {
 
 template<class Archive>
-void serialize(Archive&, Lab::Command_FinishedEditingValue&)
+void serialize(Archive&, Lab::Command_FinishedEditingVariable&)
 {
 }
 
 } // namespace cereal
 
-LAB_REGISTER_COMMAND(Lab::Command_FinishedEditingValue)
+LAB_REGISTER_COMMAND(Lab::Command_FinishedEditingVariable)

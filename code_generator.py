@@ -49,6 +49,7 @@ def all_variable_types():
         "float",
         "glm::vec2",
         "glm::vec3",
+        "Cool::Color",
         "Cool::Camera",
     ]
 
@@ -59,21 +60,26 @@ def all_variable_includes():
 """
 
 
-def register_set_value_commands():
+def register_set_variable_commands():
     commands = ""
     reversible_commands = ""
     for variable_type in all_variable_types():
-        commands += f"LAB_REGISTER_COMMAND(Lab::Command_SetValue<{variable_type}>)\n"
-        reversible_commands += f"LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetValue<{variable_type}>)\n"
+        commands += f"LAB_REGISTER_COMMAND(Lab::Command_SetVariable<{variable_type}>)\n"
+        reversible_commands += f"LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<{variable_type}>)\n"
     return f"""
 {commands}
 {reversible_commands}
 """
 
+def register_set_variable_metadata_commands():
+    commands = "\n"
+    for variable_type in all_variable_types():
+        commands += f"LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<{variable_type}>)\n"
+    return commands
 
 def VariableRegistries():
     return "\n" + "using VariableRegistries = reg::Registries<\n" + ",\n".join(
-        map(lambda var_type: f"    {var_type}", all_variable_types())) + "\n>;"
+        map(lambda var_type: f"    Cool::Variable<{var_type}>", all_variable_types())) + "\n>;"
 
 
 def AnyInput():
@@ -92,7 +98,8 @@ def AnyInputRefToConst():
 
 
 clear_generated_folder()
-generate("register_set_value_commands")
+generate("register_set_variable_commands")
+generate("register_set_variable_metadata_commands")
 generate("VariableRegistries")
 generate("AnyInput")
 generate("AnyInputRef")

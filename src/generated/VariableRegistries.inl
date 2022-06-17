@@ -6,9 +6,10 @@
  */
 
 using VariableRegistries = reg::Registries<
-    int,
-    float,
-    glm::vec2,
-    glm::vec3,
-    Cool::Camera
+    Cool::Variable<int>,
+    Cool::Variable<float>,
+    Cool::Variable<glm::vec2>,
+    Cool::Variable<glm::vec3>,
+    Cool::Variable<Cool::Color>,
+    Cool::Variable<Cool::Camera>
 >;

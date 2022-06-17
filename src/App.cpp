@@ -14,7 +14,7 @@ namespace Lab {
 
 App::App(Cool::WindowManager& windows)
     : _main_window{windows.main_window()}
-    , _camera_manager{_variable_registries.of<Cool::Camera>().create({})}
+    , _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
     , _view{_views.make_view("View")}
     , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory())}
 {
@@ -168,16 +168,16 @@ void App::imgui_windows()
     if (inputs_are_allowed()) {
         _current_module->imgui_windows(ui());
         Ui::window({.name = "Registry of vec3"}, [&]() {
-            imgui_show(_variable_registries.of<glm::vec3>());
+            imgui_show(_variable_registries.of<Cool::Variable<glm::vec3>>());
         });
         Ui::window({.name = "Registry of float"}, [&]() {
-            imgui_show(_variable_registries.of<float>());
+            imgui_show(_variable_registries.of<Cool::Variable<float>>());
         });
         Ui::window({.name = "Registry of int"}, [&]() {
-            imgui_show(_variable_registries.of<int>());
+            imgui_show(_variable_registries.of<Cool::Variable<int>>());
         });
         Ui::window({.name = "Registry of Camera"}, [&]() {
-            imgui_show(_variable_registries.of<Cool::Camera>());
+            imgui_show(_variable_registries.of<Cool::Variable<Cool::Camera>>());
         });
         Ui::window({.name = "Registry of DirtyFlag"}, [&]() {
             imgui_show(_dirty_registry);

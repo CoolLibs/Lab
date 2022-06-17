@@ -3,8 +3,9 @@
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
 #include "CommandCore/CommandExecutor_TopLevel_Ref.h"
-#include "Commands/Command_FinishedEditingValue.h"
-#include "Commands/Command_SetValue.h"
+#include "Commands/Command_FinishedEditingVariable.h"
+#include "Commands/Command_SetVariable.h"
+#include "Commands/Command_SetVariableMetadata.h"
 #include "Input.h"
 #include "VariableRegistries.h"
 
@@ -33,82 +34,50 @@ public:
         ImGui::End();
     }
 
-    void widget(std::string_view name, reg::Id<glm::vec3> color_id, glm::vec3 current_value)
+    template<typename T>
+    void widget(const VariableId<T>& id, Cool::Variable<T> variable)
     {
-        if (ImGui::ColorEdit3(name.data(), glm::value_ptr(current_value), ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float)) {
-            _command_executor.execute(
-                Command_SetValue<glm::vec3>{.id    = color_id,
-                                            .value = current_value});
-        }
-        if (ImGui::IsItemDeactivatedAfterEdit()) {
-            _command_executor.execute(
-                Command_FinishedEditingValue{});
-        }
+        Cool::imgui(variable,
+                    {.on_value_changed =
+                         [&]() { _command_executor.execute(
+                                     Command_SetVariable<T>{.id    = id,
+                                                            .value = variable.value}); },
+                     .on_metadata_changed =
+                         [&]() { _command_executor.execute(
+                                     Command_SetVariableMetadata<T>{.id       = id,
+                                                                    .metadata = variable.metadata}); },
+                     .on_value_editing_finished =
+                         [&]() {
+                             _command_executor.execute(
+                                 Command_FinishedEditingVariable{});
+                         }});
     }
 
-    void widget(std::string_view name, reg::Id<glm::vec3> color_id)
+    template<typename T>
+    void widget(const VariableId<T>& id)
     {
-        ImGui::PushID(this);
-        auto color = _variable_registries.get().get(color_id);
-        if (color) {
-            widget(name.data(), color_id, *color);
+        ImGui::PushID(&id);
+        const auto variable = _variable_registries.get().get(id);
+        if (variable) {
+            widget(id, variable->value);
         }
         ImGui::PopID();
     }
-    void widget(std::string_view, reg::Id<glm::vec2>)
-    {
-    }
-    void widget(std::string_view, reg::Id<Cool::Camera>)
-    {
-    }
 
-    void widget(std::string_view name, reg::Id<float> float_id, float current_value)
+    template<typename T>
+    void widget(Input<T>& input)
     {
-        if (ImGui::SliderFloat(name.data(), &current_value, 0.f, 1.f)) {
-            _command_executor.execute(
-                Command_SetValue<float>{.id    = float_id,
-                                        .value = current_value});
-        }
-        if (ImGui::IsItemDeactivatedAfterEdit()) {
-            _command_executor.execute(
-                Command_FinishedEditingValue{});
-        }
-    }
-
-    void widget(std::string_view name, Input<glm::vec3>& color_slot)
-    {
-        ImGui::PushID(this);
-        auto color = _variable_registries.get().get(color_slot.id);
-        if (!color) {
-            color         = glm::vec3{};
-            color_slot.id = _variable_registries.get().create(*color);
-        }
-        widget(name, color_slot.id, *color);
-        ImGui::PopID();
-    }
-    void widget(std::string_view, Input<Cool::Camera>&)
-    {
-    }
-    void widget(std::string_view, Input<int>&)
-    {
-    }
-    void widget(std::string_view, Input<glm::vec2>&)
-    {
-    }
-
-    void widget(std::string_view name, Input<float>& float_slot)
-    {
-        ImGui::PushID(this);
-        auto value = _variable_registries.get().get(float_slot.id);
+        ImGui::PushID(&input);
+        auto value = _variable_registries.get().get(input._variable_id);
         if (!value) {
-            value         = float{};
-            float_slot.id = _variable_registries.get().create(*value);
+            value              = Cool::Variable<T>{.name = input.name()};
+            input._variable_id = _variable_registries.get().create(*value);
         }
-        widget(name, float_slot.id, *value);
+        widget(input._variable_id, *value);
         ImGui::PopID();
     }
 
-    void widget(std::string_view, Input_File& input)
+    void widget(Input_File& input)
     {
         input.update(_set_dirty); // TODO shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
         std::string path = input.file_watcher.path().string();

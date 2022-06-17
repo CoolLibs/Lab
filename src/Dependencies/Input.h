@@ -1,6 +1,7 @@
 #pragma once
 #include <Cool/FileWatcher/FileWatcher.h>
 #include <reg/reg.hpp>
+#include "Dependencies/VariableId.h"
 #include "Dirty.h"
 #include "VariableRegistries.h"
 
@@ -9,39 +10,37 @@ namespace Lab {
 template<typename T>
 class Input {
 public:
-    explicit Input(DirtyFlag dirty_flag = {}, std::string_view name = "")
+    explicit Input(DirtyFlag dirty_flag = {}, std::string_view name = {} /*, Cool::VariableMetadata<T> metadata*/)
         : _dirty_flag{dirty_flag}
         , _name{name}
     {
     }
 
-    std::string_view name() const { return _name; }
+    auto name() const -> const std::string& { return _name; }
 
-    void set_dirty_if_depends_on(const reg::Id<T>& variable_id, SetDirtyFlag_Ref set_dirty) const
+    void set_dirty_if_depends_on(const VariableId<T>& variable_id, SetDirtyFlag_Ref set_dirty) const
     {
-        auto name          = reg::to_string(id);
-        auto variable_name = reg::to_string(variable_id);
-        if (id == variable_id) {
+        if (_variable_id == variable_id) {
             set_dirty(_dirty_flag);
         }
     }
 
-public: // This section is used by the InputProvider to do its job
+private:
     friend class InputProvider;
     friend class Ui;
     friend class InputDestructorRef;
-    mutable reg::Id<T> id;
-    DirtyFlag          _dirty_flag;
-
-private: // This section is really private
-    std::string _name;
+    mutable VariableId<T> _variable_id;
+    DirtyFlag             _dirty_flag;
+    std::string           _name; // NB: both the Input and its associated Variable have a name, because they are two different things and the associated variable could be coming from a global pool.
 
 private:
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(id, _name, _dirty_flag);
+        archive(cereal::make_nvp("Variable ID", _variable_id),
+                cereal::make_nvp("Dirty Flag", _dirty_flag),
+                cereal::make_nvp("Name", _name));
     }
 };
 
@@ -103,7 +102,7 @@ public:
 
     void operator()(const AnyInput& input)
     {
-        std::visit([&](auto&& input) { _variable_registries.get().destroy(input.id); }, input);
+        std::visit([&](auto&& input) { _variable_registries.get().destroy(input._variable_id); }, input);
     }
 
 private:

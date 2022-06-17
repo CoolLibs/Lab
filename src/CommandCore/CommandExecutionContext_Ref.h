@@ -3,6 +3,7 @@
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
 #include "Dependencies/SetVariableDirty.h"
+#include "Dependencies/VariableId.h"
 #include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
@@ -15,7 +16,7 @@ public:
     auto history() const -> const History& { return _data.history; }
     auto registries() -> VariableRegistries& { return _data.registries; }
     template<typename T>
-    void set_dirty(const reg::Id<T>& id)
+    void set_dirty(const VariableId<T>& id)
     {
         _data.set_dirty(id);
     }

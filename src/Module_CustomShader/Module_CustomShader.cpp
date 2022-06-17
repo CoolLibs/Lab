@@ -17,12 +17,12 @@ Module_CustomShader::Module_CustomShader(DirtyFlagFactory dirty_flag_factory)
 void Module_CustomShader::imgui_windows(Ui ui)
 {
     Ui::window({.name = "Custom Shader"}, [&]() {
-        ui.widget("File", _file);
+        ui.widget(_file);
         ImGui::Separator();
         ImGui::NewLine();
         for (auto& input : _inputs) {
             std::visit([&ui](auto&& input) {
-                ui.widget(input.name(), input);
+                ui.widget(input);
             },
                        input);
         }
@@ -30,9 +30,15 @@ void Module_CustomShader::imgui_windows(Ui ui)
 }
 
 template<typename T>
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
+static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
 {
     shader.set_uniform(name, value);
+}
+
+template<>
+void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::Color& value)
+{
+    shader.set_uniform(name, value.rgb);
 }
 
 void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
@@ -142,7 +148,7 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
                         else if (type == "vec2")
                             return Input<glm::vec2>{dirty_flag, name};
                         else if (type == "vec3")
-                            return Input<glm::vec3>{dirty_flag, name};
+                            return Input<Cool::Color>{dirty_flag, name};
                         else
                             throw std::invalid_argument(type + " is not a valid parameter type.");
                     }();
