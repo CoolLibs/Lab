@@ -11,11 +11,11 @@
 
 namespace Lab {
 
-class Ui {
+class Ui_Ref {
 public:
-    Ui(VariableRegistries&          registries,
-       CommandExecutor_TopLevel_Ref command_executor,
-       SetDirtyFlag_Ref             set_dirty)
+    Ui_Ref(VariableRegistries&          registries,
+           CommandExecutor_TopLevel_Ref command_executor,
+           SetDirtyFlag_Ref             set_dirty)
         : _variable_registries{registries}
         , _command_executor{command_executor}
         , _set_dirty{set_dirty}
@@ -35,7 +35,7 @@ public:
     }
 
     template<typename T>
-    void widget(Input<T>& input)
+    void widget(const Input<T>& input)
     {
         ImGui::PushID(&input);
         // TODO add a way to change the current_variable

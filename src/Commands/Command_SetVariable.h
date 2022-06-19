@@ -4,6 +4,7 @@
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
+#include "Dependencies/VariableId.h"
 
 namespace Lab {
 

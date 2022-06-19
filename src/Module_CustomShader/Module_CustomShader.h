@@ -14,12 +14,7 @@ public:
     Module_CustomShader(DirtyFlagFactory_Ref, InputFactory_Ref);
 
     void render(RenderParams) override;
-    void imgui_windows(Ui ui) override;
-
-    auto all_inputs()
-    {
-        return _inputs;
-    }
+    void imgui_windows(Ui_Ref ui) const override;
 
     auto all_inputs() const -> AllInputRefsToConst override
     {
@@ -48,7 +43,7 @@ private:
     std::vector<AnyInput>    _inputs;
     Input<Cool::Camera>      _camera_input;
     DirtyFlag                _shader_is_dirty; // Must be before _file because it is used to construct it
-    Input_File               _file;
+    mutable Input_File       _file;
 
 private:
     // Serialization

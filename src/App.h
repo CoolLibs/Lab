@@ -50,7 +50,7 @@ private:
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, _variable_registries}; }
-    auto ui                                         () { return Ui{_variable_registries, command_executor(), set_dirty_flag()}; }
+    auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag()}; }
     auto input_provider                             (float render_target_aspect_ratio, float time) { return InputProvider{_variable_registries, render_target_aspect_ratio, time}; }
     auto input_destructor                           () { return InputDestructor_Ref{_variable_registries}; }
     auto input_factory                              () { return InputFactory_Ref{_variable_registries, _camera_manager.id()}; }

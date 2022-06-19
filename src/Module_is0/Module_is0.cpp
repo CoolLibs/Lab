@@ -1,9 +1,19 @@
-#include "Is0.h"
+#include "Module_is0.h"
+#include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Input/Input.h>
 #include "CodeGen.h"
 #include "NodeEditorSerialization.h"
 
-void Is0::update()
+namespace Lab {
+
+Module_is0::Module_is0(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
+    : Module{dirty_flag_factory}
+    , _shader_is_dirty{dirty_flag_factory.make()}
+    , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
+{
+}
+
+void Module_is0::update()
 {
     if (_editor.tree_has_changed() || _must_recompile) {
         _must_recompile = false;
@@ -18,11 +28,13 @@ void Is0::update()
     }
 }
 
-void Is0::imgui_windows()
+void Module_is0::imgui_windows(Ui_Ref /*ui*/) const
 {
+    // TODO Use `ui`
     _editor.imgui_window();
     _shader_code_window.show([&]() {
         if (ImGui::InputTextMultiline("##is0 shader code", &_shader_code, ImVec2(ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35))) {
+            // TODO set shader dirty
             _fullscreen_pipeline.compile(_shader_code, "is0 Ray Marcher");
         }
     });
@@ -63,14 +75,46 @@ void Is0::imgui_windows()
     _must_recompile |= effect_imgui_window(_effects.render_effects);
 }
 
-void Is0::on_key_pressed(const Cool::KeyboardEvent& event)
+auto Module_is0::on_keyboard_event(const Cool::KeyboardEvent& event) -> bool
 {
     if (event.action == GLFW_PRESS && Cool::Input::matches_char("a", event.key)) {
         _editor.open_menu();
+        return true;
     }
+    return false;
 }
 
-std::string Is0::saving_path_string() const
+std::string Module_is0::saving_path_string() const
 {
     return std::filesystem::weakly_canonical(_folder_path_for_save + "/" + _file_name_for_save + ".is0geometry").string();
 }
+
+auto Module_is0::all_inputs() const -> AllInputRefsToConst
+{
+    return {};
+}
+
+auto Module_is0::is_dirty(DirtyManager dirty_manager) const -> bool
+{
+    return Module::is_dirty(dirty_manager);
+    // || shader_is_dirty
+};
+
+void Module_is0::render(RenderParams in)
+{
+    if (_fullscreen_pipeline.shader()) {
+        _fullscreen_pipeline.shader()->bind();
+        _fullscreen_pipeline.shader()->set_uniform("_time", in.provider(Input_Time{}));
+
+        // for (auto& input : _inputs) {
+        //     std::visit([&](auto&& input) {
+        //         set_uniform(*_fullscreen_pipeline.shader(), input.name(), in.provider(input));
+        //     },
+        //                input);
+        // }
+        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(_camera_input), in.provider(Input_AspectRatio{}));
+        _fullscreen_pipeline.draw();
+    }
+}
+
+} // namespace Lab

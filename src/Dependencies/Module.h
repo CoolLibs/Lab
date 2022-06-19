@@ -1,4 +1,5 @@
 #pragma once
+#include <Cool/Input/KeyboardEvent.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
@@ -13,7 +14,6 @@ namespace Lab {
 /// We need to do the polymorphism of Modules through inheritance to allow for plugins to create their own modules.
 
 /// Each module has a State struct, and that's what is serialized / modified through commands / stored in presets.
-/// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level)
 /// Rendering only has const access to the registries: creating / updating values is done trough ui()
 
 class Module {
@@ -38,12 +38,14 @@ public:
         render(params);
         params.dirty_manager.set_clean(_dirty_flag);
     }
-    virtual void imgui_windows(Ui ui) = 0;
+    virtual void imgui_windows(Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
     virtual void update(){};
+    /// Returns true iff the event was used
+    virtual auto on_keyboard_event(const Cool::KeyboardEvent&) -> bool { return false; }
 
     virtual auto all_inputs() const -> AllInputRefsToConst = 0;
 
-    virtual auto is_dirty(DirtyManager dirty_manager) const -> bool // No need for the whole DirtyManager, just DirtyChecker
+    virtual auto is_dirty(DirtyManager dirty_manager) const -> bool // TODO No need for the whole DirtyManager, just DirtyChecker
     {
         return dirty_manager.is_dirty(_dirty_flag);
     };

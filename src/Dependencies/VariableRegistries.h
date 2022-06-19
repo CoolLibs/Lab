@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Cool/Variables/Variable.h>
-#include <Cool/Variables/Variables.h>
+#include <reg/cereal.hpp>
 #include <reg/reg.hpp>
 #include "generated/all_variable_includes.inl"
 

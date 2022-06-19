@@ -56,6 +56,7 @@ def all_variable_types():
 
 def all_variable_includes():
     return f"""
+#include <Cool/Variables/Variables.h>
 #include <Cool/Camera/Camera.h>
 """
 

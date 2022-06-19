@@ -33,7 +33,7 @@ private:
 
 private:
     friend class InputProvider;
-    friend class Ui;
+    friend class Ui_Ref;
     friend class InputDestructor_Ref;
     DirtyFlag     _dirty_flag;
     std::string   _name; // NB: both the Input and the Variables have a name, because they are two different things and the current variable could be coming from a global pool and not be related to this Input at all.
@@ -68,7 +68,7 @@ public:
     }
 
 private:
-    friend class Ui;
+    friend class Ui_Ref;
     friend class InputProvider;
     friend class InputDestructor_Ref;
     Cool::FileWatcher file_watcher{};

@@ -14,9 +14,9 @@ Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory
 {
 }
 
-void Module_CustomShader::imgui_windows(Ui ui)
+void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 {
-    Ui::window({.name = "Custom Shader"}, [&]() {
+    Ui_Ref::window({.name = "Custom Shader"}, [&]() {
         ui.widget(_file);
         ImGui::Separator();
         ImGui::NewLine();

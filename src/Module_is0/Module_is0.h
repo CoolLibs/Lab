@@ -1,34 +1,47 @@
 #pragma once
 
 #include <Cool/File/File.h>
+#include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/ImGui/ImGuiWindow.h>
 #include <Cool/Serialization/as_json.h>
-#include "../ShaderManager/ShaderManager.h"
+#include "Dependencies/Module.h"
 #include "NodeEditor.h"
 #include "RenderEffectsManager.h"
 #include "RendererPBR.h"
 
-class Is0 : public ShaderManager {
+namespace Lab {
+
+class Module_is0 : public Module {
 public:
+    Module_is0(DirtyFlagFactory_Ref, InputFactory_Ref);
+
     void                             update() override;
-    void                             imgui_windows() override;
-    void                             on_key_pressed(const Cool::KeyboardEvent& event) override;
+    void                             imgui_windows(Ui_Ref) const override;
+    auto                             on_keyboard_event(const Cool::KeyboardEvent& event) -> bool override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
     std::string                      saving_path_string() const;
+    auto                             all_inputs() const -> AllInputRefsToConst override;
+    auto                             is_dirty(DirtyManager dirty_manager) const -> bool override;
+
+protected:
+    void render(RenderParams) override;
 
 private:
-    NodeEditor                  _editor{Cool::Path::root() + "/is0 nodes"};
-    RenderEffectsManager        _effects{Cool::Path::root() + "/is0 Render Effects"};
-    std::string                 _shader_code;
-    Cool::ImGuiWindow           _shader_code_window{"is0 Shader Code", false};
-    bool                        _must_recompile = false;
-    CodeGen::LightProperties    _light;
-    CodeGen::MaterialProperties _material;
-    int                         _in_use_render = 0;
-    std::string                 _folder_path_for_save;
-    std::string                 _file_name_for_save;
+    DirtyFlag                        _shader_is_dirty;
+    Input<Cool::Camera>              _camera_input;
+    mutable Cool::FullscreenPipeline _fullscreen_pipeline{};
+    mutable NodeEditor               _editor{Cool::Path::root() + "/is0 nodes"};
+    mutable RenderEffectsManager     _effects{Cool::Path::root() + "/is0 Render Effects"};
+    mutable std::string              _shader_code;
+    mutable Cool::ImGuiWindow        _shader_code_window{"is0 Shader Code", false};
+    mutable bool                     _must_recompile = false; // TODO use a DirtyFlag instead
+    CodeGen::LightProperties         _light;
+    CodeGen::MaterialProperties      _material;
+    int                              _in_use_render = 0;
+    mutable std::string              _folder_path_for_save;
+    mutable std::string              _file_name_for_save;
 
 private:
     // Serialization
@@ -58,3 +71,5 @@ private:
                 cereal::make_nvp("Render Effects Manager", _effects));
     }
 };
+
+} // namespace Lab

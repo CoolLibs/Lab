@@ -8,6 +8,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Module_CustomShader/Module_CustomShader.h"
+#include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
 
 namespace Lab {
@@ -16,7 +17,7 @@ App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
     , _main_window{windows.main_window()}
     , _view{_views.make_view("View")}
-    , _current_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
+    , _current_module{std::make_unique<Module_is0>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
@@ -166,28 +167,29 @@ void App::imgui_windows()
     }
 
     if (inputs_are_allowed()) {
-        _current_module->imgui_windows(ui());
-        Ui::window({.name = "Registry of vec3"}, [&]() {
+        const auto the_ui = ui();
+        _current_module->imgui_windows(the_ui);
+        the_ui.window({.name = "Registry of vec3"}, [&]() {
             imgui_show(_variable_registries.of<Cool::Variable<glm::vec3>>());
         });
-        Ui::window({.name = "Registry of float"}, [&]() {
+        the_ui.window({.name = "Registry of float"}, [&]() {
             imgui_show(_variable_registries.of<Cool::Variable<float>>());
         });
-        Ui::window({.name = "Registry of int"}, [&]() {
+        the_ui.window({.name = "Registry of int"}, [&]() {
             imgui_show(_variable_registries.of<Cool::Variable<int>>());
         });
-        Ui::window({.name = "Registry of Camera"}, [&]() {
+        the_ui.window({.name = "Registry of Camera"}, [&]() {
             imgui_show(_variable_registries.of<Cool::Variable<Cool::Camera>>());
         });
-        Ui::window({.name = "Registry of DirtyFlag"}, [&]() {
+        the_ui.window({.name = "Registry of DirtyFlag"}, [&]() {
             imgui_show(_dirty_registry);
         });
-        Ui::window({.name = "History"}, [&]() {
+        the_ui.window({.name = "History"}, [&]() {
             _history.imgui_show([](const ReversibleCommand& command) {
                 return command_to_string(command);
             });
         });
-        Ui::window({.name = "Command Logger"}, [&]() {
+        the_ui.window({.name = "Command Logger"}, [&]() {
             _command_logger.imgui_show();
         });
         // _shader_manager.imgui_windows();
@@ -253,6 +255,7 @@ void App::imgui_menus()
 
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
+    _current_module->on_keyboard_event(event);
     if (event.action == GLFW_RELEASE) {
         if (Cool::Input::matches_char("s", event.key) && event.mods.ctrl()) {
             _exporter.image_export_window().open();
@@ -262,20 +265,14 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
         }
     }
     if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
-        if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
-            Cool::ParametersHistory::get().move_backward();
-        }
-        if (Cool::Input::matches_char("y", event.key) && event.mods.ctrl()) {
-            Cool::ParametersHistory::get().move_forward();
-        }
-    }
-    if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
         auto exec = reversible_command_executor_without_history();
         if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
             _history.move_backward(exec);
+            Cool::ParametersHistory::get().move_backward();
         }
         if (Cool::Input::matches_char("y", event.key) && event.mods.ctrl()) {
             _history.move_forward(exec);
+            Cool::ParametersHistory::get().move_forward();
         }
     }
 }
