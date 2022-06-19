@@ -9,8 +9,7 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform float scale; // default 384
-uniform float seed;  // default 48
+uniform float seed; // default 48
 
 // END DYNAMIC PARAMS
 
@@ -40,8 +39,8 @@ void main()
 
     // float seed = fract(seed_fract); // fractional base seed
 
-    out_Color = vec4(gold_noise(uv * scale, seed + 0.1),  // r
-                     gold_noise(uv * scale, seed + 0.2),  // g
-                     gold_noise(uv * scale, seed + 0.3),  // b
-                     gold_noise(uv * scale, seed + 0.4)); // α
+    out_Color = vec4(gold_noise(uv * 2000., seed + 0.1),  // r
+                     gold_noise(uv * 2000., seed + 0.2),  // g
+                     gold_noise(uv * 2000., seed + 0.3),  // b
+                     gold_noise(uv * 2000., seed + 0.4)); // α
 }
