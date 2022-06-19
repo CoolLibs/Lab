@@ -9,7 +9,7 @@ public:
     ShaderManager_FromText();
 
     void setup_for_rendering(const Cool::Camera& camera, float time, float aspect_ratio) override;
-    void set_image_in_shader(GLuint texture_id);
+    void set_image_in_shader(std::string_view name, int slot, GLuint texture_id);
 
     inline void update() override { _file_watcher.update(); }
     void        imgui_windows() override;

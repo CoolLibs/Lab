@@ -79,13 +79,13 @@ void ShaderManager_FromText::setup_for_rendering(const Cool::Camera& camera, flo
     }
 }
 
-void ShaderManager_FromText::set_image_in_shader(GLuint texture_id)
+void ShaderManager_FromText::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
 {
     if (_fullscreen_pipeline.shader().has_value()) {
         _fullscreen_pipeline.shader()->bind();
-        glpp::active_texture(0);
+        glpp::active_texture(slot);
         glpp::bind_texture<glpp::TextureKind::Tex2D>(texture_id);
-        _fullscreen_pipeline.shader()->set_uniform("_image", 0);
+        _fullscreen_pipeline.shader()->set_uniform(name, slot);
         set_uniforms(*_fullscreen_pipeline.shader(), _parameters);
     }
 }

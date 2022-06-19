@@ -1,7 +1,9 @@
 #include "App.h"
+#include <Cool/Path/Path.h>
 
 App::App(Cool::WindowManager& windows)
     : DefaultApp::DefaultApp{windows, [&](Cool::RenderTarget& render_target, float time) { render(render_target, time); }}
+    , _texture{Cool::Path::root() + "/image resources/ETOILE5.png"}
 {
     _clock.pause();
 #if IS0_TEST_NODES
@@ -63,14 +65,16 @@ void App::render(Cool::RenderTarget& render_target, float time)
             render_one_module(_shader_manager._is0, _intermediate_render_target, time);
 
             _shader_manager._use_nodes = false;
-            _shader_manager._from_text.set_image_in_shader(_intermediate_render_target.get().texture_id());
+            _shader_manager._from_text.set_image_in_shader("_image", 0, _intermediate_render_target.get().texture_id());
+            _shader_manager._from_text.set_image_in_shader("_texture", 1, _texture.ID());
             render_one_module(_shader_manager._from_text, render_target, time);
         }
         /// --- End of ugly quick fix
 
         _intermediate_render_target.set_size(render_target.desired_size());
         render_one_module(_shader_manager._is0, _intermediate_render_target, time);
-        _shader_manager._from_text.set_image_in_shader(_intermediate_render_target.get().texture_id());
+        _shader_manager._from_text.set_image_in_shader("_image", 0, _intermediate_render_target.get().texture_id());
+        _shader_manager._from_text.set_image_in_shader("_texture", 1, _texture.ID());
         render_one_module(_shader_manager._from_text, render_target, time);
     }
     else {
