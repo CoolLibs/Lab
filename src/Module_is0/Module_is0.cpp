@@ -91,13 +91,19 @@ std::string Module_is0::saving_path_string() const
 
 auto Module_is0::all_inputs() const -> AllInputRefsToConst
 {
-    return {};
+    AllInputRefsToConst inputs;
+    inputs.push_back(AnyInputRefToConst{_camera_input});
+    // for (const auto& input : _inputs) {
+    //     inputs.push_back(
+    //         std::visit([](auto&& input) { return AnyInputRefToConst{input}; }, input));
+    // }
+    return inputs;
 }
 
 auto Module_is0::is_dirty(DirtyManager dirty_manager) const -> bool
 {
-    return Module::is_dirty(dirty_manager);
-    // || shader_is_dirty
+    return Module::is_dirty(dirty_manager) ||
+           dirty_manager.is_dirty(_shader_is_dirty);
 };
 
 void Module_is0::render(RenderParams in)
