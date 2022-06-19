@@ -9,8 +9,6 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform int number_of_colors; // min 2
-
 uniform vec3 Color1;
 uniform vec3 Color2;
 
@@ -27,8 +25,5 @@ void main()
     vec3  image                 = image(_uv).rgb;
     vec3  channels_contribution = vec3(0.2126, 0.7152, 0.0722);
     float avg_luminance         = dot(image, channels_contribution);
-    avg_luminance *= (number_of_colors);
-    avg_luminance = floor(avg_luminance - 0.00001);
-    avg_luminance /= (number_of_colors - 1);
-    out_Color = vec4(mix(Color1, Color2, avg_luminance), 1.);
+    out_Color                   = vec4(mix(Color1, Color2, avg_luminance), 1.);
 }

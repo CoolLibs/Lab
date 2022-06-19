@@ -11,10 +11,10 @@ uniform sampler2D _image;
 
 uniform float x;
 uniform float y;
-uniform float move;
+uniform float brightness;
 
-uniform int circle_3; // default 10
-uniform int seed;     // default 20
+uniform int nb_of_circles; // default 10
+uniform int seed;          // default 20
 
 // END DYNAMIC PARAMS
 
@@ -96,11 +96,11 @@ void main()
 
     // now to make the sky not black
     vec3 color = image(_uv).rgb;
-    vec3 flare = mix(vec3(0.3, 0.2, 0.02) / 0.9, vec3(0.2, 0.5, 0.8), uv.y) * 3. - 0.52 * sin(move);
+    vec3 flare = mix(vec3(0.3, 0.2, 0.02) / 0.9, vec3(0.2, 0.5, 0.8), uv.y) * 3. - brightness;
 
     // this calls the function which adds three circle types every time through the loop based on parameters I
     // got by trying things out. rnd i*2000. and rnd i*20 are just to help randomize things more
-    for (float i = 0.; i < circle_3; i++) {
+    for (float i = 0.; i < nb_of_circles; i++) {
         flare += circle(uv, pow(rnd(i * seed * 100.) * 1.8, 2.) + 1.41, 0.0, circColor + i, circColor2 + i, rnd(i * seed) * 3. + 0.2 - .5, mm);
     }
     // get angle and length of the sun (uv - mouse)

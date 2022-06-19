@@ -11,10 +11,10 @@ uniform sampler2D _image;
 
 uniform int number_of_colors;
 
-uniform vec3 Couleur1;
-uniform vec3 Couleur2;
+uniform vec3 Color2;
 
 // END DYNAMIC PARAMS
+// uniform vec3 Color1;
 
 vec4 image(vec2 uv)
 {
@@ -23,12 +23,14 @@ vec4 image(vec2 uv)
 
 void main()
 {
-    vec2 uv    = _uv;
-    vec3 image = image(_uv).rgb;
-    for (int i = 0; i < number_of_colors; i++) {
-        if (distance(Couleur1, image) <= (distance(Couleur1, image) + distance(Couleur2, image)) / number_of_colors * (i + 1) && distance(Couleur1, image) > (distance(Couleur1, image) + distance(Couleur2, image)) / number_of_colors * i)
-            image = mix(Couleur1, Couleur2, 1. / (number_of_colors - 1) * i);
-    }
-    // image     = mix(Couleur1, Couleur2, distance(Couleur1, image) / (distance(Couleur1, image) + distance(Couleur2, image)));
-    out_Color = vec4(image, 1.);
+    float t      = _time * 0.4;
+    t            = smoothstep(0., 3.7, t);
+    vec3  Color1 = min(max(vec3(t), 0.), 1.);
+    vec2  uv     = _uv;
+    vec3  image  = image(_uv).rgb;
+    float f      = distance(Color1, image) / ((distance(Color1, image) + distance(Color2, image)));
+    f *= (number_of_colors);
+    f = floor(f - 0.00001);
+    f /= (number_of_colors - 1);
+    out_Color = vec4(mix(Color1, Color2, f), 1.);
 }

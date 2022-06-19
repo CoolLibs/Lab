@@ -24,7 +24,7 @@ uniform sampler2D _image;
 
 uniform float frequency;
 
-uniform float scale;
+uniform float scale; // 100
 
 uniform float a; // min = 1, max = 3; default = 1.5;  `a` increases the fractalness of the noise
 
@@ -151,7 +151,6 @@ float triangle2(int i, float frequency)
 
 float triangle(float current_freq, float frequency)
 {
-    // float a = pow(2., a);
     if (abs(current_freq - frequency) > a) {
         return 0;
     }
@@ -162,9 +161,6 @@ float triangle(float current_freq, float frequency)
         else {
             return (frequency - current_freq - a * 1) / (-a);
         }
-        // float sg         = sgn(-current_freq + frequency);
-        // float slope_at_i = sg * (frequency - current_freq + sg * a * 1) / a;
-        // return slope_at_i;
     }
 }
 
@@ -177,8 +173,7 @@ void main()
 {
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
-    float noise = 0;
-    // float a             = pow(2., a);
+    float noise         = 0;
     float frequency_log = log2(frequency);
 
     int   start = int(floor(frequency_log - a));
@@ -189,7 +184,6 @@ void main()
         sum += triangle(i, frequency_log);
         noise += (cnoise(uv * current_freq * scale) * 0.5 + 0.5) * triangle(i, frequency_log);
     }
-    // out_Color = vec4(image(_uv + noise).rgb, 1.);
     noise /= sum;
     out_Color = vec4(vec3(noise), 1.);
 }

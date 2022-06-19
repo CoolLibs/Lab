@@ -9,8 +9,8 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform float Vignette;  // Default 0.262
-uniform float Intensity; // default 21.
+uniform float Border_Darkness; // Default 0.262
+uniform float Center_Radius;   // default 21.
 
 // END DYNAMIC PARAMS
 
@@ -27,8 +27,8 @@ void main()
     uv *= 1.0 - uv.yx;
     uv.x *= _aspect_ratio;
 
-    float vig = uv.x * uv.y * Intensity;
+    float vig = uv.x * uv.y * Center_Radius;
 
-    vig       = min(max(pow(vig, Vignette), 0.), 1.);
+    vig       = min(max(pow(vig, Border_Darkness), 0.), 1.);
     out_Color = vec4(vec3(image(_uv).rgb * vig), 1.);
 }

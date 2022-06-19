@@ -64,8 +64,8 @@ void main()
         circle_picker = 1.;
     else if (dist > r && dist < r + 0.001)
         circle_picker = -1.;
-    //float circle_picker = smoothstep(r, r - 0.001, dist);
-    vec2 xyEst  = XYZ2xy(sRGBtoXYZ * image(color_pick).rgb);
+    // float circle_picker = smoothstep(r, r - 0.001, dist);
+    vec2 xyEst  = XYZ2xy(sRGBtoXYZ * image(Coordinate_for_white_balance).rgb);
     vec3 xyzEst = xy2XYZ(xyEst, 100.0);
     mat3 M      = cbCAT(xyzEst, xyz_D65);
     vec3 res    = M * base + circle_picker;

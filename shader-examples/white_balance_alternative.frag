@@ -13,8 +13,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-#define WithQuickAndDirtyLuminancePreservation
-
 const float PI2 = 6.2831853071;
 
 // Valid from 1000 to 40000 K (and additionally 0 for pure full white)
@@ -48,11 +46,9 @@ void main()
     // vec3 color_pick = texture(iChannel0,-iMouse.xy/iResolution.xy).rgb;
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
-    float on_range_temperature = mix(1000, 40000, temperature); //temperature * 39000 + 1000; // because float are between 0 & 1 by default
-    vec3  inColor              = image(_uv).xyz;
-    vec3  outColor             = mix(inColor, inColor * colorTemperatureToRGB(on_range_temperature), temperatureStrength);
-#ifdef WithQuickAndDirtyLuminancePreservation
+    float temperature_in_kelvins = mix(1000, 40000, temperature); // because our parameter goes from 0 to 1
+    vec3  inColor                = image(_uv).xyz;
+    vec3  outColor               = mix(inColor, inColor * colorTemperatureToRGB(temperature_in_kelvins), temperatureStrength);
     outColor *= mix(1.0, dot(inColor, vec3(0.2126, 0.7152, 0.0722)) / max(dot(outColor, vec3(0.2126, 0.7152, 0.0722)), 1e-5), LuminancePreservationFactor);
-#endif
     out_Color = vec4(outColor, 1.0);
 }

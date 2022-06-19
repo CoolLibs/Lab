@@ -9,12 +9,15 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform int sampleCount;
+uniform int sampleCount; // 20
 
-uniform float falloff;
+uniform float falloff; // 1.082
+uniform float blur;    // 0.142
+
+uniform float center_x; // 0.142
+uniform float center_y; // 0.142
 
 // END DYNAMIC PARAMS
-uniform float blur;
 
 vec3 image(vec2 uv)
 {
@@ -25,13 +28,12 @@ vec3 image(vec2 uv)
 
 void main()
 {
-    float time = _time * 0.5;
-    float blur = -cos(time * 3.) * 0.5 + 0.5;
-    blur       = pow(blur, 5.);
-    blur += pow(-cos(time * 3. + 1.7) * 0.5 + 0.5, 8.);
-    blur                     = mix(0., 0.5, blur);
-    vec2  direction          = normalize(_uv - 0.5);
-    vec2  velocity           = direction * blur * pow(length(_uv - 0.5), falloff);
+    vec2 center = vec2(center_x, center_y);
+    vec2 uv     = _uv - center;
+    uv.x *= _aspect_ratio;
+
+    vec2  direction          = normalize(uv);
+    vec2  velocity           = direction * blur * pow(length(uv), falloff);
     float inverseSampleCount = 1.0 / float(sampleCount);
 
     mat3x2 increments = mat3x2(velocity * 1.0 * inverseSampleCount,

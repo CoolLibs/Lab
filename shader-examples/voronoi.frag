@@ -7,13 +7,15 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// https://youtu.be/l-07BXzNdPw
+
 // BEGIN DYNAMIC PARAMS
 
-uniform float Size;
+uniform float Scale; // 10
 uniform float Speed;
 uniform float Movement;
 uniform float Time_mode;
-uniform float Distance_mode;
+uniform float Distance_mode; // 2
 
 // END DYNAMIC PARAMS
 
@@ -21,7 +23,7 @@ vec4 image(vec2 uv)
 {
     return texture2D(_image, uv);
 }
-
+// TODO utiliser les fonctions random de #include "_COOL_RES_/shaders/math.glsl"
 vec2 N22(vec2 p)
 {
     vec3 a = fract(p.xyx * vec3(123.34, 234.34, 345.65));
@@ -48,46 +50,29 @@ void main()
 
     vec3 col = vec3(0);
 
-    if (false) {
-        for (float i = 0.; i < 50.; i++) {
-            vec2 n = N22(vec2(i));
-            vec2 p = sin(n * t);
+    uv *= Scale;
+    vec2 gv  = fract(uv) - .5;
+    vec2 id  = floor(uv);
+    vec2 cid = vec2(0);
 
-            float d = length(uv - p);
-            m += smoothstep(.02, .01, d);
+    for (float y = -1.; y <= 1.; y++) {
+        for (float x = -1.; x <= 1.; x++) {
+            vec2 offs = vec2(x, y);
+
+            vec2 n = N22(id + offs);
+            vec2 p = offs + sin(n * t) * .5;
+            p -= gv;
+            float d = pow(
+                pow(abs(p.x), Distance_mode) + pow(abs(p.y), Distance_mode),
+                1 / Distance_mode);
 
             if (d < minDist) {
-                minDist   = d;
-                cellIndex = i;
+                minDist = d;
+                cid     = id + offs;
             }
         }
-        col = vec3(minDist);
     }
-    else {
-        uv *= Size;
-        vec2 gv  = fract(uv) - .5;
-        vec2 id  = floor(uv);
-        vec2 cid = vec2(0);
-
-        for (float y = -1.; y <= 1.; y++) {
-            for (float x = -1.; x <= 1.; x++) {
-                vec2 offs = vec2(x, y);
-
-                vec2 n = N22(id + offs);
-                vec2 p = offs + sin(n * t) * .5;
-                p -= gv;
-                float d = pow(
-                    pow(abs(p.x), Distance_mode) + pow(abs(p.y), Distance_mode),
-                    1 / Distance_mode);
-
-                if (d < minDist) {
-                    minDist = d;
-                    cid     = id + offs;
-                }
-            }
-        }
-        col = vec3(minDist);
-    }
+    col = vec3(minDist);
 
     out_Color = vec4(col, 1.);
 }

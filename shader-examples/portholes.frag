@@ -11,14 +11,14 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform float Square_mode;
-uniform float Size;
+uniform float Square_mode; // bool
+uniform float Size;        // 10
 uniform float Space_to_border;
 uniform float Speed;
 uniform float Movement;
-uniform float Time_mode;
-uniform float Distance_mode;
-uniform float Zoom_intensity;
+uniform float Time_mode;      // bool
+uniform float Distance_mode;  // 2
+uniform float Zoom_intensity; // 0.001
 uniform float Translation_On_Off;
 
 uniform float change_center;
@@ -35,31 +35,23 @@ vec3 image(vec2 uv)
     return texture2D(_image, uv).rgb;
 }
 
-vec2 N22(vec2 p)
-{
-    vec3 a = fract(p.xyx * vec3(123.34, 234.34, 345.65));
-    a += dot(a, a + 34.45);
-    return fract(vec2(a.x * a.y, a.y * a.z));
-}
-
 struct VoronoiRes {
     vec2  cid;
     float minDist;
     float minDist2;
 };
 
-vec2 is_circle_mode(vec2 n, float t, vec2 offs)
+vec2 distribute_center_in_a_circle(vec2 n, float t, vec2 offs)
 {
-    float radius = Space_to_border * 0.5 * sqrt(n.x);
-    float theta  = n.x * 2 * radians(180) * sin(t);
-    vec2  p_circle;
-    p_circle.x = radius * cos(theta);
-    p_circle.y = radius * sin(theta);
-    vec2 p     = offs + p_circle;
+    float radius   = Space_to_border * 0.5 * sqrt(n.x);
+    float theta    = n.x * TAU * sin(t);
+    vec2  p_circle = radius * vec2(cos(theta),
+                                   sin(theta));
+    vec2  p        = offs + p_circle;
     return p;
 }
 
-vec2 is_square_mode(vec2 n, float t, vec2 offs)
+vec2 distribute_center_in_a_square(vec2 n, float t, vec2 offs)
 {
     vec2 p = offs + sin(n * t) * Space_to_border * .5;
     return p;
@@ -88,13 +80,13 @@ VoronoiRes voronoi(vec2 uv)
         for (float x = -1.; x <= 1.; x++) {
             vec2 offs = vec2(x, y);
 
-            vec2 n = N22(id + offs);
+            vec2 n = hash_0_to_1_2D_to_2D(id + offs);
             vec2 p;
             if (Square_mode > .5) {
-                p = is_square_mode(n, t, offs);
+                p = distribute_center_in_a_square(n, t, offs);
             }
             else {
-                p = is_circle_mode(n, t, offs);
+                p = distribute_center_in_a_circle(n, t, offs);
             }
 
             vec2  p_to_gv = p - gv;
@@ -138,7 +130,7 @@ void main()
     VoronoiRes resX = voronoi(uv + vec2(0.001, 0.));
     VoronoiRes resY = voronoi(uv + vec2(0., 0.001));
     vec2       grad = vec2(resX.minDist - res.minDist,
-                     resY.minDist - res.minDist) /
+                           resY.minDist - res.minDist) /
                 0.001;
     float distance_to_center = res.minDist / res.minDist2;
     float distance_to_edges  = 1. - distance_to_center;
