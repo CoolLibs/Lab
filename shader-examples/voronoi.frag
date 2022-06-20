@@ -1,5 +1,7 @@
 #version 430
 
+// #include "_COOL_RES_/shaders/math.glsl"
+
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 uniform float _aspect_ratio;
@@ -22,13 +24,6 @@ uniform float Distance_mode; // 2
 vec4 image(vec2 uv)
 {
     return texture2D(_image, uv);
-}
-// TODO utiliser les fonctions random de #include "_COOL_RES_/shaders/math.glsl"
-vec2 N22(vec2 p)
-{
-    vec3 a = fract(p.xyx * vec3(123.34, 234.34, 345.65));
-    a += dot(a, a + 34.45);
-    return fract(vec2(a.x * a.y, a.y * a.z));
 }
 
 void main()
@@ -59,7 +54,7 @@ void main()
         for (float x = -1.; x <= 1.; x++) {
             vec2 offs = vec2(x, y);
 
-            vec2 n = N22(id + offs);
+            vec2 n = hash_0_to_1_2D_to_2D(id + offs);
             vec2 p = offs + sin(n * t) * .5;
             p -= gv;
             float d = pow(
