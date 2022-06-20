@@ -127,6 +127,7 @@ bool NodeEditor::handle_node_deletion()
 
 void NodeEditor::imgui_window()
 {
+    ImNodes::SetCurrentContext(&*_context);
     bool node_tree_has_changed = false;
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
