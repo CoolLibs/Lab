@@ -14,6 +14,7 @@ namespace Lab {
 
 class Module_is0 : public Module {
 public:
+    Module_is0() = default;
     Module_is0(DirtyFlagFactory_Ref, InputFactory_Ref);
 
     void                             update() override;
@@ -46,30 +47,36 @@ private:
 private:
     // Serialization
     friend class cereal::access;
+    // template<class Archive>
+    // void save(Archive& archive) const
+    // {
+    //     archive(cereal::base_class<Module>(this),
+    //             cereal::make_nvp("Node Editor", _editor),
+    //             cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
+    //             cereal::make_nvp("File Name For Save", _file_name_for_save),
+    //             cereal::make_nvp("Render Effects Manager", _effects));
+    //     if (!_file_name_for_save.empty()) {
+    //         const std::string      saving_path = saving_path_string();
+    //         const std::string      message     = "Do you want to save your work in " + saving_path + "?";
+    //         const boxer::Selection sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
+    //         if (sel == boxer::Selection::Yes) {
+    //             Cool::Serialization::to_json(_editor, saving_path);
+    //         }
+    //     }
+    // }
     template<class Archive>
-    void save(Archive& archive) const
+    void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Node Editor", _editor),
+        archive(cereal::base_class<Module>(this),
+                cereal::make_nvp("Node Editor", _editor),
                 cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
                 cereal::make_nvp("File Name For Save", _file_name_for_save),
-                cereal::make_nvp("Render Effects Manager", _effects));
-        if (!_file_name_for_save.empty()) {
-            const std::string      saving_path = saving_path_string();
-            const std::string      message     = "Do you want to save your work in " + saving_path + "?";
-            const boxer::Selection sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
-            if (sel == boxer::Selection::Yes) {
-                Cool::Serialization::to_json(_editor, saving_path);
-            }
-        }
-    }
-    template<class Archive>
-    void load(Archive& archive)
-    {
-        archive(cereal::make_nvp("Node Editor", _editor),
-                cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
-                cereal::make_nvp("File Name For Save", _file_name_for_save),
-                cereal::make_nvp("Render Effects Manager", _effects));
+                cereal::make_nvp("Render Effects Manager", _effects),
+                cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
+                cereal::make_nvp("Camera Input", _camera_input));
     }
 };
 
 } // namespace Lab
+
+CEREAL_REGISTER_TYPE(Lab::Module_is0)
