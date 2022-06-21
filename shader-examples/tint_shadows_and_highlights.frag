@@ -49,14 +49,14 @@ vec3 hsv2rgb(vec3 c)
 
 float shadows_detection(vec3 image)
 {
-    float hue_pixel = rgb2hsv(image).z;
-    return smoothstep(.9, 0.3, hue_pixel);
+    float luminance = rgb2hsv(image).z;
+    return smoothstep(.9, 0.3, luminance);
 }
 
 float highlights_detection(vec3 image)
 {
-    float hue_pixel = rgb2hsv(image).z;
-    return smoothstep(.9, 1., hue_pixel);
+    float luminance = rgb2hsv(image).z;
+    return smoothstep(.9, 1., luminance);
 }
 
 void main()
