@@ -25,13 +25,17 @@ vec4 image(vec2 uv)
 
 void main()
 {
-    vec2 uv       = _uv;
-    vec3 image    = image(_uv).rgb;
-    vec2 min_dist = vec2(distance(image, table_of_colors[0]), 0);
+    vec2 uv    = _uv;
+    vec3 image = image(_uv).rgb;
+
+    vec3  col      = table_of_colors[0];
+    float min_dist = distance(image, table_of_colors[0]);
     for (int i = 1; i < size; i++) {
-        if (distance(image, table_of_colors[i]) < min_dist.x)
-            min_dist = vec2(distance(image, table_of_colors[i]), i);
+        float dist = distance(image, table_of_colors[i]);
+        if (dist < min_dist) {
+            min_dist = distance(image, table_of_colors[i]);
+            col      = table_of_colors[i];
+        }
     }
-    image     = table_of_colors[int(min_dist.y)];
-    out_Color = vec4(image, 1.);
+    out_Color = vec4(col, 1.);
 }
