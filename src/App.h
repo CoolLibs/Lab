@@ -68,6 +68,8 @@ private:
     void menu_export();
     void menu_settings();
 
+    void imgui_commands_and_registries_debug_windows();
+
     bool aspect_ratio_is_constrained() const;
     template<typename Event>
     Cool::ViewEvent<Event> view_event(const Event& event, const Cool::RenderableView& view)
@@ -98,8 +100,9 @@ private:
     Cool::OpenGL::Texture                _texture;
 
 #if DEBUG
-    bool _show_imgui_debug = true;
-    bool _show_imgui_demo  = false;
+    bool _show_imgui_debug                           = true;
+    bool _show_imgui_demo                            = false;
+    bool _show_commands_and_registries_debug_windows = false;
 #endif
 
 private:

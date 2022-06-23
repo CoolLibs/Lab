@@ -141,12 +141,44 @@ void App::render(Cool::RenderTarget& render_target, float time)
     render_one_module(*_custom_shader_module, render_target, time);
 }
 
+void App::imgui_commands_and_registries_debug_windows()
+{
+    const auto the_ui = ui();
+    the_ui.window({.name = "Registry of vec3"}, [&]() {
+        imgui_show(_variable_registries.of<Cool::Variable<glm::vec3>>());
+    });
+    the_ui.window({.name = "Registry of float"}, [&]() {
+        imgui_show(_variable_registries.of<Cool::Variable<float>>());
+    });
+    the_ui.window({.name = "Registry of int"}, [&]() {
+        imgui_show(_variable_registries.of<Cool::Variable<int>>());
+    });
+    the_ui.window({.name = "Registry of Camera"}, [&]() {
+        imgui_show(_variable_registries.of<Cool::Variable<Cool::Camera>>());
+    });
+    the_ui.window({.name = "Registry of DirtyFlag"}, [&]() {
+        imgui_show(_dirty_registry);
+    });
+    the_ui.window({.name = "History"}, [&]() {
+        _history.imgui_show([](const ReversibleCommand& command) {
+            return command_to_string(command);
+        });
+    });
+    the_ui.window({.name = "Command Logger"}, [&]() {
+        _command_logger.imgui_show();
+    });
+}
+
 void App::imgui_windows()
 {
     _is0_view.imgui_window(true);
     _custom_shader_view.imgui_window(aspect_ratio_is_constrained());
+
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     if (inputs_are_allowed()) {
+        const auto the_ui = ui();
+        _is0_module->imgui_windows(the_ui);
+        _custom_shader_module->imgui_windows(the_ui);
         // Console
         imgui_window_console();
         // Time
@@ -173,34 +205,8 @@ void App::imgui_windows()
 #endif
     }
 
-    if (inputs_are_allowed()) {
-        const auto the_ui = ui();
-        _is0_module->imgui_windows(the_ui);
-        _custom_shader_module->imgui_windows(the_ui);
-        the_ui.window({.name = "Registry of vec3"}, [&]() {
-            imgui_show(_variable_registries.of<Cool::Variable<glm::vec3>>());
-        });
-        the_ui.window({.name = "Registry of float"}, [&]() {
-            imgui_show(_variable_registries.of<Cool::Variable<float>>());
-        });
-        the_ui.window({.name = "Registry of int"}, [&]() {
-            imgui_show(_variable_registries.of<Cool::Variable<int>>());
-        });
-        the_ui.window({.name = "Registry of Camera"}, [&]() {
-            imgui_show(_variable_registries.of<Cool::Variable<Cool::Camera>>());
-        });
-        the_ui.window({.name = "Registry of DirtyFlag"}, [&]() {
-            imgui_show(_dirty_registry);
-        });
-        the_ui.window({.name = "History"}, [&]() {
-            _history.imgui_show([](const ReversibleCommand& command) {
-                return command_to_string(command);
-            });
-        });
-        the_ui.window({.name = "Command Logger"}, [&]() {
-            _command_logger.imgui_show();
-        });
-        // _shader_manager.imgui_windows();
+    if (_show_commands_and_registries_debug_windows) {
+        imgui_commands_and_registries_debug_windows();
     }
 }
 
@@ -224,6 +230,7 @@ void App::menu_windows()
 #if DEBUG
         ImGui::Separator();
         ImGui::Checkbox("Debug", &_show_imgui_debug);
+        ImGui::Checkbox("Debug Commands and Registries", &_show_commands_and_registries_debug_windows);
 #endif
         ImGui::EndMenu();
     }
