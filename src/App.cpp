@@ -79,17 +79,6 @@ void App::update()
     if (_custom_shader_view.render_target.needs_resizing()) {
         set_dirty_flag()(_custom_shader_module->dirty_flag());
     }
-    /// TODO(JF) Remove this ugly quick fix
-    // static int  framecount = 0;
-    // static bool backup     = _shader_manager._use_nodes;
-    // if (framecount == 0) {
-    //     _shader_manager._use_nodes = true;
-    // }
-    // else if (framecount == 1) {
-    //     _shader_manager._use_nodes = backup;
-    // }
-    // framecount++;
-    /// --- End of ugly quick fix
 
     if (inputs_are_allowed()) {
         _is0_module->update();
@@ -150,27 +139,13 @@ static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polar
     exporter.imgui_windows(polaroid, time);
 }
 
-void App::render(Cool::RenderTarget& /*render_target*/, float time)
+void App::render(Cool::RenderTarget& render_target, float time)
 {
-    /// TODO(JF) Remove this ugly quick fix
-    // if (render_target.current_size() != render_target.desired_size()) {
-    //     _shader_manager._use_nodes = true;
-    //     render_one_module(_shader_manager._is0, render_target, time);
-    //     _intermediate_render_target.set_size(render_target.desired_size());
-    //     render_one_module(_shader_manager._is0, _intermediate_render_target, time);
-
-    //     _shader_manager._use_nodes = false;
-    //     _shader_manager._from_text.set_image_in_shader("_image", 0, _intermediate_render_target.get().texture_id());
-    //     _shader_manager._from_text.set_image_in_shader("_texture", 1, _texture.ID());
-    //     render_one_module(_shader_manager._from_text, render_target, time);
-    // }
-    /// --- End of ugly quick fix
-
-    // _intermediate_render_target.set_size(render_target.desired_size());
+    _is0_view.render_target.set_size(render_target.desired_size());
     render_one_module(*_is0_module, _is0_view.render_target, time);
     _custom_shader_module->set_image_in_shader("_image", 0, _is0_view.render_target.get().texture_id());
     _custom_shader_module->set_image_in_shader("_texture", 1, _texture.ID());
-    render_one_module(*_custom_shader_module, _custom_shader_view.render_target, time);
+    render_one_module(*_custom_shader_module, render_target, time);
 }
 
 void App::imgui_windows()
