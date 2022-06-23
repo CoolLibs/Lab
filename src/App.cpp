@@ -127,13 +127,6 @@ static void imgui_window_console()
     Cool::Log::ToUser::imgui_console_window();
 }
 
-static void imgui_window_views(Cool::RenderableViewManager& views, bool aspect_ratio_is_constrained)
-{
-    for (auto& view : views) {
-        view.imgui_window(aspect_ratio_is_constrained);
-    }
-}
-
 static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time)
 {
     exporter.imgui_windows(polaroid, time);
@@ -150,7 +143,8 @@ void App::render(Cool::RenderTarget& render_target, float time)
 
 void App::imgui_windows()
 {
-    imgui_window_views(_views, aspect_ratio_is_constrained());
+    _is0_view.imgui_window(true);
+    _custom_shader_view.imgui_window(aspect_ratio_is_constrained());
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     if (inputs_are_allowed()) {
         // Console
