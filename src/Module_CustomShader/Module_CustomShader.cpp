@@ -1,6 +1,7 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Log/ToUser.h>
+#include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
 
@@ -176,6 +177,16 @@ void Module_CustomShader::parse_shader_for_params(std::string_view    source_cod
     auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
+}
+
+void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
+{
+    if (_fullscreen_pipeline.shader().has_value()) {
+        _fullscreen_pipeline.shader()->bind();
+        glpp::active_texture(slot);
+        glpp::bind_texture<glpp::TextureKind::Tex2D>(texture_id);
+        _fullscreen_pipeline.shader()->set_uniform(name, slot);
+    }
 }
 
 } // namespace Lab

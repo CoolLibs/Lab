@@ -2,6 +2,7 @@
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameter/ParametersHistory.h>
+#include <Cool/Path/Path.h>
 #include <Cool/Time/ClockU.h>
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
@@ -16,10 +17,14 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
     , _main_window{windows.main_window()}
-    , _view{_views.make_view("View")}
-    , _current_module{std::make_unique<Module_is0>(dirty_flag_factory(), input_factory())}
+    , _is0_view{_views.make_view("View | is0")}
+    , _custom_shader_view{_views.make_view("View | Custom Shader")}
+    , _is0_module{std::make_unique<Module_is0>(dirty_flag_factory(), input_factory())}
+    , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
+    , _texture{Cool::Path::root() + "/image resources/ETOILE5.png"}
 {
-    _camera_manager.hook_events(_view.view.mouse_events(), _variable_registries, command_executor());
+    _camera_manager.hook_events(_is0_view.view.mouse_events(), _variable_registries, command_executor());
+    _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::ToUser::info("Scripting", "{}", request);
     // });
@@ -36,8 +41,11 @@ App::~App()
     // serv::shut_down();
 }
 
-void App::render_impl(Cool::RenderTarget& render_target, Module& some_module, float time)
+void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
 {
+#if IS0_TEST_NODES
+    render_target.set_size({1, 1});
+#endif
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -62,43 +70,50 @@ void App::update()
     if (_last_time != _clock.time()) {
         _last_time = _clock.time();
 
-        set_dirty_flag()(_current_module->dirty_flag());
+        set_dirty_flag()(_is0_module->dirty_flag());
+        set_dirty_flag()(_custom_shader_module->dirty_flag());
     }
-    if (_view.render_target.needs_resizing()) {
-        set_dirty_flag()(_current_module->dirty_flag());
+    if (_is0_view.render_target.needs_resizing()) {
+        set_dirty_flag()(_is0_module->dirty_flag());
     }
+    if (_custom_shader_view.render_target.needs_resizing()) {
+        set_dirty_flag()(_custom_shader_module->dirty_flag());
+    }
+    /// TODO(JF) Remove this ugly quick fix
+    // static int  framecount = 0;
+    // static bool backup     = _shader_manager._use_nodes;
+    // if (framecount == 0) {
+    //     _shader_manager._use_nodes = true;
+    // }
+    // else if (framecount == 1) {
+    //     _shader_manager._use_nodes = backup;
+    // }
+    // framecount++;
+    /// --- End of ugly quick fix
+
     if (inputs_are_allowed()) {
-        _current_module->update();
+        _is0_module->update();
+        _custom_shader_module->update();
     }
 #if IS0_TEST_NODES
     glfwSetWindowShouldClose(_main_window.glfw(), true);
 #endif
 }
 
-void App::render(Cool::RenderTarget& render_target, float time)
-{
-#if IS0_TEST_NODES
-    render_target.set_size({1, 1});
-#endif
-    if (_current_module->is_dirty(dirty_manager())) {
-        render_impl(render_target, *_current_module, time);
-    }
-}
-
 auto App::all_inputs() -> AllInputRefsToConst
 {
-    auto vec = _current_module->all_inputs();
-    // auto vec2 = _current_module2->all_input_slots();
-    // for (const auto& x : vec2) {
-    //     vec.push_back(x);
-    // }
+    auto vec  = _custom_shader_module->all_inputs();
+    auto vec2 = _is0_module->all_inputs();
+    for (const auto& x : vec2) {
+        vec.push_back(x);
+    }
     return vec;
 }
 
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _view.render_target,
+        .render_target = _custom_shader_view.render_target,
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) { render(render_target, time); }};
 }
 
@@ -135,6 +150,29 @@ static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polar
     exporter.imgui_windows(polaroid, time);
 }
 
+void App::render(Cool::RenderTarget& /*render_target*/, float time)
+{
+    /// TODO(JF) Remove this ugly quick fix
+    // if (render_target.current_size() != render_target.desired_size()) {
+    //     _shader_manager._use_nodes = true;
+    //     render_one_module(_shader_manager._is0, render_target, time);
+    //     _intermediate_render_target.set_size(render_target.desired_size());
+    //     render_one_module(_shader_manager._is0, _intermediate_render_target, time);
+
+    //     _shader_manager._use_nodes = false;
+    //     _shader_manager._from_text.set_image_in_shader("_image", 0, _intermediate_render_target.get().texture_id());
+    //     _shader_manager._from_text.set_image_in_shader("_texture", 1, _texture.ID());
+    //     render_one_module(_shader_manager._from_text, render_target, time);
+    // }
+    /// --- End of ugly quick fix
+
+    // _intermediate_render_target.set_size(render_target.desired_size());
+    render_one_module(*_is0_module, _is0_view.render_target, time);
+    _custom_shader_module->set_image_in_shader("_image", 0, _is0_view.render_target.get().texture_id());
+    _custom_shader_module->set_image_in_shader("_texture", 1, _texture.ID());
+    render_one_module(*_custom_shader_module, _custom_shader_view.render_target, time);
+}
+
 void App::imgui_windows()
 {
     imgui_window_views(_views, aspect_ratio_is_constrained());
@@ -168,7 +206,8 @@ void App::imgui_windows()
 
     if (inputs_are_allowed()) {
         const auto the_ui = ui();
-        _current_module->imgui_windows(the_ui);
+        _is0_module->imgui_windows(the_ui);
+        _custom_shader_module->imgui_windows(the_ui);
         the_ui.window({.name = "Registry of vec3"}, [&]() {
             imgui_show(_variable_registries.of<Cool::Variable<glm::vec3>>());
         });
@@ -200,7 +239,7 @@ void App::menu_preview()
 {
     if (ImGui::BeginMenu("Preview")) {
         if (_preview_constraint.imgui()) {
-            render_impl(_view.render_target, *_current_module, _clock.time());
+            // render_impl(_view.render_target, *_current_module, _clock.time());
         }
         ImGui::EndMenu();
     }
@@ -255,7 +294,8 @@ void App::imgui_menus()
 
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
-    _current_module->on_keyboard_event(event);
+    _is0_module->on_keyboard_event(event);
+    _custom_shader_module->on_keyboard_event(event);
     if (event.action == GLFW_RELEASE) {
         if (Cool::Input::matches_char("s", event.key) && event.mods.ctrl()) {
             _exporter.image_export_window().open();

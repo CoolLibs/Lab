@@ -3,6 +3,7 @@
 #include <Cool/AppManager/IApp.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
+#include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/AutoSerializer.h>
@@ -17,6 +18,8 @@
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
 #include "Dependencies/VariableRegistries.h"
+#include "Module_CustomShader/Module_CustomShader.h"
+#include "Module_is0/Module_is0.h"
 #include "UI/ThemeManager.h"
 
 namespace Lab {
@@ -40,7 +43,7 @@ public:
 
 private:
     void render(Cool::RenderTarget& render_target, float time);
-    void render_impl(Cool::RenderTarget&, Module&, float time);
+    void render_one_module(Module&, Cool::RenderTarget&, float time);
 
     // clang-format off
     auto all_inputs() -> AllInputRefsToConst;
@@ -76,20 +79,23 @@ private:
     }
 
 private:
-    VariableRegistries          _variable_registries; // First because modules need the registries when they get created
-    CameraManager               _camera_manager;      // First because modules need the camera id when they get created
-    Cool::Window&               _main_window;
-    Cool::Clock_Realtime        _clock;
-    Cool::ImageSizeConstraint   _preview_constraint;
-    Cool::RenderableViewManager _views; // Must be before the views because it is used to create them
-    Cool::RenderableView&       _view;
-    Cool::Exporter              _exporter;
-    DirtyRegistry               _dirty_registry; // Before the modules because it is used to create them
-    History                     _history{};
-    ThemeManager                _theme_manager{};
-    float                       _last_time{0.f};
-    std::unique_ptr<Module>     _current_module;
-    CommandLogger               _command_logger{};
+    VariableRegistries                   _variable_registries; // First because modules need the registries when they get created
+    CameraManager                        _camera_manager;      // First because modules need the camera id when they get created
+    Cool::Window&                        _main_window;
+    Cool::Clock_Realtime                 _clock;
+    Cool::ImageSizeConstraint            _preview_constraint;
+    Cool::RenderableViewManager          _views; // Must be before the views because it is used to create them
+    Cool::RenderableView&                _is0_view;
+    Cool::RenderableView&                _custom_shader_view;
+    Cool::Exporter                       _exporter;
+    DirtyRegistry                        _dirty_registry; // Before the modules because it is used to create them
+    History                              _history{};
+    ThemeManager                         _theme_manager{};
+    float                                _last_time{0.f};
+    std::unique_ptr<Module_is0>          _is0_module;
+    std::unique_ptr<Module_CustomShader> _custom_shader_module;
+    CommandLogger                        _command_logger{};
+    Cool::OpenGL::Texture                _texture;
 
 #if DEBUG
     bool _show_imgui_debug = true;
@@ -105,7 +111,8 @@ private:
         archive(cereal::make_nvp("Variable Registries", _variable_registries),
                 cereal::make_nvp("Dirty Registry", _dirty_registry),
                 cereal::make_nvp("History", _history),
-                cereal::make_nvp("Module", _current_module),
+                cereal::make_nvp("is0 Module", _is0_module),
+                cereal::make_nvp("Custom Shader Module", _custom_shader_module),
                 cereal::make_nvp("Camera Manager", _camera_manager));
     }
 #if !IS0_TEST_NODES

@@ -13,6 +13,8 @@ public:
     Module_CustomShader() = default;
     Module_CustomShader(DirtyFlagFactory_Ref, InputFactory_Ref);
 
+    void set_image_in_shader(std::string_view name, int slot, GLuint texture_id);
+
     void render(RenderParams) override;
     void imgui_windows(Ui_Ref ui) const override;
 
