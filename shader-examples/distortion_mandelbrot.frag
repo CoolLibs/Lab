@@ -1,5 +1,7 @@
 #version 430
 
+// https://www.shadertoy.com/view/MsXXD7
+
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 uniform float _aspect_ratio;
