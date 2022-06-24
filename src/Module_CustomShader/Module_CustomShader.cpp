@@ -74,7 +74,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider       prov
                                                         InputDestructor_Ref input_destructor)
 {
     if (dirty_manager.is_dirty(_shader_is_dirty)) {
-        Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
+        //Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
         compile_shader(source_code, file_path.string());
