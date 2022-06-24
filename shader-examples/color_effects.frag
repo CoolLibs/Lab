@@ -34,7 +34,9 @@ vec4 image(vec2 uv)
 vec3 color_transformation(vec3 image)
 {
     if (One_color_mode > .5)
+    {
         image = vec3(dot(image, vec3(0.2126, 0.7152, 0.0722)));
+    }
     return pow(image, log(Color_coefficient) / log(Grey_coefficient));
 }
 
