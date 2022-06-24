@@ -70,14 +70,12 @@ private:
 
     void imgui_commands_and_registries_debug_windows();
 
-    bool aspect_ratio_is_constrained() const;
     template<typename Event>
     Cool::ViewEvent<Event> view_event(const Event& event, const Cool::RenderableView& view)
     {
         return {event,
                 _main_window.glfw(),
-                {view.render_target.current_size(),
-                 aspect_ratio_is_constrained()}};
+                {view.render_target.current_size()}};
     }
 
 private:

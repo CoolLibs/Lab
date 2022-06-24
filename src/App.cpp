@@ -106,12 +106,6 @@ Cool::Polaroid App::polaroid()
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) { render(render_target, time); }};
 }
 
-auto App::aspect_ratio_is_constrained() const -> bool
-{
-    return _exporter.is_exporting() ||
-           _preview_constraint.wants_to_constrain_aspect_ratio();
-}
-
 auto App::inputs_are_allowed() const -> bool
 {
     return !_exporter.is_exporting();
@@ -171,8 +165,8 @@ void App::imgui_commands_and_registries_debug_windows()
 
 void App::imgui_windows()
 {
-    _is0_view.imgui_window(true);
-    _custom_shader_view.imgui_window(aspect_ratio_is_constrained());
+    _is0_view.imgui_window();
+    _custom_shader_view.imgui_window();
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     if (inputs_are_allowed()) {
