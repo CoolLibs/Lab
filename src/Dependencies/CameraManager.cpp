@@ -17,7 +17,8 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
         .subscribe([registries, this, executor](const auto& event) {
             auto       camera   = registries.get().get(_camera_id)->value;
             const auto old_zoom = _view_controller.get_distance_to_orbit_center();
-            if (_view_controller.on_wheel_scroll(camera, event.dy)) {
+            if (_view_controller.on_wheel_scroll(camera, event.dy))
+            {
                 const auto zoom = _view_controller.get_distance_to_orbit_center();
                 _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
                 executor.execute(Command_SetCameraZoom{zoom});
@@ -57,14 +58,16 @@ void CameraManager::imgui(std::reference_wrapper<VariableRegistries> registries,
     maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
         return _view_controller.ImGui(camera);
     });
-    if (ImGui::Button("Look at the origin")) {
+    if (ImGui::Button("Look at the origin"))
+    {
         maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
             _view_controller.set_orbit_center({0, 0, 0}, camera);
             return true;
         });
         executor.execute(Command_FinishedEditingVariable{});
     }
-    if (ImGui::Button("Reset transform")) {
+    if (ImGui::Button("Reset transform"))
+    {
         maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
             Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
             return true;
@@ -74,7 +77,8 @@ void CameraManager::imgui(std::reference_wrapper<VariableRegistries> registries,
     maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
         return Cool::imgui(camera.projection());
     });
-    if (ImGui::IsItemDeactivatedAfterEdit()) {
+    if (ImGui::IsItemDeactivatedAfterEdit())
+    {
         executor.execute(Command_FinishedEditingVariable{});
     }
 }
@@ -85,7 +89,8 @@ void CameraManager::maybe_update_camera(
     std::function<bool(Cool::Camera&)>         fun)
 {
     auto camera = registries.get().get(_camera_id)->value;
-    if (fun(camera)) {
+    if (fun(camera))
+    {
         executor.execute(Command_SetVariable<Cool::Camera>{_camera_id, camera});
     }
 }

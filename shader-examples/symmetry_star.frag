@@ -53,7 +53,8 @@ void main()
     uv.x += .5;
 
     float scale = 3.;
-    for (int i = 0; i < nb_iterations; i++) {
+    for (int i = 0; i < nb_iterations; i++)
+    {
         uv *= scale;
         uv.x -= scale / 2.;
         uv.x = abs(uv.x);

@@ -30,7 +30,8 @@ App::App(Cool::WindowManager& windows)
     // });
     _clock.pause();
 #if IS0_TEST_NODES
-    for (const auto& node_template : _shader_manager.nodes_templates()) {
+    for (const auto& node_template : _shader_manager.nodes_templates())
+    {
         _shader_manager.add_node(NodeFactoryU::node_from_template(node_template));
     }
 #endif
@@ -56,31 +57,38 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 
 void App::update()
 {
-    if (!_exporter.is_exporting()) {
+    if (!_exporter.is_exporting())
+    {
         _clock.update();
-        for (auto& view : _views) {
+        for (auto& view : _views)
+        {
             view.update_size(_preview_constraint);
         }
         polaroid().render(_clock.time());
     }
-    else {
+    else
+    {
         _exporter.update(polaroid());
     }
 
-    if (_last_time != _clock.time()) {
+    if (_last_time != _clock.time())
+    {
         _last_time = _clock.time();
 
         set_dirty_flag()(_is0_module->dirty_flag());
         set_dirty_flag()(_custom_shader_module->dirty_flag());
     }
-    if (_is0_view.render_target.needs_resizing()) {
+    if (_is0_view.render_target.needs_resizing())
+    {
         set_dirty_flag()(_is0_module->dirty_flag());
     }
-    if (_custom_shader_view.render_target.needs_resizing()) {
+    if (_custom_shader_view.render_target.needs_resizing())
+    {
         set_dirty_flag()(_custom_shader_module->dirty_flag());
     }
 
-    if (inputs_are_allowed()) {
+    if (inputs_are_allowed())
+    {
         _is0_module->update();
         _custom_shader_module->update();
         check_inputs();
@@ -94,7 +102,8 @@ auto App::all_inputs() -> AllInputRefsToConst
 {
     auto vec  = _custom_shader_module->all_inputs();
     auto vec2 = _is0_module->all_inputs();
-    for (const auto& x : vec2) {
+    for (const auto& x : vec2)
+    {
         vec.push_back(x);
     }
     return vec;
@@ -104,7 +113,9 @@ Cool::Polaroid App::polaroid()
 {
     return {
         .render_target = _custom_shader_view.render_target,
-        .render_fn     = [this](Cool::RenderTarget& render_target, float time) { render(render_target, time); }};
+        .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
+            render(render_target, time);
+        }};
 }
 
 auto App::inputs_are_allowed() const -> bool
@@ -170,7 +181,8 @@ void App::imgui_windows()
     _custom_shader_view.imgui_window();
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
-    if (inputs_are_allowed()) {
+    if (inputs_are_allowed())
+    {
         const auto the_ui = ui();
         _is0_module->imgui_windows(the_ui);
         _custom_shader_module->imgui_windows(the_ui);
@@ -185,30 +197,35 @@ void App::imgui_windows()
         _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
 #if DEBUG
-        if (_show_imgui_debug) {
+        if (_show_imgui_debug)
+        {
             ImGui::Begin("Debug", &_show_imgui_debug);
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
             _main_window.imgui_cap_framerate();
             ImGui::Checkbox("Show Demo Window", &_show_imgui_demo);
             ImGui::End();
         }
-        if (_show_imgui_demo) { // Show the big demo window (Most of the sample code is
-                                // in ImGui::ShowDemoWindow()! You can browse its code
-                                // to learn more about Dear ImGui!).
+        if (_show_imgui_demo)
+        { // Show the big demo window (Most of the sample code is
+            // in ImGui::ShowDemoWindow()! You can browse its code
+            // to learn more about Dear ImGui!).
             ImGui::ShowDemoWindow(&_show_imgui_demo);
         }
 #endif
     }
 
-    if (_show_commands_and_registries_debug_windows) {
+    if (_show_commands_and_registries_debug_windows)
+    {
         imgui_commands_and_registries_debug_windows();
     }
 }
 
 void App::menu_preview()
 {
-    if (ImGui::BeginMenu("Preview")) {
-        if (_preview_constraint.imgui()) {
+    if (ImGui::BeginMenu("Preview"))
+    {
+        if (_preview_constraint.imgui())
+        {
             // render_impl(_view.render_target, *_current_module, _clock.time());
         }
         ImGui::EndMenu();
@@ -217,9 +234,11 @@ void App::menu_preview()
 
 void App::menu_windows()
 {
-    if (ImGui::BeginMenu("Windows")) {
+    if (ImGui::BeginMenu("Windows"))
+    {
         Cool::Log::ToUser::imgui_toggle_console();
-        for (auto& view : _views) {
+        for (auto& view : _views)
+        {
             view.view.imgui_open_close_checkbox();
         }
 #if DEBUG
@@ -233,7 +252,8 @@ void App::menu_windows()
 
 void App::menu_export()
 {
-    if (ImGui::BeginMenu("Export")) {
+    if (ImGui::BeginMenu("Export"))
+    {
         _exporter.imgui_menu_items();
         ImGui::EndMenu();
     }
@@ -241,7 +261,8 @@ void App::menu_export()
 
 void App::menu_settings()
 {
-    if (ImGui::BeginMenu("Settings")) {
+    if (ImGui::BeginMenu("Settings"))
+    {
         _history.imgui_max_size();
         ImGui::Separator();
         ImGui::Separator();
@@ -272,17 +293,19 @@ void App::check_inputs()
 void App::check_inputs__history()
 {
     auto        exec = reversible_command_executor_without_history();
-    const auto& io = ImGui::GetIO();
+    const auto& io   = ImGui::GetIO();
 
     // Undo
-    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z)) {
+    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z))
+    {
         _history.move_backward(exec);
         Cool::ParametersHistory::get().move_backward();
     }
 
     // Redo
     if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y)) ||
-        (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z))) {
+        (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
+    {
         _history.move_forward(exec);
         Cool::ParametersHistory::get().move_forward();
     }
@@ -292,31 +315,36 @@ void App::check_inputs__export_windows()
 {
     const auto& io = ImGui::GetIO();
 
-    if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl) {
+    if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl)
+    {
         _exporter.image_export_window().open();
     }
-    if (ImGui::IsKeyReleased(ImGuiKey_E) && io.KeyCtrl) {
+    if (ImGui::IsKeyReleased(ImGuiKey_E) && io.KeyCtrl)
+    {
         _exporter.video_export_window().open();
     }
 }
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
 {
-    for (auto& view : _views) {
+    for (auto& view : _views)
+    {
         view.view.dispatch_mouse_button_event(view_event(event, view));
     }
 }
 
 void App::on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event)
 {
-    for (auto& view : _views) {
+    for (auto& view : _views)
+    {
         view.view.dispatch_mouse_scroll_event(view_event(event, view));
     }
 }
 
 void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event)
 {
-    for (auto& view : _views) {
+    for (auto& view : _views)
+    {
         view.view.dispatch_mouse_move_event(view_event(event, view));
     }
 }

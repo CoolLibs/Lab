@@ -11,7 +11,7 @@ struct Node {
     PinSdfOut             output_pin{};
 
 private:
-    //Serialization
+    // Serialization
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)

@@ -31,9 +31,11 @@ public:
     {
         const auto* const prev =
             dynamic_cast<const PolymorphicReversibleCommand<ConcreteReversibleCommandT>*>(&previous);
-        if (prev) { // Only forward to the underlying command if `previous` has the same type as `_concrete_reversible_command`
+        if (prev) // Only forward to the underlying command if `previous` has the same type as `_concrete_reversible_command`
+        {
             const auto maybe_merged = _concrete_reversible_command.merge(prev->_concrete_reversible_command);
-            if (maybe_merged) {
+            if (maybe_merged)
+            {
                 return make_reversible_command(*maybe_merged);
             }
         }

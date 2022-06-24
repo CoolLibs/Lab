@@ -4,7 +4,8 @@
 static std::string_view find_capture(std::string_view source, size_t* end_pos)
 {
     const auto capture_pos = Cool::String::find_matching_pair(source, '[', ']');
-    if (!capture_pos.has_value()) {
+    if (!capture_pos.has_value())
+    {
         throw std::invalid_argument("Couldn't parse the capture group. It should be delimited by \"[ ]\"");
     }
     *end_pos = capture_pos->second + 1;
@@ -20,11 +21,13 @@ static std::vector<std::string> parse_capture(std::string_view source)
 /// Returns true iff IS0_FIX_ARTIFACTS was found in the code
 static bool apply_is0_fix_artifacts(std::string& code)
 {
-    if (code.find("IS0_FIX_ARTIFACTS") != std::string::npos) { // TODO Replace with code.contains(...) when we update to C++23
+    if (code.find("IS0_FIX_ARTIFACTS") != std::string::npos) // TODO Replace with code.contains(...) when we update to C++23
+    {
         Cool::String::replace_all(code, "IS0_FIX_ARTIFACTS", "(1. - Fix_Artifacts) * ");
         return true;
     }
-    else {
+    else
+    {
         return false;
     }
 }
@@ -44,7 +47,8 @@ void parse_node_template(NodeTemplate& node_template, std::string_view source)
     node_template.code_template = find_body(source, &next_pos);
     trim_source();
     node_template.parameters = Cool::parse_all_parameter_desc(source);
-    if (apply_is0_fix_artifacts(node_template.code_template)) {
+    if (apply_is0_fix_artifacts(node_template.code_template))
+    {
         node_template.parameters.emplace_back(Cool::Parameter::FloatDesc{
             .name          = "Fix Artifacts",
             .default_value = 0.f,

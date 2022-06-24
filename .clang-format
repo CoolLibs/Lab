@@ -13,9 +13,9 @@ AllowAllConstructorInitializersOnNextLine: 'true'
 AllowAllParametersOfDeclarationOnNextLine: 'true'
 AllowShortBlocksOnASingleLine: 'false'
 AllowShortCaseLabelsOnASingleLine: 'true'
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: Never
-AllowShortLambdasOnASingleLine: All
+AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: 'false'
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: 'true'
@@ -23,13 +23,31 @@ AlwaysBreakTemplateDeclarations: 'Yes'
 BinPackArguments: 'true'
 BinPackParameters: 'true'
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Stroustrup
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterCaseLabel: true
+    AfterClass: false
+    AfterControlStatement: true
+    AfterEnum: false
+    AfterFunction: true
+    AfterNamespace: false
+    AfterObjCDeclaration: true
+    AfterStruct: false
+    AfterUnion: false
+    AfterExternBlock: true
+    BeforeCatch: true
+    BeforeElse: true
+    BeforeLambdaBody: false
+    IndentBraces: false
+    SplitEmptyFunction: false
+    SplitEmptyRecord: false
+    SplitEmptyNamespace: true
 BreakBeforeTernaryOperators: 'true'
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeComma
 BreakStringLiterals: 'true'
 ColumnLimit: '0'
-CompactNamespaces: 'false'
+CompactNamespaces: 'true'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 ConstructorInitializerIndentWidth: '4'
 ContinuationIndentWidth: '4'

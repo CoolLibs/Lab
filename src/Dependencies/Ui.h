@@ -41,7 +41,8 @@ public:
         // TODO add a way to change the current_variable
         // And show the UI of the current_variable if it is set
         const auto variable = _variable_registries.get().get(input._default_variable_id);
-        if (variable) {
+        if (variable)
+        {
             widget<T>(input._default_variable_id, *variable);
         }
         ImGui::PopID();
@@ -54,13 +55,15 @@ public:
         ImGui::Text("Path : ");
         ImGui::SameLine();
         ImGui::PushID(2132541);
-        if (ImGui::InputText("", &path)) {
+        if (ImGui::InputText("", &path))
+        {
             input.file_watcher.set_path(path);
             _set_dirty(input._dirty_flag);
         }
         ImGui::PopID();
         ImGui::SameLine();
-        if (Cool::ImGuiExtras::open_file_dialog(&path, Cool::NfdFileFilter::FragmentShader, Cool::File::whithout_file_name(path))) {
+        if (Cool::ImGuiExtras::open_file_dialog(&path, Cool::NfdFileFilter::FragmentShader, Cool::File::whithout_file_name(path)))
+        {
             input.file_watcher.set_path(path);
             _set_dirty(input._dirty_flag);
         }

@@ -17,7 +17,7 @@ private:
     int _id;
 
 private:
-    //Serialization
+    // Serialization
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)

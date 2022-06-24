@@ -44,10 +44,12 @@ const Node* NodeTree::find_input_node(const Pin& pin) const
     const auto link_it = std::ranges::find_if(links, [&](const Link& link) {
         return link.to_pin_id == pin.id();
     });
-    if (link_it == links.end()) {
+    if (link_it == links.end())
+    {
         return nullptr;
     }
-    else {
+    else
+    {
         return &find_node_with_output_pin(link_it->from_pin_id);
     }
 }
@@ -61,12 +63,16 @@ const Node& NodeTree::find_node_with_output_pin(PinId pin_id) const
 
 const Pin& NodeTree::find_pin(PinId id)
 {
-    for (const auto& node : nodes) {
-        if (node.output_pin.id() == id) {
+    for (const auto& node : nodes)
+    {
+        if (node.output_pin.id() == id)
+        {
             return node.output_pin;
         }
-        for (const auto& pin : node.input_pins) {
-            if (pin.id() == id) {
+        for (const auto& pin : node.input_pins)
+        {
+            if (pin.id() == id)
+            {
                 return pin;
             }
         }

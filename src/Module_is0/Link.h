@@ -8,7 +8,7 @@ struct Link {
     PinId  to_pin_id;
 
 private:
-    //Serialization
+    // Serialization
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)

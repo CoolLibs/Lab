@@ -21,7 +21,8 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
         ui.widget(_file);
         ImGui::Separator();
         ImGui::NewLine();
-        for (auto& input : _inputs) {
+        for (auto& input : _inputs)
+        {
             std::visit([&ui](auto&& input) {
                 ui.widget(input);
             },
@@ -52,11 +53,13 @@ void Module_CustomShader::render(RenderParams in)
 {
     refresh_pipeline_if_necessary(in.provider, in.dirty_manager, in.input_factory, in.input_destructor);
     // Cool::Log::ToUser::info("Custom Shader Render", "Re-rendering");
-    if (_fullscreen_pipeline.shader()) {
+    if (_fullscreen_pipeline.shader())
+    {
         _fullscreen_pipeline.shader()->bind();
         _fullscreen_pipeline.shader()->set_uniform("_time", in.provider(Input_Time{}));
 
-        for (auto& input : _inputs) {
+        for (auto& input : _inputs)
+        {
             std::visit([&](auto&& input) {
                 set_uniform(*_fullscreen_pipeline.shader(), input.name(), in.provider(input));
             },
@@ -73,8 +76,9 @@ void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider       prov
                                                         InputFactory_Ref    input_factory,
                                                         InputDestructor_Ref input_destructor)
 {
-    if (dirty_manager.is_dirty(_shader_is_dirty)) {
-        //Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
+    if (dirty_manager.is_dirty(_shader_is_dirty))
+    {
+        // Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
         compile_shader(source_code, file_path.string());
@@ -111,12 +115,15 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<AnyInput>& new_inputs,
     InputDestructor_Ref    destroy)
 {
-    for (auto& input : old_inputs) {
+    for (auto& input : old_inputs)
+    {
         const auto it = iterator_to_same_input(input, new_inputs);
-        if (it != new_inputs.end()) {
+        if (it != new_inputs.end())
+        {
             *it = std::move(input);
         }
-        else {
+        else
+        {
             destroy(input);
         }
     }
@@ -129,14 +136,19 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
     std::stringstream     stream{std::string{source_code}};
     std::string           line;
     bool                  has_begun = false;
-    while (getline(stream, line)) {
-        if (has_begun) {
-            if (line == "// END DYNAMIC PARAMS") {
+    while (getline(stream, line))
+    {
+        if (has_begun)
+        {
+            if (line == "// END DYNAMIC PARAMS")
+            {
                 break;
             }
-            try {
+            try
+            {
                 const auto uniform_pos = line.find("uniform");
-                if (uniform_pos != std::string::npos) {
+                if (uniform_pos != std::string::npos)
+                {
                     const auto        type_pos     = uniform_pos + 8;
                     const auto        type_pos_end = line.find(' ', type_pos);
                     const std::string type         = line.substr(type_pos, type_pos_end - type_pos);
@@ -159,11 +171,13 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
                     new_inputs.push_back(input);
                 }
             }
-            catch (const std::exception& e) {
+            catch (const std::exception& e)
+            {
                 Cool::Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
             }
         }
-        if (line == "// BEGIN DYNAMIC PARAMS") {
+        if (line == "// BEGIN DYNAMIC PARAMS")
+        {
             has_begun = true;
         }
     }
@@ -181,7 +195,8 @@ void Module_CustomShader::parse_shader_for_params(std::string_view    source_cod
 
 void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
 {
-    if (_fullscreen_pipeline.shader().has_value()) {
+    if (_fullscreen_pipeline.shader().has_value())
+    {
         _fullscreen_pipeline.shader()->bind();
         glpp::active_texture(slot);
         glpp::bind_texture<glpp::TextureKind::Tex2D>(texture_id);

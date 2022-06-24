@@ -14,11 +14,12 @@ public:
     }
     ~UniqueImNodeContext()
     {
-        if (_context) {
+        if (_context)
+        {
             ImNodes::DestroyContext(_context);
         }
     }
-    UniqueImNodeContext(const UniqueImNodeContext&) = delete;
+    UniqueImNodeContext(const UniqueImNodeContext&)            = delete;
     UniqueImNodeContext& operator=(const UniqueImNodeContext&) = delete;
     UniqueImNodeContext(UniqueImNodeContext&& rhs) noexcept
         : _context{rhs._context}
@@ -27,7 +28,8 @@ public:
     };
     UniqueImNodeContext& operator=(UniqueImNodeContext&& rhs) noexcept
     {
-        if (this != &rhs) {
+        if (this != &rhs)
+        {
             ImNodes::DestroyContext(_context);
             _context     = rhs._context;
             rhs._context = nullptr;

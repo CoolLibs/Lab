@@ -43,7 +43,8 @@ void main()
     vec3   accumulator = vec3(0);
     mat3x2 offsets     = mat3x2(0);
 
-    for (int i = 0; i < sampleCount; i++) {
+    for (int i = 0; i < sampleCount; i++)
+    {
         accumulator.r += image(_uv + offsets[0]).r;
         accumulator.g += image(_uv + offsets[1]).g;
         accumulator.b += image(_uv + offsets[2]).b;

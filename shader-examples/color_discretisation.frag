@@ -30,9 +30,11 @@ void main()
 
     vec3  col      = table_of_colors[0];
     float min_dist = distance(image, table_of_colors[0]);
-    for (int i = 1; i < size; i++) {
+    for (int i = 1; i < size; i++)
+    {
         float dist = distance(image, table_of_colors[i]);
-        if (dist < min_dist) {
+        if (dist < min_dist)
+        {
             min_dist = distance(image, table_of_colors[i]);
             col      = table_of_colors[i];
         }

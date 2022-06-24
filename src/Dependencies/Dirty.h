@@ -92,7 +92,8 @@ public:
     auto is_dirty(DirtyFlag flag) const -> bool
     {
         const auto dirty = _registry.get().get(flag.id);
-        if (!dirty.has_value()) {
+        if (!dirty.has_value())
+        {
             throw std::runtime_error{"DirtyFlag has been deleted but someone still had a handle to it!"};
         }
         return dirty->is_dirty;

@@ -30,7 +30,8 @@ public:
     {
         const auto reversible = try_make_reversible(command, _make_reversible_commands_context); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
         _sub_executor.execute(command);
-        if (reversible) {
+        if (reversible)
+        {
             _history.get().push(*reversible, ReversibleCommandMerger{});
         }
     }

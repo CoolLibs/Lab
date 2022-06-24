@@ -36,7 +36,8 @@ bool NodeEditor::wants_to_delete_selection() const
 static void show_node_pins(const Node& node)
 {
     ImGui::BeginGroup();
-    for (const auto& pin : node.input_pins) {
+    for (const auto& pin : node.input_pins)
+    {
         pin.show();
     }
     ImGui::EndGroup();
@@ -74,7 +75,8 @@ static void show_link(const Link& link)
 bool NodeEditor::handle_link_creation()
 {
     int from_pin_id, to_pin_id;
-    if (ImNodes::IsLinkCreated(&from_pin_id, &to_pin_id)) {
+    if (ImNodes::IsLinkCreated(&from_pin_id, &to_pin_id))
+    {
         _tree.delete_link_going_to(PinId{to_pin_id});
         _tree.add_link(Link{.from_pin_id = PinId{from_pin_id},
                             .to_pin_id   = PinId{to_pin_id}});
@@ -88,7 +90,8 @@ bool NodeEditor::handle_link_deletion()
     bool has_deleted_some = false;
     {
         int link_id;
-        if (ImNodes::IsLinkDestroyed(&link_id)) {
+        if (ImNodes::IsLinkDestroyed(&link_id))
+        {
             _tree.delete_link(LinkId{link_id});
             has_deleted_some = true;
         }
@@ -96,12 +99,14 @@ bool NodeEditor::handle_link_deletion()
 
     {
         const int num_selected = ImNodes::NumSelectedLinks();
-        if (num_selected > 0 && wants_to_delete_selection()) {
+        if (num_selected > 0 && wants_to_delete_selection())
+        {
             has_deleted_some = true;
             static std::vector<int> selected_links;
             selected_links.resize(static_cast<size_t>(num_selected));
             ImNodes::GetSelectedLinks(selected_links.data());
-            for (const int link_id : selected_links) {
+            for (const int link_id : selected_links)
+            {
                 _tree.delete_link(LinkId{link_id});
             }
         }
@@ -112,11 +117,13 @@ bool NodeEditor::handle_link_deletion()
 bool NodeEditor::handle_node_deletion()
 {
     const int num_selected = ImNodes::NumSelectedNodes();
-    if (num_selected > 0 && wants_to_delete_selection()) {
+    if (num_selected > 0 && wants_to_delete_selection())
+    {
         static std::vector<int> selected_nodes;
         selected_nodes.resize(static_cast<size_t>(num_selected));
         ImNodes::GetSelectedNodes(selected_nodes.data());
-        for (const int node_id : selected_nodes) {
+        for (const int node_id : selected_nodes)
+        {
             _tree.delete_node(NodeId{node_id});
         }
         ImNodes::ClearNodeSelection();
@@ -147,17 +154,21 @@ void NodeEditor::imgui_window()
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
     {
-        if (should_open_nodes_menu()) {
+        if (should_open_nodes_menu())
+        {
             open_nodes_menu();
         }
-        if (ImGui::BeginPopup("_node_templates_list")) {
+        if (ImGui::BeginPopup("_node_templates_list"))
+        {
             node_tree_has_changed |= imgui_nodes_menu();
             ImGui::EndPopup();
         }
-        for (auto& node : _tree.nodes) {
+        for (auto& node : _tree.nodes)
+        {
             show_node(node, [&]() { on_tree_change(); });
         }
-        for (const auto& link : _tree.links) {
+        for (const auto& link : _tree.links)
+        {
             show_link(link);
         }
     }
@@ -167,7 +178,8 @@ void NodeEditor::imgui_window()
     node_tree_has_changed |= handle_link_deletion();
     node_tree_has_changed |= handle_node_deletion();
     ImGui::End();
-    if (node_tree_has_changed) {
+    if (node_tree_has_changed)
+    {
         on_tree_change();
     }
 }
@@ -175,12 +187,14 @@ void NodeEditor::imgui_window()
 bool NodeEditor::imgui_nodes_menu()
 {
     const std::optional<Node> node = _factory.imgui();
-    if (node.has_value()) {
+    if (node.has_value())
+    {
         _tree.add_node(*node);
         ImNodes::SetNodeScreenSpacePos(node->id, _next_node_position);
         return true;
     }
-    else {
+    else
+    {
         return false;
     }
 }
@@ -189,21 +203,26 @@ void NodeEditor::update_templates_and_nodes()
 {
     _all_nodes_have_a_valid_template = true;
     _factory.reload_templates();
-    for (auto& node : _tree.nodes) {
+    for (auto& node : _tree.nodes)
+    {
         const auto node_template = std::ranges::find_if(_factory.templates(), [&](const NodeTemplate& node_template) {
             return node_template.name == node.node_template_name;
         });
-        if (node_template == _factory.templates().end()) {
+        if (node_template == _factory.templates().end())
+        {
             _all_nodes_have_a_valid_template = false;
             Cool::Log::ToUser::warn("is0 " + node.node_template_name, "Can't find node file '{0}.is0' Your graph can't be compiled.\nEither add a '{0}.is0' file or delete all {0} nodes.", node.node_template_name);
         }
-        else {
+        else
+        {
             // Update params
             node.parameter_list = Cool::ParameterU::update_parameters(node_template->parameters, node.parameter_list);
             // Update input pins
             const auto nb_pins = node_template->sdf_identifiers.size();
-            if (nb_pins < node.input_pins.size()) {
-                for (size_t i = nb_pins; i < node.input_pins.size(); ++i) {
+            if (nb_pins < node.input_pins.size())
+            {
+                for (size_t i = nb_pins; i < node.input_pins.size(); ++i)
+                {
                     _tree.delete_link_going_to(node.input_pins[i].id());
                 }
             }

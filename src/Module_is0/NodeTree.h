@@ -28,11 +28,13 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        try {
+        try
+        {
             archive(cereal::make_nvp("Nodes", nodes),
                     cereal::make_nvp("Links", links));
         }
-        catch (const std::exception&) {
+        catch (const std::exception&)
+        {
             nodes.clear();
             links.clear();
             throw;

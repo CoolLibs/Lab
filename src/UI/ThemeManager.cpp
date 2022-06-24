@@ -5,16 +5,20 @@ namespace Lab {
 void ThemeManager::imgui()
 {
     ImGui::Text("Color Theme");
-    if (ImGui::Button("Dark")) {
+    if (ImGui::Button("Dark"))
+    {
         ImGui::StyleColorsDark();
     }
-    if (ImGui::Button("Classic")) {
+    if (ImGui::Button("Classic"))
+    {
         ImGui::StyleColorsClassic();
     }
-    if (ImGui::Button("Light")) {
+    if (ImGui::Button("Light"))
+    {
         ImGui::StyleColorsLight();
     }
-    if (ImGui::Button("Grey")) {
+    if (ImGui::Button("Grey"))
+    {
         ImGuiStyle* style  = &ImGui::GetStyle();
         ImVec4*     colors = style->Colors;
 

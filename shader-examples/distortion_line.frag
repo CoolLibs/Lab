@@ -52,12 +52,14 @@ void main()
     vec2 fragCoord   = _uv * iResolution;
     int  xModif      = 0;
     int  offs        = int(min(steps, int(fragCoord.x)));
-    for (int x = 0; x < int(fragCoord.x); x += offs) {
+    for (int x = 0; x < int(fragCoord.x); x += offs)
+    {
         offs       = int(min(steps, int(fragCoord.x) - x));
         float psin = sin(plasma(vec2(x, fragCoord.y) / iResolution.xy));
         float pcos = cos(plasma(vec2(fragCoord.y, x) / iResolution.xy));
 
-        if (abs(psin - pcos) > thres) {
+        if (abs(psin - pcos) > thres)
+        {
             xModif += offs;
         }
     }

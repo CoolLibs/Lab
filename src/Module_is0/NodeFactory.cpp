@@ -25,43 +25,56 @@ std::optional<Node> NodeFactory::imgui()
     const auto for_each_node_template = [&](std::function<void(const NodeTemplate&)>        callback,
                                             std::function<bool(const NodeTemplatesFolder&)> filter) {
         size_t nodes_counts = 0;
-        for (const auto& folder : _folders) {
-            if (filter(folder)) {
-                if (ImGui::BeginMenu(folder.name.c_str())) {
-                    for (size_t i = 0; i < folder.nodes_count; ++i) {
+        for (const auto& folder : _folders)
+        {
+            if (filter(folder))
+            {
+                if (ImGui::BeginMenu(folder.name.c_str()))
+                {
+                    for (size_t i = 0; i < folder.nodes_count; ++i)
+                    {
                         callback(_node_templates[nodes_counts]);
                         nodes_counts++;
                     }
                     ImGui::EndMenu();
                 }
-                else {
+                else
+                {
                     nodes_counts += folder.nodes_count;
                 }
             }
-            else {
+            else
+            {
                 nodes_counts += folder.nodes_count;
             }
         }
     };
 
     // ImGui
-    if (_focus_on_filter) {
+    if (_focus_on_filter)
+    {
         ImGui::SetKeyboardFocusHere();
         _focus_on_filter = false;
     }
     _filter.Draw("Search");
-    if (!_filter.IsActive()) {
+    if (!_filter.IsActive())
+    {
         for_each_node_template([&](const NodeTemplate& node_template) {
             if (ImGui::MenuItem(node_template.name.c_str())) {
                         select_node_template(node_template);
                     } }, [&](const NodeTemplatesFolder&) { return true; });
     }
-    else {
+    else
+    {
         size_t nodes_counts = 0;
-        for (const auto& folder : _folders) {
-            for (size_t i = 0; i < folder.nodes_count; ++i) {
-                if (_filter.PassFilter(_node_templates[nodes_counts].name.c_str())) {
-                    if (ImGui::Selectable(_node_templates[nodes_counts].name.c_str())) {
+        for (const auto& folder : _folders)
+        {
+            for (size_t i = 0; i < folder.nodes_count; ++i)
+            {
+                if (_filter.PassFilter(_node_templates[nodes_counts].name.c_str()))
+                {
+                    if (ImGui::Selectable(_node_templates[nodes_counts].name.c_str()))
+                    {
                         select_node_template(_node_templates[nodes_counts]);
                     }
                 }
@@ -88,19 +101,25 @@ void NodeFactory::reload_templates()
 {
     _node_templates.clear();
     _folders.clear();
-    for (const auto& entry : std::filesystem::directory_iterator{_nodes_folder_path}) {
-        if (entry.is_directory()) {
+    for (const auto& entry : std::filesystem::directory_iterator{_nodes_folder_path})
+    {
+        if (entry.is_directory())
+        {
             _folders.push_back({entry.path().stem().string(), 0});
-            for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
-                if (file.is_regular_file()) {
-                    try {
+            for (const auto& file : std::filesystem::directory_iterator{entry.path()})
+            {
+                if (file.is_regular_file())
+                {
+                    try
+                    {
                         NodeTemplate node_template;
                         node_template.name = file.path().stem().string();
                         parse_node_template(node_template, Cool::File::to_string(file.path().string()));
                         _node_templates.push_back(node_template);
                         _folders.back().nodes_count++;
                     }
-                    catch (const std::exception& e) {
+                    catch (const std::exception& e)
+                    {
                         Cool::Log::ToUser::warn("is0::NodeFactory::" + file.path().stem().string(), "Failed to parse node from file '{}':\n{}", file.path().string(), e.what());
                     }
                 }
@@ -112,12 +131,15 @@ void NodeFactory::reload_templates()
 std::optional<FolderRange> NodeFactory::templates_from_folder(std::string_view folder_name) const
 {
     size_t first = 0;
-    for (const auto& folder : _folders) {
-        if (folder.name == folder_name) {
+    for (const auto& folder : _folders)
+    {
+        if (folder.name == folder_name)
+        {
             return FolderRange{first,
                                first + folder.nodes_count - 1};
         }
-        else {
+        else
+        {
             first += folder.nodes_count;
         }
     }

@@ -19,13 +19,15 @@ public:
     {
         { // Try the current variable
             const auto maybe_variable = _variable_registries.get().get(input._current_variable_id);
-            if (maybe_variable) {
+            if (maybe_variable)
+            {
                 return maybe_variable->value;
             }
         }
         { // Try the default variable
             const auto maybe_variable = _variable_registries.get().get(input._default_variable_id);
-            if (maybe_variable) {
+            if (maybe_variable)
+            {
                 return maybe_variable->value;
             }
         }

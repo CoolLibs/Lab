@@ -27,8 +27,10 @@ void imgui_show(const reg::Registry<T>& registry)
                                              ImGuiTableFlags_BordersV |
                                              ImGuiTableFlags_ContextMenuInBody;
 
-    if (ImGui::BeginTable("table1", 2, flags)) {
-        for (const auto& [id, value] : registry) {
+    if (ImGui::BeginTable("table1", 2, flags))
+    {
+        for (const auto& [id, value] : registry)
+        {
             ImGui::TableNextRow();
             ImGui::TableSetColumnIndex(0);
             imgui_show(value);

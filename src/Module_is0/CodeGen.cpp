@@ -96,7 +96,8 @@ static std::string function_definition_recursive(int              max_recursions
            << actual_body << "\n}\n";
     };
     gen_func(max_recursions + 1, default_body);
-    for (int i{max_recursions}; i >= 0; --i) {
+    for (int i{max_recursions}; i >= 0; --i)
+    {
         std::string actual_body{body};
         Cool::String::replace_all(actual_body, "${" + std::string{name} + "}", std::string{name} + std::to_string(i + 1));
         gen_func(i, actual_body);
@@ -127,7 +128,8 @@ static auto compute_sdf_identifiers(const Node& node, const NodeTemplate& node_t
     using namespace std::string_literals;
     std::vector<std::pair<std::string, std::string>> sdf_identifiers;
     sdf_identifiers.reserve(node.input_pins.size());
-    for (size_t i = 0; i < node.input_pins.size(); ++i) {
+    for (size_t i = 0; i < node.input_pins.size(); ++i)
+    {
         const Node* input_node = node_tree.find_input_node(node.input_pins[i]);
         sdf_identifiers.push_back(std::make_pair(
             node_template.sdf_identifiers[i],
@@ -178,7 +180,8 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     main_sdf_definition << R"(float is0_main_sdf(vec3 pos) {
     float d = MAX_DIST;)";
 
-    for (const auto& node : node_tree.nodes) {
+    for (const auto& node : node_tree.nodes)
+    {
         const auto& node_template       = find_node_template(node, node_templates);
         const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
                                                                 .node_template_name = node.node_template_name,
@@ -191,7 +194,8 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
                                                  node_template.code_template,
                                                  compute_sdf_identifiers(node, node_template, node_tree))});
         definitions << "\n\n";
-        if (node_tree.has_no_successor(node)) {
+        if (node_tree.has_no_successor(node))
+        {
             main_sdf_definition << "\n    d = min(d, " << function_name({node.node_template_name, node.id}) << "(pos));";
         }
     }

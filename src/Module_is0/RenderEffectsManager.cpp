@@ -17,21 +17,27 @@ template<typename T>
 static void load_code(std::vector<T>& code, const std::filesystem::directory_entry& entry)
 {
     static_assert(std::is_same_v<T, BaseCode> || std::is_same_v<T, RenderEffect>, "Only BaseCode and RenderEffect are supported");
-    for (const auto& file : std::filesystem::directory_iterator{entry.path()}) {
-        if (file.is_regular_file()) {
-            try {
+    for (const auto& file : std::filesystem::directory_iterator{entry.path()})
+    {
+        if (file.is_regular_file())
+        {
+            try
+            {
                 T params;
-                if constexpr (std::is_same_v<T, BaseCode>) {
+                if constexpr (std::is_same_v<T, BaseCode>)
+                {
                     params.name = file.path().stem().string();
                     parse_base_code(params, Cool::File::to_string(file.path().string()));
                 }
-                else { // T is RenderEffect
+                else
+                { // T is RenderEffect
                     params.base.name = file.path().stem().string();
                     parse_base_code(params.base, Cool::File::to_string(file.path().string()));
                 }
                 code.push_back(params);
             }
-            catch (const std::exception& e) {
+            catch (const std::exception& e)
+            {
                 Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse effect, normal or ray marching from file '{}':\n{}", file.path().string(), e.what());
             }
         }
@@ -41,15 +47,19 @@ static void load_code(std::vector<T>& code, const std::filesystem::directory_ent
 RenderEffects load_effects(std::string_view render_effects_folder_path)
 {
     RenderEffects effects_gestion;
-    for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path}) {
-        if (entry.is_directory()) {
-            if (entry.path().stem() == "Objects" || entry.path().stem() == "PostProcessing") {
+    for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path})
+    {
+        if (entry.is_directory())
+        {
+            if (entry.path().stem() == "Objects" || entry.path().stem() == "PostProcessing")
+            {
                 std::vector<RenderEffect>& effects = entry.path().stem() == "Objects"
                                                          ? effects_gestion.for_objects
                                                          : effects_gestion.post_processing;
                 load_code(effects, entry);
             }
-            else if (entry.path().stem() == "Normals" || entry.path().stem() == "RayMarching" || entry.path().stem() == "Backgrounds") {
+            else if (entry.path().stem() == "Normals" || entry.path().stem() == "RayMarching" || entry.path().stem() == "Backgrounds")
+            {
                 std::vector<BaseCode>& param = entry.path().stem() == "Normals"
                                                    ? effects_gestion.normal
                                                : entry.path().stem() == "RayMarching"
@@ -66,20 +76,26 @@ template<typename T>
 static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> new_code)
 {
     static_assert(std::is_same_v<T, BaseCode> || std::is_same_v<T, RenderEffect>, "Only BaseCode and RenderEffect are supported");
-    for (auto& code : new_code) {
+    for (auto& code : new_code)
+    {
         const auto code_here = std::ranges::find_if(old_code, [&](const T& code_here) {
-            if constexpr (std::is_same_v<T, BaseCode>) {
+            if constexpr (std::is_same_v<T, BaseCode>)
+            {
                 return code_here.name == code.name;
             }
-            else { // T is RenderEffect
+            else // T is RenderEffect
+            {
                 return code_here.base.name == code.base.name;
             }
         });
-        if (code_here != old_code.end()) {
-            if constexpr (std::is_same_v<T, BaseCode>) {
+        if (code_here != old_code.end())
+        {
+            if constexpr (std::is_same_v<T, BaseCode>)
+            {
                 code.parameters = Cool::ParameterU::update_parameters(*code.parameters, code_here->parameters);
             }
-            else { // T is RenderEffect
+            else // T is RenderEffect
+            {
                 code.is_active       = code_here->is_active;
                 code.base.parameters = Cool::ParameterU::update_parameters(*code.base.parameters, code_here->base.parameters);
             }
@@ -93,10 +109,12 @@ static size_t merge_index(const BaseCode& old_parameter, const std::vector<BaseC
     const auto parameter_here = std::ranges::find_if(new_parameters, [&](const BaseCode& parameter_here) {
         return parameter_here.name == old_parameter.name;
     });
-    if (parameter_here != new_parameters.end()) {
+    if (parameter_here != new_parameters.end())
+    {
         return std::distance(new_parameters.begin(), parameter_here);
     }
-    else {
+    else
+    {
         return 0;
     }
 }
@@ -122,13 +140,17 @@ RenderEffects reload_effects(std::string_view render_effects_folder_path, const 
 std::string code_gen_render_effects_extra_code(const RenderEffects& effects)
 {
     std::string code = "";
-    for (const auto& effect : effects.for_objects) {
-        if (effect.is_active) {
+    for (const auto& effect : effects.for_objects)
+    {
+        if (effect.is_active)
+        {
             code += effect.base.extra_code;
         }
     }
-    for (const auto& effect : effects.post_processing) {
-        if (effect.is_active) {
+    for (const auto& effect : effects.post_processing)
+    {
+        if (effect.is_active)
+        {
             code += effect.base.extra_code;
         }
     }
@@ -146,8 +168,10 @@ std::string code_gen_base_code(const BaseCode& base_code)
 std::string code_gen_render_effects(const std::vector<RenderEffect>& render_effects)
 {
     std::string code = "";
-    for (const auto& effect : render_effects) {
-        if (effect.is_active) {
+    for (const auto& effect : render_effects)
+    {
+        if (effect.is_active)
+        {
             code += "{\n";
             code += code_gen_base_code(effect.base);
             code += "}\n";
@@ -180,14 +204,18 @@ bool get_index_imgui(const std::vector<BaseCode>& base_code, size_t& index)
 {
     bool        has_changed         = false;
     const char* combo_preview_value = base_code[index].name.c_str();
-    if (ImGui::BeginCombo("Select", combo_preview_value)) {
-        for (size_t n = 0; n < base_code.size(); n++) {
+    if (ImGui::BeginCombo("Select", combo_preview_value))
+    {
+        for (size_t n = 0; n < base_code.size(); n++)
+        {
             const bool is_selected = (index == n);
-            if (ImGui::Selectable(base_code[n].name.c_str(), is_selected)) {
+            if (ImGui::Selectable(base_code[n].name.c_str(), is_selected))
+            {
                 index       = n;
                 has_changed = true;
             }
-            if (is_selected) {
+            if (is_selected)
+            {
                 ImGui::SetItemDefaultFocus();
             }
         }
@@ -210,11 +238,13 @@ bool effect_imgui_window(RenderEffects& effects)
     ImGui::Begin("Shading");
     effects.bounces_count.imgui({}, [&]() { has_changed = true; });
     ImGui::Separator();
-    for (auto& param : effects.for_objects) {
+    for (auto& param : effects.for_objects)
+    {
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }
-    for (auto& param : effects.post_processing) {
+    for (auto& param : effects.post_processing)
+    {
         has_changed |= effect_imgui(param);
         ImGui::Separator();
     }

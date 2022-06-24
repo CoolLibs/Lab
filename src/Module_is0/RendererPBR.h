@@ -14,9 +14,9 @@ struct LightProperties {
                                             .min_value     = 0.0f,
                                             .max_value     = 1.0f}};
     Cool::Parameter::Vec3  lightDirection{{.name          = "Direction",
-                                          .default_value = glm::vec3(2.0f),
-                                          .min_value     = glm::vec3(-10.0f),
-                                          .max_value     = glm::vec3(10.0f)}};
+                                           .default_value = glm::vec3(2.0f),
+                                           .min_value     = glm::vec3(-10.0f),
+                                           .max_value     = glm::vec3(10.0f)}};
     Cool::Parameter::Color lightColor;
 };
 

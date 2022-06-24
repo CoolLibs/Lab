@@ -10,11 +10,13 @@ static const NodeTemplate& random_node_template(const NodeFactory& factory)
 static const NodeTemplate& random_node_template(const NodeFactory& factory, std::string_view folder)
 {
     const auto range = factory.templates_from_folder(folder);
-    if (range) {
+    if (range)
+    {
         return factory.templates()[Cool::Random::size_type(range->first,
                                                            range->last)];
     }
-    else {
+    else
+    {
         return factory.templates()[0];
     }
 }
@@ -30,17 +32,21 @@ NodeTree merge(const NodeTree& a, const NodeTree& b)
 static NodeTree random_node_tree_impl(const NodeFactory& factory, int depth, int max_depth)
 {
     auto tree = NodeTree{};
-    if (depth <= 0) {
+    if (depth <= 0)
+    {
         tree.nodes.push_back(NodeFactoryU::node_from_template(
             random_node_template(factory, "Shapes")));
     }
-    else {
+    else
+    {
         const auto node = NodeFactoryU::node_from_template(depth == max_depth ? random_node_template(factory, "Booleans")
                                                                               : random_node_template(factory));
         tree.add_node(node);
-        for (const auto& pin : node.input_pins) {
+        for (const auto& pin : node.input_pins)
+        {
             const auto subtree = random_node_tree_impl(factory, depth - 1, max_depth);
-            if (!subtree.nodes.empty()) {
+            if (!subtree.nodes.empty())
+            {
                 tree.add_link({{}, subtree.nodes[0].output_pin.id(), pin.id()});
                 tree = merge(tree, subtree);
             }

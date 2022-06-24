@@ -14,11 +14,12 @@ concept ConcreteReversibleCommand = requires(const T& a, const T& b, CommandExec
     // Has a to_string() method
     {
         a.to_string()
-        } -> std::convertible_to<std::string>;
+        }
+        -> std::convertible_to<std::string>;
     // Has a merge() method
     a.merge(b); // -> std::convertible_to<std::optional<T>> // This convertible_to directive doesn't compile :'(
 
-    //TODO require a serialization function
+    // TODO require a serialization function
 };
 
 } // namespace Lab

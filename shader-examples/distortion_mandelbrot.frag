@@ -37,7 +37,8 @@ void main()
     float m = float(nb_iteration);
     float n = fract(.3 * time_mod / m) * m;
     Z       = C * fract(n);
-    for (int i = 0; i < nb_iteration; i++) {
+    for (int i = 0; i < nb_iteration; i++)
+    {
         if (float(i) > n)
             break;
         Z = vec2(Z.x * Z.x - Z.y * Z.y, 2.0 * Z.x * Z.y) + C;

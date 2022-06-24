@@ -22,7 +22,8 @@ public:
     {
         AllInputRefsToConst inputs;
         inputs.push_back(AnyInputRefToConst{_camera_input});
-        for (const auto& input : _inputs) {
+        for (const auto& input : _inputs)
+        {
             inputs.push_back(
                 std::visit([](auto&& input) { return AnyInputRefToConst{input}; }, input));
         }

@@ -72,13 +72,15 @@ struct ReversibleCommand_SetVariable {
 
     auto merge(const ReversibleCommand_SetVariable<T>& previous) const -> std::optional<ReversibleCommand_SetVariable<T>>
     {
-        if (previous.forward_command.id == forward_command.id) {
+        if (previous.forward_command.id == forward_command.id)
+        {
             return ReversibleCommand_SetVariable<T>{
                 .forward_command = forward_command,
                 .old_value       = previous.old_value,
             };
         }
-        else {
+        else
+        {
             return {};
         }
     };

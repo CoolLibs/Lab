@@ -22,10 +22,12 @@ public:
 
     void imgui_show()
     {
-        for (const auto& text : _texts) {
+        for (const auto& text : _texts)
+        {
             ImGui::Text("%s", text.c_str());
         }
-        if (_should_scroll_down) {
+        if (_should_scroll_down)
+        {
             ImGui::SetScrollHereY(1.f);
             _should_scroll_down = false;
         }
@@ -36,7 +38,8 @@ private:
     {
         _texts.push_back(text);
         _should_scroll_down = true;
-        if (_texts.size() > 100) {
+        if (_texts.size() > 100)
+        {
             _texts.pop_front();
         }
     }
