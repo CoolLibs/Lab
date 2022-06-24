@@ -83,6 +83,7 @@ void App::update()
     if (inputs_are_allowed()) {
         _is0_module->update();
         _custom_shader_module->update();
+        check_inputs();
     }
 #if IS0_TEST_NODES
     glfwSetWindowShouldClose(_main_window.glfw(), true);
@@ -262,6 +263,30 @@ void App::imgui_menus()
     menu_settings();
 }
 
+void App::check_inputs()
+{
+    check_inputs__history();
+}
+
+void App::check_inputs__history()
+{
+    auto        exec = reversible_command_executor_without_history();
+    const auto& io = ImGui::GetIO();
+
+    // Undo
+    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z)) {
+        _history.move_backward(exec);
+        Cool::ParametersHistory::get().move_backward();
+    }
+
+    // Redo
+    if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y)) ||
+        (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z))) {
+        _history.move_forward(exec);
+        Cool::ParametersHistory::get().move_forward();
+    }
+}
+
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
     if (event.action == GLFW_RELEASE) {
@@ -272,17 +297,7 @@ void App::on_keyboard_event(const Cool::KeyboardEvent& event)
             _exporter.video_export_window().open();
         }
     }
-    if (event.action == GLFW_PRESS || event.action == GLFW_REPEAT) {
-        auto exec = reversible_command_executor_without_history();
-        if (Cool::Input::matches_char("z", event.key) && event.mods.ctrl()) {
-            _history.move_backward(exec);
-            Cool::ParametersHistory::get().move_backward();
-        }
-        if (Cool::Input::matches_char("y", event.key) && event.mods.ctrl()) {
-            _history.move_forward(exec);
-            Cool::ParametersHistory::get().move_forward();
-        }
-    }
+
 }
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)

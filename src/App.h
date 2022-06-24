@@ -45,6 +45,9 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_one_module(Module&, Cool::RenderTarget&, float time);
 
+    void check_inputs();
+    void check_inputs__history();
+
     // clang-format off
     auto all_inputs() -> AllInputRefsToConst;
     auto set_dirty_flag                             () { return SetDirtyFlag_Ref{_dirty_registry}; }
