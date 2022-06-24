@@ -132,7 +132,7 @@ void NodeEditor::imgui_window()
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
     {
-        if (ImGui::IsMouseReleased(ImGuiMouseButton_Middle) || _should_open_menu) {
+        if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) || _should_open_menu) {
             _should_open_menu = false;
             ImGui::OpenPopup("_node_templates_list");
             _factory.clear_filter();
