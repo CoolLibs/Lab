@@ -40,8 +40,6 @@ public:
     }
     virtual void imgui_windows(Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
     virtual void update(){};
-    /// Returns true iff the event was used
-    virtual auto on_keyboard_event(const Cool::KeyboardEvent&) -> bool { return false; }
 
     virtual auto all_inputs() const -> AllInputRefsToConst = 0;
 

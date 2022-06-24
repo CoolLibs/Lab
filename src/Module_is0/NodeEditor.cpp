@@ -128,6 +128,7 @@ bool NodeEditor::handle_node_deletion()
 auto NodeEditor::should_open_nodes_menu() -> bool
 {
     return ImGui::IsMouseReleased(ImGuiMouseButton_Right) ||
+           ImGui::IsKeyReleased(ImGuiKey_A) ||
            _should_open_nodes_menu;
 }
 

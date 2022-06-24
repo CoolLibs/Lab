@@ -19,7 +19,6 @@ public:
 
     void                             update() override;
     void                             imgui_windows(Ui_Ref) const override;
-    auto                             on_keyboard_event(const Cool::KeyboardEvent& event) -> bool override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
     std::string                      saving_path_string() const;

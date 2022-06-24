@@ -75,15 +75,6 @@ void Module_is0::imgui_windows(Ui_Ref /*ui*/) const
     _must_recompile |= effect_imgui_window(_effects.render_effects);
 }
 
-auto Module_is0::on_keyboard_event(const Cool::KeyboardEvent& event) -> bool
-{
-    if (event.action == GLFW_PRESS && Cool::Input::matches_char("a", event.key)) {
-        _editor.ask_to_open_nodes_menu();
-        return true;
-    }
-    return false;
-}
-
 std::string Module_is0::saving_path_string() const
 {
     return std::filesystem::weakly_canonical(_folder_path_for_save + "/" + _file_name_for_save + ".is0geometry").string();

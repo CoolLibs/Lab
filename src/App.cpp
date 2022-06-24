@@ -264,8 +264,6 @@ void App::imgui_menus()
 
 void App::on_keyboard_event(const Cool::KeyboardEvent& event)
 {
-    _is0_module->on_keyboard_event(event);
-    _custom_shader_module->on_keyboard_event(event);
     if (event.action == GLFW_RELEASE) {
         if (Cool::Input::matches_char("s", event.key) && event.mods.ctrl()) {
             _exporter.image_export_window().open();
