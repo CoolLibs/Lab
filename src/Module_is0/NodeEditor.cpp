@@ -21,9 +21,9 @@ void NodeEditor::on_tree_change()
     _tree_has_changed = true;
 }
 
-void NodeEditor::open_menu()
+void NodeEditor::ask_to_open_nodes_menu()
 {
-    _should_open_menu = true;
+    _should_open_nodes_menu = true;
 }
 
 bool NodeEditor::wants_to_delete_selection() const
@@ -125,6 +125,20 @@ bool NodeEditor::handle_node_deletion()
     return false;
 }
 
+auto NodeEditor::should_open_nodes_menu() -> bool
+{
+    return ImGui::IsMouseReleased(ImGuiMouseButton_Right) ||
+           _should_open_nodes_menu;
+}
+
+void NodeEditor::open_nodes_menu()
+{
+    _should_open_nodes_menu = false;
+    ImGui::OpenPopup("_node_templates_list");
+    _factory.clear_filter();
+    _next_node_position = ImGui::GetMousePosOnOpeningCurrentPopup();
+}
+
 void NodeEditor::imgui_window()
 {
     ImNodes::SetCurrentContext(&*_context);
@@ -132,11 +146,8 @@ void NodeEditor::imgui_window()
     ImGui::Begin("is0");
     ImNodes::BeginNodeEditor();
     {
-        if (ImGui::IsMouseReleased(ImGuiMouseButton_Right) || _should_open_menu) {
-            _should_open_menu = false;
-            ImGui::OpenPopup("_node_templates_list");
-            _factory.clear_filter();
-            _next_node_position = ImGui::GetMousePosOnOpeningCurrentPopup();
+        if (should_open_nodes_menu()) {
+            open_nodes_menu();
         }
         if (ImGui::BeginPopup("_node_templates_list")) {
             node_tree_has_changed |= imgui_nodes_menu();

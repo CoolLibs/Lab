@@ -78,7 +78,7 @@ void Module_is0::imgui_windows(Ui_Ref /*ui*/) const
 auto Module_is0::on_keyboard_event(const Cool::KeyboardEvent& event) -> bool
 {
     if (event.action == GLFW_PRESS && Cool::Input::matches_char("a", event.key)) {
-        _editor.open_menu();
+        _editor.ask_to_open_nodes_menu();
         return true;
     }
     return false;
