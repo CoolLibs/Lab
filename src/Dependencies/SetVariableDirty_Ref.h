@@ -5,9 +5,9 @@
 
 namespace Lab {
 
-class SetVariableDirty {
+class SetVariableDirty_Ref {
 public:
-    SetVariableDirty(AllInputRefsToConst all_inputs, SetDirtyFlag_Ref set_dirty)
+    SetVariableDirty_Ref(AllInputRefsToConst all_inputs, SetDirtyFlag_Ref set_dirty)
         : _inputs{all_inputs}
         , _set_dirty{set_dirty}
     {

@@ -44,7 +44,7 @@ struct Command_SetVariable {
     {
         return ReversibleCommand_SetVariable<T>{
             .forward_command = *this,
-            .old_value       = ctx.registries.get().get(id)->value, // If the id isn't found in the registry this will crash, but this is what we want because this should never happen: it is a mistake to try to create a command for a variable that doesn't exist
+            .old_value       = ctx.registries().get(id)->value, // If the id isn't found in the registry this will crash, but this is what we want because this should never happen: it is a mistake to try to create a command for a variable that doesn't exist
         };
     }
 };

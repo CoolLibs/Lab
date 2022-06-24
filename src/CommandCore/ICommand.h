@@ -4,7 +4,7 @@
 
 namespace Lab {
 
-struct MakeReversibleCommandContext_Ref;
+class MakeReversibleCommandContext_Ref;
 class CommandExecutionContext_Ref;
 
 class ICommand {

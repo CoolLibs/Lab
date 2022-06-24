@@ -2,15 +2,18 @@
 
 #include <Cool/Camera/Camera.h>
 #include <Cool/Camera/ViewController_Orbital.h>
+#include <Cool/Camera/ViewController_OrbitalU.h>
 #include <Cool/Input/MouseCoordinates.h>
 #include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
+#include "Dependencies/SetVariableDirty_Ref.h"
 #include "Dependencies/VariableId.h"
 #include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
 
 class CommandExecutor_TopLevel_Ref;
+class CommandExecutionContext_Ref;
 
 class CameraManager {
 public:
@@ -30,6 +33,9 @@ public:
     void imgui(std::reference_wrapper<VariableRegistries> registries,
                CommandExecutor_TopLevel_Ref               commander);
 
+    auto get_zoom() const -> float { return _view_controller.get_distance_to_orbit_center(); }
+    void set_zoom(float zoom, CommandExecutionContext_Ref& ctx);
+
 private:
     void maybe_update_camera(std::reference_wrapper<VariableRegistries>,
                              CommandExecutor_TopLevel_Ref,
@@ -38,7 +44,6 @@ private:
 private:
     VariableId<Cool::Camera>     _camera_id;
     Cool::ViewController_Orbital _view_controller;
-    float                        _last_aspect_ratio{};
 
 private:
     // Serialization

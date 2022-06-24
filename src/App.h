@@ -13,6 +13,7 @@
 #include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
+#include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
@@ -51,11 +52,12 @@ private:
     // clang-format off
     auto all_inputs() -> AllInputRefsToConst;
     auto set_dirty_flag                             () { return SetDirtyFlag_Ref{_dirty_registry}; }
-    auto set_variable_dirty                         () { return SetVariableDirty{all_inputs(), set_dirty_flag()}; }
-    auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, set_variable_dirty()}}; }
+    auto set_variable_dirty                         () { return SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
+    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_variable_registries, _camera_manager}}; }
+    auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, _camera_manager, set_variable_dirty()}}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
-    auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, _variable_registries}; }
+    auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, make_reversible_commands_context()}; }
     auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag()}; }
     auto input_provider                             (float render_target_aspect_ratio, float time) { return InputProvider{_variable_registries, render_target_aspect_ratio, time}; }
     auto input_destructor                           () { return InputDestructor_Ref{_variable_registries}; }

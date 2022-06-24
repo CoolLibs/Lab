@@ -12,10 +12,10 @@ class CommandExecutor_TopLevel_Ref {
 public:
     CommandExecutor_TopLevel_Ref(CommandExecutor_WithoutHistory_Ref sub_executor,
                                  History&                           history,
-                                 VariableRegistries&                registries)
+                                 MakeReversibleCommandContext_Ref   make_reversible_commands_context)
         : _sub_executor{sub_executor}
         , _history{history}
-        , _variable_registries{registries}
+        , _make_reversible_commands_context{make_reversible_commands_context}
     {
     }
 
@@ -28,7 +28,7 @@ public:
 
     void execute(const Command& command) const
     {
-        const auto reversible = try_make_reversible(command, {_variable_registries}); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
+        const auto reversible = try_make_reversible(command, _make_reversible_commands_context); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
         _sub_executor.execute(command);
         if (reversible) {
             _history.get().push(*reversible, ReversibleCommandMerger{});
@@ -38,7 +38,7 @@ public:
 private:
     mutable CommandExecutor_WithoutHistory_Ref _sub_executor;
     std::reference_wrapper<History>            _history;
-    std::reference_wrapper<VariableRegistries> _variable_registries;
+    MakeReversibleCommandContext_Ref           _make_reversible_commands_context;
 };
 
 } // namespace Lab

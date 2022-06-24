@@ -1,7 +1,9 @@
 #include "CameraManager.h"
 #include <Cool/Camera/ViewController_OrbitalU.h>
+#include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/CommandExecutor_TopLevel_Ref.h"
 #include "Commands/Command_FinishedEditingVariable.h"
+#include "Commands/Command_SetCameraZoom.h"
 #include "Commands/Command_SetVariable.h"
 
 namespace Lab {
@@ -13,10 +15,14 @@ void CameraManager::hook_events(Cool::MouveEventDispatcher<Cool::ViewCoordinates
     events
         .scroll_event()
         .subscribe([registries, this, executor](const auto& event) {
-            maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
-                return _view_controller.on_wheel_scroll(camera, event.dy);
-            });
-            executor.execute(Command_FinishedEditingVariable{});
+            auto       camera   = registries.get().get(_camera_id)->value;
+            const auto old_zoom = _view_controller.get_distance_to_orbit_center();
+            if (_view_controller.on_wheel_scroll(camera, event.dy)) {
+                const auto zoom = _view_controller.get_distance_to_orbit_center();
+                _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
+                executor.execute(Command_SetCameraZoom{zoom});
+                executor.execute(Command_FinishedEditingVariable{});
+            }
         });
     events
         .drag()
@@ -82,6 +88,16 @@ void CameraManager::maybe_update_camera(
     if (fun(camera)) {
         executor.execute(Command_SetVariable<Cool::Camera>{_camera_id, camera});
     }
+}
+
+void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref& ctx)
+{
+    auto camera = ctx.registries().get(_camera_id)->value;
+    Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, camera, zoom);
+    ctx.registries().with_mutable_ref<Cool::Variable<Cool::Camera>>(_camera_id, [&](Cool::Variable<Cool::Camera>& variable) {
+        variable.value = camera;
+    });
+    ctx.set_dirty(_camera_id);
 }
 
 } // namespace Lab
