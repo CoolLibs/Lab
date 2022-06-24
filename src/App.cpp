@@ -266,6 +266,7 @@ void App::imgui_menus()
 void App::check_inputs()
 {
     check_inputs__history();
+    check_inputs__export_windows();
 }
 
 void App::check_inputs__history()
@@ -287,17 +288,16 @@ void App::check_inputs__history()
     }
 }
 
-void App::on_keyboard_event(const Cool::KeyboardEvent& event)
+void App::check_inputs__export_windows()
 {
-    if (event.action == GLFW_RELEASE) {
-        if (Cool::Input::matches_char("s", event.key) && event.mods.ctrl()) {
-            _exporter.image_export_window().open();
-        }
-        if (Cool::Input::matches_char("e", event.key) && event.mods.ctrl()) {
-            _exporter.video_export_window().open();
-        }
-    }
+    const auto& io = ImGui::GetIO();
 
+    if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl) {
+        _exporter.image_export_window().open();
+    }
+    if (ImGui::IsKeyReleased(ImGuiKey_E) && io.KeyCtrl) {
+        _exporter.video_export_window().open();
+    }
 }
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)

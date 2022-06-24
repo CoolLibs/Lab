@@ -36,7 +36,6 @@ public:
     void imgui_windows() override;
     void imgui_menus() override;
 
-    void on_keyboard_event(const Cool::KeyboardEvent& event) override;
     void on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event) override;
     void on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event) override;
     void on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event) override;
@@ -47,6 +46,7 @@ private:
 
     void check_inputs();
     void check_inputs__history();
+    void check_inputs__export_windows();
 
     // clang-format off
     auto all_inputs() -> AllInputRefsToConst;
