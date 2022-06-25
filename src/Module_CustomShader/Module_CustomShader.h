@@ -56,7 +56,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::base_class<Module>(this),
+            cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
             cereal::make_nvp("Inputs", _inputs),
             cereal::make_nvp("Camera Input", _camera_input),
             cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
