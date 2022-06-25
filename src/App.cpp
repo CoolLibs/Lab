@@ -42,19 +42,6 @@ App::~App()
     // serv::shut_down();
 }
 
-void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
-{
-#if IS0_TEST_NODES
-    render_target.set_size({1, 1});
-#endif
-    render_target.render([&]() {
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        some_module.do_rendering({input_provider(aspect_ratio, time), input_factory(), input_destructor(), dirty_manager()});
-    });
-}
-
 void App::update()
 {
     if (!_exporter.is_exporting())
@@ -138,6 +125,25 @@ static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polar
     exporter.imgui_windows(polaroid, time);
 }
 
+void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
+{
+#if IS0_TEST_NODES
+    render_target.set_size({1, 1});
+#endif
+#if DEBUG
+    if (_log_when_rendering)
+    {
+        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
+    }
+#endif
+    render_target.render([&]() {
+        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
+        some_module.do_rendering({input_provider(aspect_ratio, time), input_factory(), input_destructor(), dirty_manager()});
+    });
+}
+
 void App::render_is0(Cool::RenderTarget& render_target, float time, img::Size size)
 {
     render_target.set_size(size);
@@ -215,18 +221,15 @@ void App::imgui_windows()
             ImGui::Checkbox("Show Demo Window", &_show_imgui_demo);
             ImGui::End();
         }
-        if (_show_imgui_demo)
-        { // Show the big demo window (Most of the sample code is
-            // in ImGui::ShowDemoWindow()! You can browse its code
-            // to learn more about Dear ImGui!).
-            ImGui::ShowDemoWindow(&_show_imgui_demo);
+        if (_show_imgui_demo)                         // Show the big demo window (Most of the sample code is
+        {                                             // in ImGui::ShowDemoWindow()! You can browse its code
+            ImGui::ShowDemoWindow(&_show_imgui_demo); // to learn more about Dear ImGui!).
+        }
+        if (_show_commands_and_registries_debug_windows)
+        {
+            imgui_commands_and_registries_debug_windows();
         }
 #endif
-    }
-
-    if (_show_commands_and_registries_debug_windows)
-    {
-        imgui_commands_and_registries_debug_windows();
     }
 }
 
@@ -251,11 +254,6 @@ void App::menu_windows()
         {
             view.view.imgui_open_close_checkbox();
         }
-#if DEBUG
-        ImGui::Separator();
-        ImGui::Checkbox("Debug", &_show_imgui_debug);
-        ImGui::Checkbox("Debug Commands and Registries", &_show_commands_and_registries_debug_windows);
-#endif
         ImGui::EndMenu();
     }
 }
@@ -286,12 +284,27 @@ void App::menu_settings()
     }
 }
 
+void App::menu_debug()
+{
+#if DEBUG
+    if (ImGui::BeginMenu("Debug"))
+    {
+        ImGui::Checkbox("Debug Window", &_show_imgui_debug);
+        ImGui::Checkbox("Debug Commands and Registries", &_show_commands_and_registries_debug_windows);
+        ImGui::Checkbox("Log when rendering", &_log_when_rendering);
+
+        ImGui::EndMenu();
+    }
+#endif
+}
+
 void App::imgui_menus()
 {
     menu_preview();
     menu_windows();
     menu_export();
     menu_settings();
+    menu_debug();
 }
 
 void App::check_inputs()

@@ -74,6 +74,7 @@ private:
     void menu_windows();
     void menu_export();
     void menu_settings();
+    void menu_debug();
 
     void imgui_commands_and_registries_debug_windows();
 
@@ -108,6 +109,7 @@ private:
     bool _show_imgui_debug                           = true;
     bool _show_imgui_demo                            = false;
     bool _show_commands_and_registries_debug_windows = false;
+    bool _log_when_rendering                         = false;
 #endif
 
 private:
