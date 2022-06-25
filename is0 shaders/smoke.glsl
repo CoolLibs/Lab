@@ -54,7 +54,8 @@ float fbm(vec3 x, float H)
     float f = 1.0;
     float a = 1.0;
     float t = 0.0;
-    for (int i = 0; i < NUM_OCTAVES; i++) {
+    for (int i = 0; i < NUM_OCTAVES; i++)
+    {
         t += a * noise(f * x);
         f *= 2.0;
         a *= G;

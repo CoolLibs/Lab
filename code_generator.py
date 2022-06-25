@@ -56,8 +56,8 @@ def all_variable_types():
 
 def all_variable_includes():
     return f"""
-#include <Cool/Variables/Variables.h>
 #include <Cool/Camera/Camera.h>
+#include <Cool/Variables/Variables.h>
 """
 
 
@@ -72,11 +72,13 @@ def register_set_variable_commands():
 {reversible_commands}
 """
 
+
 def register_set_variable_metadata_commands():
     commands = "\n"
     for variable_type in all_variable_types():
         commands += f"LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<{variable_type}>)\n"
     return commands
+
 
 def VariableRegistries():
     return "\n" + "using VariableRegistries = reg::Registries<\n" + ",\n".join(
