@@ -138,13 +138,23 @@ static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polar
     exporter.imgui_windows(polaroid, time);
 }
 
-void App::render(Cool::RenderTarget& render_target, float time)
+void App::render_is0(Cool::RenderTarget& render_target, float time, img::Size size)
 {
-    _is0_view.render_target.set_size(render_target.desired_size());
-    render_one_module(*_is0_module, _is0_view.render_target, time);
+    render_target.set_size(size);
+    render_one_module(*_is0_module, render_target, time);
+}
+
+void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
+{
     _custom_shader_module->set_image_in_shader("_image", 0, _is0_view.render_target.get().texture_id());
     _custom_shader_module->set_image_in_shader("_texture", 1, _texture.ID());
     render_one_module(*_custom_shader_module, render_target, time);
+}
+
+void App::render(Cool::RenderTarget& render_target, float time)
+{
+    render_is0(_is0_view.render_target, time, render_target.desired_size());
+    render_custom_shader(render_target, time);
 }
 
 void App::imgui_commands_and_registries_debug_windows()

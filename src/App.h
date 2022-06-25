@@ -44,6 +44,8 @@ public:
 private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_one_module(Module&, Cool::RenderTarget&, float time);
+    void render_is0(Cool::RenderTarget& render_target, float time, img::Size size);
+    void render_custom_shader(Cool::RenderTarget& render_target, float time);
 
     void check_inputs();
     void check_inputs__history();
