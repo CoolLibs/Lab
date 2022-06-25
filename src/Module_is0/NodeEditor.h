@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/Path/Path.h>
+#include <imnodes/imnodes_internal.h>
 #include "NodeFactory.h"
 #include "NodeTree.h"
 #include "UniqueImNodeContext.h"
@@ -29,13 +30,13 @@ private:
     bool handle_node_deletion();
 
 private:
-    UniqueImNodeContext _context;
-    NodeFactory         _factory;
-    NodeTree            _tree;
-    bool                _all_nodes_have_a_valid_template = true;
-    bool                _tree_has_changed                = true;
-    bool                _should_open_nodes_menu          = false;
-    ImVec2              _next_node_position              = {0.f, 0.f};
+    mutable UniqueImNodeContext _context;
+    NodeFactory                 _factory;
+    NodeTree                    _tree;
+    bool                        _all_nodes_have_a_valid_template = true;
+    bool                        _tree_has_changed                = true;
+    bool                        _should_open_nodes_menu          = false;
+    ImVec2                      _next_node_position              = {0.f, 0.f};
 
 private:
     // Serialization
@@ -43,6 +44,7 @@ private:
     template<class Archive>
     void save(Archive& archive) const
     {
+        ImNodes::SetCurrentContext(&*_context);
         archive(
             cereal::make_nvp("Node Tree", _tree),
             cereal::make_nvp("Editor State", std::string{ImNodes::SaveCurrentEditorStateToIniString()})
@@ -56,6 +58,7 @@ private:
             _tree,
             editor_state
         );
+        ImNodes::SetCurrentContext(&*_context);
         ImNodes::LoadCurrentEditorStateFromIniString(editor_state.c_str(), editor_state.size());
         update_templates_and_nodes();
     }
