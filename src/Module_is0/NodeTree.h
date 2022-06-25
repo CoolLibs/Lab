@@ -30,8 +30,10 @@ private:
     {
         try
         {
-            archive(cereal::make_nvp("Nodes", nodes),
-                    cereal::make_nvp("Links", links));
+            archive(
+                cereal::make_nvp("Nodes", nodes),
+                cereal::make_nvp("Links", links)
+            );
         }
         catch (const std::exception&)
         {

@@ -71,10 +71,12 @@ void Module_CustomShader::render(RenderParams in)
     in.dirty_manager.set_clean(dirty_flag());
 }
 
-void Module_CustomShader::refresh_pipeline_if_necessary(InputProvider       provider,
-                                                        DirtyManager        dirty_manager,
-                                                        InputFactory_Ref    input_factory,
-                                                        InputDestructor_Ref input_destructor)
+void Module_CustomShader::refresh_pipeline_if_necessary(
+    InputProvider       provider,
+    DirtyManager        dirty_manager,
+    InputFactory_Ref    input_factory,
+    InputDestructor_Ref input_destructor
+)
 {
     if (dirty_manager.is_dirty(_shader_is_dirty))
     {
@@ -113,7 +115,8 @@ static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>&
 static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<AnyInput>& old_inputs,
     std::vector<AnyInput>& new_inputs,
-    InputDestructor_Ref    destroy)
+    InputDestructor_Ref    destroy
+)
 {
     for (auto& input : old_inputs)
     {
@@ -184,9 +187,11 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
     return new_inputs;
 }
 
-void Module_CustomShader::parse_shader_for_params(std::string_view    source_code,
-                                                  InputFactory_Ref    input_factory,
-                                                  InputDestructor_Ref input_destructor)
+void Module_CustomShader::parse_shader_for_params(
+    std::string_view    source_code,
+    InputFactory_Ref    input_factory,
+    InputDestructor_Ref input_destructor
+)
 {
     auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);

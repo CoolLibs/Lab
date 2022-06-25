@@ -78,8 +78,10 @@ bool NodeEditor::handle_link_creation()
     if (ImNodes::IsLinkCreated(&from_pin_id, &to_pin_id))
     {
         _tree.delete_link_going_to(PinId{to_pin_id});
-        _tree.add_link(Link{.from_pin_id = PinId{from_pin_id},
-                            .to_pin_id   = PinId{to_pin_id}});
+        _tree.add_link(Link{
+            .from_pin_id = PinId{from_pin_id},
+            .to_pin_id   = PinId{to_pin_id},
+        });
         return true;
     }
     return false;

@@ -25,7 +25,8 @@ public:
         for (const auto& input : _inputs)
         {
             inputs.push_back(
-                std::visit([](auto&& input) { return AnyInputRefToConst{input}; }, input));
+                std::visit([](auto&& input) { return AnyInputRefToConst{input}; }, input)
+            );
         }
         return inputs;
     }
@@ -54,11 +55,13 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::base_class<Module>(this),
-                _inputs,
-                _camera_input,
-                _shader_is_dirty,
-                _file);
+        archive(
+            cereal::base_class<Module>(this),
+            cereal::make_nvp("Inputs", _inputs),
+            cereal::make_nvp("Camera Input", _camera_input),
+            cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
+            cereal::make_nvp("File", _file)
+        );
     }
 };
 

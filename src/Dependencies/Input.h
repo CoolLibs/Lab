@@ -46,10 +46,12 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Name", _name),
-                cereal::make_nvp("Default Variable ID", _default_variable_id),
-                cereal::make_nvp("Current Variable ID", _current_variable_id),
-                cereal::make_nvp("Dirty Flag", _dirty_flag));
+        archive(
+            cereal::make_nvp("Name", _name),
+            cereal::make_nvp("Default Variable ID", _default_variable_id),
+            cereal::make_nvp("Current Variable ID", _current_variable_id),
+            cereal::make_nvp("Dirty Flag", _dirty_flag)
+        );
     }
 };
 
@@ -67,7 +69,8 @@ public:
             {.on_file_changed = [&](std::string_view) { set_dirty(_dirty_flag); },
              .on_path_invalid = [](std::string_view path) {
                  Cool::Log::ToUser::error("Input File", "Invalid path: \"{}\"", path);
-             }});
+             }}
+        );
     }
 
 private:
@@ -82,15 +85,19 @@ private:
     template<class Archive>
     void save(Archive& archive) const
     {
-        archive(cereal::make_nvp("File Path", file_watcher.path().string()),
-                _dirty_flag);
+        archive(
+            cereal::make_nvp("File Path", file_watcher.path().string()),
+            _dirty_flag
+        );
     }
     template<class Archive>
     void load(Archive& archive)
     {
         std::string path;
-        archive(path,
-                _dirty_flag);
+        archive(
+            path,
+            _dirty_flag
+        );
         file_watcher.set_path(path);
     }
 };

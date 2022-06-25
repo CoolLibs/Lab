@@ -81,9 +81,10 @@ private:
     template<typename Event>
     Cool::ViewEvent<Event> view_event(const Event& event, const Cool::RenderableView& view)
     {
-        return {event,
-                _main_window.glfw(),
-                {view.render_target.current_size()}};
+        return {
+            event,
+            _main_window.glfw(),
+            {view.render_target.current_size()}};
     }
 
 private:
@@ -118,12 +119,14 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Variable Registries", _variable_registries),
-                cereal::make_nvp("Dirty Registry", _dirty_registry),
-                cereal::make_nvp("History", _history),
-                cereal::make_nvp("is0 Module", _is0_module),
-                cereal::make_nvp("Custom Shader Module", _custom_shader_module),
-                cereal::make_nvp("Camera Manager", _camera_manager));
+        archive(
+            cereal::make_nvp("Variable Registries", _variable_registries),
+            cereal::make_nvp("Dirty Registry", _dirty_registry),
+            cereal::make_nvp("History", _history),
+            cereal::make_nvp("is0 Module", _is0_module),
+            cereal::make_nvp("Custom Shader Module", _custom_shader_module),
+            cereal::make_nvp("Camera Manager", _camera_manager)
+        );
     }
 #if !IS0_TEST_NODES
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive

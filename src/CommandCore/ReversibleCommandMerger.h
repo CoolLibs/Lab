@@ -6,8 +6,10 @@ namespace Lab {
 
 class ReversibleCommandMerger {
 public:
-    static auto merge(const ReversibleCommand& prev,
-                      const ReversibleCommand& curr)
+    static auto merge(
+        const ReversibleCommand& prev,
+        const ReversibleCommand& curr
+    )
         -> std::optional<ReversibleCommand>
     {
         return curr->merge(*prev);

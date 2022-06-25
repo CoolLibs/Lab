@@ -13,9 +13,11 @@ namespace Lab {
 
 class Ui_Ref {
 public:
-    Ui_Ref(VariableRegistries&          registries,
-           CommandExecutor_TopLevel_Ref command_executor,
-           SetDirtyFlag_Ref             set_dirty)
+    Ui_Ref(
+        VariableRegistries&          registries,
+        CommandExecutor_TopLevel_Ref command_executor,
+        SetDirtyFlag_Ref             set_dirty
+    )
         : _variable_registries{registries}
         , _command_executor{command_executor}
         , _set_dirty{set_dirty}
@@ -73,20 +75,25 @@ private:
     template<typename T>
     void widget(const VariableId<T>& id, Cool::Variable<T> variable)
     {
-        Cool::imgui(variable,
-                    {.on_value_changed =
-                         [&]() { _command_executor.execute(
-                                     Command_SetVariable<T>{.id    = id,
-                                                            .value = variable.value}); },
-                     .on_metadata_changed =
-                         [&]() { _command_executor.execute(
-                                     Command_SetVariableMetadata<T>{.id       = id,
-                                                                    .metadata = variable.metadata}); },
-                     .on_value_editing_finished =
-                         [&]() {
-                             _command_executor.execute(
-                                 Command_FinishedEditingVariable{});
-                         }});
+        Cool::imgui(
+            variable,
+            {
+                .on_value_changed =
+                    [&]() { _command_executor.execute(
+                                Command_SetVariable<T>{.id = id, .value = variable.value}
+                            ); },
+
+                .on_metadata_changed =
+                    [&]() { _command_executor.execute(
+                                Command_SetVariableMetadata<T>{.id = id, .metadata = variable.metadata}
+                            ); },
+
+                .on_value_editing_finished =
+                    [&]() { _command_executor.execute(
+                                Command_FinishedEditingVariable{}
+                            ); },
+            }
+        );
     }
 
 private:

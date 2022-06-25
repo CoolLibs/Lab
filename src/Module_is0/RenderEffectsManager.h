@@ -24,14 +24,16 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Objects", for_objects),
-                cereal::make_nvp("PostProcessing", post_processing),
-                cereal::make_nvp("Normal", normal),
-                cereal::make_nvp("RayMarcher", ray_marching),
-                cereal::make_nvp("Background", background),
-                cereal::make_nvp("NormalIndex", normal_index),
-                cereal::make_nvp("RayIndex", ray_index),
-                cereal::make_nvp("BackgroundIndex", background_index));
+        archive(
+            cereal::make_nvp("Objects", for_objects),
+            cereal::make_nvp("PostProcessing", post_processing),
+            cereal::make_nvp("Normal", normal),
+            cereal::make_nvp("RayMarcher", ray_marching),
+            cereal::make_nvp("Background", background),
+            cereal::make_nvp("NormalIndex", normal_index),
+            cereal::make_nvp("RayIndex", ray_index),
+            cereal::make_nvp("BackgroundIndex", background_index)
+        );
     }
 };
 

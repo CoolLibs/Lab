@@ -66,13 +66,15 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::base_class<Module>(this),
-                cereal::make_nvp("Node Editor", _editor),
-                cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
-                cereal::make_nvp("File Name For Save", _file_name_for_save),
-                cereal::make_nvp("Render Effects Manager", _effects),
-                cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
-                cereal::make_nvp("Camera Input", _camera_input));
+        archive(
+            cereal::base_class<Module>(this),
+            cereal::make_nvp("Node Editor", _editor),
+            cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
+            cereal::make_nvp("File Name For Save", _file_name_for_save),
+            cereal::make_nvp("Render Effects Manager", _effects),
+            cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
+            cereal::make_nvp("Camera Input", _camera_input)
+        );
     }
 };
 

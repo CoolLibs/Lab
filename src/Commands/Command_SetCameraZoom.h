@@ -61,8 +61,10 @@ void serialize(Archive& archive, Lab::Command_SetCameraZoom& command)
 template<class Archive>
 void serialize(Archive& archive, Lab::ReversibleCommand_SetCameraZoom& command)
 {
-    archive(cereal::make_nvp("Zoom", command.forward_command.value),
-            cereal::make_nvp("Old Zoom", command.old_value));
+    archive(
+        cereal::make_nvp("Zoom", command.forward_command.value),
+        cereal::make_nvp("Old Zoom", command.old_value)
+    );
 }
 
 } // namespace cereal

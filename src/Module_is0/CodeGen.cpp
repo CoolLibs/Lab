@@ -82,12 +82,14 @@ void main() {
     )";
 }
 
-static std::string function_definition_recursive(int              max_recursions,
-                                                 std::string_view return_type,
-                                                 std::string_view name,
-                                                 std::string_view parameters,
-                                                 std::string_view body,
-                                                 std::string_view default_body)
+static std::string function_definition_recursive(
+    int              max_recursions,
+    std::string_view return_type,
+    std::string_view name,
+    std::string_view parameters,
+    std::string_view body,
+    std::string_view default_body
+)
 {
     assert(max_recursions >= 0);
     std::stringstream ss{};
@@ -133,7 +135,8 @@ static auto compute_sdf_identifiers(const Node& node, const NodeTemplate& node_t
         const Node* input_node = node_tree.find_input_node(node.input_pins[i]);
         sdf_identifiers.push_back(std::make_pair(
             node_template.sdf_identifiers[i],
-            input_node ? function_name({input_node->node_template_name, input_node->id}) : "is0_default_sdf"s));
+            input_node ? function_name({input_node->node_template_name, input_node->id}) : "is0_default_sdf"s
+        ));
     }
     return sdf_identifiers;
 }
@@ -150,7 +153,8 @@ static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) ->
     return std::accumulate(
         node_templates.begin(), node_templates.end(), std::string{}, [](const std::string& acc, const NodeTemplate& node_template) {
             return acc + node_template.extra_code;
-        });
+        }
+    );
 }
 
 std::string full_shader_code(const NodeTree& node_tree, const std::vector<NodeTemplate>& node_templates, const RenderEffects& effects)
@@ -183,16 +187,22 @@ std::string main_sdf(const NodeTree& node_tree, const std::vector<NodeTemplate>&
     for (const auto& node : node_tree.nodes)
     {
         const auto& node_template       = find_node_template(node, node_templates);
-        const auto  fn_signature_params = FnSignatureParams{.fn_name_params = FnNameParams{
-                                                                .node_template_name = node.node_template_name,
-                                                                .node_id            = node.id},
-                                                            .sdf_param_declaration = node_template.vec3_input_declaration};
+        const auto  fn_signature_params = FnSignatureParams{
+             .fn_name_params = FnNameParams{
+                 .node_template_name = node.node_template_name,
+                 .node_id            = node.id,
+            },
+             .sdf_param_declaration = node_template.vec3_input_declaration,
+        };
         declarations << function_declaration(fn_signature_params) << '\n';
         definitions << function_definition(FnDefinitionParams{
             .fn_signature_params = fn_signature_params,
-            .body                = function_body(node.parameter_list,
-                                                 node_template.code_template,
-                                                 compute_sdf_identifiers(node, node_template, node_tree))});
+            .body                = function_body(
+                               node.parameter_list,
+                               node_template.code_template,
+                               compute_sdf_identifiers(node, node_template, node_tree)
+                           ),
+        });
         definitions << "\n\n";
         if (node_tree.has_no_successor(node))
         {

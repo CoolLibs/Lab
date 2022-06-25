@@ -14,8 +14,10 @@ namespace Lab {
 
 class CommandExecutor_WithoutHistory_Ref {
 public:
-    explicit CommandExecutor_WithoutHistory_Ref(CommandExecutionContext_Ref context,
-                                                CommandLogger&              command_logger)
+    explicit CommandExecutor_WithoutHistory_Ref(
+        CommandExecutionContext_Ref context,
+        CommandLogger&              command_logger
+    )
         : _context{context}
         , _command_logger{command_logger}
     {
@@ -40,8 +42,10 @@ private:
 
 class ReversibleCommandExecutor_WithoutHistory_Ref {
 public:
-    explicit ReversibleCommandExecutor_WithoutHistory_Ref(CommandExecutionContext_Ref context,
-                                                          CommandLogger&              command_logger)
+    explicit ReversibleCommandExecutor_WithoutHistory_Ref(
+        CommandExecutionContext_Ref context,
+        CommandLogger&              command_logger
+    )
         : _context{context}
         , _command_logger{command_logger}
     {

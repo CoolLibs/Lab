@@ -3,8 +3,7 @@
 
 static const NodeTemplate& random_node_template(const NodeFactory& factory)
 {
-    return factory.templates()[Cool::Random::size_type(0,
-                                                       factory.templates().size() - 1)];
+    return factory.templates()[Cool::Random::size_type(0, factory.templates().size() - 1)];
 }
 
 static const NodeTemplate& random_node_template(const NodeFactory& factory, std::string_view folder)
@@ -12,8 +11,10 @@ static const NodeTemplate& random_node_template(const NodeFactory& factory, std:
     const auto range = factory.templates_from_folder(folder);
     if (range)
     {
-        return factory.templates()[Cool::Random::size_type(range->first,
-                                                           range->last)];
+        return factory.templates()[Cool::Random::size_type(
+            range->first,
+            range->last
+        )];
     }
     else
     {
@@ -35,12 +36,16 @@ static NodeTree random_node_tree_impl(const NodeFactory& factory, int depth, int
     if (depth <= 0)
     {
         tree.nodes.push_back(NodeFactoryU::node_from_template(
-            random_node_template(factory, "Shapes")));
+            random_node_template(factory, "Shapes")
+        ));
     }
     else
     {
-        const auto node = NodeFactoryU::node_from_template(depth == max_depth ? random_node_template(factory, "Booleans")
-                                                                              : random_node_template(factory));
+        const auto node = NodeFactoryU::node_from_template(
+            depth == max_depth
+                ? random_node_template(factory, "Booleans")
+                : random_node_template(factory)
+        );
         tree.add_node(node);
         for (const auto& pin : node.input_pins)
         {

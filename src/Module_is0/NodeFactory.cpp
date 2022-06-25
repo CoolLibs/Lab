@@ -82,7 +82,8 @@ std::optional<Node> NodeFactory::imgui()
             }
         }
         for_each_node_template([&](const NodeTemplate& node_template) {
-            if (ImGui::Selectable(node_template.name.c_str())) {
+            if (ImGui::Selectable(node_template.name.c_str()))
+            {
                 select_node_template(node_template);
             } }, [&](const NodeTemplatesFolder& folder) { return _filter.PassFilter(folder.name.c_str()); });
     }
@@ -92,9 +93,11 @@ std::optional<Node> NodeFactory::imgui()
 
 Node NodeFactoryU::node_from_template(const NodeTemplate& node_template)
 {
-    return Node{.node_template_name = node_template.name,
-                .parameter_list     = Cool::ParameterList(node_template.parameters),
-                .input_pins         = std::vector<PinSdfIn>(node_template.sdf_identifiers.size())};
+    return Node{
+        .node_template_name = node_template.name,
+        .parameter_list     = Cool::ParameterList(node_template.parameters),
+        .input_pins         = std::vector<PinSdfIn>(node_template.sdf_identifiers.size()),
+    };
 }
 
 void NodeFactory::reload_templates()
@@ -135,8 +138,10 @@ std::optional<FolderRange> NodeFactory::templates_from_folder(std::string_view f
     {
         if (folder.name == folder_name)
         {
-            return FolderRange{first,
-                               first + folder.nodes_count - 1};
+            return FolderRange{
+                first,
+                first + folder.nodes_count - 1,
+            };
         }
         else
         {

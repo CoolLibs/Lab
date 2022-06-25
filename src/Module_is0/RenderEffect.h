@@ -11,7 +11,9 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Effect", base),
-                cereal::make_nvp("Enabled", is_active));
+        archive(
+            cereal::make_nvp("Effect", base),
+            cereal::make_nvp("Enabled", is_active)
+        );
     }
 };

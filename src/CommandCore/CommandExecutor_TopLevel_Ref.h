@@ -10,9 +10,11 @@ namespace Lab {
 
 class CommandExecutor_TopLevel_Ref {
 public:
-    CommandExecutor_TopLevel_Ref(CommandExecutor_WithoutHistory_Ref sub_executor,
-                                 History&                           history,
-                                 MakeReversibleCommandContext_Ref   make_reversible_commands_context)
+    CommandExecutor_TopLevel_Ref(
+        CommandExecutor_WithoutHistory_Ref sub_executor,
+        History&                           history,
+        MakeReversibleCommandContext_Ref   make_reversible_commands_context
+    )
         : _sub_executor{sub_executor}
         , _history{history}
         , _make_reversible_commands_context{make_reversible_commands_context}

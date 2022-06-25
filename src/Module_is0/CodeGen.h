@@ -33,9 +33,11 @@ std::string function_name(const FnNameParams& p);
 std::string function_signature(const FnSignatureParams& p);
 std::string function_declaration(const FnSignatureParams& p);
 std::string function_definition(const FnDefinitionParams& p);
-std::string function_body(const Cool::ParameterList&                              list,
-                          const std::string&                                      code_template,
-                          const std::vector<std::pair<std::string, std::string>>& sdf_identifiers);
+std::string function_body(
+    const Cool::ParameterList&                              list,
+    const std::string&                                      code_template,
+    const std::vector<std::pair<std::string, std::string>>& sdf_identifiers
+);
 
 std::string parameters_definitions(const Cool::ParameterList& list);
 std::string parameter_definition_any(const Cool::Parameter::Any& param);
@@ -54,12 +56,9 @@ TEST_CASE("[is0::CodeGen] Function generation")
 {
     // Given
     const auto name              = std::string{"my_sdf"};
-    const auto name_params       = CodeGen::FnNameParams{name,
-                                                   NodeId{42}};
-    const auto signature_params  = CodeGen::FnSignatureParams{name_params,
-                                                             "(vec3 pos)"};
-    const auto definition_params = CodeGen::FnDefinitionParams{signature_params,
-                                                               "{ return 1.; }"};
+    const auto name_params       = CodeGen::FnNameParams{name, NodeId{42}};
+    const auto signature_params  = CodeGen::FnSignatureParams{name_params, "(vec3 pos)"};
+    const auto definition_params = CodeGen::FnDefinitionParams{signature_params, "{ return 1.; }"};
     // Then
     CHECK(CodeGen::function_name(name_params) == "my_sdf42");
     CHECK(CodeGen::function_signature(signature_params) == "float my_sdf42(vec3 pos)");

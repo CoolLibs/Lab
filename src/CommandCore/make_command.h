@@ -23,7 +23,8 @@ template<ConcreteCommand ConcreteCommandT>
 auto make_command(ConcreteCommandT&& concrete_command) -> Command
 {
     return std::make_shared<PolymorphicCommand<ConcreteCommandT>>(
-        std::forward<ConcreteCommandT>(concrete_command));
+        std::forward<ConcreteCommandT>(concrete_command)
+    );
 }
 
 } // namespace Lab

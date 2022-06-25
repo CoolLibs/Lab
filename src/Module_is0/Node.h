@@ -16,10 +16,12 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Id", id),
-                cereal::make_nvp("Node Template", node_template_name),
-                cereal::make_nvp("Parameters", parameter_list),
-                cereal::make_nvp("Input pins", input_pins),
-                cereal::make_nvp("Output pin", output_pin));
+        archive(
+            cereal::make_nvp("Id", id),
+            cereal::make_nvp("Node Template", node_template_name),
+            cereal::make_nvp("Parameters", parameter_list),
+            cereal::make_nvp("Input pins", input_pins),
+            cereal::make_nvp("Output pin", output_pin)
+        );
     }
 };
