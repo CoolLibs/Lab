@@ -7,7 +7,7 @@
 namespace Lab {
 
 Module_is0::Module_is0(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
-    : Module{dirty_flag_factory}
+    : Module{"is0", dirty_flag_factory}
     , _shader_is_dirty{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
 {

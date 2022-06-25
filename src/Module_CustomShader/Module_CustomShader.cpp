@@ -8,7 +8,7 @@
 namespace Lab {
 
 Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
-    : Module{dirty_flag_factory}
+    : Module{"Custom Shader", dirty_flag_factory}
     , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
     , _shader_is_dirty{dirty_flag_factory.make()}
     , _file{_shader_is_dirty}

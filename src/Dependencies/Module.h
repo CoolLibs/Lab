@@ -26,12 +26,15 @@ public:
     };
 
     Module() = default;
-    explicit Module(DirtyFlagFactory_Ref dirty_flag_factory)
-        : _dirty_flag{dirty_flag_factory.make()}
+    Module(std::string_view name, DirtyFlagFactory_Ref dirty_flag_factory)
+        : _name{name}
+        , _dirty_flag{dirty_flag_factory.make()}
     {
     }
 
     virtual ~Module() = default;
+
+    auto name() const -> const std::string& { return _name; }
 
     void do_rendering(RenderParams params)
     {
@@ -54,14 +57,18 @@ protected:
     virtual void render(RenderParams) = 0;
 
 private:
-    DirtyFlag _dirty_flag;
+    std::string _name;
+    DirtyFlag   _dirty_flag;
 
 private:
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
-        archive(cereal::make_nvp("Dirty Flag", _dirty_flag));
+        archive(
+            cereal::make_nvp("Name", _name),
+            cereal::make_nvp("Dirty Flag", _dirty_flag)
+        );
     }
 };
 
