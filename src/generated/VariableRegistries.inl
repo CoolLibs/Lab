@@ -11,5 +11,6 @@ using VariableRegistries = reg::Registries<
     Cool::Variable<glm::vec2>,
     Cool::Variable<glm::vec3>,
     Cool::Variable<Cool::Color>,
-    Cool::Variable<Cool::Camera>
+    Cool::Variable<Cool::Camera>,
+    Cool::Variable<Cool::Angle>
 >;

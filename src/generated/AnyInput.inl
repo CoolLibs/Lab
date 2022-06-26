@@ -11,5 +11,6 @@ using AnyInput = std::variant<
     Input<glm::vec2>,
     Input<glm::vec3>,
     Input<Cool::Color>,
-    Input<Cool::Camera>
+    Input<Cool::Camera>,
+    Input<Cool::Angle>
 >;
