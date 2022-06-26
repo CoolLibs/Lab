@@ -23,7 +23,7 @@ public:
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
     std::string                      saving_path_string() const;
     auto                             all_inputs() const -> AllInputRefsToConst override;
-    auto                             is_dirty(DirtyManager dirty_manager) const -> bool override;
+    auto                             is_dirty(DirtyManager_Ref dirty_manager) const -> bool override;
 
 protected:
     void render(RenderParams) override;

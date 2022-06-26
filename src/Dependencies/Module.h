@@ -6,7 +6,7 @@
 #include "Dependencies/History.h"
 #include "Dependencies/Input.h"
 #include "Dependencies/InputFactory_Ref.h"
-#include "Dependencies/InputProvider.h"
+#include "Dependencies/InputProvider_Ref.h"
 #include "Dependencies/Ui.h"
 
 namespace Lab {
@@ -19,10 +19,10 @@ namespace Lab {
 class Module {
 public:
     struct RenderParams {
-        InputProvider       provider;
+        InputProvider_Ref   provider;
         InputFactory_Ref    input_factory;
         InputDestructor_Ref input_destructor;
-        DirtyManager        dirty_manager;
+        DirtyManager_Ref    dirty_manager;
     };
 
     Module() = default;
@@ -46,7 +46,7 @@ public:
 
     virtual auto all_inputs() const -> AllInputRefsToConst = 0;
 
-    virtual auto is_dirty(DirtyManager dirty_manager) const -> bool // TODO No need for the whole DirtyManager, just DirtyChecker
+    virtual auto is_dirty(DirtyManager_Ref dirty_manager) const -> bool // TODO No need for the whole DirtyManager_Ref, just DirtyChecker
     {
         return dirty_manager.is_dirty(_dirty_flag);
     };

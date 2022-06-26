@@ -33,7 +33,7 @@ private:
     }
 
 private:
-    friend class InputProvider;
+    friend class InputProvider_Ref;
     friend class Ui_Ref;
     friend class InputDestructor_Ref;
     DirtyFlag     _dirty_flag;
@@ -75,7 +75,7 @@ public:
 
 private:
     friend class Ui_Ref;
-    friend class InputProvider;
+    friend class InputProvider_Ref;
     friend class InputDestructor_Ref;
     Cool::FileWatcher file_watcher{};
     DirtyFlag         _dirty_flag;

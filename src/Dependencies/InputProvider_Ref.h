@@ -5,9 +5,9 @@
 
 namespace Lab {
 
-class InputProvider {
+class InputProvider_Ref {
 public:
-    InputProvider(const VariableRegistries& registries, float render_target_aspect_ratio, float time)
+    InputProvider_Ref(const VariableRegistries& registries, float render_target_aspect_ratio, float time)
         : _variable_registries{registries}
         , _render_target_aspect_ratio{render_target_aspect_ratio}
         , _time{time}

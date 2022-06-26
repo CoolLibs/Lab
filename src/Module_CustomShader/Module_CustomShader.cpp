@@ -72,8 +72,8 @@ void Module_CustomShader::render(RenderParams in)
 }
 
 void Module_CustomShader::refresh_pipeline_if_necessary(
-    InputProvider       provider,
-    DirtyManager        dirty_manager,
+    InputProvider_Ref   provider,
+    DirtyManager_Ref    dirty_manager,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor
 )
