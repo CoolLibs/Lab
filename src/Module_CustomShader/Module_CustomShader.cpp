@@ -205,6 +205,8 @@ void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, G
         _fullscreen_pipeline.shader()->bind();
         glpp::active_texture(slot);
         glpp::bind_texture<glpp::TextureKind::Tex2D>(texture_id);
+        glpp::set_minification_filter<glpp::TextureKind::Tex2D>(texture_id, glpp::Interpolation::LinearMipmapLinear); // TODO do this only once at texture creation, and only if the curent custom shader needs it
+        glpp::generate_mipmap<glpp::TextureKind::Tex2D>();                                                            // TODO DO this only when the texture changes (aka the corresponsing module gets re-rendered)
         _fullscreen_pipeline.shader()->set_uniform(name, slot);
     }
 }
