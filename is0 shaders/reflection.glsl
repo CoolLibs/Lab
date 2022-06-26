@@ -12,19 +12,22 @@ vec3  refraction_out = vec3(0);
 float abb            = .01;
 // Red
 refraction_out = refract(refraction_in, norm_exit, IOR - abb);
-if (dot(refraction_out, refraction_out) == 0.) {
+if (dot(refraction_out, refraction_out) == 0.)
+{
     refraction_out = reflect(refraction_in, norm_exit);
 }
 reflect_text.r = refraction_out.r;
 // Green
 refraction_out = refract(refraction_in, norm_exit, IOR);
-if (dot(refraction_out, refraction_out) == 0.) {
+if (dot(refraction_out, refraction_out) == 0.)
+{
     refraction_out = reflect(refraction_in, norm_exit);
 }
 reflect_text.g = refraction_out.g;
 // Blue
 refraction_out = refract(refraction_in, norm_exit, IOR + abb);
-if (dot(refraction_out, refraction_out) == 0.) {
+if (dot(refraction_out, refraction_out) == 0.)
+{
     refraction_out = reflect(refraction_in, norm_exit);
 }
 reflect_text.b = refraction_out.b;

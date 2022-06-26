@@ -24,6 +24,13 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Cool::Core)
 add_subdirectory(lib/reg)
 target_link_libraries(${PROJECT_NAME} PRIVATE reg::reg)
 
+# Include cmd
+add_subdirectory(lib/cmd)
+target_link_libraries(${PROJECT_NAME} PRIVATE cmd::cmd)
+
+# Include range-v3
+target_include_directories(${PROJECT_NAME} PRIVATE lib/range-v3/include)
+
 # Include ImNodes
 add_library(ImNodes lib/imnodes/imnodes.cpp)
 target_include_directories(ImNodes PRIVATE Cool/lib/imgui)
@@ -48,4 +55,8 @@ if (TEST_IS0_NODES)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         IS0_TEST_NODES
     )
+endif()
+
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /bigobj) # We use too many templates apparently so we need this flag O:)
 endif()

@@ -39,11 +39,13 @@ float ray_march(vec3 ro, vec3 rd)
 {
     float dO = 0.;
 
-    for (int i = 0; i < MAX_STEPS; i++) {
+    for (int i = 0; i < MAX_STEPS; i++)
+    {
         vec3  p  = ro + rd * dO;
         float dS = sdf(p).x;
         dO += dS;
-        if (dO > MAX_DIST || abs(dS) < SURF_DIST) {
+        if (dO > MAX_DIST || abs(dS) < SURF_DIST)
+        {
             break;
         }
     }
@@ -69,7 +71,8 @@ vec3 render(vec3 ro, vec3 rd)
     float d   = ray_march(ro, rd);
     vec3  col = col;
 
-    if (d < MAX_DIST) {
+    if (d < MAX_DIST)
+    {
         vec3  p  = ro + rd * d;
         float id = sdf(p).y;
         col =
