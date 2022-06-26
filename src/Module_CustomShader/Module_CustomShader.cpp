@@ -56,6 +56,7 @@ void Module_CustomShader::render(RenderParams in)
     if (_fullscreen_pipeline.shader())
     {
         _fullscreen_pipeline.shader()->bind();
+        _fullscreen_pipeline.shader()->set_uniform("_aspect_ratio", in.provider(Input_AspectRatio{}));
         _fullscreen_pipeline.shader()->set_uniform("_time", in.provider(Input_Time{}));
 
         for (auto& input : _inputs)
