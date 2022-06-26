@@ -52,7 +52,6 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
 void Module_CustomShader::render(RenderParams in)
 {
     refresh_pipeline_if_necessary(in.provider, in.dirty_manager, in.input_factory, in.input_destructor);
-    // Cool::Log::ToUser::info("Custom Shader Render", "Re-rendering");
     if (_fullscreen_pipeline.shader())
     {
         _fullscreen_pipeline.shader()->bind();
