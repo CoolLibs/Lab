@@ -7,19 +7,17 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/vignetting.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
-uniform float Border_Darkness; // Default 0.262
-uniform float Center_Radius;   // default 21.
+uniform float Border_darkness; // Default 0.262
+uniform float Center_radius;   // default 21.
+
+uniform float Effect_intensity;
 
 // END DYNAMIC PARAMS
-
-// https://www.shadertoy.com/view/lsKSWR
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
 
 void main()
 {
@@ -27,8 +25,12 @@ void main()
     uv *= 1.0 - uv.yx;
     uv.x *= _aspect_ratio;
 
-    float vig = uv.x * uv.y * Center_Radius;
+    vec3 in_color = image(_uv);
 
-    vig       = min(max(pow(vig, Border_Darkness), 0.), 1.);
-    out_Color = vec4(vec3(image(_uv).rgb * vig), 1.);
+    vec3 out_color = vignetting(
+        in_color, Effect_intensity, uv,
+        Border_darkness, Center_radius
+    );
+
+    out_Color = vec4(out_color, 1.);
 }

@@ -1,29 +1,9 @@
-#version 430
-
-layout(location = 0) in vec2 _uv;
-uniform float _time;
-uniform float _aspect_ratio;
-out vec4      out_Color;
-
-uniform sampler2D _image;
-
 const mat3 M             = mat3(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0);
 const mat3 xfm_cat       = mat3(.40024, -.2263, 0.0, .7076, 1.16532, 0.0, -.0881, 0.0457, .91822);
 const mat3 inv_xfm_cat   = mat3(1.860, 0.361, 0.0, -1.12938162e+00, 6.38812463e-01, 0.0, 2.19897410e-01, -6.37059684e-06, 1.08906362e+00);
 const vec3 xyz_D65       = vec3(95.04, 100.0, 108.88);
 const mat3 sRGBtoXYZ     = mat3(0.4124564, 0.2126729, 0.0193339, 0.3575761, 0.7151522, 0.1191920, 0.1804375, 0.0721750, 0.9503041);
 const mat3 inv_sRGBtoXYZ = mat3(3.24045484, -0.96926639, 0.05564342, -1.53713885, 1.87601093, -0.20402585, -0.49853155, 0.04155608, 1.05722516);
-
-// BEGIN DYNAMIC PARAMS
-
-uniform vec2 Coordinate_for_white_balance;
-
-// END DYNAMIC PARAMS
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
 
 vec3 xy2XYZ(vec2 xy, float Y)
 {
@@ -49,25 +29,29 @@ mat3 cbCAT(vec3 xyz_est, vec3 xyz_target)
 }
 
 /*uniform vec3 color_pick=vec3(iMouse.x,iMouse.y,1.0);*/
-void main()
+vec3 white_balance_by_click(
+    vec3 in_color, float effect_intensity, vec2 in_uv,
+    vec2 coordinate_for_white_balance
+)
 {
-    // vec3 color_pick = texture(iChannel0,-iMouse.xy/iResolution.xy).rgb;
-    vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
-    vec3 base       = image(_uv).rgb;
-    vec2 color_pick = Coordinate_for_white_balance;
+    vec2 color_pick = coordinate_for_white_balance;
     color_pick.x *= _aspect_ratio;
-    float dist          = length(uv - color_pick);
+    float dist          = length(in_uv - color_pick);
     float r             = 0.01;
     float circle_picker = 0;
-    if (dist <= r)
+
+    if (dist <= r){
         circle_picker = 1.;
-    else if (dist > r && dist < r + 0.001)
+    }
+    else if (dist > r && dist < r + 0.001){
         circle_picker = -1.;
-    // float circle_picker = smoothstep(r, r - 0.001, dist);
-    vec2 xyEst  = XYZ2xy(sRGBtoXYZ * image(Coordinate_for_white_balance).rgb);
+    }
+        
+    vec2 xyEst  = XYZ2xy(sRGBtoXYZ * image(coordinate_for_white_balance));
     vec3 xyzEst = xy2XYZ(xyEst, 100.0);
     mat3 M      = cbCAT(xyzEst, xyz_D65);
-    vec3 res    = M * base + circle_picker;
-    out_Color   = vec4(res, 1.0);
+
+    vec3 out_color    = M * in_color + circle_picker;
+
+    return mix(in_color, out_color, effect_intensity);
 }

@@ -7,46 +7,27 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/color_effects_alternative.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform vec3 Color_coefficient;
 
 uniform float Grey_coefficient;
 
+uniform float Effect_intensity;
+
 // END DYNAMIC PARAMS
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
-
-float pow_factor(float a, float x)
-{
-    return pow(x, a);
-}
-
-float red_transformation(float red)
-{
-    return pow_factor(log(Color_coefficient.r) / log(Grey_coefficient), red);
-}
-
-float green_transformation(float green)
-{
-    return pow_factor(log(Color_coefficient.g) / log(Grey_coefficient), green);
-}
-
-float blue_transformation(float blue)
-{
-    return pow_factor(log(Color_coefficient.b) / log(Grey_coefficient), blue);
-}
-
-vec3 color_transformation(vec3 image)
-{
-    float luminosity = image.r * 0.2126 + image.g * 0.7152 + image.b * 0.0722;
-    return vec3(red_transformation(luminosity), green_transformation(luminosity), blue_transformation(luminosity));
-}
 
 void main()
 {
-    out_Color = vec4(color_transformation(image(_uv).rgb), 1.);
+    vec3 in_color = image(_uv);
+
+    vec3 out_color = color_effects_alternative(
+        in_color, Effect_intensity,
+        Color_coefficient, Grey_coefficient
+    );
+
+    out_Color = vec4(out_color, 1.);
 }

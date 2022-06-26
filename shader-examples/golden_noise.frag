@@ -7,40 +7,28 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/golden_noise.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
-uniform float seed; // default 48
+uniform float Seed; // default 48
+
+uniform float Effect_intensity;
 
 // END DYNAMIC PARAMS
 
-// https://www.shadertoy.com/view/ltB3zD
-// Gold Noise ©2015 dcerisano@standard3d.com
-// - based on the Golden Ratio
-// - uniform normalized distribution
-// - fastest static noise generator function (also runs at low precision)
-// - use with indicated fractional seeding method.
-
-float PHI = 1.61803398874989484820459; // Φ = Golden Ratio
-
-float gold_noise(in vec2 xy, in float seed)
-{
-    return fract(tan(distance(xy * PHI, xy) * seed) * xy.x);
-}
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
-
 void main()
 {
-    vec2 uv = _uv;
+    vec3 image = image(_uv);
+    vec2 uv    = _uv;
     uv.x *= _aspect_ratio;
 
-    // float seed = fract(seed_fract); // fractional base seed
+    vec3 out_color = vec3(
+        golden_noise(uv, Seed + 0.1),
+        golden_noise(uv, Seed + 0.2),
+        golden_noise(uv, Seed + 0.3)
+    );
 
-    out_Color = vec4(gold_noise(uv * 2000., seed + 0.1),  // r
-                     gold_noise(uv * 2000., seed + 0.2),  // g
-                     gold_noise(uv * 2000., seed + 0.3),  // b
-                     gold_noise(uv * 2000., seed + 0.4)); // α
+    out_Color = vec4(out_color, 1.);
 }

@@ -7,6 +7,9 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/black_and_white.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float Red_contribution;   // default 0.2126
@@ -14,21 +17,20 @@ uniform float Green_contribution; // default 0.7152
 uniform float Blue_contribution;  // default 0.0722
 uniform float Normalize_checkbox;
 
-// END DYNAMIC PARAMS
+uniform float Effect_intensity;
 
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
+// END DYNAMIC PARAMS
 
 void main()
 {
-    vec3 channels_contribution = vec3(Red_contribution, Green_contribution, Blue_contribution);
-    if (Normalize_checkbox >= 0.5) {
-        float sum_of_channels_contribution = dot(channels_contribution, vec3(1.));
-        channels_contribution /= sum_of_channels_contribution;
-    }
-    float luminosity = dot(image(_uv).rgb, channels_contribution);
+    vec3 in_color = image(_uv);
 
-    out_Color = vec4(vec3(luminosity), 1.);
+    vec3 channels_contribution = vec3(Red_contribution, Green_contribution, Blue_contribution);
+
+    vec3 out_color = black_and_white(
+        in_color, Effect_intensity,
+        channels_contribution, Normalize_checkbox
+    );
+
+    out_Color = vec4(out_color, 1.);
 }

@@ -7,6 +7,9 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/shadows_highlights.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float factor_shadows;
@@ -16,24 +19,19 @@ uniform float factor_highlights;
 uniform float power_highlights;
 uniform float dir_highlights;
 
+uniform float Effect_intensity;
+
 // END DYNAMIC PARAMS
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
-
-vec3 accentuate_shadows(vec3 image)
-{
-    return image + image * -dir_shadows * exp(-factor_shadows * pow(image, vec3(power_shadows)));
-}
-
-vec3 accentuate_highlights(vec3 image)
-{
-    return image + image * dir_highlights * exp(-factor_highlights * pow(image, vec3(power_highlights)));
-}
 
 void main()
 {
-    out_Color = vec4(accentuate_shadows(accentuate_highlights(image(_uv).xyz)), 1.);
+    vec3 in_color = image(_uv);
+
+    vec3 out_color = shadows_highlights(
+        in_color, Effect_intensity,
+        factor_shadows, power_shadows, dir_shadows,
+        factor_highlights, power_highlights, dir_highlights
+    );
+
+    out_Color = vec4(out_color, 1.);
 }

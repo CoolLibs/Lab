@@ -7,26 +7,25 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/vibrance.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float Vibrance; // default 0.
 
+uniform float Effect_intensity;
+
 // END DYNAMIC PARAMS
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
-
-vec3 add_vibrance(vec3 image)
-{
-    float average   = dot(image, vec3(1 / 3));
-    float color_max = max(image.r, max(image.g, image.b));
-    float amount    = (color_max - average) * Vibrance * 3. * 5.;
-    return image - (color_max - image) * amount;
-}
 
 void main()
 {
-    out_Color = vec4(add_vibrance(image(_uv).rgb), 1.);
+    vec3 in_color = image(_uv);
+
+    vec3 out_color = vibrance(
+        in_color, Effect_intensity,
+        Vibrance
+    );
+
+    out_Color = vec4(out_color, 1.);
 }

@@ -4,17 +4,6 @@
 // this code is licensed under the CC0 license
 // http://creativecommons.org/publicdomain/zero/1.0/
 
-#version 430
-
-layout(location = 0) in vec2 _uv;
-uniform float _time;
-uniform float _aspect_ratio;
-out vec4      out_Color;
-
-uniform sampler2D _image;
-
-const float PI2 = 6.2831853071;
-
 // Valid from 1000 to 40000 K (and additionally 0 for pure full white)
 vec3 colorTemperatureToRGB(const in float temperature)
 {
@@ -28,27 +17,14 @@ vec3 colorTemperatureToRGB(const in float temperature)
     return mix(clamp(vec3(m[0] / (vec3(clamp(temperature, 1000.0, 40000.0)) + m[1]) + m[2]), vec3(0.0), vec3(1.0)), vec3(1.0), smoothstep(1000.0, 0.0, temperature));
 }
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float temperature; // default 1000 to 40000
-uniform float temperatureStrength;
-uniform float LuminancePreservationFactor;
-
-// END DYNAMIC PARAMS
-
-vec4 image(vec2 uv)
+vec3 white_balance_by_slider(
+    vec3 in_color, float effect_intensity,
+    float temperature, float temperature_strength, float luminance_preservation_factor
+)
 {
-    return texture2D(_image, uv);
-}
-
-void main()
-{
-    // vec3 color_pick = texture(iChannel0,-iMouse.xy/iResolution.xy).rgb;
-    vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
     float temperature_in_kelvins = mix(1000, 40000, temperature); // because our parameter goes from 0 to 1
-    vec3  inColor                = image(_uv).xyz;
-    vec3  outColor               = mix(inColor, inColor * colorTemperatureToRGB(temperature_in_kelvins), temperatureStrength);
-    outColor *= mix(1.0, dot(inColor, vec3(0.2126, 0.7152, 0.0722)) / max(dot(outColor, vec3(0.2126, 0.7152, 0.0722)), 1e-5), LuminancePreservationFactor);
-    out_Color = vec4(outColor, 1.0);
+    vec3  out_color               = mix(in_color, in_color * colorTemperatureToRGB(temperature_in_kelvins), temperature_strength);
+    out_color *= mix(1.0, dot(in_color, vec3(0.2126, 0.7152, 0.0722)) / max(dot(out_color, vec3(0.2126, 0.7152, 0.0722)), 1e-5), luminance_preservation_factor);
+    
+    return mix(in_color, out_color, effect_intensity);
 }

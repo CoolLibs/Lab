@@ -7,30 +7,28 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/threshold_by_chosen_color.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform int number_of_colors;
 
+uniform vec3 Color1;
 uniform vec3 Color2;
 
-// END DYNAMIC PARAMS
-// uniform vec3 Color1;
+uniform float Effect_intensity;
 
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
+// END DYNAMIC PARAMS
 
 void main()
 {
-    float t      = _time * 0.4;
-    t            = smoothstep(0., 3.7, t);
-    vec3  Color1 = min(max(vec3(t), 0.), 1.);
-    vec2  uv     = _uv;
-    vec3  image  = image(_uv).rgb;
-    float f      = distance(Color1, image) / ((distance(Color1, image) + distance(Color2, image)));
-    f *= (number_of_colors);
-    f = floor(f - 0.00001);
-    f /= (number_of_colors - 1);
-    out_Color = vec4(mix(Color1, Color2, f), 1.);
+    vec3 in_color = image(_uv);
+
+    vec3 out_color = threshold_by_chosen_color(
+        in_color, Effect_intensity,
+        number_of_colors, Color1, Color2
+    );
+
+    out_Color = vec4(out_color, 1.);
 }
