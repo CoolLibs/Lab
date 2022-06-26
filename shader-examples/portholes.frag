@@ -60,10 +60,12 @@ vec2 distribute_center_in_a_square(vec2 n, float t, vec2 offs)
 VoronoiRes voronoi(vec2 uv)
 {
     float t = 0;
-    if (Time_mode > .5) {
+    if (Time_mode > .5)
+    {
         t = _time * Speed;
     }
-    else {
+    else
+    {
         t = Movement;
     }
 
@@ -76,16 +78,20 @@ VoronoiRes voronoi(vec2 uv)
     vec2 id  = floor(uv);
     vec2 cid = vec2(0);
 
-    for (float y = -1.; y <= 1.; y++) {
-        for (float x = -1.; x <= 1.; x++) {
+    for (float y = -1.; y <= 1.; y++)
+    {
+        for (float x = -1.; x <= 1.; x++)
+        {
             vec2 offs = vec2(x, y);
 
             vec2 n = hash_0_to_1_2D_to_2D(id + offs);
             vec2 p;
-            if (Square_mode > .5) {
+            if (Square_mode > .5)
+            {
                 p = distribute_center_in_a_square(n, t, offs);
             }
-            else {
+            else
+            {
                 p = distribute_center_in_a_circle(n, t, offs);
             }
 
@@ -94,12 +100,14 @@ VoronoiRes voronoi(vec2 uv)
                       pow(abs(p_to_gv.x), Distance_mode) + pow(abs(p_to_gv.y), Distance_mode),
                       1 / Distance_mode);
 
-            if (d < res.minDist) {
+            if (d < res.minDist)
+            {
                 res.minDist2 = res.minDist;
                 res.minDist  = d;
                 res.cid      = id + offs;
             }
-            else if (d < res.minDist2) {
+            else if (d < res.minDist2)
+            {
                 res.minDist2 = d;
             }
         }

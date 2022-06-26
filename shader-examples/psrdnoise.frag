@@ -183,17 +183,20 @@ vec3 psrdnoise(vec2 pos, vec2 per, float rot)
     vec3 dtdy = -2.0 * vec3(d0.y, d1.y, d2.y);
 
     // Set influence of each surflet to zero outside radius sqrt(0.8)
-    if (t.x < 0.0) {
+    if (t.x < 0.0)
+    {
         dtdx.x = 0.0;
         dtdy.x = 0.0;
         t.x    = 0.0;
     }
-    if (t.y < 0.0) {
+    if (t.y < 0.0)
+    {
         dtdx.y = 0.0;
         dtdy.y = 0.0;
         t.y    = 0.0;
     }
-    if (t.z < 0.0) {
+    if (t.z < 0.0)
+    {
         dtdx.z = 0.0;
         dtdy.z = 0.0;
         t.z    = 0.0;
@@ -368,17 +371,20 @@ vec3 srdnoise(vec2 pos, float rot)
     vec3 dtdy = -2.0 * vec3(d0.y, d1.y, d2.y);
 
     // Set influence of each surflet to zero outside radius sqrt(0.8)
-    if (t.x < 0.0) {
+    if (t.x < 0.0)
+    {
         dtdx.x = 0.0;
         dtdy.x = 0.0;
         t.x    = 0.0;
     }
-    if (t.y < 0.0) {
+    if (t.y < 0.0)
+    {
         dtdx.y = 0.0;
         dtdy.y = 0.0;
         t.y    = 0.0;
     }
-    if (t.z < 0.0) {
+    if (t.z < 0.0)
+    {
         dtdx.z = 0.0;
         dtdy.z = 0.0;
         t.z    = 0.0;
@@ -510,7 +516,8 @@ float fbm(in vec2 st)
     float frequency = 0.;
     //
     // Loop of octaves
-    for (int i = 0; i < octaves; i++) {
+    for (int i = 0; i < octaves; i++)
+    {
         value += amplitude * (snoise(st * scale) * 0.5 + 0.5);
         st *= lacunarity;
         amplitude *= gain;

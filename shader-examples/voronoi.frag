@@ -33,10 +33,12 @@ void main()
 
     float m = 0.;
     float t = 0;
-    if (Time_mode > .5) {
+    if (Time_mode > .5)
+    {
         t = _time * Speed;
     }
-    else {
+    else
+    {
         t = Movement;
     }
 
@@ -50,8 +52,10 @@ void main()
     vec2 id  = floor(uv);
     vec2 cid = vec2(0);
 
-    for (float y = -1.; y <= 1.; y++) {
-        for (float x = -1.; x <= 1.; x++) {
+    for (float y = -1.; y <= 1.; y++)
+    {
+        for (float x = -1.; x <= 1.; x++)
+        {
             vec2 offs = vec2(x, y);
 
             vec2 n = hash_0_to_1_2D_to_2D(id + offs);
@@ -61,7 +65,8 @@ void main()
                 pow(abs(p.x), Distance_mode) + pow(abs(p.y), Distance_mode),
                 1 / Distance_mode);
 
-            if (d < minDist) {
+            if (d < minDist)
+            {
                 minDist = d;
                 cid     = id + offs;
             }

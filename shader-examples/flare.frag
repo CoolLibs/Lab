@@ -100,7 +100,8 @@ void main()
 
     // this calls the function which adds three circle types every time through the loop based on parameters I
     // got by trying things out. rnd i*2000. and rnd i*20 are just to help randomize things more
-    for (float i = 0.; i < nb_of_circles; i++) {
+    for (float i = 0.; i < nb_of_circles; i++)
+    {
         flare += circle(uv, pow(rnd(i * seed * 100.) * 1.8, 2.) + 1.41, 0.0, circColor + i, circColor2 + i, rnd(i * seed) * 3. + 0.2 - .5, mm);
     }
     // get angle and length of the sun (uv - mouse)

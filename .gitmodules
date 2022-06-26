@@ -10,6 +10,9 @@
 [submodule "lib/cmd"]
 	path = lib/cmd
 	url = https://github.com/CoolLibs/cmd
+[submodule "lib/range-v3"]
+	path = lib/range-v3
+	url = https://github.com/ericniebler/range-v3
 [submodule "tooling"]
 	path = tooling
-	url = https://github.com/CoolLibs/tooling
+	url = https://github.com/CoolLibs/tooling/

@@ -140,10 +140,12 @@ float triangle2(int i, float frequency)
 {
     float a = 2;
 
-    if (i > abs(frequency + a)) {
+    if (i > abs(frequency + a))
+    {
         return 0;
     }
-    else {
+    else
+    {
         float slope_at_i = ((frequency + a - i) * 1) / a;
         return slope_at_i;
     }
@@ -151,14 +153,18 @@ float triangle2(int i, float frequency)
 
 float triangle(float current_freq, float frequency)
 {
-    if (abs(current_freq - frequency) > a) {
+    if (abs(current_freq - frequency) > a)
+    {
         return 0;
     }
-    else {
-        if (current_freq > frequency) {
+    else
+    {
+        if (current_freq > frequency)
+        {
             return (frequency - current_freq + a * 1) / a;
         }
-        else {
+        else
+        {
             return (frequency - current_freq - a * 1) / (-a);
         }
     }
@@ -179,7 +185,8 @@ void main()
     int   start = int(floor(frequency_log - a));
     int   end   = int(ceil(frequency_log + a));
     float sum   = 0;
-    for (int i = start; i <= end; i++) {
+    for (int i = start; i <= end; i++)
+    {
         float current_freq = pow(2., i);
         sum += triangle(i, frequency_log);
         noise += (cnoise(uv * current_freq * scale) * 0.5 + 0.5) * triangle(i, frequency_log);

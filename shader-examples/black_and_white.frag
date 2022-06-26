@@ -24,7 +24,8 @@ vec4 image(vec2 uv)
 void main()
 {
     vec3 channels_contribution = vec3(Red_contribution, Green_contribution, Blue_contribution);
-    if (Normalize_checkbox >= 0.5) {
+    if (Normalize_checkbox >= 0.5)
+    {
         float sum_of_channels_contribution = dot(channels_contribution, vec3(1.));
         channels_contribution /= sum_of_channels_contribution;
     }

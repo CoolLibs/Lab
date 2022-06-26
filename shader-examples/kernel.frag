@@ -61,13 +61,15 @@ float[kernel_size * kernel_size] bokeh_blur()
 {
     float[kernel_size * kernel_size] b_b;
     float sum = 0;
-    for (int i = 0; i < kernel_size * kernel_size; i++) {
+    for (int i = 0; i < kernel_size * kernel_size; i++)
+    {
         vec2 index = index_2D(i) / float(kernel_size - 1);
         index.y    = 1. - index.y;
         b_b[i]     = texture(_texture, index).r;
         sum += b_b[i];
     }
-    for (int i = 0; i < kernel_size * kernel_size; i++) {
+    for (int i = 0; i < kernel_size * kernel_size; i++)
+    {
         b_b[i] /= pow(sum, normaliza);
     }
     return b_b;
@@ -77,13 +79,15 @@ float[kernel_size * kernel_size] gaussian_blur()
 {
     float[kernel_size * kernel_size] g_b;
     float sum = 0;
-    for (int i = 0; i < kernel_size * kernel_size; i++) {
+    for (int i = 0; i < kernel_size * kernel_size; i++)
+    {
         vec2 value = (index_2D(i) - kernel_size / 2);
         g_b[i]     = exp(-dot(value, value) /
                          (2. * pow(sigma, 2.)));
         sum += g_b[i];
     }
-    for (int i = 0; i < kernel_size * kernel_size; i++) {
+    for (int i = 0; i < kernel_size * kernel_size; i++)
+    {
         g_b[i] /= sum;
     }
     return g_b;
@@ -101,7 +105,8 @@ vec2 neighbour_offset_in_image_space(int index)
 vec3 convolution(float kernel[kernel_size * kernel_size], sampler2D sampler, vec2 uv)
 {
     vec3 sum = vec3(0.);
-    for (int i = 0; i < kernel_size * kernel_size; i++) {
+    for (int i = 0; i < kernel_size * kernel_size; i++)
+    {
         vec3 neighbour_color  = texture(sampler, uv + neighbour_offset_in_image_space(i)).rgb;
         vec3 neighbour_kernel = kernel[i] * neighbour_color;
         sum += neighbour_kernel;

@@ -42,7 +42,8 @@ void main()
                                                      smoothe);
 
     float epsilon = 0.01;
-    color         = mix(border_color, image(img_uv),
+    color         = mix(border_color,
+                        image(img_uv),
                         1. - smoothstep(border - epsilon, border + epsilon, distance_to_center));
 
     out_Color = vec4(color, 1.);

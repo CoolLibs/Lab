@@ -1,5 +1,5 @@
 `
-#include "is0 shaders/smoke.glsl"
+#include "_ROOT_FOLDER_/is0 shaders/smoke.glsl"
 
 // See https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html
 // And https://www.shadertoy.com/view/tsScDG
