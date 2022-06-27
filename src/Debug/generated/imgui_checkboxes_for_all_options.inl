@@ -4,8 +4,8 @@
  * Instead, go to "generate_debug_options.py" and edit the "imgui_checkboxes_for_all_options" function there.
  * -----------------------------------------------------------------------------
  */
-ImGui::Checkbox("show_imgui_debug", &instance().show_imgui_debug);
-ImGui::Checkbox("show_imgui_demo", &instance().show_imgui_demo);
-ImGui::Checkbox("show_commands_and_registries_debug_windows", &instance().show_commands_and_registries_debug_windows);
-ImGui::Checkbox("log_when_rendering", &instance().log_when_rendering);
-ImGui::Checkbox("test_all_variable_widgets", &instance().test_all_variable_widgets);
+ImGui::Checkbox("Framerate window", &instance().show_framerate_window);
+ImGui::Checkbox("ImGui Demo window", &instance().show_imgui_demo_window);
+ImGui::Checkbox("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
+ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
+ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets);

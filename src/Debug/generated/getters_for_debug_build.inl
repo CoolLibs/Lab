@@ -4,8 +4,8 @@
  * Instead, go to "generate_debug_options.py" and edit the "getters_for_debug_build" function there.
  * -----------------------------------------------------------------------------
  */
-[[nodiscard]] static auto show_imgui_debug() -> bool { return instance().show_imgui_debug; }
-[[nodiscard]] static auto show_imgui_demo() -> bool { return instance().show_imgui_demo; }
-[[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool { return instance().show_commands_and_registries_debug_windows; }
-[[nodiscard]] static auto log_when_rendering() -> bool { return instance().log_when_rendering; }
-[[nodiscard]] static auto test_all_variable_widgets() -> bool { return instance().test_all_variable_widgets; }
+[[nodiscard]] static auto show_framerate_window() -> bool& { return instance().show_framerate_window; }
+[[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
+[[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
+[[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
+[[nodiscard]] static auto test_all_variable_widgets() -> bool& { return instance().test_all_variable_widgets; }

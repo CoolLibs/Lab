@@ -225,21 +225,23 @@ void App::imgui_windows()
         ImGui::Begin("Camera");
         _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
-        if (DebugOptions::show_imgui_debug())
+#if DEBUG
+        if (DebugOptions::show_framerate_window())
         {
-            ImGui::Begin("Debug");
+            ImGui::Begin("Framerate", &DebugOptions::show_framerate_window());
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
             _main_window.imgui_cap_framerate();
             ImGui::End();
         }
-        if (DebugOptions::show_imgui_demo()) // Show the big demo window (Most of the sample code is
-        {                                    // in ImGui::ShowDemoWindow()! You can browse its code
-            ImGui::ShowDemoWindow(nullptr);  // to learn more about Dear ImGui!).
+        if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
+        {                                                                   // in ImGui::ShowDemoWindow()! You can browse its code
+            ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // to learn more about Dear ImGui!).
         }
         if (DebugOptions::show_commands_and_registries_debug_windows())
         {
             imgui_commands_and_registries_debug_windows();
         }
+#endif // DEBUG
     }
 }
 

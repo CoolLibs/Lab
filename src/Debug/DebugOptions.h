@@ -25,8 +25,10 @@ private:
     friend class DebugOptionsDetails; // We go through this indirection so that only the files which include "DebugOptionsDetails" can call `imgui_checkboxes_for_all_options()`
     static void imgui_checkboxes_for_all_options()
     {
+#if DEBUG
         // TODO Add a search bar
 #include "generated/imgui_checkboxes_for_all_options.inl"
+#endif
     }
 };
 

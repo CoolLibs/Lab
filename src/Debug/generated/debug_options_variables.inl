@@ -4,8 +4,8 @@
  * Instead, go to "generate_debug_options.py" and edit the "debug_options_variables" function there.
  * -----------------------------------------------------------------------------
  */
-bool show_imgui_debug{false};
-bool show_imgui_demo{false};
+bool show_framerate_window{true};
+bool show_imgui_demo_window{false};
 bool show_commands_and_registries_debug_windows{false};
 bool log_when_rendering{false};
 bool test_all_variable_widgets{false};
