@@ -11,5 +11,6 @@ using AnyInputRef = std::variant<
     std::reference_wrapper<Input<glm::vec2>>,
     std::reference_wrapper<Input<glm::vec3>>,
     std::reference_wrapper<Input<Cool::Color>>,
-    std::reference_wrapper<Input<Cool::Camera>>
+    std::reference_wrapper<Input<Cool::Camera>>,
+    std::reference_wrapper<Input<Cool::Angle>>
 >;

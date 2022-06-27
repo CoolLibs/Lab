@@ -16,7 +16,7 @@ public:
     Ui_Ref(
         VariableRegistries&          registries,
         CommandExecutor_TopLevel_Ref command_executor,
-        SetDirtyFlag_Ref             set_dirty
+        SetDirty_Ref                 set_dirty
     )
         : _variable_registries{registries}
         , _command_executor{command_executor}
@@ -99,7 +99,7 @@ private:
 private:
     std::reference_wrapper<VariableRegistries> _variable_registries;
     CommandExecutor_TopLevel_Ref               _command_executor;
-    SetDirtyFlag_Ref                           _set_dirty;
+    SetDirty_Ref                               _set_dirty;
 };
 
 } // namespace Lab

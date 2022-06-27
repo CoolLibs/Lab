@@ -11,6 +11,7 @@ LAB_REGISTER_COMMAND(Lab::Command_SetVariable<glm::vec2>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<glm::vec3>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::Color>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::Camera>)
+LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::Angle>)
 
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<int>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<float>)
@@ -18,4 +19,5 @@ LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<glm::vec2>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<glm::vec3>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Color>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Camera>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Angle>)
 

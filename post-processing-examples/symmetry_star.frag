@@ -13,7 +13,6 @@ uniform sampler2D _image;
 // BEGIN DYNAMIC PARAMS
 uniform float Size;           // 0 forbidden 0.001 to 0.5
 uniform float Angle_in_turns; // 0 to 1 (1 == 1 turn)
-uniform float Right_or_left;  // bool
 
 uniform int Nb_iterations;
 
@@ -23,16 +22,16 @@ uniform float Effect_intensity;
 
 void main()
 {
-    vec2 in_uv = _uv - .5;
+    vec2 in_uv = _uv - 0.5;
     in_uv.x *= _aspect_ratio;
 
     vec2 out_uv = symmetry_star(
         in_uv, Effect_intensity,
-        Size, Angle_in_turns, Right_or_left, Nb_iterations
+        Size, Angle_in_turns, Nb_iterations
     );
 
     out_uv.x /= _aspect_ratio;
-    out_uv += .5;
+    out_uv += 0.5;
 
     vec3 out_color = image(out_uv).xyz;
 

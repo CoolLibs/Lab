@@ -31,14 +31,14 @@ public:
         return inputs;
     }
 
-    auto is_dirty(DirtyManager_Ref dirty_manager) const -> bool override
+    auto is_dirty(IsDirty_Ref check_dirty) const -> bool override
     {
-        return Module::is_dirty(dirty_manager) ||
-               dirty_manager.is_dirty(_shader_is_dirty);
+        return Module::is_dirty(check_dirty) ||
+               check_dirty(_shader_is_dirty);
     }
 
 private:
-    void refresh_pipeline_if_necessary(InputProvider_Ref, DirtyManager_Ref, InputFactory_Ref, InputDestructor_Ref);
+    void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, SetClean_Ref, InputFactory_Ref, InputDestructor_Ref);
     void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name);
     void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref);
 

@@ -53,7 +53,7 @@ private:
 
     // clang-format off
     auto all_inputs() -> AllInputRefsToConst;
-    auto set_dirty_flag                             () { return SetDirtyFlag_Ref{_dirty_registry}; }
+    auto set_dirty_flag                             () { return SetDirty_Ref{_dirty_registry}; }
     auto set_variable_dirty                         () { return SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_variable_registries, _camera_manager}}; }
     auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, _camera_manager, set_variable_dirty()}}; }
@@ -65,7 +65,8 @@ private:
     auto input_destructor                           () { return InputDestructor_Ref{_variable_registries}; }
     auto input_factory                              () { return InputFactory_Ref{_variable_registries, _camera_manager.id()}; }
     auto dirty_flag_factory                         () { return DirtyFlagFactory_Ref{_dirty_registry}; }
-    auto dirty_manager                              () { return DirtyManager_Ref{_dirty_registry}; }
+    auto is_dirty__functor                          () { return IsDirty_Ref{_dirty_registry}; }
+    auto set_clean__functor                         () { return SetClean_Ref{_dirty_registry}; }
     // clang-format on
 
     Cool::Polaroid polaroid();

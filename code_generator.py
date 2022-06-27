@@ -51,6 +51,7 @@ def all_variable_types():
         "glm::vec3",
         "Cool::Color",
         "Cool::Camera",
+        "Cool::Angle",
     ]
 
 

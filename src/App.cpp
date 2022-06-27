@@ -140,7 +140,13 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        some_module.do_rendering({input_provider(aspect_ratio, time), input_factory(), input_destructor(), dirty_manager()});
+        some_module.do_rendering({
+            input_provider(aspect_ratio, time),
+            input_factory(),
+            input_destructor(),
+            is_dirty__functor(),
+            set_clean__functor(),
+        });
     });
 }
 

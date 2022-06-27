@@ -52,8 +52,7 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
 
 void Module_CustomShader::render(RenderParams in)
 {
-    refresh_pipeline_if_necessary(in.provider, in.dirty_manager, in.input_factory, in.input_destructor);
-    // Cool::Log::ToUser::info("Custom Shader Render", "Re-rendering");
+    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.set_clean, in.input_factory, in.input_destructor);
     if (_fullscreen_pipeline.shader())
     {
         _fullscreen_pipeline.shader()->bind();
@@ -70,24 +69,24 @@ void Module_CustomShader::render(RenderParams in)
         Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(_camera_input), in.provider(Input_AspectRatio{}));
         _fullscreen_pipeline.draw();
     }
-    in.dirty_manager.set_clean(dirty_flag());
 }
 
 void Module_CustomShader::refresh_pipeline_if_necessary(
     InputProvider_Ref   provider,
-    DirtyManager_Ref    dirty_manager,
+    IsDirty_Ref         is_dirty,
+    SetClean_Ref        set_clean,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor
 )
 {
-    if (dirty_manager.is_dirty(_shader_is_dirty))
+    if (is_dirty(_shader_is_dirty))
     {
         // Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
         compile_shader(source_code, file_path.string());
         parse_shader_for_params(source_code, input_factory, input_destructor);
-        dirty_manager.set_clean(_shader_is_dirty);
+        set_clean(_shader_is_dirty);
     }
 }
 

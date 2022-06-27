@@ -14,7 +14,7 @@ public:
 
     auto name() const -> const std::string& { return _name; }
 
-    void set_dirty_if_depends_on(const VariableId<T>& variable_id, SetDirtyFlag_Ref set_dirty) const
+    void set_dirty_if_depends_on(const VariableId<T>& variable_id, SetDirty_Ref set_dirty) const
     {
         if (_current_variable_id == variable_id ||
             (_current_variable_id.underlying_uuid().is_nil() && _default_variable_id == variable_id))
@@ -63,7 +63,7 @@ public:
     {
     }
 
-    void update(SetDirtyFlag_Ref set_dirty)
+    void update(SetDirty_Ref set_dirty)
     {
         file_watcher.update(
             {.on_file_changed = [&](std::string_view) { set_dirty(_dirty_flag); },

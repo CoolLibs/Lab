@@ -29,8 +29,9 @@ public:
 
 private:
     friend class DirtyManager_Ref;
-    friend class SetDirtyFlag_Ref;
+    friend class DirtyFlagSetter_Ref;
     friend class DirtyFlagFactory_Ref;
+    friend class IsDirty_Ref;
 
     explicit DirtyFlag(reg::Id<internal::IsDirty> id)
         : id{id}
@@ -66,30 +67,62 @@ private:
     std::reference_wrapper<DirtyRegistry> _registry;
 };
 
-class SetDirtyFlag_Ref {
+class DirtyFlagSetter_Ref {
 public:
-    explicit SetDirtyFlag_Ref(DirtyRegistry& registry)
+    explicit DirtyFlagSetter_Ref(DirtyRegistry& registry)
         : _registry{registry}
     {
     }
 
-    void operator()(DirtyFlag flag)
+    void operator()(const DirtyFlag& flag, bool is_dirty)
     {
-        _registry.get().set(flag.id, {true});
+        _registry.get().set(flag.id, {is_dirty});
     }
 
 private:
     std::reference_wrapper<DirtyRegistry> _registry;
 };
 
-class DirtyManager_Ref {
+class SetDirty_Ref {
 public:
-    explicit DirtyManager_Ref(DirtyRegistry& registry)
+    explicit SetDirty_Ref(DirtyRegistry& registry)
+        : _setter{registry}
+    {
+    }
+
+    void operator()(const DirtyFlag& flag)
+    {
+        _setter(flag, true);
+    }
+
+private:
+    DirtyFlagSetter_Ref _setter;
+};
+
+class SetClean_Ref {
+public:
+    explicit SetClean_Ref(DirtyRegistry& registry)
+        : _setter{registry}
+    {
+    }
+
+    void operator()(const DirtyFlag& flag)
+    {
+        _setter(flag, false);
+    }
+
+private:
+    DirtyFlagSetter_Ref _setter;
+};
+
+class IsDirty_Ref {
+public:
+    explicit IsDirty_Ref(const DirtyRegistry& registry)
         : _registry{registry}
     {
     }
 
-    auto is_dirty(DirtyFlag flag) const -> bool
+    auto operator()(const DirtyFlag& flag) const -> bool
     {
         const auto dirty = _registry.get().get(flag.id);
         if (!dirty.has_value())
@@ -99,13 +132,8 @@ public:
         return dirty->is_dirty;
     }
 
-    void set_clean(DirtyFlag flag)
-    {
-        _registry.get().set(flag.id, {false});
-    }
-
 private:
-    std::reference_wrapper<DirtyRegistry> _registry;
+    std::reference_wrapper<const DirtyRegistry> _registry;
 };
 
 } // namespace Lab
