@@ -58,7 +58,7 @@ def getters_for_release_build():
 
 def imgui_checkboxes_for_all_options():
     return "\n".join(map(lambda debug_option:
-                         f'ImGui::Checkbox("{debug_option.name_in_ui}", &instance().{debug_option.name_in_code});',
+                         f'if (instance().filter.PassFilter("{debug_option.name_in_ui}")) ImGui::Checkbox("{debug_option.name_in_ui}", &instance().{debug_option.name_in_code});',
                          all_debug_options()))
 
 

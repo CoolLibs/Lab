@@ -14,6 +14,7 @@ private:
 #if DEBUG
     struct Instance {
 #include "generated/debug_options_variables.inl"
+        ImGuiTextFilter filter;
     };
     static auto instance() -> Instance&
     {
@@ -26,7 +27,7 @@ private:
     static void imgui_checkboxes_for_all_options()
     {
 #if DEBUG
-        // TODO Add a search bar
+        instance().filter.Draw("Filter");
 #include "generated/imgui_checkboxes_for_all_options.inl"
 #endif
     }
