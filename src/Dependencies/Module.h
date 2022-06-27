@@ -22,7 +22,8 @@ public:
         InputProvider_Ref   provider;
         InputFactory_Ref    input_factory;
         InputDestructor_Ref input_destructor;
-        DirtyManager_Ref    dirty_manager;
+        IsDirty_Ref         is_dirty;
+        SetClean_Ref        set_clean;
     };
 
     Module() = default;
@@ -39,16 +40,16 @@ public:
     void do_rendering(RenderParams params)
     {
         render(params);
-        params.dirty_manager.set_clean(_dirty_flag);
+        params.set_clean(_dirty_flag);
     }
     virtual void imgui_windows(Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
     virtual void update(){};
 
     virtual auto all_inputs() const -> AllInputRefsToConst = 0;
 
-    virtual auto is_dirty(DirtyManager_Ref dirty_manager) const -> bool // TODO No need for the whole DirtyManager_Ref, just DirtyChecker
+    virtual auto is_dirty(IsDirty_Ref check_dirty) const -> bool
     {
-        return dirty_manager.is_dirty(_dirty_flag);
+        return check_dirty(_dirty_flag);
     };
 
     auto dirty_flag() { return _dirty_flag; }
