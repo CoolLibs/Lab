@@ -2,7 +2,7 @@
 
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ConcreteCommand.h"
-#include "CommandCore/ReversibleCommandMerger.h"
+#include "CommandCore/ReversibleCommandMerger_Ref.h"
 #include "CommandCore/make_command.h"
 #include "CommandCore/try_make_reversible.h"
 
@@ -34,7 +34,7 @@ public:
         _sub_executor.execute(command);
         if (reversible)
         {
-            _history.get().push(*reversible, ReversibleCommandMerger{});
+            _history.get().push(*reversible, ReversibleCommandMerger_Ref{});
         }
     }
 
