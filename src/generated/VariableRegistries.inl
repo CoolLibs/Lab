@@ -10,7 +10,7 @@ using VariableRegistries = reg::Registries<
     Cool::Variable<float>,
     Cool::Variable<glm::vec2>,
     Cool::Variable<glm::vec3>,
-    Cool::Variable<Cool::Color>,
+    Cool::Variable<Cool::RgbColor>,
     Cool::Variable<Cool::Camera>,
     Cool::Variable<Cool::Angle>
 >;

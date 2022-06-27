@@ -38,9 +38,9 @@ static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view nam
 }
 
 template<>
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::Color& value)
+void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value)
 {
-    shader.set_uniform(name, value.rgb);
+    shader.set_uniform(name, value.value);
 }
 
 void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
@@ -167,7 +167,7 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
                         else if (type == "vec2")
                             return input_factory.make<glm::vec2>(dirty_flag, name);
                         else if (type == "vec3")
-                            return input_factory.make<Cool::Color>(dirty_flag, name);
+                            return input_factory.make<Cool::RgbColor>(dirty_flag, name);
                         else
                             throw std::invalid_argument(type + " is not a valid parameter type.");
                     }();

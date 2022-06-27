@@ -10,7 +10,7 @@ using AnyInput = std::variant<
     Input<float>,
     Input<glm::vec2>,
     Input<glm::vec3>,
-    Input<Cool::Color>,
+    Input<Cool::RgbColor>,
     Input<Cool::Camera>,
     Input<Cool::Angle>
 >;

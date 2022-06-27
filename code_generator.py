@@ -49,7 +49,7 @@ def all_variable_types():
         "float",
         "glm::vec2",
         "glm::vec3",
-        "Cool::Color",
+        "Cool::RgbColor",
         "Cool::Camera",
         "Cool::Angle",
     ]
