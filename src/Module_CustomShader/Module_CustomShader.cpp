@@ -133,11 +133,39 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
+void identify_type(const std::string type, const std::string name, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
+{
+    const auto input = [&]() -> AnyInput {
+        if (type == "int")
+            return input_factory.make<int>(dirty_flag, name);
+        else if (type == "float")
+            return input_factory.make<float>(dirty_flag, name);
+        else if (type == "vec2")
+            return input_factory.make<glm::vec2>(dirty_flag, name);
+        else if (type == "vec3")
+            return input_factory.make<Cool::Color>(dirty_flag, name);
+        else
+            throw std::invalid_argument(type + " is not a valid parameter type.");
+    }();
+    new_inputs.push_back(input);
+}
+
 auto separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
 {
     const auto uniform_pos = line.find("uniform");
     if (uniform_pos != std::string::npos)
     {
+        const auto comment_pos = line.find("//");
+        if (comment_pos < uniform_pos)
+        {
+            return;
+        }
+        auto space_before_include = Cool::String::find_next_word(line, size_t(0));
+        if (!space_before_include)
+        {
+            return;
+        }
+        line                = Cool::String::replace_at(0, space_before_include->first, line, "");
         const auto type_pos = Cool::String::find_next_word(line, size_t(8));
         if (!type_pos)
         {
@@ -149,21 +177,15 @@ auto separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
         {
             return;
         }
-        const std::string name = line.substr(name_pos->first, name_pos->second - name_pos->first - 1);
+        std::string name = line.substr(name_pos->first, name_pos->second - name_pos->first - 1);
 
-        const auto input = [&]() -> AnyInput {
-            if (type == "int")
-                return input_factory.make<int>(dirty_flag, name);
-            else if (type == "float")
-                return input_factory.make<float>(dirty_flag, name);
-            else if (type == "vec2")
-                return input_factory.make<glm::vec2>(dirty_flag, name);
-            else if (type == "vec3")
-                return input_factory.make<Cool::Color>(dirty_flag, name);
-            else
-                throw std::invalid_argument(type + " is not a valid parameter type.");
-        }();
-        new_inputs.push_back(input);
+        const std::vector<std::pair<std::string, std::string>> replacements = {
+            std::make_pair("_", " "),
+        };
+
+        // Cool::String::replace_all(name, "_", " ");
+
+        identify_type(type, name, dirty_flag, input_factory, new_inputs);
     }
 }
 
