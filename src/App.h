@@ -112,6 +112,7 @@ private:
     bool _show_imgui_demo                            = false;
     bool _show_commands_and_registries_debug_windows = false;
     bool _log_when_rendering                         = false;
+    bool _test_all_variable_widgets                  = true;
 #endif
 
 private:

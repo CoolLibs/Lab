@@ -10,6 +10,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
+#include "TestVariables.h"
 #include "UI/imgui_show.h"
 
 namespace Lab {
@@ -201,6 +202,12 @@ void App::imgui_windows()
 {
     _is0_view.imgui_window();
     _custom_shader_view.imgui_window();
+#if DEBUG
+    if (_test_all_variable_widgets)
+    {
+        // test_variables();
+    }
+#endif
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     if (inputs_are_allowed())
@@ -298,6 +305,7 @@ void App::menu_debug()
         ImGui::Checkbox("Debug Window", &_show_imgui_debug);
         ImGui::Checkbox("Debug Commands and Registries", &_show_commands_and_registries_debug_windows);
         ImGui::Checkbox("Log when rendering", &_log_when_rendering);
+        ImGui::Checkbox("Test All Variable Widgets", &_test_all_variable_widgets);
 
         ImGui::EndMenu();
     }
