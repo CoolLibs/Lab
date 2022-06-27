@@ -14,6 +14,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Debug/DebugOptionsDetails.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
@@ -123,6 +124,7 @@ private:
         );
     }
 #if !IS0_TEST_NODES
+    DebugOptionsDetails::AutoSerializer _auto_serializer_for_debug_options{};
     // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
     Cool::AutoSerializer<App> _auto_serializer{Cool::Path::root() + "/cache--last-session.json", "App", *this};
 #endif

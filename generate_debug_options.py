@@ -62,6 +62,12 @@ def imgui_checkboxes_for_all_options():
                          all_debug_options()))
 
 
+def cereal_make_nvp():
+    return ",\n".join(map(lambda debug_option:
+                          f'cereal::make_nvp("{debug_option.name_in_ui}", {debug_option.name_in_code})',
+                          all_debug_options()))
+
+
 if __name__ == '__main__':
     from tooling.generate_files import generate
     generate(
@@ -70,6 +76,7 @@ if __name__ == '__main__':
             debug_options_variables,
             getters_for_debug_build,
             getters_for_release_build,
-            imgui_checkboxes_for_all_options
+            imgui_checkboxes_for_all_options,
+            cereal_make_nvp,
         ],
     )

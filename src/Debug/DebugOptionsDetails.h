@@ -10,6 +10,17 @@ public:
     {
         DebugOptions::imgui_checkboxes_for_all_options();
     }
+
+    struct AutoSerializer {
+        ~AutoSerializer()
+        {
+            Cool::Serialization::to_json(
+                DebugOptions::instance(),
+                Cool::Path::root() + "/cache--debug-options.json",
+                "Debug Options"
+            );
+        }
+    };
 };
 
 } // namespace Lab

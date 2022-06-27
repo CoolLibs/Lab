@@ -1,5 +1,8 @@
 #pragma once
 
+#include <Cool/Path/Path.h>
+#include <Cool/Serialization/as_json.h>
+
 namespace Lab {
 
 class DebugOptions {
@@ -15,11 +18,30 @@ private:
     struct Instance {
 #include "generated/debug_options_variables.inl"
         ImGuiTextFilter filter;
+
+    private:
+        // Serialization
+        friend class cereal::access;
+        template<class Archive>
+        void serialize(Archive& archive)
+        {
+            archive(
+#include "generated/cereal_make_nvp.inl"
+            );
+        }
     };
+
+    static auto load_debug_options() -> Instance
+    {
+        auto the_instance = Instance{};
+        Cool::Serialization::from_json(the_instance, Cool::Path::root() + "/cache--debug-options.json");
+        return the_instance;
+    }
+
     static auto instance() -> Instance&
     {
-        static Instance inst; // TODO serialize and read from file
-        return inst;
+        static auto the_instance = Instance{load_debug_options()};
+        return the_instance;
     }
 #endif
 
