@@ -144,7 +144,8 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
             input_provider(aspect_ratio, time),
             input_factory(),
             input_destructor(),
-            dirty_manager(),
+            is_dirty__functor(),
+            set_clean__functor(),
         });
     });
 }

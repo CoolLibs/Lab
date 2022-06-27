@@ -7,7 +7,7 @@ namespace Lab {
 
 class SetVariableDirty_Ref {
 public:
-    SetVariableDirty_Ref(AllInputRefsToConst all_inputs, SetDirtyFlag_Ref set_dirty)
+    SetVariableDirty_Ref(AllInputRefsToConst all_inputs, SetDirty_Ref set_dirty)
         : _inputs{all_inputs}
         , _set_dirty{set_dirty}
     {
@@ -28,7 +28,7 @@ public:
 
 private:
     AllInputRefsToConst _inputs;
-    SetDirtyFlag_Ref    _set_dirty;
+    SetDirty_Ref        _set_dirty;
 };
 
 } // namespace Lab

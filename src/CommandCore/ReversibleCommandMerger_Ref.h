@@ -4,7 +4,7 @@
 
 namespace Lab {
 
-class ReversibleCommandMerger {
+class ReversibleCommandMerger_Ref {
 public:
     static auto merge(
         const ReversibleCommand& prev,

@@ -100,10 +100,10 @@ auto Module_is0::all_inputs() const -> AllInputRefsToConst
     return inputs;
 }
 
-auto Module_is0::is_dirty(DirtyManager_Ref dirty_manager) const -> bool
+auto Module_is0::is_dirty(IsDirty_Ref check_dirty) const -> bool
 {
-    return Module::is_dirty(dirty_manager) ||
-           dirty_manager.is_dirty(_shader_is_dirty);
+    return Module::is_dirty(check_dirty) ||
+           check_dirty(_shader_is_dirty);
 };
 
 void Module_is0::render(RenderParams in)

@@ -23,12 +23,14 @@ public:
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
     std::string                      saving_path_string() const;
     auto                             all_inputs() const -> AllInputRefsToConst override;
-    auto                             is_dirty(DirtyManager_Ref dirty_manager) const -> bool override;
+    auto                             is_dirty(IsDirty_Ref) const -> bool override;
 
 protected:
     void render(RenderParams) override;
 
 private:
+    // TODO remove all those `mutable` once ui function is done properly
+
     DirtyFlag                        _shader_is_dirty;
     Input<Cool::Camera>              _camera_input;
     mutable Cool::FullscreenPipeline _fullscreen_pipeline{};
