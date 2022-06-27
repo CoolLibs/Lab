@@ -1,6 +1,7 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Log/ToUser.h>
+#include <Cool/String/String.h>
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
@@ -133,6 +134,40 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
+auto separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
+{
+    const auto uniform_pos = line.find("uniform");
+    if (uniform_pos != std::string::npos)
+    {
+        const auto type_pos = Cool::String::find_next_word(line, size_t(8));
+        if (!type_pos)
+        {
+            return;
+        }
+        const std::string type     = line.substr(type_pos->first, type_pos->second - type_pos->first);
+        const auto        name_pos = Cool::String::find_next_word(line, type_pos->second);
+        if (!name_pos)
+        {
+            return;
+        }
+        const std::string name = line.substr(name_pos->first, name_pos->second - name_pos->first - 1);
+
+        const auto input = [&]() -> AnyInput {
+            if (type == "int")
+                return input_factory.make<int>(dirty_flag, name);
+            else if (type == "float")
+                return input_factory.make<float>(dirty_flag, name);
+            else if (type == "vec2")
+                return input_factory.make<glm::vec2>(dirty_flag, name);
+            else if (type == "vec3")
+                return input_factory.make<Cool::Color>(dirty_flag, name);
+            else
+                throw std::invalid_argument(type + " is not a valid parameter type.");
+        }();
+        new_inputs.push_back(input);
+    }
+}
+
 static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory)
     -> std::vector<AnyInput>
 {
@@ -150,30 +185,7 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
             }
             try
             {
-                const auto uniform_pos = line.find("uniform");
-                if (uniform_pos != std::string::npos)
-                {
-                    const auto        type_pos     = uniform_pos + 8;
-                    const auto        type_pos_end = line.find(' ', type_pos);
-                    const std::string type         = line.substr(type_pos, type_pos_end - type_pos);
-                    const auto        name_pos     = type_pos_end + 1;
-                    const auto        name_pos_end = line.find_first_of(" ;", name_pos);
-                    const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
-                    //
-                    const auto input = [&]() -> AnyInput {
-                        if (type == "int")
-                            return input_factory.make<int>(dirty_flag, name);
-                        else if (type == "float")
-                            return input_factory.make<float>(dirty_flag, name);
-                        else if (type == "vec2")
-                            return input_factory.make<glm::vec2>(dirty_flag, name);
-                        else if (type == "vec3")
-                            return input_factory.make<Cool::Color>(dirty_flag, name);
-                        else
-                            throw std::invalid_argument(type + " is not a valid parameter type.");
-                    }();
-                    new_inputs.push_back(input);
-                }
+                separate_input_elements(line, dirty_flag, input_factory, new_inputs);
             }
             catch (const std::exception& e)
             {
