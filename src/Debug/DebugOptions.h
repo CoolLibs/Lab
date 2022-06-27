@@ -31,6 +31,12 @@ private:
         }
     };
 
+    static void reset_all()
+    {
+        instance().filter.Clear();
+#include "generated/reset_all.inl"
+    }
+
     static auto load_debug_options() -> Instance
     {
         auto the_instance = Instance{};
@@ -50,6 +56,11 @@ private:
     {
 #if DEBUG
         instance().filter.Draw("Filter");
+        if (ImGui::Button("Reset all debug options"))
+        {
+            reset_all();
+        }
+        ImGui::Separator();
 #include "generated/imgui_checkboxes_for_all_options.inl"
 #endif
     }

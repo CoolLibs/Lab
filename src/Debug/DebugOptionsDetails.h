@@ -21,6 +21,11 @@ public:
             );
         }
     };
+
+    static void reset_all()
+    {
+        DebugOptions::reset_all();
+    }
 };
 
 } // namespace Lab

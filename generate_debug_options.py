@@ -68,6 +68,12 @@ def cereal_make_nvp():
                           all_debug_options()))
 
 
+def reset_all():
+    return "\n".join(map(lambda debug_option:
+                         f'instance().{debug_option.name_in_code} = {"true" if debug_option.default_value else "false"};',
+                         all_debug_options()))
+
+
 if __name__ == '__main__':
     from tooling.generate_files import generate
     generate(
@@ -78,5 +84,6 @@ if __name__ == '__main__':
             getters_for_release_build,
             imgui_checkboxes_for_all_options,
             cereal_make_nvp,
+            reset_all,
         ],
     )
