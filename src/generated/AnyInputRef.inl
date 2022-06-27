@@ -10,6 +10,7 @@ using AnyInputRef = std::variant<
     std::reference_wrapper<Input<float>>,
     std::reference_wrapper<Input<glm::vec2>>,
     std::reference_wrapper<Input<glm::vec3>>,
+    std::reference_wrapper<Input<glm::vec4>>,
     std::reference_wrapper<Input<Cool::RgbColor>>,
     std::reference_wrapper<Input<Cool::Camera>>,
     std::reference_wrapper<Input<Cool::Angle>>
