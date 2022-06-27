@@ -71,7 +71,7 @@ def AnyInputRefToConst():
 if __name__ == '__main__':
     from tooling.generate_files import generate
     generate(
-        folder="src/generated",
+        folder="src/generated_variables",
         files=[
             register_set_variable_commands,
             register_set_variable_metadata_commands,
