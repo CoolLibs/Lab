@@ -29,6 +29,8 @@ protected:
     void render(RenderParams) override;
 
 private:
+    // TODO remove all those `mutable` once ui function is done properly
+
     DirtyFlag                        _shader_is_dirty;
     Input<Cool::Camera>              _camera_input;
     mutable Cool::FullscreenPipeline _fullscreen_pipeline{};

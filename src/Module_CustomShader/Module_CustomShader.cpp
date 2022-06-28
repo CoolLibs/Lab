@@ -39,9 +39,9 @@ static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view nam
 }
 
 template<>
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::Color& value)
+void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value)
 {
-    shader.set_uniform(name, value.rgb);
+    shader.set_uniform(name, value.value);
 }
 
 void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)

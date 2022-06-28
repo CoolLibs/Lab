@@ -10,6 +10,9 @@
 #include "CommandCore/command_to_string.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
+// #include "TestVariables.h"
+#include "Debug/DebugOptions.h"
+#include "Debug/DebugOptionsDetails.h"
 #include "UI/imgui_show.h"
 
 namespace Lab {
@@ -130,12 +133,10 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 #if IS0_TEST_NODES
     render_target.set_size({1, 1});
 #endif
-#if DEBUG
-    if (_log_when_rendering)
+    if (DebugOptions::log_when_rendering())
     {
         Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
     }
-#endif
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -201,6 +202,12 @@ void App::imgui_windows()
 {
     _is0_view.imgui_window();
     _custom_shader_view.imgui_window();
+#if DEBUG
+    if (DebugOptions::test_all_variable_widgets())
+    {
+        // test_variables();
+    }
+#endif
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     if (inputs_are_allowed())
@@ -219,23 +226,22 @@ void App::imgui_windows()
         _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
 #if DEBUG
-        if (_show_imgui_debug)
+        if (DebugOptions::show_framerate_window())
         {
-            ImGui::Begin("Debug", &_show_imgui_debug);
+            ImGui::Begin("Framerate", &DebugOptions::show_framerate_window());
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
             _main_window.imgui_cap_framerate();
-            ImGui::Checkbox("Show Demo Window", &_show_imgui_demo);
             ImGui::End();
         }
-        if (_show_imgui_demo)                         // Show the big demo window (Most of the sample code is
-        {                                             // in ImGui::ShowDemoWindow()! You can browse its code
-            ImGui::ShowDemoWindow(&_show_imgui_demo); // to learn more about Dear ImGui!).
+        if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
+        {                                                                   // in ImGui::ShowDemoWindow()! You can browse its code
+            ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // to learn more about Dear ImGui!).
         }
-        if (_show_commands_and_registries_debug_windows)
+        if (DebugOptions::show_commands_and_registries_debug_windows())
         {
             imgui_commands_and_registries_debug_windows();
         }
-#endif
+#endif // DEBUG
     }
 }
 
@@ -295,10 +301,7 @@ void App::menu_debug()
 #if DEBUG
     if (ImGui::BeginMenu("Debug"))
     {
-        ImGui::Checkbox("Debug Window", &_show_imgui_debug);
-        ImGui::Checkbox("Debug Commands and Registries", &_show_commands_and_registries_debug_windows);
-        ImGui::Checkbox("Log when rendering", &_log_when_rendering);
-
+        DebugOptionsDetails::imgui_checkboxes_for_all_options();
         ImGui::EndMenu();
     }
 #endif

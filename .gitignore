@@ -12,7 +12,6 @@ exports/
 myShaders/
 
 last-session-cache.json
-
 NodeEditor.json
 
 is0_node_editor.ini
@@ -20,3 +19,6 @@ is0_node_editor.ini
 vs
 
 videos
+
+cache--last-session.json
+cache--debug-options.json

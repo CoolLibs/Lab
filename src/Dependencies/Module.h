@@ -54,7 +54,7 @@ public:
 
     auto dirty_flag() { return _dirty_flag; }
 
-protected:
+private:
     virtual void render(RenderParams) = 0;
 
 private:

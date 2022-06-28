@@ -107,9 +107,9 @@ struct Input_AspectRatio {
 struct Input_Time {
 };
 
-#include "generated/AnyInput.inl"
-#include "generated/AnyInputRef.inl"
-#include "generated/AnyInputRefToConst.inl"
+#include "generated_variables/AnyInput.inl"
+#include "generated_variables/AnyInputRef.inl"
+#include "generated_variables/AnyInputRefToConst.inl"
 
 class InputDestructor_Ref {
 public:
