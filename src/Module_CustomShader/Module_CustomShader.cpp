@@ -133,7 +133,7 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-void identify_type(const std::string type, const std::string name, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
+void identify_type(const std::string type, const std::string name, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs, std::string default_value, std::string min_value, std::string max_value)
 {
     const auto input = [&]() -> AnyInput {
         if (type == "int")
@@ -143,6 +143,10 @@ void identify_type(const std::string type, const std::string name, DirtyFlag dir
         else if (type == "vec2")
             return input_factory.make<glm::vec2>(dirty_flag, name);
         else if (type == "vec3")
+            return input_factory.make<glm::vec3>(dirty_flag, name);
+        else if (type == "bool")
+            return input_factory.make<bool>(dirty_flag, name);
+        else if (type == "RgbColor")
             return input_factory.make<Cool::Color>(dirty_flag, name);
         else
             throw std::invalid_argument(type + " is not a valid parameter type.");
@@ -160,32 +164,59 @@ auto separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
         {
             return;
         }
+
         auto space_before_include = Cool::String::find_next_word(line, size_t(0));
         if (!space_before_include)
         {
             return;
         }
-        line                = Cool::String::replace_at(0, space_before_include->first, line, "");
+        line = Cool::String::replace_at(0, space_before_include->first, line, "");
+
         const auto type_pos = Cool::String::find_next_word(line, size_t(8));
         if (!type_pos)
         {
             return;
         }
-        const std::string type     = line.substr(type_pos->first, type_pos->second - type_pos->first);
-        const auto        name_pos = Cool::String::find_next_word(line, type_pos->second);
+        const std::string type = line.substr(type_pos->first, type_pos->second - type_pos->first);
+
+        const auto name_pos = Cool::String::find_next_word(line, type_pos->second);
         if (!name_pos)
         {
             return;
         }
         std::string name = line.substr(name_pos->first, name_pos->second - name_pos->first - 1);
 
-        const std::vector<std::pair<std::string, std::string>> replacements = {
-            std::make_pair("_", " "),
-        };
+        // const std::vector<std::pair<std::string, std::string>> replacements = {
+        //     std::make_pair("_", " "),
+        // };
 
         // Cool::String::replace_all(name, "_", " ");
 
-        identify_type(type, name, dirty_flag, input_factory, new_inputs);
+        const auto  find_default = line.find("default");
+        const auto  default_pos  = Cool::String::find_next_word(line, find_default + 7);
+        std::string default_value;
+        if (default_pos)
+        {
+            default_value = line.substr(default_pos->first, default_pos->second - default_pos->first);
+        }
+
+        const auto  find_min = line.find("min");
+        const auto  min_pos  = Cool::String::find_next_word(line, find_min + 3);
+        std::string min_value;
+        if (min_pos)
+        {
+            min_value = line.substr(min_pos->first, min_pos->second - min_pos->first);
+        }
+
+        const auto  find_max = line.find("max");
+        const auto  max_pos  = Cool::String::find_next_word(line, find_max + 3);
+        std::string max_value;
+        if (max_pos)
+        {
+            max_value = line.substr(max_pos->first, max_pos->second - max_pos->first);
+        }
+
+        identify_type(type, name, dirty_flag, input_factory, new_inputs, default_value, min_value, max_value);
     }
 }
 
