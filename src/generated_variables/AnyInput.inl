@@ -14,5 +14,6 @@ using AnyInput = std::variant<
     Input<Cool::RgbColor>,
     Input<Cool::Camera>,
     Input<Cool::Angle>,
-    Input<Cool::Direction2D>
+    Input<Cool::Direction2D>,
+    Input<Cool::Hue>
 >;

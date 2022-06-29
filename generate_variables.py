@@ -18,7 +18,8 @@ def all_variable_types():
         "Cool::RgbColor",
         "Cool::Camera",
         "Cool::Angle",
-        "Cool::Direction2D"
+        "Cool::Direction2D",
+        "Cool::Hue",
     ]
 
 

@@ -14,5 +14,6 @@ using VariableRegistries = reg::Registries<
     Cool::Variable<Cool::RgbColor>,
     Cool::Variable<Cool::Camera>,
     Cool::Variable<Cool::Angle>,
-    Cool::Variable<Cool::Direction2D>
+    Cool::Variable<Cool::Direction2D>,
+    Cool::Variable<Cool::Hue>
 >;
