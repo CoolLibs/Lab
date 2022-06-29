@@ -202,14 +202,11 @@ void App::imgui_windows()
 {
     _is0_view.imgui_window();
     _custom_shader_view.imgui_window();
-#if DEBUG
-    if (DebugOptions::test_all_variable_widgets())
-    {
-        // test_variables();
-    }
-#endif
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
+#if DEBUG
+    _error_logger.imgui_show();
+#endif
     if (inputs_are_allowed())
     {
         const auto the_ui = ui();
@@ -240,6 +237,14 @@ void App::imgui_windows()
         if (DebugOptions::show_commands_and_registries_debug_windows())
         {
             imgui_commands_and_registries_debug_windows();
+        }
+        if (DebugOptions::test_all_variable_widgets())
+        {
+            // test_variables();
+        }
+        if (DebugOptions::test_error_logger())
+        {
+            _test_error_logger.imgui_window(_error_logger);
         }
 #endif // DEBUG
     }

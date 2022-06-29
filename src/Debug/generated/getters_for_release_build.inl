@@ -9,3 +9,4 @@
 [[nodiscard]] static auto constexpr show_commands_and_registries_debug_windows() -> bool { return false; }
 [[nodiscard]] static auto constexpr log_when_rendering() -> bool { return false; }
 [[nodiscard]] static auto constexpr test_all_variable_widgets() -> bool { return false; }
+[[nodiscard]] static auto constexpr test_error_logger() -> bool { return false; }
