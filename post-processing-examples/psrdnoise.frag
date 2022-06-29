@@ -76,6 +76,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float scale;
@@ -530,5 +532,5 @@ void main()
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
     float noise = snoise(uv * scale) * 0.5 + 0.5;
-    out_Color   = vec4(vec3(fbm(uv)), 1.);
+    out_Color   = vec4(RgbColor(fbm(uv)), 1.);
 }

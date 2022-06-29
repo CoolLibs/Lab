@@ -29,8 +29,8 @@ mat3 cbCAT(vec3 xyz_est, vec3 xyz_target)
 }
 
 /*uniform vec3 color_pick=vec3(iMouse.x,iMouse.y,1.0);*/
-vec3 white_balance_by_click(
-    vec3 in_color, float effect_intensity, vec2 in_uv,
+RgbColor white_balance_by_click(
+    RgbColor in_color, float effect_intensity, vec2 in_uv,
     vec2 coordinate_for_white_balance
 )
 {
@@ -40,18 +40,20 @@ vec3 white_balance_by_click(
     float r             = 0.01;
     float circle_picker = 0;
 
-    if (dist <= r){
+    if (dist <= r)
+    {
         circle_picker = 1.;
     }
-    else if (dist > r && dist < r + 0.001){
+    else if (dist > r && dist < r + 0.001)
+    {
         circle_picker = -1.;
     }
-        
+
     vec2 xyEst  = XYZ2xy(sRGBtoXYZ * image(coordinate_for_white_balance));
     vec3 xyzEst = xy2XYZ(xyEst, 100.0);
     mat3 M      = cbCAT(xyzEst, xyz_D65);
 
-    vec3 out_color    = M * in_color + circle_picker;
+    RgbColor out_color = M * in_color + circle_picker;
 
     return mix(in_color, out_color, effect_intensity);
 }

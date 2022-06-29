@@ -147,14 +147,35 @@ void identify_type(const std::string type, const std::string name, DirtyFlag dir
         else if (type == "bool")
             return input_factory.make<bool>(dirty_flag, name);
         else if (type == "RgbColor")
-            return input_factory.make<Cool::Color>(dirty_flag, name);
+            return input_factory.make<Cool::RgbColor>(dirty_flag, name);
         else
             throw std::invalid_argument(type + " is not a valid parameter type.");
     }();
     new_inputs.push_back(input);
 }
 
-auto separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
+std::string find_element(std::string line, size_t current_pos)
+{
+    const auto type_pos = Cool::String::find_next_word(line, current_pos);
+    if (type_pos)
+    {
+        return line.substr(type_pos->first, type_pos->second - type_pos->first);
+    }
+    return 0;
+}
+
+std::string find_default(std::string line, std::string word_to_calculate)
+{
+    auto find_default = line.find(word_to_calculate);
+    if (find_default == std::string::npos)
+    {
+        return "";
+    }
+    find_default += word_to_calculate.length();
+    return find_element(line, find_default);
+}
+
+void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
 {
     const auto uniform_pos = line.find("uniform");
     if (uniform_pos != std::string::npos)
@@ -165,26 +186,27 @@ auto separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
             return;
         }
 
-        auto space_before_include = Cool::String::find_next_word(line, size_t(0));
+        auto space_before_include = Cool::String::find_next_word(line, 0);
         if (!space_before_include)
         {
             return;
         }
         line = Cool::String::replace_at(0, space_before_include->first, line, "");
 
-        const auto type_pos = Cool::String::find_next_word(line, size_t(8));
-        if (!type_pos)
-        {
-            return;
-        }
-        const std::string type = line.substr(type_pos->first, type_pos->second - type_pos->first);
+        std::string include     = "include";
+        size_t      current_pos = include.length();
 
-        const auto name_pos = Cool::String::find_next_word(line, type_pos->second);
-        if (!name_pos)
+        std::string type = find_element(line, current_pos);
+
+        current_pos += type.length() + 1;
+
+        std::string name = find_element(line, current_pos);
+
+        auto delete_semicolon = Cool::String::find_next_word(name, 0, ";");
+        if (delete_semicolon)
         {
-            return;
+            name = name.substr(0, name.size() - 1); // Find a better way to delete the semicolon ?
         }
-        std::string name = line.substr(name_pos->first, name_pos->second - name_pos->first - 1);
 
         // const std::vector<std::pair<std::string, std::string>> replacements = {
         //     std::make_pair("_", " "),
@@ -192,29 +214,11 @@ auto separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
 
         // Cool::String::replace_all(name, "_", " ");
 
-        const auto  find_default = line.find("default");
-        const auto  default_pos  = Cool::String::find_next_word(line, find_default + 7);
-        std::string default_value;
-        if (default_pos)
-        {
-            default_value = line.substr(default_pos->first, default_pos->second - default_pos->first);
-        }
+        std::string default_value = find_default(line, "default");
 
-        const auto  find_min = line.find("min");
-        const auto  min_pos  = Cool::String::find_next_word(line, find_min + 3);
-        std::string min_value;
-        if (min_pos)
-        {
-            min_value = line.substr(min_pos->first, min_pos->second - min_pos->first);
-        }
+        std::string min_value = find_default(line, "min");
 
-        const auto  find_max = line.find("max");
-        const auto  max_pos  = Cool::String::find_next_word(line, find_max + 3);
-        std::string max_value;
-        if (max_pos)
-        {
-            max_value = line.substr(max_pos->first, max_pos->second - max_pos->first);
-        }
+        std::string max_value = find_default(line, "max");
 
         identify_type(type, name, dirty_flag, input_factory, new_inputs, default_value, min_value, max_value);
     }

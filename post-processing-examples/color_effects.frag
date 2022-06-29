@@ -7,15 +7,16 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/color_effects.glsl"
 
 // BEGIN DYNAMIC PARAMS
 
-uniform vec3 Color_coefficient;
+uniform RgbColor Color_coefficient;
 
 uniform float Grey_coefficient;
-uniform float One_color_mode;
+uniform bool  One_color_mode;
 
 uniform float Effect_intensity;
 
@@ -23,9 +24,9 @@ uniform float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = color_effects(
+    RgbColor out_color = color_effects(
         in_color, Effect_intensity,
         Color_coefficient, Grey_coefficient, One_color_mode
     );

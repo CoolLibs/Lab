@@ -1,6 +1,6 @@
-vec3 pixelation(
-    vec3 in_color, float effect_intensity, vec2 uv,
-    float nb_tiles_on_y_axis, float border, float smoothing, vec3 border_color
+RgbColor pixelation(
+    RgbColor in_color, float effect_intensity, vec2 uv,
+    float nb_tiles_on_y_axis, float border, float smoothing, RgbColor border_color
 )
 {
     vec2  gv           = fract(uv * nb_tiles_on_y_axis + 0.5) - 0.5;
@@ -14,7 +14,7 @@ vec3 pixelation(
 
     float epsilon = 0.01;
 
-    vec3 out_color = mix(border_color, image(img_uv), 1. - smoothstep(border - epsilon, border + epsilon, distance_to_center));
+    RgbColor out_color = mix(border_color, image(img_uv), 1. - smoothstep(border - epsilon, border + epsilon, distance_to_center));
 
     return mix(in_color, out_color, effect_intensity);
 }

@@ -10,6 +10,7 @@
 
 def all_variable_types():
     return [
+        "bool",
         "int",
         "float",
         "glm::vec2",

@@ -71,14 +71,14 @@ vec2 cellular(vec2 P)
     return sqrt(d1.xy);
 }
 
-vec3 voronoise(
-    vec3 in_color, float effect_intensity, vec2 uv,
+RgbColor voronoise(
+    RgbColor in_color, float effect_intensity, vec2 uv,
     float scale
 )
 {
     vec2 noise = cellular(uv * scale);
 
-    vec3 out_color = vec3(noise.x / noise.y);
+    RgbColor out_color = RgbColor(noise.x / noise.y);
 
     return mix(in_color, out_color, effect_intensity);
 }

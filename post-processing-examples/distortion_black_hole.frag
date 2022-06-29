@@ -9,6 +9,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float angle_in_turns;    // 0 to 1 (1 == 1 turn)
@@ -19,13 +21,13 @@ uniform float hole_smooth;       // -.5 to 1
 uniform float hole_center_x;     // default 0.5 range 0 to 1
 uniform float hole_center_y;     // default 0.5 range0 to 1
 
-uniform vec3 hole_color;
+uniform RgbColor hole_color;
 
 uniform int nb_div; // 0 forbidden
 
 // END DYNAMIC PARAMS
 
-vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
+RgbColor blob(vec2 point, vec2 uv, RgbColor color, float invIntensity, float invGlow)
 {
     float d    = distance(uv, point);
     float invD = 1.0 / d;
@@ -51,8 +53,7 @@ void main()
 
     // rotation
     float angleRot = angle_in_turns * TAU;
-    vec2  tcoord   = vec2(ncoord.x * cos(angleRot) - ncoord.y * sin(angleRot),
-                          ncoord.y * cos(angleRot) + ncoord.x * sin(angleRot));
+    vec2  tcoord   = vec2(ncoord.x * cos(angleRot) - ncoord.y * sin(angleRot), ncoord.y * cos(angleRot) + ncoord.x * sin(angleRot));
 
     // sink hole projection
     float angle  = atan(tcoord.x, tcoord.y);

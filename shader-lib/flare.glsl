@@ -22,7 +22,7 @@ float regShape(vec2 p, int N)
 
     return f;
 }
-vec3 circle(vec2 p, float size, float decay, vec3 color, vec3 color2, float dist, vec2 mouse)
+RgbColor circle(vec2 p, float size, float decay, RgbColor color, RgbColor color2, float dist, vec2 mouse)
 {
     // l is used for making rings.I get the length and pass it through a sinwave
     // but I also use a pow function. pow function + sin function , from 0 and up, = a pulse, at least
@@ -39,9 +39,9 @@ vec3 circle(vec2 p, float size, float decay, vec3 color, vec3 color2, float dist
     float c2 = max(0.04 / pow(length(p - mouse * dist / 2. + 0.09) * 1., 1.), 0.0) / 20.;
     float s  = max(00.01 - pow(regShape(p * 5. + mouse * dist * 5. + 0.9, 6), 1.), 0.0) * 5.;
 
-    color  = 0.5 + 0.5 * sin(color);
-    color  = cos(vec3(0.44, .24, .2) * 8. + dist * 4.) * 0.5 + .5;
-    vec3 f = c * color;
+    color      = 0.5 + 0.5 * sin(color);
+    color      = cos(RgbColor(0.44, .24, .2) * 8. + dist * 4.) * 0.5 + .5;
+    RgbColor f = c * color;
     f += c1 * color;
 
     f += c2 * color;
@@ -58,8 +58,8 @@ float sun(vec2 p, vec2 mouse)
     return f;
 }
 
-vec3 flare(
-    vec3 in_color, float effect_intensity,
+RgbColor flare(
+    RgbColor in_color, float effect_intensity,
     float x, float y, float Brightness, int Nb_of_circles, int Seed
 )
 {
@@ -69,12 +69,12 @@ vec3 flare(
     vec2 mm = vec2(x, y) - 0.5;
     mm.x *= _aspect_ratio;
 
-    vec3 circColor  = vec3(0.9, 0.2, 0.1);
-    vec3 circColor2 = vec3(0.3, 0.1, 0.9);
+    RgbColor circColor  = RgbColor(0.9, 0.2, 0.1);
+    RgbColor circColor2 = RgbColor(0.3, 0.1, 0.9);
 
     // now to make the sky not black
-    vec3 color = in_color;
-    vec3 flare = mix(vec3(0.3, 0.2, 0.02) / 0.9, vec3(0.2, 0.5, 0.8), uv.y) * 3. - Brightness;
+    RgbColor color = in_color;
+    RgbColor flare = mix(RgbColor(0.3, 0.2, 0.02) / 0.9, RgbColor(0.2, 0.5, 0.8), uv.y) * 3. - Brightness;
 
     // this calls the function which adds three circle types every time through the loop based on parameters I
     // got by trying things out. rnd i*2000. and rnd i*20 are just to help randomize things more
@@ -90,6 +90,6 @@ vec3 flare(
     // there is a sharper roll of of the light decay from the sun.
     flare *= exp(1.0 - length(uv - mm)) / 5.;
     color += flare;
-    vec3 out_color = color;
+    RgbColor out_color = color;
     return mix(in_color, out_color, effect_intensity);
 }

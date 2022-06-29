@@ -7,6 +7,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/symmetry_star.glsl"
 
@@ -33,7 +34,7 @@ void main()
     out_uv.x /= _aspect_ratio;
     out_uv += 0.5;
 
-    vec3 out_color = image(out_uv).xyz;
+    RgbColor out_color = image(out_uv).xyz;
 
     out_Color = vec4(out_color, 1.);
 }

@@ -10,16 +10,16 @@
 
 // #include "_ROOT_FOLDER_/shader-lib/luminance.glsl"
 
-vec3 color_effects(
-    vec3 in_color, float effect_intensity,
-    vec3 color_coefficient, float grey_coefficient, float one_color_mode
+RgbColor color_effects(
+    RgbColor in_color, float effect_intensity,
+    RgbColor color_coefficient, float grey_coefficient, bool one_color_mode
 )
 {
-    vec3 image = in_color;
-    if (one_color_mode > .5)
+    RgbColor image = in_color;
+    if (one_color_mode)
     {
-        image = vec3(luminance(image));
+        image = RgbColor(luminance(image));
     }
-    vec3 out_color = pow(image, log(color_coefficient) / log(grey_coefficient));
+    RgbColor out_color = pow(image, log(color_coefficient) / log(grey_coefficient));
     return mix(in_color, out_color, effect_intensity);
 }

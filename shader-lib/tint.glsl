@@ -1,5 +1,5 @@
-vec3 tint(
-    vec3 in_color, float effect_intensity,
+RgbColor tint(
+    RgbColor in_color, float effect_intensity,
     float tint
 )
 {
@@ -24,7 +24,7 @@ vec3 tint(
 
     vec3 yIQ = vec3(YPrime, I, Q);
 
-    vec3 out_color = vec3(dot(yIQ, kYIQToR), dot(yIQ, kYIQToG), dot(yIQ, kYIQToB));
+    RgbColor out_color = RgbColor(dot(yIQ, kYIQToR), dot(yIQ, kYIQToG), dot(yIQ, kYIQToB));
 
     return mix(in_color, out_color, effect_intensity);
 }

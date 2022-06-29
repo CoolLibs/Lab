@@ -1,0 +1,1 @@
+#define RgbColor vec3

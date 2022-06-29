@@ -19,7 +19,7 @@
 //     return float[kernel_size * kernel_size](1. / (kernel_size * kernel_size));
 // }
 
-bool is_white(vec3 color)
+bool is_white(RgbColor color)
 {
     return (color.r == 1 && color.g == 1 && color.b == 1) ? true : false;
 }
@@ -68,24 +68,24 @@ vec2 neighbour_offset_in_image_space(int index)
 // kernel : kernel used for convolution
 // sampler : texture sampler
 // uv : current coordinates on sampler
-vec3 convolution(float kernel[kernel_size * kernel_size], sampler2D sampler, vec2 uv)
+RgbColor convolution(float kernel[kernel_size * kernel_size], sampler2D sampler, vec2 uv)
 {
-    vec3 sum = vec3(0.);
+    RgbColor sum = RgbColor(0.);
     for (int i = 0; i < kernel_size * kernel_size; i++)
     {
-        vec3 neighbour_color  = texture(sampler, uv + neighbour_offset_in_image_space(i)).rgb;
-        vec3 neighbour_kernel = kernel[i] * neighbour_color;
+        RgbColor neighbour_color  = texture(sampler, uv + neighbour_offset_in_image_space(i)).rgb;
+        RgbColor neighbour_kernel = kernel[i] * neighbour_color;
         sum += neighbour_kernel;
     }
 
     return sum;
 }
 
-vec3 kernel(
+RgbColor kernel(
     vec2 uv,
     int nb, int kernel_size, float space_between_two_pixels_times_1000, float sigma, float normaliza
 )
 {
-    vec3 color = convolution(gaussian_blur(), _image, uv);
+    RgbColor color = convolution(gaussian_blur(), _image, uv);
     return color;
 }

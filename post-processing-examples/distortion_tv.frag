@@ -9,6 +9,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float time_mod;
@@ -18,9 +20,9 @@ uniform int nb_iteration; // min = 1 max 23
 
 // END DYNAMIC PARAMS
 
-vec3 draw(vec2 uv)
+RgbColor draw(vec2 uv)
 {
-    return vec3(texture(_image, vec2(uv.x, 1. - uv.y)).rgb);
+    return RgbColor(texture(_image, vec2(uv.x, 1. - uv.y)).rgb);
 }
 
 float terrain(float x)
@@ -30,7 +32,8 @@ float terrain(float x)
     // You actually should look after sigma.
     float v = 0.;
     x *= 3.;
-    for (float n = 0.; n < nb_iteration; n++) {
+    for (float n = 0.; n < nb_iteration; n++)
+    {
         v += ((sin((x * sin(n / 2.142)) + (n / 1.41))) / nb_iteration) * strip;
     }
     return pow(v, 3.);
@@ -43,8 +46,8 @@ vec4 image(vec2 uv)
 
 void main()
 {
-    float time         = time_mod;
-    vec2  uv           = _uv;
-    vec3  dist_texture = vec3(draw(uv + (terrain((uv.y * 20.) + (time * 30.)) / 200.)).r, draw(uv + (terrain((uv.y * 22.) + (time * 30.)) / 201.)).g, draw(uv + (terrain((uv.y * 14.) + (time * 30.)) / 202.)).b);
-    out_Color          = vec4(dist_texture, 1.0);
+    float    time         = time_mod;
+    vec2     uv           = _uv;
+    RgbColor dist_texture = RgbColor(draw(uv + (terrain((uv.y * 20.) + (time * 30.)) / 200.)).r, draw(uv + (terrain((uv.y * 22.) + (time * 30.)) / 201.)).g, draw(uv + (terrain((uv.y * 14.) + (time * 30.)) / 202.)).b);
+    out_Color             = vec4(dist_texture, 1.0);
 }
