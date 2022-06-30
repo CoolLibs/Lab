@@ -246,7 +246,7 @@ std::string function_body(const Cool::ParameterList& list, const std::string& co
 {
     return "{\n" +
            parameters_definitions(list) +
-           Cool::String::replace({code_template, sdf_identifiers, "${", "}"}) +
+           Cool::String::replace_between_delimiters({code_template, sdf_identifiers, "${", "}"}) +
            "\n}";
 }
 
