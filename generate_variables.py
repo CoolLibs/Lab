@@ -20,6 +20,7 @@ def all_variable_types():
         "Cool::Angle",
         "Cool::Direction2D",
         "Cool::Hue",
+        "Cool::ColorPalette",
     ]
 
 
