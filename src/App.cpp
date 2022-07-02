@@ -79,8 +79,8 @@ void App::update()
 
     if (inputs_are_allowed())
     {
-        _is0_module->update();
-        _custom_shader_module->update();
+        _is0_module->update(module_update_context());
+        _custom_shader_module->update(module_update_context());
         check_inputs();
     }
 #if IS0_TEST_NODES
@@ -141,13 +141,16 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        some_module.do_rendering({
-            input_provider(aspect_ratio, time),
-            input_factory(),
-            input_destructor(),
-            is_dirty__functor(),
-            set_clean__functor(),
-        });
+        some_module.do_rendering(
+            {
+                input_provider(aspect_ratio, time),
+                input_factory(),
+                input_destructor(),
+                is_dirty__functor(),
+                set_clean__functor(),
+            },
+            module_update_context()
+        );
     });
 }
 

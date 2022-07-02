@@ -1,5 +1,6 @@
 #pragma once
 #include <Cool/Input/KeyboardEvent.h>
+#include <Cool/MessageConsole/MessageConsole.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
@@ -26,6 +27,18 @@ public:
         SetClean_Ref        set_clean;
     };
 
+    class UpdateContext_Ref {
+    public:
+        UpdateContext_Ref(Cool::MessageConsole& console)
+            : _message_console{console}
+        {}
+
+        auto message_console() -> Cool::MessageConsole& { return _message_console; }
+
+    private:
+        std::reference_wrapper<Cool::MessageConsole> _message_console;
+    };
+
     Module() = default;
     Module(std::string_view name, DirtyFlagFactory_Ref dirty_flag_factory)
         : _name{name}
@@ -37,13 +50,13 @@ public:
 
     auto name() const -> const std::string& { return _name; }
 
-    void do_rendering(RenderParams params)
+    void do_rendering(RenderParams params, UpdateContext_Ref update_ctx)
     {
-        render(params);
+        render(params, update_ctx);
         params.set_clean(_dirty_flag);
     }
     virtual void imgui_windows(Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
-    virtual void update(){};
+    virtual void update(UpdateContext_Ref){};
 
     virtual auto all_inputs() const -> AllInputRefsToConst = 0;
 
@@ -55,7 +68,7 @@ public:
     auto dirty_flag() { return _dirty_flag; }
 
 private:
-    virtual void render(RenderParams) = 0;
+    virtual void render(RenderParams, UpdateContext_Ref) = 0;
 
 private:
     std::string _name;

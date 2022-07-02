@@ -49,9 +49,9 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
     // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-void Module_CustomShader::render(RenderParams in)
+void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
-    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.set_clean, in.input_factory, in.input_destructor);
+    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.set_clean, in.input_factory, in.input_destructor, update_ctx);
     if (_fullscreen_pipeline.shader())
     {
         _fullscreen_pipeline.shader()->bind();
@@ -75,23 +75,38 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     IsDirty_Ref         is_dirty,
     SetClean_Ref        set_clean,
     InputFactory_Ref    input_factory,
-    InputDestructor_Ref input_destructor
+    InputDestructor_Ref input_destructor,
+    UpdateContext_Ref   update_ctx
 )
 {
     if (is_dirty(_shader_is_dirty))
     {
-        // Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
-        compile_shader(source_code, file_path.string());
+        compile_shader(source_code, file_path.string(), update_ctx);
         parse_shader_for_params(source_code, input_factory, input_destructor);
         set_clean(_shader_is_dirty);
     }
 }
 
-void Module_CustomShader::compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name)
+void Module_CustomShader::compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name, UpdateContext_Ref update_ctx)
 {
-    _fullscreen_pipeline.compile(fragment_shader_source_code, shader_name);
+    const auto maybe_error = _fullscreen_pipeline.compile(fragment_shader_source_code, shader_name);
+    if (maybe_error)
+    {
+        update_ctx.message_console().send(
+            _compile_error_message_id,
+            Cool::MessageV2{
+                .category         = name(),
+                .detailed_message = *maybe_error,
+                .severity         = Cool::MessageSeverity::Error,
+            }
+        );
+    }
+    else
+    {
+        update_ctx.message_console().clear(_compile_error_message_id);
+    }
 }
 
 static auto name(const AnyInput& input)

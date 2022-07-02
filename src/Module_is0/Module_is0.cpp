@@ -13,7 +13,7 @@ Module_is0::Module_is0(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref
 {
 }
 
-void Module_is0::update()
+void Module_is0::update(UpdateContext_Ref update_ctx)
 {
     if (_editor.tree_has_changed() || _must_recompile)
     {
@@ -27,7 +27,22 @@ void Module_is0::update()
             _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
         }
 
-        _fullscreen_pipeline.compile(_shader_code, "is0 Ray Marcher");
+        const auto maybe_error = _fullscreen_pipeline.compile(_shader_code, "is0 Ray Marcher");
+        if (maybe_error)
+        {
+            update_ctx.message_console().send(
+                _compile_error_message_id,
+                Cool::MessageV2{
+                    .category         = name(),
+                    .detailed_message = *maybe_error,
+                    .severity         = Cool::MessageSeverity::Error,
+                }
+            );
+        }
+        else
+        {
+            update_ctx.message_console().clear(_compile_error_message_id);
+        }
     }
 }
 
@@ -106,7 +121,7 @@ auto Module_is0::is_dirty(IsDirty_Ref check_dirty) const -> bool
            check_dirty(_shader_is_dirty);
 };
 
-void Module_is0::render(RenderParams in)
+void Module_is0::render(RenderParams in, UpdateContext_Ref)
 {
     if (_fullscreen_pipeline.shader())
     {

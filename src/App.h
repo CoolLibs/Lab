@@ -70,6 +70,7 @@ private:
     auto dirty_flag_factory                         () { return DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return SetClean_Ref{_dirty_registry}; }
+    auto module_update_context                      () { return Module::UpdateContext_Ref{_message_console}; }
     // clang-format on
 
     Cool::Polaroid polaroid();

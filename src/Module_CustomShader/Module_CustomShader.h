@@ -15,7 +15,7 @@ public:
 
     void set_image_in_shader(std::string_view name, int slot, GLuint texture_id);
 
-    void render(RenderParams) override;
+    void render(RenderParams, UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref ui) const override;
 
     auto all_inputs() const -> AllInputRefsToConst override
@@ -38,8 +38,8 @@ public:
     }
 
 private:
-    void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, SetClean_Ref, InputFactory_Ref, InputDestructor_Ref);
-    void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name);
+    void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, SetClean_Ref, InputFactory_Ref, InputDestructor_Ref, UpdateContext_Ref);
+    void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name, UpdateContext_Ref);
     void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref);
 
 private:
@@ -48,6 +48,7 @@ private:
     Input<Cool::Camera>      _camera_input;
     DirtyFlag                _shader_is_dirty; // Must be before _file because it is used to construct it
     mutable Input_File       _file;
+    Cool::MessageId          _compile_error_message_id{};
 
 private:
     // Serialization

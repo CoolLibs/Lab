@@ -17,7 +17,7 @@ public:
     Module_is0() = default;
     Module_is0(DirtyFlagFactory_Ref, InputFactory_Ref);
 
-    void                             update() override;
+    void                             update(UpdateContext_Ref) override;
     void                             imgui_windows(Ui_Ref) const override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
@@ -26,7 +26,7 @@ public:
     auto                             is_dirty(IsDirty_Ref) const -> bool override;
 
 protected:
-    void render(RenderParams) override;
+    void render(RenderParams, UpdateContext_Ref) override;
 
 private:
     // TODO remove all those `mutable` once ui function is done properly
@@ -44,6 +44,7 @@ private:
     int                              _in_use_render = 0;
     mutable std::string              _folder_path_for_save;
     mutable std::string              _file_name_for_save;
+    Cool::MessageId                  _compile_error_message_id;
 
 private:
     // Serialization
