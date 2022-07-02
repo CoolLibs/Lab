@@ -7,20 +7,92 @@
 # You can use `all_variable_types()` to get all the variable types we use in CoolLab.
 # ------------
 
+from dataclasses import dataclass
+
+
+@dataclass
+class VariableMetadata:
+    name_in_shader: str
+    field_name: str
+
+
+@dataclass
+class VariableType:
+    type: str
+    metadatas: list[VariableMetadata]
+
+
+def all_variable_types_and_metadata():
+    return [
+        VariableType(
+            type="bool",
+            metadatas=[]
+        ),
+        VariableType(
+            type="int",
+            metadatas=[
+                VariableMetadata(
+                    name_in_shader="min",
+                    field_name="min_value",
+                ),
+                VariableMetadata(
+                    name_in_shader="max",
+                    field_name="max_value",
+                ),
+            ]
+        ),
+        VariableType(
+            type="float",
+            metadatas=[
+                VariableMetadata(
+                    name_in_shader="min",
+                    field_name="min_value",
+                ),
+                VariableMetadata(
+                    name_in_shader="max",
+                    field_name="max_value",
+                ),
+            ]
+        ),
+        VariableType(
+            type="glm::vec2",
+            metadatas=[]
+        ),
+        VariableType(
+            type="glm::vec3",
+            metadatas=[]
+        ),
+        VariableType(
+            type="glm::vec4",
+            metadatas=[]
+        ),
+        VariableType(
+            type="Cool::RgbColor",
+            metadatas=[
+                VariableMetadata(
+                    name_in_shader="hdr",
+                    field_name="is_hdr",
+                ),
+            ]
+        ),
+        VariableType(
+            type="Cool::Camera",
+            metadatas=[]
+        ),
+        VariableType(
+            type="Cool::Angle",
+            metadatas=[]
+        ),
+        VariableType(
+            type="Cool::Direction2D",
+            metadatas=[]
+        ),
+    ]
+
 
 def all_variable_types():
-    return [
-        "bool",
-        "int",
-        "float",
-        "glm::vec2",
-        "glm::vec3",
-        "glm::vec4",
-        "Cool::RgbColor",
-        "Cool::Camera",
-        "Cool::Angle",
-        "Cool::Direction2D"
-    ]
+    return map(lambda type_and_meta: type_and_meta.type,
+               all_variable_types_and_metadata())
 
 
 def all_variable_includes():
