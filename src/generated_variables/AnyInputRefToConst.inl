@@ -14,5 +14,7 @@ using AnyInputRefToConst = std::variant<
     std::reference_wrapper<const Input<Cool::RgbColor>>,
     std::reference_wrapper<const Input<Cool::Camera>>,
     std::reference_wrapper<const Input<Cool::Angle>>,
-    std::reference_wrapper<const Input<Cool::Direction2D>>
+    std::reference_wrapper<const Input<Cool::Direction2D>>,
+    std::reference_wrapper<const Input<Cool::Hue>>,
+    std::reference_wrapper<const Input<Cool::ColorPalette>>
 >;
