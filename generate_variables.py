@@ -14,6 +14,7 @@ from dataclasses import dataclass
 class VariableMetadata:
     name_in_shader: str
     field_name: str
+    type: str
 
 
 @dataclass
@@ -34,10 +35,12 @@ def all_variable_types_and_metadata():
                 VariableMetadata(
                     name_in_shader="min",
                     field_name="min_value",
+                    type="int",
                 ),
                 VariableMetadata(
                     name_in_shader="max",
                     field_name="max_value",
+                    type="int",
                 ),
             ]
         ),
@@ -47,10 +50,12 @@ def all_variable_types_and_metadata():
                 VariableMetadata(
                     name_in_shader="min",
                     field_name="min_value",
+                    type="float",
                 ),
                 VariableMetadata(
                     name_in_shader="max",
                     field_name="max_value",
+                    type="float",
                 ),
             ]
         ),
@@ -72,6 +77,7 @@ def all_variable_types_and_metadata():
                 VariableMetadata(
                     name_in_shader="hdr",
                     field_name="is_hdr",
+                    type="bool",
                 ),
             ]
         ),
@@ -85,6 +91,14 @@ def all_variable_types_and_metadata():
         ),
         VariableType(
             type="Cool::Direction2D",
+            metadatas=[]
+        ),
+        VariableType(
+            type="Cool::Hue",
+            metadatas=[]
+        ),
+        VariableType(
+            type="Cool::ColorPalette",
             metadatas=[]
         ),
     ]
@@ -141,6 +155,27 @@ def AnyInputRefToConst():
         map(lambda var_type: f"    std::reference_wrapper<const Input<{var_type}>>", all_variable_types())) + "\n>;"
 
 
+def find_metadatas_in_string():
+    commands = "\n"
+    for variable_type_and_metadatas in all_variable_types_and_metadata():
+        commands += f'''
+template<>
+auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata<{variable_type_and_metadatas.type}>
+{{
+Cool::VariableMetadata<{variable_type_and_metadatas.type}> metadata{{}};
+'''
+        for variable_metadatas in variable_type_and_metadatas.metadatas:
+            commands += f'''
+const auto {variable_metadatas.field_name} = Cool::String::find_value_for_given_key<{variable_metadatas.type}>(key_values, "{variable_metadatas.name_in_shader}");
+if ({variable_metadatas.field_name})
+{{
+    metadata.{variable_metadatas.field_name} = *{variable_metadatas.field_name};
+}}
+'''
+        commands += "return metadata;\n}\n"
+    return commands
+
+
 if __name__ == '__main__':
     from tooling.generate_files import generate
     generate(
@@ -153,5 +188,6 @@ if __name__ == '__main__':
             AnyInputRef,
             AnyInputRefToConst,
             all_variable_includes,
+            find_metadatas_in_string,
         ],
     )

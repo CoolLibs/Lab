@@ -5,6 +5,7 @@
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
+#include <type_from_string/type_from_string.hpp>
 
 namespace Lab {
 
@@ -133,42 +134,52 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-void identify_type(const std::string type, const std::string name, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs, std::string default_value, std::string min_value, std::string max_value)
+template<typename T>
+auto get_default_value(std::string_view key_values)
 {
-    const auto input = [&]() -> AnyInput {
-        if (type == "int")
-            return input_factory.make<int>(dirty_flag, name);
-        else if (type == "float")
-            return input_factory.make<float>(dirty_flag, name);
-        else if (type == "vec2")
-            return input_factory.make<glm::vec2>(dirty_flag, name);
-        else if (type == "vec3")
-            return input_factory.make<glm::vec3>(dirty_flag, name);
-        else if (type == "bool")
-            return input_factory.make<bool>(dirty_flag, name);
-        else if (type == "RgbColor")
-            return input_factory.make<Cool::RgbColor>(dirty_flag, name);
-        else
-            throw std::invalid_argument(type + " is not a valid parameter type.");
-    }();
-    new_inputs.push_back(input);
+    T          default_value{};
+    const auto default_T = Cool::String::find_value_for_given_key<T>(key_values, "default");
+    if (default_T)
+    {
+        default_value = *default_T;
+    }
+    return default_value;
 }
 
-/// Finds in `text` the value associated with a given `key` (e.g. "default", "min", "max"), as a string.
-std::string find_value_for_given_key(std::string_view text, std::string_view key)
+template<typename T>
+auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata<T>
 {
-    auto start_position_of_key = text.find(key);
-    if (start_position_of_key == std::string_view::npos)
-    {
-        return "";
-    }
-    else
-    {
-        return Cool::String::next_word(
-            text,
-            start_position_of_key + key.length()
-        );
-    }
+    static_assert("Type not already defined, you can add it in generate_variables.py");
+}
+
+#include "generated_variables/find_metadatas_in_string.inl"
+
+template<typename T>
+auto make_input(
+    const std::string_view name,
+    DirtyFlag              dirty_flag,
+    InputFactory_Ref       input_factory,
+    std::string_view       key_values
+) -> Input<T>
+{
+    return input_factory.make<T>(
+        dirty_flag,
+        name,
+        get_default_value<T>(key_values),
+        get_default_metadata<T>(key_values)
+    );
+}
+
+auto make_any_input(
+    const std::string_view type,
+    const std::string_view name,
+    DirtyFlag              dirty_flag,
+    InputFactory_Ref       input_factory,
+    std::string_view       key_values
+)
+    -> AnyInput
+{
+    return TFS_EVALUATE_FUNCTION_TEMPLATE(make_input, type, AnyInput, (name, dirty_flag, input_factory, key_values));
 }
 
 void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
@@ -189,8 +200,8 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
         }
         line = Cool::String::replace_at(0, space_before_include->first, line, "");
 
-        std::string include     = "include";
-        size_t      current_pos = include.length();
+        std::string uniform     = "uniform";
+        size_t      current_pos = uniform.length();
 
         std::string type = Cool::String::next_word(line, current_pos);
 
@@ -204,13 +215,20 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
 
         // Cool::String::replace_all(name, "_", " ");
 
-        std::string default_value = find_value_for_given_key(line, "default");
+        const auto key_values = [&]() -> std::string {
+            if (comment_pos != std::string_view::npos)
+            {
+                return line.substr(comment_pos, line.length() - comment_pos);
+            }
+            else
+            {
+                return "";
+            }
+        }();
 
-        std::string min_value = find_value_for_given_key(line, "min");
-
-        std::string max_value = find_value_for_given_key(line, "max");
-
-        identify_type(type, name, dirty_flag, input_factory, new_inputs, default_value, min_value, max_value);
+        new_inputs.push_back(
+            make_any_input(type, name, dirty_flag, input_factory, key_values)
+        );
     }
 }
 
