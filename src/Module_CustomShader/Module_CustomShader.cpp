@@ -154,25 +154,21 @@ void identify_type(const std::string type, const std::string name, DirtyFlag dir
     new_inputs.push_back(input);
 }
 
-std::string find_element(std::string line, size_t current_pos)
+/// Finds in `text` the value associated with a given `key` (e.g. "default", "min", "max"), as a string.
+std::string find_value_for_given_key(std::string_view text, std::string_view key)
 {
-    const auto type_pos = Cool::String::find_next_word(line, current_pos);
-    if (type_pos)
-    {
-        return line.substr(type_pos->first, type_pos->second - type_pos->first);
-    }
-    return 0;
-}
-
-std::string find_default(std::string line, std::string word_to_calculate)
-{
-    auto find_default = line.find(word_to_calculate);
-    if (find_default == std::string::npos)
+    auto start_position_of_key = text.find(key);
+    if (start_position_of_key == std::string_view::npos)
     {
         return "";
     }
-    find_default += word_to_calculate.length();
-    return find_element(line, find_default);
+    else
+    {
+        return Cool::String::next_word(
+            text,
+            start_position_of_key + key.length()
+        );
+    }
 }
 
 void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
@@ -196,17 +192,11 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
         std::string include     = "include";
         size_t      current_pos = include.length();
 
-        std::string type = find_element(line, current_pos);
+        std::string type = Cool::String::next_word(line, current_pos);
 
         current_pos += type.length() + 1;
 
-        std::string name = find_element(line, current_pos);
-
-        auto delete_semicolon = Cool::String::find_next_word(name, 0, ";");
-        if (delete_semicolon)
-        {
-            name = name.substr(0, name.size() - 1); // Find a better way to delete the semicolon ?
-        }
+        std::string name = Cool::String::next_word(line, current_pos);
 
         // const std::vector<std::pair<std::string, std::string>> replacements = {
         //     std::make_pair("_", " "),
@@ -214,11 +204,11 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
 
         // Cool::String::replace_all(name, "_", " ");
 
-        std::string default_value = find_default(line, "default");
+        std::string default_value = find_value_for_given_key(line, "default");
 
-        std::string min_value = find_default(line, "min");
+        std::string min_value = find_value_for_given_key(line, "min");
 
-        std::string max_value = find_default(line, "max");
+        std::string max_value = find_value_for_given_key(line, "max");
 
         identify_type(type, name, dirty_flag, input_factory, new_inputs, default_value, min_value, max_value);
     }
