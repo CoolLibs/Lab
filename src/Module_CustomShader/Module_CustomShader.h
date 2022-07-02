@@ -1,10 +1,10 @@
 #pragma once
 #include <Cool/File/File.h>
-#include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/Path/Path.h>
 #include "Dependencies/Input.h"
 #include "Dependencies/InputFactory_Ref.h"
 #include "Dependencies/Module.h"
+#include "FullscreenShader.h"
 
 namespace Lab {
 
@@ -34,21 +34,18 @@ public:
     auto is_dirty(IsDirty_Ref check_dirty) const -> bool override
     {
         return Module::is_dirty(check_dirty) ||
-               check_dirty(_shader_is_dirty);
+               check_dirty(_shader._is_dirty);
     }
 
 private:
     void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, SetClean_Ref, InputFactory_Ref, InputDestructor_Ref, UpdateContext_Ref);
-    void compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name, UpdateContext_Ref);
     void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref);
 
 private:
-    Cool::FullscreenPipeline _fullscreen_pipeline{};
-    std::vector<AnyInput>    _inputs;
-    Input<Cool::Camera>      _camera_input;
-    DirtyFlag                _shader_is_dirty; // Must be before _file because it is used to construct it
-    mutable Input_File       _file;
-    Cool::MessageId          _compile_error_message_id{};
+    FullscreenShader      _shader; // Must be before _file because it is used to construct it
+    std::vector<AnyInput> _inputs;
+    Input<Cool::Camera>   _camera_input;
+    mutable Input_File    _file;
 
 private:
     // Serialization
@@ -60,7 +57,7 @@ private:
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
             cereal::make_nvp("Inputs", _inputs),
             cereal::make_nvp("Camera Input", _camera_input),
-            cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
+            cereal::make_nvp("Shader", _shader),
             cereal::make_nvp("File", _file)
         );
     }
