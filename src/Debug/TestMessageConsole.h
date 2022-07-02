@@ -55,7 +55,7 @@ private:
 
 private:
     Message _message1;
-    Message _message2{"Test 2", "Hello! 2"};
+    Message _message2{"Test 2", "Hello! 2", Cool::MessageSeverity::Warning};
 };
 
 } // namespace Lab
