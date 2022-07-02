@@ -6,6 +6,7 @@
  */
 
 using AnyInputRef = std::variant<
+    std::reference_wrapper<Input<bool>>,
     std::reference_wrapper<Input<int>>,
     std::reference_wrapper<Input<float>>,
     std::reference_wrapper<Input<glm::vec2>>,

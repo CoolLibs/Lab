@@ -6,6 +6,7 @@
  */
 
 using AnyInput = std::variant<
+    Input<bool>,
     Input<int>,
     Input<float>,
     Input<glm::vec2>,

@@ -5,6 +5,7 @@
  * -----------------------------------------------------------------------------
  */
 
+LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<bool>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<int>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<float>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<glm::vec2>)

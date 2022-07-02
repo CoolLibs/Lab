@@ -6,6 +6,7 @@
  */
 
 using VariableRegistries = reg::Registries<
+    Cool::Variable<bool>,
     Cool::Variable<int>,
     Cool::Variable<float>,
     Cool::Variable<glm::vec2>,
