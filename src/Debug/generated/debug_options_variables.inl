@@ -9,4 +9,4 @@ bool show_imgui_demo_window{false};
 bool show_commands_and_registries_debug_windows{false};
 bool log_when_rendering{false};
 bool test_all_variable_widgets{false};
-bool test_error_logger{false};
+bool test_message_console{false};

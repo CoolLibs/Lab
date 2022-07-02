@@ -204,9 +204,13 @@ void App::imgui_windows()
     _custom_shader_view.imgui_window();
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
-#if DEBUG
-    _error_logger.imgui_show();
-#endif
+
+    ImGui::Begin("Messages");
+    {
+        _message_console.imgui();
+    }
+    ImGui::End();
+
     if (inputs_are_allowed())
     {
         const auto the_ui = ui();
@@ -242,9 +246,9 @@ void App::imgui_windows()
         {
             // test_variables();
         }
-        if (DebugOptions::test_error_logger())
+        if (DebugOptions::test_message_console())
         {
-            _test_error_logger.imgui_window(_error_logger);
+            _test_message_console.imgui_window(_message_console);
         }
 #endif // DEBUG
     }

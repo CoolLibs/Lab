@@ -1,11 +1,11 @@
 #pragma once
 
 #include <Cool/AppManager/IApp.h>
-#include <Cool/Errors/ErrorLogger.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
+#include <Cool/MessageConsole/MessageConsole.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/AutoSerializer.h>
 #include <Cool/Time/Clock_Realtime.h>
@@ -16,7 +16,7 @@
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Debug/DebugOptionsDetails.h"
-#include "Debug/TestErrorLogger.h"
+#include "Debug/TestMessageConsole.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
@@ -109,9 +109,9 @@ private:
     std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger                        _command_logger{};
     Cool::OpenGL::Texture                _texture;
-    Cool::ErrorLogger                    _error_logger{};
+    Cool::MessageConsole                 _message_console{};
 #if DEBUG
-    TestErrorLogger _test_error_logger{};
+    TestMessageConsole _test_message_console{};
 #endif
 
 private:
