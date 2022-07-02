@@ -205,11 +205,7 @@ void App::imgui_windows()
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
-    ImGui::Begin("Messages");
-    {
-        _message_console.imgui();
-    }
-    ImGui::End();
+    _message_console.imgui_window();
 
     if (inputs_are_allowed())
     {
@@ -270,6 +266,7 @@ void App::menu_windows()
 {
     if (ImGui::BeginMenu("Windows"))
     {
+        ImGui::Checkbox("Console", &_message_console.is_open());
         Cool::Log::ToUser::imgui_toggle_console();
         for (auto& view : _views)
         {
