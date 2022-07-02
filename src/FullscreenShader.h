@@ -9,15 +9,24 @@ namespace Lab {
 
 class FullscreenShader {
 public:
+    FullscreenShader() = default;
+    explicit FullscreenShader(DirtyFlag dirty_flag)
+        : _dirty_flag{dirty_flag}
+    {}
+
     void compile(
         std::string_view      fragment_shader_source_code,
         std::string_view      shader_name,
         std::string_view      module_name,
+        SetClean_Ref          set_clean,
         Cool::MessageConsole& message_console
     );
 
-public:
-    DirtyFlag                _is_dirty;
+    auto dirty_flag() const -> const DirtyFlag& { return _dirty_flag; }
+    auto pipeline() -> Cool::FullscreenPipeline& { return _fullscreen_pipeline; }
+
+private:
+    DirtyFlag                _dirty_flag{};
     Cool::FullscreenPipeline _fullscreen_pipeline{};
     Cool::MessageId          _compile_error_message_id{};
 
@@ -28,7 +37,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Shader Dirty Flag", _is_dirty)
+            cereal::make_nvp("Shader Dirty Flag", _dirty_flag)
         );
     }
 };

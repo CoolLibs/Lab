@@ -6,6 +6,7 @@ void FullscreenShader::compile(
     std::string_view      fragment_shader_source_code,
     std::string_view      shader_name,
     std::string_view      module_name,
+    SetClean_Ref          set_clean,
     Cool::MessageConsole& message_console
 )
 {
@@ -25,6 +26,7 @@ void FullscreenShader::compile(
     {
         message_console.clear(_compile_error_message_id);
     }
+    set_clean(_dirty_flag);
 }
 
 } // namespace Lab
