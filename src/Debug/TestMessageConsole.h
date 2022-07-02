@@ -20,9 +20,10 @@ public:
 
 private:
     struct Message {
-        std::string     category{"Test"};
-        std::string     message{"Hello!"};
-        Cool::MessageId id{};
+        std::string           category{"Test"};
+        std::string           message{"Hello!"};
+        Cool::MessageSeverity severity{Cool::MessageSeverity::Error};
+        Cool::MessageId       id{};
     };
 
     void imgui(Message& message, Cool::MessageConsole& message_console)
@@ -42,11 +43,12 @@ private:
             message_console.send(message.id, {
                                                  .category         = message.category,
                                                  .detailed_message = message.message,
-                                                 .severity         = Cool::MessageSeverity::Error,
+                                                 .severity         = message.severity,
                                              });
         }
         ImGui::InputText("Category", &message.category);
         ImGui::InputText("Message", &message.message);
+        ImGui::Combo("Severity", (int*)&message.severity, "Info\0Warning\0Error\0\0");
 
         ImGui::PopID();
     }
