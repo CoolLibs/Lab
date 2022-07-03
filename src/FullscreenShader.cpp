@@ -3,17 +3,16 @@
 namespace Lab {
 
 void FullscreenShader::compile(
-    std::string_view      fragment_shader_source_code,
-    std::string_view      shader_name,
-    std::string_view      module_name,
-    SetClean_Ref          set_clean,
-    Cool::MessageConsole& message_console
+    std::string_view  fragment_shader_source_code,
+    std::string_view  shader_name,
+    std::string_view  module_name,
+    UpdateContext_Ref update_ctx
 )
 {
     const auto maybe_error = _fullscreen_pipeline.compile(fragment_shader_source_code, shader_name);
     if (maybe_error)
     {
-        message_console.send(
+        update_ctx.message_console().send(
             _compile_error_message_id,
             Cool::MessageV2{
                 .category         = std::string{module_name},
@@ -24,9 +23,9 @@ void FullscreenShader::compile(
     }
     else
     {
-        message_console.clear(_compile_error_message_id);
+        update_ctx.message_console().clear(_compile_error_message_id);
     }
-    set_clean(_dirty_flag);
+    update_ctx.set_clean(_dirty_flag);
 }
 
 } // namespace Lab

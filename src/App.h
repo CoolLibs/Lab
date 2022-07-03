@@ -21,6 +21,7 @@
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
+#include "Dependencies/UpdateContext_Ref.h"
 #include "Dependencies/VariableRegistries.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
@@ -70,7 +71,7 @@ private:
     auto dirty_flag_factory                         () { return DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return SetClean_Ref{_dirty_registry}; }
-    auto module_update_context                      () { return Module::UpdateContext_Ref{_message_console}; }
+    auto update_context                             () { return UpdateContext_Ref{{_message_console, set_clean__functor()}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();

@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Cool/Gpu/FullscreenPipeline.h>
-#include <Cool/MessageConsole/MessageConsole.h>
 #include <Cool/MessageConsole/MessageId.h>
 #include "Dependencies/Dirty.h"
+#include "Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {
 
@@ -15,11 +15,10 @@ public:
     {}
 
     void compile(
-        std::string_view      fragment_shader_source_code,
-        std::string_view      shader_name,
-        std::string_view      module_name,
-        SetClean_Ref          set_clean,
-        Cool::MessageConsole& message_console
+        std::string_view fragment_shader_source_code,
+        std::string_view shader_name,
+        std::string_view module_name,
+        UpdateContext_Ref
     );
 
     auto dirty_flag() const -> const DirtyFlag& { return _dirty_flag; }

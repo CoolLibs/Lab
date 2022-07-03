@@ -1,6 +1,5 @@
 #pragma once
 #include <Cool/Input/KeyboardEvent.h>
-#include <Cool/MessageConsole/MessageConsole.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
@@ -9,6 +8,7 @@
 #include "Dependencies/InputFactory_Ref.h"
 #include "Dependencies/InputProvider_Ref.h"
 #include "Dependencies/Ui.h"
+#include "Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {
 
@@ -25,18 +25,6 @@ public:
         InputDestructor_Ref input_destructor;
         IsDirty_Ref         is_dirty;
         SetClean_Ref        set_clean;
-    };
-
-    class UpdateContext_Ref {
-    public:
-        UpdateContext_Ref(Cool::MessageConsole& console)
-            : _message_console{console}
-        {}
-
-        auto message_console() -> Cool::MessageConsole& { return _message_console; }
-
-    private:
-        std::reference_wrapper<Cool::MessageConsole> _message_console;
     };
 
     Module() = default;

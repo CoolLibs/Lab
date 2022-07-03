@@ -79,8 +79,8 @@ void App::update()
 
     if (inputs_are_allowed())
     {
-        _is0_module->update(module_update_context());
-        _custom_shader_module->update(module_update_context());
+        _is0_module->update(update_context());
+        _custom_shader_module->update(update_context());
         check_inputs();
     }
 #if IS0_TEST_NODES
@@ -149,7 +149,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
                 is_dirty__functor(),
                 set_clean__functor(),
             },
-            module_update_context()
+            update_context()
         );
     });
 }

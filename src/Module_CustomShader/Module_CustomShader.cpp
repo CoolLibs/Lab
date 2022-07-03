@@ -51,7 +51,7 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
 
 void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
-    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.set_clean, in.input_factory, in.input_destructor, update_ctx);
+    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
     if (_shader.pipeline().shader())
     {
         _shader.pipeline().shader()->bind();
@@ -73,7 +73,6 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 void Module_CustomShader::refresh_pipeline_if_necessary(
     InputProvider_Ref   provider,
     IsDirty_Ref         is_dirty,
-    SetClean_Ref        set_clean,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor,
     UpdateContext_Ref   update_ctx
@@ -83,7 +82,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     {
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
-        _shader.compile(source_code, file_path.string(), name(), set_clean, update_ctx.message_console());
+        _shader.compile(source_code, file_path.string(), name(), update_ctx);
         parse_shader_for_params(source_code, input_factory, input_destructor);
     }
 }

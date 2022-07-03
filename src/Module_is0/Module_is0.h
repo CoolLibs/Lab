@@ -6,6 +6,7 @@
 #include <Cool/ImGui/ImGuiWindow.h>
 #include <Cool/Serialization/as_json.h>
 #include "Dependencies/Module.h"
+#include "FullscreenShader.h"
 #include "NodeEditor.h"
 #include "RenderEffectsManager.h"
 #include "RendererPBR.h"
@@ -31,20 +32,19 @@ protected:
 private:
     // TODO remove all those `mutable` once ui function is done properly
 
-    DirtyFlag                        _shader_is_dirty;
-    Input<Cool::Camera>              _camera_input;
-    mutable Cool::FullscreenPipeline _fullscreen_pipeline{};
-    mutable NodeEditor               _editor{Cool::Path::root() + "/is0 nodes"};
-    mutable RenderEffectsManager     _effects{Cool::Path::root() + "/is0 Render Effects"};
-    mutable std::string              _shader_code;
-    mutable Cool::ImGuiWindow        _shader_code_window{"is0 Shader Code", false};
-    mutable bool                     _must_recompile = false; // TODO use a DirtyFlag instead
-    CodeGen::LightProperties         _light;
-    CodeGen::MaterialProperties      _material;
-    int                              _in_use_render = 0;
-    mutable std::string              _folder_path_for_save;
-    mutable std::string              _file_name_for_save;
-    Cool::MessageId                  _compile_error_message_id;
+    FullscreenShader             _shader;
+    Input<Cool::Camera>          _camera_input;
+    mutable NodeEditor           _editor{Cool::Path::root() + "/is0 nodes"};
+    mutable RenderEffectsManager _effects{Cool::Path::root() + "/is0 Render Effects"};
+    mutable std::string          _shader_code;
+    mutable Cool::ImGuiWindow    _shader_code_window{"is0 Shader Code", false};
+    mutable bool                 _must_recompile              = false; // TODO use a DirtyFlag instead (which is alreadt in FullscreenShader)
+    mutable bool                 _must_regenerate_shader_code = false; // TODO use a DirtyFlag instead (which is alreadt in FullscreenShader)
+    CodeGen::LightProperties     _light;
+    CodeGen::MaterialProperties  _material;
+    int                          _in_use_render = 0;
+    mutable std::string          _folder_path_for_save;
+    mutable std::string          _file_name_for_save;
 
 private:
     // Serialization
@@ -75,7 +75,7 @@ private:
             cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
             cereal::make_nvp("File Name For Save", _file_name_for_save),
             cereal::make_nvp("Render Effects Manager", _effects),
-            cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
+            cereal::make_nvp("Shader", _shader),
             cereal::make_nvp("Camera Input", _camera_input)
         );
     }

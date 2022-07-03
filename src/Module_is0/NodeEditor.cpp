@@ -236,5 +236,6 @@ void NodeEditor::update_templates_and_nodes()
 
 void NodeEditor::generate_a_random_scene()
 {
-    _tree = random_node_tree(_factory);
+    _tree             = random_node_tree(_factory);
+    _tree_has_changed = true;
 }

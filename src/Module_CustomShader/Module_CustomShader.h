@@ -38,7 +38,7 @@ public:
     }
 
 private:
-    void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, SetClean_Ref, InputFactory_Ref, InputDestructor_Ref, UpdateContext_Ref);
+    void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, InputFactory_Ref, InputDestructor_Ref, UpdateContext_Ref);
     void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref);
 
 private:
