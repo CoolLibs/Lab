@@ -112,10 +112,3 @@ auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata
 Cool::VariableMetadata<Cool::Hue> metadata{};
 return metadata;
 }
-
-template<>
-auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata<Cool::ColorPalette>
-{
-Cool::VariableMetadata<Cool::ColorPalette> metadata{};
-return metadata;
-}

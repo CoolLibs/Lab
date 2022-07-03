@@ -135,15 +135,26 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
 }
 
 template<typename T>
-auto get_default_value(std::string_view key_values)
+auto get_default_value(std::string_view key_values) -> T
 {
-    T          default_value{};
     const auto default_T = Cool::String::find_value_for_given_key<T>(key_values, "default");
-    if (default_T)
+    if (default_T.has_value())
     {
-        default_value = *default_T;
+        return *default_T;
     }
-    return default_value;
+
+    auto default_without_key = Cool::String::find_next_word(key_values, 0);
+    if (!default_without_key.has_value())
+    {
+        return T{};
+    }
+
+    auto default_value = Cool::String::value_from_string<T>(*default_without_key);
+    if (default_value.has_value())
+    {
+        return *default_value;
+    }
+    return T{};
 }
 
 template<typename T>
@@ -193,7 +204,7 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
             return;
         }
 
-        auto space_before_include = Cool::String::find_next_word(line, 0);
+        auto space_before_include = Cool::String::find_next_word_position(line, 0);
         if (!space_before_include)
         {
             return;
@@ -205,7 +216,7 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
 
         std::string type = Cool::String::next_word(line, current_pos);
 
-        current_pos += type.length() + 1;
+        current_pos += type.length() + 1; // find_next_word_position to find current_pos even if there are whitespaces between words
 
         std::string name = Cool::String::next_word(line, current_pos);
 

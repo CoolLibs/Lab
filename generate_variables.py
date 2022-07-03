@@ -57,19 +57,19 @@ def all_variable_types_and_metadata():
                     field_name="max_value",
                     type="float",
                 ),
-            ]
+            ],
         ),
         VariableType(
             type="glm::vec2",
-            metadatas=[]
+            metadatas=[],
         ),
         VariableType(
             type="glm::vec3",
-            metadatas=[]
+            metadatas=[],
         ),
         VariableType(
             type="glm::vec4",
-            metadatas=[]
+            metadatas=[],
         ),
         VariableType(
             type="Cool::RgbColor",
@@ -79,28 +79,28 @@ def all_variable_types_and_metadata():
                     field_name="is_hdr",
                     type="bool",
                 ),
-            ]
+            ],
         ),
         VariableType(
             type="Cool::Camera",
-            metadatas=[]
+            metadatas=[],
         ),
         VariableType(
             type="Cool::Angle",
-            metadatas=[]
+            metadatas=[],
         ),
         VariableType(
             type="Cool::Direction2D",
-            metadatas=[]
+            metadatas=[],
         ),
         VariableType(
             type="Cool::Hue",
-            metadatas=[]
+            metadatas=[],
         ),
-        VariableType(
-            type="Cool::ColorPalette",
-            metadatas=[]
-        ),
+        # VariableType(
+        #     type="Cool::ColorPalette",
+        #     metadatas=[],
+        # ),
     ]
 
 
