@@ -31,9 +31,11 @@ void NodeEditor::ask_to_open_nodes_menu()
 
 bool NodeEditor::wants_to_delete_selection() const
 {
-    return ImGui::IsKeyReleased(GLFW_KEY_DELETE) ||
-           ImGui::IsKeyReleased(GLFW_KEY_BACKSPACE) ||
-           ImGui::IsKeyReleased(GLFW_KEY_X);
+    return _window_is_hovered &&
+           !ImGui::GetIO().WantTextInput &&
+           (ImGui::IsKeyReleased(GLFW_KEY_DELETE) ||
+            ImGui::IsKeyReleased(GLFW_KEY_BACKSPACE) ||
+            ImGui::IsKeyReleased(GLFW_KEY_X));
 }
 
 static void show_node_pins(const Node& node)
@@ -157,7 +159,10 @@ void NodeEditor::imgui_window()
     ImNodes::SetCurrentContext(&*_context);
     bool node_tree_has_changed = false;
     ImGui::Begin("is0");
-    _window_is_hovered = ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows);
+    _window_is_hovered = ImGui::IsWindowHovered(
+        ImGuiHoveredFlags_ChildWindows |
+        ImGuiHoveredFlags_NoPopupHierarchy
+    );
     ImNodes::BeginNodeEditor();
     {
         if (should_open_nodes_menu())
