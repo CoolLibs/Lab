@@ -6,6 +6,7 @@
 #include <Cool/ImGui/ImGuiWindow.h>
 #include <Cool/Serialization/as_json.h>
 #include "Dependencies/Module.h"
+#include "FullscreenShader.h"
 #include "NodeEditor.h"
 #include "RenderEffectsManager.h"
 #include "RendererPBR.h"
@@ -17,7 +18,7 @@ public:
     Module_is0() = default;
     Module_is0(DirtyFlagFactory_Ref, InputFactory_Ref);
 
-    void                             update() override;
+    void                             update(UpdateContext_Ref) override;
     void                             imgui_windows(Ui_Ref) const override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
@@ -26,24 +27,24 @@ public:
     auto                             is_dirty(IsDirty_Ref) const -> bool override;
 
 protected:
-    void render(RenderParams) override;
+    void render(RenderParams, UpdateContext_Ref) override;
 
 private:
     // TODO remove all those `mutable` once ui function is done properly
 
-    DirtyFlag                        _shader_is_dirty;
-    Input<Cool::Camera>              _camera_input;
-    mutable Cool::FullscreenPipeline _fullscreen_pipeline{};
-    mutable NodeEditor               _editor{Cool::Path::root() + "/is0 nodes"};
-    mutable RenderEffectsManager     _effects{Cool::Path::root() + "/is0 Render Effects"};
-    mutable std::string              _shader_code;
-    mutable Cool::ImGuiWindow        _shader_code_window{"is0 Shader Code", false};
-    mutable bool                     _must_recompile = false; // TODO use a DirtyFlag instead
-    CodeGen::LightProperties         _light;
-    CodeGen::MaterialProperties      _material;
-    int                              _in_use_render = 0;
-    mutable std::string              _folder_path_for_save;
-    mutable std::string              _file_name_for_save;
+    FullscreenShader             _shader;
+    Input<Cool::Camera>          _camera_input;
+    mutable NodeEditor           _editor{Cool::Path::root() + "/is0 nodes"};
+    mutable RenderEffectsManager _effects{Cool::Path::root() + "/is0 Render Effects"};
+    mutable std::string          _shader_code;
+    mutable Cool::ImGuiWindow    _shader_code_window{"is0 Shader Code", false};
+    mutable bool                 _must_recompile              = false; // TODO use a DirtyFlag instead (which is alreadt in FullscreenShader)
+    mutable bool                 _must_regenerate_shader_code = false; // TODO use a DirtyFlag instead (which is alreadt in FullscreenShader)
+    CodeGen::LightProperties     _light;
+    CodeGen::MaterialProperties  _material;
+    int                          _in_use_render = 0;
+    mutable std::string          _folder_path_for_save;
+    mutable std::string          _file_name_for_save;
 
 private:
     // Serialization
@@ -74,7 +75,7 @@ private:
             cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
             cereal::make_nvp("File Name For Save", _file_name_for_save),
             cereal::make_nvp("Render Effects Manager", _effects),
-            cereal::make_nvp("Shader Dirty Flag", _shader_is_dirty),
+            cereal::make_nvp("Shader", _shader),
             cereal::make_nvp("Camera Input", _camera_input)
         );
     }

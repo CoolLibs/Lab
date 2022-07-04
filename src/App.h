@@ -5,6 +5,7 @@
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
+#include <Cool/MessageConsole/MessageConsole.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/AutoSerializer.h>
 #include <Cool/Time/Clock_Realtime.h>
@@ -15,10 +16,12 @@
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Debug/DebugOptionsDetails.h"
+#include "Debug/TestMessageConsole.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
+#include "Dependencies/UpdateContext_Ref.h"
 #include "Dependencies/VariableRegistries.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
@@ -68,6 +71,7 @@ private:
     auto dirty_flag_factory                         () { return DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return SetClean_Ref{_dirty_registry}; }
+    auto update_context                             () { return UpdateContext_Ref{{_message_console, set_clean__functor()}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();
@@ -107,6 +111,10 @@ private:
     std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger                        _command_logger{};
     Cool::OpenGL::Texture                _texture;
+    Cool::MessageConsole                 _message_console{};
+#if DEBUG
+    TestMessageConsole _test_message_console{};
+#endif
 
 private:
     // Serialization

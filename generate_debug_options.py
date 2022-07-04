@@ -35,6 +35,10 @@ def all_debug_options():
             name_in_code="test_all_variable_widgets",
             name_in_ui="Test all Variable Widgets",
         ),
+        DebugOption(
+            name_in_code="test_message_console",
+            name_in_ui="Test Message Console",
+        ),
     ]
 
 

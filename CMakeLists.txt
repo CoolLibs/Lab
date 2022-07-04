@@ -20,10 +20,6 @@ set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,330,430>) # Must be >= 330 for Im
 add_subdirectory(Cool)
 target_link_libraries(${PROJECT_NAME} PRIVATE Cool::Core)
 
-# Include reg
-add_subdirectory(lib/reg)
-target_link_libraries(${PROJECT_NAME} PRIVATE reg::reg)
-
 # Include cmd
 add_subdirectory(lib/cmd)
 target_link_libraries(${PROJECT_NAME} PRIVATE cmd::cmd)

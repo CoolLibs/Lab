@@ -9,3 +9,4 @@
 [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
 [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
 [[nodiscard]] static auto test_all_variable_widgets() -> bool& { return instance().test_all_variable_widgets; }
+[[nodiscard]] static auto test_message_console() -> bool& { return instance().test_message_console; }

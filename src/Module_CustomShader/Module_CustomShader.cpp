@@ -11,9 +11,9 @@ namespace Lab {
 
 Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
     : Module{"Custom Shader", dirty_flag_factory}
+    , _shader{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
-    , _shader_is_dirty{dirty_flag_factory.make()}
-    , _file{_shader_is_dirty}
+    , _file{_shader.dirty_flag()}
 {
 }
 
@@ -51,49 +51,42 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
     // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-void Module_CustomShader::render(RenderParams in)
+void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
-    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.set_clean, in.input_factory, in.input_destructor);
-    if (_fullscreen_pipeline.shader())
+    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
+    if (_shader.pipeline().shader())
     {
-        _fullscreen_pipeline.shader()->bind();
-        _fullscreen_pipeline.shader()->set_uniform("_aspect_ratio", in.provider(Input_AspectRatio{}));
-        _fullscreen_pipeline.shader()->set_uniform("_time", in.provider(Input_Time{}));
+        _shader.pipeline().shader()->bind();
+        _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Input_AspectRatio{}));
+        _shader.pipeline().shader()->set_uniform("_time", in.provider(Input_Time{}));
 
         for (auto& input : _inputs)
         {
             std::visit([&](auto&& input) {
-                set_uniform(*_fullscreen_pipeline.shader(), input.name(), in.provider(input));
+                set_uniform(*_shader.pipeline().shader(), input.name(), in.provider(input));
             },
                        input);
         }
-        Cool::CameraShaderU::set_uniform(*_fullscreen_pipeline.shader(), in.provider(_camera_input), in.provider(Input_AspectRatio{}));
-        _fullscreen_pipeline.draw();
+        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Input_AspectRatio{}));
+        _shader.pipeline().draw();
     }
 }
 
 void Module_CustomShader::refresh_pipeline_if_necessary(
     InputProvider_Ref   provider,
     IsDirty_Ref         is_dirty,
-    SetClean_Ref        set_clean,
     InputFactory_Ref    input_factory,
-    InputDestructor_Ref input_destructor
+    InputDestructor_Ref input_destructor,
+    UpdateContext_Ref   update_ctx
 )
 {
-    if (is_dirty(_shader_is_dirty))
+    if (is_dirty(_shader.dirty_flag()))
     {
-        // Cool::Log::ToUser::info("Custom Shader Pipeline", "Re-building pipeline");
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
-        compile_shader(source_code, file_path.string());
+        _shader.compile(source_code, file_path.string(), name(), update_ctx);
         parse_shader_for_params(source_code, input_factory, input_destructor);
-        set_clean(_shader_is_dirty);
     }
-}
-
-void Module_CustomShader::compile_shader(std::string_view fragment_shader_source_code, std::string_view shader_name)
-{
-    _fullscreen_pipeline.compile(fragment_shader_source_code, shader_name);
 }
 
 static auto name(const AnyInput& input)
@@ -288,14 +281,14 @@ void Module_CustomShader::parse_shader_for_params(
 
 void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
 {
-    if (_fullscreen_pipeline.shader().has_value())
+    if (_shader.pipeline().shader().has_value())
     {
-        _fullscreen_pipeline.shader()->bind();
+        _shader.pipeline().shader()->bind();
         glpp::active_texture(slot);
         glpp::bind_texture<glpp::TextureKind::Tex2D>(texture_id);
         glpp::set_minification_filter<glpp::TextureKind::Tex2D>(texture_id, glpp::Interpolation::LinearMipmapLinear); // TODO do this only once at texture creation, and only if the curent custom shader needs it
         glpp::generate_mipmap<glpp::TextureKind::Tex2D>();                                                            // TODO DO this only when the texture changes (aka the corresponsing module gets re-rendered)
-        _fullscreen_pipeline.shader()->set_uniform(name, slot);
+        _shader.pipeline().shader()->set_uniform(name, slot);
     }
 }
 

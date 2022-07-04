@@ -71,6 +71,8 @@ public:
         }
     }
 
+    void set_dirty(const DirtyFlag flag) { _set_dirty(flag); }
+
 private:
     template<typename T>
     void widget(const VariableId<T>& id, Cool::Variable<T> variable)

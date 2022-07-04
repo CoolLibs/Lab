@@ -35,8 +35,13 @@ public:
             )};
     }
 
+private:
+    std::reference_wrapper<VariableRegistries> _variable_registries;
+    VariableId<Cool::Camera>                   _default_camera_id;
+};
+
     template<>
-    auto make(
+    inline auto InputFactory_Ref::make(
         const DirtyFlag& dirty_flag,
         std::string_view name,
         const Cool::Camera&,
@@ -49,10 +54,5 @@ public:
             name,
             _default_camera_id};
     }
-
-private:
-    std::reference_wrapper<VariableRegistries> _variable_registries;
-    VariableId<Cool::Camera>                   _default_camera_id;
-};
 
 } // namespace Lab

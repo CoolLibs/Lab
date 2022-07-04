@@ -79,8 +79,8 @@ void App::update()
 
     if (inputs_are_allowed())
     {
-        _is0_module->update();
-        _custom_shader_module->update();
+        _is0_module->update(update_context());
+        _custom_shader_module->update(update_context());
         check_inputs();
     }
 #if IS0_TEST_NODES
@@ -141,13 +141,16 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        some_module.do_rendering({
-            input_provider(aspect_ratio, time),
-            input_factory(),
-            input_destructor(),
-            is_dirty__functor(),
-            set_clean__functor(),
-        });
+        some_module.do_rendering(
+            {
+                input_provider(aspect_ratio, time),
+                input_factory(),
+                input_destructor(),
+                is_dirty__functor(),
+                set_clean__functor(),
+            },
+            update_context()
+        );
     });
 }
 
@@ -202,14 +205,11 @@ void App::imgui_windows()
 {
     _is0_view.imgui_window();
     _custom_shader_view.imgui_window();
-#if DEBUG
-    if (DebugOptions::test_all_variable_widgets())
-    {
-        // test_variables();
-    }
-#endif
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
+
+    _message_console.imgui_window();
+
     if (inputs_are_allowed())
     {
         const auto the_ui = ui();
@@ -241,6 +241,14 @@ void App::imgui_windows()
         {
             imgui_commands_and_registries_debug_windows();
         }
+        if (DebugOptions::test_all_variable_widgets())
+        {
+            // test_variables();
+        }
+        if (DebugOptions::test_message_console())
+        {
+            _test_message_console.imgui_window(_message_console);
+        }
 #endif // DEBUG
     }
 }
@@ -261,6 +269,7 @@ void App::menu_windows()
 {
     if (ImGui::BeginMenu("Windows"))
     {
+        ImGui::Checkbox("Console", &_message_console.is_open());
         Cool::Log::ToUser::imgui_toggle_console();
         for (auto& view : _views)
         {
