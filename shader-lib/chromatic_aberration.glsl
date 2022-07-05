@@ -1,7 +1,7 @@
 // https://www.shadertoy.com/view/4tlyD8
 
-RgbColor chromatic_aberration(
-    RgbColor in_color, float effect_intensity,
+vec3 chromatic_aberration(
+    vec3 in_color, float effect_intensity,
     float center_x, float center_y, int sampleCount, float falloff, float blur
 )
 {
@@ -30,6 +30,6 @@ RgbColor chromatic_aberration(
 
         offsets -= increments;
     }
-    RgbColor out_color = accumulator / float(sampleCount);
+    vec3 out_color = accumulator / float(sampleCount);
     return mix(in_color, out_color, effect_intensity);
 }

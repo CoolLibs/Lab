@@ -14,7 +14,7 @@ uniform sampler2D _image;
 // BEGIN DYNAMIC PARAMS
 uniform float center_x;       // 0 to 1 default 0.5
 uniform float center_y;       // 0 to 1 default 0.5
-uniform float angle_in_turns; // 0 to 1 (1 == 1 turn)
+uniform Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
 uniform bool  right_or_left;  // bool
 
 uniform float Effect_intensity;

@@ -13,7 +13,7 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform float Hue;
+uniform Hue Hue_coeficient;
 
 uniform float Effect_intensity;
 
@@ -25,7 +25,7 @@ void main()
 
     RgbColor out_color = hue(
         in_color, Effect_intensity,
-        Hue
+        Hue_coeficient
     );
 
     out_Color = vec4(out_color, 1.);

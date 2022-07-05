@@ -13,7 +13,7 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform float angle_in_turns;    // 0 to 1 (1 == 1 turn)
+uniform Angle angle_in_turns;    // 0 to 1 (1 == 1 turn)
 uniform float hole_radius;       // positive values
 uniform float hole_intensity;    // 0 to 8
 uniform float hole_attractivity; // -1 to 1

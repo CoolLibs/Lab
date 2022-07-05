@@ -1,5 +1,5 @@
-RgbColor highlight_modifier(
-    RgbColor in_color, float effect_intensity,
+vec3 highlight_modifier(
+    vec3 in_color, float effect_intensity,
     float highlights
 )
 {
@@ -17,6 +17,6 @@ RgbColor highlight_modifier(
                                 ? lum
                                 : lum +
                               a * sign(highlights) * exp(-0.5 * (((x1 - b) / c) * ((x1 - b) / c) + ((x2 - d) / e) * ((x2 - d) / e)));
-    RgbColor    out_color = in_color * lum_new / lum;
+    vec3        out_color = in_color * lum_new / lum;
     return mix(in_color, out_color, effect_intensity);
 }

@@ -1,8 +1,8 @@
 // #include "_ROOT_FOLDER_/shader-lib/rgb_hsv_conversion.frag"
 
 float color_detection(
-    RgbColor in_color,
-    RgbColor color
+    vec3 in_color,
+    vec3 color
 )
 {
     float hue_color = rgb2hsv(color).x;

@@ -5,7 +5,7 @@
 // http://creativecommons.org/publicdomain/zero/1.0/
 
 // Valid from 1000 to 40000 K (and additionally 0 for pure full white)
-RgbColor colorTemperatureToRGB(const in float temperature)
+vec3 colorTemperatureToRGB(const in float temperature)
 {
     // Values from: http://blenderartists.org/forum/showthread.php?270332-OSL-Goodness&p=2268693&viewfull=1#post2268693
     mat3 m = (temperature <= 6500.0) ? mat3(vec3(0.0, -2902.1955373783176, -8257.7997278925690), vec3(0.0, 1669.5803561666639, 2575.2827530017594), vec3(1.0, 1.3302673723350029, 1.8993753891711275))
@@ -13,13 +13,13 @@ RgbColor colorTemperatureToRGB(const in float temperature)
     return mix(clamp(vec3(m[0] / (vec3(clamp(temperature, 1000.0, 40000.0)) + m[1]) + m[2]), vec3(0.0), vec3(1.0)), vec3(1.0), smoothstep(1000.0, 0.0, temperature));
 }
 
-RgbColor white_balance_by_slider(
-    RgbColor in_color, float effect_intensity,
+vec3 white_balance_by_slider(
+    vec3 in_color, float effect_intensity,
     float temperature, float temperature_strength, float luminance_preservation_factor
 )
 {
-    float    temperature_in_kelvins = mix(1000, 40000, temperature); // because our parameter goes from 0 to 1
-    RgbColor out_color              = mix(in_color, in_color * colorTemperatureToRGB(temperature_in_kelvins), temperature_strength);
+    float temperature_in_kelvins = mix(1000, 40000, temperature); // because our parameter goes from 0 to 1
+    vec3  out_color              = mix(in_color, in_color * colorTemperatureToRGB(temperature_in_kelvins), temperature_strength);
     out_color *= mix(1.0, luminance(in_color) / max(luminance(out_color), 1e-5), luminance_preservation_factor);
 
     return mix(in_color, out_color, effect_intensity);

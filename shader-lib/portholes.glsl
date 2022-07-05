@@ -78,10 +78,10 @@ VoronoiRes voronoi(vec2 uv)
     return res;
 }
 
-RgbColor portholes(
-    RgbColor in_color, float effect_intensity, vec2 uv,
+vec3 portholes(
+    vec3 in_color, float effect_intensity, vec2 uv,
     bool square_mode, float size, float space_to_border, float speed, float movement, bool time_mode, float distance_mode, float zoom_intensity,
-    flaot change_center, float border, float smoothing, float border_smoothing, RgbColor border_color
+    flaot change_center, float border, float smoothing, float border_smoothing, vec3 border_color
 )
 {
     float m = 0.;
@@ -108,7 +108,7 @@ RgbColor portholes(
 
     vec2 uv2 = _uv;
 
-    RgbColor out_color = mix(image(uv2 + grad * zoom * zoom_intensity), border_color, smoothstep(border, 1. - border, 1 - smooth_max_polynomial(distance_to_edges, distance_to_edges * border_smoothing, smoothing)));
+    vec3 out_color = mix(image(uv2 + grad * zoom * zoom_intensity), border_color, smoothstep(border, 1. - border, 1 - smooth_max_polynomial(distance_to_edges, distance_to_edges * border_smoothing, smoothing)));
 
     return mix(in_color, out_color, effect_intensity);
 }

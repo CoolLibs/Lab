@@ -20,17 +20,17 @@ float blue_transformation(float blue, vec3 color_coefficient, float grey_coeffic
     return pow_factor(log(color_coefficient.b) / log(grey_coefficient), blue);
 }
 
-RgbColor color_transformation(RgbColor image, vec3 color_coefficient, float grey_coefficient)
+vec3 color_transformation(vec3 image, vec3 color_coefficient, float grey_coefficient)
 {
     float luminosity = luminance(image);
-    return RgbColor(red_transformation(luminosity, color_coefficient, grey_coefficient), green_transformation(luminosity, color_coefficient, grey_coefficient), blue_transformation(luminosity, color_coefficient, grey_coefficient));
+    return vec3(red_transformation(luminosity, color_coefficient, grey_coefficient), green_transformation(luminosity, color_coefficient, grey_coefficient), blue_transformation(luminosity, color_coefficient, grey_coefficient));
 }
 
-RgbColor color_effects_alternative(
-    RgbColor in_color, float effect_intensity,
-    RgbColor color_coefficient, float grey_coefficient
+vec3 color_effects_alternative(
+    vec3 in_color, float effect_intensity,
+    vec3 color_coefficient, float grey_coefficient
 )
 {
-    RgbColor out_color = color_transformation(in_color, color_coefficient, grey_coefficient);
+    vec3 out_color = color_transformation(in_color, color_coefficient, grey_coefficient);
     return mix(in_color, out_color, effect_intensity);
 }

@@ -20,7 +20,7 @@ uniform float center_x;       // default 0.5 range 0 to 1
 uniform float center_y;       // default 0.5 range 0 to 1
 uniform float scale;          //  range 0 to 7
 uniform float details;        //
-uniform float angle_in_turns; // 0 to 1 (1 == 1 turn)
+uniform Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
 uniform float strip;          // default 0.01
 
 uniform int nb_div;
