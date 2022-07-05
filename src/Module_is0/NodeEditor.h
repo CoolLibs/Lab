@@ -36,6 +36,7 @@ private:
     bool                        _all_nodes_have_a_valid_template = true;
     bool                        _tree_has_changed                = true;
     bool                        _should_open_nodes_menu          = false;
+    bool                        _window_is_hovered               = false;
     ImVec2                      _next_node_position              = {0.f, 0.f};
 
 private:
