@@ -34,24 +34,24 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 }
 
 template<typename T>
-static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
+static auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value) -> void
 {
     shader.set_uniform(name, value);
 }
 
 template<>
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value)
+auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value) -> void
 {
     shader.set_uniform(name, value.value);
 }
 
-void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
+auto set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&) -> void
 {
     assert(false); // This isn't used at the moment because we set the camera3d manually for all shaders, but this should be changed
     // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
+auto Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx) -> void
 {
     refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
     if (_shader.pipeline().shader())
@@ -72,13 +72,13 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
     }
 }
 
-void Module_CustomShader::refresh_pipeline_if_necessary(
+auto Module_CustomShader::refresh_pipeline_if_necessary(
     InputProvider_Ref   provider,
     IsDirty_Ref         is_dirty,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor,
     UpdateContext_Ref   update_ctx
-)
+) -> void
 {
     if (is_dirty(_shader.dirty_flag()))
     {
@@ -107,11 +107,11 @@ static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>&
     });
 }
 
-static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
+static auto keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<AnyInput>& old_inputs,
     std::vector<AnyInput>& new_inputs,
     InputDestructor_Ref    destroy
-)
+) -> void
 {
     for (auto& input : old_inputs)
     {
@@ -136,7 +136,7 @@ auto get_default_value(std::string_view key_values) -> T
         return *default_T;
     }
 
-    auto default_without_key = Cool::String::find_next_word(key_values, 0);
+    auto default_without_key = Cool::String::next_word(key_values, 0);
     if (!default_without_key.has_value())
     {
         return T{};
@@ -180,13 +180,17 @@ auto make_any_input(
     DirtyFlag              dirty_flag,
     InputFactory_Ref       input_factory,
     std::string_view       key_values
-)
-    -> AnyInput
+) -> AnyInput
 {
     return TFS_EVALUATE_FUNCTION_TEMPLATE(make_input, type, AnyInput, (name, dirty_flag, input_factory, key_values));
 }
 
-void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactory_Ref input_factory, std::vector<AnyInput>& new_inputs)
+auto separate_input_elements(
+    std::string            line,
+    DirtyFlag              dirty_flag,
+    InputFactory_Ref       input_factory,
+    std::vector<AnyInput>& new_inputs
+) -> void
 {
     const auto uniform_pos = line.find("uniform");
     if (uniform_pos != std::string::npos)
@@ -207,11 +211,21 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
         std::string uniform     = "uniform";
         size_t      current_pos = uniform.length();
 
-        std::string type = Cool::String::next_word(line, current_pos);
+        auto type = Cool::String::next_word(line, current_pos);
+        if (type.has_value())
+        {
+            current_pos += type->length() + 1; // find_next_word_position to find current_pos even if there are whitespaces between words
+        }
+        else
+        {
+            return;
+        }
 
-        current_pos += type.length() + 1; // find_next_word_position to find current_pos even if there are whitespaces between words
-
-        std::string name = Cool::String::next_word(line, current_pos);
+        auto name = Cool::String::next_word(line, current_pos);
+        if (!name.has_value())
+        {
+            return;
+        }
 
         // const std::vector<std::pair<std::string, std::string>> replacements = {
         //     std::make_pair("_", " "),
@@ -231,13 +245,16 @@ void separate_input_elements(std::string line, DirtyFlag dirty_flag, InputFactor
         }();
 
         new_inputs.push_back(
-            make_any_input(type, name, dirty_flag, input_factory, key_values)
+            make_any_input(*type, *name, dirty_flag, input_factory, key_values)
         );
     }
 }
 
-static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory)
-    -> std::vector<AnyInput>
+static auto get_inputs_from_shader_code(
+    std::string_view source_code,
+    DirtyFlag        dirty_flag,
+    InputFactory_Ref input_factory
+) -> std::vector<AnyInput>
 {
     std::vector<AnyInput> new_inputs;
     std::stringstream     stream{std::string{source_code}};
@@ -268,18 +285,18 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
     return new_inputs;
 }
 
-void Module_CustomShader::parse_shader_for_params(
+auto Module_CustomShader::parse_shader_for_params(
     std::string_view    source_code,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor
-)
+) -> void
 {
     auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }
 
-void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
+auto Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void
 {
     if (_shader.pipeline().shader().has_value())
     {
