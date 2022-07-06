@@ -6,6 +6,7 @@
  */
 
 using VariableRegistries = reg::Registries<
+    Cool::Variable<bool>,
     Cool::Variable<int>,
     Cool::Variable<float>,
     Cool::Variable<glm::vec2>,
@@ -15,6 +16,5 @@ using VariableRegistries = reg::Registries<
     Cool::Variable<Cool::Camera>,
     Cool::Variable<Cool::Angle>,
     Cool::Variable<Cool::Direction2D>,
-    Cool::Variable<Cool::Hue>,
-    Cool::Variable<Cool::ColorPalette>
+    Cool::Variable<Cool::Hue>
 >;

@@ -7,14 +7,15 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/symmetry.glsl"
 
 // BEGIN DYNAMIC PARAMS
 uniform float center_x;       // 0 to 1 default 0.5
 uniform float center_y;       // 0 to 1 default 0.5
-uniform float angle_in_turns; // 0 to 1 (1 == 1 turn)
-uniform float right_or_left;  // bool
+uniform Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
+uniform bool  right_or_left;  // bool
 
 uniform float Effect_intensity;
 
@@ -29,7 +30,7 @@ void main()
         center_x, center_y, angle_in_turns, right_or_left
     );
 
-    vec3 out_color = image(out_uv);
+    RgbColor out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }

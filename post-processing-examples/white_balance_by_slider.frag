@@ -13,6 +13,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/luminance.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/white_balance_by_slider.glsl"
 
@@ -28,12 +30,12 @@ uniform float Effect_intensity;
 
 void main()
 {
-    vec3  in_color = image(_uv).xyz;
+    RgbColor in_color = image(_uv).xyz;
 
-    vec3  out_color = white_balance_by_slider(
+    RgbColor out_color = white_balance_by_slider(
         in_color, Effect_intensity,
         Temperature, Temperature_strength, Luminance_preservation_factor
     );
-    
+
     out_Color = vec4(out_color, 1.0);
 }
