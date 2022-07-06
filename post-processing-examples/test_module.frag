@@ -3,11 +3,15 @@
 layout(location = 0) in vec2 _uv;
 out vec4 out_Color;
 
-uniform vec3  _color;
-uniform vec3  _color2;
-uniform float _circle_radius;
-uniform float _aspect_ratio;
-uniform float _time;
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+
+uniform RgbColor _color;
+uniform RgbColor _color2;
+uniform float    _circle_radius;
+uniform float    _aspect_ratio;
+uniform float    _time;
+
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
 void main()
 {

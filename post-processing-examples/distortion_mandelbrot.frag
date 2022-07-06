@@ -9,6 +9,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float size;     // negative values to flip the pattern
@@ -45,7 +47,7 @@ void main()
     }
 
     // image map
-    vec3 color = image(-Z.yx * .3 + .5).rgb;
+    RgbColor color = image(-Z.yx * .3 + .5).rgb;
 
     out_Color = vec4(color, 1.);
 }

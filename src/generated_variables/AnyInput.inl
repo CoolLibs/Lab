@@ -6,6 +6,7 @@
  */
 
 using AnyInput = std::variant<
+    Input<bool>,
     Input<int>,
     Input<float>,
     Input<glm::vec2>,
@@ -15,6 +16,5 @@ using AnyInput = std::variant<
     Input<Cool::Camera>,
     Input<Cool::Angle>,
     Input<Cool::Direction2D>,
-    Input<Cool::Hue>,
-    Input<Cool::ColorPalette>
+    Input<Cool::Hue>
 >;
