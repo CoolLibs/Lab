@@ -2,12 +2,12 @@
 
 vec3 pixelation_voronoi(
     vec3 in_color, float effect_intensity, vec2 uv,
-    float size, float speed, float movement, bool time_mode, float distance_mode
+    float size, float speed, float movement, float time_mode, float distance_mode
 )
 {
     float m = 0.;
     float t = 0;
-    if (time_mode)
+    if (time_mode > .5)
     {
         t = _time * speed;
     }

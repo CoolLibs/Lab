@@ -14,14 +14,15 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
-
 // BEGIN DYNAMIC PARAMS
 
-uniform float    drops_size;               // default 0.2 min = .001 max = 1.5
-uniform float    distortion;               // default 0.7 min = 0 max = 1
-uniform float    size;                     // default 1 min = 0.001 max = 1.5
-uniform RgbColor border_color_coefficient; // default 1 min = -1 max = 1
+uniform float time_mod;
+uniform float drops_size;     // default 0.2 min = .001 max = 1.5
+uniform float distortion;     // default 0.7 min = 0 max = 1
+uniform float size;           // default 1 min = 0.001 max = 1.5
+uniform float border_color_r; // default 1 min = -1 max = 1
+uniform float border_color_g; // default 1 min = -1 max = 1
+uniform float border_color_b; // default 1 min = -1 max = 1
 
 // END DYNAMIC PARAMS
 
@@ -68,8 +69,7 @@ float tick(float t, float d)
 // Kaleidoscopic iterated function system
 vec3 kifs(vec3 p, float t)
 {
-    for (int i = 0; i < 3; ++i)
-    {
+    for (int i = 0; i < 3; ++i) {
         float t1 = tick(t + float(i), 0.4 + float(i) * 0.1) + t * 0.3;
         p.xz *= rot(t1);
         p.yz *= rot(t1 * 0.7);
@@ -127,16 +127,13 @@ void main()
     float at     = 0.0;
     bool  inside = false;
     // main raymarching loop
-    for (int i = 0; i < 100; ++i)
-    {
+    for (int i = 0; i < 100; ++i) {
         float d = map(p);
-        if (d < drops_size)
-        {
+        if (d < drops_size) {
             inside = true;
             break;
         }
-        if (d > 100.0)
-        {
+        if (d > 100.0) {
             break;
         }
         p += r * d;
@@ -144,8 +141,7 @@ void main()
     }
 
     // // if we hit a surface
-    if (inside)
-    {
+    if (inside) {
         vec2 off = vec2(0.01, 0);
         vec3 n   = normalize(map(p) - vec3(map(p - off.xyy), map(p - off.yxy), map(p - off.yyx)));
         // refract the ray direction
@@ -156,9 +152,9 @@ void main()
 
     vec2 uv2 = p.xy * size / (depth * r.z) + vec2(0.5, .5);
 
-    RgbColor col = image(uv2).rgb;
+    vec3 col = image(uv2).rgb;
 
-    RgbColor border_color = border_color_coefficient + vec3(sin(_time * 4) * 0.05);
+    vec3 border_color = vec3(border_color_r, border_color_g, border_color_b) + vec3(sin(_time * 4) * 0.05);
     col += at * border_color;
     col *= pow(max(0.0, 1.3 - length(uv)), 0.8);
 

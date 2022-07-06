@@ -40,20 +40,18 @@ vec3 white_balance_by_click(
     float r             = 0.01;
     float circle_picker = 0;
 
-    if (dist <= r)
-    {
+    if (dist <= r){
         circle_picker = 1.;
     }
-    else if (dist > r && dist < r + 0.001)
-    {
+    else if (dist > r && dist < r + 0.001){
         circle_picker = -1.;
     }
-
+        
     vec2 xyEst  = XYZ2xy(sRGBtoXYZ * image(coordinate_for_white_balance));
     vec3 xyzEst = xy2XYZ(xyEst, 100.0);
     mat3 M      = cbCAT(xyzEst, xyz_D65);
 
-    vec3 out_color = M * in_color + circle_picker;
+    vec3 out_color    = M * in_color + circle_picker;
 
     return mix(in_color, out_color, effect_intensity);
 }

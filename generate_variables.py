@@ -7,106 +7,21 @@
 # You can use `all_variable_types()` to get all the variable types we use in CoolLab.
 # ------------
 
-from dataclasses import dataclass
-
-
-@dataclass
-class VariableMetadata:
-    name_in_shader: str
-    field_name: str
-    type: str
-
-
-@dataclass
-class VariableType:
-    type: str
-    metadatas: list[VariableMetadata]
-
-
-def all_variable_types_and_metadata():
-    return [
-        VariableType(
-            type="bool",
-            metadatas=[]
-        ),
-        VariableType(
-            type="int",
-            metadatas=[
-                VariableMetadata(
-                    name_in_shader="min",
-                    field_name="min_value",
-                    type="int",
-                ),
-                VariableMetadata(
-                    name_in_shader="max",
-                    field_name="max_value",
-                    type="int",
-                ),
-            ]
-        ),
-        VariableType(
-            type="float",
-            metadatas=[
-                VariableMetadata(
-                    name_in_shader="min",
-                    field_name="min_value",
-                    type="float",
-                ),
-                VariableMetadata(
-                    name_in_shader="max",
-                    field_name="max_value",
-                    type="float",
-                ),
-            ],
-        ),
-        VariableType(
-            type="glm::vec2",
-            metadatas=[],
-        ),
-        VariableType(
-            type="glm::vec3",
-            metadatas=[],
-        ),
-        VariableType(
-            type="glm::vec4",
-            metadatas=[],
-        ),
-        VariableType(
-            type="Cool::RgbColor",
-            metadatas=[
-                VariableMetadata(
-                    name_in_shader="hdr",
-                    field_name="is_hdr",
-                    type="bool",
-                ),
-            ],
-        ),
-        VariableType(
-            type="Cool::Camera",
-            metadatas=[],
-        ),
-        VariableType(
-            type="Cool::Angle",
-            metadatas=[],
-        ),
-        VariableType(
-            type="Cool::Direction2D",
-            metadatas=[],
-        ),
-        VariableType(
-            type="Cool::Hue",
-            metadatas=[],
-        ),
-        # VariableType(
-        #     type="Cool::ColorPalette",
-        #     metadatas=[],
-        # ),
-    ]
-
 
 def all_variable_types():
-    return map(lambda type_and_meta: type_and_meta.type,
-               all_variable_types_and_metadata())
+    return [
+        "int",
+        "float",
+        "glm::vec2",
+        "glm::vec3",
+        "glm::vec4",
+        "Cool::RgbColor",
+        "Cool::Camera",
+        "Cool::Angle",
+        "Cool::Direction2D",
+        "Cool::Hue",
+        "Cool::ColorPalette",
+    ]
 
 
 def all_variable_includes():
@@ -155,27 +70,6 @@ def AnyInputRefToConst():
         map(lambda var_type: f"    std::reference_wrapper<const Input<{var_type}>>", all_variable_types())) + "\n>;"
 
 
-def find_metadatas_in_string():
-    commands = "\n"
-    for variable_type_and_metadatas in all_variable_types_and_metadata():
-        commands += f'''
-template<>
-auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata<{variable_type_and_metadatas.type}>
-{{
-Cool::VariableMetadata<{variable_type_and_metadatas.type}> metadata{{}};
-'''
-        for variable_metadatas in variable_type_and_metadatas.metadatas:
-            commands += f'''
-const auto {variable_metadatas.field_name} = Cool::String::find_value_for_given_key<{variable_metadatas.type}>(key_values, "{variable_metadatas.name_in_shader}");
-if ({variable_metadatas.field_name})
-{{
-    metadata.{variable_metadatas.field_name} = *{variable_metadatas.field_name};
-}}
-'''
-        commands += "return metadata;\n}\n"
-    return commands
-
-
 if __name__ == '__main__':
     from tooling.generate_files import generate
     generate(
@@ -188,6 +82,5 @@ if __name__ == '__main__':
             AnyInputRef,
             AnyInputRefToConst,
             all_variable_includes,
-            find_metadatas_in_string,
         ],
     )

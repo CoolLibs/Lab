@@ -5,7 +5,6 @@
  * -----------------------------------------------------------------------------
  */
 
-LAB_REGISTER_COMMAND(Lab::Command_SetVariable<bool>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<int>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<float>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<glm::vec2>)
@@ -16,8 +15,8 @@ LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::Camera>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::Angle>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::Direction2D>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::Hue>)
+LAB_REGISTER_COMMAND(Lab::Command_SetVariable<Cool::ColorPalette>)
 
-LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<bool>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<int>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<float>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<glm::vec2>)
@@ -28,4 +27,5 @@ LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Camera>
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Angle>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Direction2D>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Hue>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::ColorPalette>)
 

@@ -13,9 +13,9 @@ public:
     Module_CustomShader() = default;
     Module_CustomShader(DirtyFlagFactory_Ref, InputFactory_Ref);
 
-    auto set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void;
+    void set_image_in_shader(std::string_view name, int slot, GLuint texture_id);
 
-    auto render(RenderParams, UpdateContext_Ref) -> void override;
+    void render(RenderParams, UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref ui) const override;
 
     auto all_inputs() const -> AllInputRefsToConst override
@@ -38,18 +38,8 @@ public:
     }
 
 private:
-    auto refresh_pipeline_if_necessary(
-        InputProvider_Ref,
-        IsDirty_Ref,
-        InputFactory_Ref,
-        InputDestructor_Ref,
-        UpdateContext_Ref
-    ) -> void;
-    auto parse_shader_for_params(
-        std::string_view fragment_shader_source_code,
-        InputFactory_Ref,
-        InputDestructor_Ref
-    ) -> void;
+    void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, InputFactory_Ref, InputDestructor_Ref, UpdateContext_Ref);
+    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref);
 
 private:
     FullscreenShader      _shader; // Must be before _file because it is used to construct it
@@ -61,7 +51,7 @@ private:
     // Serialization
     friend class cereal::access;
     template<class Archive>
-    auto serialize(Archive& archive) -> void
+    void serialize(Archive& archive)
     {
         archive(
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),

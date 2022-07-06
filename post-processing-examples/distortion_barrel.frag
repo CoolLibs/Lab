@@ -9,8 +9,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
-
 // BEGIN DYNAMIC PARAMS
 
 uniform float center_x;   // default 0.5 range 0 to 1

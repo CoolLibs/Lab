@@ -11,8 +11,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
-
 // BEGIN DYNAMIC PARAMS
 
 uniform float time_mod;

@@ -6,7 +6,6 @@
  */
 
 using AnyInputRefToConst = std::variant<
-    std::reference_wrapper<const Input<bool>>,
     std::reference_wrapper<const Input<int>>,
     std::reference_wrapper<const Input<float>>,
     std::reference_wrapper<const Input<glm::vec2>>,
@@ -16,5 +15,6 @@ using AnyInputRefToConst = std::variant<
     std::reference_wrapper<const Input<Cool::Camera>>,
     std::reference_wrapper<const Input<Cool::Angle>>,
     std::reference_wrapper<const Input<Cool::Direction2D>>,
-    std::reference_wrapper<const Input<Cool::Hue>>
+    std::reference_wrapper<const Input<Cool::Hue>>,
+    std::reference_wrapper<const Input<Cool::ColorPalette>>
 >;

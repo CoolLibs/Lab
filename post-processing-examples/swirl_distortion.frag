@@ -11,8 +11,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
-
 // BEGIN DYNAMIC PARAMS
 
 uniform float center_x; // default 0.5
@@ -39,7 +37,7 @@ void main()
     float angle  = atan(uv.y, uv.x) + nb_turn * TAU * smoothstep(size, 0., len);
     float radius = length(uv);
 
-    RgbColor color = image(vec2(radius * cos(angle), radius * sin(angle)) + center).rgb;
+    vec3 color = image(vec2(radius * cos(angle), radius * sin(angle)) + center).rgb;
 
     out_Color = vec4(color, 1.);
 }

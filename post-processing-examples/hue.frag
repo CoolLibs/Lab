@@ -7,13 +7,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/hue.glsl"
 
 // BEGIN DYNAMIC PARAMS
 
-uniform Hue Hue_coeficient;
+uniform float Hue;
 
 uniform float Effect_intensity;
 
@@ -21,11 +20,11 @@ uniform float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = hue(
+    vec3 out_color = hue(
         in_color, Effect_intensity,
-        Hue_coeficient
+        Hue
     );
 
     out_Color = vec4(out_color, 1.);

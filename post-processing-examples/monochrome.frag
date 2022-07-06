@@ -3,9 +3,7 @@
 layout(location = 0) in vec2 _uv;
 out vec4 out_Color;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
-
-uniform RgbColor _color;
+uniform vec3 _color;
 
 void main()
 {

@@ -7,7 +7,7 @@ float symmetry_side(bool right, float ortho)
 
 vec2 symmetry(
     vec2 in_uv, float effect_intensity,
-    float center_x, float center_y, float angle_in_turns, bool right_or_left
+    float center_x, float center_y, float angle_in_turns, float right_or_left
 )
 {
     vec2  center = vec2(center_x, center_y);
@@ -15,7 +15,7 @@ vec2 symmetry(
     vec2  u_line = vec2(sin(angle), -cos(angle));
 
     vec2 out_uv = in_uv - center;
-    out_uv      = center + out_uv - u_line * symmetry_side(right_or_left, dot(out_uv, u_line)) * 2.;
+    out_uv      = center + out_uv - u_line * symmetry_side(right_or_left > 0.5, dot(out_uv, u_line)) * 2.;
 
     return mix(in_uv, out_uv, effect_intensity);
 }

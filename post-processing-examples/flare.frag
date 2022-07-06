@@ -7,7 +7,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/flare.glsl"
 
@@ -26,9 +25,9 @@ uniform float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = flare(
+    vec3 out_color = flare(
         in_color, Effect_intensity,
         x, y, Brightness, Nb_of_circles, Seed
     );

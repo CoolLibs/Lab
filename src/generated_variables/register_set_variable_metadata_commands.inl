@@ -5,7 +5,6 @@
  * -----------------------------------------------------------------------------
  */
 
-LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<bool>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<int>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<float>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<glm::vec2>)
@@ -16,3 +15,4 @@ LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<Cool::Camera>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<Cool::Angle>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<Cool::Direction2D>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<Cool::Hue>)
+LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<Cool::ColorPalette>)

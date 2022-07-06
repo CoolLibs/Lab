@@ -7,7 +7,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/golden_noise.glsl"
 
@@ -21,11 +20,11 @@ uniform float Effect_intensity;
 
 void main()
 {
-    RgbColor image = image(_uv);
-    vec2     uv    = _uv;
+    vec3 image = image(_uv);
+    vec2 uv    = _uv;
     uv.x *= _aspect_ratio;
 
-    RgbColor out_color = RgbColor(
+    vec3 out_color = vec3(
         golden_noise(uv, Seed + 0.1),
         golden_noise(uv, Seed + 0.2),
         golden_noise(uv, Seed + 0.3)

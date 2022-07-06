@@ -12,11 +12,11 @@
 
 vec3 color_effects(
     vec3 in_color, float effect_intensity,
-    vec3 color_coefficient, float grey_coefficient, bool one_color_mode
+    vec3 color_coefficient, float grey_coefficient, float one_color_mode
 )
 {
     vec3 image = in_color;
-    if (one_color_mode)
+    if (one_color_mode > .5)
     {
         image = vec3(luminance(image));
     }

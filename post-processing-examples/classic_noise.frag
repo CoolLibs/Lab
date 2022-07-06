@@ -20,7 +20,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/classic_noise.glsl"
 
@@ -46,5 +45,5 @@ void main()
         Frequency, a, Scale
     );
 
-    out_Color = vec4(RgbColor(out_color), 1.);
+    out_Color = vec4(vec3(out_color), 1.);
 }

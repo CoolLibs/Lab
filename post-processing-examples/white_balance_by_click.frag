@@ -7,7 +7,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/white_balance_by_click.glsl"
 
@@ -24,9 +23,9 @@ void main()
     vec2 in_uv = _uv;
     in_uv.x *= _aspect_ratio;
 
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = white_balance_by_click(
+    vec3 out_color = white_balance_by_click(
         in_color, Effect_intensity, in_uv,
         Coordinate_for_white_balance
     );

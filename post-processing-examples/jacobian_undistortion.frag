@@ -9,8 +9,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
-
 // BEGIN DYNAMIC PARAMS
 
 uniform float time_mod;
@@ -39,6 +37,6 @@ void main()
 
     // mat2 J = mat2(dFdx(U), dFdy(U)) * R.y / 8.; // the Jacobian store the local distorted frame
 
-    RgbColor color = image(_uv * J).rgb;
-    out_Color      = vec4(color, 1.);
+    vec3 color = image(_uv * J).rgb;
+    out_Color  = vec4(color, 1.);
 }
