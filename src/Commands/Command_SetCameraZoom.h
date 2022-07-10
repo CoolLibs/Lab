@@ -4,6 +4,8 @@
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
+#include "CommandCore/MakeReversibleCommandContext_Ref.h"
+#include "Dependencies/CameraManager.h"
 
 namespace Lab {
 
@@ -12,7 +14,10 @@ struct ReversibleCommand_SetCameraZoom;
 struct Command_SetCameraZoom {
     float value{};
 
-    void execute(CommandExecutionContext_Ref& ctx) const;
+    void execute(CommandExecutionContext_Ref& ctx) const
+    {
+        ctx.camera_manager().set_zoom(value, ctx);
+    }
 
     auto to_string() const -> std::string
     {
@@ -31,11 +36,14 @@ struct ReversibleCommand_SetCameraZoom {
         forward_command.execute(ctx);
     }
 
-    void revert(CommandExecutionContext_Ref& ctx) const;
+    void revert(CommandExecutionContext_Ref& ctx) const
+    {
+        ctx.camera_manager().set_zoom(old_value, ctx);
+    }
 
     auto to_string() const -> std::string
     {
-        return "Set camera zoom from" + Cool::stringify(old_value) +
+        return "Set camera zoom from " + Cool::stringify(old_value) +
                " to " + Cool::stringify(forward_command.value);
     }
 
@@ -47,6 +55,15 @@ struct ReversibleCommand_SetCameraZoom {
         };
     };
 };
+
+inline auto Command_SetCameraZoom::make_reversible(const MakeReversibleCommandContext_Ref& ctx) const
+    -> ReversibleCommand_SetCameraZoom
+{
+    return ReversibleCommand_SetCameraZoom{
+        .forward_command = *this,
+        .old_value       = ctx.camera_manager().get_zoom(),
+    };
+}
 
 } // namespace Lab
 
