@@ -25,7 +25,7 @@ public:
         }
         if (ImGui::Button("Add a new message ID"))
         {
-            _messages.emplace_back();
+            _messages.push_back({.message = std::to_string(next_message_number++)});
             _messages.back().send_to(message_console);
         }
         ImGui::NewLine();
@@ -85,7 +85,8 @@ private:
         {},
         {"Test 2", "Hello! 2", Cool::MessageSeverity::Warning}};
 
-    bool should_bring_window_to_front{false};
+    bool   should_bring_window_to_front{false};
+    size_t next_message_number{0};
 };
 
 } // namespace Lab
