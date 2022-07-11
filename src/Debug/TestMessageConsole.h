@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Cool/Log/ToUser.h>
 #include <Cool/MessageConsole/MessageConsole.h>
 
 namespace Lab {
@@ -15,6 +16,13 @@ public:
         ImGui::Separator();
         ImGui::NewLine();
         imgui(_message2, message_console);
+        ImGui::NewLine();
+        ImGui::Separator();
+        ImGui::NewLine();
+        if (ImGui::Button("Send to the legacy console"))
+        {
+            Cool::Log::ToUser::info("Test", "Hello World");
+        }
         ImGui::End();
     }
 
