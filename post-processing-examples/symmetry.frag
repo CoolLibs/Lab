@@ -23,6 +23,7 @@ uniform float Effect_intensity;
 void main()
 {
     vec2 in_uv = _uv;
+    in_uv.x *= _aspect_ratio;
 
     vec2 out_uv = symmetry(
         in_uv, Effect_intensity,

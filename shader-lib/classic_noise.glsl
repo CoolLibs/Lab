@@ -171,3 +171,15 @@ float classic_noise(
     noise /= sum;
     return noise;
 }
+
+vec2 classic_noise_uv(
+    float Effect_intensity, vec2 uv,
+    float frequency, float a, float scale
+)
+{
+    vec2 uv_noise = vec2(classic_noise(
+        uv,
+        frequency, a, scale
+    ));
+    return mix(uv, uv_noise, Effect_intensity);
+}

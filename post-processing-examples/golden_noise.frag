@@ -24,11 +24,11 @@ void main()
     vec2 uv    = _uv;
     uv.x *= _aspect_ratio;
 
-    vec3 out_color = vec3(
+    vec3 noise_color = vec3(
         golden_noise(uv, Seed + 0.1),
         golden_noise(uv, Seed + 0.2),
         golden_noise(uv, Seed + 0.3)
     );
-
-    out_Color = vec4(out_color, 1.);
+    vec3 out_color = mix(image, noise_color, Effect_intensity);
+    out_Color      = vec4(out_color, 1.);
 }

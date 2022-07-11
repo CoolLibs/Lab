@@ -10,6 +10,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
+#include "TestVariables.h"
 // #include "TestVariables.h"
 #include "Debug/DebugOptions.h"
 #include "Debug/DebugOptionsDetails.h"
@@ -205,6 +206,12 @@ void App::imgui_windows()
 {
     _is0_view.imgui_window();
     _custom_shader_view.imgui_window();
+#if DEBUG
+    if (DebugOptions::test_all_variable_widgets())
+    {
+         test_variables();
+    }
+#endif
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 

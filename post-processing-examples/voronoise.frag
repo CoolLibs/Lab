@@ -27,14 +27,15 @@ uniform float Effect_intensity;
 void main()
 {
     vec2 in_uv = _uv;
-    in_uv.x *= _aspect_ratio;
-    
+
     vec3 in_color = image(_uv);
 
-    vec3 out_color = voronoise(
-        in_color, Effect_intensity, in_uv,
+    vec2 uv_voronoise = voronoise(
+        Effect_intensity, in_uv,
         Scale
     );
 
-    out_Color  = vec4(out_color, 1.);
+    vec3 out_color = image(uv_voronoise);
+
+    out_Color = vec4(out_color, 1.);
 }

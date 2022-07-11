@@ -29,21 +29,22 @@ uniform float Frequency;
 
 uniform float Scale; // 100
 
-uniform float a; // min = 1, max = 3; default = 1.5;  `a` increases the fractalness of the noise
+uniform float Fractalness; // min = 1, max = 3; default = 1.5;   increases the fractalness of the noise
 
-uniform float Effect_intensity;
+uniform float Effect_intensity; // default 1
 
 // END DYNAMIC PARAMS
 
 void main()
 {
     vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
 
-    float out_color = classic_noise(
-        uv,
-        Frequency, a, Scale
+    vec2 uv_noise = classic_noise_uv(
+        Effect_intensity, uv,
+        Frequency, Fractalness, Scale
     );
 
-    out_Color = vec4(vec3(out_color), 1.);
+    vec3 out_color = image(uv_noise);
+
+    out_Color = vec4(out_color, 1.);
 }
