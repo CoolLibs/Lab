@@ -22,7 +22,7 @@ vec2 distribute_center_in_a_square(vec2 n, float t, vec2 offs)
 VoronoiRes voronoi(vec2 uv)
 {
     float t = 0;
-    if (Time_mode > .5)
+    if (Time_mode)
     {
         t = _time * Speed;
     }
@@ -48,7 +48,7 @@ VoronoiRes voronoi(vec2 uv)
 
             vec2 n = hash_0_to_1_2D_to_2D(id + offs);
             vec2 p;
-            if (Square_mode > .5)
+            if (Square_mode)
             {
                 p = distribute_center_in_a_square(n, t, offs);
             }
@@ -80,7 +80,7 @@ VoronoiRes voronoi(vec2 uv)
 
 vec3 portholes(
     vec3 in_color, float effect_intensity, vec2 uv,
-    float square_mode, float size, float space_to_border, float speed, float movement, float time_mode, float distance_mode, float zoom_intensity, float translation_On_Off,
+    bool square_mode, float size, float space_to_border, float speed, float movement, bool time_mode, float distance_mode, float zoom_intensity,
     flaot change_center, float border, float smoothing, float border_smoothing, vec3 border_color
 )
 {

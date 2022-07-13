@@ -1,9 +1,11 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Log/ToUser.h>
+#include <Cool/String/String.h>
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
+#include <type_from_string/type_from_string.hpp>
 
 namespace Lab {
 
@@ -32,24 +34,24 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 }
 
 template<typename T>
-static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
+static auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value) -> void
 {
     shader.set_uniform(name, value);
 }
 
 template<>
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value)
+auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value) -> void
 {
     shader.set_uniform(name, value.value);
 }
 
-void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
+auto set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&) -> void
 {
     assert(false); // This isn't used at the moment because we set the camera3d manually for all shaders, but this should be changed
     // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
+auto Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx) -> void
 {
     refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
     if (_shader.pipeline().shader())
@@ -70,13 +72,13 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
     }
 }
 
-void Module_CustomShader::refresh_pipeline_if_necessary(
+auto Module_CustomShader::refresh_pipeline_if_necessary(
     InputProvider_Ref   provider,
     IsDirty_Ref         is_dirty,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor,
     UpdateContext_Ref   update_ctx
-)
+) -> void
 {
     if (is_dirty(_shader.dirty_flag()))
     {
@@ -105,11 +107,11 @@ static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>&
     });
 }
 
-static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
+static auto keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<AnyInput>& old_inputs,
     std::vector<AnyInput>& new_inputs,
     InputDestructor_Ref    destroy
-)
+) -> void
 {
     for (auto& input : old_inputs)
     {
@@ -125,8 +127,134 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory)
-    -> std::vector<AnyInput>
+template<typename T>
+auto get_default_value(std::string_view key_values) -> T
+{
+    const auto default_T = Cool::String::find_value_for_given_key<T>(key_values, "default");
+    if (default_T.has_value())
+    {
+        return *default_T;
+    }
+
+    auto default_without_key = Cool::String::next_word(key_values, 0);
+    if (!default_without_key.has_value())
+    {
+        return T{};
+    }
+
+    auto default_value = Cool::String::value_from_string<T>(*default_without_key);
+    if (default_value.has_value())
+    {
+        return *default_value;
+    }
+    return T{};
+}
+
+template<typename T>
+auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata<T>
+{
+    static_assert("Type not already defined, you can add it in generate_variables.py");
+}
+
+#include "generated_variables/find_metadatas_in_string.inl"
+
+template<typename T>
+auto make_input(
+    const std::string_view name,
+    DirtyFlag              dirty_flag,
+    InputFactory_Ref       input_factory,
+    std::string_view       key_values
+) -> Input<T>
+{
+    return input_factory.make<T>(
+        dirty_flag,
+        name,
+        get_default_value<T>(key_values),
+        get_default_metadata<T>(key_values)
+    );
+}
+
+auto make_any_input(
+    const std::string_view type,
+    const std::string_view name,
+    DirtyFlag              dirty_flag,
+    InputFactory_Ref       input_factory,
+    std::string_view       key_values
+) -> AnyInput
+{
+    return TFS_EVALUATE_FUNCTION_TEMPLATE(make_input, type, AnyInput, (name, dirty_flag, input_factory, key_values));
+}
+
+auto separate_input_elements(
+    std::string            line,
+    DirtyFlag              dirty_flag,
+    InputFactory_Ref       input_factory,
+    std::vector<AnyInput>& new_inputs
+) -> void
+{
+    const auto uniform_pos = line.find("uniform");
+    if (uniform_pos != std::string::npos)
+    {
+        const auto comment_pos = line.find("//");
+        if (comment_pos < uniform_pos)
+        {
+            return;
+        }
+
+        auto space_before_include = Cool::String::find_next_word_position(line, 0);
+        if (!space_before_include)
+        {
+            return;
+        }
+        line = Cool::String::replace_at(0, space_before_include->first, line, "");
+
+        std::string uniform     = "uniform";
+        size_t      current_pos = uniform.length();
+
+        auto type = Cool::String::next_word(line, current_pos);
+        if (type.has_value())
+        {
+            current_pos += type->length() + 1; // find_next_word_position to find current_pos even if there are whitespaces between words
+        }
+        else
+        {
+            return;
+        }
+
+        auto name = Cool::String::next_word(line, current_pos);
+        if (!name.has_value())
+        {
+            return;
+        }
+
+        // const std::vector<std::pair<std::string, std::string>> replacements = {
+        //     std::make_pair("_", " "),
+        // };
+
+        // Cool::String::replace_all(name, "_", " ");
+
+        const auto key_values = [&]() -> std::string {
+            if (comment_pos != std::string_view::npos)
+            {
+                return line.substr(comment_pos, line.length() - comment_pos);
+            }
+            else
+            {
+                return "";
+            }
+        }();
+
+        new_inputs.push_back(
+            make_any_input(*type, *name, dirty_flag, input_factory, key_values)
+        );
+    }
+}
+
+static auto get_inputs_from_shader_code(
+    std::string_view source_code,
+    DirtyFlag        dirty_flag,
+    InputFactory_Ref input_factory
+) -> std::vector<AnyInput>
 {
     std::vector<AnyInput> new_inputs;
     std::stringstream     stream{std::string{source_code}};
@@ -142,30 +270,7 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
             }
             try
             {
-                const auto uniform_pos = line.find("uniform");
-                if (uniform_pos != std::string::npos)
-                {
-                    const auto        type_pos     = uniform_pos + 8;
-                    const auto        type_pos_end = line.find(' ', type_pos);
-                    const std::string type         = line.substr(type_pos, type_pos_end - type_pos);
-                    const auto        name_pos     = type_pos_end + 1;
-                    const auto        name_pos_end = line.find_first_of(" ;", name_pos);
-                    const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
-                    //
-                    const auto input = [&]() -> AnyInput {
-                        if (type == "int")
-                            return input_factory.make<int>(dirty_flag, name);
-                        else if (type == "float")
-                            return input_factory.make<float>(dirty_flag, name);
-                        else if (type == "vec2")
-                            return input_factory.make<glm::vec2>(dirty_flag, name);
-                        else if (type == "vec3")
-                            return input_factory.make<Cool::RgbColor>(dirty_flag, name);
-                        else
-                            throw std::invalid_argument(type + " is not a valid parameter type.");
-                    }();
-                    new_inputs.push_back(input);
-                }
+                separate_input_elements(line, dirty_flag, input_factory, new_inputs);
             }
             catch (const std::exception& e)
             {
@@ -180,18 +285,18 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
     return new_inputs;
 }
 
-void Module_CustomShader::parse_shader_for_params(
+auto Module_CustomShader::parse_shader_for_params(
     std::string_view    source_code,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor
-)
+) -> void
 {
     auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }
 
-void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
+auto Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void
 {
     if (_shader.pipeline().shader().has_value())
     {

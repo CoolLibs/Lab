@@ -13,6 +13,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/voronoise.glsl"
 
@@ -28,13 +29,13 @@ void main()
 {
     vec2 in_uv = _uv;
     in_uv.x *= _aspect_ratio;
-    
-    vec3 in_color = image(_uv);
 
-    vec3 out_color = voronoise(
+    RgbColor in_color = image(_uv);
+
+    RgbColor out_color = voronoise(
         in_color, Effect_intensity, in_uv,
         Scale
     );
 
-    out_Color  = vec4(out_color, 1.);
+    out_Color = vec4(out_color, 1.);
 }

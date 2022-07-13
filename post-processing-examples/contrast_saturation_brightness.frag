@@ -7,6 +7,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/contrast_saturation_brightness.glsl"
 
@@ -22,9 +23,9 @@ uniform float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = contrast_saturation_brightness(
+    RgbColor out_color = contrast_saturation_brightness(
         in_color, Effect_intensity,
         Contrast, Brightness, Saturation
     );
