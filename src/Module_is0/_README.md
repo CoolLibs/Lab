@@ -1,26 +1,28 @@
-# *is0*
+# _is0_
 
-## What is *is0* ?
+## What is _is0_ ?
 
-*is0* is a 3D modeler and renderer based on *Signed Distance Fields* (SDFs for short). It is an alternative representation of 3D objects that doesn't involve meshes and is very well suited for procedural modeling and raycast rendering.
+_is0_ is a 3D modeler and renderer based on _Signed Distance Fields_ (SDFs for short). It is an alternative representation of 3D objects that doesn't involve meshes and is very well suited for procedural modeling and raycast rendering.
 
 ## Learning about SDFs and Ray Marching
 
-You can watch these videos, in that order: 
+You can watch these videos, in that order:
 
-- [Conceptual intro to ray marching by *CodeParade*](https://www.youtube.com/watch?v=svLzmFuSBhk)
+- [Conceptual intro to ray marching by _CodeParade_](https://www.youtube.com/watch?v=svLzmFuSBhk)
 
-- [Conceptual intro to ray marching by *Sebastian Lague*](https://www.youtube.com/watch?v=Cp5WWtMoeKg)
+- [Conceptual intro to ray marching by _Sebastian Lague_](https://www.youtube.com/watch?v=Cp5WWtMoeKg)
 
-- [Practical intro to shader programming by *The Art of Code*](https://www.youtube.com/watch?v=u5HAYVHsasc)
+- [Practical intro to shader programming by _The Art of Code_](https://www.youtube.com/watch?v=u5HAYVHsasc)
 
-- [Practical intro to ray marching by *The Art of Code*](https://www.youtube.com/watch?v=PGtv-dBi2wE)
+- [Practical intro to ray marching by _The Art of Code_](https://www.youtube.com/watch?v=PGtv-dBi2wE)
 
-- [*Inigo Quilez* detailing the creation of one of his artworks](https://youtu.be/-pdSjBPH3zM) (long but very insightful)
+- [Presentation of how _procedurals_ work in Notch. This is very similar to _is0_.](https://youtu.be/nAG-r_2_Udg)
 
-- [More videos from *The Art of Code*](https://youtu.be/AfKGMUDWfuE?list=PLGmrMu-IwbgtMxMiV3x4IrHPlPmg7FD-P)
+- [_Inigo Quilez_ detailing the creation of one of his artworks](https://youtu.be/-pdSjBPH3zM) (long but very insightful)
 
-- [More videos from *Inigo Quilez*](https://youtu.be/PMltMdi1Wzg?list=PL0EpikNmjs2CYUMePMGh3IjjP4tQlYqji)
+- [More videos from _The Art of Code_](https://youtu.be/AfKGMUDWfuE?list=PLGmrMu-IwbgtMxMiV3x4IrHPlPmg7FD-P)
+
+- [More videos from _Inigo Quilez_](https://youtu.be/PMltMdi1Wzg?list=PL0EpikNmjs2CYUMePMGh3IjjP4tQlYqji)
 
 ## Resources about SDFs
 
@@ -32,7 +34,7 @@ You can watch these videos, in that order:
 
 - [Rendering SDFs as smoke](https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html)
 
-- [*Dream*'s engine: different rendering techniques for SDFs](https://www.youtube.com/watch?v=u9KNtnCZDMI)
+- [_Dream_'s engine: different rendering techniques for SDFs](https://www.youtube.com/watch?v=u9KNtnCZDMI)
 
 - [Non-euclidian space rendered with Ray Marching and SDFs](https://youtu.be/ivHG4AOkhYA)
 
@@ -82,7 +84,7 @@ It also owns a `NodeFactory` to create the `Node`s.
 
 ### NodeFactory
 
-`NodeFactory` owns the `NodeTemplate`s that we read from the *.is0* files and use to create the different node types.
+`NodeFactory` owns the `NodeTemplate`s that we read from the _.is0_ files and use to create the different node types.
 
 `NodeFactory` is responsible for loading the `NodeTemplate`s and creating or updating a node from a `NodeTemplate`.
 
@@ -90,11 +92,12 @@ It also owns a `NodeFactory` to create the `Node`s.
 
 A `NodeTemplate` is the data that allows us to know what a `Node` should be like (how many input pins and which kind of parameters), and holds the shader code for the given node type.
 
-For example if we create a *Sphere* node from the corresponding template, the shader code is held by the `NodeTemplate` since all *Sphere* nodes will share the exact same code.
+For example if we create a _Sphere_ node from the corresponding template, the shader code is held by the `NodeTemplate` since all _Sphere_ nodes will share the exact same code.
 
 ### Node
 
 A `Node` holds all relevant data to be displayed and to generate some shader code, a.k.a.:
+
 - The name of the `NodeTemplate` so that we can get the shader code (we reference the `NodeTemplate` by name instead of pointer in order to be able to serialize the node and still find the template back).
 
 - The `Cool::Parameter`s of the node, using the `Cool::ParameterDesc`s from the `NodeTemplate`.
@@ -103,14 +106,14 @@ A `Node` holds all relevant data to be displayed and to generate some shader cod
 
 ### Material system
 
-What is a material? For the moment it will be a simple struct containing some properties of the object: albedo, roughness, metalic, etc. In the future we might try to support a more complex system like Blender's shading nodes which allows per-pixel calculations to affect the material, basically allowing us to texture our objects. For now, we will stick to one fixed material per object.
+What is a material? For the moment it will be a simple struct containing some properties of the object: albedo, roughness, metalic, etc. In the future we might try to support a more complex system like Blender's shading nodes which allows per-pixel calculations to affect the material, basically allowing us to texture our objects. For now, we will stick to one fixed material per object. (**EDIT:** Since our material will be calculated per-pixel anyways, it will be very easy to use functions instead of constants for the materials of each nodes!).
 
 But even then, how do we go from SDFs, that tell us whether there is "something" at a given position, to knowing the material of the pixel we are currently shading? Each object could have an ID, and its SDF would return both the distance and the ID. Then the ID would be used to look up the associated material. This is nice and simple **but** how do we handle blending materials? For a smooth min we would like to smoothly blend the materials of the two objects in the transition area. If we want to support blending materials, no ID-based system will ever work, because there will be infinitely many shades of material in-between two given materials.
 We therefore need to return materials directly. Doing it in the regular SDF would be a waste of effort because the SDF is called many times, but the material is only used once at the end. We will therefore create another function, sibling of the SDF, that returns the material of the nearest object for a given position in space (instead of the distance to that nearest object).
 
 For primitives, this will simply return the struct with the values provided by the user. For a min it will compute which object is closest and return its material. For a smooth min it will compute a blending factor based on the distance to the two objects, and will blend the materials accordingly, and so on.
-The material function should be defined in the node file alongside the SDF. It can have parameters (one of the type beeing: the material struct, for primitives).
+The material function should be defined in the node file alongside the SDF. It can have parameters (one of the type beeing: the material struct, for primitives. It could also be a list of materials: this would allow the `random spheres` node to assign different materials to each sphere).
 
 Users should also be able to override materials: for example a smooth min could have one single material struct chosen by the user, instead of blending the materials of its children. Its only if no material is specified for the smooth min that the blending occurs.
 
-UI: it could be a simple input where your select your materia (Blender-like). You can create new materials, or share materials across objects. There would be a *default* material for primitives (white) and a *None* option for Booleans and Modifiers, which means that the material(s) of the child(ren) object(s) is(are) used.
+UI: it could be a simple input where your select your materia (Blender-like). You can create new materials, or share materials across objects. There would be a _default_ material for primitives (white) and a _None_ option for Booleans and Modifiers, which means that the material(s) of the child(ren) object(s) is(are) used.
