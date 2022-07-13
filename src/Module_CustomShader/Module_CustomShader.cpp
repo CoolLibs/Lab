@@ -7,6 +7,11 @@
 #include <sstream>
 #include <type_from_string/type_from_string.hpp>
 
+// TODO(LD) Support is_hdr metadata.
+// Support angle units (turns, degrees, radians)
+
+// TODO(JF) TODO(LD) Why isn't Hue working ???
+
 namespace Lab {
 
 Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
@@ -131,29 +136,30 @@ template<typename T>
 auto get_default_value(std::string_view key_values) -> T
 {
     const auto default_T = Cool::String::find_value_for_given_key<T>(key_values, "default");
+
     if (default_T.has_value())
     {
         return *default_T;
     }
 
-    auto default_without_key = Cool::String::next_word(key_values, 0);
-    if (!default_without_key.has_value())
+    // `default` keyword is allowed to be omitted
+    const auto default_without_key = Cool::String::next_word(key_values, 0);
+    if (default_without_key.has_value())
     {
-        return T{};
+        const auto default_value = Cool::String::value_from_string<T>(*default_without_key);
+        if (default_value.has_value())
+        {
+            return *default_value;
+        }
     }
 
-    auto default_value = Cool::String::value_from_string<T>(*default_without_key);
-    if (default_value.has_value())
-    {
-        return *default_value;
-    }
     return T{};
 }
 
 template<typename T>
 auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata<T>
 {
-    static_assert("Type not already defined, you can add it in generate_variables.py");
+    static_assert("No implementation found for this type! You can add it in generate_variables.py");
 }
 
 #include "generated_variables/find_metadatas_in_string.inl"
@@ -185,76 +191,94 @@ auto make_any_input(
     return TFS_EVALUATE_FUNCTION_TEMPLATE(make_input, type, AnyInput, (name, dirty_flag, input_factory, key_values));
 }
 
-auto separate_input_elements(
-    std::string            line,
-    DirtyFlag              dirty_flag,
-    InputFactory_Ref       input_factory,
-    std::vector<AnyInput>& new_inputs
-) -> void
+static auto is_input_declaration(std::string line) -> bool
 {
+    return line.find("uniform") != std::string::npos;
+}
+
+static auto is_commented_out(std::string line) -> bool
+{
+    const auto comment_pos = line.find("//");
     const auto uniform_pos = line.find("uniform");
-    if (uniform_pos != std::string::npos)
+    if (comment_pos != std::string::npos &&
+        uniform_pos != std::string::npos)
     {
-        const auto comment_pos = line.find("//");
         if (comment_pos < uniform_pos)
         {
-            return;
+            return true;
         }
+    }
+    return false;
+}
 
-        auto space_before_include = Cool::String::find_next_word_position(line, 0);
-        if (!space_before_include)
+auto try_parse_input(
+    std::string      line,
+    DirtyFlag        dirty_flag,
+    InputFactory_Ref input_factory
+) -> std::optional<AnyInput>
+{
+    if (!is_input_declaration(line) ||
+        is_commented_out(line))
+    {
+        return std::nullopt;
+    }
+
+    // TODO(LD) Split into several small functions
+    auto next_word_pos = Cool::String::find_next_word_position(line, 0);
+    if (!next_word_pos)
+    {
+        return std::nullopt;
+    }
+    line = Cool::String::replace_at(0, next_word_pos->first, line, "");
+
+    std::string uniform     = "uniform";
+    size_t      current_pos = uniform.length();
+
+    auto type = Cool::String::next_word(line, current_pos);
+    if (type.has_value())
+    {
+        current_pos += type->length() + 1; // find_next_word_position to find current_pos even if there are whitespaces between words
+    }
+    else
+    {
+        return std::nullopt;
+    }
+
+    auto name = Cool::String::next_word(line, current_pos);
+    if (!name.has_value())
+    {
+        return std::nullopt;
+    }
+
+    // TODO(JF) TODO(LD) Make this a reality
+    // const std::vector<std::pair<std::string, std::string>> replacements = {
+    //     std::make_pair("_", " "),
+    // };
+
+    // Cool::String::replace_all(name, "_", " ");
+
+    const auto comment_pos = line.find("//");
+    const auto key_values  = [&]() -> std::string {
+        if (comment_pos != std::string_view::npos)
         {
-            return;
-        }
-        line = Cool::String::replace_at(0, space_before_include->first, line, "");
-
-        std::string uniform     = "uniform";
-        size_t      current_pos = uniform.length();
-
-        auto type = Cool::String::next_word(line, current_pos);
-        if (type.has_value())
-        {
-            current_pos += type->length() + 1; // find_next_word_position to find current_pos even if there are whitespaces between words
+            return line.substr(comment_pos, line.length() - comment_pos);
         }
         else
         {
-            return;
+            return "";
         }
+    }();
 
-        auto name = Cool::String::next_word(line, current_pos);
-        if (!name.has_value())
-        {
-            return;
-        }
-
-        // const std::vector<std::pair<std::string, std::string>> replacements = {
-        //     std::make_pair("_", " "),
-        // };
-
-        // Cool::String::replace_all(name, "_", " ");
-
-        const auto key_values = [&]() -> std::string {
-            if (comment_pos != std::string_view::npos)
-            {
-                return line.substr(comment_pos, line.length() - comment_pos);
-            }
-            else
-            {
-                return "";
-            }
-        }();
-
-        new_inputs.push_back(
-            make_any_input(*type, *name, dirty_flag, input_factory, key_values)
-        );
-    }
+    return make_any_input(*type, *name, dirty_flag, input_factory, key_values);
 }
 
-static auto get_inputs_from_shader_code(
-    std::string_view source_code,
-    DirtyFlag        dirty_flag,
-    InputFactory_Ref input_factory
-) -> std::vector<AnyInput>
+static auto
+    get_inputs_from_shader_code(
+        std::string_view source_code,
+        DirtyFlag        dirty_flag,
+        InputFactory_Ref input_factory
+    )
+        -> std::vector<AnyInput>
 {
     std::vector<AnyInput> new_inputs;
     std::stringstream     stream{std::string{source_code}};
@@ -270,7 +294,11 @@ static auto get_inputs_from_shader_code(
             }
             try
             {
-                separate_input_elements(line, dirty_flag, input_factory, new_inputs);
+                const auto input = try_parse_input(line, dirty_flag, input_factory);
+                if (input)
+                {
+                    new_inputs.push_back(*input);
+                }
             }
             catch (const std::exception& e)
             {
@@ -289,7 +317,8 @@ auto Module_CustomShader::parse_shader_for_params(
     std::string_view    source_code,
     InputFactory_Ref    input_factory,
     InputDestructor_Ref input_destructor
-) -> void
+)
+    -> void
 {
     auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);

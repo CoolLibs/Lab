@@ -16,7 +16,7 @@ uniform sampler2D _image;
 uniform vec3 channels_contribution; // default vec3(0.2126, 0.7152, 0.0722)
 uniform bool Normalize_checkbox;    // default true
 
-uniform float Effect_intensity; // default 1. min 0. max 0.
+uniform float Effect_intensity; // default 1. min 0. max 1.
 
 // END DYNAMIC PARAMS
 
