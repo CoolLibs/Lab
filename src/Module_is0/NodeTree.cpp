@@ -12,15 +12,27 @@ void NodeTree::add_link(Link link)
 
 void NodeTree::delete_node(NodeId node_id)
 {
-    const auto node = std::ranges::find_if(nodes, [&](const Node& node) {
+    const auto node = std::find_if(nodes.begin(), nodes.end(), [&](const Node& node) {
         return node.id == node_id;
     });
+
     std::erase_if(links, [&](const Link& link) {
         return link.from_pin_id == node->output_pin.id() ||
-               std::ranges::any_of(node->input_pins, [&](const auto& pin) {
+               std::any_of(node->input_pins.begin(), node->input_pins.end(), [&](const auto& pin) {
                    return link.to_pin_id == pin.id();
                });
     });
+
+    // waiting for xcode to support std::ranges::find_if && std::ranges::any_of
+    //  const auto node = std::ranges::find_if(nodes, [&](const Node& node) {
+    //      return node.id == node_id;
+    //  });
+    // std::erase_if(links, [&](const Link& link) {
+    //     return link.from_pin_id == node->output_pin.id() ||
+    //            std::ranges::any_of(node->input_pins, [&](const auto& pin) {
+    //                return link.to_pin_id == pin.id();
+    //            });
+    // });
     nodes.erase(node);
 }
 
@@ -41,9 +53,15 @@ void NodeTree::delete_link_going_to(PinId pin_id)
 const Node* NodeTree::find_input_node(const Pin& pin) const
 {
     assert(pin.kind() == PinKind::Input);
-    const auto link_it = std::ranges::find_if(links, [&](const Link& link) {
+
+    const auto link_it = std::find_if(links.begin(), links.end(), [&](const Link& link) {
         return link.to_pin_id == pin.id();
     });
+
+    // waiting for xcode to support std::ranges::find_if
+    //  const auto link_it = std::ranges::find_if(links, [&](const Link& link) {
+    //      return link.to_pin_id == pin.id();
+    //  });
     if (link_it == links.end())
     {
         return nullptr;
@@ -56,9 +74,14 @@ const Node* NodeTree::find_input_node(const Pin& pin) const
 
 const Node& NodeTree::find_node_with_output_pin(PinId pin_id) const
 {
-    return *std::ranges::find_if(nodes, [&](const Node& node) {
+    return *std::find_if(nodes.begin(), nodes.end(), [&](const Node& node) {
         return node.output_pin.id() == pin_id;
     });
+
+    // waiting for xcode to support std::ranges::find_if
+    // return *std::ranges::find_if(nodes, [&](const Node& node) {
+    //     return node.output_pin.id() == pin_id;
+    // });
 }
 
 const Pin& NodeTree::find_pin(PinId id)
@@ -82,7 +105,12 @@ const Pin& NodeTree::find_pin(PinId id)
 
 bool NodeTree::has_no_successor(const Node& node) const
 {
-    return std::ranges::find_if(links, [&](const Link& link) {
+    return std::find_if(links.begin(), links.end(), [&](const Link& link) {
                return link.from_pin_id == node.output_pin.id();
            }) == links.end();
+
+    // waiting for xcode to support std::ranges::find_if
+    // return std::ranges::find_if(links, [&](const Link& link) {
+    //            return link.from_pin_id == node.output_pin.id();
+    //        }) == links.end();
 }

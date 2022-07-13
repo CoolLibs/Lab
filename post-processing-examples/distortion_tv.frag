@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 // https://www.shadertoy.com/view/XtlXzj
 
@@ -30,7 +30,8 @@ float terrain(float x)
     // You actually should look after sigma.
     float v = 0.;
     x *= 3.;
-    for (float n = 0.; n < nb_iteration; n++) {
+    for (float n = 0.; n < nb_iteration; n++)
+    {
         v += ((sin((x * sin(n / 2.142)) + (n / 1.41))) / nb_iteration) * strip;
     }
     return pow(v, 3.);

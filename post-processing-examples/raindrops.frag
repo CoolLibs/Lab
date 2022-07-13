@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 // https://www.youtube.com/watch?v=0flY11lVCwY
 // https://www.youtube.com/watch?v=0flY11lVCwY
