@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 // https://www.shadertoy.com/view/WdKXWt
 /*
@@ -69,7 +69,8 @@ float tick(float t, float d)
 // Kaleidoscopic iterated function system
 vec3 kifs(vec3 p, float t)
 {
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i)
+    {
         float t1 = tick(t + float(i), 0.4 + float(i) * 0.1) + t * 0.3;
         p.xz *= rot(t1);
         p.yz *= rot(t1 * 0.7);
@@ -127,13 +128,16 @@ void main()
     float at     = 0.0;
     bool  inside = false;
     // main raymarching loop
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 100; ++i)
+    {
         float d = map(p);
-        if (d < drops_size) {
+        if (d < drops_size)
+        {
             inside = true;
             break;
         }
-        if (d > 100.0) {
+        if (d > 100.0)
+        {
             break;
         }
         p += r * d;
@@ -141,7 +145,8 @@ void main()
     }
 
     // // if we hit a surface
-    if (inside) {
+    if (inside)
+    {
         vec2 off = vec2(0.01, 0);
         vec3 n   = normalize(map(p) - vec3(map(p - off.xyy), map(p - off.yxy), map(p - off.yyx)));
         // refract the ray direction

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Cool/Log/ToUser.h>
 #include <Cool/MessageConsole/MessageConsole.h>
 
 namespace Lab {
@@ -8,13 +9,32 @@ class TestMessageConsole {
 public:
     void imgui_window(Cool::MessageConsole& message_console)
     {
+        if (should_bring_window_to_front)
+        {
+            should_bring_window_to_front = false;
+            ImGui::SetNextWindowToFront();
+        }
         ImGui::Begin("Test Message Console");
         ImGui::NewLine();
-        imgui(_message1, message_console);
+        for (auto& message : _messages)
+        {
+            imgui(message, message_console);
+            ImGui::NewLine();
+            ImGui::Separator();
+            ImGui::NewLine();
+        }
+        if (ImGui::Button("Add a new message ID"))
+        {
+            _messages.push_back({.message = std::to_string(next_message_number++)});
+            _messages.back().send_to(message_console);
+        }
         ImGui::NewLine();
         ImGui::Separator();
         ImGui::NewLine();
-        imgui(_message2, message_console);
+        if (ImGui::Button("Send to the legacy console"))
+        {
+            Cool::Log::ToUser::info("Test", "Hello World");
+        }
         ImGui::End();
     }
 
@@ -24,6 +44,15 @@ private:
         std::string           message{"Hello!"};
         Cool::MessageSeverity severity{Cool::MessageSeverity::Error};
         Cool::MessageId       id{};
+
+        void send_to(Cool::MessageConsole& message_console)
+        {
+            message_console.send(id, {
+                                         .category         = category,
+                                         .detailed_message = message,
+                                         .severity         = severity,
+                                     });
+        }
     };
 
     void imgui(Message& message, Cool::MessageConsole& message_console)
@@ -37,14 +66,12 @@ private:
         {
             ImGui::SameLine();
             ImGui::Text("<-- CLICK HERE");
+            ImGui::SetScrollHereY(0.5f);
+            should_bring_window_to_front = true;
         }
         if (ImGui::Button("Send"))
         {
-            message_console.send(message.id, {
-                                                 .category         = message.category,
-                                                 .detailed_message = message.message,
-                                                 .severity         = message.severity,
-                                             });
+            message.send_to(message_console);
         }
         ImGui::InputText("Category", &message.category);
         ImGui::InputText("Message", &message.message);
@@ -54,8 +81,12 @@ private:
     }
 
 private:
-    Message _message1;
-    Message _message2{"Test 2", "Hello! 2", Cool::MessageSeverity::Warning};
+    std::vector<Message> _messages{
+        {},
+        {"Test 2", "Hello! 2\nmulti\nline", Cool::MessageSeverity::Warning}};
+
+    bool   should_bring_window_to_front{false};
+    size_t next_message_number{0};
 };
 
 } // namespace Lab

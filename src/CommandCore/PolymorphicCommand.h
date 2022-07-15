@@ -16,7 +16,7 @@ auto try_make_reversible(CommandT command, const MakeReversibleCommandContext_Re
 }
 
 template<ConcreteCommand CommandT>
-auto try_make_reversible(CommandT command, const MakeReversibleCommandContext_Ref& ctx)
+auto try_make_reversible(CommandT, const MakeReversibleCommandContext_Ref&)
     -> std::optional<ReversibleCommand>
 {
     return {};

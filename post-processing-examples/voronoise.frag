@@ -4,7 +4,7 @@
 // See LICENSE file for details.
 // https://github.com/stegu/webgl-noise
 
-#version 430
+#version 410
 
 layout(location = 0) in vec2 _uv;
 uniform float _time;

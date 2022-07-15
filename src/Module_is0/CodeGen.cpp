@@ -143,9 +143,14 @@ static auto compute_sdf_identifiers(const Node& node, const NodeTemplate& node_t
 
 static const NodeTemplate& find_node_template(const Node& node, const std::vector<NodeTemplate>& node_templates)
 {
-    return *std::ranges::find_if(node_templates, [&](const NodeTemplate& node_template) {
+    return *std::find_if(node_templates.begin(), node_templates.end(), [&](const NodeTemplate& node_template) {
         return node_template.name == node.node_template_name;
     });
+
+    // Waiting for xcode to support std::ranges::find_if
+    // return *std::ranges::find_if(node_templates, [&](const NodeTemplate& node_template) {
+    //     return node_template.name == node.node_template_name;
+    // });
 }
 
 static auto nodes_extra_code(const std::vector<NodeTemplate>& node_templates) -> std::string

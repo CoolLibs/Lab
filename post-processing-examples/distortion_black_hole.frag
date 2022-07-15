@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 // #include "_COOL_RES_/shaders/math.glsl"
 

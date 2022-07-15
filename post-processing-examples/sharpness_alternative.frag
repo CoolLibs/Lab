@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 // from https://www.shadertoy.com/view/llXGWf
 
@@ -50,9 +50,10 @@ void main()
     float sharpness = (col - blur).r * Sharpening_strength;
 
     // col = vec3(0);
-    //col -= step(distance(fract(uv.x + (sin(_time) + 1.0) / 2.0) + 0.5, 0.5) * 2.0, 0.013);
+    // col -= step(distance(fract(uv.x + (sin(_time) + 1.0) / 2.0) + 0.5, 0.5) * 2.0, 0.013);
 
-    if (floor(uv.x + ((sin(_time) + 1.0) / 2.0)) > 0.0) {
+    if (floor(uv.x + ((sin(_time) + 1.0) / 2.0)) > 0.0)
+    {
         col += sharpness;
     }
 

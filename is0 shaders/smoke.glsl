@@ -76,9 +76,9 @@ float GetFogDensity(vec3 position, float sdfDistance)
     bool        insideSDF        = sdfDistance < 0.0;
     float       sdfMultiplier    = insideSDF ? min(abs(sdfDistance), maxSDFMultiplier) : 0.0;
 
-#if UNIFORM_FOG_DENSITY
-    return sdfMultiplier;
-#else
+    // #ifdef UNIFORM_FOG_DENSITY
+    //     return sdfMultiplier;
+    // #else
     return sdfMultiplier * abs(fbm(position / 6.0, 0.5));
-#endif
+    // #endif
 }
