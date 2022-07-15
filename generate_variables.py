@@ -7,7 +7,12 @@
 # You can use `all_variable_types()` to get all the variable types we use in CoolLab.
 # ------------
 
+from ast import If
 from dataclasses import dataclass
+from xmlrpc.client import boolean
+
+
+# TODO(LD) Move to Cool and generate the Variable files from this script
 
 
 @dataclass
@@ -21,6 +26,7 @@ class VariableMetadata:
 class VariableType:
     type: str
     metadatas: list[VariableMetadata]
+    do_generate_get_default_metadata: bool = True
 
 
 def all_variable_types_and_metadata():
@@ -80,6 +86,7 @@ def all_variable_types_and_metadata():
                     type="bool",
                 ),
             ],
+            do_generate_get_default_metadata=False,
         ),
         VariableType(
             type="Cool::Camera",
@@ -158,21 +165,22 @@ def AnyInputRefToConst():
 def find_metadatas_in_string():
     commands = "\n"
     for variable_type_and_metadatas in all_variable_types_and_metadata():
-        commands += f'''
+        if variable_type_and_metadatas.do_generate_get_default_metadata == True:
+            commands += f'''
 template<>
 auto get_default_metadata(std::string_view key_values) -> Cool::VariableMetadata<{variable_type_and_metadatas.type}>
 {{
 Cool::VariableMetadata<{variable_type_and_metadatas.type}> metadata{{}};
 '''
-        for variable_metadatas in variable_type_and_metadatas.metadatas:
-            commands += f'''
+            for variable_metadatas in variable_type_and_metadatas.metadatas:
+                commands += f'''
 const auto {variable_metadatas.field_name} = Cool::String::find_value_for_given_key<{variable_metadatas.type}>(key_values, "{variable_metadatas.name_in_shader}");
 if ({variable_metadatas.field_name})
 {{
     metadata.{variable_metadatas.field_name} = *{variable_metadatas.field_name};
 }}
 '''
-        commands += "return metadata;\n}\n"
+            commands += "return metadata;\n}\n"
     return commands
 
 

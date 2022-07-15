@@ -14,7 +14,7 @@ uniform sampler2D _image;
 // default 0.5 min -1 max 1
 
 input RgbColor Color1;
-input RgbColor Color2;
+input RgbColor Color2;           // hdr
 input float    Effect_intensity; // default 0.5 min -1 max 2
 
 void main()

@@ -1,6 +1,8 @@
 #include <Cool/String/String.h>
 #include <Cool/StrongTypes/RgbColor.h>
 
+// TODO(LD) Write tons of tests!!
+
 TEST_CASE("[Cool::String] replace_all()")
 {
     std::string text = "Effect_intensity";

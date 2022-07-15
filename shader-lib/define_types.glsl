@@ -4,8 +4,8 @@
 
 // TODO(LD) examples
 #define RgbColor    vec3  // hdr
-#define Angle       float // 0.3 turns
-#define Direction2D vec2
-#define Hue         float
+#define Angle       float // 90 (angle in degrees)
+#define Direction2D vec2  // 90 (angle in degrees)
+#define Hue         float // 0.3
 
-#define input uniform // TODO(LD) Use it in all shaders, and remove BEGIN_DYNALIC_PARAMS (and END...) And change the shader parser to detech the CoolInput instead of the BEGIN_DYNAMIC_PARAMS
+#define input uniform
