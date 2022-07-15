@@ -1,4 +1,5 @@
 #pragma once
+#if DEBUG
 
 #include "DebugOptions.h"
 
@@ -29,3 +30,5 @@ public:
 };
 
 } // namespace Lab
+
+#endif
