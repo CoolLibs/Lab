@@ -5,11 +5,11 @@ out vec4 out_Color;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-uniform RgbColor _color;
-uniform RgbColor _color2;
-uniform float    _circle_radius;
-uniform float    _aspect_ratio;
-uniform float    _time;
+input RgbColor _color;
+input RgbColor _color2;
+input float    _circle_radius;
+input float    _aspect_ratio;
+input float    _time;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 

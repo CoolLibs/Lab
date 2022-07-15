@@ -11,14 +11,10 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float time_mod;
+input float strip; // min = 1
 
-uniform float time_mod;
-uniform float strip; // min = 1
-
-uniform int nb_iteration; // min = 1 max 23
-
-// END DYNAMIC PARAMS
+input int nb_iteration; // min = 1 max 23
 
 RgbColor draw(vec2 uv)
 {

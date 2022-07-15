@@ -11,15 +11,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/contrast_saturation_brightness.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Contrast;   // default 1.0
+input float Brightness; // default 1.0
+input float Saturation; // default 1.0
 
-uniform float Contrast;   // default 1.0
-uniform float Brightness; // default 1.0
-uniform float Saturation; // default 1.0
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

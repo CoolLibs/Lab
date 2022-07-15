@@ -12,30 +12,26 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/color_effects.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/grid_9_colors.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
 // uniform int number_of_colors; // min 2
 
 // uniform RgbColor Color0;
 
-uniform RgbColor Color_coefficient;
+input RgbColor Color_coefficient;
 
-uniform float Grey_coefficient;
-uniform bool  One_color_mode;
+input float Grey_coefficient;
+input bool  One_color_mode;
 
-uniform RgbColor Color1;
-uniform RgbColor Color2;
-uniform RgbColor Color3;
-uniform RgbColor Color4;
-uniform RgbColor Color5;
-uniform RgbColor Color6;
-uniform RgbColor Color7;
-uniform RgbColor Color8;
-uniform RgbColor Color9;
+input RgbColor Color1;
+input RgbColor Color2;
+input RgbColor Color3;
+input RgbColor Color4;
+input RgbColor Color5;
+input RgbColor Color6;
+input RgbColor Color7;
+input RgbColor Color8;
+input RgbColor Color9;
 
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

@@ -11,15 +11,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/color_effects_alternative.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input RgbColor Color_coefficient;
 
-uniform RgbColor Color_coefficient;
+input float Grey_coefficient;
 
-uniform float Grey_coefficient;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

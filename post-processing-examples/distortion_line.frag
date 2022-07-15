@@ -13,14 +13,10 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float time_mod;
-uniform float thres; // default 0.7 min = 0 max = 2
-uniform float res_x;
-uniform float res_y;
-
-// END DYNAMIC PARAMS
+input float time_mod;
+input float thres; // default 0.7 min = 0 max = 2
+input float res_x;
+input float res_y;
 const float steps = 4; // default 4
 
 float random(vec2 co)

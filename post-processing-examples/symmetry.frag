@@ -10,16 +10,12 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/symmetry.glsl"
+input float center_x;       // 0 to 1 default 0.5
+input float center_y;       // 0 to 1 default 0.5
+input Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
+input bool  right_or_left;  // bool
 
-// BEGIN DYNAMIC PARAMS
-uniform float center_x;       // 0 to 1 default 0.5
-uniform float center_y;       // 0 to 1 default 0.5
-uniform Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
-uniform bool  right_or_left;  // bool
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

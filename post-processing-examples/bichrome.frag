@@ -13,13 +13,9 @@ uniform sampler2D _image;
 
 // default 0.5 min -1 max 1
 
-// BEGIN DYNAMIC PARAMS
-
-uniform RgbColor Color1;
-uniform RgbColor Color2;
-uniform float    Effect_intensity; // default 0.5 min -1 max 2
-
-// END DYNAMIC PARAMS
+input RgbColor Color1;
+input RgbColor Color2;
+input float    Effect_intensity; // default 0.5 min -1 max 2
 
 void main()
 {

@@ -15,14 +15,10 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float size; // 0 forbidden
-uniform float blur; // between 2 and 5.5
-uniform float time_mod;
-uniform float rain_amount; // between 0 and 1
-
-// END DYNAMIC PARAMS
+input float size; // 0 forbidden
+input float blur; // between 2 and 5.5
+input float time_mod;
+input float rain_amount; // between 0 and 1
 
 #define S(a, b, t) smoothstep(a, b, t)
 

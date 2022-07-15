@@ -11,13 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/hue.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input Hue Hue_coeficient;
 
-uniform Hue Hue_coeficient;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

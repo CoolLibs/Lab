@@ -11,17 +11,13 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/voronoi.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Scale; // 10
+input float Speed;
+input float Movement;
+input bool  Time_mode;
+input float Distance_mode; // 2
 
-uniform float Scale; // 10
-uniform float Speed;
-uniform float Movement;
-uniform bool  Time_mode;
-uniform float Distance_mode; // 2
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

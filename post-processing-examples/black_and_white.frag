@@ -11,14 +11,10 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/black_and_white.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input vec3 channels_contribution; // default vec3(0.2126, 0.7152, 0.0722)
+input bool Normalize_checkbox;    // default true
 
-uniform vec3 channels_contribution; // default vec3(0.2126, 0.7152, 0.0722)
-uniform bool Normalize_checkbox;    // default true
-
-uniform float Effect_intensity; // default 1. min 0. max 1.
-
-// END DYNAMIC PARAMS
+input float Effect_intensity; // default 1. min 0. max 1.
 
 void main()
 {

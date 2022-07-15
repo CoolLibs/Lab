@@ -12,11 +12,7 @@ uniform sampler2D _texture;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/distortion.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

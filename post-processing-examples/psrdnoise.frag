@@ -78,14 +78,10 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float scale;
-uniform float gain;       // default = 0.5
-uniform float lacunarity; // default =2
-uniform float octaves;    // min=1
-
-// END DYNAMIC PARAMS
+input float scale;
+input float gain;       // default = 0.5
+input float lacunarity; // default =2
+input float octaves;    // min=1
 
 // Modulo 289, optimizes to code without divisions
 vec3 mod289(vec3 x)

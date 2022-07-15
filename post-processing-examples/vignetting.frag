@@ -11,14 +11,10 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/vignetting.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Border_darkness; // Default 0.262
+input float Center_radius;   // default 21.
 
-uniform float Border_darkness; // Default 0.262
-uniform float Center_radius;   // default 21.
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

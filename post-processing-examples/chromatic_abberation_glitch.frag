@@ -11,10 +11,6 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-// END DYNAMIC PARAMS
-
 float rng2(vec2 seed)
 {
     return fract(sin(dot(seed * floor(_time * 12.), vec2(127.1, 311.7))) * 43758.5453123);

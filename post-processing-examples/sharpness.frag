@@ -16,11 +16,7 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float Intensity;
-
-// END DYNAMIC PARAMS
+input float Intensity;
 
 RgbColor texsample(const int x, const int y, in vec2 fragCoord)
 {

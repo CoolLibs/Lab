@@ -16,14 +16,10 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float    drops_size;               // default 0.2 min = .001 max = 1.5
-uniform float    distortion;               // default 0.7 min = 0 max = 1
-uniform float    size;                     // default 1 min = 0.001 max = 1.5
-uniform RgbColor border_color_coefficient; // default 1 min = -1 max = 1
-
-// END DYNAMIC PARAMS
+input float    drops_size;               // default 0.2 min = .001 max = 1.5
+input float    distortion;               // default 0.7 min = 0 max = 1
+input float    size;                     // default 1 min = 0.001 max = 1.5
+input RgbColor border_color_coefficient; // default 1 min = -1 max = 1
 
 float time;
 

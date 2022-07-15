@@ -193,17 +193,17 @@ auto make_any_input(
 
 static auto is_input_declaration(std::string line) -> bool
 {
-    return line.find("uniform") != std::string::npos;
+    return line.find("input") != std::string::npos;
 }
 
 static auto is_commented_out(std::string line) -> bool
 {
     const auto comment_pos = line.find("//");
-    const auto uniform_pos = line.find("uniform");
+    const auto input_pos   = line.find("input");
     if (comment_pos != std::string::npos &&
-        uniform_pos != std::string::npos)
+        input_pos != std::string::npos)
     {
-        if (comment_pos < uniform_pos)
+        if (comment_pos < input_pos)
         {
             return true;
         }
@@ -283,31 +283,20 @@ static auto
     std::vector<AnyInput> new_inputs;
     std::stringstream     stream{std::string{source_code}};
     std::string           line;
-    bool                  has_begun = false;
+    // bool                  has_begun = false;
     while (getline(stream, line))
     {
-        if (has_begun)
+        try
         {
-            if (line == "// END DYNAMIC PARAMS")
+            const auto input = try_parse_input(line, dirty_flag, input_factory);
+            if (input)
             {
-                break;
-            }
-            try
-            {
-                const auto input = try_parse_input(line, dirty_flag, input_factory);
-                if (input)
-                {
-                    new_inputs.push_back(*input);
-                }
-            }
-            catch (const std::exception& e)
-            {
-                Cool::Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
+                new_inputs.push_back(*input);
             }
         }
-        if (line == "// BEGIN DYNAMIC PARAMS")
+        catch (const std::exception& e)
         {
-            has_begun = true;
+            Cool::Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
         }
     }
     return new_inputs;

@@ -13,14 +13,10 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float time_mod;
-uniform float thickness; // default .1
-uniform float offset_x;  // default .5 min = 0 max = 1
-uniform float offset_y;  // default .5 min = 0 max = 1
-
-// END DYNAMIC PARAMS
+input float time_mod;
+input float thickness; // default .1
+input float offset_x;  // default .5 min = 0 max = 1
+input float offset_y;  // default .5 min = 0 max = 1
 
 vec4 image(vec2 uv)
 {

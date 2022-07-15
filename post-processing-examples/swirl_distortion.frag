@@ -13,15 +13,11 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float center_x; // default 0.5
+input float center_y; // default 0.5
 
-uniform float center_x; // default 0.5
-uniform float center_y; // default 0.5
-
-uniform float size;    // only positive values
-uniform float nb_turn; // positive and negative values
-
-// END DYNAMIC PARAMS
+input float size;    // only positive values
+input float nb_turn; // positive and negative values
 
 vec4 image(vec2 uv)
 {

@@ -11,19 +11,15 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/chromatic_aberration.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input int Sample_count; // 20
 
-uniform int Sample_count; // 20
+input float Falloff; // 1.082
+input float Blur;    // 0.142
 
-uniform float Falloff; // 1.082
-uniform float Blur;    // 0.142
+input float Center_x; // 0.142
+input float Center_y; // 0.142
 
-uniform float Center_x; // 0.142
-uniform float Center_y; // 0.142
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

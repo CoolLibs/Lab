@@ -11,13 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/highlights.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Highlights;
 
-uniform float Highlights;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

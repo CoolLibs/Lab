@@ -9,11 +9,7 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform vec3 channels_contribution; // default 1 min = 0
-
-// END DYNAMIC PARAMS
+input vec3 channels_contribution; // default 1 min = 0
 
 vec4 image(vec2 uv)
 {

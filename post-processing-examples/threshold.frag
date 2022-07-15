@@ -11,16 +11,12 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/threshold.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input int number_of_colors; // min 2
 
-uniform int number_of_colors; // min 2
+input RgbColor Color1;
+input RgbColor Color2;
 
-uniform RgbColor Color1;
-uniform RgbColor Color2;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

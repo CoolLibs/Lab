@@ -11,12 +11,8 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float time_mod;
-uniform float resolution_bias;
-
-// END DYNAMIC PARAMS
+input float time_mod;
+input float resolution_bias;
 
 vec4 image(vec2 uv)
 {

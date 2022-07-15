@@ -11,14 +11,10 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float center_x;   // default 0.5 range 0 to 1
-uniform float center_y;   // default 0.5 range 0 to 1
-uniform float distortion; // -5 to 5
-uniform float nb_tiles;   // 0 forbbiden
-
-// END DYNAMIC PARAMS
+input float center_x;   // default 0.5 range 0 to 1
+input float center_y;   // default 0.5 range 0 to 1
+input float distortion; // -5 to 5
+input float nb_tiles;   // 0 forbbiden
 
 vec2 mid;
 

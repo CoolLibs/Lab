@@ -13,25 +13,21 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/portholes.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input bool  Square_mode; // bool
+input float Size;        // 10
+input float Space_to_border;
+input float Speed;
+input float Movement;
+input bool  Time_mode;      // bool
+input float Distance_mode;  // 2
+input float Zoom_intensity; // 0.001
 
-uniform bool  Square_mode; // bool
-uniform float Size;        // 10
-uniform float Space_to_border;
-uniform float Speed;
-uniform float Movement;
-uniform bool  Time_mode;      // bool
-uniform float Distance_mode;  // 2
-uniform float Zoom_intensity; // 0.001
+input float Change_center;
+input float Border;
+input float Smoothing;
+input float Border_smoothing;
 
-uniform float Change_center;
-uniform float Border;
-uniform float Smoothing;
-uniform float Border_smoothing;
-
-uniform RgbColor Border_color;
-
-// END DYNAMIC PARAMS
+input RgbColor Border_color;
 
 void main()
 {

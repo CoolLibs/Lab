@@ -14,18 +14,14 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float center_x;       // default 0.5 range 0 to 1
+input float center_y;       // default 0.5 range 0 to 1
+input float scale;          //  range 0 to 7
+input float details;        //
+input Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
+input float strip;          // default 0.01
 
-uniform float center_x;       // default 0.5 range 0 to 1
-uniform float center_y;       // default 0.5 range 0 to 1
-uniform float scale;          //  range 0 to 7
-uniform float details;        //
-uniform Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
-uniform float strip;          // default 0.01
-
-uniform int nb_div;
-
-// END DYNAMIC PARAMS
+input int nb_div;
 
 float thc(float a, float b)
 {

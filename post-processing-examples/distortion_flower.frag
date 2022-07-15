@@ -13,16 +13,12 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float center_x; // default 0.5 range 0 to 1
+input float center_y; // default 0.5 range 0 to 1
+input float size;
+input float details;
 
-uniform float center_x; // default 0.5 range 0 to 1
-uniform float center_y; // default 0.5 range 0 to 1
-uniform float size;
-uniform float details;
-
-uniform int distor;
-
-// END DYNAMIC PARAMS
+input int distor;
 
 vec4 image(vec2 uv)
 {

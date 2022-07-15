@@ -16,12 +16,8 @@ uniform sampler2D _image;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float Offset_strength;
-uniform float Sharpening_strength;
-
-// END DYNAMIC PARAMS
+input float Offset_strength;
+input float Sharpening_strength;
 
 vec4 image(vec2 uv)
 {

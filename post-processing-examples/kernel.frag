@@ -10,16 +10,12 @@ uniform sampler2D _texture;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
 const int nb          = 15;
 const int kernel_size = nb * 2 + 1;
 
-uniform float space_between_two_pixels_times_1000;
-uniform float sigma;
-uniform float normaliza;
-
-// END DYNAMIC PARAMS
+input float space_between_two_pixels_times_1000;
+input float sigma;
+input float normaliza;
 
 // https://en.wikipedia.org/wiki/Kernel_(image_processing)
 

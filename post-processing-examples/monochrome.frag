@@ -5,7 +5,7 @@ out vec4 out_Color;
 
 // #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
 
-uniform RgbColor _color;
+input RgbColor _color;
 
 void main()
 {

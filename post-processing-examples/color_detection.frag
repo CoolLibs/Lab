@@ -12,15 +12,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/color_detection.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input RgbColor Color;
 
-uniform RgbColor Color;
+input float Saturation;
 
-uniform float Saturation;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
