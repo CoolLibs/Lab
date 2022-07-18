@@ -30,7 +30,7 @@ protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
 private:
-    // TODO remove all those `mutable` once ui function is done properly
+    // TODO(JF) remove all those `mutable` once ui function is done properly
 
     FullscreenShader             _shader;
     Input<Cool::Camera>          _camera_input;
@@ -38,8 +38,8 @@ private:
     mutable RenderEffectsManager _effects{Cool::Path::root() + "/is0 Render Effects"};
     mutable std::string          _shader_code;
     mutable Cool::ImGuiWindow    _shader_code_window{"is0 Shader Code", false};
-    mutable bool                 _must_recompile              = false; // TODO use a DirtyFlag instead (which is alreadt in FullscreenShader)
-    mutable bool                 _must_regenerate_shader_code = false; // TODO use a DirtyFlag instead (which is alreadt in FullscreenShader)
+    mutable bool                 _must_recompile              = false; // TODO(JF) use a DirtyFlag instead (which is alreadt in FullscreenShader)
+    mutable bool                 _must_regenerate_shader_code = false; // TODO(JF) use a DirtyFlag instead (which is alreadt in FullscreenShader)
     CodeGen::LightProperties     _light;
     CodeGen::MaterialProperties  _material;
     int                          _in_use_render = 0;

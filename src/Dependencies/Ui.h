@@ -40,7 +40,7 @@ public:
     void widget(const Input<T>& input)
     {
         ImGui::PushID(&input);
-        // TODO add a way to change the current_variable
+        // TODO(JF) add a way to change the current_variable
         // And show the UI of the current_variable if it is set
         const auto variable = _variable_registries.get().get(input._default_variable_id);
         if (variable)
@@ -52,7 +52,7 @@ public:
 
     void widget(Input_File& input)
     {
-        input.update(_set_dirty); // TODO shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
+        input.update(_set_dirty); // TODO(JF) shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
         std::string path = input.file_watcher.path().string();
         ImGui::Text("Path : ");
         ImGui::SameLine();

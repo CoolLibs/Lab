@@ -37,14 +37,14 @@ void Module_is0::update(UpdateContext_Ref update_ctx)
 
 void Module_is0::imgui_windows(Ui_Ref) const
 {
-    // TODO Use `ui`
+    // TODO(JF) Use `ui`
     _editor.imgui_window();
     _shader_code_window.show([&]() {
         if (ImGui::InputTextMultiline("##is0 shader code", &_shader_code, ImVec2(ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35)))
         {
             _must_recompile = true;
             // ui.set_dirty()
-            // _shader.compile(_shader_code, "is0 Ray Marcher", ); // TODO just set shader dirty
+            // _shader.compile(_shader_code, "is0 Ray Marcher", ); // TODO(JF) just set shader dirty
         }
     });
     ImGui::Begin("is0 Opt");

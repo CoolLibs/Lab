@@ -8,11 +8,11 @@
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
-#include "Module_CustomShader/Module_CustomShader.h"
-#include "Module_is0/Module_is0.h"
-// #include "TestVariables.h"
 #include "Debug/DebugOptions.h"
 #include "Debug/DebugOptionsDetails.h"
+#include "Debug/TestVariables.h"
+#include "Module_CustomShader/Module_CustomShader.h"
+#include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
 
 namespace Lab {
@@ -243,7 +243,7 @@ void App::imgui_windows()
         }
         if (DebugOptions::test_all_variable_widgets())
         {
-            // test_variables();
+            test_variables();
         }
         if (DebugOptions::test_message_console())
         {
