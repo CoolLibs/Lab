@@ -38,7 +38,7 @@ void Module_is0::update(UpdateContext_Ref update_ctx)
 void Module_is0::imgui_windows(Ui_Ref) const
 {
     // TODO(JF) Use `ui`
-    _editor.imgui_window();
+
     _shader_code_window.show([&]() {
         if (ImGui::InputTextMultiline("##is0 shader code", &_shader_code, ImVec2(ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35)))
         {
@@ -86,6 +86,9 @@ void Module_is0::imgui_windows(Ui_Ref) const
 
     ImGui::End();
     _must_regenerate_shader_code |= effect_imgui_window(_effects.render_effects);
+
+    // This line has to be at the end to have is0 focused when we open the app
+    _editor.imgui_window();
 }
 
 std::string Module_is0::saving_path_string() const
