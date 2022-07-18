@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/Parameter/ParameterList.h>
+#include <doctest/doctest.h>
 #include "NodeTemplate.h"
 #include "NodeTree.h"
 #include "RenderEffectsManager.h"

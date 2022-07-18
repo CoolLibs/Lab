@@ -1,6 +1,7 @@
 #pragma once
 #include <Cool/Parameter/Parsing.h>
 #include <Cool/String/String.h>
+#include <doctest/doctest.h>
 
 std::string find_extra_code(std::string_view source, size_t* end_pos);
 
