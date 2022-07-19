@@ -11,7 +11,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 input float center_x;   // default 0.5 range 0 to 1
 input float center_y;   // default 0.5 range 0 to 1

@@ -14,7 +14,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 input float    drops_size;               // default 0.2 min = .001 max = 1.5
 input float    distortion;               // default 0.7 min = 0 max = 1

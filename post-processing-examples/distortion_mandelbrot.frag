@@ -9,7 +9,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 input float size;     // negative values to flip the pattern
 input float offset_x; // default .5 min = 0 max = 1

@@ -3,7 +3,7 @@
 layout(location = 0) in vec2 _uv;
 out vec4 out_Color;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 input RgbColor _color;
 input RgbColor _color2;
@@ -11,7 +11,7 @@ input float    _circle_radius;
 input float    _aspect_ratio;
 input float    _time;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 void main()
 {

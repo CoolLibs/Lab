@@ -13,7 +13,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_ROOT_FOLDER_/shader-lib/define_types.glsl"
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 input float size; // 0 forbidden
 input float blur; // between 2 and 5.5
