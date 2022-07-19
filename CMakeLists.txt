@@ -24,6 +24,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Cool::Core)
 add_subdirectory(lib/cmd)
 target_link_libraries(${PROJECT_NAME} PRIVATE cmd::cmd)
 
+# Include open_link
+add_subdirectory(lib/open_link)
+target_link_libraries(${PROJECT_NAME} PRIVATE open_link::open_link)
+
 # Include range-v3
 target_include_directories(${PROJECT_NAME} PRIVATE lib/range-v3/include)
 
