@@ -1,8 +1,8 @@
 #pragma once
 #include <Cool/File/File.h>
 #include <Cool/Path/Path.h>
-#include "Dependencies/Input.h"
-#include "Dependencies/InputFactory_Ref.h"
+#include "Cool/Dependencies/Input.h"
+#include "Cool/Dependencies/InputFactory_Ref.h"
 #include "Dependencies/Module.h"
 #include "FullscreenShader.h"
 
@@ -11,27 +11,27 @@ namespace Lab {
 class Module_CustomShader : public Module {
 public:
     Module_CustomShader() = default;
-    Module_CustomShader(DirtyFlagFactory_Ref, InputFactory_Ref);
+    Module_CustomShader(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
     auto set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void;
 
-    auto render(RenderParams, UpdateContext_Ref) -> void override;
-    void imgui_windows(Ui_Ref ui) const override;
+    auto render(RenderParams, Cool::UpdateContext_Ref) -> void override;
+    void imgui_windows(Cool::Ui_Ref ui) const override;
 
-    auto all_inputs() const -> AllInputRefsToConst override
+    auto all_inputs() const -> Cool::AllInputRefsToConst override
     {
-        AllInputRefsToConst inputs;
-        inputs.push_back(AnyInputRefToConst{_camera_input});
+        Cool::AllInputRefsToConst inputs;
+        inputs.push_back(Cool::AnyInputRefToConst{_camera_input});
         for (const auto& input : _inputs)
         {
             inputs.push_back(
-                std::visit([](auto&& input) { return AnyInputRefToConst{input}; }, input)
+                std::visit([](auto&& input) { return Cool::AnyInputRefToConst{input}; }, input)
             );
         }
         return inputs;
     }
 
-    auto is_dirty(IsDirty_Ref check_dirty) const -> bool override
+    auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool override
     {
         return Module::is_dirty(check_dirty) ||
                check_dirty(_shader.dirty_flag());
@@ -39,23 +39,23 @@ public:
 
 private:
     auto refresh_pipeline_if_necessary(
-        InputProvider_Ref,
-        IsDirty_Ref,
-        InputFactory_Ref,
-        InputDestructor_Ref,
-        UpdateContext_Ref
+        Cool::InputProvider_Ref,
+        Cool::IsDirty_Ref,
+        Cool::InputFactory_Ref,
+        Cool::InputDestructor_Ref,
+        Cool::UpdateContext_Ref
     ) -> void;
     auto parse_shader_for_params(
         std::string_view fragment_shader_source_code,
-        InputFactory_Ref,
-        InputDestructor_Ref
+        Cool::InputFactory_Ref,
+        Cool::InputDestructor_Ref
     ) -> void;
 
 private:
-    FullscreenShader      _shader; // Must be before _file because it is used to construct it
-    std::vector<AnyInput> _inputs;
-    Input<Cool::Camera>   _camera_input;
-    mutable Input_File    _file;
+    FullscreenShader            _shader; // Must be before _file because it is used to construct it
+    std::vector<Cool::AnyInput> _inputs;
+    Cool::Input<Cool::Camera>   _camera_input;
+    mutable Cool::Input_File    _file;
 
 private:
     // Serialization

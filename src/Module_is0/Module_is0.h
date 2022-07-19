@@ -16,24 +16,24 @@ namespace Lab {
 class Module_is0 : public Module {
 public:
     Module_is0() = default;
-    Module_is0(DirtyFlagFactory_Ref, InputFactory_Ref);
+    Module_is0(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
-    void                             update(UpdateContext_Ref) override;
-    void                             imgui_windows(Ui_Ref) const override;
+    void                             update(Cool::UpdateContext_Ref) override;
+    void                             imgui_windows(Cool::Ui_Ref) const override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
     std::string                      saving_path_string() const;
-    auto                             all_inputs() const -> AllInputRefsToConst override;
-    auto                             is_dirty(IsDirty_Ref) const -> bool override;
+    auto                             all_inputs() const -> Cool::AllInputRefsToConst override;
+    auto                             is_dirty(Cool::IsDirty_Ref) const -> bool override;
 
 protected:
-    void render(RenderParams, UpdateContext_Ref) override;
+    void render(RenderParams, Cool::UpdateContext_Ref) override;
 
 private:
     // TODO remove all those `mutable` once ui function is done properly
 
     FullscreenShader             _shader;
-    Input<Cool::Camera>          _camera_input;
+    Cool::Input<Cool::Camera>    _camera_input;
     mutable NodeEditor           _editor{Cool::Path::root() + "/is0 nodes"};
     mutable RenderEffectsManager _effects{Cool::Path::root() + "/is0 Render Effects"};
     mutable std::string          _shader_code;

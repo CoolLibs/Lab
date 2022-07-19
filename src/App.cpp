@@ -88,7 +88,7 @@ void App::update()
 #endif
 }
 
-auto App::all_inputs() -> AllInputRefsToConst
+auto App::all_inputs() -> Cool::AllInputRefsToConst
 {
     auto vec  = _custom_shader_module->all_inputs();
     auto vec2 = _is0_module->all_inputs();
