@@ -32,7 +32,7 @@ void menu_info()
         if (ImGui::BeginTable("table121", 2, flags))
         {
             line(
-                [] { ImGui::TextDisabled("Visit our Website"); },
+                [] { ImGui::TextDisabled("Website"); },
                 [] { Cool::ImGuiExtras::link("https://coollibs.github.io/lab"); }
             );
 
