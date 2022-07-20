@@ -1,7 +1,7 @@
 #include "menu_info.h"
+#include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Utils/Version.h>
-#include <open_link/open_link.hpp>
 
 namespace Lab {
 
@@ -33,16 +33,7 @@ void menu_info()
         {
             line(
                 [] { ImGui::TextDisabled("Visit our Website"); },
-                [] {
-                    if (ImGui::Selectable("https://coollibs.github.io/lab", true))
-                    {
-                        open_link::open("https://coollibs.github.io/lab");
-                    }
-                    if (ImGui::IsItemHovered())
-                    {
-                        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-                    }
-                }
+                [] { Cool::ImGuiExtras::link("https://coollibs.github.io/lab"); }
             );
 
             line(

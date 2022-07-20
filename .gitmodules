@@ -13,6 +13,3 @@
 [submodule "tooling"]
 	path = tooling
 	url = https://github.com/CoolLibs/tooling/
-[submodule "lib/open_link"]
-	path = lib/open_link
-	url = https://github.com/CoolLibs/open_link
