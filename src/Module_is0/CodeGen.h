@@ -21,13 +21,13 @@ struct FnNameParams {
 };
 
 struct FnSignatureParams {
-    const FnNameParams& fn_name_params;
-    std::string_view    sdf_param_declaration;
+    FnNameParams     fn_name_params;
+    std::string_view sdf_param_declaration;
 };
 
 struct FnDefinitionParams {
-    const FnSignatureParams& fn_signature_params;
-    std::string_view         body;
+    FnSignatureParams fn_signature_params;
+    std::string_view  body;
 };
 
 std::string function_name(const FnNameParams& p);
@@ -53,6 +53,7 @@ std::string value_to_string(const T&& x);
 
 #include "CodeGen.tpp"
 
+#if DEBUG
 TEST_CASE("[is0::CodeGen] Function generation")
 {
     // Given
@@ -88,16 +89,16 @@ TEST_CASE("[is0::CodeGen] Parameter definition")
     return my_sdf(pos);
 })");
 }
+#endif
 
-#if DEBUG
 namespace CodeGen {
 inline doctest::String toString(const FnNameParams& params)
 {
     return ("{ Name: \"" + std::string{params.node_template_name} + "\", Id: \"" + std::to_string(params.node_id) + "\" }").c_str();
 }
 } // namespace CodeGen
-#endif
 
+#if DEBUG
 TEST_CASE("[is0::CodeGen::function_name] glsl names must not contain __ (these are reserved names)")
 {
     // Given
@@ -108,3 +109,4 @@ TEST_CASE("[is0::CodeGen::function_name] glsl names must not contain __ (these a
     CAPTURE(generated_name);
     CHECK(generated_name.find("__") == std::string::npos);
 }
+#endif
