@@ -11,9 +11,9 @@ float _prism_Half_Space_SDF(vec3 pos, vec3 normal, vec3 origin)
          pos.z - Height/2
     ); 
     for (int i = 0; i < Faces_Count; ++i) {
-        const float c = cos(i * TAU / Faces_Count);
-        const float s = sin(i * TAU / Faces_Count);
-        const vec3 polygon_vertex = vec3(c, s, 0.);
+        float c = cos(i * TAU / Faces_Count);
+        float s = sin(i * TAU / Faces_Count);
+        vec3 polygon_vertex = vec3(c, s, 0.);
         d = smooth_max_polynomial(d,
                 _prism_Half_Space_SDF(pos, polygon_vertex, Base_Radius * polygon_vertex),
                 Smoothing
