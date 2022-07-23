@@ -205,12 +205,6 @@ void App::imgui_windows()
 {
     _is0_view.imgui_window();
     _custom_shader_view.imgui_window();
-#if DEBUG
-    if (DebugOptions::test_all_variable_widgets())
-    {
-         test_variables();
-    }
-#endif
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
