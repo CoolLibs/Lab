@@ -35,7 +35,7 @@ void test_variables()
     static Cool::Variable<Cool::Gradient> gradient{
         "Gradient",
         Cool::Gradient{
-            Cool::ImGuiExtras::ImGradientWidget{}}};
+            Cool::ImGuiExtras::GradientWidget{}}};
 
     ImGui::Begin("Test Variables");
     Cool::imgui(angle);
