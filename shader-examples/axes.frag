@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 layout(location = 0) in vec2 _uv;
 uniform float _time;
@@ -32,7 +32,8 @@ vec2 sdf(vec3 p)
     return vec2(
         d,
         d == dX ? 0 : d == dY ? 1
-                              : 2);
+                              : 2
+    );
 }
 
 float ray_march(vec3 ro, vec3 rd)
@@ -61,7 +62,8 @@ vec3 normal(vec3 p)
     vec3 n = d - vec3(
                      sdf(p - e.xyy).x,
                      sdf(p - e.yxy).x,
-                     sdf(p - e.yyx).x);
+                     sdf(p - e.yyx).x
+                 );
 
     return normalize(n);
 }

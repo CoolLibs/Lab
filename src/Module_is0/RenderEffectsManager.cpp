@@ -78,7 +78,7 @@ static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> 
     static_assert(std::is_same_v<T, BaseCode> || std::is_same_v<T, RenderEffect>, "Only BaseCode and RenderEffect are supported");
     for (auto& code : new_code)
     {
-        const auto code_here = std::ranges::find_if(old_code, [&](const T& code_here) {
+        const auto code_here = std::find_if(old_code.begin(), old_code.end(), [&code](const T& code_here) {
             if constexpr (std::is_same_v<T, BaseCode>)
             {
                 return code_here.name == code.name;
@@ -88,6 +88,18 @@ static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> 
                 return code_here.base.name == code.base.name;
             }
         });
+
+        // waiting for xcode to support std::ranges::find_if
+        //  const auto code_here = std::ranges::find_if(old_code, [&](const T& code_here) {
+        //      if constexpr (std::is_same_v<T, BaseCode>)
+        //      {
+        //          return code_here.name == code.name;
+        //      }
+        //      else // T is RenderEffect
+        //      {
+        //          return code_here.base.name == code.base.name;
+        //      }
+        //  });
         if (code_here != old_code.end())
         {
             if constexpr (std::is_same_v<T, BaseCode>)
@@ -106,9 +118,14 @@ static std::vector<T> merge_code(const std::vector<T>& old_code, std::vector<T> 
 
 static size_t merge_index(const BaseCode& old_parameter, const std::vector<BaseCode>& new_parameters)
 {
-    const auto parameter_here = std::ranges::find_if(new_parameters, [&](const BaseCode& parameter_here) {
+    const auto parameter_here = std::find_if(new_parameters.begin(), new_parameters.end(), [&](const BaseCode& parameter_here) {
         return parameter_here.name == old_parameter.name;
     });
+
+    // waiting for xcode to support std::ranges::find_if
+    // const auto parameter_here = std::ranges::find_if(new_parameters, [&](const BaseCode& parameter_here) {
+    //     return parameter_here.name == old_parameter.name;
+    // });
     if (parameter_here != new_parameters.end())
     {
         return std::distance(new_parameters.begin(), parameter_here);

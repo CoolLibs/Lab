@@ -216,9 +216,18 @@ void NodeEditor::update_templates_and_nodes()
     _factory.reload_templates();
     for (auto& node : _tree.nodes)
     {
-        const auto node_template = std::ranges::find_if(_factory.templates(), [&](const NodeTemplate& node_template) {
-            return node_template.name == node.node_template_name;
-        });
+        const auto node_template = std::find_if(
+            _factory.templates().begin(),
+            _factory.templates().end(),
+            [&](const NodeTemplate& node_template) {
+                return node_template.name == node.node_template_name;
+            }
+        );
+
+        // wainting for xcode to support std::ranges::find_if
+        // const auto node_template = std::ranges::find_if(_factory.templates(), [&](const NodeTemplate& node_template) {
+        // return node_template.name == node.node_template_name;
+        // });
         if (node_template == _factory.templates().end())
         {
             _all_nodes_have_a_valid_template = false;

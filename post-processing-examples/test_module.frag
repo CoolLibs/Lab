@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 layout(location = 0) in vec2 _uv;
 out vec4 out_Color;

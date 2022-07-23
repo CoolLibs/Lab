@@ -17,7 +17,7 @@ endif()
 
 # Choose our GPU API and its version
 # set(COOL_USE_VULKAN 110)
-set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,330,430>) # Must be >= 330 for ImGui to work properly # We use 330 when building on Mac because it doesn't support higher versions of OpenGL
+set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,410,430>) # Must be >= 330 for ImGui to work properly # We use 410 when building on Mac because it doesn't support higher versions of OpenGL
 
 # Include Cool
 add_subdirectory(Cool)
@@ -49,6 +49,8 @@ Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "shader-examples")
 Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "is0 nodes")
 Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "is0 shaders")
 Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "is0 Render Effects")
+Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "image resources")
+Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "post-processing-examples")
 
 option(TEST_IS0_NODES "Test all Is0 Nodes" OFF)
 

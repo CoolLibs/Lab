@@ -4,7 +4,7 @@
 // See LICENSE file for details.
 // https://github.com/stegu/webgl-noise
 
-#version 430
+#version 410
 
 layout(location = 0) in vec2 _uv;
 uniform float _time;
@@ -26,9 +26,9 @@ void main()
     vec2 in_uv = _uv;
     in_uv.x *= _aspect_ratio;
 
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = voronoise(
+    vec3 out_color = voronoise(
         in_color, Effect_intensity, in_uv,
         Scale
     );

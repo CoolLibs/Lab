@@ -83,7 +83,7 @@ private:
 private:
     std::vector<Message> _messages{
         {},
-        {"Test 2", "Hello! 2", Cool::MessageSeverity::Warning}};
+        {"Test 2", "Hello! 2\nmulti\nline", Cool::MessageSeverity::Warning}};
 
     bool   should_bring_window_to_front{false};
     size_t next_message_number{0};

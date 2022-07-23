@@ -67,7 +67,7 @@
 // (If you run into problems with this, please let me know.)
 //
 
-#version 430
+#version 410
 
 layout(location = 0) in vec2 _uv;
 uniform float _time;

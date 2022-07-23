@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 // from https://www.shadertoy.com/view/llXGWf
 
@@ -30,9 +30,9 @@ void main()
     uv.x *= _aspect_ratio;
 
     // Time varying pixel color
-    RgbColor col = image(_uv).rgb;
+    vec3 col = image(_uv).rgb;
 
-    RgbColor blur = col;
+    vec3 blur = col;
     blur += texture(_image, _uv + vec2(0.0, 0.001 * Offset_strength)).rgb;
     blur += texture(_image, _uv + vec2(0.001 * Offset_strength, 0.0)).rgb;
     blur += texture(_image, _uv - vec2(0.0, 0.001 * Offset_strength)).rgb;
@@ -47,7 +47,7 @@ void main()
 
     float sharpness = (col - blur).r * Sharpening_strength;
 
-    // col = RgbColor(0);
+    // col = vec3(0);
     // col -= step(distance(fract(uv.x + (sin(_time) + 1.0) / 2.0) + 0.5, 0.5) * 2.0, 0.013);
 
     if (floor(uv.x + ((sin(_time) + 1.0) / 2.0)) > 0.0)

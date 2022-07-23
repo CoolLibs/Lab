@@ -107,9 +107,14 @@ static auto inputs_have_the_same_type_and_name(const Cool::AnyInput& input1, con
 
 static auto iterator_to_same_input(const Cool::AnyInput& input, std::vector<Cool::AnyInput>& old_inputs)
 {
-    return std::ranges::find_if(old_inputs, [&](const Cool::AnyInput& other_input) {
+    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnyInput& other_input) {
         return inputs_have_the_same_type_and_name(other_input, input);
     });
+
+    // Waiting for xcode to support std::ranges::find_if
+    //  return std::ranges::find_if(old_inputs, [&](const AnyInput& other_input) {
+    //      return inputs_have_the_same_type_and_name(other_input, input);
+    //  });
 }
 
 static auto keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(

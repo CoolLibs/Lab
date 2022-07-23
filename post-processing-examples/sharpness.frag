@@ -1,4 +1,4 @@
-#version 430
+#version 410
 
 // from https://www.shadertoy.com/view/llXGWf
 

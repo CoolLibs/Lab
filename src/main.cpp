@@ -4,7 +4,7 @@
 int main()
 {
     Cool::run<Lab::App>({Cool::WindowConfig{
-        .title                  = "Cool Lab",
+        .title                  = "CoolLab",
         .maximize_on_startup_if = true,
     }});
 }

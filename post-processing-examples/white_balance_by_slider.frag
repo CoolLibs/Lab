@@ -4,7 +4,7 @@
 // this code is licensed under the CC0 license
 // http://creativecommons.org/publicdomain/zero/1.0/
 
-#version 430
+#version 410
 
 layout(location = 0) in vec2 _uv;
 uniform float _time;
@@ -26,9 +26,9 @@ input float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv).xyz;
+    vec3 in_color = image(_uv).xyz;
 
-    RgbColor out_color = white_balance_by_slider(
+    vec3 out_color = white_balance_by_slider(
         in_color, Effect_intensity,
         Temperature, Temperature_strength, Luminance_preservation_factor
     );

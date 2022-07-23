@@ -37,14 +37,14 @@ void Module_is0::update(Cool::UpdateContext_Ref update_ctx)
 
 void Module_is0::imgui_windows(Cool::Ui_Ref) const
 {
-    // TODO Use `ui`
-    _editor.imgui_window();
+    // TODO(JF) Use `ui`
+
     _shader_code_window.show([&]() {
         if (ImGui::InputTextMultiline("##is0 shader code", &_shader_code, ImVec2(ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35)))
         {
             _must_recompile = true;
             // ui.set_dirty()
-            // _shader.compile(_shader_code, "is0 Ray Marcher", ); // TODO just set shader dirty
+            // _shader.compile(_shader_code, "is0 Ray Marcher", ); // TODO(JF) just set shader dirty
         }
     });
     ImGui::Begin("is0 Opt");
@@ -86,6 +86,9 @@ void Module_is0::imgui_windows(Cool::Ui_Ref) const
 
     ImGui::End();
     _must_regenerate_shader_code |= effect_imgui_window(_effects.render_effects);
+
+    // This line has to be at the end to have is0 focused when we open the app
+    _editor.imgui_window();
 }
 
 std::string Module_is0::saving_path_string() const
