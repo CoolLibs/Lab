@@ -128,15 +128,12 @@ private:
             cereal::make_nvp("History", _history),
             cereal::make_nvp("is0 Module", _is0_module),
             cereal::make_nvp("Custom Shader Module", _custom_shader_module),
+            cereal::make_nvp("Preview Constraint", _preview_constraint),
             cereal::make_nvp("Camera Manager", _camera_manager)
         );
     }
-#if !IS0_TEST_NODES
-#if DEBUG
+#if !IS0_TEST_NODES && DEBUG
     DebugOptionsDetails::AutoSerializer _auto_serializer_for_debug_options{};
-#endif
-    // Must be declared last because its constructor modifies App, and its destructor requires all other members to still be alive
-    Cool::AutoSerializer<App> _auto_serializer{Cool::Path::root() + "/cache--last-session.json", "App", *this};
 #endif
 };
 
