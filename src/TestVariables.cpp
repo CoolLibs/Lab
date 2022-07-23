@@ -12,7 +12,7 @@ void test_variables()
     static Cool::Variable<glm::vec4>          vector4{"Vector4", glm::vec4(0., 1., 0.5, 8.)};
     static Cool::Variable<glm::vec3>          vector3{"Vector3", glm::vec3(1., 1.5, 8.)};
     static Cool::Variable<Cool::ColorPalette> color_palette{"Color Palette", Cool::ColorPalette(std::vector{Cool::RgbColor{glm::vec3{0.f, 1.f, 0.75f}}, Cool::RgbColor{glm::vec3{1.f, 1.f, 0.5f}}, Cool::RgbColor{glm::vec3{1.f, 0.f, 0.5f}}})};
-    static Cool::Variable<Cool::Gradient>     gradient{"Gradient", Cool::Gradient{ImGradient()}};
+    static Cool::Variable<Cool::Gradient>     gradient{"Gradient", Cool::Gradient{Cool::ImGradientWidget()}};
 
     ImGui::Begin("Test Variables");
     Cool::imgui(angle);
