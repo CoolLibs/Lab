@@ -9,11 +9,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float time_mod;
-
-// END DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 float rng2(vec2 seed)
 {
@@ -46,6 +42,6 @@ void main()
     vec4 col2 = texture(_image, uv + vec2(lineNoise * 0.05 * rng(5.), 0));
     vec4 col3 = texture(_image, uv - vec2(lineNoise * 0.05 * rng(31), 0));
 
-    vec3 color = vec3(col1.r, col2.g, col3.b) + noise;
-    out_Color  = vec4(color, 1.);
+    RgbColor color = RgbColor(col1.r, col2.g, col3.b) + noise;
+    out_Color      = vec4(color, 1.);
 }

@@ -11,16 +11,14 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float center_x; // default 0.5 range 0 to 1
-uniform float center_y; // default 0.5 range 0 to 1
-uniform float size;
-uniform float details;
+input float center_x; // default 0.5 range 0 to 1
+input float center_y; // default 0.5 range 0 to 1
+input float size;
+input float details;
 
-uniform int distor;
-
-// END DYNAMIC PARAMS
+input int distor;
 
 vec4 image(vec2 uv)
 {
@@ -42,7 +40,7 @@ void main()
     a = a * (r / 50.0);
     a = 200000.0 * sin(a * 6.0) * (r / 30.0) * details;
 
-    vec3 col = image(uv + vec2(cos(a / 20.0), cos(a / 200.0)) - center).rgb;
+    RgbColor col = image(uv + vec2(cos(a / 20.0), cos(a / 200.0)) - center).rgb;
 
     out_Color = vec4(col, 1.0);
 }

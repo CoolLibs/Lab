@@ -13,14 +13,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float size; // 0 forbidden
-uniform float blur; // between 2 and 5.5
-uniform float time_mod;
-uniform float rain_amount; // between 0 and 1
-
-// END DYNAMIC PARAMS
+input float size; // 0 forbidden
+input float blur; // between 2 and 5.5
+input float time_mod;
+input float rain_amount; // between 0 and 1
 
 #define S(a, b, t) smoothstep(a, b, t)
 
@@ -191,8 +189,8 @@ void main()
     float cy = Drops(uv + e.yx, t, staticDrops, layer1, layer2).x;
     vec2  n  = vec2(cx - c.x, cy - c.x); // expensive normals
 
-    float focus = mix(maxBlur - c.y, minBlur, S(.1, .2, c.x));
-    vec3  color = textureLod(_image, UV + n, blur).rgb;
+    float    focus = mix(maxBlur - c.y, minBlur, S(.1, .2, c.x));
+    RgbColor color = textureLod(_image, UV + n, blur).rgb;
 
     out_Color = vec4(color, 1.);
 }

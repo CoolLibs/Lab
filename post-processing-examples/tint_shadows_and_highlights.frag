@@ -7,26 +7,23 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/tint_shadows_and_highlights.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input RgbColor Color_shadows;
+input RgbColor Color_highlights;
 
-uniform vec3 Color_shadows;
-uniform vec3 Color_highlights;
+input float Shadows_intensity;
+input float Highlights_intensity;
 
-uniform float Shadows_intensity;
-uniform float Highlights_intensity;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = tint_shadows_and_highlights(
+    RgbColor out_color = tint_shadows_and_highlights(
         in_color, Effect_intensity,
         Color_shadows, Color_highlights, Shadows_intensity, Highlights_intensity
     );

@@ -7,29 +7,26 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/voronoi.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Scale; // 10
+input float Speed;
+input float Movement;
+input bool  Time_mode;
+input float Distance_mode; // 2
 
-uniform float Scale; // 10
-uniform float Speed;
-uniform float Movement;
-uniform float Time_mode;
-uniform float Distance_mode; // 2
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
     vec2 in_uv = _uv;
     in_uv.x *= _aspect_ratio;
 
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = voronoi(
+    RgbColor out_color = voronoi(
         in_color, Effect_intensity, in_uv,
         Scale, Speed, Movement, Time_mode, Distance_mode
     );

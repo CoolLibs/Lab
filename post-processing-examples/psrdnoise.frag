@@ -76,14 +76,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float scale;
-uniform float gain;       // default = 0.5
-uniform float lacunarity; // default =2
-uniform float octaves;    // min=1
-
-// END DYNAMIC PARAMS
+input float scale;
+input float gain;       // default = 0.5
+input float lacunarity; // default =2
+input float octaves;    // min=1
 
 // Modulo 289, optimizes to code without divisions
 vec3 mod289(vec3 x)
@@ -530,5 +528,5 @@ void main()
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
     float noise = snoise(uv * scale) * 0.5 + 0.5;
-    out_Color   = vec4(vec3(fbm(uv)), 1.);
+    out_Color   = vec4(RgbColor(fbm(uv)), 1.);
 }

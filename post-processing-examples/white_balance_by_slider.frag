@@ -13,18 +13,16 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/luminance.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/white_balance_by_slider.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Temperature; // default 1000 to 40000
+input float Temperature_strength;
+input float Luminance_preservation_factor;
 
-uniform float Temperature; // default 1000 to 40000
-uniform float Temperature_strength;
-uniform float Luminance_preservation_factor;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {

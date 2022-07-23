@@ -11,15 +11,13 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float center_x; // default 0.5
-uniform float center_y; // default 0.5
+input float center_x; // default 0.5
+input float center_y; // default 0.5
 
-uniform float size;    // only positive values
-uniform float nb_turn; // positive and negative values
-
-// END DYNAMIC PARAMS
+input float size;    // only positive values
+input float nb_turn; // positive and negative values
 
 vec4 image(vec2 uv)
 {
@@ -37,7 +35,7 @@ void main()
     float angle  = atan(uv.y, uv.x) + nb_turn * TAU * smoothstep(size, 0., len);
     float radius = length(uv);
 
-    vec3 color = image(vec2(radius * cos(angle), radius * sin(angle)) + center).rgb;
+    RgbColor color = image(vec2(radius * cos(angle), radius * sin(angle)) + center).rgb;
 
     out_Color = vec4(color, 1.);
 }

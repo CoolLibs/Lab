@@ -2,15 +2,15 @@
 
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/MessageConsole/MessageId.h>
-#include "Dependencies/Dirty.h"
-#include "Dependencies/UpdateContext_Ref.h"
+#include "Cool/Dependencies/Dirty.h"
+#include "Cool/Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {
 
 class FullscreenShader {
 public:
     FullscreenShader() = default;
-    explicit FullscreenShader(DirtyFlag dirty_flag)
+    explicit FullscreenShader(Cool::DirtyFlag dirty_flag)
         : _dirty_flag{dirty_flag}
     {}
 
@@ -18,14 +18,14 @@ public:
         std::string_view fragment_shader_source_code,
         std::string_view shader_name,
         std::string_view module_name,
-        UpdateContext_Ref
+        Cool::UpdateContext_Ref
     );
 
-    auto dirty_flag() const -> const DirtyFlag& { return _dirty_flag; }
+    auto dirty_flag() const -> const Cool::DirtyFlag& { return _dirty_flag; }
     auto pipeline() -> Cool::FullscreenPipeline& { return _fullscreen_pipeline; }
 
 private:
-    DirtyFlag                _dirty_flag{};
+    Cool::DirtyFlag          _dirty_flag{};
     Cool::FullscreenPipeline _fullscreen_pipeline{};
     Cool::MessageId          _compile_error_message_id{};
 

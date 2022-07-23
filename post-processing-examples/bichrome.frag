@@ -7,23 +7,21 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/bichrome.glsl"
 
-// BEGIN DYNAMIC PARAMS
+// default 0.5 min -1 max 1
 
-uniform vec3 Color1;
-uniform vec3 Color2;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input RgbColor Color1;
+input RgbColor Color2;           // hdr
+input float    Effect_intensity; // default 0.5 min -1 max 2
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = bichrome(
+    RgbColor out_color = bichrome(
         in_color, Effect_intensity,
         Color1, Color2
     );

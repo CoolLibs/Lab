@@ -7,27 +7,24 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/flare.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float x;
+input float y;
+input float Brightness;
 
-uniform float x;
-uniform float y;
-uniform float Brightness;
+input int Nb_of_circles; // default 10
+input int Seed;          // default 20
 
-uniform int Nb_of_circles; // default 10
-uniform int Seed;          // default 20
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = flare(
+    RgbColor out_color = flare(
         in_color, Effect_intensity,
         x, y, Brightness, Nb_of_circles, Seed
     );

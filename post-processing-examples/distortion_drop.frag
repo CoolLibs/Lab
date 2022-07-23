@@ -14,17 +14,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float time_mod;
-uniform float drops_size;     // default 0.2 min = .001 max = 1.5
-uniform float distortion;     // default 0.7 min = 0 max = 1
-uniform float size;           // default 1 min = 0.001 max = 1.5
-uniform float border_color_r; // default 1 min = -1 max = 1
-uniform float border_color_g; // default 1 min = -1 max = 1
-uniform float border_color_b; // default 1 min = -1 max = 1
-
-// END DYNAMIC PARAMS
+input float    drops_size;               // default 0.2 min = .001 max = 1.5
+input float    distortion;               // default 0.7 min = 0 max = 1
+input float    size;                     // default 1 min = 0.001 max = 1.5
+input RgbColor border_color_coefficient; // default 1 min = -1 max = 1
 
 float time;
 
@@ -157,9 +152,9 @@ void main()
 
     vec2 uv2 = p.xy * size / (depth * r.z) + vec2(0.5, .5);
 
-    vec3 col = image(uv2).rgb;
+    RgbColor col = image(uv2).rgb;
 
-    vec3 border_color = vec3(border_color_r, border_color_g, border_color_b) + vec3(sin(_time * 4) * 0.05);
+    RgbColor border_color = border_color_coefficient + vec3(sin(_time * 4) * 0.05);
     col += at * border_color;
     col *= pow(max(0.0, 1.3 - length(uv)), 0.8);
 

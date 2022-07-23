@@ -7,10 +7,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
-
-// END DYNAMIC PARAMS
-
 vec4 image(vec2 uv)
 {
     return texture2D(_image, uv);

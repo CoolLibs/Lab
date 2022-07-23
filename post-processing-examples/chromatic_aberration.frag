@@ -7,28 +7,25 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/chromatic_aberration.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input int Sample_count; // 20
 
-uniform int Sample_count; // 20
+input float Falloff; // 1.082
+input float Blur;    // 0.142
 
-uniform float Falloff; // 1.082
-uniform float Blur;    // 0.142
+input float Center_x; // 0.142
+input float Center_y; // 0.142
 
-uniform float Center_x; // 0.142
-uniform float Center_y; // 0.142
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = chromatic_aberration(
+    RgbColor out_color = chromatic_aberration(
         in_color, Effect_intensity,
         Center_x, Center_y, Sample_count, Falloff, Blur
     );

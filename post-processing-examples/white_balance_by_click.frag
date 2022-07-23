@@ -7,25 +7,22 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/white_balance_by_click.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input vec2 Coordinate_for_white_balance;
 
-uniform vec2 Coordinate_for_white_balance;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
     vec2 in_uv = _uv;
     in_uv.x *= _aspect_ratio;
 
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = white_balance_by_click(
+    RgbColor out_color = white_balance_by_click(
         in_color, Effect_intensity, in_uv,
         Coordinate_for_white_balance
     );

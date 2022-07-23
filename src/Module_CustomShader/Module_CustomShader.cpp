@@ -1,13 +1,20 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
+#include <Cool/InputParser/InputParser.h>
 #include <Cool/Log/ToUser.h>
+#include <Cool/String/String.h>
+#include <doctest/doctest.h>
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
+#include <type_from_string/type_from_string.hpp>
+
+// Support angle units (turns, degrees, radians)
+
+// TODO(JF) TODO(LD) Why isn't Hue working ???
 
 namespace Lab {
-
-Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
+Module_CustomShader::Module_CustomShader(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"Custom Shader", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
@@ -15,9 +22,9 @@ Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory
 {
 }
 
-void Module_CustomShader::imgui_windows(Ui_Ref ui) const
+void Module_CustomShader::imgui_windows(Cool::Ui_Ref ui) const
 {
-    Ui_Ref::window({.name = "Custom Shader"}, [&]() {
+    Cool::Ui_Ref::window({.name = "Custom Shader"}, [&]() {
         ui.widget(_file);
         ImGui::Separator();
         ImGui::NewLine();
@@ -32,31 +39,31 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 }
 
 template<typename T>
-static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
+static auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value) -> void
 {
     shader.set_uniform(name, value);
 }
 
 template<>
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value)
+auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value) -> void
 {
     shader.set_uniform(name, value.value);
 }
 
-void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
+auto set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&) -> void
 {
     assert(false); // This isn't used at the moment because we set the camera3d manually for all shaders, but this should be changed
     // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
+auto Module_CustomShader::render(RenderParams in, Cool::UpdateContext_Ref update_ctx) -> void
 {
     refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
     if (_shader.pipeline().shader())
     {
         _shader.pipeline().shader()->bind();
-        _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Input_AspectRatio{}));
-        _shader.pipeline().shader()->set_uniform("_time", in.provider(Input_Time{}));
+        _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+        _shader.pipeline().shader()->set_uniform("_time", in.provider(Cool::Input_Time{}));
 
         for (auto& input : _inputs)
         {
@@ -65,18 +72,18 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
             },
                        input);
         }
-        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Input_AspectRatio{}));
+        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
         _shader.pipeline().draw();
     }
 }
 
-void Module_CustomShader::refresh_pipeline_if_necessary(
-    InputProvider_Ref   provider,
-    IsDirty_Ref         is_dirty,
-    InputFactory_Ref    input_factory,
-    InputDestructor_Ref input_destructor,
-    UpdateContext_Ref   update_ctx
-)
+auto Module_CustomShader::refresh_pipeline_if_necessary(
+    Cool::InputProvider_Ref   provider,
+    Cool::IsDirty_Ref         is_dirty,
+    Cool::InputFactory_Ref    input_factory,
+    Cool::InputDestructor_Ref input_destructor,
+    Cool::UpdateContext_Ref   update_ctx
+) -> void
 {
     if (is_dirty(_shader.dirty_flag()))
     {
@@ -87,20 +94,20 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     }
 }
 
-static auto name(const AnyInput& input)
+static auto name(const Cool::AnyInput& input)
 {
     return std::visit(([](auto&& input) { return input.name(); }), input);
 }
 
-static auto inputs_have_the_same_type_and_name(const AnyInput& input1, const AnyInput& input2) -> bool
+static auto inputs_have_the_same_type_and_name(const Cool::AnyInput& input1, const Cool::AnyInput& input2) -> bool
 {
     return input1.index() == input2.index() &&
            name(input1) == name(input2);
 }
 
-static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>& old_inputs)
+static auto iterator_to_same_input(const Cool::AnyInput& input, std::vector<Cool::AnyInput>& old_inputs)
 {
-    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const AnyInput& other_input) {
+    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnyInput& other_input) {
         return inputs_have_the_same_type_and_name(other_input, input);
     });
 
@@ -110,11 +117,11 @@ static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>&
     //  });
 }
 
-static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
-    std::vector<AnyInput>& old_inputs,
-    std::vector<AnyInput>& new_inputs,
-    InputDestructor_Ref    destroy
-)
+static auto keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
+    std::vector<Cool::AnyInput>& old_inputs,
+    std::vector<Cool::AnyInput>& new_inputs,
+    Cool::InputDestructor_Ref    destroy
+) -> void
 {
     for (auto& input : old_inputs)
     {
@@ -130,75 +137,21 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory)
-    -> std::vector<AnyInput>
-{
-    std::vector<AnyInput> new_inputs;
-    std::stringstream     stream{std::string{source_code}};
-    std::string           line;
-    bool                  has_begun = false;
-    while (getline(stream, line))
-    {
-        if (has_begun)
-        {
-            if (line == "// END DYNAMIC PARAMS")
-            {
-                break;
-            }
-            try
-            {
-                const auto uniform_pos = line.find("uniform");
-                if (uniform_pos != std::string::npos)
-                {
-                    const auto        type_pos     = uniform_pos + 8;
-                    const auto        type_pos_end = line.find(' ', type_pos);
-                    const std::string type         = line.substr(type_pos, type_pos_end - type_pos);
-                    const auto        name_pos     = type_pos_end + 1;
-                    const auto        name_pos_end = line.find_first_of(" ;", name_pos);
-                    const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
-                    //
-                    const auto input = [&]() -> AnyInput {
-                        if (type == "int")
-                            return input_factory.make<int>(dirty_flag, name);
-                        else if (type == "float")
-                            return input_factory.make<float>(dirty_flag, name);
-                        else if (type == "vec2")
-                            return input_factory.make<glm::vec2>(dirty_flag, name);
-                        else if (type == "vec3")
-                            return input_factory.make<Cool::RgbColor>(dirty_flag, name);
-                        else
-                            throw std::invalid_argument(type + " is not a valid parameter type.");
-                    }();
-                    new_inputs.push_back(input);
-                }
-            }
-            catch (const std::exception& e)
-            {
-                Cool::Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
-            }
-        }
-        if (line == "// BEGIN DYNAMIC PARAMS")
-        {
-            has_begun = true;
-        }
-    }
-    return new_inputs;
-}
-
-void Module_CustomShader::parse_shader_for_params(
-    std::string_view    source_code,
-    InputFactory_Ref    input_factory,
-    InputDestructor_Ref input_destructor
+auto Module_CustomShader::parse_shader_for_params(
+    std::string_view          source_code,
+    Cool::InputFactory_Ref    input_factory,
+    Cool::InputDestructor_Ref input_destructor
 )
+    -> void
 {
-    auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
+    auto new_inputs = Cool::get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }
 
-void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
+auto Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void
 {
-    if (_shader.pipeline().shader().has_value())
+    if (_shader.pipeline().shader())
     {
         _shader.pipeline().shader()->bind();
         glpp::active_texture(slot);
@@ -210,3 +163,13 @@ void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, G
 }
 
 } // namespace Lab
+
+TEST_CASE("Parsing a RgbColor")
+{
+    const auto color_metadata = Cool::get_default_metadata<Cool::RgbColor>("hdr");
+    CHECK(
+        color_metadata.is_hdr == true
+    );
+}
+
+// TODO(LD) More tests for the shader parser

@@ -7,22 +7,19 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/vibrance.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Vibrance; // default 0.
 
-uniform float Vibrance; // default 0.
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = vibrance(
+    RgbColor out_color = vibrance(
         in_color, Effect_intensity,
         Vibrance
     );

@@ -7,24 +7,21 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/color_discretisation.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input RgbColor color1;
+input RgbColor color2;
+input RgbColor color3;
 
-uniform vec3 color1;
-uniform vec3 color2;
-uniform vec3 color3;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = color_discretisation(
+    RgbColor out_color = color_discretisation(
         in_color, Effect_intensity,
         color1, color2, color3
     );

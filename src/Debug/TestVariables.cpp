@@ -25,13 +25,13 @@ void test_variables()
     static Cool::Variable<glm::vec3> vector3{
         "Vector3",
         glm::vec3{1.f, 1.5f, 8.f}};
-    static Cool::Variable<Cool::ColorPalette> color_palette{
-        "Color Palette",
-        Cool::ColorPalette{
-            std::vector{
-                Cool::RgbColor{glm::vec3{0.f, 1.f, 0.75f}},
-                Cool::RgbColor{glm::vec3{1.f, 1.f, 0.5f}},
-                Cool::RgbColor{glm::vec3{1.f, 0.f, 0.5f}}}}};
+    // static Cool::Variable<Cool::ColorPalette> color_palette{
+    //     "Color Palette",
+    //     Cool::ColorPalette{
+    //         std::vector{
+    //             Cool::RgbColor{glm::vec3{0.f, 1.f, 0.75f}},
+    //             Cool::RgbColor{glm::vec3{1.f, 1.f, 0.5f}},
+    //             Cool::RgbColor{glm::vec3{1.f, 0.f, 0.5f}}}}};
 
     ImGui::Begin("Test Variables");
     Cool::imgui(angle);
@@ -40,7 +40,7 @@ void test_variables()
     Cool::imgui(direction);
     Cool::imgui(vector3);
     Cool::imgui(vector4);
-    Cool::imgui(color_palette);
+    // Cool::imgui(color_palette);
     ImGui::End();
 }
 

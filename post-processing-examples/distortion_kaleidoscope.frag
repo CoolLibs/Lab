@@ -9,14 +9,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float time_mod;
-uniform float scale;  // default 0.125
-uniform float offs_x; // default .5
-uniform float offs_y; // default .5
-
-// END DYNAMIC PARAMS
+input float time_mod;
+input float scale;  // default 0.125
+input float offs_x; // default .5
+input float offs_y; // default .5
 
 vec4 image(vec2 uv)
 {

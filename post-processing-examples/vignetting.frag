@@ -7,17 +7,14 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/vignetting.glsl"
 
-// BEGIN DYNAMIC PARAMS
+input float Border_darkness; // Default 0.262
+input float Center_radius;   // default 21.
 
-uniform float Border_darkness; // Default 0.262
-uniform float Center_radius;   // default 21.
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+input float Effect_intensity;
 
 void main()
 {
@@ -25,9 +22,9 @@ void main()
     uv *= 1.0 - uv.yx;
     uv.x *= _aspect_ratio;
 
-    vec3 in_color = image(_uv);
+    RgbColor in_color = image(_uv);
 
-    vec3 out_color = vignetting(
+    RgbColor out_color = vignetting(
         in_color, Effect_intensity, uv,
         Border_darkness, Center_radius
     );
