@@ -22,9 +22,9 @@ Module_CustomShader::Module_CustomShader(Cool::DirtyFlagFactory_Ref dirty_flag_f
 {
 }
 
-void Module_CustomShader::imgui_windows(Cool::Ui_Ref ui) const
+void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 {
-    Cool::Ui_Ref::window({.name = "Custom Shader"}, [&]() {
+    Ui_Ref::window({.name = "Custom Shader"}, [&]() {
         ui.widget(_file);
         ImGui::Separator();
         ImGui::NewLine();
@@ -56,7 +56,7 @@ auto set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
     // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-auto Module_CustomShader::render(RenderParams in, Cool::UpdateContext_Ref update_ctx) -> void
+auto Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx) -> void
 {
     refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
     if (_shader.pipeline().shader())
@@ -82,7 +82,7 @@ auto Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::IsDirty_Ref         is_dirty,
     Cool::InputFactory_Ref    input_factory,
     Cool::InputDestructor_Ref input_destructor,
-    Cool::UpdateContext_Ref   update_ctx
+    UpdateContext_Ref         update_ctx
 ) -> void
 {
     if (is_dirty(_shader.dirty_flag()))

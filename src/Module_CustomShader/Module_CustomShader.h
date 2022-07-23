@@ -15,8 +15,8 @@ public:
 
     auto set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void;
 
-    auto render(RenderParams, Cool::UpdateContext_Ref) -> void override;
-    void imgui_windows(Cool::Ui_Ref ui) const override;
+    auto render(RenderParams, UpdateContext_Ref) -> void override;
+    void imgui_windows(Ui_Ref ui) const override;
 
     auto all_inputs() const -> Cool::AllInputRefsToConst override
     {
@@ -43,7 +43,7 @@ private:
         Cool::IsDirty_Ref,
         Cool::InputFactory_Ref,
         Cool::InputDestructor_Ref,
-        Cool::UpdateContext_Ref
+        UpdateContext_Ref
     ) -> void;
     auto parse_shader_for_params(
         std::string_view fragment_shader_source_code,

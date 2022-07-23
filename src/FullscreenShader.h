@@ -3,7 +3,7 @@
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/MessageConsole/MessageId.h>
 #include "Cool/Dependencies/Dirty.h"
-#include "Cool/Dependencies/UpdateContext_Ref.h"
+#include "Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {
 
@@ -18,7 +18,7 @@ public:
         std::string_view fragment_shader_source_code,
         std::string_view shader_name,
         std::string_view module_name,
-        Cool::UpdateContext_Ref
+        UpdateContext_Ref
     );
 
     auto dirty_flag() const -> const Cool::DirtyFlag& { return _dirty_flag; }

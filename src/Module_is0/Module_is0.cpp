@@ -13,7 +13,7 @@ Module_is0::Module_is0(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::Inpu
 {
 }
 
-void Module_is0::update(Cool::UpdateContext_Ref update_ctx)
+void Module_is0::update(UpdateContext_Ref update_ctx)
 {
     if (_editor.tree_has_changed() || _must_regenerate_shader_code)
     {
@@ -35,7 +35,7 @@ void Module_is0::update(Cool::UpdateContext_Ref update_ctx)
     }
 }
 
-void Module_is0::imgui_windows(Cool::Ui_Ref) const
+void Module_is0::imgui_windows(Ui_Ref) const
 {
     // TODO(JF) Use `ui`
 
@@ -113,7 +113,7 @@ auto Module_is0::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
            check_dirty(_shader.dirty_flag());
 };
 
-void Module_is0::render(RenderParams in, Cool::UpdateContext_Ref)
+void Module_is0::render(RenderParams in, UpdateContext_Ref)
 {
     if (_shader.pipeline().shader())
     {

@@ -6,9 +6,9 @@
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Dependencies/InputFactory_Ref.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
-#include "Cool/Dependencies/Ui.h"
-#include "Cool/Dependencies/UpdateContext_Ref.h"
 #include "Dependencies/History.h"
+#include "Ui.h"
+#include "UpdateContext_Ref.h"
 
 namespace Lab {
 
@@ -38,13 +38,13 @@ public:
 
     auto name() const -> const std::string& { return _name; }
 
-    void do_rendering(RenderParams params, Cool::UpdateContext_Ref update_ctx)
+    void do_rendering(RenderParams params, UpdateContext_Ref update_ctx)
     {
         render(params, update_ctx);
         params.set_clean(_dirty_flag);
     }
-    virtual void imgui_windows(Cool::Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
-    virtual void update(Cool::UpdateContext_Ref){};
+    virtual void imgui_windows(Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
+    virtual void update(UpdateContext_Ref){};
 
     virtual auto all_inputs() const -> Cool::AllInputRefsToConst = 0;
 
@@ -56,7 +56,7 @@ public:
     auto dirty_flag() { return _dirty_flag; }
 
 private:
-    virtual void render(RenderParams, Cool::UpdateContext_Ref) = 0;
+    virtual void render(RenderParams, UpdateContext_Ref) = 0;
 
 private:
     std::string     _name;

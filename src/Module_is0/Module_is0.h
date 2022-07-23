@@ -18,8 +18,8 @@ public:
     Module_is0() = default;
     Module_is0(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
-    void                             update(Cool::UpdateContext_Ref) override;
-    void                             imgui_windows(Cool::Ui_Ref) const override;
+    void                             update(UpdateContext_Ref) override;
+    void                             imgui_windows(Ui_Ref) const override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
     std::string                      saving_path_string() const;
@@ -27,7 +27,7 @@ public:
     auto                             is_dirty(Cool::IsDirty_Ref) const -> bool override;
 
 protected:
-    void render(RenderParams, Cool::UpdateContext_Ref) override;
+    void render(RenderParams, UpdateContext_Ref) override;
 
 private:
     // TODO(JF) remove all those `mutable` once ui function is done properly
