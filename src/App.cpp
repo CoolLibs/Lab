@@ -9,7 +9,6 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
-#include "Debug/DebugOptionsDetails.h"
 #include "Debug/TestVariables.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
@@ -311,7 +310,7 @@ void App::menu_debug()
 #if DEBUG
     if (ImGui::BeginMenu("Debug"))
     {
-        DebugOptionsDetails::imgui_checkboxes_for_all_options();
+        DebugOptionsManager::imgui_checkboxes_for_all_options();
         ImGui::EndMenu();
     }
 #endif

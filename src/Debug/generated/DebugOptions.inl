@@ -6,7 +6,9 @@
  */
 
 #pragma once
+#if DEBUG
 
+#include <Cool/DebugOptions/DebugOptionsManager.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/as_json.h>
 
@@ -14,7 +16,6 @@ namespace Lab {
 
 class DebugOptions {
 public:
-#if DEBUG
     // clang-format off
 [[nodiscard]] static auto show_framerate_window() -> bool& { return instance().show_framerate_window; }
 [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
@@ -22,26 +23,16 @@ public:
 [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
 [[nodiscard]] static auto test_all_variable_widgets() -> bool& { return instance().test_all_variable_widgets; }
 [[nodiscard]] static auto test_message_console() -> bool& { return instance().test_message_console; }
-#else
-[[nodiscard]] static auto constexpr show_framerate_window() -> bool { return false; }
-[[nodiscard]] static auto constexpr show_imgui_demo_window() -> bool { return false; }
-[[nodiscard]] static auto constexpr show_commands_and_registries_debug_windows() -> bool { return false; }
-[[nodiscard]] static auto constexpr log_when_rendering() -> bool { return false; }
-[[nodiscard]] static auto constexpr test_all_variable_widgets() -> bool { return false; }
-[[nodiscard]] static auto constexpr test_message_console() -> bool { return false; }
-#endif
     // clang-format on
 
 private:
-#if DEBUG
     struct Instance {
-        bool            show_framerate_window{true};
-        bool            show_imgui_demo_window{false};
-        bool            show_commands_and_registries_debug_windows{false};
-        bool            log_when_rendering{false};
-        bool            test_all_variable_widgets{false};
-        bool            test_message_console{false};
-        ImGuiTextFilter filter;
+        bool show_framerate_window{true};
+        bool show_imgui_demo_window{false};
+        bool show_commands_and_registries_debug_windows{false};
+        bool log_when_rendering{false};
+        bool test_all_variable_widgets{false};
+        bool test_message_console{false};
 
     private:
         // Serialization
@@ -62,7 +53,6 @@ private:
 
     static void reset_all()
     {
-        instance().filter.Clear();
         instance().show_framerate_window                      = true;
         instance().show_imgui_demo_window                     = false;
         instance().show_commands_and_registries_debug_windows = false;
@@ -71,10 +61,19 @@ private:
         instance().test_message_console                       = false;
     }
 
+    static void save_to_file()
+    {
+        Cool::Serialization::to_json(
+            instance(),
+            Cool::Path::root() + "/cache--debug-options-lab.json",
+            "Debug Options"
+        );
+    }
+
     static auto load_debug_options() -> Instance
     {
         auto the_instance = Instance{};
-        Cool::Serialization::from_json(the_instance, Cool::Path::root() + "/cache--debug-options.json");
+        Cool::Serialization::from_json(the_instance, Cool::Path::root() + "/cache--debug-options-lab.json");
         return the_instance;
     }
 
@@ -83,32 +82,26 @@ private:
         static auto the_instance = Instance{load_debug_options()};
         return the_instance;
     }
-#endif
 
-    friend class DebugOptionsDetails; // We go through this indirection so that only the files which include "DebugOptionsDetails" can call `imgui_checkboxes_for_all_options()`
-    static void imgui_checkboxes_for_all_options()
+    template<typename... Ts>
+    friend class Cool::DebugOptionsManager; // We go through this indirection so that only the files which include "DebugOptionsManager" can call `imgui_checkboxes_for_all_options()`
+    static void imgui_checkboxes_for_all_options(const ImGuiTextFilter& filter)
     {
-#if DEBUG
-        instance().filter.Draw("Filter");
-        if (ImGui::Button("Reset all debug options"))
-        {
-            reset_all();
-        }
-        ImGui::Separator();
-        if (instance().filter.PassFilter("Framerate window"))
+        if (filter.PassFilter("Framerate window"))
             ImGui::Checkbox("Framerate window", &instance().show_framerate_window);
-        if (instance().filter.PassFilter("ImGui Demo window"))
+        if (filter.PassFilter("ImGui Demo window"))
             ImGui::Checkbox("ImGui Demo window", &instance().show_imgui_demo_window);
-        if (instance().filter.PassFilter("Commands and Registries windows"))
+        if (filter.PassFilter("Commands and Registries windows"))
             ImGui::Checkbox("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
-        if (instance().filter.PassFilter("Log when rendering"))
+        if (filter.PassFilter("Log when rendering"))
             ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
-        if (instance().filter.PassFilter("Test all Variable Widgets"))
+        if (filter.PassFilter("Test all Variable Widgets"))
             ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets);
-        if (instance().filter.PassFilter("Test Message Console"))
+        if (filter.PassFilter("Test Message Console"))
             ImGui::Checkbox("Test Message Console", &instance().test_message_console);
-#endif
     }
 };
 
 } // namespace Lab
+
+#endif

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Cool/AppManager/IApp.h>
+#include <Cool/DebugOptions/DebugOptions.h>
+#include <Cool/DebugOptions/DebugOptionsManager.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
@@ -15,7 +17,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Debug/DebugOptionsDetails.h"
+#include "Debug/DebugOptions.h"
 #include "Debug/TestMessageConsole.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/Dirty.h"
@@ -28,6 +30,10 @@
 #include "UI/ThemeManager.h"
 
 namespace Lab {
+
+using DebugOptionsManager = Cool::DebugOptionsManager<
+    Cool::DebugOptions,
+    Lab::DebugOptions>;
 
 class App : public Cool::IApp {
 public:
@@ -133,7 +139,7 @@ private:
         );
     }
 #if !IS0_TEST_NODES && DEBUG
-    DebugOptionsDetails::AutoSerializer _auto_serializer_for_debug_options{};
+    DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 #endif
 };
 
