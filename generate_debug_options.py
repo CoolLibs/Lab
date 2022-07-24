@@ -2,14 +2,7 @@
 
 # ------------
 
-from dataclasses import dataclass
-
-
-@dataclass
-class DebugOption:
-    name_in_code: str
-    name_in_ui: str
-    default_value: bool = False
+from Cool.src.Cool.DebugOptions.debug_options_generator import DebugOption, generate_debug_options
 
 
 def all_debug_options():
@@ -42,52 +35,8 @@ def all_debug_options():
     ]
 
 
-def debug_options_variables():
-    return "\n".join(map(lambda debug_option:
-                         f"bool {debug_option.name_in_code}{{{'true' if debug_option.default_value else 'false'}}};",
-                         all_debug_options()))
-
-
-def getters_for_debug_build():
-    return "\n".join(map(lambda debug_option:
-                         f"[[nodiscard]] static auto {debug_option.name_in_code}() -> bool& {{ return instance().{debug_option.name_in_code}; }}",
-                         all_debug_options()))
-
-
-def getters_for_release_build():
-    return "\n".join(map(lambda debug_option:
-                         f"[[nodiscard]] static auto constexpr {debug_option.name_in_code}() -> bool {{ return false; }}",
-                         all_debug_options()))
-
-
-def imgui_checkboxes_for_all_options():
-    return "\n".join(map(lambda debug_option:
-                         f'if (instance().filter.PassFilter("{debug_option.name_in_ui}")) ImGui::Checkbox("{debug_option.name_in_ui}", &instance().{debug_option.name_in_code});',
-                         all_debug_options()))
-
-
-def cereal_make_nvp():
-    return ",\n".join(map(lambda debug_option:
-                          f'cereal::make_nvp("{debug_option.name_in_ui}", {debug_option.name_in_code})',
-                          all_debug_options()))
-
-
-def reset_all():
-    return "\n".join(map(lambda debug_option:
-                         f'instance().{debug_option.name_in_code} = {"true" if debug_option.default_value else "false"};',
-                         all_debug_options()))
-
-
 if __name__ == '__main__':
-    from tooling.generate_files import generate
-    generate(
-        folder="src/Debug/generated",
-        files=[
-            debug_options_variables,
-            getters_for_debug_build,
-            getters_for_release_build,
-            imgui_checkboxes_for_all_options,
-            cereal_make_nvp,
-            reset_all,
-        ],
+    generate_debug_options(
+        output_folder="src/Debug/generated",
+        debug_options=all_debug_options(),
     )
