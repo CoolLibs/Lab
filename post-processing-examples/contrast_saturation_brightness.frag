@@ -11,11 +11,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/contrast_saturation_brightness.glsl"
 
-input float Contrast;   // default 1.0
-input float Brightness; // default 1.0
-input float Saturation; // default 1.0
+INPUT float Contrast;   // default 1.0
+INPUT float Brightness; // default 1.0
+INPUT float Saturation; // default 1.0
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

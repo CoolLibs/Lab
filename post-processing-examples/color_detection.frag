@@ -12,11 +12,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/color_detection.glsl"
 
-input RgbColor Color;
+INPUT RgbColor Color;
 
-input float Saturation;
+INPUT float Saturation;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

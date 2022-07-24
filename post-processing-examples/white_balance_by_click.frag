@@ -11,9 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/white_balance_by_click.glsl"
 
-input vec2 Coordinate_for_white_balance;
+INPUT vec2 Coordinate_for_white_balance;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

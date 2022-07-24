@@ -13,21 +13,21 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/portholes.glsl"
 
-input bool  Square_mode; // bool
-input float Size;        // 10
-input float Space_to_border;
-input float Speed;
-input float Movement;
-input bool  Time_mode;      // bool
-input float Distance_mode;  // 2
-input float Zoom_intensity; // 0.001
+INPUT bool  Square_mode; // bool
+INPUT float Size;        // 10
+INPUT float Space_to_border;
+INPUT float Speed;
+INPUT float Movement;
+INPUT bool  Time_mode;      // bool
+INPUT float Distance_mode;  // 2
+INPUT float Zoom_intensity; // 0.001
 
-input float Change_center;
-input float Border;
-input float Smoothing;
-input float Border_smoothing;
+INPUT float Change_center;
+INPUT float Border;
+INPUT float Smoothing;
+INPUT float Border_smoothing;
 
-input RgbColor Border_color;
+INPUT RgbColor Border_color;
 
 void main()
 {

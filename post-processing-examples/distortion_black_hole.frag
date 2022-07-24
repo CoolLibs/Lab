@@ -11,17 +11,17 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input Angle angle_in_turns;    // 0 to 1 (1 == 1 turn)
-input float hole_radius;       // positive values
-input float hole_intensity;    // 0 to 8
-input float hole_attractivity; // -1 to 1
-input float hole_smooth;       // -.5 to 1
-input float hole_center_x;     // default 0.5 range 0 to 1
-input float hole_center_y;     // default 0.5 range0 to 1
+INPUT Angle angle_in_turns;    // 0 to 1 (1 == 1 turn)
+INPUT float hole_radius;       // positive values
+INPUT float hole_intensity;    // 0 to 8
+INPUT float hole_attractivity; // -1 to 1
+INPUT float hole_smooth;       // -.5 to 1
+INPUT float hole_center_x;     // default 0.5 range 0 to 1
+INPUT float hole_center_y;     // default 0.5 range0 to 1
 
-input RgbColor hole_color;
+INPUT RgbColor hole_color;
 
-input int nb_div; // 0 forbidden
+INPUT int nb_div; // 0 forbidden
 
 RgbColor blob(vec2 point, vec2 uv, RgbColor color, float invIntensity, float invGlow)
 {

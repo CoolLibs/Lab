@@ -11,10 +11,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float time_mod;
-input float strip; // min = 1
+INPUT float time_mod;
+INPUT float strip; // min = 1
 
-input int nb_iteration; // min = 1 max 23
+INPUT int nb_iteration; // min = 1 max 23
 
 RgbColor draw(vec2 uv)
 {

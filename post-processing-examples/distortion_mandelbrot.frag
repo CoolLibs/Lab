@@ -11,12 +11,12 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float size;     // negative values to flip the pattern
-input float offset_x; // default .5 min = 0 max = 1
-input float offset_y; // default .5 min = 0 max = 1
-input float time_mod; // min = 0 max = 20
+INPUT float size;     // negative values to flip the pattern
+INPUT float offset_x; // default .5 min = 0 max = 1
+INPUT float offset_y; // default .5 min = 0 max = 1
+INPUT float time_mod; // min = 0 max = 20
 
-input int nb_iteration; // min = 1
+INPUT int nb_iteration; // min = 1
 
 vec4 image(vec2 uv)
 {

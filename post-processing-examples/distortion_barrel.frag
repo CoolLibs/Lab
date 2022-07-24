@@ -11,10 +11,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float center_x;   // default 0.5 range 0 to 1
-input float center_y;   // default 0.5 range 0 to 1
-input float distortion; // -5 to 5
-input float nb_tiles;   // 0 forbbiden
+INPUT float center_x;   // default 0.5 range 0 to 1
+INPUT float center_y;   // default 0.5 range 0 to 1
+INPUT float distortion; // -5 to 5
+INPUT float nb_tiles;   // 0 forbbiden
 
 vec2 mid;
 

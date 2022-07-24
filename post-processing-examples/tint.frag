@@ -11,9 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/tint.glsl"
 
-input float Tint; // default 0.0 / default bounds -1.0 -> 1.0
+INPUT float Tint; // default 0.0 / default bounds -1.0 -> 1.0
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

@@ -11,17 +11,17 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/gradient_overlay.glsl"
 
-input vec2 Gradient_pos_a;
-input vec2 Gradient_pos_b;
+INPUT vec2 Gradient_pos_a;
+INPUT vec2 Gradient_pos_b;
 
-input RgbColor Gradient_color_a;
-input RgbColor Gradient_color_b;
+INPUT RgbColor Gradient_color_a;
+INPUT RgbColor Gradient_color_b;
 
-input float Gradient_presence;
+INPUT float Gradient_presence;
 
-input bool Use_the_best_blending_technique;
+INPUT bool Use_the_best_blending_technique;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

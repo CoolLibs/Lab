@@ -11,8 +11,8 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float time_mod;
-input float resolution_bias;
+INPUT float time_mod;
+INPUT float resolution_bias;
 
 vec4 image(vec2 uv)
 {

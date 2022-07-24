@@ -28,7 +28,7 @@
 // can make "flow noise" effects as presented by Perlin and Neyret.
 //
 // vec3 {p}s{r}dnoise(vec2 pos {, vec2 per} {, float rot})
-// "pos" is the input (x,y) coordinate
+// "pos" is the INPUT (x,y) coordinate
 // "per" is the x and y period, where per.x is a positive integer
 //    and per.y is a positive even integer
 // "rot" is the angle to rotate the gradients (any float value,
@@ -37,7 +37,7 @@
 // The second and third components are the x and y partial derivatives.
 //
 // float {p}s{r}noise(vec2 pos {, vec2 per} {, float rot})
-// "pos" is the input (x,y) coordinate
+// "pos" is the INPUT (x,y) coordinate
 // "per" is the x and y period, where per.x is a positive integer
 //    and per.y is a positive even integer
 // "rot" is the angle to rotate the gradients (any float value,
@@ -59,7 +59,7 @@
 //
 // TODO: One-pixel wide artefacts used to occur due to precision issues with
 // the gradient indexing. This is specific to this variant of noise, because
-// one axis of the simplex grid is perfectly aligned with the input x axis.
+// one axis of the simplex grid is perfectly aligned with the INPUT x axis.
 // The errors were rare, and they are now very unlikely to ever be visible
 // after a quick fix was introduced: a small offset is added to the y coordinate.
 // A proper fix would involve using round() instead of floor() in selected
@@ -78,10 +78,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float scale;
-input float gain;       // default = 0.5
-input float lacunarity; // default =2
-input float octaves;    // min=1
+INPUT float scale;
+INPUT float gain;       // default = 0.5
+INPUT float lacunarity; // default =2
+INPUT float octaves;    // min=1
 
 // Modulo 289, optimizes to code without divisions
 vec3 mod289(vec3 x)

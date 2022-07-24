@@ -13,9 +13,9 @@ uniform sampler2D _texture;
 const int nb          = 15;
 const int kernel_size = nb * 2 + 1;
 
-input float space_between_two_pixels_times_1000;
-input float sigma;
-input float normaliza;
+INPUT float space_between_two_pixels_times_1000;
+INPUT float sigma;
+INPUT float normaliza;
 
 // https://en.wikipedia.org/wiki/Kernel_(image_processing)
 

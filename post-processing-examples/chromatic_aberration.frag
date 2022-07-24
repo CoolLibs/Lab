@@ -11,15 +11,15 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/chromatic_aberration.glsl"
 
-input int Sample_count; // 20
+INPUT int Sample_count; // 20
 
-input float Falloff; // 1.082
-input float Blur;    // 0.142
+INPUT float Falloff; // 1.082
+INPUT float Blur;    // 0.142
 
-input float Center_x; // 0.142
-input float Center_y; // 0.142
+INPUT float Center_x; // 0.142
+INPUT float Center_y; // 0.142
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

@@ -17,9 +17,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/voronoise.glsl"
 
-input float Scale;
+INPUT float Scale;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

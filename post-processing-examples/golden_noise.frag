@@ -11,9 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/golden_noise.glsl"
 
-input float Seed; // default 48
+INPUT float Seed; // default 48
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

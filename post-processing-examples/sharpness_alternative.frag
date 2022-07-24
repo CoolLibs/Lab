@@ -16,8 +16,8 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float Offset_strength;
-input float Sharpening_strength;
+INPUT float Offset_strength;
+INPUT float Sharpening_strength;
 
 vec4 image(vec2 uv)
 {

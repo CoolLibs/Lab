@@ -14,14 +14,14 @@ uniform sampler2D _image;
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 
-input float center_x;       // default 0.5 range 0 to 1
-input float center_y;       // default 0.5 range 0 to 1
-input float scale;          //  range 0 to 7
-input float details;        //
-input Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
-input float strip;          // default 0.01
+INPUT float center_x;       // default 0.5 range 0 to 1
+INPUT float center_y;       // default 0.5 range 0 to 1
+INPUT float scale;          //  range 0 to 7
+INPUT float details;        //
+INPUT Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
+INPUT float strip;          // default 0.01
 
-input int nb_div;
+INPUT int nb_div;
 
 float thc(float a, float b)
 {

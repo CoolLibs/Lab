@@ -16,7 +16,7 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float Intensity;
+INPUT float Intensity;
 
 RgbColor texsample(const int x, const int y, in vec2 fragCoord)
 {

@@ -11,13 +11,13 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/pixelation_voronoi.glsl"
 
-input float Size;
-input float Speed;
-input float Movement;
-input bool  Time_mode;
-input float Distance_mode;
+INPUT float Size;
+INPUT float Speed;
+INPUT float Movement;
+INPUT bool  Time_mode;
+INPUT float Distance_mode;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

@@ -11,12 +11,12 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/threshold.glsl"
 
-input int number_of_colors; // min 2
+INPUT int number_of_colors; // min 2
 
-input RgbColor Color1;
-input RgbColor Color2;
+INPUT RgbColor Color1;
+INPUT RgbColor Color2;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

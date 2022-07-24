@@ -11,11 +11,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/color_effects_alternative.glsl"
 
-input RgbColor Color_coefficient;
+INPUT RgbColor Color_coefficient;
 
-input float Grey_coefficient;
+INPUT float Grey_coefficient;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

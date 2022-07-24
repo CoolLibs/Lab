@@ -18,11 +18,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/white_balance_by_slider.glsl"
 
-input float Temperature; // default 1000 to 40000
-input float Temperature_strength;
-input float Luminance_preservation_factor;
+INPUT float Temperature; // default 1000 to 40000
+INPUT float Temperature_strength;
+INPUT float Luminance_preservation_factor;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

@@ -13,12 +13,12 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float center_x; // default 0.5 range 0 to 1
-input float center_y; // default 0.5 range 0 to 1
-input float size;
-input float details;
+INPUT float center_x; // default 0.5 range 0 to 1
+INPUT float center_y; // default 0.5 range 0 to 1
+INPUT float size;
+INPUT float details;
 
-input int distor;
+INPUT int distor;
 
 vec4 image(vec2 uv)
 {

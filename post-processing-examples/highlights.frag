@@ -11,9 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/highlights.glsl"
 
-input float Highlights;
+INPUT float Highlights;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

@@ -9,7 +9,7 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input vec3 channels_contribution; // default 1 min = 0
+INPUT vec3 channels_contribution; // default 1 min = 0
 
 vec4 image(vec2 uv)
 {

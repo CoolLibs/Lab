@@ -13,10 +13,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float time_mod;
-input float thres; // default 0.7 min = 0 max = 2
-input float res_x;
-input float res_y;
+INPUT float time_mod;
+INPUT float thres; // default 0.7 min = 0 max = 2
+INPUT float res_x;
+INPUT float res_y;
 const float steps = 4; // default 4
 
 float random(vec2 co)

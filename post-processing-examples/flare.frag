@@ -11,14 +11,14 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/flare.glsl"
 
-input float x;
-input float y;
-input float Brightness;
+INPUT float x;
+INPUT float y;
+INPUT float Brightness;
 
-input int Nb_of_circles; // default 10
-input int Seed;          // default 20
+INPUT int Nb_of_circles; // default 10
+INPUT int Seed;          // default 20
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

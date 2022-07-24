@@ -24,13 +24,13 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/classic_noise.glsl"
 
-input float Frequency;
+INPUT float Frequency;
 
-input float Scale; // 100
+INPUT float Scale; // 100
 
-input float a; // min = 1, max = 3; default = 1.5;  `a` increases the fractalness of the noise
+INPUT float a; // min = 1, max = 3; default = 1.5;  `a` increases the fractalness of the noise
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

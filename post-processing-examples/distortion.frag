@@ -12,7 +12,7 @@ uniform sampler2D _texture;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/distortion.glsl"
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

@@ -13,11 +13,11 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float center_x; // default 0.5
-input float center_y; // default 0.5
+INPUT float center_x; // default 0.5
+INPUT float center_y; // default 0.5
 
-input float size;    // only positive values
-input float nb_turn; // positive and negative values
+INPUT float size;    // only positive values
+INPUT float nb_turn; // positive and negative values
 
 vec4 image(vec2 uv)
 {

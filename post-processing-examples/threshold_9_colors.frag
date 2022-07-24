@@ -16,22 +16,22 @@ uniform sampler2D _image;
 
 // uniform RgbColor Color0;
 
-input RgbColor Color_coefficient;
+INPUT RgbColor Color_coefficient;
 
-input float Grey_coefficient;
-input bool  One_color_mode;
+INPUT float Grey_coefficient;
+INPUT bool  One_color_mode;
 
-input RgbColor Color1;
-input RgbColor Color2;
-input RgbColor Color3;
-input RgbColor Color4;
-input RgbColor Color5;
-input RgbColor Color6;
-input RgbColor Color7;
-input RgbColor Color8;
-input RgbColor Color9;
+INPUT RgbColor Color1;
+INPUT RgbColor Color2;
+INPUT RgbColor Color3;
+INPUT RgbColor Color4;
+INPUT RgbColor Color5;
+INPUT RgbColor Color6;
+INPUT RgbColor Color7;
+INPUT RgbColor Color8;
+INPUT RgbColor Color9;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

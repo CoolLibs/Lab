@@ -13,13 +13,13 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/pixelation.glsl"
 
-input float Nb_tiles_on_y_axis; // default 20
-input float Border;             // default 0.469
-input float Smoothing;          // default 0.225
+INPUT float Nb_tiles_on_y_axis; // default 20
+INPUT float Border;             // default 0.469
+INPUT float Smoothing;          // default 0.225
 
-input RgbColor Border_color;
+INPUT RgbColor Border_color;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

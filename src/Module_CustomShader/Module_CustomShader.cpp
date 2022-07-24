@@ -144,7 +144,7 @@ auto Module_CustomShader::parse_shader_for_params(
 )
     -> void
 {
-    auto new_inputs = Cool::get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
+    auto new_inputs = Cool::parse_all_inputs(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }
@@ -164,12 +164,12 @@ auto Module_CustomShader::set_image_in_shader(std::string_view name, int slot, G
 
 } // namespace Lab
 
-TEST_CASE("Parsing a RgbColor")
-{
-    const auto color_metadata = Cool::get_default_metadata<Cool::RgbColor>("hdr");
-    CHECK(
-        color_metadata.is_hdr == true
-    );
-}
+// TEST_CASE("Parsing a RgbColor")
+// {
+//     const auto color_metadata = Cool::get_default_metadata<Cool::RgbColor>("hdr");
+//     CHECK(
+//         color_metadata.is_hdr == true
+//     );
+// }
 
 // TODO(LD) More tests for the shader parser

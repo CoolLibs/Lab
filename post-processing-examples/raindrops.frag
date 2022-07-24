@@ -15,10 +15,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float size; // 0 forbidden
-input float blur; // between 2 and 5.5
-input float time_mod;
-input float rain_amount; // between 0 and 1
+INPUT float size; // 0 forbidden
+INPUT float blur; // between 2 and 5.5
+INPUT float time_mod;
+INPUT float rain_amount; // between 0 and 1
 
 #define S(a, b, t) smoothstep(a, b, t)
 

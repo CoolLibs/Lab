@@ -16,10 +16,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float    drops_size;               // default 0.2 min = .001 max = 1.5
-input float    distortion;               // default 0.7 min = 0 max = 1
-input float    size;                     // default 1 min = 0.001 max = 1.5
-input RgbColor border_color_coefficient; // default 1 min = -1 max = 1
+INPUT float    drops_size;               // default 0.2 min = .001 max = 1.5
+INPUT float    distortion;               // default 0.7 min = 0 max = 1
+INPUT float    size;                     // default 1 min = 0.001 max = 1.5
+INPUT RgbColor border_color_coefficient; // default 1 min = -1 max = 1
 
 float time;
 

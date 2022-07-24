@@ -13,10 +13,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input float time_mod;
-input float thickness; // default .1
-input float offset_x;  // default .5 min = 0 max = 1
-input float offset_y;  // default .5 min = 0 max = 1
+INPUT float time_mod;
+INPUT float thickness; // default .1
+INPUT float offset_x;  // default .5 min = 0 max = 1
+INPUT float offset_y;  // default .5 min = 0 max = 1
 
 vec4 image(vec2 uv)
 {

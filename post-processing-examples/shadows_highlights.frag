@@ -11,14 +11,14 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/shadows_highlights.glsl"
 
-input float factor_shadows;
-input float power_shadows;
-input float dir_shadows;
-input float factor_highlights;
-input float power_highlights;
-input float dir_highlights;
+INPUT float factor_shadows;
+INPUT float power_shadows;
+INPUT float dir_shadows;
+INPUT float factor_highlights;
+INPUT float power_highlights;
+INPUT float dir_highlights;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

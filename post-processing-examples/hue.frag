@@ -11,9 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/hue.glsl"
 
-input Hue Hue_coeficient;
+/*truc*/ INPUT Hue Hue_coeficient;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

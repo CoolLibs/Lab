@@ -11,11 +11,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/color_discretisation.glsl"
 
-input RgbColor color1;
-input RgbColor color2;
-input RgbColor color3;
+INPUT RgbColor color1;
+INPUT RgbColor color2;
+INPUT RgbColor color3;
 
-input float Effect_intensity;
+INPUT float Effect_intensity;
 
 void main()
 {

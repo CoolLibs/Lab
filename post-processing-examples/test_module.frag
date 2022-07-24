@@ -5,11 +5,11 @@ out vec4 out_Color;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-input RgbColor _color;
-input RgbColor _color2;
-input float    _circle_radius;
-input float    _aspect_ratio;
-input float    _time;
+INPUT RgbColor _color;
+INPUT RgbColor _color2;
+INPUT float    _circle_radius;
+INPUT float    _aspect_ratio;
+INPUT float    _time;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 
