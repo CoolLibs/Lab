@@ -33,7 +33,7 @@ struct Command_SetCameraZoom {
 
 struct ReversibleCommand_SetCameraZoom {
     Command_SetCameraZoom forward_command{};
-    float    old_value{};
+    float                 old_value{};
 
     void execute(CommandExecutionContext_Ref& ctx) const
     {

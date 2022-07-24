@@ -28,4 +28,3 @@ LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Angle>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Direction2D>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::Hue>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::ColorPalette>)
-

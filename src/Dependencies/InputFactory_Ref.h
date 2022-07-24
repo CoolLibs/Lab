@@ -40,19 +40,19 @@ private:
     VariableId<Cool::Camera>                   _default_camera_id;
 };
 
-    template<>
-    inline auto InputFactory_Ref::make(
-        const DirtyFlag& dirty_flag,
-        std::string_view name,
-        const Cool::Camera&,
-        const Cool::VariableMetadata<Cool::Camera>&
-    )
-        -> Input<Cool::Camera>
-    {
-        return Input{
-            dirty_flag,
-            name,
-            _default_camera_id};
-    }
+template<>
+inline auto InputFactory_Ref::make(
+    const DirtyFlag& dirty_flag,
+    std::string_view name,
+    const Cool::Camera&,
+    const Cool::VariableMetadata<Cool::Camera>&
+)
+    -> Input<Cool::Camera>
+{
+    return Input{
+        dirty_flag,
+        name,
+        _default_camera_id};
+}
 
 } // namespace Lab

@@ -16,5 +16,4 @@ using AnyInputRef = std::variant<
     std::reference_wrapper<Input<Cool::Angle>>,
     std::reference_wrapper<Input<Cool::Direction2D>>,
     std::reference_wrapper<Input<Cool::Hue>>,
-    std::reference_wrapper<Input<Cool::ColorPalette>>
->;
+    std::reference_wrapper<Input<Cool::ColorPalette>>>;
