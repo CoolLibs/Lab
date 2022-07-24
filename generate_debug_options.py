@@ -38,5 +38,6 @@ def all_debug_options():
 if __name__ == '__main__':
     generate_debug_options(
         output_folder="src/Debug/generated",
+        namespace="Lab",
         debug_options=all_debug_options(),
     )
