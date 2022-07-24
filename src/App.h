@@ -31,9 +31,11 @@
 
 namespace Lab {
 
+#if DEBUG
 using DebugOptionsManager = Cool::DebugOptionsManager<
     Lab::DebugOptions,
     Cool::DebugOptions>;
+#endif
 
 class App : public Cool::IApp {
 public:

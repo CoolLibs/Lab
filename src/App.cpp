@@ -133,10 +133,12 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 #if IS0_TEST_NODES
     render_target.set_size({1, 1});
 #endif
+#if DEBUG
     if (DebugOptions::log_when_rendering())
     {
         Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
     }
+#endif
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
