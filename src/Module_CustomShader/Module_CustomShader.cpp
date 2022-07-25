@@ -83,7 +83,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
         _shader.compile(source_code, file_path.string(), name(), update_ctx);
-        parse_shader_for_params(source_code, input_factory, input_destructor);
+        parse_shader_for_params(source_code, input_factory, input_destructor, update_ctx.message_console());
     }
 }
 
@@ -130,9 +130,10 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory)
+static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory, Cool::MessageConsole& message_console, Cool::MessageId& parsing_error_message_id, const std::string& module_name)
     -> std::vector<AnyInput>
 {
+    message_console.clear(parsing_error_message_id);
     std::vector<AnyInput> new_inputs;
     std::stringstream     stream{std::string{source_code}};
     std::string           line;
@@ -167,14 +168,21 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
                         else if (type == "vec3")
                             return input_factory.make<Cool::RgbColor>(dirty_flag, name);
                         else
-                            throw std::invalid_argument(type + " is not a valid parameter type.");
+                            throw std::invalid_argument('"' + type + "\" is not a valid INPUT type.\nFrom line: \"" + line + "\"");
                     }();
                     new_inputs.push_back(input);
                 }
             }
             catch (const std::exception& e)
             {
-                Cool::Log::ToUser::error("ShaderManager_FromText::parse_shader_for_params", "Error while parsing :\n{}", e.what());
+                message_console.send(
+                    parsing_error_message_id,
+                    {
+                        .category         = module_name,
+                        .detailed_message = e.what(),
+                        .severity         = Cool::MessageSeverity::Error,
+                    }
+                );
             }
         }
         if (line == "// BEGIN DYNAMIC PARAMS")
@@ -186,12 +194,13 @@ static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag 
 }
 
 void Module_CustomShader::parse_shader_for_params(
-    std::string_view    source_code,
-    InputFactory_Ref    input_factory,
-    InputDestructor_Ref input_destructor
+    std::string_view      source_code,
+    InputFactory_Ref      input_factory,
+    InputDestructor_Ref   input_destructor,
+    Cool::MessageConsole& message_console
 )
 {
-    auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory);
+    auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory, message_console, _parsing_error_message_id, name());
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }

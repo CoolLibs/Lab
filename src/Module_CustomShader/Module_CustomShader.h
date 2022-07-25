@@ -39,13 +39,14 @@ public:
 
 private:
     void refresh_pipeline_if_necessary(InputProvider_Ref, IsDirty_Ref, InputFactory_Ref, InputDestructor_Ref, UpdateContext_Ref);
-    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref);
+    void parse_shader_for_params(std::string_view fragment_shader_source_code, InputFactory_Ref, InputDestructor_Ref, Cool::MessageConsole&);
 
 private:
     FullscreenShader      _shader; // Must be before _file because it is used to construct it
     std::vector<AnyInput> _inputs;
     Input<Cool::Camera>   _camera_input;
     mutable Input_File    _file;
+    Cool::MessageId       _parsing_error_message_id{};
 
 private:
     // Serialization
