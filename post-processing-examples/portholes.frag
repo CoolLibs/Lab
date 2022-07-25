@@ -26,6 +26,7 @@ INPUT float Change_center;
 INPUT float Border;
 INPUT float Smoothing;
 INPUT float Border_smoothing;
+INPUT float Effect_intensity;
 
 INPUT RgbColor Border_color;
 

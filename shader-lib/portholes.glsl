@@ -4,7 +4,7 @@ struct VoronoiRes {
     float minDist2;
 };
 
-vec2 distribute_center_in_a_circle(vec2 n, float t, vec2 offs)
+vec2 distribute_center_in_a_circle(vec2 n, float t, vec2 offs, float Space_to_border)
 {
     float radius   = Space_to_border * 0.5 * sqrt(n.x);
     float theta    = n.x * TAU * sin(t);
@@ -13,13 +13,13 @@ vec2 distribute_center_in_a_circle(vec2 n, float t, vec2 offs)
     return p;
 }
 
-vec2 distribute_center_in_a_square(vec2 n, float t, vec2 offs)
+vec2 distribute_center_in_a_square(vec2 n, float t, vec2 offs, float Space_to_border, float size, float Speed, float Movement)
 {
     vec2 p = offs + sin(n * t) * Space_to_border * .5;
     return p;
 }
 
-VoronoiRes voronoi(vec2 uv)
+VoronoiRes voronoi(vec2 uv, bool Time_mode, float space_to_border, float size, float Speed, float Movement, bool Square_mode, float Distance_mode)
 {
     float t = 0;
     if (Time_mode)
@@ -50,11 +50,11 @@ VoronoiRes voronoi(vec2 uv)
             vec2 p;
             if (Square_mode)
             {
-                p = distribute_center_in_a_square(n, t, offs);
+                p = distribute_center_in_a_square(n, t, offs, space_to_border, size, Speed, Movement);
             }
             else
             {
-                p = distribute_center_in_a_circle(n, t, offs);
+                p = distribute_center_in_a_circle(n, t, offs, space_to_border);
             }
 
             vec2  p_to_gv = p - gv;
@@ -81,7 +81,7 @@ VoronoiRes voronoi(vec2 uv)
 vec3 portholes(
     vec3 in_color, float effect_intensity, vec2 uv,
     bool square_mode, float size, float space_to_border, float speed, float movement, bool time_mode, float distance_mode, float zoom_intensity,
-    flaot change_center, float border, float smoothing, float border_smoothing, vec3 border_color
+    float change_center, float border, float smoothing, float border_smoothing, vec3 border_color
 )
 {
     float m = 0.;
@@ -97,9 +97,9 @@ vec3 portholes(
     vec2 img_uv = (id + .5) * tiles_length;
     img_uv.x /= _aspect_ratio;
 
-    VoronoiRes res  = voronoi(uv);
-    VoronoiRes resX = voronoi(uv + vec2(0.001, 0.));
-    VoronoiRes resY = voronoi(uv + vec2(0., 0.001));
+    VoronoiRes res  = voronoi(uv, time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
+    VoronoiRes resX = voronoi(uv + vec2(0.001, 0.), time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
+    VoronoiRes resY = voronoi(uv + vec2(0., 0.001), time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
     vec2       grad = vec2(resX.minDist - res.minDist, resY.minDist - res.minDist) /
                 0.001;
     float distance_to_center = res.minDist / res.minDist2;
