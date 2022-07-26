@@ -211,6 +211,9 @@ void App::imgui_windows()
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
     _message_console.imgui_window();
+#if DEBUG
+    Cool::Log::console().imgui_window();
+#endif
 
     if (inputs_are_allowed())
     {

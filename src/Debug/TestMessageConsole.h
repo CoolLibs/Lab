@@ -31,10 +31,20 @@ public:
         ImGui::NewLine();
         ImGui::Separator();
         ImGui::NewLine();
-        if (ImGui::Button("Send to the legacy console"))
+        if (ImGui::Button("Send Info to the Debug console"))
         {
-            Cool::Log::ToUser::info("Test", "Hello World");
+            Cool::Log::info("Test", "Hello World");
         }
+        if (ImGui::Button("Send Warning to the Debug console"))
+        {
+            Cool::Log::warn("Test", "Hello World");
+        }
+        if (ImGui::Button("Send Error to the Debug console"))
+        {
+            Cool::Log::error("Test", "Hello World");
+        }
+        ImGui::SameLine();
+        ImGui::TextDisabled("(NB: This will trigger a breakpoint)");
         ImGui::End();
     }
 
