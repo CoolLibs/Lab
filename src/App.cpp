@@ -274,7 +274,6 @@ void App::menu_windows()
 {
     if (ImGui::BeginMenu("Windows"))
     {
-        ImGui::Checkbox("Console", &_message_console.is_open());
         Cool::Log::ToUser::imgui_toggle_console();
         for (auto& view : _views)
         {
