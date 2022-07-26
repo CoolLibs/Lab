@@ -32,7 +32,7 @@ public:
             }
         }
         // Default, this should not happen
-        Cool::Log::error("InputProvider_Ref", "An Input has an invalid default variable!");
+        Cool::Log::Debug::error("InputProvider_Ref", "An Input has an invalid default variable!");
         return T{};
     }
 

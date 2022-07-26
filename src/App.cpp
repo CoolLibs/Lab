@@ -29,7 +29,7 @@ App::App(Cool::WindowManager& windows)
     _camera_manager.hook_events(_is0_view.view.mouse_events(), _variable_registries, command_executor());
     _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
-    //     Cool::Log::ToUser::info("Scripting", "{}", request);
+    //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
     _clock.pause();
 #if IS0_TEST_NODES
@@ -136,7 +136,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 #if DEBUG
     if (DebugOptions::log_when_rendering())
     {
-        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
+        Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
     }
 #endif
     render_target.render([&]() {
@@ -212,7 +212,7 @@ void App::imgui_windows()
 
     _message_console.imgui_window();
 #if DEBUG
-    Cool::Log::console().imgui_window();
+    Cool::Log::Debug::console().imgui_window();
 #endif
 
     if (inputs_are_allowed())
