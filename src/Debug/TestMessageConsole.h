@@ -39,6 +39,10 @@ public:
         {
             Cool::Log::warning("Test", "Hello World");
         }
+        if (ImGui::Button("Send Error to the Debug console (without breakpoint)"))
+        {
+            Cool::Log::error_without_breakpoint("Test", "Hello World");
+        }
         if (ImGui::Button("Send Error to the Debug console"))
         {
             Cool::Log::error("Test", "Hello World");
