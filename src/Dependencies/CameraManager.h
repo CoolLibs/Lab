@@ -3,12 +3,13 @@
 #include <Cool/Camera/Camera.h>
 #include <Cool/Camera/ViewController_Orbital.h>
 #include <Cool/Camera/ViewController_OrbitalU.h>
+#include <Cool/Dependencies/SetVariableDirty_Ref.h>
+#include <Cool/Dependencies/VariableId.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/Input/MouseCoordinates.h>
 #include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
-#include "Cool/Dependencies/SetVariableDirty_Ref.h"
-#include "Cool/Dependencies/VariableId.h"
-#include "Cool/Dependencies/VariableRegistries.h"
+
 
 namespace Lab {
 

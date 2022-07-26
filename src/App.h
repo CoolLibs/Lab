@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Cool/AppManager/IApp.h>
+#include <Cool/Dependencies/Dirty.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
@@ -15,8 +17,6 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Cool/Dependencies/Dirty.h"
-#include "Cool/Dependencies/VariableRegistries.h"
 #include "Debug/DebugOptionsDetails.h"
 #include "Debug/TestMessageConsole.h"
 #include "Dependencies/CameraManager.h"
@@ -26,6 +26,7 @@
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/ThemeManager.h"
+
 
 namespace Lab {
 

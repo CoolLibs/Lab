@@ -1,8 +1,8 @@
 #pragma once
+#include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/File/File.h>
 #include <Cool/Path/Path.h>
-#include "Cool/Dependencies/Input.h"
-#include "Cool/Dependencies/InputFactory_Ref.h"
 #include "Dependencies/Module.h"
 #include "FullscreenShader.h"
 
@@ -13,9 +13,9 @@ public:
     Module_CustomShader() = default;
     Module_CustomShader(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
-    auto set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void;
+    void set_image_in_shader(std::string_view name, int slot, GLuint texture_id);
 
-    auto render(RenderParams, UpdateContext_Ref) -> void override;
+    void render(RenderParams, UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref ui) const override;
 
     auto all_inputs() const -> Cool::AllInputRefsToConst override
@@ -38,18 +38,18 @@ public:
     }
 
 private:
-    auto refresh_pipeline_if_necessary(
+    void refresh_pipeline_if_necessary(
         Cool::InputProvider_Ref,
         Cool::IsDirty_Ref,
         Cool::InputFactory_Ref,
         Cool::InputDestructor_Ref,
         UpdateContext_Ref
-    ) -> void;
-    auto parse_shader_for_params(
+    );
+    void parse_shader_for_params(
         std::string_view fragment_shader_source_code,
         Cool::InputFactory_Ref,
         Cool::InputDestructor_Ref
-    ) -> void;
+    );
 
 private:
     FullscreenShader            _shader; // Must be before _file because it is used to construct it
@@ -61,7 +61,7 @@ private:
     // Serialization
     friend class cereal::access;
     template<class Archive>
-    auto serialize(Archive& archive) -> void
+    void serialize(Archive& archive)
     {
         archive(
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),

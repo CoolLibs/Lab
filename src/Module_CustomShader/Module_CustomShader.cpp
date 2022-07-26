@@ -9,9 +9,7 @@
 #include <sstream>
 #include <type_from_string/type_from_string.hpp>
 
-// Support angle units (turns, degrees, radians)
-
-// TODO(JF) TODO(LD) Why isn't Hue working ???
+// TODO(LD) Support angle units (turns, degrees, radians)
 
 namespace Lab {
 Module_CustomShader::Module_CustomShader(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
@@ -39,24 +37,24 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 }
 
 template<typename T>
-static auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value) -> void
+static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
 {
     shader.set_uniform(name, value);
 }
 
 template<>
-auto set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value) -> void
+void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value)
 {
     shader.set_uniform(name, value.value);
 }
 
-auto set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&) -> void
+void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
 {
     assert(false); // This isn't used at the moment because we set the camera3d manually for all shaders, but this should be changed
     // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
-auto Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx) -> void
+void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
     refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
     if (_shader.pipeline().shader())
@@ -77,13 +75,13 @@ auto Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx) 
     }
 }
 
-auto Module_CustomShader::refresh_pipeline_if_necessary(
+void Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::InputProvider_Ref   provider,
     Cool::IsDirty_Ref         is_dirty,
     Cool::InputFactory_Ref    input_factory,
     Cool::InputDestructor_Ref input_destructor,
     UpdateContext_Ref         update_ctx
-) -> void
+)
 {
     if (is_dirty(_shader.dirty_flag()))
     {
@@ -117,11 +115,11 @@ static auto iterator_to_same_input(const Cool::AnyInput& input, std::vector<Cool
     //  });
 }
 
-static auto keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
+static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<Cool::AnyInput>& old_inputs,
     std::vector<Cool::AnyInput>& new_inputs,
     Cool::InputDestructor_Ref    destroy
-) -> void
+)
 {
     for (auto& input : old_inputs)
     {
@@ -137,19 +135,18 @@ static auto keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-auto Module_CustomShader::parse_shader_for_params(
+void Module_CustomShader::parse_shader_for_params(
     std::string_view          source_code,
     Cool::InputFactory_Ref    input_factory,
     Cool::InputDestructor_Ref input_destructor
 )
-    -> void
 {
     auto new_inputs = Cool::parse_all_inputs(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }
 
-auto Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id) -> void
+void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
 {
     if (_shader.pipeline().shader())
     {

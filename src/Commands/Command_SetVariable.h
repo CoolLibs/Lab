@@ -1,10 +1,11 @@
 #pragma once
 
+#include <Cool/Dependencies/VariableId.h>
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
-#include "Cool/Dependencies/VariableId.h"
+
 
 namespace Lab {
 
@@ -111,4 +112,4 @@ void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
 
 } // namespace cereal
 
-#include "Cool/Variables/generated/register_set_variable_commands.inl"
+#include <Cool/Variables/generated/register_set_variable_commands.inl>

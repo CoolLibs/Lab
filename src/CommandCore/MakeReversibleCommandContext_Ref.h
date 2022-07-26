@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Cool/Dependencies/VariableRegistries.h"
+#include <Cool/Dependencies/VariableRegistries.h>
 #include "Dependencies/CameraManager.h"
 
 namespace Lab {

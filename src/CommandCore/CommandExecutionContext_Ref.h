@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Cool/Dependencies/Dirty.h"
-#include "Cool/Dependencies/SetVariableDirty_Ref.h"
-#include "Cool/Dependencies/VariableId.h"
-#include "Cool/Dependencies/VariableRegistries.h"
+#include <Cool/Dependencies/Dirty.h>
+#include <Cool/Dependencies/SetVariableDirty_Ref.h>
+#include <Cool/Dependencies/VariableId.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include "Dependencies/History.h"
 
 namespace Lab {

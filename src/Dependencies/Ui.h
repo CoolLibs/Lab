@@ -1,4 +1,6 @@
 #pragma once
+#include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/File/File.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
@@ -6,8 +8,7 @@
 #include "Commands/Command_FinishedEditingVariable.h"
 #include "Commands/Command_SetVariable.h"
 #include "Commands/Command_SetVariableMetadata.h"
-#include "Cool/Dependencies/Input.h"
-#include "Cool/Dependencies/VariableRegistries.h"
+
 
 namespace Lab {
 
