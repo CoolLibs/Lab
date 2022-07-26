@@ -42,5 +42,5 @@ void main()
         Frequency, a, Scale
     );
 
-    out_Color = vec4(RgbColor(out_color), 1.);
+    out_Color = vec4(vec3(out_color), 1.);
 }

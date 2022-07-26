@@ -26,9 +26,9 @@ void main()
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
 
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = pixelation(
+    vec3 out_color = pixelation(
         in_color, Effect_intensity, uv,
         Nb_tiles_on_y_axis, Border, Smoothing, Border_color
     );

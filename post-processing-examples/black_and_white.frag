@@ -18,9 +18,9 @@ INPUT float Effect_intensity; // default 1. min 0. max 1.
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = black_and_white(
+    vec3 out_color = black_and_white(
         in_color, Effect_intensity,
         channels_contribution, Normalize_checkbox
     );

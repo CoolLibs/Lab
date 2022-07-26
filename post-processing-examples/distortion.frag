@@ -22,7 +22,7 @@ void main()
     vec2 out_uv = distortion(in_uv, Effect_intensity);
 
     out_uv.x /= _aspect_ratio;
-    RgbColor out_color = image(out_uv);
+    vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }

@@ -152,9 +152,9 @@ void main()
 
     vec2 uv2 = p.xy * size / (depth * r.z) + vec2(0.5, .5);
 
-    RgbColor col = image(uv2).rgb;
+    vec3 col = image(uv2).rgb;
 
-    RgbColor border_color = border_color_coefficient + vec3(sin(_time * 4) * 0.05);
+    vec3 border_color = border_color_coefficient + vec3(sin(_time * 4) * 0.05);
     col += at * border_color;
     col *= pow(max(0.0, 1.3 - length(uv)), 0.8);
 

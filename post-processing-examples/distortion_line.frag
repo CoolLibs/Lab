@@ -62,7 +62,7 @@ void main()
         }
     }
 
-    vec2     uvModif = vec2(xModif, fragCoord.y) / iResolution.xy;
-    RgbColor col     = texture(_image, uvModif).rgb;
-    out_Color        = vec4(col, 1.);
+    vec2 uvModif = vec2(xModif, fragCoord.y) / iResolution.xy;
+    vec3 col     = texture(_image, uvModif).rgb;
+    out_Color    = vec4(col, 1.);
 }

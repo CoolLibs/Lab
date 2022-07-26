@@ -18,9 +18,9 @@ vec4 image(vec2 uv)
 
 void main()
 {
-    vec2     uv    = _uv;
-    RgbColor color = RgbColor(1.);
-    vec4     img   = image(uv);
+    vec2 uv    = _uv;
+    vec3 color = vec3(1.);
+    vec4 img   = image(uv);
     color -= channels_contribution * img.rgb;
     out_Color = vec4(color, 1.);
 }

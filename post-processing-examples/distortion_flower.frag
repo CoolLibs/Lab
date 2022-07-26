@@ -40,7 +40,7 @@ void main()
     a = a * (r / 50.0);
     a = 200000.0 * sin(a * 6.0) * (r / 30.0) * details;
 
-    RgbColor col = image(uv + vec2(cos(a / 20.0), cos(a / 200.0)) - center).rgb;
+    vec3 col = image(uv + vec2(cos(a / 20.0), cos(a / 200.0)) - center).rgb;
 
     out_Color = vec4(col, 1.0);
 }

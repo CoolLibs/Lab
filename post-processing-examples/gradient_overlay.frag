@@ -25,9 +25,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = gradient_overlay(
+    vec3 out_color = gradient_overlay(
         in_color, Effect_intensity,
         Gradient_pos_a, Gradient_pos_b, Gradient_color_a, Gradient_color_b, Gradient_presence, Use_the_best_blending_technique
     );

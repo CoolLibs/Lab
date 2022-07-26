@@ -20,9 +20,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = threshold(
+    vec3 out_color = threshold(
         in_color, Effect_intensity,
         number_of_colors, Color1, Color2
     );

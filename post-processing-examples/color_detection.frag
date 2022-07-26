@@ -20,10 +20,10 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color  = image(_uv);
-    float    hue       = color_detection(in_color, Color);
-    vec3     image_hsl = rgb2hsv(in_color);
+    vec3  in_color  = image(_uv);
+    float hue       = color_detection(in_color, Color);
+    vec3  image_hsl = rgb2hsv(in_color);
     image_hsl += vec3(0., Saturation * hue, 0.);
-    RgbColor out_color = hsv2rgb(image_hsl);
-    out_Color          = vec4(out_color, 1.);
+    vec3 out_color = hsv2rgb(image_hsl);
+    out_Color      = vec4(out_color, 1.);
 }

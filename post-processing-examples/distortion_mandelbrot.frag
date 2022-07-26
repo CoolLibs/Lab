@@ -43,7 +43,7 @@ void main()
     }
 
     // image map
-    RgbColor color = image(-Z.yx * .3 + .5).rgb;
+    vec3 color = image(-Z.yx * .3 + .5).rgb;
 
     out_Color = vec4(color, 1.);
 }

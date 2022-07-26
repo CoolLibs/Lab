@@ -24,9 +24,9 @@ void main()
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
 
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = pixelation_voronoi(
+    vec3 out_color = pixelation_voronoi(
         in_color, Effect_intensity, uv,
         Size, Speed, Movement, Time_mode, Distance_mode
     );

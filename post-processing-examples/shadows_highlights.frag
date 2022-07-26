@@ -22,9 +22,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = shadows_highlights(
+    vec3 out_color = shadows_highlights(
         in_color, Effect_intensity,
         factor_shadows, power_shadows, dir_shadows,
         factor_highlights, power_highlights, dir_highlights

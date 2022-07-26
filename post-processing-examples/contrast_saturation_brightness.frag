@@ -19,9 +19,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = contrast_saturation_brightness(
+    vec3 out_color = contrast_saturation_brightness(
         in_color, Effect_intensity,
         Contrast, Brightness, Saturation
     );

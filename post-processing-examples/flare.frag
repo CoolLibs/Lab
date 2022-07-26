@@ -22,9 +22,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = flare(
+    vec3 out_color = flare(
         in_color, Effect_intensity,
         x, y, Brightness, Nb_of_circles, Seed
     );

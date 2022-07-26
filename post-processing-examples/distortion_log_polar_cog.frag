@@ -82,7 +82,7 @@ void main()
 
     // s * X + ..., higher X = more distortion
     // s        = cos(s * 4. + 2. * a + 8. * r + time_mod);
-    RgbColor col = image(s * pal(uv.y + s, vec3(1.), vec3(1.), vec3(1.), vec3(0., uv.y, 2. * uv.y)).xy * angle_in_turns * TAU * 6. - center);
+    vec3 col = image(s * pal(uv.y + s, vec3(1.), vec3(1.), vec3(1.), vec3(0., uv.y, 2. * uv.y)).xy * angle_in_turns * TAU * 6. - center);
 
     // Output to screen
     out_Color = vec4(col, 1.0);

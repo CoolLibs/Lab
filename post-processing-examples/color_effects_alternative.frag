@@ -19,9 +19,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = color_effects_alternative(
+    vec3 out_color = color_effects_alternative(
         in_color, Effect_intensity,
         Color_coefficient, Grey_coefficient
     );

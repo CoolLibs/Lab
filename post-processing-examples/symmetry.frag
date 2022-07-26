@@ -26,7 +26,7 @@ void main()
         center_x, center_y, angle_in_turns, right_or_left
     );
 
-    RgbColor out_color = image(out_uv);
+    vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }

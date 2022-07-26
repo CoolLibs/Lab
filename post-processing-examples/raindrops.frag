@@ -189,8 +189,8 @@ void main()
     float cy = Drops(uv + e.yx, t, staticDrops, layer1, layer2).x;
     vec2  n  = vec2(cx - c.x, cy - c.x); // expensive normals
 
-    float    focus = mix(maxBlur - c.y, minBlur, S(.1, .2, c.x));
-    RgbColor color = textureLod(_image, UV + n, blur).rgb;
+    float focus = mix(maxBlur - c.y, minBlur, S(.1, .2, c.x));
+    vec3  color = textureLod(_image, UV + n, blur).rgb;
 
     out_Color = vec4(color, 1.);
 }

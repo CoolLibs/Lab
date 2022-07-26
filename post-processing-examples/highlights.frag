@@ -17,9 +17,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = highlight_modifier(
+    vec3 out_color = highlight_modifier(
         in_color, Effect_intensity,
         Highlights
     );

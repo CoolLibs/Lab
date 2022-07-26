@@ -30,7 +30,7 @@ void main()
     out_uv.x /= _aspect_ratio;
     out_uv += 0.5;
 
-    RgbColor out_color = image(out_uv).xyz;
+    vec3 out_color = image(out_uv).xyz;
 
     out_Color = vec4(out_color, 1.);
 }

@@ -24,9 +24,9 @@ void main()
     vec2 in_uv = _uv;
     in_uv.x *= _aspect_ratio;
 
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = voronoi(
+    vec3 out_color = voronoi(
         in_color, Effect_intensity, in_uv,
         Scale, Speed, Movement, Time_mode, Distance_mode
     );

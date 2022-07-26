@@ -11,15 +11,15 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/hue.glsl"
 
-/*truc*/ INPUT Hue Hue_coeficient;
+INPUT Hue Hue_coeficient;
 
 INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = hue(
+    vec3 out_color = hue(
         in_color, Effect_intensity,
         Hue_coeficient
     );

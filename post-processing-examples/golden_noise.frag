@@ -17,11 +17,11 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor image = image(_uv);
-    vec2     uv    = _uv;
+    vec3 image = image(_uv);
+    vec2 uv    = _uv;
     uv.x *= _aspect_ratio;
 
-    RgbColor out_color = RgbColor(
+    vec3 out_color = vec3(
         golden_noise(uv, Seed + 0.1),
         golden_noise(uv, Seed + 0.2),
         golden_noise(uv, Seed + 0.3)

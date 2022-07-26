@@ -11,17 +11,15 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/bichrome.glsl"
 
-// default 0.5 min -1 max 1
-
 INPUT RgbColor Color1;           // default (0.5, 0.5, 0.5) hdr
 INPUT RgbColor Color2;           // hdr default (0.3, 0.6, 0.2)
-INPUT float    Effect_intensity; // default 0.5 min -1 max 2
+INPUT float    Effect_intensity; // default 1 min -1 max 2
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = bichrome(
+    vec3 out_color = bichrome(
         in_color, Effect_intensity,
         Color1, Color2
     );

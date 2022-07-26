@@ -19,9 +19,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    RgbColor in_color = image(_uv);
+    vec3 in_color = image(_uv);
 
-    RgbColor out_color = color_discretisation(
+    vec3 out_color = color_discretisation(
         in_color, Effect_intensity,
         color1, color2, color3
     );

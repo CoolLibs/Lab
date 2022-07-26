@@ -28,7 +28,7 @@
 // can make "flow noise" effects as presented by Perlin and Neyret.
 //
 // vec3 {p}s{r}dnoise(vec2 pos {, vec2 per} {, float rot})
-// "pos" is the INPUT (x,y) coordinate
+// "pos" is the input (x,y) coordinate
 // "per" is the x and y period, where per.x is a positive integer
 //    and per.y is a positive even integer
 // "rot" is the angle to rotate the gradients (any float value,
@@ -37,7 +37,7 @@
 // The second and third components are the x and y partial derivatives.
 //
 // float {p}s{r}noise(vec2 pos {, vec2 per} {, float rot})
-// "pos" is the INPUT (x,y) coordinate
+// "pos" is the input (x,y) coordinate
 // "per" is the x and y period, where per.x is a positive integer
 //    and per.y is a positive even integer
 // "rot" is the angle to rotate the gradients (any float value,
@@ -59,7 +59,7 @@
 //
 // TODO: One-pixel wide artefacts used to occur due to precision issues with
 // the gradient indexing. This is specific to this variant of noise, because
-// one axis of the simplex grid is perfectly aligned with the INPUT x axis.
+// one axis of the simplex grid is perfectly aligned with the input x axis.
 // The errors were rare, and they are now very unlikely to ever be visible
 // after a quick fix was introduced: a small offset is added to the y coordinate.
 // A proper fix would involve using round() instead of floor() in selected
@@ -528,5 +528,5 @@ void main()
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
     float noise = snoise(uv * scale) * 0.5 + 0.5;
-    out_Color   = vec4(RgbColor(fbm(uv)), 1.);
+    out_Color   = vec4(vec3(fbm(uv)), 1.);
 }

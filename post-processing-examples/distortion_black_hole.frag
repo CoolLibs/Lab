@@ -23,7 +23,7 @@ INPUT RgbColor hole_color;
 
 INPUT int nb_div; // 0 forbidden
 
-RgbColor blob(vec2 point, vec2 uv, RgbColor color, float invIntensity, float invGlow)
+vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
 {
     float d    = distance(uv, point);
     float invD = 1.0 / d;

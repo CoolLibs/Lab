@@ -35,7 +35,7 @@ void main()
     float angle  = atan(uv.y, uv.x) + nb_turn * TAU * smoothstep(size, 0., len);
     float radius = length(uv);
 
-    RgbColor color = image(vec2(radius * cos(angle), radius * sin(angle)) + center).rgb;
+    vec3 color = image(vec2(radius * cos(angle), radius * sin(angle)) + center).rgb;
 
     out_Color = vec4(color, 1.);
 }
