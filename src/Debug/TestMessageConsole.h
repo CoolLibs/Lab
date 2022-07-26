@@ -37,7 +37,7 @@ public:
         }
         if (ImGui::Button("Send Warning to the Debug console"))
         {
-            Cool::Log::warn("Test", "Hello World");
+            Cool::Log::warning("Test", "Hello World");
         }
         if (ImGui::Button("Send Error to the Debug console"))
         {
