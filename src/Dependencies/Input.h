@@ -68,7 +68,7 @@ public:
         file_watcher.update(
             {.on_file_changed = [&](std::string_view) { set_dirty(_dirty_flag); },
              .on_path_invalid = [](std::string_view path) {
-                 Cool::Log::ToUser::error("Input File", "Invalid path: \"{}\"", path);
+                 Cool::Log::ToUser::error("Input File", fmt::format("Invalid path: \"{}\"", path));
              }}
         );
     }
