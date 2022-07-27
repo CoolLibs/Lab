@@ -16,7 +16,7 @@ uniform sampler2D _image;
 
 // INPUT RgbColor Color0;
 
-INPUT RgbColor Color_coefficient;
+// INPUT RgbColor Color_coefficient;
 
 INPUT float Grey_coefficient;
 INPUT bool  One_color_mode;
@@ -43,14 +43,11 @@ void main()
 
     const int size = 3;
 
-    vec3 table_of_colors[size][size] = {
-        {Color1, Color2, Color3},
-        {Color4, Color5, Color6},
-        {Color7, Color8, Color9}};
+    vec3 table_of_colors[size * size] = {Color1, Color2, Color3, Color4, Color5, Color6, Color7, Color8, Color9};
 
     ivec2 grid_id = ivec2(floor(out_uv));
 
-    vec3 current_color = table_of_colors[grid_id.x][grid_id.y];
+    vec3 current_color = table_of_colors[size * grid_id.x + grid_id.y];
 
     // vec3 out_color = threshold_by_chosen_color(
     //     in_color, Effect_intensity,
