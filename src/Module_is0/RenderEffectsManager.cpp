@@ -38,7 +38,10 @@ static void load_code(std::vector<T>& code, const std::filesystem::directory_ent
             }
             catch (const std::exception& e)
             {
-                Cool::Log::ToUser::warn("is0::RenderEffectsManager::" + file.path().stem().string(), "Failed to parse effect, normal or ray marching from file '{}':\n{}", file.path().string(), e.what());
+                Cool::Log::ToUser::warning(
+                    "is0::RenderEffectsManager::" + file.path().stem().string(),
+                    fmt::format("Failed to parse effect, normal or ray marching from file '{}':\n{}", file.path().string(), e.what())
+                );
             }
         }
     }

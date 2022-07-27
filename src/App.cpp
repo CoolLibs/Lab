@@ -120,7 +120,10 @@ auto App::wants_to_show_menu_bar() const -> bool
 
 static void imgui_window_console()
 {
-    Cool::Log::ToUser::imgui_console_window();
+    Cool::Log::ToUser::console().imgui_window();
+#if DEBUG
+    Cool::Log::Debug::console().imgui_window();
+#endif
 }
 
 static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time)
@@ -210,18 +213,13 @@ void App::imgui_windows()
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
-    _message_console.imgui_window();
-#if DEBUG
-    Cool::Log::Debug::console().imgui_window();
-#endif
+    imgui_window_console();
 
     if (inputs_are_allowed())
     {
         const auto the_ui = ui();
         _is0_module->imgui_windows(the_ui);
         _custom_shader_module->imgui_windows(the_ui);
-        // Console
-        imgui_window_console();
         // Time
         ImGui::Begin("Time");
         Cool::ClockU::imgui_timeline(_clock);
@@ -252,7 +250,7 @@ void App::imgui_windows()
         }
         if (DebugOptions::test_message_console())
         {
-            _test_message_console.imgui_window(_message_console);
+            _test_message_console.imgui_window(Cool::Log::ToUser::console());
         }
 #endif // DEBUG
     }
@@ -274,7 +272,6 @@ void App::menu_windows()
 {
     if (ImGui::BeginMenu("Windows"))
     {
-        Cool::Log::ToUser::imgui_toggle_console();
         for (auto& view : _views)
         {
             view.view.imgui_open_close_checkbox();

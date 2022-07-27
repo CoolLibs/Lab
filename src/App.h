@@ -79,7 +79,7 @@ private:
     auto dirty_flag_factory                         () { return DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return SetClean_Ref{_dirty_registry}; }
-    auto update_context                             () { return UpdateContext_Ref{{_message_console, set_clean__functor()}}; }
+    auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor()}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();
@@ -119,7 +119,6 @@ private:
     std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger                        _command_logger{};
     Cool::OpenGL::Texture                _texture;
-    Cool::MessageConsole                 _message_console{};
 #if DEBUG
     TestMessageConsole _test_message_console{};
 #endif

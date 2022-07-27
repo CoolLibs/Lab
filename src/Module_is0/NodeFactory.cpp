@@ -123,7 +123,10 @@ void NodeFactory::reload_templates()
                     }
                     catch (const std::exception& e)
                     {
-                        Cool::Log::ToUser::warn("is0::NodeFactory::" + file.path().stem().string(), "Failed to parse node from file '{}':\n{}", file.path().string(), e.what());
+                        Cool::Log::ToUser::warning(
+                            "is0::NodeFactory::" + file.path().stem().string(),
+                            fmt::format("Failed to parse node from file '{}':\n{}", file.path().string(), e.what())
+                        );
                     }
                 }
             }
