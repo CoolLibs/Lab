@@ -6,7 +6,6 @@
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
 
-
 namespace Lab {
 
 namespace internal {
@@ -112,4 +111,4 @@ void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
 
 } // namespace cereal
 
-#include <Cool/Variables/generated/register_set_variable_commands.inl>
+#include "generated/register_set_variable_commands.inl"

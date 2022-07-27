@@ -39,4 +39,4 @@ void serialize(Archive& archive, Lab::Command_SetVariableMetadata<T>& command)
 
 } // namespace cereal
 
-#include <Cool/Variables/generated/register_set_variable_metadata_commands.inl>
+#include "generated/register_set_variable_metadata_commands.inl"
