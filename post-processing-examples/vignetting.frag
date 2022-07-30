@@ -7,17 +7,14 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/vignetting.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT float Border_darkness; // Default 0.262
+INPUT float Center_radius;   // default 21.
 
-uniform float Border_darkness; // Default 0.262
-uniform float Center_radius;   // default 21.
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

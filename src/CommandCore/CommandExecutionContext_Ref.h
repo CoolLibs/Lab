@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Dependencies/Dirty.h"
+#include <Cool/Dependencies/Dirty.h>
+#include <Cool/Dependencies/SetVariableDirty_Ref.h>
+#include <Cool/Dependencies/VariableId.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include "Dependencies/History.h"
-#include "Dependencies/SetVariableDirty_Ref.h"
-#include "Dependencies/VariableId.h"
-#include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
 
@@ -16,19 +16,19 @@ class CameraManager;
 class CommandExecutionContext_Ref {
 public:
     auto history() const -> const History& { return _data.history; }
-    auto registries() -> VariableRegistries& { return _data.registries; }
+    auto registries() -> Cool::VariableRegistries& { return _data.registries; }
     auto camera_manager() -> CameraManager& { return _data.camera_manager; }
     template<typename T>
-    void set_dirty(const VariableId<T>& id)
+    void set_dirty(const Cool::VariableId<T>& id)
     {
         _data.set_dirty(id);
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        std::reference_wrapper<const History>      history;
-        std::reference_wrapper<VariableRegistries> registries;
-        std::reference_wrapper<CameraManager>      camera_manager;
-        SetVariableDirty_Ref                       set_dirty;
+        std::reference_wrapper<const History>            history;
+        std::reference_wrapper<Cool::VariableRegistries> registries;
+        std::reference_wrapper<CameraManager>            camera_manager;
+        Cool::SetVariableDirty_Ref                       set_dirty;
     };
     explicit CommandExecutionContext_Ref(Data data)
         : _data{data} {}

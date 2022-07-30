@@ -9,12 +9,10 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float time_mod;
-uniform float resolution_bias;
-
-// END DYNAMIC PARAMS
+INPUT float time_mod;
+INPUT float resolution_bias;
 
 vec4 image(vec2 uv)
 {

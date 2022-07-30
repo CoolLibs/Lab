@@ -6,7 +6,7 @@
 
 namespace Lab {
 
-Module_is0::Module_is0(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
+Module_is0::Module_is0(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"is0", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
@@ -96,10 +96,10 @@ std::string Module_is0::saving_path_string() const
     return std::filesystem::weakly_canonical(_folder_path_for_save + "/" + _file_name_for_save + ".is0geometry").string();
 }
 
-auto Module_is0::all_inputs() const -> AllInputRefsToConst
+auto Module_is0::all_inputs() const -> Cool::AllInputRefsToConst
 {
-    AllInputRefsToConst inputs;
-    inputs.push_back(AnyInputRefToConst{_camera_input});
+    Cool::AllInputRefsToConst inputs;
+    inputs.push_back(Cool::AnyInputRefToConst{_camera_input});
     // for (const auto& input : _inputs) {
     //     inputs.push_back(
     //         std::visit([](auto&& input) { return AnyInputRefToConst{input}; }, input));
@@ -107,7 +107,7 @@ auto Module_is0::all_inputs() const -> AllInputRefsToConst
     return inputs;
 }
 
-auto Module_is0::is_dirty(IsDirty_Ref check_dirty) const -> bool
+auto Module_is0::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
     return Module::is_dirty(check_dirty) ||
            check_dirty(_shader.dirty_flag());
@@ -118,7 +118,7 @@ void Module_is0::render(RenderParams in, UpdateContext_Ref)
     if (_shader.pipeline().shader())
     {
         _shader.pipeline().shader()->bind();
-        _shader.pipeline().shader()->set_uniform("_time", in.provider(Input_Time{}));
+        _shader.pipeline().shader()->set_uniform("_time", in.provider(Cool::Input_Time{}));
 
         // for (auto& input : _inputs) {
         //     std::visit([&](auto&& input) {
@@ -126,7 +126,7 @@ void Module_is0::render(RenderParams in, UpdateContext_Ref)
         //     },
         //                input);
         // }
-        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Input_AspectRatio{}));
+        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
         _shader.pipeline().draw();
     }
 }

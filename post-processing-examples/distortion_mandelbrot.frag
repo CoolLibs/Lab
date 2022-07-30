@@ -9,16 +9,14 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float size;     // negative values to flip the pattern
-uniform float offset_x; // default .5 min = 0 max = 1
-uniform float offset_y; // default .5 min = 0 max = 1
-uniform float time_mod; // min = 0 max = 20
+INPUT float size;     // negative values to flip the pattern
+INPUT float offset_x; // default .5 min = 0 max = 1
+INPUT float offset_y; // default .5 min = 0 max = 1
+INPUT float time_mod; // min = 0 max = 20
 
-uniform int nb_iteration; // min = 1
-
-// END DYNAMIC PARAMS
+INPUT int nb_iteration; // min = 1
 
 vec4 image(vec2 uv)
 {

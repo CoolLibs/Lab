@@ -7,15 +7,16 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/rgb_hsv_conversion.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/color_detection.glsl"
 
-uniform vec3 Color;
+INPUT RgbColor Color;
 
-uniform float Saturation;
+INPUT float Saturation;
 
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

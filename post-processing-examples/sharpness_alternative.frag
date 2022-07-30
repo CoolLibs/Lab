@@ -14,12 +14,10 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float Offset_strength;
-uniform float Sharpening_strength;
-
-// END DYNAMIC PARAMS
+INPUT float Offset_strength;
+INPUT float Sharpening_strength;
 
 vec4 image(vec2 uv)
 {

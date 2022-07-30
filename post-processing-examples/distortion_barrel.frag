@@ -9,14 +9,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float center_x;   // default 0.5 range 0 to 1
-uniform float center_y;   // default 0.5 range 0 to 1
-uniform float distortion; // -5 to 5
-uniform float nb_tiles;   // 0 forbbiden
-
-// END DYNAMIC PARAMS
+INPUT float center_x;   // default 0.5 range 0 to 1
+INPUT float center_y;   // default 0.5 range 0 to 1
+INPUT float distortion; // -5 to 5
+INPUT float nb_tiles;   // 0 forbbiden
 
 vec2 mid;
 

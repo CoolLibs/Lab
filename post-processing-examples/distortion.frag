@@ -8,14 +8,11 @@ out vec4      out_Color;
 uniform sampler2D _image;
 uniform sampler2D _texture;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/distortion.glsl"
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

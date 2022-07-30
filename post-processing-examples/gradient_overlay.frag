@@ -7,24 +7,21 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/gradient_overlay.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT vec2 Gradient_pos_a;
+INPUT vec2 Gradient_pos_b;
 
-uniform vec2 Gradient_pos_a;
-uniform vec2 Gradient_pos_b;
+INPUT RgbColor Gradient_color_a;
+INPUT RgbColor Gradient_color_b;
 
-uniform vec3 Gradient_color_a;
-uniform vec3 Gradient_color_b;
+INPUT float Gradient_presence;
 
-uniform float Gradient_presence;
+INPUT bool Use_the_best_blending_technique;
 
-uniform float Use_the_best_blending_technique;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

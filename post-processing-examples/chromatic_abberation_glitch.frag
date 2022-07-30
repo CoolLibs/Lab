@@ -9,11 +9,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
-
-uniform float time_mod;
-
-// END DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
 float rng2(vec2 seed)
 {

@@ -9,26 +9,26 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/portholes.glsl"
 
-uniform float Square_mode; // bool
-uniform float Size;        // 10
-uniform float Space_to_border;
-uniform float Speed;
-uniform float Movement;
-uniform float Time_mode;      // bool
-uniform float Distance_mode;  // 2
-uniform float Zoom_intensity; // 0.001
-uniform float Translation_On_Off;
+INPUT bool  Square_mode; // bool
+INPUT float Size;        // 10
+INPUT float Space_to_border;
+INPUT float Speed;
+INPUT float Movement;
+INPUT bool  Time_mode;      // bool
+INPUT float Distance_mode;  // 2
+INPUT float Zoom_intensity; // 0.001
 
-uniform float Change_center;
-uniform float Border;
-uniform float Smoothing;
-uniform float Border_smoothing;
+INPUT float Change_center;
+INPUT float Border;
+INPUT float Smoothing;
+INPUT float Border_smoothing;
+INPUT float Effect_intensity;
 
-uniform vec3 Border_color;
-
-// END DYNAMIC PARAMS
+INPUT RgbColor Border_color;
 
 void main()
 {
@@ -39,7 +39,7 @@ void main()
 
     vec3 out_color = portholes(
         in_color, Effect_intensity, uv,
-        Square_mode, Size, Space_to_border, Speed, Movement, Time_mode, Distance_mode, Zoom_intensity, Translation_On_Off,
+        Square_mode, Size, Space_to_border, Speed, Movement, Time_mode, Distance_mode, Zoom_intensity,
         Change_center, Border, Smoothing, Border_smoothing, Border_color
     );
 

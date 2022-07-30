@@ -10,7 +10,7 @@ namespace Lab {
 
 void CameraManager::hook_events(
     Cool::MouveEventDispatcher<Cool::ViewCoordinates>& events,
-    std::reference_wrapper<VariableRegistries>         registries,
+    std::reference_wrapper<Cool::VariableRegistries>   registries,
     CommandExecutor_TopLevel_Ref                       executor
 )
 {
@@ -55,8 +55,8 @@ void CameraManager::hook_events(
 }
 
 void CameraManager::imgui(
-    std::reference_wrapper<VariableRegistries> registries,
-    CommandExecutor_TopLevel_Ref               executor
+    std::reference_wrapper<Cool::VariableRegistries> registries,
+    CommandExecutor_TopLevel_Ref                     executor
 )
 {
     maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
@@ -88,9 +88,9 @@ void CameraManager::imgui(
 }
 
 void CameraManager::maybe_update_camera(
-    std::reference_wrapper<VariableRegistries> registries,
-    CommandExecutor_TopLevel_Ref               executor,
-    std::function<bool(Cool::Camera&)>         fun
+    std::reference_wrapper<Cool::VariableRegistries> registries,
+    CommandExecutor_TopLevel_Ref                     executor,
+    std::function<bool(Cool::Camera&)>               fun
 )
 {
     auto camera = registries.get().get(_camera_id)->value;

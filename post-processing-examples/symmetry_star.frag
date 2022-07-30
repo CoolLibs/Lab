@@ -7,18 +7,15 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/symmetry_star.glsl"
+INPUT float Size;           // 0 forbidden 0.001 to 0.5
+INPUT Angle Angle_in_turns; // 0 to 1 (1 == 1 turn)
 
-// BEGIN DYNAMIC PARAMS
-uniform float Size;           // 0 forbidden 0.001 to 0.5
-uniform float Angle_in_turns; // 0 to 1 (1 == 1 turn)
+INPUT int Nb_iterations;
 
-uniform int Nb_iterations;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

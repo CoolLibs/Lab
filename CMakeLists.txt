@@ -2,11 +2,14 @@ cmake_minimum_required(VERSION 3.20)
 
 project(CoolLab)
 add_executable(${PROJECT_NAME})
+add_library(CooLab-Properties INTERFACE) # This is needed by both CoolLab and its tests
+target_link_libraries(${PROJECT_NAME} PRIVATE CooLab-Properties)
 target_compile_features(${PROJECT_NAME} PRIVATE
     cxx_std_20)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
-if (MSVC)
+
+if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /WX /W3)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra -Wpedantic -pedantic-errors)
@@ -18,26 +21,27 @@ set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,410,430>) # Must be >= 330 for Im
 
 # Include Cool
 add_subdirectory(Cool)
-target_link_libraries(${PROJECT_NAME} PRIVATE Cool::Core)
+target_link_libraries(CooLab-Properties INTERFACE Cool::Core)
+cool_setup(${PROJECT_NAME})
 
 # Include cmd
 add_subdirectory(lib/cmd)
-target_link_libraries(${PROJECT_NAME} PRIVATE cmd::cmd)
+target_link_libraries(CooLab-Properties INTERFACE cmd::cmd)
 
 # Include range-v3
-target_include_directories(${PROJECT_NAME} PRIVATE lib/range-v3/include)
+target_include_directories(CooLab-Properties INTERFACE lib/range-v3/include)
 
 # Include ImNodes
 add_library(ImNodes lib/imnodes/imnodes.cpp)
 target_include_directories(ImNodes PRIVATE Cool/lib/imgui)
-target_link_libraries(${PROJECT_NAME} PRIVATE ImNodes)
+target_link_libraries(CooLab-Properties INTERFACE ImNodes)
 
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
 target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
 
 # Set include directories
-target_include_directories(${PROJECT_NAME} PRIVATE src lib)
+target_include_directories(CooLab-Properties INTERFACE src lib)
 
 # Copy resources to the output folder (where the executable is created) after each build
 include("Cool/CMakeUtils/files_and_folders.cmake")
@@ -49,12 +53,32 @@ Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "image resources")
 Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "post-processing-examples")
 
 option(TEST_IS0_NODES "Test all Is0 Nodes" OFF)
-if (TEST_IS0_NODES)
+
+if(TEST_IS0_NODES)
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         IS0_TEST_NODES
     )
 endif()
 
-if (MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE /bigobj) # We use too many templates apparently so we need this flag O:)
+if(MSVC)
+    target_compile_options(CooLab-Properties INTERFACE /bigobj) # We use too many templates apparently so we need this flag O:)
 endif()
+
+# ---------------------
+# ---Setup the tests---
+# ---------------------
+list(REMOVE_ITEM COOL_LAB_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/main.cpp
+    ${CMAKE_SOURCE_DIR}/src/tests.cpp
+)
+add_executable(Tests-CoolLab tests/tests.cpp ${COOL_LAB_SOURCES})
+target_compile_features(Tests-CoolLab PRIVATE cxx_std_20)
+
+if(MSVC)
+    target_compile_options(Tests-CoolLab PRIVATE /WX /W3)
+else()
+    target_compile_options(Tests-CoolLab PRIVATE -Werror -Wall -Wextra -Wpedantic -pedantic-errors)
+endif()
+
+target_link_libraries(Tests-CoolLab PRIVATE CooLab-Properties)
+target_link_libraries(Tests-CoolLab PUBLIC doctest::doctest)

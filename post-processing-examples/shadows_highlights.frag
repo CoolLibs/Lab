@@ -7,21 +7,18 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/shadows_highlights.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT float factor_shadows;
+INPUT float power_shadows;
+INPUT float dir_shadows;
+INPUT float factor_highlights;
+INPUT float power_highlights;
+INPUT float dir_highlights;
 
-uniform float factor_shadows;
-uniform float power_shadows;
-uniform float dir_shadows;
-uniform float factor_highlights;
-uniform float power_highlights;
-uniform float dir_highlights;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

@@ -3,12 +3,12 @@
 #include <Cool/Camera/Camera.h>
 #include <Cool/Camera/ViewController_Orbital.h>
 #include <Cool/Camera/ViewController_OrbitalU.h>
+#include <Cool/Dependencies/SetVariableDirty_Ref.h>
+#include <Cool/Dependencies/VariableId.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/Input/MouseCoordinates.h>
 #include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
-#include "Dependencies/SetVariableDirty_Ref.h"
-#include "Dependencies/VariableId.h"
-#include "Dependencies/VariableRegistries.h"
 
 namespace Lab {
 
@@ -17,7 +17,7 @@ class CommandExecutionContext_Ref;
 
 class CameraManager {
 public:
-    explicit CameraManager(const VariableId<Cool::Camera>& camera_id)
+    explicit CameraManager(const Cool::VariableId<Cool::Camera>& camera_id)
         : _camera_id{camera_id}
     {
     }
@@ -26,14 +26,14 @@ public:
 
     void hook_events(
         Cool::MouveEventDispatcher<Cool::ViewCoordinates>&,
-        std::reference_wrapper<VariableRegistries>,
+        std::reference_wrapper<Cool::VariableRegistries>,
         CommandExecutor_TopLevel_Ref
     );
 
-    auto id() const -> const VariableId<Cool::Camera>& { return _camera_id; }
+    auto id() const -> const Cool::VariableId<Cool::Camera>& { return _camera_id; }
 
     void imgui(
-        std::reference_wrapper<VariableRegistries>,
+        std::reference_wrapper<Cool::VariableRegistries>,
         CommandExecutor_TopLevel_Ref
     );
 
@@ -42,14 +42,14 @@ public:
 
 private:
     void maybe_update_camera(
-        std::reference_wrapper<VariableRegistries>,
+        std::reference_wrapper<Cool::VariableRegistries>,
         CommandExecutor_TopLevel_Ref,
         std::function<bool(Cool::Camera&)>
     );
 
 private:
-    VariableId<Cool::Camera>     _camera_id;
-    Cool::ViewController_Orbital _view_controller;
+    Cool::VariableId<Cool::Camera> _camera_id;
+    Cool::ViewController_Orbital   _view_controller;
 
 private:
     // Serialization

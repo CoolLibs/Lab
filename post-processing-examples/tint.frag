@@ -7,16 +7,13 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/tint.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT float Tint; // default 0.0 / default bounds -1.0 -> 1.0
 
-uniform float Tint; // default 0.0 / default bounds -1.0 -> 1.0
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

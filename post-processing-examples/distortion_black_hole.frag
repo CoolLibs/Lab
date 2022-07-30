@@ -9,21 +9,19 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float angle_in_turns;    // 0 to 1 (1 == 1 turn)
-uniform float hole_radius;       // positive values
-uniform float hole_intensity;    // 0 to 8
-uniform float hole_attractivity; // -1 to 1
-uniform float hole_smooth;       // -.5 to 1
-uniform float hole_center_x;     // default 0.5 range 0 to 1
-uniform float hole_center_y;     // default 0.5 range0 to 1
+INPUT Angle angle_in_turns;    // 0 to 1 (1 == 1 turn)
+INPUT float hole_radius;       // positive values
+INPUT float hole_intensity;    // 0 to 8
+INPUT float hole_attractivity; // -1 to 1
+INPUT float hole_smooth;       // -.5 to 1
+INPUT float hole_center_x;     // default 0.5 range 0 to 1
+INPUT float hole_center_y;     // default 0.5 range0 to 1
 
-uniform vec3 hole_color;
+INPUT RgbColor hole_color;
 
-uniform int nb_div; // 0 forbidden
-
-// END DYNAMIC PARAMS
+INPUT int nb_div; // 0 forbidden
 
 vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
 {
@@ -51,8 +49,7 @@ void main()
 
     // rotation
     float angleRot = angle_in_turns * TAU;
-    vec2  tcoord   = vec2(ncoord.x * cos(angleRot) - ncoord.y * sin(angleRot),
-                          ncoord.y * cos(angleRot) + ncoord.x * sin(angleRot));
+    vec2  tcoord   = vec2(ncoord.x * cos(angleRot) - ncoord.y * sin(angleRot), ncoord.y * cos(angleRot) + ncoord.x * sin(angleRot));
 
     // sink hole projection
     float angle  = atan(tcoord.x, tcoord.y);

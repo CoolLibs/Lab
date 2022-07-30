@@ -76,14 +76,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float scale;
-uniform float gain;       // default = 0.5
-uniform float lacunarity; // default =2
-uniform float octaves;    // min=1
-
-// END DYNAMIC PARAMS
+INPUT float scale;
+INPUT float gain;       // default = 0.5
+INPUT float lacunarity; // default =2
+INPUT float octaves;    // min=1
 
 // Modulo 289, optimizes to code without divisions
 vec3 mod289(vec3 x)

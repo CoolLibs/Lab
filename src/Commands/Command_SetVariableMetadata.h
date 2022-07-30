@@ -8,7 +8,7 @@ namespace Lab {
 
 template<typename T>
 struct Command_SetVariableMetadata {
-    VariableId<T>             id{};
+    Cool::VariableId<T>       id{};
     Cool::VariableMetadata<T> metadata{};
 
     void execute(CommandExecutionContext_Ref& ctx) const
@@ -39,4 +39,4 @@ void serialize(Archive& archive, Lab::Command_SetVariableMetadata<T>& command)
 
 } // namespace cereal
 
-#include "generated_variables/register_set_variable_metadata_commands.inl"
+#include "generated/register_set_variable_metadata_commands.inl"

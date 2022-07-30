@@ -14,11 +14,9 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float Intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Intensity;
 
 vec3 texsample(const int x, const int y, in vec2 fragCoord)
 {
