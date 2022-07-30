@@ -24,7 +24,7 @@ void menu_info()
 
         static constexpr auto show_version = [](const char* text, int version) {
             line(
-                [text] { ImGui::TextDisabled(text); },
+                [text] { ImGui::TextDisabled("%s", text); },
                 [version] { ImGui::Text("%d.%d", Cool::major_version(version), Cool::minor_version(version)); }
             );
         };
