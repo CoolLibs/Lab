@@ -1,17 +1,17 @@
 #pragma once
 
+#include <Cool/Dependencies/VariableId.h>
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
-#include "Dependencies/VariableId.h"
 
 namespace Lab {
 
 namespace internal {
 
 template<typename T>
-void set_value_default_impl(CommandExecutionContext_Ref& ctx, const VariableId<T>& id, const T& value)
+void set_value_default_impl(CommandExecutionContext_Ref& ctx, const Cool::VariableId<T>& id, const T& value)
 {
     ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
         variable.value = value;
@@ -26,8 +26,8 @@ struct ReversibleCommand_SetVariable;
 
 template<typename T>
 struct Command_SetVariable {
-    VariableId<T> id{};
-    T             value{};
+    Cool::VariableId<T> id{};
+    T                   value{};
 
     void execute(CommandExecutionContext_Ref& ctx) const
     {
@@ -111,4 +111,4 @@ void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
 
 } // namespace cereal
 
-#include "generated_variables/register_set_variable_commands.inl"
+#include "generated/register_set_variable_commands.inl"

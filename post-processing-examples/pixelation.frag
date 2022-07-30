@@ -9,20 +9,17 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/pixelation.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT float Nb_tiles_on_y_axis; // default 20
+INPUT float Border;             // default 0.469
+INPUT float Smoothing;          // default 0.225
 
-uniform float Nb_tiles_on_y_axis; // default 20
-uniform float Border;             // default 0.469
-uniform float Smoothing;          // default 0.225
+INPUT RgbColor Border_color;
 
-uniform vec3 Border_color;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

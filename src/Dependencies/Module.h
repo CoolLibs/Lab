@@ -1,14 +1,15 @@
 #pragma once
+#include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/InputFactory_Ref.h>
+#include <Cool/Dependencies/InputProvider_Ref.h>
 #include <Cool/Input/KeyboardEvent.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
 #include "Dependencies/History.h"
-#include "Dependencies/Input.h"
-#include "Dependencies/InputFactory_Ref.h"
-#include "Dependencies/InputProvider_Ref.h"
-#include "Dependencies/Ui.h"
-#include "Dependencies/UpdateContext_Ref.h"
+#include "Ui.h"
+#include "UpdateContext_Ref.h"
+
 
 namespace Lab {
 
@@ -20,15 +21,15 @@ namespace Lab {
 class Module {
 public:
     struct RenderParams {
-        InputProvider_Ref   provider;
-        InputFactory_Ref    input_factory;
-        InputDestructor_Ref input_destructor;
-        IsDirty_Ref         is_dirty;
-        SetClean_Ref        set_clean;
+        Cool::InputProvider_Ref   provider;
+        Cool::InputFactory_Ref    input_factory;
+        Cool::InputDestructor_Ref input_destructor;
+        Cool::IsDirty_Ref         is_dirty;
+        Cool::SetClean_Ref        set_clean;
     };
 
     Module() = default;
-    Module(std::string_view name, DirtyFlagFactory_Ref dirty_flag_factory)
+    Module(std::string_view name, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
         : _name{name}
         , _dirty_flag{dirty_flag_factory.make()}
     {
@@ -46,9 +47,9 @@ public:
     virtual void imgui_windows(Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
     virtual void update(UpdateContext_Ref){};
 
-    virtual auto all_inputs() const -> AllInputRefsToConst = 0;
+    virtual auto all_inputs() const -> Cool::AllInputRefsToConst = 0;
 
-    virtual auto is_dirty(IsDirty_Ref check_dirty) const -> bool
+    virtual auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
     {
         return check_dirty(_dirty_flag);
     };
@@ -59,8 +60,8 @@ private:
     virtual void render(RenderParams, UpdateContext_Ref) = 0;
 
 private:
-    std::string _name;
-    DirtyFlag   _dirty_flag;
+    std::string     _name;
+    Cool::DirtyFlag _dirty_flag;
 
 private:
     friend class cereal::access;

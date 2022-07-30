@@ -11,14 +11,12 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float time_mod;
-uniform float thres; // default 0.7 min = 0 max = 2
-uniform float res_x;
-uniform float res_y;
-
-// END DYNAMIC PARAMS
+INPUT float time_mod;
+INPUT float thres; // default 0.7 min = 0 max = 2
+INPUT float res_x;
+INPUT float res_y;
 const float steps = 4; // default 4
 
 float random(vec2 co)

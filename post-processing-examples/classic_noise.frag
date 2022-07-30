@@ -20,20 +20,17 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/classic_noise.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT float Frequency;
 
-uniform float Frequency;
+INPUT float Scale; // 100
 
-uniform float Scale; // 100
+INPUT float a; // min = 1, max = 3; default = 1.5;  `a` increases the fractalness of the noise
 
-uniform float a; // min = 1, max = 3; default = 1.5;  `a` increases the fractalness of the noise
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

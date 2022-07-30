@@ -7,13 +7,9 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float r_affect; // default 1 min = 0
-uniform float g_affect; // default 1 min = 0
-uniform float b_affect; // default 1 min = 0
-
-// END DYNAMIC PARAMS
+INPUT vec3 channels_contribution; // default 1 min = 0
 
 vec4 image(vec2 uv)
 {
@@ -22,10 +18,9 @@ vec4 image(vec2 uv)
 
 void main()
 {
-    vec2 uv     = _uv;
-    vec3 color  = vec3(1.);
-    vec4 img    = image(uv);
-    vec3 affect = vec3(r_affect, g_affect, b_affect);
-    color -= affect * img.rgb;
+    vec2 uv    = _uv;
+    vec3 color = vec3(1.);
+    vec4 img   = image(uv);
+    color -= channels_contribution * img.rgb;
     out_Color = vec4(color, 1.);
 }

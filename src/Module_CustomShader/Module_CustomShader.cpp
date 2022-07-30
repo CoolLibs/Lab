@@ -1,13 +1,19 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
+#include <Cool/InputParser/InputParser.h>
 #include <Cool/Log/ToUser.h>
+#include <Cool/String/String.h>
+#include <doctest/doctest.h>
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
+#include <type_from_string/type_from_string.hpp>
+
+// TODO(LD) Support angle units (turns, degrees, radians)
 
 namespace Lab {
 
-Module_CustomShader::Module_CustomShader(DirtyFlagFactory_Ref dirty_flag_factory, InputFactory_Ref input_factory)
+Module_CustomShader::Module_CustomShader(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"Custom Shader", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
@@ -55,8 +61,8 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
     if (_shader.pipeline().shader())
     {
         _shader.pipeline().shader()->bind();
-        _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Input_AspectRatio{}));
-        _shader.pipeline().shader()->set_uniform("_time", in.provider(Input_Time{}));
+        _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+        _shader.pipeline().shader()->set_uniform("_time", in.provider(Cool::Input_Time{}));
 
         for (auto& input : _inputs)
         {
@@ -65,17 +71,17 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
             },
                        input);
         }
-        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Input_AspectRatio{}));
+        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
         _shader.pipeline().draw();
     }
 }
 
 void Module_CustomShader::refresh_pipeline_if_necessary(
-    InputProvider_Ref   provider,
-    IsDirty_Ref         is_dirty,
-    InputFactory_Ref    input_factory,
-    InputDestructor_Ref input_destructor,
-    UpdateContext_Ref   update_ctx
+    Cool::InputProvider_Ref   provider,
+    Cool::IsDirty_Ref         is_dirty,
+    Cool::InputFactory_Ref    input_factory,
+    Cool::InputDestructor_Ref input_destructor,
+    UpdateContext_Ref         update_ctx
 )
 {
     if (is_dirty(_shader.dirty_flag()))
@@ -83,24 +89,24 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         const auto file_path   = provider(_file);
         const auto source_code = Cool::File::to_string(file_path.string());
         _shader.compile(source_code, file_path.string(), name(), update_ctx);
-        parse_shader_for_params(source_code, input_factory, input_destructor, update_ctx.message_console());
+        parse_shader_for_params(source_code, input_factory, input_destructor);
     }
 }
 
-static auto name(const AnyInput& input)
+static auto name(const Cool::AnyInput& input)
 {
     return std::visit(([](auto&& input) { return input.name(); }), input);
 }
 
-static auto inputs_have_the_same_type_and_name(const AnyInput& input1, const AnyInput& input2) -> bool
+static auto inputs_have_the_same_type_and_name(const Cool::AnyInput& input1, const Cool::AnyInput& input2) -> bool
 {
     return input1.index() == input2.index() &&
            name(input1) == name(input2);
 }
 
-static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>& old_inputs)
+static auto iterator_to_same_input(const Cool::AnyInput& input, std::vector<Cool::AnyInput>& old_inputs)
 {
-    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const AnyInput& other_input) {
+    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnyInput& other_input) {
         return inputs_have_the_same_type_and_name(other_input, input);
     });
 
@@ -111,9 +117,9 @@ static auto iterator_to_same_input(const AnyInput& input, std::vector<AnyInput>&
 }
 
 static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
-    std::vector<AnyInput>& old_inputs,
-    std::vector<AnyInput>& new_inputs,
-    InputDestructor_Ref    destroy
+    std::vector<Cool::AnyInput>& old_inputs,
+    std::vector<Cool::AnyInput>& new_inputs,
+    Cool::InputDestructor_Ref    destroy
 )
 {
     for (auto& input : old_inputs)
@@ -130,84 +136,20 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-static auto get_inputs_from_shader_code(std::string_view source_code, DirtyFlag dirty_flag, InputFactory_Ref input_factory, Cool::MessageConsole& message_console, Cool::MessageId& parsing_error_message_id, const std::string& module_name)
-    -> std::vector<AnyInput>
-{
-    message_console.clear(parsing_error_message_id);
-    std::vector<AnyInput> new_inputs;
-    std::stringstream     stream{std::string{source_code}};
-    std::string           line;
-    bool                  has_begun = false;
-    while (getline(stream, line))
-    {
-        if (has_begun)
-        {
-            if (line == "// END DYNAMIC PARAMS")
-            {
-                break;
-            }
-            try
-            {
-                const auto uniform_pos = line.find("uniform");
-                if (uniform_pos != std::string::npos)
-                {
-                    const auto        type_pos     = uniform_pos + 8;
-                    const auto        type_pos_end = line.find(' ', type_pos);
-                    const std::string type         = line.substr(type_pos, type_pos_end - type_pos);
-                    const auto        name_pos     = type_pos_end + 1;
-                    const auto        name_pos_end = line.find_first_of(" ;", name_pos);
-                    const std::string name         = line.substr(name_pos, name_pos_end - name_pos);
-                    //
-                    const auto input = [&]() -> AnyInput {
-                        if (type == "int")
-                            return input_factory.make<int>(dirty_flag, name);
-                        else if (type == "float")
-                            return input_factory.make<float>(dirty_flag, name);
-                        else if (type == "vec2")
-                            return input_factory.make<glm::vec2>(dirty_flag, name);
-                        else if (type == "vec3")
-                            return input_factory.make<Cool::RgbColor>(dirty_flag, name);
-                        else
-                            throw std::invalid_argument('"' + type + "\" is not a valid INPUT type.\nFrom line: \"" + line + "\"");
-                    }();
-                    new_inputs.push_back(input);
-                }
-            }
-            catch (const std::exception& e)
-            {
-                message_console.send(
-                    parsing_error_message_id,
-                    {
-                        .category         = module_name,
-                        .detailed_message = e.what(),
-                        .severity         = Cool::MessageSeverity::Error,
-                    }
-                );
-            }
-        }
-        if (line == "// BEGIN DYNAMIC PARAMS")
-        {
-            has_begun = true;
-        }
-    }
-    return new_inputs;
-}
-
 void Module_CustomShader::parse_shader_for_params(
-    std::string_view      source_code,
-    InputFactory_Ref      input_factory,
-    InputDestructor_Ref   input_destructor,
-    Cool::MessageConsole& message_console
+    std::string_view          source_code,
+    Cool::InputFactory_Ref    input_factory,
+    Cool::InputDestructor_Ref input_destructor
 )
 {
-    auto new_inputs = get_inputs_from_shader_code(source_code, dirty_flag(), input_factory, message_console, _parsing_error_message_id, name());
+    auto new_inputs = Cool::parse_all_inputs(source_code, dirty_flag(), input_factory);
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
     _inputs = std::move(new_inputs);
 }
 
 void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
 {
-    if (_shader.pipeline().shader().has_value())
+    if (_shader.pipeline().shader())
     {
         _shader.pipeline().shader()->bind();
         glpp::active_texture(slot);

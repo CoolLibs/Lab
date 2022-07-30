@@ -3,7 +3,7 @@
 
 static std::string_view find_capture(std::string_view source, size_t* end_pos)
 {
-    const auto capture_pos = Cool::String::find_matching_pair(source, '[', ']');
+    const auto capture_pos = Cool::String::find_matching_pair({source, 0, '[', ']'});
     if (!capture_pos.has_value())
     {
         throw std::invalid_argument("Couldn't parse the capture group. It should be delimited by \"[ ]\"");

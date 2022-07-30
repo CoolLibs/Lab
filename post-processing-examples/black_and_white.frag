@@ -7,25 +7,18 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/black_and_white.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT vec3 channels_contribution; // default vec3(0.2126, 0.7152, 0.0722)
+INPUT bool Normalize_checkbox;    // default true
 
-uniform float Red_contribution;   // default 0.2126
-uniform float Green_contribution; // default 0.7152
-uniform float Blue_contribution;  // default 0.0722
-uniform float Normalize_checkbox;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity; // default 1. min 0. max 1.
 
 void main()
 {
     vec3 in_color = image(_uv);
-
-    vec3 channels_contribution = vec3(Red_contribution, Green_contribution, Blue_contribution);
 
     vec3 out_color = black_and_white(
         in_color, Effect_intensity,

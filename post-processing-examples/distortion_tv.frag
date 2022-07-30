@@ -9,18 +9,16 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 
-uniform float time_mod;
-uniform float strip; // min = 1
+INPUT float time_mod;
+INPUT float strip; // min = 1
 
-uniform int nb_iteration; // min = 1 max 23
-
-// END DYNAMIC PARAMS
+INPUT int nb_iteration; // min = 1 max 23
 
 vec3 draw(vec2 uv)
 {
-    return vec3(texture(_image, vec2(uv.x, 1. - uv.y)).rgb);
+    return vec3(texture(_image, vec2(uv.x, uv.y)).rgb);
 }
 
 float terrain(float x)

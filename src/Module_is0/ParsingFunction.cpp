@@ -2,7 +2,7 @@
 
 std::string find_extra_code(std::string_view source, size_t* end_pos)
 {
-    const auto extra_code_pos = Cool::String::find_matching_pair(source, '`', '`');
+    const auto extra_code_pos = Cool::String::find_matching_pair({source, 0, '`', '`'});
     if (!extra_code_pos.has_value())
     {
         return "";
@@ -16,7 +16,7 @@ std::string find_extra_code(std::string_view source, size_t* end_pos)
 
 std::string find_parameters_declaration(std::string_view source, size_t* end_pos)
 {
-    const auto pos = Cool::String::find_matching_pair(source, '(', ')');
+    const auto pos = Cool::String::find_matching_pair({source, 0, '(', ')'});
     if (!pos.has_value())
     {
         throw std::invalid_argument("Couldn't parse the input declaration. It should look like \"( )\"");
@@ -27,7 +27,7 @@ std::string find_parameters_declaration(std::string_view source, size_t* end_pos
 
 std::string find_body(std::string_view source, size_t* end_pos)
 {
-    const auto pos = Cool::String::find_matching_pair(source, '{', '}');
+    const auto pos = Cool::String::find_matching_pair({source, 0, '{', '}'});
     if (!pos.has_value())
     {
         throw std::invalid_argument("Couldn't parse the body. It should be delimited by \"{ }\"");

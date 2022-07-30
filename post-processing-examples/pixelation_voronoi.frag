@@ -7,20 +7,17 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/shader-lib/pixelation_voronoi.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT float Size;
+INPUT float Speed;
+INPUT float Movement;
+INPUT bool  Time_mode;
+INPUT float Distance_mode;
 
-uniform float Size;
-uniform float Speed;
-uniform float Movement;
-uniform float Time_mode;
-uniform float Distance_mode;
-
-uniform float Effect_intensity;
-
-// END DYNAMIC PARAMS
+INPUT float Effect_intensity;
 
 void main()
 {

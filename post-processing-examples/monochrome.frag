@@ -3,7 +3,9 @@
 layout(location = 0) in vec2 _uv;
 out vec4 out_Color;
 
-uniform vec3 _color;
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
+
+INPUT RgbColor _color;
 
 void main()
 {

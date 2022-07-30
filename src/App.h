@@ -3,6 +3,8 @@
 #include <Cool/AppManager/IApp.h>
 #include <Cool/DebugOptions/DebugOptions.h>
 #include <Cool/DebugOptions/DebugOptionsManager.h>
+#include <Cool/Dependencies/Dirty.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
@@ -20,11 +22,9 @@
 #include "Debug/DebugOptions.h"
 #include "Debug/TestMessageConsole.h"
 #include "Dependencies/CameraManager.h"
-#include "Dependencies/Dirty.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
-#include "Dependencies/VariableRegistries.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/ThemeManager.h"
@@ -64,21 +64,21 @@ private:
     void check_inputs__export_windows();
 
     // clang-format off
-    auto all_inputs() -> AllInputRefsToConst;
-    auto set_dirty_flag                             () { return SetDirty_Ref{_dirty_registry}; }
-    auto set_variable_dirty                         () { return SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
+    auto all_inputs() -> Cool::AllInputRefsToConst;
+    auto set_dirty_flag                             () { return Cool::SetDirty_Ref{_dirty_registry}; }
+    auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_variable_registries, _camera_manager}}; }
     auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, _camera_manager, set_variable_dirty()}}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, make_reversible_commands_context()}; }
     auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag()}; }
-    auto input_provider                             (float render_target_aspect_ratio, float time) { return InputProvider_Ref{_variable_registries, render_target_aspect_ratio, time}; }
-    auto input_destructor                           () { return InputDestructor_Ref{_variable_registries}; }
-    auto input_factory                              () { return InputFactory_Ref{_variable_registries, _camera_manager.id()}; }
-    auto dirty_flag_factory                         () { return DirtyFlagFactory_Ref{_dirty_registry}; }
-    auto is_dirty__functor                          () { return IsDirty_Ref{_dirty_registry}; }
-    auto set_clean__functor                         () { return SetClean_Ref{_dirty_registry}; }
+    auto input_provider                             (float render_target_aspect_ratio, float time) { return Cool::InputProvider_Ref{_variable_registries, render_target_aspect_ratio, time}; }
+    auto input_destructor                           () { return Cool::InputDestructor_Ref{_variable_registries}; }
+    auto input_factory                              () { return Cool::InputFactory_Ref{_variable_registries, _camera_manager.id()}; }
+    auto dirty_flag_factory                         () { return Cool::DirtyFlagFactory_Ref{_dirty_registry}; }
+    auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_dirty_registry}; }
+    auto set_clean__functor                         () { return Cool::SetClean_Ref{_dirty_registry}; }
     auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor()}}; }
     // clang-format on
 
@@ -102,7 +102,7 @@ private:
     }
 
 private:
-    VariableRegistries                   _variable_registries; // First because modules need the registries when they get created
+    Cool::VariableRegistries             _variable_registries; // First because modules need the registries when they get created
     CameraManager                        _camera_manager;      // First because modules need the camera id when they get created
     Cool::Window&                        _main_window;
     Cool::Clock_Realtime                 _clock;
@@ -111,7 +111,7 @@ private:
     Cool::RenderableView&                _is0_view;
     Cool::RenderableView&                _custom_shader_view;
     Cool::Exporter                       _exporter;
-    DirtyRegistry                        _dirty_registry; // Before the modules because it is used to create them
+    Cool::DirtyRegistry                  _dirty_registry; // Before the modules because it is used to create them
     History                              _history{};
     ThemeManager                         _theme_manager{};
     float                                _last_time{0.f};

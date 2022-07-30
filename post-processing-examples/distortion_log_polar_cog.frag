@@ -11,18 +11,17 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// BEGIN DYNAMIC PARAMS
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/shader-lib/image.glsl"
 
-uniform float center_x;       // default 0.5 range 0 to 1
-uniform float center_y;       // default 0.5 range 0 to 1
-uniform float scale;          //  range 0 to 7
-uniform float details;        //
-uniform float angle_in_turns; // 0 to 1 (1 == 1 turn)
-uniform float strip;          // default 0.01
+INPUT float center_x;       // default 0.5 range 0 to 1
+INPUT float center_y;       // default 0.5 range 0 to 1
+INPUT float scale;          //  range 0 to 7
+INPUT float details;        //
+INPUT Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
+INPUT float strip;          // default 0.01
 
-uniform int nb_div;
-
-// END DYNAMIC PARAMS
+INPUT int nb_div;
 
 float thc(float a, float b)
 {
@@ -59,11 +58,6 @@ float mlength(vec2 uv)
     return max(abs(uv.x), abs(uv.y));
 }
 
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
-
 void main()
 {
     vec2 center = vec2(center_x, center_y);
@@ -88,7 +82,7 @@ void main()
 
     // s * X + ..., higher X = more distortion
     // s        = cos(s * 4. + 2. * a + 8. * r + time_mod);
-    vec3 col = image(s * pal(uv.y + s, vec3(1.), vec3(1.), vec3(1.), vec3(0., uv.y, 2. * uv.y)).xy * angle_in_turns * TAU * 6. - center).rgb;
+    vec3 col = image(s * pal(uv.y + s, vec3(1.), vec3(1.), vec3(1.), vec3(0., uv.y, 2. * uv.y)).xy * angle_in_turns * TAU * 6. - center);
 
     // Output to screen
     out_Color = vec4(col, 1.0);

@@ -1,4 +1,6 @@
 #pragma once
+#include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/File/File.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
@@ -6,17 +8,15 @@
 #include "Commands/Command_FinishedEditingVariable.h"
 #include "Commands/Command_SetVariable.h"
 #include "Commands/Command_SetVariableMetadata.h"
-#include "Input.h"
-#include "VariableRegistries.h"
 
 namespace Lab {
 
 class Ui_Ref {
 public:
     Ui_Ref(
-        VariableRegistries&          registries,
+        Cool::VariableRegistries&    registries,
         CommandExecutor_TopLevel_Ref command_executor,
-        SetDirty_Ref                 set_dirty
+        Cool::SetDirty_Ref           set_dirty
     )
         : _variable_registries{registries}
         , _command_executor{command_executor}
@@ -37,7 +37,7 @@ public:
     }
 
     template<typename T>
-    void widget(const Input<T>& input)
+    void widget(const Cool::Input<T>& input)
     {
         ImGui::PushID(&input);
         // TODO(JF) add a way to change the current_variable
@@ -50,7 +50,7 @@ public:
         ImGui::PopID();
     }
 
-    void widget(Input_File& input)
+    void widget(Cool::Input_File& input)
     {
         input.update(_set_dirty); // TODO(JF) shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
         std::string path = input.file_watcher.path().string();
@@ -71,11 +71,11 @@ public:
         }
     }
 
-    void set_dirty(const DirtyFlag flag) { _set_dirty(flag); }
+    void set_dirty(const Cool::DirtyFlag flag) { _set_dirty(flag); }
 
 private:
     template<typename T>
-    void widget(const VariableId<T>& id, Cool::Variable<T> variable)
+    void widget(const Cool::VariableId<T>& id, Cool::Variable<T> variable)
     {
         Cool::imgui(
             variable,
@@ -99,9 +99,9 @@ private:
     }
 
 private:
-    std::reference_wrapper<VariableRegistries> _variable_registries;
-    CommandExecutor_TopLevel_Ref               _command_executor;
-    SetDirty_Ref                               _set_dirty;
+    std::reference_wrapper<Cool::VariableRegistries> _variable_registries;
+    CommandExecutor_TopLevel_Ref                     _command_executor;
+    Cool::SetDirty_Ref                               _set_dirty;
 };
 
 } // namespace Lab
