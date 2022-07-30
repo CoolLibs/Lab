@@ -12,6 +12,7 @@
 // TODO(LD) Support angle units (turns, degrees, radians)
 
 namespace Lab {
+
 Module_CustomShader::Module_CustomShader(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"Custom Shader", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
@@ -160,13 +161,3 @@ void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, G
 }
 
 } // namespace Lab
-
-// TEST_CASE("Parsing a RgbColor")
-// {
-//     const auto color_metadata = Cool::get_default_metadata<Cool::RgbColor>("hdr");
-//     CHECK(
-//         color_metadata.is_hdr == true
-//     );
-// }
-
-// TODO(LD) More tests for the shader parser

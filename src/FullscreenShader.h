@@ -5,7 +5,6 @@
 #include <Cool/MessageConsole/MessageId.h>
 #include "Dependencies/UpdateContext_Ref.h"
 
-
 namespace Lab {
 
 class FullscreenShader {

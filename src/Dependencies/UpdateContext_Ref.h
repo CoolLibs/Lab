@@ -2,7 +2,6 @@
 #include <Cool/Dependencies/Dirty.h>
 #include <Cool/MessageConsole/MessageConsole.h>
 
-
 namespace Lab {
 
 class UpdateContext_Ref {

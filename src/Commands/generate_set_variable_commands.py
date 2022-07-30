@@ -1,4 +1,4 @@
-if __name__ == '__main__':
+if True:  # HACK: Without this "if True", the code gets formatted and "import generate_variables" moves above the hack, which makes it fail
     # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
     # So we need to add the path manually to sys.path
     import os
@@ -6,11 +6,10 @@ if __name__ == '__main__':
     from pathlib import Path
     sys.path.append(os.path.join(
         Path(os.path.abspath(__file__)).parent.parent.parent,
-        "Cool\\src\\Cool\\Variables")
+        "Cool/src/Cool/Variables")
     )
     # End of HACK
-
-import generate_variables
+    import generate_variables
 
 
 def register_set_variable_commands():
@@ -43,10 +42,12 @@ if __name__ == '__main__':
         "tooling")
     )
     # End of HACK
-
     import generate_files
+
     generate_files.generate(
         folder="generated",
-        files=[register_set_variable_commands,
-               register_set_variable_metadata_commands, ]
+        files=[
+            register_set_variable_commands,
+            register_set_variable_metadata_commands,
+        ]
     )

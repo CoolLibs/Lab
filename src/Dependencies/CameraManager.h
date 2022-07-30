@@ -10,7 +10,6 @@
 #include <Cool/Input/MouveEventDispatcher.h>
 #include <reg/reg.hpp>
 
-
 namespace Lab {
 
 class CommandExecutor_TopLevel_Ref;

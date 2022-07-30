@@ -9,7 +9,6 @@
 #include "Commands/Command_SetVariable.h"
 #include "Commands/Command_SetVariableMetadata.h"
 
-
 namespace Lab {
 
 class Ui_Ref {
