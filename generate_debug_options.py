@@ -32,10 +32,6 @@ def all_debug_options():
             name_in_code="test_message_console",
             name_in_ui="Test Message Console",
         ),
-        DebugOption(
-            name_in_code="test_presets",
-            name_in_ui="Test Presets",
-        ),
     ]
 
 
