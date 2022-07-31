@@ -231,7 +231,10 @@ void NodeEditor::update_templates_and_nodes()
         if (node_template == _factory.templates().end())
         {
             _all_nodes_have_a_valid_template = false;
-            Cool::Log::ToUser::warn("is0 " + node.node_template_name, "Can't find node file '{0}.is0' Your graph can't be compiled.\nEither add a '{0}.is0' file or delete all {0} nodes.", node.node_template_name);
+            Cool::Log::ToUser::warning(
+                "is0 " + node.node_template_name,
+                fmt::format("Can't find node file '{0}.is0' Your graph can't be compiled.\nEither add a '{0}.is0' file or delete all {0} nodes.", node.node_template_name)
+            );
         }
         else
         {

@@ -11,7 +11,6 @@ exports/
 
 myShaders/
 
-last-session-cache.json
 NodeEditor.json
 
 is0_node_editor.ini
@@ -20,7 +19,8 @@ vs
 
 videos
 
-cache--last-session.json
-cache--debug-options.json
-
 .DS_Store
+
+cache--last-session.json
+cache--debug-options-lab.json
+cache--debug-options-cool.json

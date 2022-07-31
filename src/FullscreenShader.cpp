@@ -14,7 +14,7 @@ void FullscreenShader::compile(
     {
         update_ctx.message_console().send(
             _compile_error_message_id,
-            Cool::MessageV2{
+            Cool::Message{
                 .category         = std::string{module_name},
                 .detailed_message = *maybe_error,
                 .severity         = Cool::MessageSeverity::Error,

@@ -56,6 +56,7 @@ private:
     std::vector<Cool::AnyInput> _inputs;
     Cool::Input<Cool::Camera>   _camera_input;
     mutable Cool::Input_File    _file;
+    Cool::MessageId             _parsing_error_message_id{};
 
 private:
     // Serialization

@@ -9,8 +9,8 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
-#include "Debug/DebugOptionsDetails.h"
 #include "Debug/TestVariables.h"
+#include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
@@ -29,7 +29,7 @@ App::App(Cool::WindowManager& windows)
     _camera_manager.hook_events(_is0_view.view.mouse_events(), _variable_registries, command_executor());
     _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
-    //     Cool::Log::ToUser::info("Scripting", "{}", request);
+    //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
     _clock.pause();
 #if IS0_TEST_NODES
@@ -120,7 +120,10 @@ auto App::wants_to_show_menu_bar() const -> bool
 
 static void imgui_window_console()
 {
-    Cool::Log::ToUser::imgui_console_window();
+    Cool::Log::ToUser::console().imgui_window();
+#if DEBUG
+    Cool::Log::Debug::console().imgui_window();
+#endif
 }
 
 static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time)
@@ -133,10 +136,12 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 #if IS0_TEST_NODES
     render_target.set_size({1, 1});
 #endif
+#if DEBUG
     if (DebugOptions::log_when_rendering())
     {
-        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
+        Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
     }
+#endif
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -208,15 +213,13 @@ void App::imgui_windows()
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
-    _message_console.imgui_window();
+    imgui_window_console();
 
     if (inputs_are_allowed())
     {
         const auto the_ui = ui();
         _is0_module->imgui_windows(the_ui);
         _custom_shader_module->imgui_windows(the_ui);
-        // Console
-        imgui_window_console();
         // Time
         ImGui::Begin("Time");
         Cool::ClockU::imgui_timeline(_clock);
@@ -247,7 +250,7 @@ void App::imgui_windows()
         }
         if (DebugOptions::test_message_console())
         {
-            _test_message_console.imgui_window(_message_console);
+            _test_message_console.imgui_window(Cool::Log::ToUser::console());
         }
         if (DebugOptions::test_presets())
         {
@@ -274,8 +277,6 @@ void App::menu_windows()
 {
     if (ImGui::BeginMenu("Windows"))
     {
-        ImGui::Checkbox("Console", &_message_console.is_open());
-        Cool::Log::ToUser::imgui_toggle_console();
         for (auto& view : _views)
         {
             view.view.imgui_open_close_checkbox();
@@ -315,7 +316,7 @@ void App::menu_debug()
 #if DEBUG
     if (ImGui::BeginMenu("Debug"))
     {
-        DebugOptionsDetails::imgui_checkboxes_for_all_options();
+        DebugOptionsManager::imgui_checkboxes_for_all_options();
         ImGui::EndMenu();
     }
 #endif
@@ -327,6 +328,7 @@ void App::imgui_menus()
     menu_windows();
     menu_export();
     menu_settings();
+    menu_info();
     menu_debug();
 }
 

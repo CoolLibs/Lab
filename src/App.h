@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Cool/AppManager/IApp.h>
+#include <Cool/DebugOptions/DebugOptions.h>
+#include <Cool/DebugOptions/DebugOptionsManager.h>
 #include <Cool/Dependencies/Dirty.h>
 #include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/Exporter/Exporter.h>
@@ -17,7 +19,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Debug/DebugOptionsDetails.h"
+#include "Debug/DebugOptions.h"
 #include "Debug/TestMessageConsole.h"
 #include "Debug/TestPresets.h"
 #include "Dependencies/CameraManager.h"
@@ -29,6 +31,12 @@
 #include "UI/ThemeManager.h"
 
 namespace Lab {
+
+#if DEBUG
+using DebugOptionsManager = Cool::DebugOptionsManager<
+    Lab::DebugOptions,
+    Cool::DebugOptions>;
+#endif
 
 class App : public Cool::IApp {
 public:
@@ -72,7 +80,7 @@ private:
     auto dirty_flag_factory                         () { return Cool::DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_dirty_registry}; }
-    auto update_context                             () { return UpdateContext_Ref{{_message_console, set_clean__functor()}}; }
+    auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor()}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();
@@ -112,7 +120,6 @@ private:
     std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger                        _command_logger{};
     Cool::OpenGL::Texture                _texture;
-    Cool::MessageConsole                 _message_console{};
 #if DEBUG
     TestMessageConsole _test_message_console{};
     TestPresets        _test_presets{};
@@ -135,7 +142,7 @@ private:
         );
     }
 #if !IS0_TEST_NODES && DEBUG
-    DebugOptionsDetails::AutoSerializer _auto_serializer_for_debug_options{};
+    DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 #endif
 };
 
