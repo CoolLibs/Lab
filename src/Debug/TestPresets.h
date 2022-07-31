@@ -16,21 +16,39 @@ public:
             Cool::Variable<float>{.name = "Troisième", .value = 1.f},
         };
 
-        Cool::Preset preset = {
+        std::vector<Cool::AnyVariable> values2{
+            Cool::Variable<int>{.name = "Premier", .value = 2},
+            Cool::Variable<float>{.name = "Second", .value = .5f},
+            Cool::Variable<float>{.name = "Troisième", .value = 1.2f},
+        };
+
+        std::vector<Cool::AnyVariable> values3{
+            Cool::Variable<int>{.name = "Premier", .value = 12},
+            Cool::Variable<float>{.name = "Second", .value = 0.8f},
+            Cool::Variable<float>{.name = "Troisième", .value = 4.2f},
+        };
+
+        std::vector<Cool::AnyVariable> values4{
+            Cool::Variable<int>{.name = "Premier", .value = 9},
+            Cool::Variable<float>{.name = "Second", .value = 2.4f},
+            Cool::Variable<float>{.name = "Troisième", .value = 0.7f},
+        };
+
+        Cool::Preset2 preset = {
             .name   = "test",
             .values = values};
 
-        Cool::Preset preset2 = {
+        Cool::Preset2 preset2 = {
             .name   = "test2",
-            .values = values};
+            .values = values2};
 
-        Cool::Preset preset3 = {
+        Cool::Preset2 preset3 = {
             .name   = "test3",
-            .values = values};
+            .values = values3};
 
-        Cool::Preset preset4 = {
+        Cool::Preset2 preset4 = {
             .name   = "test4",
-            .values = values};
+            .values = values4};
 
         _manager.add_preset(preset);
         _manager.add_preset(preset2);
