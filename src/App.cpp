@@ -9,6 +9,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
+#include "Debug/TestMessageConsole.h"
 #include "Debug/TestVariables.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
@@ -250,7 +251,8 @@ void App::imgui_windows()
         }
         if (DebugOptions::test_message_console())
         {
-            _test_message_console.imgui_window(Cool::Log::ToUser::console());
+            static auto test_message_console = TestMessageConsole{};
+            test_message_console.imgui_window(Cool::Log::ToUser::console());
         }
 #endif // DEBUG
     }

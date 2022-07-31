@@ -20,7 +20,6 @@
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Debug/DebugOptions.h"
-#include "Debug/TestMessageConsole.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
@@ -119,9 +118,6 @@ private:
     std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger                        _command_logger{};
     Cool::OpenGL::Texture                _texture;
-#if DEBUG
-    TestMessageConsole _test_message_console{};
-#endif
 
 private:
     // Serialization
