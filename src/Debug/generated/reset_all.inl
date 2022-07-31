@@ -10,3 +10,4 @@ instance().show_commands_and_registries_debug_windows = false;
 instance().log_when_rendering = false;
 instance().test_all_variable_widgets = false;
 instance().test_message_console = false;
+instance().test_presets = false;

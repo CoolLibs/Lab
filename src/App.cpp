@@ -249,6 +249,11 @@ void App::imgui_windows()
         {
             _test_message_console.imgui_window(_message_console);
         }
+        if (DebugOptions::test_presets())
+        {
+            _test_presets.imgui_window();
+            // _test_message_console.imgui_window(_message_console);
+        }
 #endif // DEBUG
     }
 }

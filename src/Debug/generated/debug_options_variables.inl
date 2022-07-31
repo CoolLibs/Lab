@@ -10,3 +10,4 @@ bool show_commands_and_registries_debug_windows{false};
 bool log_when_rendering{false};
 bool test_all_variable_widgets{false};
 bool test_message_console{false};
+bool test_presets{false};

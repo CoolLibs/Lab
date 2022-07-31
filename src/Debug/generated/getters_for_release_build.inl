@@ -10,3 +10,4 @@
 [[nodiscard]] static auto constexpr log_when_rendering() -> bool { return false; }
 [[nodiscard]] static auto constexpr test_all_variable_widgets() -> bool { return false; }
 [[nodiscard]] static auto constexpr test_message_console() -> bool { return false; }
+[[nodiscard]] static auto constexpr test_presets() -> bool { return false; }

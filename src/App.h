@@ -19,6 +19,7 @@
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Debug/DebugOptionsDetails.h"
 #include "Debug/TestMessageConsole.h"
+#include "Debug/TestPresets.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
@@ -26,7 +27,6 @@
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/ThemeManager.h"
-
 
 namespace Lab {
 
@@ -115,6 +115,7 @@ private:
     Cool::MessageConsole                 _message_console{};
 #if DEBUG
     TestMessageConsole _test_message_console{};
+    TestPresets        _test_presets{};
 #endif
 
 private:

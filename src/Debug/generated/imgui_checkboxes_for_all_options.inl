@@ -10,3 +10,4 @@ if (instance().filter.PassFilter("Commands and Registries windows")) ImGui::Chec
 if (instance().filter.PassFilter("Log when rendering")) ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
 if (instance().filter.PassFilter("Test all Variable Widgets")) ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets);
 if (instance().filter.PassFilter("Test Message Console")) ImGui::Checkbox("Test Message Console", &instance().test_message_console);
+if (instance().filter.PassFilter("Test Presets")) ImGui::Checkbox("Test Presets", &instance().test_presets);

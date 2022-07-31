@@ -10,3 +10,4 @@
 [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
 [[nodiscard]] static auto test_all_variable_widgets() -> bool& { return instance().test_all_variable_widgets; }
 [[nodiscard]] static auto test_message_console() -> bool& { return instance().test_message_console; }
+[[nodiscard]] static auto test_presets() -> bool& { return instance().test_presets; }
