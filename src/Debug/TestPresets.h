@@ -50,10 +50,10 @@ public:
             .name   = "test4",
             .values = values4};
 
-        _manager.add_preset(preset);
-        _manager.add_preset(preset2);
-        _manager.add_preset(preset3);
-        _manager.add_preset(preset4);
+        // _manager.add_preset(preset);
+        // _manager.add_preset(preset2);
+        // _manager.add_preset(preset3);
+        // _manager.add_preset(preset4);
     }
     void imgui_window()
     {
@@ -64,8 +64,7 @@ public:
     }
 
 private:
-    // TODO Put a PresetManager here
-    Cool::PresetManager _manager;
+    Cool::PresetManager _manager{Cool::Path::root() + "/test-presets-manager.json"};
 
     Cool::PresetData values{
         Cool::Variable<int>{.name = "Premier", .value = 3},
