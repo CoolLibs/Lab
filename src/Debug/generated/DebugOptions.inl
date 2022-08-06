@@ -22,7 +22,6 @@ public:
 [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
 [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
 [[nodiscard]] static auto test_all_variable_widgets() -> bool& { return instance().test_all_variable_widgets; }
-[[nodiscard]] static auto test_message_console() -> bool& { return instance().test_message_console; }
     // clang-format on
 
 private:
@@ -32,7 +31,6 @@ private:
         bool show_commands_and_registries_debug_windows{false};
         bool log_when_rendering{false};
         bool test_all_variable_widgets{false};
-        bool test_message_console{false};
 
     private:
         // Serialization
@@ -45,8 +43,7 @@ private:
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
-                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets),
-                cereal::make_nvp("Test Message Console", test_message_console)
+                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets)
             );
         }
     };
@@ -58,7 +55,6 @@ private:
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
         instance().test_all_variable_widgets                  = false;
-        instance().test_message_console                       = false;
     }
 
     static void save_to_file()
@@ -97,8 +93,6 @@ private:
             ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
         if (filter.PassFilter("Test all Variable Widgets"))
             ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets);
-        if (filter.PassFilter("Test Message Console"))
-            ImGui::Checkbox("Test Message Console", &instance().test_message_console);
     }
 };
 
