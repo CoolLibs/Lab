@@ -2,7 +2,7 @@
 
 #include <Cool/Dependencies/Dirty.h>
 #include <Cool/Gpu/FullscreenPipeline.h>
-#include <Cool/MessageConsole/MessageId.h>
+#include <Cool/Log/MessageId.h>
 #include "Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {

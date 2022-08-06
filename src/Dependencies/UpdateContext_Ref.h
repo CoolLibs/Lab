@@ -1,6 +1,6 @@
 #pragma once
 #include <Cool/Dependencies/Dirty.h>
-#include <Cool/MessageConsole/MessageConsole.h>
+#include <Cool/Log/internal/MessageConsole.h>
 
 namespace Lab {
 
