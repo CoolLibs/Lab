@@ -7,6 +7,16 @@ namespace Lab {
 
 class TestMessageConsole {
 public:
+    TestMessageConsole()
+    {
+        _messages.push_back({}); // We can't use an initializer list to fill a container of move-only types, so we have to push_back manually
+        _messages.push_back({
+            "Test 2",
+            "Hello! 2\nmulti\nline",
+            Cool::MessageSeverity::Warning,
+        });
+    }
+
     void imgui_window(Cool::MessageConsole& message_console)
     {
         if (should_bring_window_to_front)
@@ -28,7 +38,10 @@ public:
             _messages.push_back({.message = std::to_string(next_message_number++)});
             _messages.back().send_to(message_console);
         }
-        ImGui::NewLine();
+        if (ImGui::Button("Remove last message ID"))
+        {
+            _messages.pop_back();
+        }
         ImGui::Separator();
         ImGui::NewLine();
         if (ImGui::Button("Send Info to the Debug console"))
@@ -95,9 +108,7 @@ private:
     }
 
 private:
-    std::vector<Message> _messages{
-        {},
-        {"Test 2", "Hello! 2\nmulti\nline", Cool::MessageSeverity::Warning}};
+    std::vector<Message> _messages{};
 
     bool   should_bring_window_to_front{false};
     size_t next_message_number{0};
