@@ -5,12 +5,12 @@
  * -----------------------------------------------------------------------------
  */
 
-#pragma once
 #if DEBUG
 
 #include <Cool/DebugOptions/DebugOptionsManager.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/as_json.h>
+#include <wafl/wafl.hpp>
 
 namespace Lab {
 
@@ -81,17 +81,22 @@ private:
 
     template<typename... Ts>
     friend class Cool::DebugOptionsManager; // We go through this indirection so that only the files which include "DebugOptionsManager" can call `imgui_checkboxes_for_all_options()`
-    static void imgui_checkboxes_for_all_options(const ImGuiTextFilter& filter)
+
+    static void imgui_checkboxes_for_all_options(std::string_view filter)
     {
-        if (filter.PassFilter("Framerate window"))
+        if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
             ImGui::Checkbox("Framerate window", &instance().show_framerate_window);
-        if (filter.PassFilter("ImGui Demo window"))
+
+        if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
             ImGui::Checkbox("ImGui Demo window", &instance().show_imgui_demo_window);
-        if (filter.PassFilter("Commands and Registries windows"))
+
+        if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
             ImGui::Checkbox("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
-        if (filter.PassFilter("Log when rendering"))
+
+        if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
             ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
-        if (filter.PassFilter("Test all Variable Widgets"))
+
+        if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
             ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets);
     }
 };
