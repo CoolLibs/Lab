@@ -99,6 +99,39 @@ private:
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
             ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets);
     }
+
+    static void toggle_first_checkbox(std::string_view filter)
+    {
+        if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
+        {
+            instance().show_framerate_window = !instance().show_framerate_window;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_checkbox()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
+        {
+            instance().show_imgui_demo_window = !instance().show_imgui_demo_window;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_checkbox()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
+        {
+            instance().show_commands_and_registries_debug_windows = !instance().show_commands_and_registries_debug_windows;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_checkbox()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
+        {
+            instance().log_when_rendering = !instance().log_when_rendering;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_checkbox()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
+        {
+            instance().test_all_variable_widgets = !instance().test_all_variable_widgets;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_checkbox()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+    }
 };
 
 } // namespace Lab

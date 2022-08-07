@@ -311,10 +311,16 @@ void App::menu_settings()
 void App::menu_debug()
 {
 #if DEBUG
+    static bool was_closed_last_frame{true}; // HACK(JF) I guess a `static` here is okay because no one is gonna want two distinct instances of the same debug menu O:) A better solution would be to make a small Menu class that would remember if it was open last frame or not.
     if (ImGui::BeginMenu("Debug"))
     {
-        DebugOptionsManager::imgui_checkboxes_for_all_options();
+        DebugOptionsManager::imgui_checkboxes_for_all_options(was_closed_last_frame);
+        was_closed_last_frame = false;
         ImGui::EndMenu();
+    }
+    else
+    {
+        was_closed_last_frame = true;
     }
 #endif
 }
