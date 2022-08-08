@@ -16,13 +16,27 @@ namespace Lab {
 
 class DebugOptions {
 public:
-    // clang-format off
-[[nodiscard]] static auto show_framerate_window() -> bool& { return instance().show_framerate_window; }
-[[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
-[[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
-[[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
-[[nodiscard]] static auto test_all_variable_widgets() -> bool& { return instance().test_all_variable_widgets; }
-    // clang-format on
+    static void show_framerate_window(std::function<void()> callback)
+    {
+        if (instance().show_framerate_window)
+        {
+            ImGui::Begin("Framerate", &instance().show_framerate_window);
+            callback();
+            ImGui::End();
+        }
+    }
+    [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
+    [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
+    [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
+    static void               test_all_variable_widgets__window(std::function<void()> callback)
+    {
+        if (instance().test_all_variable_widgets__window)
+        {
+            ImGui::Begin("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
+            callback();
+            ImGui::End();
+        }
+    }
 
 private:
     struct Instance {
@@ -30,7 +44,7 @@ private:
         bool show_imgui_demo_window{false};
         bool show_commands_and_registries_debug_windows{false};
         bool log_when_rendering{false};
-        bool test_all_variable_widgets{false};
+        bool test_all_variable_widgets__window{false};
 
     private:
         // Serialization
@@ -43,7 +57,7 @@ private:
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
-                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets)
+                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window)
             );
         }
     };
@@ -54,7 +68,7 @@ private:
         instance().show_imgui_demo_window                     = false;
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
-        instance().test_all_variable_widgets                  = false;
+        instance().test_all_variable_widgets__window          = false;
     }
 
     static void save_to_file()
@@ -97,7 +111,7 @@ private:
             ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
 
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
-            ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets);
+            ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
     }
 
     static void toggle_first_checkbox(std::string_view filter)
@@ -128,7 +142,7 @@ private:
 
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
-            instance().test_all_variable_widgets = !instance().test_all_variable_widgets;
+            instance().test_all_variable_widgets__window = !instance().test_all_variable_widgets__window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_checkbox()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }

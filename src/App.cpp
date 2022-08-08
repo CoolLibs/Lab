@@ -230,13 +230,10 @@ void App::imgui_windows()
         _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
 #if DEBUG
-        if (DebugOptions::show_framerate_window())
-        {
-            ImGui::Begin("Framerate", &DebugOptions::show_framerate_window());
+        DebugOptions::show_framerate_window([&] {
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
             _main_window.imgui_cap_framerate();
-            ImGui::End();
-        }
+        });
         if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
         {                                                                   // in ImGui::ShowDemoWindow()! You can browse its code
             ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // to learn more about Dear ImGui!).
@@ -245,10 +242,9 @@ void App::imgui_windows()
         {
             imgui_commands_and_registries_debug_windows();
         }
-        if (DebugOptions::test_all_variable_widgets())
-        {
-            test_variables(&DebugOptions::test_all_variable_widgets());
-        }
+
+        DebugOptions::test_all_variable_widgets__window(&test_variables);
+
         if (Cool::DebugOptions::test_message_console())
         {
             static auto test_message_console = Cool::TestMessageConsole{};

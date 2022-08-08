@@ -5,7 +5,7 @@
 
 namespace Lab {
 
-void test_variables(bool* is_open)
+void test_variables()
 {
     static Cool::Variable<Cool::Angle> angle{
         "Angle",
@@ -33,7 +33,6 @@ void test_variables(bool* is_open)
     //             Cool::RgbColor{glm::vec3{1.f, 1.f, 0.5f}},
     //             Cool::RgbColor{glm::vec3{1.f, 0.f, 0.5f}}}}};
 
-    ImGui::Begin("Test Variables", is_open);
     Cool::imgui(angle);
     Cool::imgui(color);
     Cool::imgui(hue);
@@ -41,7 +40,6 @@ void test_variables(bool* is_open)
     Cool::imgui(vector3);
     Cool::imgui(vector4);
     // Cool::imgui(color_palette);
-    ImGui::End();
 }
 
 } // namespace Lab
