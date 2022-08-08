@@ -2,6 +2,6 @@
 
 namespace Lab {
 
-void test_variables();
+void test_variables(bool* is_open);
 
 }

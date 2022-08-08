@@ -247,12 +247,15 @@ void App::imgui_windows()
         }
         if (DebugOptions::test_all_variable_widgets())
         {
-            test_variables();
+            test_variables(&DebugOptions::test_all_variable_widgets());
         }
         if (Cool::DebugOptions::test_message_console())
         {
             static auto test_message_console = Cool::TestMessageConsole{};
-            test_message_console.imgui_window(Cool::Log::ToUser::console());
+            test_message_console.imgui_window(
+                Cool::Log::ToUser::console(),
+                &Cool::DebugOptions::test_message_console()
+            );
         }
 #endif // DEBUG
     }
