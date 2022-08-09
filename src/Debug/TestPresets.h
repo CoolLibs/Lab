@@ -3,6 +3,9 @@
 
 #include <Cool/Variables/Presets.h>
 
+// TODO(JF) Move to Cool (after merging main, after Jules merges their branch)
+// TODO(JF) Use a Window DebugOption
+// TODO(JF) Move to a .cpp
 namespace Lab {
 
 class TestPresets {
@@ -11,6 +14,18 @@ public:
     {
         ImGui::Begin("Test Presets");
         _manager.imgui(_current_settings);
+        ImGui::NewLine();
+        ImGui::Separator();
+        ImGui::NewLine();
+        if (ImGui::Button("Add and edit a preset"))
+        {
+            const auto test_id = _manager.add({.name = "Test", .values = _current_settings});
+            _manager.edit(test_id, {
+                                       Cool::Variable<int>{.name = "First", .value = 0},
+                                       Cool::Variable<float>{.name = "Second", .value = 0.f},
+                                       Cool::Variable<float>{.name = "Third", .value = 0.f},
+                                   });
+        }
         ImGui::End();
     }
 
