@@ -1,7 +1,7 @@
 #pragma once
 #if DEBUG
 
-#include <Cool/Variables/Presets.h>
+#include <Cool/Variables/PresetManager.h>
 
 // TODO(JF) Move to Cool (after merging main, after Jules merges their branch)
 // TODO(JF) Use a Window DebugOption

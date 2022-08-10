@@ -21,18 +21,81 @@ Module_CustomShader::Module_CustomShader(Cool::DirtyFlagFactory_Ref dirty_flag_f
 {
 }
 
+static auto settings_from_inputs(
+    const std::vector<Cool::AnyInput>& inputs,
+    const Cool::VariableRegistries&    registry
+) -> std::vector<Cool::AnyVariable>
+{
+    std::vector<Cool::AnyVariable> settings;
+    settings.reserve(inputs.size());
+    for (const auto& input : inputs)
+    {
+        const auto maybe_variable = std::visit([&](auto&& input) -> std::optional<Cool::AnyVariable> {
+            const auto maybe_variable = registry.get(input._default_variable_id);
+            if (maybe_variable)
+            {
+                return Cool::AnyVariable{*maybe_variable};
+            }
+            else
+            {
+                return std::nullopt;
+            }
+        },
+                                               input);
+        if (maybe_variable)
+        {
+            settings.push_back(*maybe_variable);
+        }
+    }
+    return settings;
+}
+
+template<typename T>
+auto get_concrete_variable(const Cool::Input<T>&, const Cool::AnyVariable& var) -> Cool::Variable<T>
+{
+    return std::get<Cool::Variable<T>>(var);
+}
+
+static void apply_settings_to_inputs(
+    const std::vector<Cool::AnyVariable>& settings,
+    std::vector<Cool::AnyInput>&          inputs,
+    Cool::VariableRegistries&             registry
+)
+{
+    for (size_t i = 0; i < inputs.size(); ++i)
+    {
+        std::visit([&](auto&& input) {
+            registry.set(
+                input._default_variable_id,
+                get_concrete_variable(input, settings[i])
+            );
+        },
+                   inputs[i]);
+    }
+}
+
 void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 {
     Ui_Ref::window({.name = "Custom Shader"}, [&]() {
         ui.widget(_file);
         ImGui::Separator();
         ImGui::NewLine();
-        for (auto& input : _inputs)
+        for (auto& input : inputs())
         {
             std::visit([&ui](auto&& input) {
                 ui.widget(input);
             },
                        input);
+        }
+        if (_presets_manager)
+        {
+            ImGui::Separator();
+            // Get the variables from the inputs
+            auto settings = settings_from_inputs(inputs(), ui.variable_registries());
+            // UI for the variables
+            _presets_manager->imgui_presets(settings);
+            // Apply back the variables to the inputs' default variables
+            apply_settings_to_inputs(settings, inputs(), ui.variable_registries());
         }
     });
 }
@@ -64,7 +127,7 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
         _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
         _shader.pipeline().shader()->set_uniform("_time", in.provider(Cool::Input_Time{}));
 
-        for (auto& input : _inputs)
+        for (auto& input : inputs())
         {
             std::visit([&](auto&& input) {
                 set_uniform(*_shader.pipeline().shader(), input.name(), in.provider(input));
@@ -74,6 +137,19 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
         Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
         _shader.pipeline().draw();
     }
+}
+
+static auto preset_path(std::filesystem::path path) -> std::filesystem::path
+{
+    path.concat(".presets.json");
+    return path;
+}
+
+static auto settings_cache_path(std::filesystem::path path) -> std::filesystem::path
+{
+    auto p = path.parent_path() / "settings-cache" / path.filename();
+    p.concat(".settings-cache.json");
+    return p;
 }
 
 void Module_CustomShader::refresh_pipeline_if_necessary(
@@ -86,7 +162,9 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
 {
     if (is_dirty(_shader.dirty_flag()))
     {
-        const auto file_path   = provider(_file);
+        const auto file_path = provider(_file);
+        _presets_manager.emplace(preset_path(file_path));
+        _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
         const auto source_code = Cool::File::to_string(file_path.string());
         _shader.compile(source_code, file_path.string(), name(), update_ctx);
         parse_shader_for_params(source_code, input_factory, input_destructor);
@@ -143,8 +221,8 @@ void Module_CustomShader::parse_shader_for_params(
 )
 {
     auto new_inputs = Cool::parse_all_inputs(source_code, dirty_flag(), input_factory);
-    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(_inputs, new_inputs, input_destructor);
-    _inputs = std::move(new_inputs);
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(inputs(), new_inputs, input_destructor);
+    inputs() = std::move(new_inputs);
 }
 
 void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)

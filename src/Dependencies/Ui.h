@@ -73,6 +73,9 @@ public:
 
     void set_dirty(const Cool::DirtyFlag flag) { _set_dirty(flag); }
 
+    auto variable_registries() const -> const Cool::VariableRegistries& { return _variable_registries; }
+    auto variable_registries() -> Cool::VariableRegistries& { return _variable_registries; }
+
 private:
     template<typename T>
     void widget(const Cool::VariableId<T>& id, Cool::Variable<T> variable)
