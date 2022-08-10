@@ -20,11 +20,14 @@ public:
         if (ImGui::Button("Add and edit a preset"))
         {
             const auto test_id = _manager.add({.name = "Test", .values = _current_settings});
-            _manager.edit(test_id, {
-                                       Cool::Variable<int>{.name = "First", .value = 0},
-                                       Cool::Variable<float>{.name = "Second", .value = 0.f},
-                                       Cool::Variable<float>{.name = "Third", .value = 0.f},
-                                   });
+            if (_manager.contains(test_id)) // Check if the adding was successful
+            {
+                _manager.edit(test_id, {
+                                           Cool::Variable<int>{.name = "First", .value = 0},
+                                           Cool::Variable<float>{.name = "Second", .value = 0.f},
+                                           Cool::Variable<float>{.name = "Third", .value = 0.f},
+                                       });
+            }
         }
         ImGui::End();
     }
