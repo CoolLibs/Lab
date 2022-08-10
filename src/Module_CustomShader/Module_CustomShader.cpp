@@ -163,11 +163,20 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     if (is_dirty(_shader.dirty_flag()))
     {
         const auto file_path = provider(_file);
-        _presets_manager.emplace(preset_path(file_path));
-        _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
-        const auto source_code = Cool::File::to_string(file_path.string());
-        _shader.compile(source_code, file_path.string(), name(), update_ctx);
-        parse_shader_for_params(source_code, input_factory, input_destructor);
+        if (Cool::File::exists(file_path.string()))
+        {
+            _presets_manager.emplace(preset_path(file_path));
+            _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
+            const auto source_code = Cool::File::to_string(file_path.string());
+            _shader.compile(source_code, file_path.string(), name(), update_ctx);
+            parse_shader_for_params(source_code, input_factory, input_destructor);
+        }
+        else
+        {
+            _shader.pipeline().reset();
+            _presets_manager.reset();
+            _settings_serializer = std::make_unique<SettingsSerializer>();
+        }
     }
 }
 

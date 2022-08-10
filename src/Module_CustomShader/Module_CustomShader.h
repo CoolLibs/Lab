@@ -13,8 +13,7 @@ class SettingsSerializer {
 public:
     SettingsSerializer() = default;
     SettingsSerializer(std::filesystem::path path)
-        : _path{path}
-        , _auto_serializer{Cool::AutoSerializer<SettingsSerializer>{
+        : _auto_serializer{Cool::AutoSerializer<SettingsSerializer>{
               path, "Current Settings", *this}}
     {
     }
@@ -24,7 +23,6 @@ public:
 
 private:
     std::vector<Cool::AnyInput>                             _inputs{};
-    std::optional<std::filesystem::path>                    _path{};
     std::optional<Cool::AutoSerializer<SettingsSerializer>> _auto_serializer;
 
 private:
