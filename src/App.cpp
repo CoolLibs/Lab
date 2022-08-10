@@ -1,4 +1,5 @@
 #include "App.h"
+#include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameter/ParametersHistory.h>
@@ -9,6 +10,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
+#include "Debug/TestPresets.h"
 #include "Debug/TestVariables.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
@@ -248,13 +250,15 @@ void App::imgui_windows()
         {
             test_variables();
         }
-        if (DebugOptions::test_message_console())
+        if (Cool::DebugOptions::test_message_console())
         {
-            _test_message_console.imgui_window(Cool::Log::ToUser::console());
+            static auto test_message_console = Cool::TestMessageConsole{};
+            test_message_console.imgui_window(Cool::Log::ToUser::console());
         }
         if (Cool::DebugOptions::test_presets())
         {
-            _test_presets.imgui_window();
+            static auto test_presets = TestPresets{};
+            test_presets.imgui_window();
         }
 #endif // DEBUG
     }

@@ -9,7 +9,6 @@
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
-#include <Cool/MessageConsole/MessageConsole.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/AutoSerializer.h>
 #include <Cool/Time/Clock_Realtime.h>
@@ -20,8 +19,6 @@
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Debug/DebugOptions.h"
-#include "Debug/TestMessageConsole.h"
-#include "Debug/TestPresets.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
@@ -120,10 +117,6 @@ private:
     std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger                        _command_logger{};
     Cool::OpenGL::Texture                _texture;
-#if DEBUG
-    TestMessageConsole _test_message_console{};
-    TestPresets        _test_presets{};
-#endif
 
 private:
     // Serialization
