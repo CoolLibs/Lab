@@ -7,7 +7,6 @@
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
-#include <type_from_string/type_from_string.hpp>
 
 // TODO(LD) Support angle units (turns, degrees, radians)
 
