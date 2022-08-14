@@ -31,6 +31,11 @@ def all_debug_options():
             name_in_ui="Test all Variable Widgets",
             kind=Kind.WINDOW,
         ),
+        DebugOption(
+            name_in_code="test_is0_nodes",
+            name_in_ui="Test is0 Nodes",
+            kind=Kind.BUTTON,
+        ),
     ]
 
 
