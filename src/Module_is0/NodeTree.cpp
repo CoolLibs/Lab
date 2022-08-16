@@ -5,6 +5,12 @@ void NodeTree::add_node(const Node& node)
     nodes.push_back(node);
 }
 
+void NodeTree::remove_all_nodes()
+{
+    nodes.clear();
+    links.clear();
+}
+
 void NodeTree::add_link(Link link)
 {
     links.push_back(link);

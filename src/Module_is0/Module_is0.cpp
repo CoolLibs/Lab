@@ -19,20 +19,32 @@ void Module_is0::update(UpdateContext_Ref update_ctx)
     {
         _must_regenerate_shader_code = false;
         _must_recompile              = true;
-        if (_editor.tree_is_valid())
-        {
-            _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _effects.render_effects);
-        }
-        else
-        {
-            _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
-        }
     }
     if (_must_recompile)
     {
-        _must_recompile = false;
-        _shader.compile(_shader_code, "is0 Ray Marcher", name(), update_ctx);
+        recompile(update_ctx);
     }
+}
+
+void Module_is0::remove_all_nodes()
+{
+    _editor.remove_all_nodes();
+    _must_recompile              = true;
+    _must_regenerate_shader_code = true;
+}
+
+void Module_is0::recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
+{
+    if (_editor.tree_is_valid())
+    {
+        _shader_code = CodeGen::full_shader_code(_editor.tree(), _editor.node_templates(), _effects.render_effects);
+    }
+    else
+    {
+        _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
+    }
+    _must_recompile = false;
+    _shader.compile(_shader_code, "is0 Ray Marcher", name(), update_ctx, for_testing_nodes ? Cool::Log::Debug::console() : Cool::Log::ToUser::console(), !for_testing_nodes);
 }
 
 void Module_is0::imgui_windows(Ui_Ref) const

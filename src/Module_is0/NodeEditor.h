@@ -17,6 +17,11 @@ public:
     auto tree() const -> const NodeTree& { return _tree; }
     auto node_templates() const -> const std::vector<NodeTemplate>& { return _factory.templates(); }
     void add_node(const Node& node) { _tree.add_node(node); }
+    void remove_all_nodes()
+    {
+        _tree.remove_all_nodes();
+        _tree_has_changed = true;
+    }
     void generate_a_random_scene();
 
 private:

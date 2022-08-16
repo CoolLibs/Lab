@@ -14,6 +14,8 @@ struct NodeTree {
     void delete_link(LinkId link_id);
     void delete_link_going_to(PinId pin_id);
 
+    void remove_all_nodes();
+
     /**
      * @brief Assumes that pin is an input pin and returns the node that is connected to it (or nullptr if there is none)
      */

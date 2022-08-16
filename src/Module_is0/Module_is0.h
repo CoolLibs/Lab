@@ -18,9 +18,12 @@ public:
     Module_is0() = default;
     Module_is0(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
+    void recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes = false);
+
     void                             update(UpdateContext_Ref) override;
     void                             imgui_windows(Ui_Ref) const override;
     void                             add_node(const Node& node) { _editor.add_node(node); }
+    void                             remove_all_nodes();
     const std::vector<NodeTemplate>& nodes_templates() { return _editor.node_templates(); }
     std::string                      saving_path_string() const;
     auto                             all_inputs() const -> Cool::AllInputRefsToConst override;

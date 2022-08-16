@@ -99,6 +99,8 @@ private:
             {view.render_target.current_size()}};
     }
 
+    void compile_all_is0_nodes();
+
 private:
     Cool::VariableRegistries             _variable_registries; // First because modules need the registries when they get created
     CameraManager                        _camera_manager;      // First because modules need the camera id when they get created

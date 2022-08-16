@@ -21,7 +21,8 @@ public:
         std::string_view shader_name,
         std::string_view module_name,
         UpdateContext_Ref,
-        Cool::MessageConsole& message_console = Cool::Log::ToUser::console()
+        Cool::MessageConsole& message_console          = Cool::Log::ToUser::console(),
+        bool                  use_permanent_message_id = true
     );
 
     auto dirty_flag() const -> const Cool::DirtyFlag& { return _dirty_flag; }

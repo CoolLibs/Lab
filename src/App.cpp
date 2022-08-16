@@ -33,17 +33,23 @@ App::App(Cool::WindowManager& windows)
     //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
     _clock.pause();
-#if IS0_TEST_NODES
-    for (const auto& node_template : _shader_manager.nodes_templates())
-    {
-        _shader_manager.add_node(NodeFactoryU::node_from_template(node_template));
-    }
-#endif
 }
 
 App::~App()
 {
     // serv::shut_down();
+}
+
+void App::compile_all_is0_nodes()
+{
+    for (const auto& node_template : _is0_module->nodes_templates())
+    {
+        _is0_module->remove_all_nodes();
+        Cool::Log::Debug::info("Test is0 Nodes", node_template.name);
+        _is0_module->add_node(NodeFactoryU::node_from_template(node_template));
+        _is0_module->recompile(update_context(), true);
+    }
+    _is0_module->remove_all_nodes();
 }
 
 void App::update()
@@ -84,8 +90,12 @@ void App::update()
         _custom_shader_module->update(update_context());
         check_inputs();
     }
-#if IS0_TEST_NODES
-    glfwSetWindowShouldClose(_main_window.glfw(), true);
+
+#if DEBUG
+    if (DebugOptions::test_is0_nodes())
+    {
+        compile_all_is0_nodes();
+    }
 #endif
 }
 
@@ -134,9 +144,6 @@ static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polar
 
 void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
 {
-#if IS0_TEST_NODES
-    render_target.set_size({1, 1});
-#endif
 #if DEBUG
     if (DebugOptions::log_when_rendering())
     {
@@ -242,7 +249,6 @@ void App::imgui_windows()
         {
             imgui_commands_and_registries_debug_windows();
         }
-
         DebugOptions::test_all_variable_widgets__window(&test_variables);
 
         if (Cool::DebugOptions::test_message_console())
@@ -313,7 +319,7 @@ void App::menu_debug()
     static bool was_closed_last_frame{true}; // HACK(JF) I guess a `static` here is okay because no one is gonna want two distinct instances of the same debug menu O:) A better solution would be to make a small Menu class that would remember if it was open last frame or not.
     if (ImGui::BeginMenu("Debug"))
     {
-        DebugOptionsManager::imgui_checkboxes_for_all_options(was_closed_last_frame);
+        DebugOptionsManager::imgui_ui_for_all_options(was_closed_last_frame);
         was_closed_last_frame = false;
         ImGui::EndMenu();
     }
