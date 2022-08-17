@@ -1,5 +1,6 @@
 #include "App.h"
 #include <Cool/DebugOptions/TestMessageConsole.h>
+#include <Cool/DebugOptions/TestVariables.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Parameter/ParametersHistory.h>
@@ -11,7 +12,6 @@
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
 #include "Debug/TestPresets.h"
-#include "Debug/TestVariables.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
