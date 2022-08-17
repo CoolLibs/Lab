@@ -43,8 +43,24 @@ void Module_is0::recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     {
         _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
     }
-    _must_recompile = false;
-    _shader.compile(_shader_code, "is0 Ray Marcher", name(), update_ctx, for_testing_nodes ? Cool::Log::Debug::console() : Cool::Log::ToUser::console(), !for_testing_nodes);
+    _must_recompile      = false;
+    const auto maybe_err = _shader.compile(
+        _shader_code,
+        "is0 Ray Marcher",
+        name(),
+        update_ctx
+    );
+    if (!for_testing_nodes)
+    {
+        _shader_compilation_error_logger.handle(maybe_err);
+    }
+    else
+    {
+        if (maybe_err)
+        {
+            Cool::Log::Debug::console().send(*maybe_err);
+        }
+    }
 }
 
 void Module_is0::imgui_windows(Ui_Ref) const

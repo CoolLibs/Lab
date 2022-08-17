@@ -2,6 +2,7 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/File/File.h>
+#include <Cool/Log/MessageLogger.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Variables/PresetManager.h>
 #include "Dependencies/Module.h"
@@ -84,6 +85,7 @@ private:
 
 private:
     FullscreenShader                            _shader; // Must be before _file because it is used to construct it
+    Cool::MessageLogger                         _shader_compilation_error_logger{};
     Cool::Input<Cool::Camera>                   _camera_input;
     mutable Cool::Input_File                    _file;
     Cool::MessageId                             _parsing_error_message_id{};

@@ -2,45 +2,27 @@
 
 namespace Lab {
 
-#define MESSAGE()                                         \
-    Cool::Message                                         \
-    {                                                     \
-        .category         = std::string{module_name},     \
-        .detailed_message = *maybe_error,                 \
-        .severity         = Cool::MessageSeverity::Error, \
-    }
-
-void FullscreenShader::compile(
-    std::string_view      fragment_shader_source_code,
-    std::string_view      shader_name,
-    std::string_view      module_name,
-    UpdateContext_Ref     update_ctx,
-    Cool::MessageConsole& message_console,
-    bool                  use_permanent_message_id
-)
+auto FullscreenShader::compile(
+    std::string_view  fragment_shader_source_code,
+    std::string_view  shader_name,
+    std::string_view  module_name,
+    UpdateContext_Ref update_ctx
+) -> std::optional<Cool::Message>
 {
     const auto maybe_error = _fullscreen_pipeline.compile(fragment_shader_source_code, shader_name);
+    update_ctx.set_clean(_dirty_flag);
     if (maybe_error)
     {
-        if (use_permanent_message_id)
-        {
-            message_console.send(
-                _compile_error_message_id,
-                MESSAGE()
-            );
-        }
-        else
-        {
-            message_console.send(
-                MESSAGE()
-            );
-        }
+        return Cool::Message{
+            .category         = std::string{module_name},
+            .detailed_message = *maybe_error,
+            .severity         = Cool::MessageSeverity::Error,
+        };
     }
     else
     {
-        message_console.clear(_compile_error_message_id);
+        return {};
     }
-    update_ctx.set_clean(_dirty_flag);
 }
 
 } // namespace Lab

@@ -167,7 +167,9 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
             _presets_manager.emplace(preset_path(file_path));
             _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
             const auto source_code = Cool::File::to_string(file_path.string());
-            _shader.compile(source_code, file_path.string(), name(), update_ctx);
+            _shader_compilation_error_logger.handle(
+                _shader.compile(source_code, file_path.string(), name(), update_ctx)
+            );
             parse_shader_for_params(source_code, input_factory, input_destructor);
         }
         else

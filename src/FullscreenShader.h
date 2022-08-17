@@ -16,14 +16,12 @@ public:
         : _dirty_flag{dirty_flag}
     {}
 
-    void compile(
+    [[nodiscard]] auto compile(
         std::string_view fragment_shader_source_code,
         std::string_view shader_name,
         std::string_view module_name,
-        UpdateContext_Ref,
-        Cool::MessageConsole& message_console          = Cool::Log::ToUser::console(),
-        bool                  use_permanent_message_id = true
-    );
+        UpdateContext_Ref
+    ) -> std::optional<Cool::Message>;
 
     auto dirty_flag() const -> const Cool::DirtyFlag& { return _dirty_flag; }
     auto pipeline() -> Cool::FullscreenPipeline& { return _fullscreen_pipeline; }
@@ -31,7 +29,6 @@ public:
 private:
     Cool::DirtyFlag          _dirty_flag{};
     Cool::FullscreenPipeline _fullscreen_pipeline{};
-    Cool::MessageId          _compile_error_message_id{};
 
 private:
     // Serialization
