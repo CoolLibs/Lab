@@ -10,6 +10,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
+#include "Debug/TestPresets.h"
 #include "Debug/TestVariables.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
@@ -258,6 +259,11 @@ void App::imgui_windows()
                 Cool::Log::ToUser::console(),
                 &Cool::DebugOptions::test_message_console()
             );
+        }
+        if (Cool::DebugOptions::test_presets())
+        {
+            static auto test_presets = TestPresets{};
+            test_presets.imgui_window();
         }
 #endif // DEBUG
     }
