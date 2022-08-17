@@ -2,6 +2,7 @@
 #include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Input/Input.h>
 #include "CodeGen.h"
+#include "Common/make_shader_compilation_error_message.h"
 #include "NodeEditorSerialization.h"
 
 namespace Lab {
@@ -46,20 +47,22 @@ void Module_is0::recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     _must_recompile      = false;
     const auto maybe_err = _shader.compile(
         _shader_code,
-        "is0 Ray Marcher",
-        name(),
         update_ctx
     );
     if (!for_testing_nodes)
     {
-        _shader_compilation_error_logger.handle(maybe_err);
+        maybe_err.send_error_if_any(_shader_compilation_error_id, [&](const std::string& msg) {
+            return make_shader_compilation_error_message(name(), "Ray Marcher", msg);
+        });
     }
     else
     {
-        if (maybe_err)
-        {
-            Cool::Log::Debug::console().send(*maybe_err);
-        }
+        maybe_err.send_error_if_any(
+            [&](const std::string& msg) {
+                return make_shader_compilation_error_message("Test is0 Nodes", "Ray Marcher", msg);
+            },
+            Cool::Log::Debug::console()
+        );
     }
 }
 

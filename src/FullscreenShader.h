@@ -4,6 +4,7 @@
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/Log/MessageConsole.h>
 #include <Cool/Log/MessageId.h>
+#include <Cool/Log/OptionalErrorMessage.h>
 #include <Cool/Log/ToUser.h>
 #include "Dependencies/UpdateContext_Ref.h"
 
@@ -16,12 +17,10 @@ public:
         : _dirty_flag{dirty_flag}
     {}
 
-    [[nodiscard]] auto compile(
+    auto compile(
         std::string_view fragment_shader_source_code,
-        std::string_view shader_name,
-        std::string_view module_name,
         UpdateContext_Ref
-    ) -> std::optional<Cool::Message>;
+    ) -> Cool::OptionalErrorMessage;
 
     auto dirty_flag() const -> const Cool::DirtyFlag& { return _dirty_flag; }
     auto pipeline() -> Cool::FullscreenPipeline& { return _fullscreen_pipeline; }

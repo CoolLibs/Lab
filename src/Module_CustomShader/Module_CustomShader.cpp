@@ -7,6 +7,7 @@
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
+#include "Common/make_shader_compilation_error_message.h"
 
 // TODO(LD) Support angle units (turns, degrees, radians)
 
@@ -167,9 +168,11 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
             _presets_manager.emplace(preset_path(file_path));
             _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
             const auto source_code = Cool::File::to_string(file_path.string());
-            _shader_compilation_error_logger.handle(
-                _shader.compile(source_code, file_path.string(), name(), update_ctx)
-            );
+            _shader
+                .compile(source_code, update_ctx)
+                .send_error_if_any(_shader_compilation_error_id, [&](const std::string& msg) {
+                    return make_shader_compilation_error_message(name(), file_path.string(), msg);
+                });
             parse_shader_for_params(source_code, input_factory, input_destructor);
         }
         else
