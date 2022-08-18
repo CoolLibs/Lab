@@ -170,7 +170,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
             const auto source_code = Cool::File::to_string(file_path.string());
             _shader
                 .compile(source_code, update_ctx)
-                .send_error_if_any(_shader_compilation_error_id, [&](const std::string& msg) {
+                .send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
                     return make_shader_compilation_error_message(name(), file_path.string(), msg);
                 });
             parse_shader_for_params(source_code, input_factory, input_destructor);
