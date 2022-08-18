@@ -3,7 +3,6 @@
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/File/File.h>
 #include <Cool/Log/MessageSender.h>
-#include <Cool/Log/ToUser.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Variables/PresetManager.h>
 #include "Dependencies/Module.h"
@@ -86,10 +85,10 @@ private:
 
 private:
     FullscreenShader          _shader; // Must be before _file because it is used to construct it
-    Cool::MessageSender       _shader_compilation_error{Cool::Log::ToUser::console()};
+    Cool::MessageSender       _shader_compilation_error{};
     Cool::Input<Cool::Camera> _camera_input;
     mutable Cool::Input_File  _file;
-    // Cool::MessageSender                         _parsing_error_message{Cool::Log::ToUser::console()}; // TODO(JF) Use this
+    // Cool::MessageSender                         _parsing_error_message{}; // TODO(JF) Use this
     mutable std::optional<Cool::PresetManager>  _presets_manager{};
     mutable std::unique_ptr<SettingsSerializer> _settings_serializer{std::make_unique<SettingsSerializer>()};
 
