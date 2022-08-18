@@ -348,8 +348,11 @@ void App::imgui_menus()
 
 void App::check_inputs()
 {
-    check_inputs__history();
-    check_inputs__export_windows();
+    if (!ImGui::GetIO().WantTextInput)
+    {
+        check_inputs__history();
+        check_inputs__export_windows();
+    }
 }
 
 void App::check_inputs__history()
