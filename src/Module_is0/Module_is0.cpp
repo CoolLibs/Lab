@@ -51,7 +51,7 @@ void Module_is0::recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     );
     if (!for_testing_nodes)
     {
-        maybe_err.send_error_if_any(_shader_compilation_error_id, [&](const std::string& msg) {
+        maybe_err.send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
             return make_shader_compilation_error_message(name(), "Ray Marcher", msg);
         });
     }

@@ -4,7 +4,7 @@
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/ImGui/ImGuiWindow.h>
-#include <Cool/Log/MessageId.h>
+#include <Cool/Log/MessageSender.h>
 #include <Cool/Serialization/as_json.h>
 #include "Dependencies/Module.h"
 #include "FullscreenShader.h"
@@ -49,7 +49,7 @@ private:
     int                          _in_use_render = 0;
     mutable std::string          _folder_path_for_save;
     mutable std::string          _file_name_for_save;
-    Cool::MessageId              _shader_compilation_error_id{};
+    Cool::MessageSender          _shader_compilation_error{};
 
 private:
     // Serialization
