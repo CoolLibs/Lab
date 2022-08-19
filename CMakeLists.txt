@@ -51,6 +51,7 @@ Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "is0 shaders")
 Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "is0 Render Effects")
 Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "image resources")
 Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "post-processing-examples")
+Cool__target_copy_folder(${PROJECT_NAME} ${PROJECT_NAME} "shader-lib")
 
 option(TEST_IS0_NODES "Test all Is0 Nodes" OFF)
 
