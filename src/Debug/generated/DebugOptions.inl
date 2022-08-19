@@ -8,6 +8,7 @@
 #if DEBUG
 
 #include <Cool/DebugOptions/DebugOptionsManager.h>
+#include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/as_json.h>
 #include <wafl/wafl.hpp>
@@ -128,7 +129,7 @@ private:
         if (wafl::similarity_match({filter, "Test is0 Nodes"}) >= wafl::Matches::Strongly)
         {
             instance().test_is0_nodes = ImGui::Button("##Test is0 Nodes", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
-            ImGui::SameLine();
+            ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
             ImGui::Text("Test is0 Nodes");
             if (ImGui::IsItemClicked())
                 instance().test_is0_nodes = true;
