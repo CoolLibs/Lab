@@ -71,7 +71,6 @@ private:
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
         instance().test_all_variable_widgets__window          = false;
-        instance().test_is0_nodes                             = false;
     }
 
     static void save_to_file()
@@ -131,6 +130,8 @@ private:
             instance().test_is0_nodes = ImGui::Button("##Test is0 Nodes", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
             ImGui::SameLine();
             ImGui::Text("Test is0 Nodes");
+            if (ImGui::IsItemClicked())
+                instance().test_is0_nodes = true;
         }
     }
 
