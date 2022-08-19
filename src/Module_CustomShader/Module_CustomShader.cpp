@@ -147,8 +147,8 @@ static auto preset_path(std::filesystem::path path) -> std::filesystem::path
 
 static auto settings_cache_path(std::filesystem::path path) -> std::filesystem::path
 {
-    auto p = path.parent_path() / "settings-cache" / path.filename();
-    p.concat(".settings-cache.json");
+    auto p = std::filesystem::path{Cool::Path::root() + std::string{"/cache--settings/"} + path.filename().string()};
+    p.concat(".current-settings.json");
     return p;
 }
 
