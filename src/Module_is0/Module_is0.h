@@ -38,8 +38,8 @@ private:
 
     FullscreenShader             _shader;
     Cool::Input<Cool::Camera>    _camera_input;
-    mutable NodeEditor           _editor{Cool::Path::root() + "/is0 nodes"};
-    mutable RenderEffectsManager _effects{Cool::Path::root() + "/is0 Render Effects"};
+    mutable NodeEditor           _editor{Cool::Path::root() + "/res/is0 nodes"};
+    mutable RenderEffectsManager _effects{Cool::Path::root() + "/res/is0 Render Effects"};
     mutable std::string          _shader_code;
     mutable Cool::ImGuiWindow    _shader_code_window{"is0 Shader Code", false};
     mutable bool                 _must_recompile              = false; // TODO(JF) use a DirtyFlag instead (which is alreadt in FullscreenShader)
