@@ -55,6 +55,7 @@ void Module_is0::recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
             return make_shader_compilation_error_message(name(), "Ray Marcher", msg);
         });
     }
+#if DEBUG
     else
     {
         maybe_err.send_error_if_any(
@@ -64,6 +65,7 @@ void Module_is0::recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
             Cool::Log::Debug::console()
         );
     }
+#endif
 }
 
 void Module_is0::imgui_windows(Ui_Ref) const
