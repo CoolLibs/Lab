@@ -5,8 +5,8 @@
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Variables/PresetManager.h>
+#include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
-#include "FullscreenShader.h"
 
 namespace Lab {
 

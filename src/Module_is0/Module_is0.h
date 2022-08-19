@@ -6,8 +6,8 @@
 #include <Cool/ImGui/ImGuiWindow.h>
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Serialization/as_json.h>
+#include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
-#include "FullscreenShader.h"
 #include "NodeEditor.h"
 #include "RenderEffectsManager.h"
 #include "RendererPBR.h"
