@@ -127,9 +127,21 @@ def Command_SetCameraZoom():
 
 
 if __name__ == '__main__':
-    from tooling.generate_files import generate
-    generate(
-        folder="src/generated_commands",
+    # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
+    # So we need to add the path manually to sys.path
+    import os
+    import sys
+    from pathlib import Path
+    sys.path.append(os.path.join(
+        Path(os.path.abspath(__file__)).parent.parent.parent,
+        "tooling")
+    )
+    # End of HACK
+    import generate_files
+
+    generate_files.generate(
+        # TODO(JF) Make both script generate in the same folder
+        folder="generated2",
         files=[
             Command_SetCameraZoom,
         ],
