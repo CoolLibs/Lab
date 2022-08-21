@@ -2,10 +2,17 @@
 
 # ------------
 
-from Cool.src.Cool.DebugOptions.debug_options_generator import DebugOption, generate_debug_options, Kind
+import os
+from pathlib import Path
+from importlib.machinery import SourceFileLoader
+generate_files = SourceFileLoader(
+    "generate_files",
+    os.path.join(Path(os.path.abspath(__file__)
+                      ).parent.parent.parent, "Cool", "src", "Cool", "DebugOptions", "debug_options_generator.py")).load_module()
 
 
 def all_debug_options():
+    from generate_files import DebugOption, Kind
     return [
         DebugOption(
             name_in_code="show_framerate_window",
@@ -40,8 +47,9 @@ def all_debug_options():
 
 
 if __name__ == '__main__':
+    from generate_files import generate_debug_options
     generate_debug_options(
-        output_folder="src/Debug/generated",
+        output_folder="generated",
         namespace="Lab",
         cache_file_name="cache/debug-options-lab",
         debug_options=all_debug_options(),
