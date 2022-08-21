@@ -21,8 +21,6 @@ videos
 
 .DS_Store
 
-cache--last-session.json
-cache--debug-options-lab.json
-cache--debug-options-cool.json
 test-presets-manager.json
-cache--settings
+
+cache
