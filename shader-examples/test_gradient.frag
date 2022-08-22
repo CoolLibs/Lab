@@ -17,6 +17,7 @@ struct Mark {
 
 // TODO(ASG) bug linear two elments
 const int number_of_marks = TEST_IDX;
+const int benchmark       = 2000;
 
 #if TEST_IDX == 0
 
@@ -107,9 +108,11 @@ Mark gradient_data[number_of_marks] = Mark[](
 
 #if TEST_IDX == 0
 
+// glsl does not accept to have an array with a size of 0,
+// therefore we have to create a particular case
 void main()
 {
-    for (int i = 0; i < 2000; ++i)
+    for (int i = 0; i < benchmark; ++i)
     {
         vec4 color = vec4(0);
         out_Color  = color;
@@ -118,22 +121,22 @@ void main()
 
 #else
 
-vec4 constant(Mark gradient[number_of_marks])
+vec4 constant(Mark gradient[number_of_marks], float uv_x)
 {
-    if ((_uv.x <= gradient_data[0].pos) && (_uv.x >= 0.f))
+    if ((uv_x <= gradient[0].pos) && (uv_x >= 0.f))
     {
-        return gradient_data[0].col;
+        return gradient[0].col;
     }
     for (int i = 1; i < number_of_marks; i++)
     {
-        if ((_uv.x <= gradient_data[i].pos) && (_uv.x >= gradient_data[i - 1].pos))
+        if ((uv_x <= gradient[i].pos) && (uv_x >= gradient[i - 1].pos))
         {
-            return gradient_data[i - 1].col;
+            return gradient[i - 1].col;
         }
     }
-    if ((_uv.x <= 1.f) && (_uv.x >= gradient_data[number_of_marks - 1].pos))
+    if ((uv_x <= 1.f) && (uv_x >= gradient[number_of_marks - 1].pos))
     {
-        return gradient_data[number_of_marks - 1].col;
+        return gradient[number_of_marks - 1].col;
     }
 }
 
@@ -157,7 +160,7 @@ int dicho(Mark gradient[number_of_marks], float uv_x)
     return middle;
 }
 
-vec4 constant_dicho(Mark gradient[number_of_marks])
+vec4 constant_dicho(Mark gradient[number_of_marks], float uv_x)
 {
     if (number_of_marks == 1)
     {
@@ -165,14 +168,14 @@ vec4 constant_dicho(Mark gradient[number_of_marks])
     }
     else
     {
-        if (_uv.x > gradient[number_of_marks - 1].pos)
+        if (uv_x > gradient[number_of_marks - 1].pos)
         {
             return gradient[number_of_marks - 1].col;
         }
         else
         {
-            int index = dicho(gradient, _uv.x);
-            if (_uv.x > gradient[index].pos)
+            int index = dicho(gradient, uv_x);
+            if (uv_x > gradient[index].pos)
             {
                 return gradient[index].col;
             }
@@ -191,7 +194,7 @@ vec4 constant_dicho(Mark gradient[number_of_marks])
     }
 }
 
-vec4 linear_dicho(Mark gradient[number_of_marks])
+vec4 linear_dicho(Mark gradient[number_of_marks], float uv_x)
 {
     if (number_of_marks == 1)
     {
@@ -200,26 +203,26 @@ vec4 linear_dicho(Mark gradient[number_of_marks])
 
     else
     {
-        if (_uv.x > gradient[number_of_marks - 1].pos)
+        if (uv_x > gradient[number_of_marks - 1].pos)
         {
             return gradient[number_of_marks - 1].col;
         }
-        if (_uv.x < gradient[0].pos)
+        if (uv_x < gradient[0].pos)
         {
             return gradient[0].col;
         }
         else
         {
-            int index = dicho(gradient, _uv.x);
-            if ((_uv.x <= gradient[index].pos))
+            int index = dicho(gradient, uv_x);
+            if ((uv_x <= gradient[index].pos))
             {
-                float mix_factor = (_uv.x - gradient[index - 1].pos) /
+                float mix_factor = (uv_x - gradient[index - 1].pos) /
                                    (gradient[index].pos - gradient[index - 1].pos);
                 return mix(gradient[index - 1].col, gradient[index].col, mix_factor);
             }
             else
             {
-                float mix_factor = (_uv.x - gradient[index].pos) /
+                float mix_factor = (uv_x - gradient[index].pos) /
                                    (gradient[index + 1].pos - gradient[index].pos);
                 return mix(gradient[index].col, gradient[index + 1].col, mix_factor);
             }
@@ -229,24 +232,24 @@ vec4 linear_dicho(Mark gradient[number_of_marks])
 
 // TODO(ASG) benchmark to see which method is fastest
 
-vec4 linear(Mark gradient[number_of_marks])
+vec4 linear(Mark gradient[number_of_marks], float uv_x)
 {
-    if ((_uv.x <= gradient_data[0].pos) && (_uv.x >= 0.f))
+    if ((uv_x <= gradient[0].pos) && (uv_x >= 0.f))
     {
-        return gradient_data[0].col;
+        return gradient[0].col;
     }
     for (int i = 1; i < number_of_marks; i++)
     {
-        if ((_uv.x <= gradient_data[i].pos) && (_uv.x >= gradient_data[i - 1].pos))
+        if ((uv_x <= gradient[i].pos) && (uv_x >= gradient[i - 1].pos))
         {
-            float mix_factor = (_uv.x - gradient_data[i - 1].pos) /
-                               (gradient_data[i].pos - gradient_data[i - 1].pos);
-            return mix(gradient_data[i - 1].col, gradient_data[i].col, mix_factor);
+            float mix_factor = (uv_x - gradient[i - 1].pos) /
+                               (gradient[i].pos - gradient[i - 1].pos);
+            return mix(gradient[i - 1].col, gradient[i].col, mix_factor);
         }
     }
-    if ((_uv.x <= 1.f) && (_uv.x >= gradient_data[number_of_marks - 1].pos))
+    if ((uv_x <= 1.f) && (uv_x >= gradient[number_of_marks - 1].pos))
     {
-        return gradient_data[number_of_marks - 1].col;
+        return gradient[number_of_marks - 1].col;
     }
 }
 
@@ -254,12 +257,12 @@ vec4 linear(Mark gradient[number_of_marks])
 
 void main()
 {
-    for (int i = 0; i < 2000; ++i)
+    for (int i = 0; i < benchmark; ++i)
     {
         vec4 color = vec4(0);
         if (gradient_data.length() != 0)
         {
-            color = constant(gradient_data);
+            color = constant(gradient_data, _uv.x);
         }
         out_Color = color;
     }
@@ -269,12 +272,12 @@ void main()
 
 void main()
 {
-    for (int i = 0; i < 2000; ++i)
+    for (int i = 0; i < benchmark; ++i)
     {
         vec4 color = vec4(0);
         if (gradient_data.length() != 0)
         {
-            color = linear(gradient_data);
+            color = linear(gradient_data, _uv.x);
         }
         out_Color = color;
     }
@@ -283,12 +286,12 @@ void main()
 
 void main()
 {
-    for (int i = 0; i < 200; ++i)
+    for (int i = 0; i < benchmark; ++i)
     {
         vec4 color = vec4(0);
         if (gradient_data.length() != 0)
         {
-            color = constant_dicho(gradient_data);
+            color = constant_dicho(gradient_data, _uv.x);
         }
         out_Color = color;
     }
@@ -298,12 +301,12 @@ void main()
 
 void main()
 {
-    for (int i = 0; i < 200; ++i)
+    for (int i = 0; i < benchmark; ++i)
     {
         vec4 color = vec4(0);
         if (gradient_data.length() != 0)
         {
-            color = linear_dicho(gradient_data);
+            color = linear_dicho(gradient_data, _uv.x);
         }
         out_Color = color;
     }
