@@ -12,10 +12,9 @@ struct Mark {
     vec4  col;
 };
 
-#define TEST_IDX 3
-#define METHOD   2 // 1 : constant, 2 : linear, 3 : constant dicho, 4 : linear dicho
+#define TEST_IDX 2
+#define METHOD   4 // 1 : constant, 2 : linear, 3 : constant dicho, 4 : linear dicho
 
-// TODO(ASG) bug linear two elments
 const int number_of_marks = TEST_IDX;
 const int benchmark       = 2000;
 
@@ -33,7 +32,7 @@ Mark gradient_data[number_of_marks] = Mark[](
 
 Mark gradient_data[number_of_marks] = Mark[](
     Mark(0.15f, vec4(.1, .5, .1, 1)),
-    Mark(0.15f, vec4(0, 0, .1, 1))
+    Mark(0.25f, vec4(0, 0, .1, 1))
 
 );
 
