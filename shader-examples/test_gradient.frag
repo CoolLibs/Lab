@@ -12,7 +12,7 @@ struct Mark {
     vec4  col;
 };
 
-#define TEST_IDX 2
+#define TEST_IDX 4
 #define METHOD   4 // 1 : constant, 2 : linear, 3 : constant dicho, 4 : linear dicho
 
 const int number_of_marks = TEST_IDX;
@@ -122,7 +122,7 @@ void main()
 
 vec4 constant(Mark gradient[number_of_marks], float uv_x)
 {
-    if ((uv_x <= gradient[0].pos) && (uv_x >= 0.f))
+    if (uv_x <= gradient[0].pos)
     {
         return gradient[0].col;
     }
@@ -133,7 +133,7 @@ vec4 constant(Mark gradient[number_of_marks], float uv_x)
             return gradient[i - 1].col;
         }
     }
-    if ((uv_x <= 1.f) && (uv_x >= gradient[number_of_marks - 1].pos))
+    if (uv_x >= gradient[number_of_marks - 1].pos)
     {
         return gradient[number_of_marks - 1].col;
     }
@@ -146,7 +146,9 @@ int dicho(Mark gradient[number_of_marks], float uv_x)
     int middle = 0;
     while (end - start > 0)
     {
-        middle = (start + end) % 2 == 0 ? (start + end) / 2 : (start + end - 1) / 2;
+        middle = (start + end) % 2 == 0
+                     ? (start + end) / 2
+                     : (start + end - 1) / 2;
         if (gradient[middle].pos >= uv_x)
         {
             end = middle;
@@ -233,7 +235,7 @@ vec4 linear_dicho(Mark gradient[number_of_marks], float uv_x)
 
 vec4 linear(Mark gradient[number_of_marks], float uv_x)
 {
-    if ((uv_x <= gradient[0].pos) && (uv_x >= 0.f))
+    if (uv_x <= gradient[0].pos)
     {
         return gradient[0].col;
     }
@@ -246,7 +248,7 @@ vec4 linear(Mark gradient[number_of_marks], float uv_x)
             return mix(gradient[i - 1].col, gradient[i].col, mix_factor);
         }
     }
-    if ((uv_x <= 1.f) && (uv_x >= gradient[number_of_marks - 1].pos))
+    if (uv_x >= gradient[number_of_marks - 1].pos)
     {
         return gradient[number_of_marks - 1].col;
     }
