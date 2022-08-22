@@ -15,7 +15,7 @@ const int number_of_marks = TEST_IDX; // folowwing functions need to know gradie
 
 const int benchmark = 2000;
 
-// #include "_ROOT_FOLDER_/shader-examples/gradient/gradient_generated.glsl"
+// #include "_ROOT_FOLDER_/shader-examples/gradient/generated/gradient_test_generated.inl"
 
 #if TEST_IDX == 0
 
