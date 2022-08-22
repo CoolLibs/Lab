@@ -44,7 +44,7 @@ Mark({1}.f, vec4({random.random()}f, {random.random()}f, {random.random()}f, 1.f
 if __name__ == '__main__':
     from tooling.generate_files import generate
     generate(
-        folder="shader-examples/gradient/generated",
+        folder="res/shader-examples/gradient/generated",
         files=[
             gradient_test_generated,
         ],
