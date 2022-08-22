@@ -5,17 +5,12 @@ uniform float _time;
 uniform float _aspect_ratio;
 out vec4      out_Color;
 
-#define TEST_IDX 4
-#define METHOD   4 // 1 : constant, 2 : linear, 3 : constant dicho, 4 : linear dicho
+#define TEST_IDX 0
+#define METHOD   1 // 1 : constant, 2 : linear, 3 : constant dicho, 4 : linear dicho
 
 const int number_of_marks = TEST_IDX; // folowwing functions need to know gradient size
-// #include "_ROOT_FOLDER_/shader-examples/gradient/constant_gradient.glsl"
-// #include "_ROOT_FOLDER_/shader-examples/gradient/linear_gradient.glsl"
-// #include "_ROOT_FOLDER_/shader-examples/gradient/dicho_gradient.glsl"
 
-const int benchmark = 2000;
-
-// #include "_ROOT_FOLDER_/shader-examples/gradient/generated/gradient_test_generated.inl"
+const int benchmark = 3000;
 
 #if TEST_IDX == 0
 
@@ -31,6 +26,12 @@ void main()
 }
 
 #else
+
+// #include "_ROOT_FOLDER_/shader-examples/gradient/constant_gradient.glsl"
+// #include "_ROOT_FOLDER_/shader-examples/gradient/linear_gradient.glsl"
+// #include "_ROOT_FOLDER_/shader-examples/gradient/dicho_gradient.glsl"
+
+// #include "_ROOT_FOLDER_/shader-examples/gradient/generated/gradient_test_generated.inl"
 
 // TODO(ASG) benchmark to see which method is fastest
 
