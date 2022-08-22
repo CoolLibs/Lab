@@ -1,0 +1,27 @@
+[SDF] (vec3 p) {
+    float proj = dot(p, Axis);
+    float c = cos(Strength * proj); 
+    float s = sin(Strength * proj); 
+    mat2  m = mat2(c, -s, s, c);
+    vec3 plane_axis1 = normalize(vec3(-Axis.y, Axis.x, 0.));
+    vec3 plane_axis2 = cross(plane_axis1, Axis);
+    vec2 p_in_plane = vec2(dot(p, plane_axis1), dot(p, plane_axis2));
+    vec2 p_in_plane_rot = m * p_in_plane;
+    vec3  q = proj * Axis + p_in_plane_rot.x * plane_axis1 + p_in_plane_rot.y * plane_axis2; 
+    return IS0_FIX_ARTIFACTS(${SDF}(q)); 
+}
+
+direction3D {
+    "Name": "Axis",
+    "Default": {
+        "x": 0.0,
+        "y": 0.0
+    }
+}
+
+float {
+    "Name": "Strength",
+    "Default": 1.0,
+    "Min": 0.001,
+    "Max": 5.0
+}

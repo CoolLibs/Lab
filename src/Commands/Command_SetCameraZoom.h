@@ -3,4 +3,4 @@
 #include "Dependencies/CameraManager.h"
 
 //
-#include "generated_commands/Command_SetCameraZoom.inl"
+#include "generated2/Command_SetCameraZoom.inl"

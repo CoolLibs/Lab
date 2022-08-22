@@ -4,9 +4,10 @@
 #include <Cool/Gpu/FullscreenPipeline.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/ImGui/ImGuiWindow.h>
+#include <Cool/Log/MessageSender.h>
 #include <Cool/Serialization/as_json.h>
+#include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
-#include "FullscreenShader.h"
 #include "NodeEditor.h"
 #include "RenderEffectsManager.h"
 #include "RendererPBR.h"
@@ -37,8 +38,8 @@ private:
 
     FullscreenShader             _shader;
     Cool::Input<Cool::Camera>    _camera_input;
-    mutable NodeEditor           _editor{Cool::Path::root() + "/is0 nodes"};
-    mutable RenderEffectsManager _effects{Cool::Path::root() + "/is0 Render Effects"};
+    mutable NodeEditor           _editor{Cool::Path::root() + "/res/is0 nodes"};
+    mutable RenderEffectsManager _effects{Cool::Path::root() + "/res/is0 Render Effects"};
     mutable std::string          _shader_code;
     mutable Cool::ImGuiWindow    _shader_code_window{"is0 Shader Code", false};
     mutable bool                 _must_recompile              = false; // TODO(JF) use a DirtyFlag instead (which is alreadt in FullscreenShader)
@@ -48,6 +49,7 @@ private:
     int                          _in_use_render = 0;
     mutable std::string          _folder_path_for_save;
     mutable std::string          _file_name_for_save;
+    Cool::MessageSender          _shader_compilation_error{};
 
 private:
     // Serialization
