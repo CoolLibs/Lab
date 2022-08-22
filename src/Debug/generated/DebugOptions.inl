@@ -8,6 +8,7 @@
 #if DEBUG
 
 #include <Cool/DebugOptions/DebugOptionsManager.h>
+#include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/as_json.h>
 #include <wafl/wafl.hpp>
@@ -71,14 +72,13 @@ private:
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
         instance().test_all_variable_widgets__window          = false;
-        instance().test_is0_nodes                             = false;
     }
 
     static void save_to_file()
     {
         Cool::Serialization::to_json(
             instance(),
-            Cool::Path::root() + "/cache--debug-options-lab.json",
+            Cool::Path::root() + "/cache/debug-options-lab.json",
             "Debug Options"
         );
     }
@@ -86,7 +86,7 @@ private:
     static auto load_debug_options() -> Instance
     {
         auto the_instance = Instance{};
-        Cool::Serialization::from_json(the_instance, Cool::Path::root() + "/cache--debug-options-lab.json");
+        Cool::Serialization::from_json(the_instance, Cool::Path::root() + "/cache/debug-options-lab.json");
         return the_instance;
     }
 
@@ -129,8 +129,10 @@ private:
         if (wafl::similarity_match({filter, "Test is0 Nodes"}) >= wafl::Matches::Strongly)
         {
             instance().test_is0_nodes = ImGui::Button("##Test is0 Nodes", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
-            ImGui::SameLine();
+            ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
             ImGui::Text("Test is0 Nodes");
+            if (ImGui::IsItemClicked())
+                instance().test_is0_nodes = true;
         }
     }
 

@@ -7,6 +7,7 @@
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
+#include "Common/make_shader_compilation_error_message.h"
 
 // TODO(LD) Support angle units (turns, degrees, radians)
 
@@ -146,8 +147,8 @@ static auto preset_path(std::filesystem::path path) -> std::filesystem::path
 
 static auto settings_cache_path(std::filesystem::path path) -> std::filesystem::path
 {
-    auto p = path.parent_path() / "settings-cache" / path.filename();
-    p.concat(".settings-cache.json");
+    auto p = std::filesystem::path{Cool::Path::root() + std::string{"/cache/settings/"} + path.filename().string()};
+    p.concat(".current-settings.json");
     return p;
 }
 
@@ -167,8 +168,12 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
             _presets_manager.emplace(preset_path(file_path));
             _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
             const auto source_code = Cool::File::to_string(file_path.string());
-            _shader.compile(source_code, file_path.string(), name(), update_ctx);
             parse_shader_for_params(source_code, input_factory, input_destructor);
+            _shader
+                .compile(Cool::preprocess_inputs(source_code, inputs(), provider), update_ctx)
+                .send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
+                    return make_shader_compilation_error_message(name(), file_path.string(), msg);
+                });
         }
         else
         {

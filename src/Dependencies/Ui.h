@@ -52,23 +52,26 @@ public:
 
     void widget(Cool::Input_File& input)
     {
-        input.update(_set_dirty); // TODO(JF) shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
-        std::string path = input.file_watcher.path().string();
-        ImGui::Text("Path : ");
-        ImGui::SameLine();
-        ImGui::PushID(2132541);
-        if (ImGui::InputText("", &path))
-        {
-            input.file_watcher.set_path(path);
-            _set_dirty(input._dirty_flag);
-        }
-        ImGui::PopID();
-        ImGui::SameLine();
-        if (Cool::ImGuiExtras::open_file_dialog(&path, Cool::NfdFileFilter::FragmentShader, Cool::File::whithout_file_name(path)))
-        {
-            input.file_watcher.set_path(path);
-            _set_dirty(input._dirty_flag);
-        }
+        Cool::ImGuiExtras::bring_attention_if(
+            input.should_highlight(),
+            [&] {
+                input.update(_set_dirty); // TODO(JF) shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
+                std::string path = input.file_watcher.path().string();
+                ImGui::Text("Path:");
+                ImGui::SameLine();
+                if (ImGui::InputText("##2132541", &path))
+                {
+                    input.file_watcher.set_path(path);
+                    _set_dirty(input._dirty_flag);
+                }
+                ImGui::SameLine();
+                if (Cool::ImGuiExtras::open_file_dialog(&path, Cool::NfdFileFilter::FragmentShader, Cool::File::whithout_file_name(path)))
+                {
+                    input.file_watcher.set_path(path);
+                    _set_dirty(input._dirty_flag);
+                }
+            }
+        );
     }
 
     void set_dirty(const Cool::DirtyFlag flag) { _set_dirty(flag); }

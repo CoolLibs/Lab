@@ -2,10 +2,11 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/File/File.h>
+#include <Cool/Log/MessageSender.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Variables/PresetManager.h>
+#include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
-#include "FullscreenShader.h"
 
 namespace Lab {
 
@@ -83,10 +84,11 @@ private:
     auto inputs() -> std::vector<Cool::AnyInput>& { return _settings_serializer->get(); }
 
 private:
-    FullscreenShader                            _shader; // Must be before _file because it is used to construct it
-    Cool::Input<Cool::Camera>                   _camera_input;
-    mutable Cool::Input_File                    _file;
-    Cool::MessageId                             _parsing_error_message_id{};
+    FullscreenShader          _shader; // Must be before _file because it is used to construct it
+    Cool::MessageSender       _shader_compilation_error{};
+    Cool::Input<Cool::Camera> _camera_input;
+    mutable Cool::Input_File  _file;
+    // Cool::MessageSender                         _parsing_error_message{}; // TODO(JF) Use this
     mutable std::optional<Cool::PresetManager>  _presets_manager{};
     mutable std::unique_ptr<SettingsSerializer> _settings_serializer{std::make_unique<SettingsSerializer>()};
 

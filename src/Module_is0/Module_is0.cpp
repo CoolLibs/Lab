@@ -2,6 +2,7 @@
 #include <Cool/Camera/CameraShaderU.h>
 #include <Cool/Input/Input.h>
 #include "CodeGen.h"
+#include "Common/make_shader_compilation_error_message.h"
 #include "NodeEditorSerialization.h"
 
 namespace Lab {
@@ -43,8 +44,28 @@ void Module_is0::recompile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     {
         _shader_code = "void main() { gl_FragColor = vec4(vec3(0.), 1.); }";
     }
-    _must_recompile = false;
-    _shader.compile(_shader_code, "is0 Ray Marcher", name(), update_ctx, for_testing_nodes ? Cool::Log::Debug::console() : Cool::Log::ToUser::console(), !for_testing_nodes);
+    _must_recompile      = false;
+    const auto maybe_err = _shader.compile(
+        _shader_code,
+        update_ctx
+    );
+    if (!for_testing_nodes)
+    {
+        maybe_err.send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
+            return make_shader_compilation_error_message(name(), "Ray Marcher", msg);
+        });
+    }
+#if DEBUG
+    else
+    {
+        maybe_err.send_error_if_any(
+            [&](const std::string& msg) {
+                return make_shader_compilation_error_message("Test is0 Nodes", "Ray Marcher", msg);
+            },
+            Cool::Log::Debug::console()
+        );
+    }
+#endif
 }
 
 void Module_is0::imgui_windows(Ui_Ref) const

@@ -1,0 +1,4 @@
+- Mark it as such on GitHub
+- Update it on our website
+- Update it on our uTip
+- Make a post / article about it
