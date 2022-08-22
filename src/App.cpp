@@ -250,7 +250,7 @@ void App::imgui_windows()
         {
             imgui_commands_and_registries_debug_windows();
         }
-        DebugOptions::test_all_variable_widgets__window(&test_variables);
+        DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
 
         if (Cool::DebugOptions::test_message_console())
         {
