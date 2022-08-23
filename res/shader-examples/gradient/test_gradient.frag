@@ -29,10 +29,10 @@ void main()
 
 #else
 
-// #include "_ROOT_FOLDER_/shader-examples/gradient/constant_gradient.glsl"
-// #include "_ROOT_FOLDER_/shader-examples/gradient/linear_gradient.glsl"
+// #include "_ROOT_FOLDER_/res/shader-examples/gradient/constant_gradient.glsl"
+// #include "_ROOT_FOLDER_/res/shader-examples/gradient/linear_gradient.glsl"
 
-// #include "_ROOT_FOLDER_/shader-examples/gradient/generated/gradient_test_generated.inl"
+// #include "_ROOT_FOLDER_/res/shader-examples/gradient/generated/gradient_test_generated.inl"
 
 #if METHOD == 1
 

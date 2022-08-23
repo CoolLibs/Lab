@@ -7,7 +7,7 @@ def relative_pos(index_of_the_term,number_of_terms):
 
 def gradient_test_generated():
     out = f"""
-#include "_ROOT_FOLDER_/shader-examples/gradient/Mark.glsl"
+#include "_ROOT_FOLDER_/res/shader-examples/gradient/Mark.glsl"
 
 #if TEST_IDX == 0
 

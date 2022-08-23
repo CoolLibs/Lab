@@ -1,4 +1,4 @@
-// #include "_ROOT_FOLDER_/shader-examples/gradient/Mark.glsl"
+// #include "_ROOT_FOLDER_/res/shader-examples/gradient/Mark.glsl"
 
 vec4 linear(Mark gradient[number_of_marks], float uv_x)
 {
