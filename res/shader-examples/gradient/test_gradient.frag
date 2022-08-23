@@ -5,10 +5,10 @@ uniform float _time;
 uniform float _aspect_ratio;
 out vec4      out_Color;
 
-#define TEST_IDX 50
+#define TEST_IDX 2
 #define METHOD   2 // 1 : constant, 2 : linear
 
-const int number_of_marks = TEST_IDX; // following functions need to know gradient size
+const int number_of_marks_test = TEST_IDX; // following functions need to know gradient size
 
 INPUT Gradient grad;
 
