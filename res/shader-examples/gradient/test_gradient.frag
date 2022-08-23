@@ -8,7 +8,7 @@ out vec4      out_Color;
 #define TEST_IDX 50
 #define METHOD   3 // 1 : constant, 2 : linear, 3 : constant dicho, 4 : linear dicho
 
-const int number_of_marks = TEST_IDX; // folowwing functions need to know gradient size
+const int number_of_marks = TEST_IDX; // following functions need to know gradient size
 
 INPUT Gradient grad;
 
@@ -34,8 +34,6 @@ void main()
 // #include "_ROOT_FOLDER_/shader-examples/gradient/dicho_gradient.glsl"
 
 // #include "_ROOT_FOLDER_/shader-examples/gradient/generated/gradient_test_generated.inl"
-
-// TODO(ASG) benchmark to see which method is fastest
 
 #if METHOD == 1
 
