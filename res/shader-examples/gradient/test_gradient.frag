@@ -6,7 +6,7 @@ uniform float _aspect_ratio;
 out vec4      out_Color;
 
 #define TEST_IDX 50
-#define METHOD   3 // 1 : constant, 2 : linear, 3 : constant dicho, 4 : linear dicho
+#define METHOD   2 // 1 : constant, 2 : linear
 
 const int number_of_marks = TEST_IDX; // following functions need to know gradient size
 
@@ -31,7 +31,6 @@ void main()
 
 // #include "_ROOT_FOLDER_/shader-examples/gradient/constant_gradient.glsl"
 // #include "_ROOT_FOLDER_/shader-examples/gradient/linear_gradient.glsl"
-// #include "_ROOT_FOLDER_/shader-examples/gradient/dicho_gradient.glsl"
 
 // #include "_ROOT_FOLDER_/shader-examples/gradient/generated/gradient_test_generated.inl"
 
@@ -64,34 +63,6 @@ void main()
         out_Color = color;
     }
 }
-#elif METHOD == 3
 
-void main()
-{
-    for (int i = 0; i < benchmark; ++i)
-    {
-        vec4 color = vec4(0);
-        if (gradient_data.length() != 0)
-        {
-            color = constant_dicho(gradient_data, _uv.x);
-        }
-        out_Color = color;
-    }
-}
-
-#elif METHOD == 4
-
-void main()
-{
-    for (int i = 0; i < benchmark; ++i)
-    {
-        vec4 color = vec4(0);
-        if (gradient_data.length() != 0)
-        {
-            color = linear_dicho(gradient_data, _uv.x);
-        }
-        out_Color = color;
-    }
-}
 #endif
 #endif
