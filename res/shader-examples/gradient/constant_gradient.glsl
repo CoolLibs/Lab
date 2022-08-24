@@ -10,7 +10,7 @@ vec4 constant(Mark gradient[number_of_marks_test], float uv_x)
     {
         if ((uv_x <= gradient[i].pos) && (uv_x >= gradient[i - 1].pos))
         {
-            return gradient[i - 1].col;
+            return gradient[i].col;
         }
     }
     if (uv_x >= gradient[number_of_marks_test - 1].pos)
