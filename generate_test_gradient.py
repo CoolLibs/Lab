@@ -18,7 +18,7 @@ Mark gradient_data[];
         out += f"""
 #elif TEST_IDX == {i}
 
-Mark gradient_data[number_of_marks] = Mark[](
+Mark gradient_data[number_of_marks_test] = Mark[](
 
 """
         for j in range(1,i): # Go in this loop when i > 2
