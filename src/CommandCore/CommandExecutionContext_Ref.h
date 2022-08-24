@@ -17,6 +17,7 @@ class CommandExecutionContext_Ref {
 public:
     auto history() const -> const History& { return _data.history; }
     auto registries() -> Cool::VariableRegistries& { return _data.registries; }
+    auto dirty_registry() -> Cool::DirtyRegistry& { return _data.dirty_registry; }
     auto camera_manager() -> CameraManager& { return _data.camera_manager; }
     template<typename T>
     void set_dirty(const Cool::VariableId<T>& id)
@@ -29,6 +30,7 @@ public:
         std::reference_wrapper<Cool::VariableRegistries> registries;
         std::reference_wrapper<CameraManager>            camera_manager;
         Cool::SetVariableDirty_Ref                       set_dirty;
+        std::reference_wrapper<Cool::DirtyRegistry>      dirty_registry; // TODO(JF) Remove this. It is just here to allow a hack that recompiles shaders when a gradient variable changes.
     };
     explicit CommandExecutionContext_Ref(Data data)
         : _data{data} {}
