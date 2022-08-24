@@ -252,19 +252,17 @@ void App::imgui_windows()
         }
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
 
-        if (Cool::DebugOptions::test_message_console())
-        {
+        Cool::DebugOptions::test_message_console__window([]() {
             static auto test_message_console = Cool::TestMessageConsole{};
-            test_message_console.imgui_window(
-                Cool::Log::ToUser::console(),
-                &Cool::DebugOptions::test_message_console()
+            test_message_console.imgui(
+                Cool::Log::ToUser::console()
             );
-        }
-        if (Cool::DebugOptions::test_presets())
-        {
+        });
+
+        Cool::DebugOptions::test_presets__window([]() {
             static auto test_presets = TestPresets{};
-            test_presets.imgui_window();
-        }
+            test_presets.imgui();
+        });
 #endif // DEBUG
     }
 }
