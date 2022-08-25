@@ -1,0 +1,228 @@
+name: Build and run tests
+
+on: 
+  push:
+    branches: [ main ]
+
+  pull_request:
+    branches: [ main ]
+
+
+env:
+  TARGET: Tests-CoolLab # Should be the name of the target you created in your CMakeLists.txt and want to build and run
+
+
+jobs:
+#-----------------------------------------------------------------------------------------------
+  Windows_MSVC_Debug:
+    name: Windows MSVC Debug
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          submodules: recursive
+
+    - name: Configure CMake
+      run: cmake .\tests -B ${{github.workspace}}\build -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl 
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}\build\Debug\${{env.TARGET}} 
+
+#-----------------------------------------------------------------------------------------------
+  Windows_MSVC_Release:
+    name: Windows MSVC Release
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          submodules: recursive
+
+    - name: Configure CMake
+      run: cmake .\tests -B ${{github.workspace}}\build -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}\build\Release\${{env.TARGET}} 
+#-----------------------------------------------------------------------------------------------
+  Windows_Clang_Debug:
+    name: Windows Clang Debug
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          submodules: recursive
+
+    - name: Configure CMake
+      run: cmake .\tests -B ${{github.workspace}}\build -T ClangCL
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}\build\Debug\${{env.TARGET}} 
+
+#-----------------------------------------------------------------------------------------------
+  Windows_Clang_Release:
+    name: Windows Clang Release
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          submodules: recursive
+
+    - name: Configure CMake
+      run: cmake .\tests -B ${{github.workspace}}\build -T ClangCL
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}\build\Release\${{env.TARGET}} 
+#-----------------------------------------------------------------------------------------------
+  Linux_GCC_Debug: 
+    name: Linux GCC Debug
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      
+#-----------------------------------------------------------------------------------------------
+  Linux_GCC_Release: 
+    name: Linux GCC Release
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
+
+#-----------------------------------------------------------------------------------------------
+  Linux_Clang_Debug:
+    name: Linux Clang Debug 
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
+
+#-----------------------------------------------------------------------------------------------
+  Linux_Clang_Release: 
+    name: Linux Clang Release
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
+                        
+#-----------------------------------------------------------------------------------------------
+  MacOS_GCC_Debug: 
+    name: MacOS GCC Debug
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      
+#-----------------------------------------------------------------------------------------------
+  MacOS_GCC_Release: 
+    name: MacOS GCC Release
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
+
+#-----------------------------------------------------------------------------------------------
+  MacOS_Clang_Debug:
+    name: MacOS Clang Debug 
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
+
+#-----------------------------------------------------------------------------------------------
+  MacOS_Clang_Release: 
+    name: MacOS Clang Release
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake ./tests -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+
+    - name: Run
+      run: ${{github.workspace}}/build/${{env.TARGET}} 
