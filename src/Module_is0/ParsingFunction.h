@@ -9,6 +9,7 @@ std::string find_parameters_declaration(std::string_view source, size_t* end_pos
 
 std::string find_body(std::string_view source, size_t* end_pos);
 
+#if !defined(DOCTEST_CONFIG_DISABLE)
 TEST_CASE("[is0::ParsingFunction] find_extra_code()")
 {
     // Given
@@ -23,3 +24,4 @@ TEST_CASE("[is0::ParsingFunction] find_extra_code()")
 #include "something.glsl"
 )");
 }
+#endif
