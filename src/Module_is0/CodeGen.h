@@ -53,6 +53,8 @@ std::string value_to_string(const T&& x);
 
 #include "CodeGen.tpp"
 
+#if !defined(DOCTEST_CONFIG_DISABLE)
+
 TEST_CASE("[is0::CodeGen] Function generation")
 {
     // Given
@@ -89,14 +91,12 @@ TEST_CASE("[is0::CodeGen] Parameter definition")
 })");
 }
 
-#if DEBUG
 namespace CodeGen {
 inline doctest::String toString(const FnNameParams& params)
 {
     return ("{ Name: \"" + std::string{params.node_template_name} + "\", Id: \"" + std::to_string(params.node_id) + "\" }").c_str();
 }
 } // namespace CodeGen
-#endif
 
 TEST_CASE("[is0::CodeGen::function_name] glsl names must not contain __ (these are reserved names)")
 {
@@ -108,3 +108,4 @@ TEST_CASE("[is0::CodeGen::function_name] glsl names must not contain __ (these a
     CAPTURE(generated_name);
     CHECK(generated_name.find("__") == std::string::npos);
 }
+#endif
