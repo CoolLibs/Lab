@@ -4,15 +4,16 @@ project(CoolLab)
 add_executable(${PROJECT_NAME})
 add_library(CooLab-Properties INTERFACE) # This is needed by both CoolLab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE CooLab-Properties)
-target_compile_features(${PROJECT_NAME} PRIVATE
-    cxx_std_20)
+
+target_compile_features(CooLab-Properties INTERFACE cxx_std_20)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
 
 if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE /WX /W3)
+    target_compile_options(CooLab-Properties INTERFACE /WX /W3)
 else()
-    target_compile_options(${PROJECT_NAME} PRIVATE -Werror -Wall -Wextra -Wpedantic -pedantic-errors)
+    target_compile_options(CooLab-Properties INTERFACE -Werror -Wall -Wextra -Wpedantic -pedantic-errors)
 endif()
 
 # Choose our GPU API and its version
@@ -54,18 +55,8 @@ endif()
 # ---------------------
 # ---Setup the tests---
 # ---------------------
-list(REMOVE_ITEM COOL_LAB_SOURCES
-    ${CMAKE_SOURCE_DIR}/src/main.cpp
-    ${CMAKE_SOURCE_DIR}/src/tests.cpp
-)
+list(REMOVE_ITEM COOL_LAB_SOURCES ${CMAKE_SOURCE_DIR}/src/main.cpp)
 add_executable(Tests-CoolLab tests/tests.cpp ${COOL_LAB_SOURCES})
-target_compile_features(Tests-CoolLab PRIVATE cxx_std_20)
-
-if(MSVC)
-    target_compile_options(Tests-CoolLab PRIVATE /WX /W3)
-else()
-    target_compile_options(Tests-CoolLab PRIVATE -Werror -Wall -Wextra -Wpedantic -pedantic-errors)
-endif()
-
+target_compile_definitions(Tests-CoolLab PRIVATE LAB_ENABLE_TESTS)
 target_link_libraries(Tests-CoolLab PRIVATE CooLab-Properties)
-target_link_libraries(Tests-CoolLab PUBLIC doctest::doctest)
+target_link_libraries(Tests-CoolLab PRIVATE doctest::doctest)

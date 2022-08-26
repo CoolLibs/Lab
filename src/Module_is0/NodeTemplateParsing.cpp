@@ -58,7 +58,8 @@ void parse_node_template(NodeTemplate& node_template, std::string_view source)
     }
 }
 
-#if !defined(DOCTEST_CONFIG_DISABLE)
+#if LAB_ENABLE_TESTS
+#include <doctest/doctest.h>
 
 TEST_CASE("[is0::NodeParsing] parse_node_template()")
 {

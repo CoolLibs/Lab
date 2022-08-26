@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Cool/Parameter/ParameterList.h>
-#include <doctest/doctest.h>
 #include "NodeTemplate.h"
 #include "NodeTree.h"
 #include "RenderEffectsManager.h"
@@ -53,7 +52,8 @@ std::string value_to_string(const T&& x);
 
 #include "CodeGen.tpp"
 
-#if !defined(DOCTEST_CONFIG_DISABLE)
+#if LAB_ENABLE_TESTS
+#include <doctest/doctest.h>
 
 TEST_CASE("[is0::CodeGen] Function generation")
 {
