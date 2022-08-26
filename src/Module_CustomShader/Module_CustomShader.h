@@ -15,7 +15,9 @@ public:
     SettingsSerializer() = default;
     SettingsSerializer(std::filesystem::path path)
         : _auto_serializer{Cool::AutoSerializer<SettingsSerializer>{
-              path, "Current Settings", *this}}
+              path, "Current Settings", *this, [](const std::string&) {
+                  /*Ignore deserialization warnings*/
+              }}}
     {
     }
 
