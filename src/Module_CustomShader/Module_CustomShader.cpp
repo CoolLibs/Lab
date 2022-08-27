@@ -3,7 +3,6 @@
 #include <Cool/InputParser/InputParser.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/String/String.h>
-#include <doctest/doctest.h>
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
