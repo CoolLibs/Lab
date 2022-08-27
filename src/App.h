@@ -66,7 +66,7 @@ private:
     auto set_dirty_flag                             () { return Cool::SetDirty_Ref{_dirty_registry}; }
     auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_variable_registries, _camera_manager}}; }
-    auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, _camera_manager, set_variable_dirty()}}; }
+    auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, _camera_manager, set_variable_dirty(),_dirty_registry }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, make_reversible_commands_context()}; }

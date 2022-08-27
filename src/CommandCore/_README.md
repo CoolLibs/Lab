@@ -43,4 +43,4 @@ For example it could:
 ### Merger
 
 Knows how to merge two similar commands together. For example `set x from 2 to 3` and `set x from 3 to 5` can be merged as `set x from 2 to 5`. This is useful for the History: when we drag a slider we will issue many `SetValue` commands, but in the end we only want one of them in the History: from the value before dragging, to the value when the slider was released. This is achieved by merging all the commands that are submitted during the drag.<br/>
-And if we were to start dragging the same slider, those new commands wouldn't be merged with the previous ones because we explicitly told the history not to thanks to the `FinishedEditingValue` command.
+And if we were to start dragging the same slider, those new commands wouldn't be merged with the previous ones because we explicitly told the history not to thanks to the `FinishedEditingVariable` command.

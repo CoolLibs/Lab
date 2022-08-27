@@ -12,6 +12,16 @@ struct Command_FinishedEditingVariable {
     void execute(CommandExecutionContext_Ref& ctx) const
     {
         ctx.history().dont_merge_next_command();
+        // TODO(JF) Remove this hack.
+        // Force recompilation of all shaders when a variable changes to allow gradient variables to update (bc they need to generate shader code)
+        {
+            auto&            registry = ctx.dirty_registry();
+            std::unique_lock lock{registry.mutex()};
+            for (auto& [_, is_dirty] : registry)
+            {
+                is_dirty.is_dirty = true;
+            }
+        }
     }
 
     auto to_string() const -> std::string
