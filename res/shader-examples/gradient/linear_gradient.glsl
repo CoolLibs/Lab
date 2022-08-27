@@ -1,6 +1,6 @@
-// #include "_ROOT_FOLDER_/res/shader-examples/gradient/Mark.glsl"
+// #include "_COOL_RES_/shaders/GradientMark.glsl"
 
-vec4 linear(Mark gradient[number_of_marks_test], float uv_x)
+vec4 linear(GradientMark gradient[number_of_marks_test], float uv_x)
 {
     if (uv_x <= gradient[0].pos)
     {

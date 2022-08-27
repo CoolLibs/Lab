@@ -7,27 +7,27 @@ def relative_pos(index_of_the_term,number_of_terms):
 
 def gradient_test_generated():
     out = f"""
-#include "_ROOT_FOLDER_/res/shader-examples/gradient/Mark.glsl"
+#include "_COOL_RES_/shaders/GradientMark.glsl"
 
 #if TEST_IDX == 0
 
-Mark gradient_data[];
+GradientMark gradient_data[];
 
 """
     for i in range(1,51): 
         out += f"""
 #elif TEST_IDX == {i}
 
-Mark gradient_data[number_of_marks_test] = Mark[](
+GradientMark gradient_data[number_of_marks_test] = GradientMark[](
 
 """
         for j in range(1,i): # Go in this loop when i > 2
             out += f"""
-Mark({relative_pos(j,i)}f, vec4({random.random()}f, {random.random()}f, {random.random()}f, 1.f)),
+GradientMark({relative_pos(j,i)}f, vec4({random.random()}f, {random.random()}f, {random.random()}f, 1.f)),
 
 """
         out += f"""
-Mark({1}.f, vec4({random.random()}f, {random.random()}f, {random.random()}f, 1.f))
+GradientMark({1}.f, vec4({random.random()}f, {random.random()}f, {random.random()}f, 1.f))
 );
 
 """
