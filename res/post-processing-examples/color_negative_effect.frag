@@ -10,13 +10,14 @@ uniform sampler2D _image;
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
-INPUT vec3 channels_contribution; // default 1 min = 0
+// default 1 min = 0
+INPUT vec3 channels_contribution;
 
 void main()
 {
     vec2 uv    = _uv;
     vec3 color = vec3(1.);
-    vec4 img   = image(uv);
-    color -= channels_contribution * img.rgb;
+    vec3 img   = image(uv);
+    color -= channels_contribution * img;
     out_Color = vec4(color, 1.);
 }
