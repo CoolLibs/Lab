@@ -171,3 +171,25 @@ float classic_noise(
     noise /= sum;
     return noise;
 }
+
+vec2 classic_noise_uv(
+    vec2  uv,
+    float frequency, float fractalness, float scale
+)
+{
+    return vec2(classic_noise(
+        uv,
+        frequency, fractalness, scale
+    ));
+}
+
+vec3 classic_noise_color(
+    vec2  uv,
+    float frequency, float fractalness, float scale
+)
+{
+    return vec3(classic_noise(
+        uv,
+        frequency, fractalness, scale
+    ));
+}

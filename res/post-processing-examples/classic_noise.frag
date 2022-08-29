@@ -37,10 +37,10 @@ void main()
     vec2 uv = _uv;
     uv.x *= _aspect_ratio;
 
-    vec3 out_color = vec3(classic_noise(
+    vec2 out_uv = classic_noise_uv(
         uv,
         Frequency, Fractalness, Scale
-    ));
+    );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(image(out_uv), 1.);
 }
