@@ -4,7 +4,7 @@ vec3 color_discretisation(
 )
 {
     const int size                  = 3;
-    vec3      table_of_colors[size] = {color1, color2, color3};
+    vec3      table_of_colors[size] = vec3[](color1, color2, color3);
     vec3      col                   = table_of_colors[0];
     float     min_dist              = distance(in_color, table_of_colors[0]);
     for (int i = 1; i < size; i++)
