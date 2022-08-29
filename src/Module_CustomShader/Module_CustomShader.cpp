@@ -151,9 +151,15 @@ static auto settings_cache_path(std::filesystem::path path) -> std::filesystem::
     return p;
 }
 
+template<typename T>
+static auto path_has_changed(const T& path_holder, std::filesystem::path path) -> bool
+{
+    return !path_holder || path_holder->path() != path;
+}
+
 static void load_if_necessary(std::optional<Cool::PresetManager>& presets_manager, std::filesystem::path path)
 {
-    if (!presets_manager || presets_manager->path() != path)
+    if (path_has_changed(presets_manager, path))
     {
         presets_manager.emplace(path);
     }
@@ -161,7 +167,7 @@ static void load_if_necessary(std::optional<Cool::PresetManager>& presets_manage
 
 static void load_if_necessary(std::unique_ptr<SettingsSerializer>& settings_serializer, std::filesystem::path path)
 {
-    if (!settings_serializer || settings_serializer->path() != path)
+    if (path_has_changed(settings_serializer, path))
     {
         settings_serializer = std::make_unique<SettingsSerializer>(path);
     }
