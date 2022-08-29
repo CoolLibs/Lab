@@ -15,3 +15,13 @@ vec2 distort(vec2 pixel, float power)
 
     return pixel;
 }
+
+vec2 barrel_disortion(
+    vec2 in_uv, float Effect_intensity,
+    vec2 Center
+)
+{
+    vec2 uv = in_uv / -1; // invert
+    uv      = Center - distort(uv + Center, Effect_intensity);
+    return uv;
+}

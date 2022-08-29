@@ -14,18 +14,16 @@ uniform sampler2D _image;
 // default 0.5 range 0 to 1
 INPUT vec2 Center; // vec2(0.5,0.5)
 
-INPUT float distortion; // -5 to 5
-// 0 forbbiden
-INPUT float Scale;
 INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 uv = _uv;
-    uv /= -1; // invert
-    uv *= Scale;
+    vec2 in_uv = _uv;
 
-    vec2 out_uv    = mix(_uv, -distort(uv + Center, distortion) + Center, Effect_intensity);
+    vec2 out_uv = barrel_disortion(
+        in_uv, Effect_intensity,
+        Center
+    );
     vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
