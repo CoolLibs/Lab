@@ -12,19 +12,20 @@ uniform sampler2D _image;
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
-INPUT Angle angle_in_turns;    // 0 to 1 (1 == 1 turn)
-INPUT float hole_radius;       // positive values
-INPUT float hole_intensity;    // 0 to 8
-INPUT float hole_attractivity; // -1 to 1
-INPUT float hole_smooth;       // -.5 to 1
-INPUT float hole_center_x;     // default 0.5 range 0 to 1
-INPUT float hole_center_y;     // default 0.5 range0 to 1
+INPUT Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
+INPUT float hole_radius;    // positive values
+INPUT float hole_intensity; // 0 to 8
+// INPUT float hole_attractivity; // -1 to 1
+INPUT float hole_glow; // -.5 to 1
+// range 0 to 1
+// Point 2D
+INPUT vec2 hole_center; // default vec2(0.5,0.5)
 
 INPUT RgbColor hole_color;
 
-INPUT int nb_div; // 0 forbidden
+INPUT float Effect_intensity;
 
-vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
+vec3 hole(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
 {
     float d    = distance(uv, point);
     float invD = 1.0 / d;
@@ -34,33 +35,21 @@ vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
 
 void main()
 {
-    // [0, res] to [-1, 1]
-    vec2 hole_center = vec2(hole_center_x, hole_center_y);
-    vec2 coord       = -hole_center + (_uv)*2.;
-    vec2 ncoord      = -hole_center + coord * vec2(_aspect_ratio, 1.0);
-
-    // change look at
-    // ncoord.x += sin(radians(time_mod * 40.0)) * .4;
-    // ncoord.y += cos(radians(time_mod * 40.0)) * .7;
-
-    // rotation
-    float angleRot = angle_in_turns * TAU;
-    vec2  tcoord   = vec2(ncoord.x * cos(angleRot) - ncoord.y * sin(angleRot), ncoord.y * cos(angleRot) + ncoord.x * sin(angleRot));
+    vec2 ncoord = _uv - hole_center;
 
     // sink hole projection
-    float angle  = atan(tcoord.x, tcoord.y);
-    float radius = length(tcoord);
+    float angle  = atan(ncoord.x, ncoord.y);
+    float radius = length(ncoord);
     vec2  uv     = vec2(angle, radius);
 
-    uv /= radians(360. / float(nb_div));
-    uv.y += hole_attractivity; // scrolling
+    uv.y += Effect_intensity;
 
-    vec4 col = texture(_image, uv);
+    vec3 col = image(mix(_uv, uv, Effect_intensity));
 
     // hole
-    float invIntensity = (6.0 + sin(radians(hole_intensity * 40)) * 5.8) / (hole_radius);
-    float invGlow      = hole_smooth;
-    col.rgb += blob(vec2(0, 0), tcoord, -hole_color, invIntensity, invGlow);
+    // float invIntensity = (6.0 + sin(radians(hole_intensity * 40)) * 5.8) / (hole_radius);
+    // vec3  out_col      = col + hole(vec2(0., 0.), ncoord, -hole_color, invIntensity, hole_glow);
 
-    out_Color = col;
+    // out_col   = mix(col, out_col, Effect_intensity);
+    out_Color = vec4(col, 1.);
 }
