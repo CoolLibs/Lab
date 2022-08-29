@@ -21,20 +21,26 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+
+    - name: Zip building directory
+      run: tar cvzf ${{github.workspace}}\bin\Release.tar.gz ${{github.workspace}}\bin\Release
     
     - name: Look for path
       run: ls ${{github.workspace}}\bin
 
-    # - name: Upload assets
-    #   id: upload-release-asset 
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ github.event.release.upload_url }}
-    #     asset_path: ./program.tar.gz
-    #     asset_name: program-${{ runner.os }}.tar.gz
-    #     asset_content_type: application/tar.gz
+    - name: Upload assets
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ${{github.workspace}}\bin\Release.tar.gz
+        asset_name: program-${{ runner.os }}.tar.gz
+        asset_content_type: application/tar.gz
+    
+     - name: Look for path
+      run: ls ${{github.workspace}}\bin
 #-----------------------------------------------------------------------------------------------
 #   Linux_Clang_Release: 
 #     name: Linux Clang Release
