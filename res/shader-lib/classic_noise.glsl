@@ -153,20 +153,20 @@ float triangle(float current_freq, float frequency, float a)
 
 float classic_noise(
     vec2  uv,
-    float frequency, float a, float scale
+    float frequency, float fractalness, float scale
 )
 {
     float noise         = 0;
     float frequency_log = log2(frequency);
 
-    int   start = int(floor(frequency_log - a));
-    int   end   = int(ceil(frequency_log + a));
+    int   start = int(floor(frequency_log - fractalness));
+    int   end   = int(ceil(frequency_log + fractalness));
     float sum   = 0;
     for (int i = start; i <= end; i++)
     {
         float current_freq = pow(2., i);
-        sum += triangle(i, frequency_log, a);
-        noise += (cnoise(uv * current_freq * scale) * 0.5 + 0.5) * triangle(i, frequency_log, a);
+        sum += triangle(i, frequency_log, fractalness);
+        noise += (cnoise(uv * current_freq * scale) * 0.5 + 0.5) * triangle(i, frequency_log, fractalness);
     }
     noise /= sum;
     return noise;
