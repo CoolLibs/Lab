@@ -21,11 +21,11 @@ INPUT float nb_tiles;
 void main()
 {
     vec2 uv = _uv;
-    uv.x /= _aspect_ratio;
     uv /= -1; // normalize and invert
 
     // Put origo at the center of the viewport.
     uv += Center;
+    vec3 out_color = image(-distort(uv, distortion) * nb_tiles);
 
-    out_Color = textureaspectCompensated(_image, -distort(uv, distortion) * nb_tiles + Center);
+    out_Color = vec4(out_color, 1.);
 }

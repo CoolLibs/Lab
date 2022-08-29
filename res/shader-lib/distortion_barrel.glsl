@@ -15,9 +15,3 @@ vec2 distort(vec2 pixel, float power)
 
     return pixel;
 }
-
-vec4 textureaspectCompensated(sampler2D channel, vec2 pixel)
-{
-    vec2 uv = vec2(pixel.x * _aspect_ratio, pixel.y);
-    return texture(channel, uv);
-}
