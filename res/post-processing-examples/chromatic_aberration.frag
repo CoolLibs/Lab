@@ -27,6 +27,7 @@ void main()
 
     vec3 out_color = chromatic_aberration(
         in_color, Effect_intensity,
+        _uv, _aspect_ratio,
         Center, Sample_count, Falloff, Blur
     );
 
