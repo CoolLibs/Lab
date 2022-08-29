@@ -16,16 +16,17 @@ INPUT vec2 Center; // vec2(0.5,0.5)
 
 INPUT float distortion; // -5 to 5
 // 0 forbbiden
-INPUT float nb_tiles;
+INPUT float Scale;
+INPUT float Effect_intensity;
 
 void main()
 {
     vec2 uv = _uv;
-    uv /= -1; // normalize and invert
+    uv /= -1; // invert
+    uv *= Scale;
 
-    // Put origo at the center of the viewport.
-    uv += Center;
-    vec3 out_color = image(-distort(uv, distortion) * nb_tiles);
+    vec2 out_uv    = mix(_uv, -distort(uv + Center, distortion) + Center, Effect_intensity);
+    vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }
