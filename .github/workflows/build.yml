@@ -39,7 +39,7 @@ jobs:
         asset_name: program-${{ runner.os }}.tar.gz
         asset_content_type: application/tar.gz
     
-     - name: Look for path
+    - name: Look for path after
       run: ls ${{github.workspace}}\bin
 #-----------------------------------------------------------------------------------------------
 #   Linux_Clang_Release: 
