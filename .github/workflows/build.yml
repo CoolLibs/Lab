@@ -23,7 +23,7 @@ jobs:
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
     
     - name: Look for path
-      run: ls ${{github.workspace}}\build
+      run: ls ${{github.workspace}}\bin
 
     # - name: Upload assets
     #   id: upload-release-asset 
