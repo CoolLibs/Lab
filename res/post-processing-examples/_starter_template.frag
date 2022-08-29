@@ -7,10 +7,7 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 void main()
 {
