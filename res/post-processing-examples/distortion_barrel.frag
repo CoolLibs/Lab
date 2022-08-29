@@ -1,7 +1,5 @@
 #version 410
 
-// https://www.shadertoy.com/view/ls2XWD
-
 layout(location = 0) in vec2 _uv;
 uniform float _time;
 uniform float _aspect_ratio;
@@ -11,47 +9,23 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/distortion_barrel.glsl"
 
-INPUT float center_x;   // default 0.5 range 0 to 1
-INPUT float center_y;   // default 0.5 range 0 to 1
+// default 0.5 range 0 to 1
+INPUT vec2 Center; // vec2(0.5,0.5)
+
 INPUT float distortion; // -5 to 5
-INPUT float nb_tiles;   // 0 forbbiden
-
-vec2 mid;
-
-vec2 distort(vec2 p, float power)
-{
-    // Convert to polar coords:
-    float theta  = atan(p.y, p.x);
-    float radius = length(p);
-
-    // Distort:
-    radius = pow(radius, power);
-
-    // Convert back to Cartesian:
-    p.x = radius * cos(theta);
-    p.y = radius * sin(theta);
-
-    return p;
-}
-
-vec4 textureaspectCompensated(sampler2D channel, vec2 pixel)
-{
-    vec2 uv = vec2(pixel.x * _aspect_ratio, pixel.y);
-    return texture(channel, uv);
-}
+// 0 forbbiden
+INPUT float nb_tiles;
 
 void main()
 {
-    vec2 pixel = _uv;
-
-    mid = vec2(center_x, center_y);
-
     vec2 uv = _uv;
+    uv.x /= _aspect_ratio;
     uv /= -1; // normalize and invert
 
     // Put origo at the center of the viewport.
-    uv += mid;
+    uv += Center;
 
-    out_Color = textureaspectCompensated(_image, -distort(uv, distortion) * nb_tiles + mid);
+    out_Color = textureaspectCompensated(_image, -distort(uv, distortion) * nb_tiles + Center);
 }
