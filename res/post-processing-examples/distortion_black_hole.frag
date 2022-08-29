@@ -10,6 +10,7 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 INPUT Angle angle_in_turns;    // 0 to 1 (1 == 1 turn)
 INPUT float hole_radius;       // positive values
@@ -29,11 +30,6 @@ vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
     float invD = 1.0 / d;
     invD       = pow(invD / invIntensity, invGlow);
     return color * invD;
-}
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
 }
 
 void main()

@@ -15,6 +15,7 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 INPUT float    drops_size;               // default 0.2 min = .001 max = 1.5
 INPUT float    distortion;               // default 0.7 min = 0 max = 1
@@ -102,11 +103,6 @@ float map(vec3 p)
     d = smin(d, bp.z - 4.0, -0.3);
 
     return d;
-}
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
 }
 
 void main()

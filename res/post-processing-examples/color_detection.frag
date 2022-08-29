@@ -8,8 +8,8 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/rgb_hsv_conversion.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/rgb_hsv_conversion.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/color_detection.glsl"
 
 INPUT RgbColor Color;

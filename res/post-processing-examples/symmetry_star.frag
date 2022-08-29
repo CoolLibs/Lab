@@ -10,6 +10,7 @@ uniform sampler2D _image;
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry_star.glsl"
+
 INPUT float Size;           // 0 forbidden 0.001 to 0.5
 INPUT Angle Angle_in_turns; // 0 to 1 (1 == 1 turn)
 

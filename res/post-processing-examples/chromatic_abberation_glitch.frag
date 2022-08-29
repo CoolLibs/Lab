@@ -10,6 +10,7 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 float rng2(vec2 seed)
 {
@@ -19,11 +20,6 @@ float rng2(vec2 seed)
 float rng(float seed)
 {
     return rng2(vec2(seed, 1.0));
-}
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
 }
 
 void main()
@@ -38,9 +34,9 @@ void main()
 
     float lineNoise = pow(rng2(blockS), 8.) * pow(rng2(blockL), 3.) - pow(rng(7.2341), 17.) * 2.;
 
-    vec4 col1 = texture(_image, uv);
-    vec4 col2 = texture(_image, uv + vec2(lineNoise * 0.05 * rng(5.), 0));
-    vec4 col3 = texture(_image, uv - vec2(lineNoise * 0.05 * rng(31), 0));
+    vec3 col1 = image(uv);
+    vec3 col2 = image(uv + vec2(lineNoise * 0.05 * rng(5.), 0));
+    vec3 col3 = image(uv - vec2(lineNoise * 0.05 * rng(31), 0));
 
     vec3 color = vec3(col1.r, col2.g, col3.b) + noise;
     out_Color  = vec4(color, 1.);

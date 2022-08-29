@@ -8,13 +8,9 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 INPUT vec3 channels_contribution; // default 1 min = 0
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
 
 void main()
 {

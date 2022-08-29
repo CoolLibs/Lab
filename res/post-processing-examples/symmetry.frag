@@ -10,6 +10,7 @@ uniform sampler2D _image;
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry.glsl"
+
 INPUT float center_x;       // 0 to 1 default 0.5
 INPUT float center_y;       // 0 to 1 default 0.5
 INPUT Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
