@@ -2,11 +2,10 @@
 
 vec3 chromatic_aberration(
     vec3 in_color, float effect_intensity,
-    float center_x, float center_y, int sampleCount, float falloff, float blur
+    vec2 center, int sampleCount, float falloff, float blur
 )
 {
-    vec2 center = vec2(center_x, center_y);
-    vec2 uv     = _uv - center;
+    vec2 uv = _uv - center;
     uv.x *= _aspect_ratio;
 
     vec2  direction          = normalize(uv);

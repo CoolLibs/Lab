@@ -13,13 +13,13 @@ uniform sampler2D _image;
 
 INPUT int Sample_count; // 20
 
-INPUT float Falloff; // 1.082
-INPUT float Blur;    // 0.142
+INPUT float Falloff; // default 1.082 min 0. max 5.
+INPUT float Blur;    // default 0.142 min -1. max 1.
 
-INPUT float Center_x; // 0.142
-INPUT float Center_y; // 0.142
+// Point2D
+INPUT vec2 Center; // default vec2(0.5,0.5)
 
-INPUT float Effect_intensity;
+INPUT float Effect_intensity; // default 1. min 0. max 1.
 
 void main()
 {
@@ -27,7 +27,7 @@ void main()
 
     vec3 out_color = chromatic_aberration(
         in_color, Effect_intensity,
-        Center_x, Center_y, Sample_count, Falloff, Blur
+        Center, Sample_count, Falloff, Blur
     );
 
     out_Color = vec4(out_color, 1.);
