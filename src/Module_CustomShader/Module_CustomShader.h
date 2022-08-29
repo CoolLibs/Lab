@@ -22,6 +22,8 @@ public:
     auto get() -> std::vector<Cool::AnyInput>& { return _inputs; }
     auto get() const -> const std::vector<Cool::AnyInput>& { return _inputs; }
 
+    auto path() const { return _auto_serializer ? _auto_serializer->path() : ""; }
+
 private:
     std::vector<Cool::AnyInput>                             _inputs{};
     std::optional<Cool::AutoSerializer<SettingsSerializer>> _auto_serializer;

@@ -159,6 +159,14 @@ static void load_if_necessary(std::optional<Cool::PresetManager>& presets_manage
     }
 }
 
+static void load_if_necessary(std::unique_ptr<SettingsSerializer>& settings_serializer, std::filesystem::path path)
+{
+    if (!settings_serializer || settings_serializer->path() != path)
+    {
+        settings_serializer = std::make_unique<SettingsSerializer>(path);
+    }
+}
+
 void Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::InputProvider_Ref   provider,
     Cool::IsDirty_Ref         is_dirty,
@@ -173,7 +181,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         if (Cool::File::exists(file_path.string()))
         {
             load_if_necessary(_presets_manager, preset_path(file_path));
-            _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
+            load_if_necessary(_settings_serializer, settings_cache_path(file_path));
             const auto source_code = Cool::File::to_string(file_path.string());
             parse_shader_for_params(source_code, input_factory, input_destructor);
             _shader
