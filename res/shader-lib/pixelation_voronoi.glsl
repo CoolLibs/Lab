@@ -1,7 +1,7 @@
 // #include "_COOL_RES_/shaders/math.glsl"
 
-vec3 pixelation_voronoi(
-    vec3 in_color, float effect_intensity, vec2 uv,
+vec2 pixelation_voronoi(
+    vec2 in_uv, float effect_intensity,
     float size, float speed, float movement, bool time_mode, float distance_mode
 )
 {
@@ -21,7 +21,7 @@ vec3 pixelation_voronoi(
 
     vec3 col = vec3(0);
 
-    uv *= size;
+    vec2 uv  = in_uv * size;
     vec2 gv  = fract(uv) - .5;
     vec2 id  = floor(uv);
     vec2 cid = vec2(0);
@@ -48,9 +48,6 @@ vec3 pixelation_voronoi(
         }
     }
     vec2 image_uv = cid / size;
-    image_uv.x /= _aspect_ratio;
-    col = image(image_uv);
 
-    vec3 out_color = col;
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_uv, image_uv, effect_intensity);
 }

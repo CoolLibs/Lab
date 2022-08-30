@@ -21,15 +21,14 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
+    vec2 in_uv = _uv;
 
-    vec3 in_color = image(_uv);
-
-    vec3 out_color = pixelation_voronoi(
-        in_color, Effect_intensity, uv,
+    vec2 out_uv = pixelation_voronoi(
+        in_uv, Effect_intensity,
         Size, Speed, Movement, Time_mode, Distance_mode
     );
+
+    vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }
