@@ -1,5 +1,7 @@
 #version 410
 
+// https://www.shadertoy.com/view/MtKGzt
+
 // #include "_COOL_RES_/shaders/math.glsl"
 
 layout(location = 0) in vec2 _uv;
