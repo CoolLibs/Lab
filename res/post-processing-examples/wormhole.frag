@@ -15,13 +15,13 @@ uniform sampler2D _image;
 
 // BEGIN DYNAMIC PARAMS
 
-uniform float atractivity; // default 0.008
-uniform float symmetry;    // min = 0 max = 0.5
-uniform float intensity;
-uniform float wormhole_smooth; // fobidden 0
-uniform float wormhole_size;   // fobidden 0
+INPUT float atractivity; // default 0.008
+INPUT float symmetry;    // min = 0 max = 0.5
+INPUT float intensity;
+INPUT float wormhole_smooth; // fobidden 0
+INPUT float wormhole_size;   // fobidden 0
 
-uniform vec3 wormhole_color;
+INPUT vec3 wormhole_color;
 
 // END DYNAMIC PARAMS
 
