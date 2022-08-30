@@ -10,7 +10,6 @@
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Path/Path.h>
-#include <Cool/Serialization/AutoSerializer.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderableViewManager.h>
 #include <Cool/Window/WindowManager.h>
