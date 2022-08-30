@@ -10,3 +10,23 @@ float golden_noise(in vec2 xy, in float seed)
     const float golden_ratio = 1.61803398874989484820459;
     return fract(tan(distance(xy * golden_ratio * 2000., xy) * seed) * xy.x);
 }
+
+vec2 golden_noise_uv(
+    vec2 in_uv, float Effect_intensity,
+    float Seed
+)
+{
+    return mix(in_uv, vec2(golden_noise(in_uv, Seed)), Effect_intensity);
+}
+
+vec3 golden_noise_color(
+    vec2 in_uv, float Effect_intensity,
+    float Seed
+)
+{
+    return vec3(
+        golden_noise(in_uv, Seed + 0.1),
+        golden_noise(in_uv, Seed + 0.2),
+        golden_noise(in_uv, Seed + 0.3)
+    );
+}

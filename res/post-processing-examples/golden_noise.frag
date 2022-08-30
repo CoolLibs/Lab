@@ -17,14 +17,18 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec3 image = image(_uv);
-    vec2 uv    = _uv;
-    uv.x *= _aspect_ratio;
+    vec2 in_uv = _uv;
 
-    vec3 out_color = vec3(
-        golden_noise(uv, Seed + 0.1),
-        golden_noise(uv, Seed + 0.2),
-        golden_noise(uv, Seed + 0.3)
+    // vec2 out_uv = golden_noise_uv(
+    //     in_uv, Effect_intensity,
+    //     Seed
+    // );
+
+    // vec3 out_color = image(out_uv);
+
+    vec3 out_color = golden_noise_color(
+        in_uv, Effect_intensity,
+        Seed
     );
 
     out_Color = vec4(out_color, 1.);
