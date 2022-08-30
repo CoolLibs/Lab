@@ -33,7 +33,6 @@ INPUT RgbColor Border_color;
 void main()
 {
     vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
 
     vec3 in_color = image(_uv);
 

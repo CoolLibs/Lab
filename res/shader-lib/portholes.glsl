@@ -95,7 +95,6 @@ vec3 portholes(
     float tiles_length = 1. / size;
 
     vec2 img_uv = (id + .5) * tiles_length;
-    img_uv.x /= _aspect_ratio;
 
     VoronoiRes res  = voronoi(uv, time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
     VoronoiRes resX = voronoi(uv + vec2(0.001, 0.), time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
