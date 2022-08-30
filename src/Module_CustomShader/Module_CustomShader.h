@@ -82,7 +82,8 @@ private:
         Cool::IsDirty_Ref,
         Cool::InputFactory_Ref,
         Cool::InputDestructor_Ref,
-        UpdateContext_Ref
+        UpdateContext_Ref,
+        Cool::VariableRegistries&
     );
     void parse_shader_for_params(
         std::string_view fragment_shader_source_code,

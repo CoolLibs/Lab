@@ -119,7 +119,7 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
 
 void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
-    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx);
+    refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx, in.variable_registries);
     if (_shader.pipeline().shader())
     {
         _shader.pipeline().shader()->bind();
@@ -165,14 +165,24 @@ static void load_if_necessary(std::optional<Cool::PresetManager>& presets_manage
     }
 }
 
-static void load_if_necessary(std::unique_ptr<SettingsSerializer>& settings_serializer, std::filesystem::path path, const std::optional<Cool::PresetManager>& presets_manager)
+static void load_if_necessary(
+    std::unique_ptr<SettingsSerializer>&      settings_serializer,
+    std::filesystem::path                     path,
+    const std::optional<Cool::PresetManager>& presets_manager,
+    Cool::VariableRegistries&                 variable_registries
+)
 {
     if (path_has_changed(settings_serializer, path))
     {
         settings_serializer = std::make_unique<SettingsSerializer>(path);
         if (!settings_serializer->is_coming_from_deserialization() && presets_manager)
         {
-            presets_manager->apply_first_preset_if_there_is_one(settings_serializer->get());
+            // Get the variables from the inputs
+            auto settings = settings_from_inputs(settings_serializer->get(), variable_registries);
+            // UI for the variables
+            presets_manager->apply_first_preset_if_there_is_one(settings);
+            // Apply back the variables to the inputs' default variables
+            apply_settings_to_inputs(settings, settings_serializer->get(), variable_registries);
         }
     }
 }
@@ -182,7 +192,8 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::IsDirty_Ref         is_dirty,
     Cool::InputFactory_Ref    input_factory,
     Cool::InputDestructor_Ref input_destructor,
-    UpdateContext_Ref         update_ctx
+    UpdateContext_Ref         update_ctx,
+    Cool::VariableRegistries& variable_registries
 )
 {
     if (is_dirty(_shader.dirty_flag()))
@@ -191,7 +202,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         if (Cool::File::exists(file_path.string()))
         {
             load_if_necessary(_presets_manager, preset_path(file_path));
-            load_if_necessary(_settings_serializer, settings_cache_path(file_path), _presets_manager);
+            load_if_necessary(_settings_serializer, settings_cache_path(file_path), _presets_manager, variable_registries);
             const auto source_code = Cool::File::to_string(file_path.string());
             parse_shader_for_params(source_code, input_factory, input_destructor);
             _shader
@@ -199,6 +210,10 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
                 .send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
                     return make_shader_compilation_error_message(name(), file_path.string(), msg);
                 });
+            if (_settings_serializer)
+            {
+                inputs() = _settings_serializer->get();
+            }
         }
         else
         {
