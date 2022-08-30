@@ -23,13 +23,11 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
-
-    vec3 in_color = image(_uv);
+    vec2 in_uv = _uv;
 
     vec3 out_color = pixelation(
-        in_color, Effect_intensity, uv,
+        in_uv, Effect_intensity,
+        _aspect_ratio,
         Nb_tiles_on_y_axis, Border_thickness, Smoothing, Border_color
     );
 
