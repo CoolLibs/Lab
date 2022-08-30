@@ -151,6 +151,28 @@ static auto settings_cache_path(std::filesystem::path path) -> std::filesystem::
     return p;
 }
 
+template<typename T>
+static auto path_has_changed(const T& path_holder, std::filesystem::path path) -> bool
+{
+    return !path_holder || path_holder->path() != path;
+}
+
+static void load_if_necessary(std::optional<Cool::PresetManager>& presets_manager, std::filesystem::path path)
+{
+    if (path_has_changed(presets_manager, path))
+    {
+        presets_manager.emplace(path);
+    }
+}
+
+static void load_if_necessary(std::unique_ptr<SettingsSerializer>& settings_serializer, std::filesystem::path path)
+{
+    if (path_has_changed(settings_serializer, path))
+    {
+        settings_serializer = std::make_unique<SettingsSerializer>(path);
+    }
+}
+
 void Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::InputProvider_Ref   provider,
     Cool::IsDirty_Ref         is_dirty,
@@ -164,15 +186,15 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         const auto file_path = provider(_file);
         if (Cool::File::exists(file_path.string()))
         {
-            _presets_manager.emplace(preset_path(file_path));
-            _settings_serializer   = std::make_unique<SettingsSerializer>(settings_cache_path(file_path));
+            load_if_necessary(_presets_manager, preset_path(file_path));
+            load_if_necessary(_settings_serializer, settings_cache_path(file_path));
             const auto source_code = Cool::File::to_string(file_path.string());
+            parse_shader_for_params(source_code, input_factory, input_destructor);
             _shader
-                .compile(source_code, update_ctx)
+                .compile(Cool::preprocess_inputs(source_code, inputs(), provider), update_ctx)
                 .send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
                     return make_shader_compilation_error_message(name(), file_path.string(), msg);
                 });
-            parse_shader_for_params(source_code, input_factory, input_destructor);
         }
         else
         {

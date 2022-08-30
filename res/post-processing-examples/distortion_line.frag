@@ -12,6 +12,7 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 INPUT float time_mod;
 INPUT float thres; // default 0.7 min = 0 max = 2
@@ -63,6 +64,6 @@ void main()
     }
 
     vec2 uvModif = vec2(xModif, fragCoord.y) / iResolution.xy;
-    vec3 col     = texture(_image, uvModif).rgb;
+    vec3 col     = image(uvModif).rgb;
     out_Color    = vec4(col, 1.);
 }

@@ -11,6 +11,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+
 // BEGIN DYNAMIC PARAMS
 
 uniform float atractivity; // default 0.008
@@ -22,11 +24,6 @@ uniform float wormhole_size;   // fobidden 0
 uniform vec3 wormhole_color;
 
 // END DYNAMIC PARAMS
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
 
 void main()
 {

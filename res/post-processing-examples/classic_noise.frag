@@ -24,23 +24,22 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/classic_noise.glsl"
 
-INPUT float Frequency;
+INPUT float Frequency; // 0.5 min 0.001 max 10.
 
-INPUT float Scale; // 100
+INPUT float Scale; // 100. min 0. max 200.
 
-INPUT float a; // min = 1, max = 3; default = 1.5;  `a` increases the fractalness of the noise
+INPUT float Fractalness; // 1.5 min 1. max 5.
 
-INPUT float Effect_intensity;
+INPUT float Effect_intensity; // default 1. min -1. max 2.
 
 void main()
 {
     vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
 
-    float out_color = classic_noise(
-        uv,
-        Frequency, a, Scale
+    vec2 out_uv = classic_noise_uv(
+        uv, Effect_intensity,
+        Frequency, Fractalness, Scale
     );
 
-    out_Color = vec4(vec3(out_color), 1.);
+    out_Color = vec4(image(out_uv), 1.);
 }

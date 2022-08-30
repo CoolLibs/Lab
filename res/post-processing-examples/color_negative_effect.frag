@@ -8,19 +8,22 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/color_negative_effect.glsl"
 
-INPUT vec3 channels_contribution; // default 1 min = 0
+// default 1 min = 0
+INPUT vec3 channels_contribution;
 
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
+INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 uv    = _uv;
-    vec3 color = vec3(1.);
-    vec4 img   = image(uv);
-    color -= channels_contribution * img.rgb;
-    out_Color = vec4(color, 1.);
+    vec3 in_color = image(_uv);
+
+    vec3 out_color = color_negative_effet(
+        in_color, Effect_intensity,
+        channels_contribution
+    );
+
+    out_Color = vec4(out_color, 1.);
 }

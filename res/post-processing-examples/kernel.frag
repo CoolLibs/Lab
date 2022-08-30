@@ -9,6 +9,7 @@ uniform sampler2D _image;
 uniform sampler2D _texture;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 const int nb          = 15;
 const int kernel_size = nb * 2 + 1;
@@ -101,11 +102,6 @@ vec3 convolution(float kernel[kernel_size * kernel_size], sampler2D sampler, vec
     }
 
     return sum;
-}
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
 }
 
 void main()

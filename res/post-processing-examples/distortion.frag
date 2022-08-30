@@ -17,11 +17,9 @@ INPUT float Effect_intensity;
 void main()
 {
     vec2 in_uv = _uv;
-    in_uv.x *= _aspect_ratio;
 
-    vec2 out_uv = distortion(in_uv, Effect_intensity);
+    vec2 out_uv = distortion(in_uv, Effect_intensity, _texture);
 
-    out_uv.x /= _aspect_ratio;
     vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);

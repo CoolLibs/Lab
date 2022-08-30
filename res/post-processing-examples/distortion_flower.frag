@@ -12,6 +12,7 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 INPUT float center_x; // default 0.5 range 0 to 1
 INPUT float center_y; // default 0.5 range 0 to 1
@@ -19,11 +20,6 @@ INPUT float size;
 INPUT float details;
 
 INPUT int distor;
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
 
 void main()
 {

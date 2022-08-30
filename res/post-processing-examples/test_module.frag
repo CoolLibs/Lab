@@ -11,8 +11,6 @@ INPUT float    _circle_radius;
 INPUT float    _aspect_ratio;
 INPUT float    _time;
 
-// #include "_COOL_RES_/shaders/input_definitions.glsl"
-
 void main()
 {
     vec2  uv       = (_uv - 0.5) * vec2(_aspect_ratio, 1.);

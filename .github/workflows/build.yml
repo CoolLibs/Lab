@@ -1,0 +1,92 @@
+name: Build exe
+
+on: workflow_dispatch
+
+env:
+  TARGET: CoolLab # Should be the name of the target you created in your CMakeLists.txt and want to build and run
+
+
+jobs:
+#-----------------------------------------------------------------------------------------------
+  Windows_Clang_Release:
+    name: Windows Clang Release
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          submodules: recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}\build -T ClangCL
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+
+    - name: Zip building directory
+      run: tar cvzf ${{github.workspace}}\bin\Release.tar.gz ${{github.workspace}}\bin\Release
+    
+    - name: Look for path
+      run: ls ${{github.workspace}}\bin
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload assets
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: https://github.com/CoolLibs/Lab/tree/main/.github
+        asset_path: ${{github.workspace}}\bin\Release.tar.gz
+        asset_name: program-${{ runner.os }}.tar.gz
+        asset_content_type: application/tar.gz
+    
+    - name: Look for path after
+      run: ls ${{github.workspace}}\bin
+#-----------------------------------------------------------------------------------------------
+#   Linux_Clang_Release: 
+#     name: Linux Clang Release
+#     runs-on: ubuntu-22.04
+#     steps:
+#     - uses: actions/checkout@v3
+#       with:
+#         submodules: recursive
+
+#     - name: Install glfw dependencies
+#       run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev    
+
+#     - name: Configure CMake
+#       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+
+#     - name: Build
+#       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+
+#     - name: Run
+#       run: ${{github.workspace}}/build/${{env.TARGET}} 
+
+# #-----------------------------------------------------------------------------------------------
+#   MacOS_Clang_Release: 
+#     name: MacOS Clang Release
+#     runs-on: macos-12
+#     steps:
+#     - uses: actions/checkout@v3
+#       with:
+#         submodules: recursive
+
+#     - name: Configure CMake
+#       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+
+#     - name: Build
+#       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+
+#     - name: Run
+#       run: ${{github.workspace}}/build/${{env.TARGET}} 
