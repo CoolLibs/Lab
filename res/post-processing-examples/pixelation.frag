@@ -14,7 +14,7 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/pixelation.glsl"
 
 INPUT float Nb_tiles_on_y_axis; // default 20
-INPUT float Border;             // default 0.469
+INPUT float Border_thickness;   // default 0.469 min 0. max 0.5
 INPUT float Smoothing;          // default 0.225
 
 INPUT RgbColor Border_color;
@@ -30,7 +30,7 @@ void main()
 
     vec3 out_color = pixelation(
         in_color, Effect_intensity, uv,
-        Nb_tiles_on_y_axis, Border, Smoothing, Border_color
+        Nb_tiles_on_y_axis, Border_thickness, Smoothing, Border_color
     );
 
     out_Color = vec4(out_color, 1.);
