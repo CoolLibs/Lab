@@ -14,9 +14,11 @@ class SettingsSerializer {
 public:
     SettingsSerializer() = default;
     SettingsSerializer(std::filesystem::path path)
-        : _auto_serializer{Cool::AutoSerializer<SettingsSerializer>{
-              path, "Current Settings", *this, [](const std::string&) {
+        : _is_coming_from_deserialization{true}
+        , _auto_serializer{Cool::AutoSerializer<SettingsSerializer>{
+              path, "Current Settings", *this, [&](const std::string&) {
                   /*Ignore deserialization warnings*/
+                  _is_coming_from_deserialization = false;
               }}}
     {
     }
@@ -26,7 +28,10 @@ public:
 
     auto path() const { return _auto_serializer ? _auto_serializer->path() : ""; }
 
+    auto is_coming_from_deserialization() const -> bool { return _is_coming_from_deserialization; }
+
 private:
+    bool                                                    _is_coming_from_deserialization{false};
     std::vector<Cool::AnyInput>                             _inputs{};
     std::optional<Cool::AutoSerializer<SettingsSerializer>> _auto_serializer;
 
