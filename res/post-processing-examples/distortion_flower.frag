@@ -1,7 +1,5 @@
 #version 410
 
-// https://www.shadertoy.com/view/stSGDW
-
 // #include "_COOL_RES_/shaders/math.glsl"
 
 layout(location = 0) in vec2 _uv;
@@ -13,30 +11,27 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/distortion_flower.glsl"
 
-INPUT float center_x; // default 0.5 range 0 to 1
-INPUT float center_y; // default 0.5 range 0 to 1
-INPUT float size;
-INPUT float details;
+// default 0.5 range 0 to 1
+// Point2D
+INPUT vec2  Center;
+INPUT float Scale;
+INPUT float Frequency;
+INPUT int   Subdivison;
 
-INPUT int distor;
+INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 uv     = _uv;
-    vec2 center = vec2(center_x, center_y);
-    uv -= center;
-    uv.x *= _aspect_ratio;
-    // uv *= size;
+    vec2 in_uv = _uv;
 
-    float r = sqrt(uv.x * uv.x + uv.y * uv.y) * size / 15.0;
+    vec2 out_uv = distortion_flower(
+        in_uv, Effect_intensity,
+        Center, Scale, Frequency, Subdivison
+    );
 
-    float a = 60.0 * sin(distor * atan(uv.x + uv.y / r, uv.y - uv.x / r));
-    a += 500.0;
-    a = a * (r / 50.0);
-    a = 200000.0 * sin(a * 6.0) * (r / 30.0) * details;
+    vec3 out_color = image(out_uv);
 
-    vec3 col = image(uv + vec2(cos(a / 20.0), cos(a / 200.0)) - center).rgb;
-
-    out_Color = vec4(col, 1.0);
+    out_Color = vec4(out_color, 1.0);
 }
