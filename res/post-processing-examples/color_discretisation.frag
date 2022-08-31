@@ -11,9 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/color_discretisation.glsl"
 
-INPUT RgbColor color1;
-INPUT RgbColor color2;
-INPUT RgbColor color3;
+INPUT RgbColor Color1;
+INPUT RgbColor Color2;
+INPUT RgbColor Color3;
 
 INPUT float Effect_intensity;
 
@@ -23,7 +23,7 @@ void main()
 
     vec3 out_color = color_discretisation(
         in_color, Effect_intensity,
-        color1, color2, color3
+        Color1, Color2, Color3
     );
 
     out_Color = vec4(out_color, 1.);
