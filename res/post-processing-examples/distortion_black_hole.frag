@@ -1,7 +1,5 @@
 #version 410
 
-// https://www.shadertoy.com/view/MtKGzt
-
 // #include "_COOL_RES_/shaders/math.glsl"
 
 layout(location = 0) in vec2 _uv;
@@ -13,56 +11,33 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/distortion_black_hole.glsl"
 
-INPUT Angle angle_in_turns;    // 0 to 1 (1 == 1 turn)
-INPUT float hole_radius;       // positive values
-INPUT float hole_intensity;    // 0 to 8
-INPUT float hole_attractivity; // -1 to 1
-INPUT float hole_smooth;       // -.5 to 1
-INPUT float hole_center_x;     // default 0.5 range 0 to 1
-INPUT float hole_center_y;     // default 0.5 range0 to 1
+INPUT Angle Angle_in_turns;    // 0 to 1 (1 == 1 turn)
+INPUT float Hole_radius;       // positive values
+INPUT float Hole_intensity;    // 0 to 8
+INPUT float Hole_attractivity; // -1 to 1
+INPUT float Hole_smooth;       // -.5 to 1
+// range 0 to 1
+// Point2D
+INPUT vec2 Hole_center; // vec2(0.5,0.5)
 
-INPUT RgbColor hole_color;
+INPUT RgbColor Hole_color;
 
-INPUT int nb_div; // 0 forbidden
+INPUT int Subdivision; // 0 forbidden
 
-vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
-{
-    float d    = distance(uv, point);
-    float invD = 1.0 / d;
-    invD       = pow(invD / invIntensity, invGlow);
-    return color * invD;
-}
+INPUT float Effect_intensity;
 
+/// Use Mirror_Reppeat instead of Clamp
 void main()
 {
-    // [0, res] to [-1, 1]
-    vec2 hole_center = vec2(hole_center_x, hole_center_y);
-    vec2 coord       = -hole_center + (_uv)*2.;
-    vec2 ncoord      = -hole_center + coord * vec2(_aspect_ratio, 1.0);
+    vec2 in_uv = _uv;
 
-    // change look at
-    // ncoord.x += sin(radians(time_mod * 40.0)) * .4;
-    // ncoord.y += cos(radians(time_mod * 40.0)) * .7;
+    vec3 out_color = distortion_black_hole(
+        in_uv, Effect_intensity,
+        Hole_center, Angle_in_turns, Hole_color, Subdivision,
+        Hole_radius, Hole_intensity, Hole_attractivity, Hole_smooth
+    );
 
-    // rotation
-    float angleRot = angle_in_turns * TAU;
-    vec2  tcoord   = vec2(ncoord.x * cos(angleRot) - ncoord.y * sin(angleRot), ncoord.y * cos(angleRot) + ncoord.x * sin(angleRot));
-
-    // sink hole projection
-    float angle  = atan(tcoord.x, tcoord.y);
-    float radius = length(tcoord);
-    vec2  uv     = vec2(angle, radius);
-
-    uv /= radians(360. / float(nb_div));
-    uv.y += hole_attractivity; // scrolling
-
-    vec4 col = texture(_image, uv);
-
-    // hole
-    float invIntensity = (6.0 + sin(radians(hole_intensity * 40)) * 5.8) / (hole_radius);
-    float invGlow      = hole_smooth;
-    col.rgb += blob(vec2(0, 0), tcoord, -hole_color, invIntensity, invGlow);
-
-    out_Color = col;
+    out_Color = vec4(out_color, 1.);
 }

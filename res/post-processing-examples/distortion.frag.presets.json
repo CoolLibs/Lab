@@ -6,30 +6,12 @@
                     {
                         "first": {
                             "value0": {
-                                "value0": "00c91bb2-da74-491d-b830-37255dceef9b"
+                                "value0": "d67af52a-59fd-4a95-8fff-ef6dfab0e672"
                             }
                         },
                         "second": {
                             "Name": "Default",
                             "Values": [
-                                {
-                                    "index": 4,
-                                    "data": {
-                                        "Name": "channels_contribution",
-                                        "Value": {
-                                            "x": 1.0,
-                                            "y": 1.0,
-                                            "z": 1.0
-                                        },
-                                        "Metadata": {},
-                                        "Default Value": {
-                                            "x": 0.0,
-                                            "y": 0.0,
-                                            "z": 0.0
-                                        },
-                                        "Default Metadata": {}
-                                    }
-                                },
                                 {
                                     "index": 2,
                                     "data": {

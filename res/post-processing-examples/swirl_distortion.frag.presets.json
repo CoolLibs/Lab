@@ -6,28 +6,42 @@
                     {
                         "first": {
                             "value0": {
-                                "value0": "00c91bb2-da74-491d-b830-37255dceef9b"
+                                "value0": "59554cca-9762-48a0-b581-be7516a13f66"
                             }
                         },
                         "second": {
-                            "Name": "Default",
+                            "Name": "Smooth swirl",
                             "Values": [
                                 {
-                                    "index": 4,
+                                    "index": 3,
                                     "data": {
-                                        "Name": "channels_contribution",
+                                        "Name": "Center",
                                         "Value": {
-                                            "x": 1.0,
-                                            "y": 1.0,
-                                            "z": 1.0
+                                            "x": 0.5,
+                                            "y": 0.5
                                         },
                                         "Metadata": {},
                                         "Default Value": {
                                             "x": 0.0,
-                                            "y": 0.0,
-                                            "z": 0.0
+                                            "y": 0.0
                                         },
                                         "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Size",
+                                        "Value": 0.5,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 10.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
                                     }
                                 },
                                 {

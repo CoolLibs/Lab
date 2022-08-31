@@ -6,28 +6,26 @@
                     {
                         "first": {
                             "value0": {
-                                "value0": "00c91bb2-da74-491d-b830-37255dceef9b"
+                                "value0": "da6e8b86-8d44-4602-841a-1ff951f40e35"
                             }
                         },
                         "second": {
                             "Name": "Default",
                             "Values": [
                                 {
-                                    "index": 4,
+                                    "index": 2,
                                     "data": {
-                                        "Name": "channels_contribution",
-                                        "Value": {
-                                            "x": 1.0,
-                                            "y": 1.0,
-                                            "z": 1.0
+                                        "Name": "Gamma",
+                                        "Value": 5.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 50.0
                                         },
-                                        "Metadata": {},
-                                        "Default Value": {
-                                            "x": 0.0,
-                                            "y": 0.0,
-                                            "z": 0.0
-                                        },
-                                        "Default Metadata": {}
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
                                     }
                                 },
                                 {
@@ -36,8 +34,8 @@
                                         "Name": "Effect_intensity",
                                         "Value": 1.0,
                                         "Metadata": {
-                                            "Min Value": -5.0,
-                                            "Max Value": 5.0
+                                            "Min Value": 0.0,
+                                            "Max Value": 3.0
                                         },
                                         "Default Value": 0.0,
                                         "Default Metadata": {
