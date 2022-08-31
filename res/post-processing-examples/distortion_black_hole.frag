@@ -34,11 +34,13 @@ vec3 Hole(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
     invD       = pow(invD / invIntensity, invGlow);
     return color * invD;
 }
+INPUT float Effect_intensity;
 
+/// Use Mirror_Reppeat instead of Clamp
 void main()
 {
     vec2 coord  = (_uv - Hole_center) * 2.;
-    vec2 ncoord = coord * vec2(_aspect_ratio, 1.0);
+    vec2 ncoord = coord;
 
     // rotation
     float angleRot = Angle_in_turns * TAU;
@@ -52,12 +54,12 @@ void main()
     uv /= radians(360. / float(Subdivision));
     uv.y += Hole_attractivity;
 
-    vec4 col = texture(_image, uv);
+    vec3 out_color = image(mix(_uv, uv, Effect_intensity));
 
     // Hole
     float invIntensity = (6.0 + sin(radians(Hole_intensity * 40)) * 5.8) / (Hole_radius);
     float invGlow      = Hole_smooth;
-    col.rgb += Hole(vec2(0, 0), tcoord, -Hole_color, invIntensity, invGlow);
+    out_color += Hole(vec2(0, 0), tcoord, -Hole_color, invIntensity, invGlow) * Effect_intensity;
 
-    out_Color = col;
+    out_Color = vec4(out_color, 1.);
 }
