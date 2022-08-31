@@ -82,3 +82,15 @@ vec3 voronoise(
 
     return mix(in_color, out_color, effect_intensity);
 }
+
+vec3 voronoise_color(
+    vec2  in_uv,
+    float scale
+)
+{
+    vec2 noise = cellular(in_uv * scale);
+
+    vec3 out_color = vec3(noise.x / noise.y);
+
+    return out_color;
+}

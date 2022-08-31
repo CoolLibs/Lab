@@ -28,8 +28,8 @@ void main()
 
     vec3 in_color = image(_uv);
 
-    vec3 out_color = voronoise(
-        in_color, Effect_intensity, in_uv,
+    vec3 out_color = voronoise_color(
+        in_uv,
         Scale
     );
 
