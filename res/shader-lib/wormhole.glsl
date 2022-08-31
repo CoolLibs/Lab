@@ -1,7 +1,7 @@
 // https://www.shadertoy.com/view/tdXfW7
 
 vec3 wormhole(
-    vec2  in_uv,
+    vec2 in_uv, float Effect_intensity,
     float aspect_ratio,
     float Atractivity, float Symmetry, float Intensity, float Wormhole_smooth, float Wormhole_size, RgbColor Wormhole_color
 )
@@ -23,8 +23,11 @@ vec3 wormhole(
     }
     tuv = abs(1. - 2. * tuv);
 
-    color += Wormhole_color;
-    color += image(tuv) * l * Intensity;
+    color += Wormhole_color * Effect_intensity;
+    color += image(
+                 mix(in_uv, tuv, Effect_intensity)
+             ) *
+             mix(1., l * Intensity, Effect_intensity);
 
     return color;
 }

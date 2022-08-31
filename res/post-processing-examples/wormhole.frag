@@ -21,11 +21,13 @@ INPUT float Wormhole_size;   // fobidden 0
 
 INPUT RgbColor Wormhole_color;
 
+INPUT float Effect_intensity;
+
 void main()
 {
     vec2 in_uv     = _uv;
     vec3 out_color = wormhole(
-        in_uv,
+        in_uv, Effect_intensity,
         _aspect_ratio,
         Atractivity, Symmetry, Intensity, Wormhole_smooth, Wormhole_size, Wormhole_color
     );
