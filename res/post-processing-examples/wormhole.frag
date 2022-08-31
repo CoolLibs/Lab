@@ -18,6 +18,7 @@ INPUT float Symmetry;    // min = 0 max = 0.5
 INPUT float Intensity;
 INPUT float Wormhole_smooth; // fobidden 0
 INPUT float Wormhole_size;   // fobidden 0
+INPUT vec2  Center;
 
 INPUT RgbColor Wormhole_color;
 
@@ -29,7 +30,7 @@ void main()
     vec3 out_color = wormhole(
         in_uv, Effect_intensity,
         _aspect_ratio,
-        Atractivity, Symmetry, Intensity, Wormhole_smooth, Wormhole_size, Wormhole_color
+        Center, Atractivity, Symmetry, Intensity, Wormhole_smooth, Wormhole_size, Wormhole_color
     );
 
     out_Color = vec4(out_color, 1.);

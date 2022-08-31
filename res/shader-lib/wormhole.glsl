@@ -3,10 +3,10 @@
 vec3 wormhole(
     vec2 in_uv, float Effect_intensity,
     float aspect_ratio,
-    float Atractivity, float Symmetry, float Intensity, float Wormhole_smooth, float Wormhole_size, RgbColor Wormhole_color
+    vec2 Center, float Atractivity, float Symmetry, float Intensity, float Wormhole_smooth, float Wormhole_size, RgbColor Wormhole_color
 )
 {
-    vec2 p = in_uv - 0.5;
+    vec2 p = in_uv - Center;
     p.x *= aspect_ratio;
 
     vec2  tuv   = vec2(atan(p.x, p.y) / PI * Symmetry, Atractivity / length(p)) + .5;
