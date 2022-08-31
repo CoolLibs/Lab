@@ -11,10 +11,10 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/black_and_white.glsl"
 
-INPUT vec3 Channels_contribution; // default vec3(0.2126, 0.7152, 0.0722)
-INPUT bool Normalize;             // default true
+INPUT vec3 Channels_contribution;
+INPUT bool Normalize;
 
-INPUT float Effect_intensity; // default 1. min 0. max 1.
+INPUT float Effect_intensity;
 
 void main()
 {
