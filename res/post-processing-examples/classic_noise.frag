@@ -41,5 +41,7 @@ void main()
         Frequency, Fractalness, Scale
     );
 
-    out_Color = vec4(image(out_uv), 1.);
+    vec3 out_color = image(out_uv);
+
+    out_Color = vec4(out_color, 1.);
 }
