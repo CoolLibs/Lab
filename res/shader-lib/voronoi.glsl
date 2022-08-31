@@ -2,8 +2,8 @@
 
 // https://youtu.be/l-07BXzNdPw
 
-vec3 voronoi(
-    vec3 in_color, float effect_intensity, vec2 in_uv,
+float voronoi(
+    vec2  in_uv,
     float scale, float speed, float movement, bool time_mode, float distance_mode
 )
 {
@@ -46,7 +46,30 @@ vec3 voronoi(
             }
         }
     }
-    vec3 out_color = vec3(minimal_distance);
+    return minimal_distance;
+}
+vec2 voronoi_uv(
+    vec2 in_uv, float effect_intensity,
+    float scale, float speed, float movement, bool time_mode, float distance_mode
+)
+{
+    return mix(
+        in_uv,
+        vec2(voronoi(
+            in_uv,
+            scale, speed, movement, time_mode, distance_mode
+        )),
+        effect_intensity
+    );
+}
 
-    return mix(in_color, out_color, effect_intensity);
+vec3 voronoi_color(
+    vec2  in_uv,
+    float scale, float speed, float movement, bool time_mode, float distance_mode
+)
+{
+    return vec3(voronoi(
+        in_uv,
+        scale, speed, movement, time_mode, distance_mode
+    ));
 }
