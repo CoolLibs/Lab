@@ -11,10 +11,11 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry.glsl"
 
-INPUT float center_x;       // 0 to 1 default 0.5
-INPUT float center_y;       // 0 to 1 default 0.5
-INPUT Angle angle_in_turns; // 0 to 1 (1 == 1 turn)
-INPUT bool  right_or_left;  // bool
+// 0 to 1 default 0.5
+// Point2D
+INPUT vec2  Center;
+INPUT Angle Angle_symmetry;
+INPUT bool  Invert_symmetry;
 
 INPUT float Effect_intensity;
 
@@ -24,7 +25,7 @@ void main()
 
     vec2 out_uv = symmetry(
         in_uv, Effect_intensity,
-        center_x, center_y, angle_in_turns, right_or_left
+        Center, Angle_symmetry, Invert_symmetry
     );
 
     vec3 out_color = image(out_uv);
