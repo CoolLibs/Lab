@@ -11,39 +11,36 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
-// BEGIN DYNAMIC PARAMS
+INPUT float Atractivity; // default 0.008
+INPUT float Symmetry;    // min = 0 max = 0.5
+INPUT float Intensity;
+INPUT float Wormhole_smooth; // fobidden 0
+INPUT float Wormhole_size;   // fobidden 0
 
-INPUT float atractivity; // default 0.008
-INPUT float symmetry;    // min = 0 max = 0.5
-INPUT float intensity;
-INPUT float wormhole_smooth; // fobidden 0
-INPUT float wormhole_size;   // fobidden 0
-
-INPUT vec3 wormhole_color;
-
-// END DYNAMIC PARAMS
+INPUT RgbColor Wormhole_color;
 
 void main()
 {
     vec2 p = _uv - 0.5;
     p.x *= _aspect_ratio;
 
-    vec2  tuv   = vec2(atan(p.x, p.y) / PI * symmetry, atractivity / length(p)) + .5;
+    vec2  tuv   = vec2(atan(p.x, p.y) / PI * Symmetry, Atractivity / length(p)) + .5;
     float l     = sqrt(p.x * p.x + p.y * p.y);
     vec3  color = vec3(0.);
     if (l > 2.)
     {
-        l = wormhole_size;
+        l = Wormhole_size;
     }
     else
     {
-        l = l * wormhole_smooth - wormhole_size;
-        l = -(l * l) + wormhole_size;
+        l = l * Wormhole_smooth - Wormhole_size;
+        l = -(l * l) + Wormhole_size;
     }
     tuv = abs(1. - 2. * tuv);
-    color += wormhole_color;
-    color += image(tuv).rgb * l * intensity;
+    color += Wormhole_color;
+    color += image(tuv).rgb * l * Intensity;
     out_Color = vec4(color, 1.);
 }
