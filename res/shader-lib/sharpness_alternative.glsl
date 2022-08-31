@@ -25,15 +25,8 @@ vec3 sharpness_alternative(
     blur += image(in_uv + vec2(-0.001 * Offset_strength, 0.001 * Offset_strength)) / 2.0;
 
     blur /= 7.0;
-
     float sharpness = (out_color - blur).r * Sharpening_strength;
+    out_color += sharpness;
 
-    // out_color = vec3(0);
-    // out_color -= step(distance(fract(uv.x + (sin(_time) + 1.0) / 2.0) + 0.5, 0.5) * 2.0, 0.013);
-
-    if (floor(in_uv.x + ((sin(_time) + 1.0) / 2.0)) > 0.0)
-    {
-        out_color += sharpness;
-    }
     return out_color;
 }
