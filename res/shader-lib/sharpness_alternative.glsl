@@ -28,5 +28,5 @@ vec3 sharpness_alternative(
     float sharpness = (out_color - blur).r * Sharpening_strength;
     out_color += sharpness;
 
-    return out_color;
+    return mix(image(in_uv), out_color, effect_intensity);
 }
