@@ -10,13 +10,14 @@ uniform sampler2D _image;
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/color_effects.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/threshold_by_chosen_color.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/grid_9_colors.glsl"
 
-// INPUT int number_of_colors; // min 2
+INPUT int number_of_colors; // min 2
 
-// INPUT RgbColor Color0;
+INPUT RgbColor Color0;
 
-// INPUT RgbColor Color_coefficient;
+INPUT RgbColor Color_coefficient;
 
 INPUT float Grey_coefficient;
 INPUT bool  One_color_mode;
@@ -59,15 +60,15 @@ void main()
 
     vec3 current_color = table_of_colors[size * grid_id.x + grid_id.y];
 
-    // vec3 out_color = threshold_by_chosen_color(
-    //     in_color, Effect_intensity,
-    //     number_of_colors, Color0, current_color
-    // );
-
-    vec3 out_color = color_effects(
+    vec3 out_color = threshold_by_chosen_color(
         in_color, Effect_intensity,
-        current_color, Grey_coefficient, One_color_mode
+        number_of_colors, Color0, current_color
     );
+
+    // vec3 out_color = color_effects(
+    //     in_color, Effect_intensity,
+    //     current_color, Grey_coefficient, One_color_mode
+    // );
 
     out_Color = vec4(out_color, 1.);
 }
