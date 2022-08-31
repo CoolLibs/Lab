@@ -1,0 +1,116 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "4c3a53e9-9fa1-40af-95f0-9d0ecd641fd1"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 6,
+                                    "data": {
+                                        "Name": "Color1",
+                                        "Value": {
+                                            "RGB": {
+                                                "x": 0.4105461835861206,
+                                                "y": 0.10332564264535904,
+                                                "z": 0.4901960492134094
+                                            }
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": false
+                                        },
+                                        "Default Value": {
+                                            "RGB": {
+                                                "x": 0.0,
+                                                "y": 0.0,
+                                                "z": 0.0
+                                            }
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 6,
+                                    "data": {
+                                        "Name": "Color2",
+                                        "Value": {
+                                            "RGB": {
+                                                "x": 0.8136293292045593,
+                                                "y": 0.16339868307113648,
+                                                "z": 0.8333333134651184
+                                            }
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": false
+                                        },
+                                        "Default Value": {
+                                            "RGB": {
+                                                "x": 0.0,
+                                                "y": 0.0,
+                                                "z": 0.0
+                                            }
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 6,
+                                    "data": {
+                                        "Name": "Color3",
+                                        "Value": {
+                                            "RGB": {
+                                                "x": 1.0,
+                                                "y": 1.0,
+                                                "z": 1.0
+                                            }
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": false
+                                        },
+                                        "Default Value": {
+                                            "RGB": {
+                                                "x": 0.0,
+                                                "y": 0.0,
+                                                "z": 0.0
+                                            }
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": -5.0,
+                                            "Max Value": 5.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
