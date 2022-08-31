@@ -1,0 +1,98 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "1aa1e84f-2820-4427-9f29-d3b9580009c1"
+                            }
+                        },
+                        "second": {
+                            "Name": "Green",
+                            "Values": [
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Tint",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": -3.0,
+                                            "Max Value": 3.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 10.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "4d5696ec-4da9-4418-b4bd-d5a7b9134b98"
+                            }
+                        },
+                        "second": {
+                            "Name": "Purple",
+                            "Values": [
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Tint",
+                                        "Value": -1.0,
+                                        "Metadata": {
+                                            "Min Value": -3.0,
+                                            "Max Value": 3.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 10.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
