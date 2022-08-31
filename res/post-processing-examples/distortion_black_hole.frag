@@ -19,8 +19,9 @@ INPUT float hole_radius;       // positive values
 INPUT float hole_intensity;    // 0 to 8
 INPUT float hole_attractivity; // -1 to 1
 INPUT float hole_smooth;       // -.5 to 1
-INPUT float hole_center_x;     // default 0.5 range 0 to 1
-INPUT float hole_center_y;     // default 0.5 range0 to 1
+// range 0 to 1
+// Point2D
+INPUT vec2 hole_center; // vec2(0.5,0.5)
 
 INPUT RgbColor hole_color;
 
@@ -37,9 +38,8 @@ vec3 blob(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
 void main()
 {
     // [0, res] to [-1, 1]
-    vec2 hole_center = vec2(hole_center_x, hole_center_y);
-    vec2 coord       = -hole_center + (_uv)*2.;
-    vec2 ncoord      = -hole_center + coord * vec2(_aspect_ratio, 1.0);
+    vec2 coord  = (_uv - hole_center) * 2.;
+    vec2 ncoord = coord * vec2(_aspect_ratio, 1.0);
 
     // change look at
     // ncoord.x += sin(radians(time_mod * 40.0)) * .4;
