@@ -43,7 +43,17 @@ void main()
 
     const int size = 3;
 
-    vec3 table_of_colors[size * size] = {Color1, Color2, Color3, Color4, Color5, Color6, Color7, Color8, Color9};
+    vec3 table_of_colors[size * size] = vec3[](
+        Color1,
+        Color2,
+        Color3,
+        Color4,
+        Color5,
+        Color6,
+        Color7,
+        Color8,
+        Color9
+    );
 
     ivec2 grid_id = ivec2(floor(out_uv));
 
