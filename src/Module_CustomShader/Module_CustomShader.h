@@ -10,43 +10,6 @@
 
 namespace Lab {
 
-class SettingsSerializer {
-public:
-    SettingsSerializer() = default;
-    SettingsSerializer(std::filesystem::path path)
-        : _is_coming_from_deserialization{true}
-        , _auto_serializer{Cool::AutoSerializer<SettingsSerializer>{
-              path, "Current Settings", *this, [&](const std::string&) {
-                  /*Ignore deserialization warnings*/
-                  _is_coming_from_deserialization = false;
-              }}}
-    {
-    }
-
-    auto get() -> std::vector<Cool::AnyInput>& { return _inputs; }
-    auto get() const -> const std::vector<Cool::AnyInput>& { return _inputs; }
-
-    auto path() const { return _auto_serializer ? _auto_serializer->path() : ""; }
-
-    auto is_coming_from_deserialization() const -> bool { return _is_coming_from_deserialization; }
-
-private:
-    bool                                                    _is_coming_from_deserialization{false};
-    std::vector<Cool::AnyInput>                             _inputs{};
-    std::optional<Cool::AutoSerializer<SettingsSerializer>> _auto_serializer;
-
-private:
-    // Serialization
-    friend class cereal::access;
-    template<class Archive>
-    void serialize(Archive& archive)
-    {
-        archive(
-            cereal::make_nvp("Inputs", _inputs)
-        );
-    }
-};
-
 class Module_CustomShader : public Module {
 public:
     Module_CustomShader() = default;
@@ -90,17 +53,20 @@ private:
         Cool::InputFactory_Ref,
         Cool::InputDestructor_Ref
     );
-    auto inputs() const -> std::vector<Cool::AnyInput>& { return _settings_serializer->get(); }
-    auto inputs() -> std::vector<Cool::AnyInput>& { return _settings_serializer->get(); }
+    void apply_first_preset_if_there_is_one(Cool::VariableRegistries& variable_registries);
+
+    auto inputs() const -> std::vector<Cool::AnyInput>& { return _inputs; }
+    auto inputs() -> std::vector<Cool::AnyInput>& { return _inputs; }
 
 private:
     FullscreenShader          _shader; // Must be before _file because it is used to construct it
     Cool::MessageSender       _shader_compilation_error{};
     Cool::Input<Cool::Camera> _camera_input;
     mutable Cool::Input_File  _file;
+    std::filesystem::path     _previous_path;
     // Cool::MessageSender                         _parsing_error_message{}; // TODO(JF) Use this
-    mutable std::optional<Cool::PresetManager>  _presets_manager{};
-    mutable std::unique_ptr<SettingsSerializer> _settings_serializer{std::make_unique<SettingsSerializer>()};
+    mutable std::optional<Cool::PresetManager> _presets_manager{};
+    mutable std::vector<Cool::AnyInput>        _inputs{};
 
 private:
     // Serialization
@@ -110,7 +76,7 @@ private:
     {
         archive(
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
-            // cereal::make_nvp("Inputs", inputs()),
+            cereal::make_nvp("Inputs", inputs()),
             cereal::make_nvp("Camera Input", _camera_input),
             cereal::make_nvp("Shader", _shader),
             cereal::make_nvp("File", _file)
