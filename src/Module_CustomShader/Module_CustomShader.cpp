@@ -157,13 +157,6 @@ static auto preset_path(std::filesystem::path path) -> std::filesystem::path
     return path;
 }
 
-static auto settings_cache_path(std::filesystem::path path) -> std::filesystem::path
-{
-    auto p = std::filesystem::path{Cool::Path::root() + std::string{"/cache/settings/"} + path.filename().string()};
-    p.concat(".current-settings.json");
-    return p;
-}
-
 void Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::InputProvider_Ref   provider,
     Cool::IsDirty_Ref         is_dirty,
