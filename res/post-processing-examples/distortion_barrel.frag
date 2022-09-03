@@ -12,7 +12,8 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_barrel.glsl"
 
 // default 0.5 range 0 to 1
-INPUT vec2 Center; // vec2(0.5,0.5)
+// Point2D
+INPUT vec2 Center;
 
 INPUT float Effect_intensity;
 

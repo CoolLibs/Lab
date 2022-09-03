@@ -6,11 +6,11 @@
                     {
                         "first": {
                             "value0": {
-                                "value0": "ae638deb-bef1-4a83-8f54-f40040c53060"
+                                "value0": "00c91bb2-da74-491d-b830-37255dceef9b"
                             }
                         },
                         "second": {
-                            "Name": "Negative (classic)",
+                            "Name": "Default",
                             "Values": [
                                 {
                                     "index": 4,
@@ -36,8 +36,8 @@
                                         "Name": "Effect_intensity",
                                         "Value": 1.0,
                                         "Metadata": {
-                                            "Min Value": 0.0,
-                                            "Max Value": 1.0
+                                            "Min Value": -5.0,
+                                            "Max Value": 5.0
                                         },
                                         "Default Value": 0.0,
                                         "Default Metadata": {

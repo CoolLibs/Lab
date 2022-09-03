@@ -22,6 +22,6 @@ vec2 barrel_disortion(
 )
 {
     vec2 uv = in_uv / -1; // invert
-    uv      = Center - distort(uv + Center, Effect_intensity);
+    uv      = Center - distort(uv + Center, Effect_intensity + 1.);
     return uv;
 }

@@ -1,0 +1,70 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "59554cca-9762-48a0-b581-be7516a13f66"
+                            }
+                        },
+                        "second": {
+                            "Name": "Smooth swirl",
+                            "Values": [
+                                {
+                                    "index": 3,
+                                    "data": {
+                                        "Name": "Center",
+                                        "Value": {
+                                            "x": 0.5,
+                                            "y": 0.5
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "x": 0.0,
+                                            "y": 0.0
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Size",
+                                        "Value": 0.5,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 10.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": -5.0,
+                                            "Max Value": 5.0
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

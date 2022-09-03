@@ -17,21 +17,19 @@ INPUT Angle Angle_in_turns; // 0 to 1 (1 == 1 turn)
 INPUT int Nb_iterations;
 
 INPUT float Effect_intensity;
+INPUT vec2  Center;
 
 void main()
 {
-    vec2 in_uv = _uv - 0.5;
-    in_uv.x *= _aspect_ratio;
+    vec2 in_uv = _uv;
 
     vec2 out_uv = symmetry_star(
         in_uv, Effect_intensity,
-        Size, Angle_in_turns, Nb_iterations
+        _aspect_ratio,
+        Center, Size, Angle_in_turns, Nb_iterations
     );
 
-    out_uv.x /= _aspect_ratio;
-    out_uv += 0.5;
-
-    vec3 out_color = image(out_uv).xyz;
+    vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }

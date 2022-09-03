@@ -11,9 +11,9 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/bichrome.glsl"
 
-INPUT RgbColor Color1;           // default (0.5, 0.5, 0.5) hdr
-INPUT RgbColor Color2;           // hdr default (0.3, 0.6, 0.2)
-INPUT float    Effect_intensity; // default 1 min -1 max 2
+INPUT RgbColor Color1;
+INPUT RgbColor Color2;
+INPUT float    Effect_intensity;
 
 void main()
 {
