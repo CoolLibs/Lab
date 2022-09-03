@@ -1,0 +1,82 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "ff9972d6-0bf5-476d-ba23-e5660988a0a2"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 3,
+                                    "data": {
+                                        "Name": "Position",
+                                        "Value": {
+                                            "Point2D": {
+                                                "x": 0.0,
+                                                "y": 0.0
+                                            }
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "Point2D": {
+                                                "x": 0.0,
+                                                "y": 0.0
+                                            }
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "",
+                                        "Value": false,
+                                        "Metadata": {},
+                                        "Default Value": false,
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "",
+                                        "Value": false,
+                                        "Metadata": {},
+                                        "Default Value": false,
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "",
+                                        "Value": false,
+                                        "Metadata": {},
+                                        "Default Value": false,
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "",
+                                        "Value": false,
+                                        "Metadata": {},
+                                        "Default Value": false,
+                                        "Default Metadata": {}
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

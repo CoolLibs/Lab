@@ -11,9 +11,8 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/flare.glsl"
 
-// Point2D
-INPUT vec2  Position;   // vec2(0.5,0.5)
-INPUT float Brightness; // 0 min -1. max 1.
+INPUT Point2D Position;   // vec2(0.5,0.5)
+INPUT float   Brightness; // 0 min -1. max 1.
 
 INPUT int Number_of_circles; // default 10
 INPUT int Seed;              // default 20
