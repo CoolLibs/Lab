@@ -11,6 +11,7 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_bulging.glsl"
 
+// default 0.5 range 0 to 1
 INPUT Point2D Center;
 INPUT float   Strength;
 
@@ -22,7 +23,7 @@ void main()
 
     vec2 out_uv = distortion_bulging(
         in_uv, Effect_intensity,
-        Strength, Center - 0.5
+        Strength, Center
     );
     vec3 color = image(out_uv);
 
