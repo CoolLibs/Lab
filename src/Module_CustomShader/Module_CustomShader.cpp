@@ -74,11 +74,10 @@ static void apply_settings_to_inputs(
     }
 }
 
-template<std::invocable<Cool::Settings&> Callback>
 static void modify_default_variables_of_the_inputs(
-    std::vector<Cool::AnyInput>& inputs,
-    Cool::VariableRegistries&    registry,
-    Callback&&                   callback
+    std::vector<Cool::AnyInput>&           inputs,
+    Cool::VariableRegistries&              registry,
+    std::invocable<Cool::Settings&> auto&& callback
 )
 {
     // Get the variables from the inputs
