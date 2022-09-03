@@ -15,8 +15,6 @@ INPUT int N;
 
 INPUT float Effect_intensity;
 
-// TODO(ASG rename ALL local `out_color` variables as `color`)
-
 void main()
 {
     vec3 in_color = image(_uv);
