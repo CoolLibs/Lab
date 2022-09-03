@@ -162,6 +162,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
                 input_destructor(),
                 is_dirty__functor(),
                 set_clean__functor(),
+                _variable_registries,
             },
             update_context()
         );
