@@ -171,6 +171,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     const auto current_path = provider(_file);
     if (!Cool::File::exists(current_path.string()))
     {
+        _previous_path = "";
         _shader.pipeline().reset();
         _presets_manager.reset();
         return;
