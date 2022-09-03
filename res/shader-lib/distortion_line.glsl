@@ -25,6 +25,11 @@ float plasma(vec2 uv, float time_mod)
     return v;
 }
 
+int offset(int x, int Steps)
+{
+    return int(max(1, min(Steps, x)));
+}
+
 vec2 distortion_line(
     vec2 in_uv, float Effect_intensity,
     float Time_mod, float Threshold, vec2 Distortion, int Steps
@@ -32,10 +37,10 @@ vec2 distortion_line(
 {
     vec2 uv     = in_uv * Distortion;
     int  xModif = 0;
-    int  offs   = int(min(Steps, int(uv.x)));
+    int  offs   = offset(int(uv.x), Steps);
     for (int x = 0; x < int(uv.x); x += offs)
     {
-        offs       = int(min(Steps, int(uv.x) - x));
+        offs       = offset(int(uv.x) - x, Steps);
         float psin = sin(plasma(vec2(x, uv.y) / Distortion.xy, Time_mod));
         float pcos = cos(plasma(vec2(uv.y, x) / Distortion.xy, Time_mod));
 

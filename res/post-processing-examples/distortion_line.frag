@@ -17,8 +17,7 @@ INPUT float Time_mod;
 INPUT float Threshold; // default 0.7 min = 0 max = 2
 // 0 forbidden
 INPUT vec2 Distortion;
-// 0 forbidden make crash
-INPUT int Steps; // default 4 min 1 max 20
+INPUT int  Steps; // default 4 min 1 max 20
 
 INPUT float Effect_intensity;
 
