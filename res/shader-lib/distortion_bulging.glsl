@@ -16,12 +16,12 @@ vec2 distort(vec2 pixel, float power)
     return pixel;
 }
 
-vec2 barrel_disortion(
-    vec2 in_uv, float Effect_intensity,
-    vec2 Center
+vec2 distortion_bulging(
+    vec2 in_uv, float effect_intensity,
+    float strength, vec2 center
 )
 {
     vec2 uv = in_uv / -1; // invert
-    uv      = Center - distort(uv + Center, Effect_intensity + 1.);
+    uv      = center - distort(uv + center, strength * effect_intensity + 1.);
     return uv;
 }

@@ -1,4 +1,4 @@
-vec3 color_discretisation(
+vec3 apply_color_palette(
     vec3 in_color, float effect_intensity,
     vec3 color1, vec3 color2, vec3 color3
 )

@@ -9,22 +9,22 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_discretisation.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/8_bit_color.glsl"
 
-INPUT RgbColor Color1;
-INPUT RgbColor Color2;
-INPUT RgbColor Color3;
+INPUT float N;
 
 INPUT float Effect_intensity;
+
+// TODO(ASG rename ALL local `out_color` variables as `color`)
 
 void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = color_discretisation(
+    vec3 color = 8_bit_color(
         in_color, Effect_intensity,
-        Color1, Color2, Color3
+        N
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

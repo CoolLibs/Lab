@@ -9,21 +9,23 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_negative_effect.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/distortion_bulging.glsl"
 
-// default 1 min = 0
-INPUT vec3 channels_contribution;
+// default 0.5 range 0 to 1
+INPUT Point2D Center;
+INPUT float   Strength;
 
 INPUT float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
+    vec2 in_uv = _uv;
 
-    vec3 out_color = color_negative_effet(
-        in_color, Effect_intensity,
-        channels_contribution
+    vec2 out_uv = distortion_bulging(
+        in_uv, Effect_intensity,
+        Strength, Center
     );
+    vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }

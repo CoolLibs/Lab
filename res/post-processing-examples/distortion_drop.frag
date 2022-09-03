@@ -14,7 +14,7 @@ uniform sampler2D _image;
 INPUT float    Drops_size;           // default 0.2 min = .001 max = 1.5
 INPUT float    Distortion_intensity; // default 0.7 min = 0 max = 1
 INPUT float    Scale;                // default 1 min = 0.001 max = 1.5
-INPUT float    Time_mod;
+INPUT float    Time;
 INPUT RgbColor Border_color_coefficient; // default 1 min = -1 max = 1
 
 void main()
@@ -23,7 +23,7 @@ void main()
 
     vec3 out_color = distortion_drop(
         in_uv,
-        Drops_size, Scale, Distortion_intensity, Time_mod, Border_color_coefficient
+        Drops_size, Scale, Distortion_intensity, Time, Border_color_coefficient
     );
 
     out_Color = vec4(out_color, 1);

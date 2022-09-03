@@ -9,6 +9,8 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
+// TODO(ASG) Fix displacement when increasig scale at low effect_intensity
+
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_flower.glsl"

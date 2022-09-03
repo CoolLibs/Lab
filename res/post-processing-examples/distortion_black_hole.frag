@@ -19,8 +19,7 @@ INPUT float Hole_intensity;    // 0 to 8
 INPUT float Hole_attractivity; // -1 to 1
 INPUT float Hole_smooth;       // -.5 to 1
 // range 0 to 1
-// Point2D
-INPUT vec2 Hole_center; // vec2(0.5,0.5)
+INPUT Point2D Hole_center; // vec2(0.5,0.5)
 
 INPUT RgbColor Hole_color;
 

@@ -8,6 +8,9 @@ vec3 Hole(vec2 point, vec2 uv, vec3 color, float invIntensity, float invGlow)
     return color * invD;
 }
 
+// TODO(ASG) Remove the color part of the effect
+// TODO(ASG) Rename the effect
+
 vec3 distortion_black_hole(
     vec2 in_uv, float Effect_intensity,
     vec2 Hole_center, Angle Angle_in_turns, RgbColor Hole_color, int Subdivision,

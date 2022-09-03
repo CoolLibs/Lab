@@ -13,7 +13,8 @@ uniform sampler2D _image;
 
 INPUT RgbColor Color1;
 INPUT RgbColor Color2;
-INPUT float    Effect_intensity;
+
+INPUT float Effect_intensity;
 
 void main()
 {

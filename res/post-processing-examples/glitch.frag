@@ -8,24 +8,21 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/distortion_barrel.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/glitch.glsl"
 
-// default 0.5 range 0 to 1
-// Point2D
-INPUT vec2 Center;
+INPUT float Time;
+INPUT vec2  Squares_size; // default vec2(24., 9.)
 
-INPUT float Effect_intensity;
+INPUT float Effect_intensity; // default .05 min 0. max 1.
 
 void main()
 {
     vec2 in_uv = _uv;
 
-    vec2 out_uv = barrel_disortion(
+    vec3 out_color = glitch(
         in_uv, Effect_intensity,
-        Center
+        Squares_size, Time
     );
-    vec3 out_color = image(out_uv);
 
     out_Color = vec4(out_color, 1.);
 }

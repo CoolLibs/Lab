@@ -9,12 +9,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_effects.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/monochrome.glsl"
 
-INPUT RgbColor Color_coefficient;
-
-INPUT float Grey_coefficient;
-INPUT bool  One_color_mode;
+INPUT RgbColor Color;
+INPUT float    Brightness;
 
 INPUT float Effect_intensity;
 
@@ -22,9 +20,9 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = color_effects(
+    vec3 out_color = monochrome(
         in_color, Effect_intensity,
-        Color_coefficient, Grey_coefficient, One_color_mode
+        Color, Brightness
     );
 
     out_Color = vec4(out_color, 1.);

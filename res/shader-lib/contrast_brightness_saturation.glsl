@@ -1,6 +1,6 @@
 // #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 
-vec3 contrast_saturation_brightness(
+vec3 contrast_brightness_saturation(
     vec3 in_color, float effect_intensity,
     float contrast, float brightness, float saturation
 )

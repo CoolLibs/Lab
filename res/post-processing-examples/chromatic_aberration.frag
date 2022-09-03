@@ -11,24 +11,23 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/chromatic_aberration.glsl"
 
-INPUT int Sample_count;
-
-INPUT float Falloff;
-INPUT float Blur;
-
-// Point2D
-INPUT vec2 Center;
+INPUT int     Sample_count;
+INPUT float   Falloff;
+INPUT float   Blur;
+INPUT Point2D Center;
 
 INPUT float Effect_intensity;
 
 void main()
 {
     vec3 in_color = image(_uv);
+    vec2 uv       = _uv - 0.5;
+    uv.x *= _aspect_ratio;
+    uv -= Center;
 
     vec3 out_color = chromatic_aberration(
-        in_color, Effect_intensity,
-        _uv, _aspect_ratio,
-        Center, Sample_count, Falloff, Blur
+        in_color, Effect_intensity, uv,
+        Sample_count, Falloff, Blur
     );
 
     out_Color = vec4(out_color, 1.);

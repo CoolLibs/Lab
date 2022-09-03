@@ -9,10 +9,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/black_and_white.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/color_inversion.glsl"
 
+// default 1 min = 0
 INPUT vec3 Channels_contribution;
-INPUT bool Normalize; /// Makes sure the sum of "Channels contribution" is 1
 
 INPUT float Effect_intensity;
 
@@ -20,10 +20,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = black_and_white(
+    vec3 color = color_inversion(
         in_color, Effect_intensity,
-        Channels_contribution, Normalize
+        Channels_contribution
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }
