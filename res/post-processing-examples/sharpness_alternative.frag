@@ -20,10 +20,10 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = sharpness_alternative(
+    vec3 color = sharpness_alternative(
         in_uv, Effect_intensity,
         Offset_strength, Sharpening_strength
     );
 
-    out_Color = vec4(out_color, 1.0);
+    out_Color = vec4(color, 1.0);
 }

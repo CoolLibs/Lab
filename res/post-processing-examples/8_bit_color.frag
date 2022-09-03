@@ -11,19 +11,17 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/8_bit_color.glsl"
 
-INPUT float N;
+INPUT int N;
 
 INPUT float Effect_intensity;
-
-// TODO(ASG rename ALL local `out_color` variables as `color`)
 
 void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 color = 8_bit_color(
+    vec3 color = bit_color(
         in_color, Effect_intensity,
-        N
+        float(N)
     );
 
     out_Color = vec4(color, 1.);

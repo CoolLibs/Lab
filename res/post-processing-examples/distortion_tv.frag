@@ -21,10 +21,10 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = distortion_tv(
+    vec3 color = distortion_tv(
         in_uv, Effect_intensity,
         Channels_offset, Y_offset, Nb_iteration
     );
 
-    out_Color = vec4(out_color, 1.0);
+    out_Color = vec4(color, 1.0);
 }

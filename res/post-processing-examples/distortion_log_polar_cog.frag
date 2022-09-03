@@ -32,7 +32,7 @@ void main()
         Center, Scale1, Scale2, Angle_in_turns, Flowerness, Subdivision
     );
 
-    vec3 out_color = image(out_uv);
+    vec3 color = image(out_uv);
 
-    out_Color = vec4(out_color, 1.0);
+    out_Color = vec4(color, 1.0);
 }

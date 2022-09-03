@@ -20,10 +20,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = monochrome(
+    vec3 color = monochrome(
         in_color, Effect_intensity,
         Color, Brightness
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

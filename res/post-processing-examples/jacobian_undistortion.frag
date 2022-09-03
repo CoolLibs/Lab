@@ -26,7 +26,7 @@ void main()
         Time_mod, Resolution_bias
     );
 
-    vec3 out_color = image(out_uv);
+    vec3 color = image(out_uv);
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

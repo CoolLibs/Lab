@@ -23,11 +23,11 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = raindrops_uv(
+    vec3 color = raindrops_uv(
         in_uv, Effect_intensity,
         _aspect_ratio,
         Time_mod, Scale, Rain_amount, Blur
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

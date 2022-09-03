@@ -21,10 +21,10 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = distortion_drop(
+    vec3 color = distortion_drop(
         in_uv,
         Drops_size, Scale, Distortion_intensity, Time, Border_color_coefficient
     );
 
-    out_Color = vec4(out_color, 1);
+    out_Color = vec4(color, 1);
 }

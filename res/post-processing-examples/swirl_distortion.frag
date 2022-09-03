@@ -15,8 +15,7 @@ uniform sampler2D _image;
 
 // default 0.5
 // Point2D
-INPUT vec2 Center;
-
+INPUT vec2  Center;
 INPUT float Size; // only positive values
 
 INPUT float Effect_intensity; // positive and negative values
@@ -30,7 +29,7 @@ void main()
         Center, Size
     );
 
-    vec3 out_color = image(out_uv);
+    vec3 color = image(out_uv);
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

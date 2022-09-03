@@ -28,10 +28,10 @@ void main()
 {
     vec3 in_color = image(_uv).xyz;
 
-    vec3 out_color = white_balance_by_slider(
+    vec3 color = white_balance_by_slider(
         in_color, Effect_intensity,
         Temperature, Temperature_strength, Luminance_preservation_factor
     );
 
-    out_Color = vec4(out_color, 1.0);
+    out_Color = vec4(color, 1.0);
 }

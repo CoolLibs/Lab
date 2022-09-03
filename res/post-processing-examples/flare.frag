@@ -23,11 +23,11 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = flare(
+    vec3 color = flare(
         in_uv, Effect_intensity,
         _aspect_ratio,
         Position, Brightness, Number_of_circles, Seed
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }
