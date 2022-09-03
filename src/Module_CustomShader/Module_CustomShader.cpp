@@ -234,7 +234,9 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         const auto it = iterator_to_same_input(input, new_inputs);
         if (it != new_inputs.end())
         {
-            *it = std::move(input);
+            auto description = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the newly-parsed description
+            *it              = std::move(input);
+            std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
         }
         else
         {
