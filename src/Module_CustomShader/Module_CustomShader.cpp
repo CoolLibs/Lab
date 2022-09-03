@@ -3,6 +3,7 @@
 #include <Cool/InputParser/InputParser.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/String/String.h>
+#include <concepts>
 #include <glpp/glpp.hpp>
 #include <ranges>
 #include <sstream>
@@ -73,6 +74,21 @@ static void apply_settings_to_inputs(
     }
 }
 
+template<std::invocable<Cool::Settings&> Callback>
+static void modify_default_variables_of_the_inputs(
+    std::vector<Cool::AnyInput>& inputs,
+    Cool::VariableRegistries&    registry,
+    Callback&&                   callback
+)
+{
+    // Get the variables from the inputs
+    auto settings = settings_from_inputs(inputs, registry);
+    // Apply
+    callback(settings);
+    // Apply back the variables to the inputs' default variables
+    apply_settings_to_inputs(settings, inputs, registry);
+}
+
 void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 {
     Ui_Ref::window({.name = "Custom Shader"}, [&]() {
@@ -89,12 +105,9 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
         if (_presets_manager)
         {
             ImGui::Separator();
-            // Get the variables from the inputs
-            auto settings = settings_from_inputs(inputs(), ui.variable_registries());
-            // UI for the variables
-            _presets_manager->imgui_presets(settings);
-            // Apply back the variables to the inputs' default variables
-            apply_settings_to_inputs(settings, inputs(), ui.variable_registries());
+            modify_default_variables_of_the_inputs(inputs(), ui.variable_registries(), [&](Cool::Settings& settings) {
+                _presets_manager->imgui_presets(settings);
+            });
         }
     });
 }
@@ -190,12 +203,9 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
 
 void Module_CustomShader::apply_first_preset_if_there_is_one(Cool::VariableRegistries& variable_registries)
 {
-    // Get the variables from the inputs
-    auto settings = settings_from_inputs(inputs(), variable_registries);
-    //
-    _presets_manager->apply_first_preset_if_there_is_one(settings);
-    // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, inputs(), variable_registries);
+    modify_default_variables_of_the_inputs(inputs(), variable_registries, [&](Cool::Settings& settings) {
+        _presets_manager->apply_first_preset_if_there_is_one(settings);
+    });
 }
 
 static auto name(const Cool::AnyInput& input)
