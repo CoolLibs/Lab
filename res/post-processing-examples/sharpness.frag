@@ -17,7 +17,7 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = texfilter(in_uv, Effect_intensity);
+    vec3 color = texfilter(in_uv, Effect_intensity);
 
-    out_Color = vec4(out_color, 1);
+    out_Color = vec4(color, 1);
 }

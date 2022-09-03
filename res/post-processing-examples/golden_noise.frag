@@ -24,12 +24,12 @@ void main()
     //     Seed
     // );
 
-    // vec3 out_color = image(out_uv);
+    // vec3 color = image(out_uv);
 
-    vec3 out_color = golden_noise_color(
+    vec3 color = golden_noise_color(
         in_uv, Effect_intensity,
         Seed
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

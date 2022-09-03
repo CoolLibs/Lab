@@ -19,10 +19,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = vibrance(
+    vec3 color = vibrance(
         in_color, Effect_intensity,
         Vibrance
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

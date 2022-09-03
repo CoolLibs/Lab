@@ -19,11 +19,9 @@ INPUT float Hole_intensity;    // 0 to 8
 INPUT float Hole_attractivity; // -1 to 1
 INPUT float Hole_smooth;       // -.5 to 1
 // range 0 to 1
-INPUT Point2D Hole_center; // vec2(0.5,0.5)
-
+INPUT Point2D  Hole_center; // vec2(0.5,0.5)
 INPUT RgbColor Hole_color;
-
-INPUT int Subdivision; // 0 forbidden
+INPUT int      Subdivision; // 0 forbidden
 
 INPUT float Effect_intensity;
 
@@ -32,11 +30,11 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = distortion_black_hole(
+    vec3 color = distortion_black_hole(
         in_uv, Effect_intensity,
         Hole_center, Angle_in_turns, Hole_color, Subdivision,
         Hole_radius, Hole_intensity, Hole_attractivity, Hole_smooth
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

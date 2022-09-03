@@ -25,10 +25,10 @@ void main()
     uv.x *= _aspect_ratio;
     uv -= Center;
 
-    vec3 out_color = chromatic_aberration(
+    vec3 color = chromatic_aberration(
         in_color, Effect_intensity, uv,
         Sample_count, Falloff, Blur
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

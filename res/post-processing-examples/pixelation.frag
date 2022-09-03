@@ -25,11 +25,11 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = pixelation(
+    vec3 color = pixelation(
         in_uv, Effect_intensity,
         _aspect_ratio,
         Nb_tiles_on_y_axis, Border_thickness, Smoothing, Border_color
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

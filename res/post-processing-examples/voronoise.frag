@@ -30,12 +30,12 @@ void main()
         Scale
     );
 
-    vec3 out_color = image(out_uv);
+    vec3 color = image(out_uv);
 
-    // vec3 out_color = voronoise_color(
+    // vec3 color = voronoise_color(
     //     in_uv,
     //     Scale
     // );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

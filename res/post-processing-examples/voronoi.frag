@@ -28,12 +28,12 @@ void main()
         Scale, Speed, Movement, Time_mode, Distance_mode
     );
 
-    vec3 out_color = image(out_uv);
+    vec3 color = image(out_uv);
 
-    // vec3 out_color = voronoi_color(
+    // vec3 color = voronoi_color(
     //     in_uv,
     //     Scale, Speed, Movement, Time_mode, Distance_mode
     // );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

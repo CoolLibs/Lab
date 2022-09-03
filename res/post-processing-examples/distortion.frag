@@ -20,7 +20,7 @@ void main()
 
     vec2 out_uv = distortion(in_uv, Effect_intensity, _texture);
 
-    vec3 out_color = image(out_uv);
+    vec3 color = image(out_uv);
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

@@ -19,10 +19,10 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 out_color = glitch(
+    vec3 color = glitch(
         in_uv, Effect_intensity,
         Squares_size, Time
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

@@ -27,10 +27,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = gradient_overlay(
+    vec3 color = gradient_overlay(
         in_color, Effect_intensity,
         Gradient_pos_a, Gradient_pos_b, Gradient_color_a, Gradient_color_b, Gradient_presence, Use_the_best_blending_technique
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

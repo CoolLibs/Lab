@@ -13,11 +13,10 @@ uniform sampler2D _image;
 
 INPUT float Size;           // 0 forbidden 0.001 to 0.5
 INPUT Angle Angle_in_turns; // 0 to 1 (1 == 1 turn)
-
-INPUT int Nb_iterations;
+INPUT int   Nb_iterations;
+INPUT vec2  Center;
 
 INPUT float Effect_intensity;
-INPUT vec2  Center;
 
 void main()
 {
@@ -29,7 +28,7 @@ void main()
         Center, Size, Angle_in_turns, Nb_iterations
     );
 
-    vec3 out_color = image(out_uv);
+    vec3 color = image(out_uv);
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

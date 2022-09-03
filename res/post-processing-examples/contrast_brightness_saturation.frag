@@ -22,10 +22,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = contrast_brightness_saturation(
+    vec3 color = contrast_brightness_saturation(
         in_color, Effect_intensity,
         Contrast, Brightness, Saturation
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

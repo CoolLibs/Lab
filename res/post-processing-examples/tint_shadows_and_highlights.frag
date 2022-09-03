@@ -13,9 +13,8 @@ uniform sampler2D _image;
 
 INPUT RgbColor Color_shadows;
 INPUT RgbColor Color_highlights;
-
-INPUT float Shadows_intensity;
-INPUT float Highlights_intensity;
+INPUT float    Shadows_intensity;
+INPUT float    Highlights_intensity;
 
 INPUT float Effect_intensity;
 
@@ -23,10 +22,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = tint_shadows_and_highlights(
+    vec3 color = tint_shadows_and_highlights(
         in_color, Effect_intensity,
         Color_shadows, Color_highlights, Shadows_intensity, Highlights_intensity
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

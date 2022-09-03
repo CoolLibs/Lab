@@ -22,10 +22,10 @@ void main()
 
     vec3 in_color = image(_uv);
 
-    vec3 out_color = white_balance_by_click(
+    vec3 color = white_balance_by_click(
         in_color, Effect_intensity, in_uv,
         Coordinate_for_white_balance
     );
 
-    out_Color = vec4(out_color, 1.0);
+    out_Color = vec4(color, 1.0);
 }

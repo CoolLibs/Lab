@@ -60,15 +60,15 @@ void main()
 
     vec3 current_color = table_of_colors[size * grid_id.x + grid_id.y];
 
-    vec3 out_color = threshold_by_chosen_color(
+    vec3 color = threshold_by_chosen_color(
         in_color, Effect_intensity,
         Number_of_colors, Color0, current_color
     );
 
-    // vec3 out_color = color_effects(
+    // vec3 color = color_effects(
     //     in_color, Effect_intensity,
     //     current_color, Grey_coefficient, One_color_mode
     // );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }
