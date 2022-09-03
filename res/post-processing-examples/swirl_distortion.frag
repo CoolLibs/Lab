@@ -1,7 +1,5 @@
 #version 410
 
-// https://www.shadertoy.com/view/Xscyzn
-
 // #include "_COOL_RES_/shaders/math.glsl"
 
 layout(location = 0) in vec2 _uv;
@@ -12,30 +10,26 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/swirl_distortion.glsl"
 
-INPUT float center_x; // default 0.5
-INPUT float center_y; // default 0.5
+// default 0.5
+// Point2D
+INPUT vec2  Center;
+INPUT float Size; // only positive values
 
-INPUT float size;    // only positive values
-INPUT float nb_turn; // positive and negative values
-
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
+INPUT float Effect_intensity; // positive and negative values
 
 void main()
 {
-    vec2 center = vec2(center_x, center_y);
-    center      = center == vec2(0., 0.) ? vec2(.5, .5) : center;
+    vec2 in_uv = _uv;
 
-    vec2 uv = _uv - center;
+    vec2 out_uv = swirl_distortion(
+        in_uv, Effect_intensity,
+        Center, Size
+    );
 
-    float len    = length(uv * vec2(_aspect_ratio, 1.));
-    float angle  = atan(uv.y, uv.x) + nb_turn * TAU * smoothstep(size, 0., len);
-    float radius = length(uv);
-
-    vec3 color = image(vec2(radius * cos(angle), radius * sin(angle)) + center).rgb;
+    vec3 color = image(out_uv);
 
     out_Color = vec4(color, 1.);
 }

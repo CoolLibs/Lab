@@ -32,16 +32,13 @@ INPUT RgbColor Border_color;
 
 void main()
 {
-    vec2 uv = _uv;
-    uv.x *= _aspect_ratio;
+    vec2 in_uv = _uv;
 
-    vec3 in_color = image(_uv);
-
-    vec3 out_color = portholes(
-        in_color, Effect_intensity, uv,
+    vec3 color = portholes(
+        in_uv, Effect_intensity,
         Square_mode, Size, Space_to_border, Speed, Movement, Time_mode, Distance_mode, Zoom_intensity,
         Change_center, Border, Smoothing, Border_smoothing, Border_color
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

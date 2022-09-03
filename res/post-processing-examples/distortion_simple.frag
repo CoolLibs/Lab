@@ -1,7 +1,5 @@
 #version 410
 
-// https://www.shadertoy.com/view/MdfXRs
-
 // #include "_COOL_RES_/shaders/math.glsl"
 
 layout(location = 0) in vec2 _uv;
@@ -12,25 +10,25 @@ out vec4      out_Color;
 uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/distortion_simple.glsl"
 
-INPUT float center_x;   // default 0.5 range 0 to 1
-INPUT float center_y;   // default 0.5 range 0 to 1
-INPUT float distortion; // 0 to 1
+// default 0.5 range 0 to 1
+// Point2D
+INPUT vec2 Center;
 
-vec4 image(vec2 uv)
-{
-    return texture2D(_image, uv);
-}
+INPUT float Effect_intensity; // default 1 min 0 max 1
 
 void main()
 {
-    vec2 uv = _uv;
+    vec2 in_uv = _uv;
 
-    vec2  med    = vec2(center_x, center_y); //(uv*0.5) - 1.0;
-    vec2  disVec = med - uv;
-    float l      = length(disVec);
-    float ll     = distortion - l * l;
-    vec2  dist   = med - disVec * ll;
+    vec2 out_uv = distortion_simple(
+        in_uv, Effect_intensity,
+        Center
+    );
 
-    out_Color = image(dist);
+    vec3 color = image(out_uv);
+
+    out_Color = vec4(color, 1.);
 }

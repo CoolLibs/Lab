@@ -78,37 +78,41 @@ VoronoiRes voronoi(vec2 uv, bool Time_mode, float space_to_border, float size, f
     return res;
 }
 
+vec2 portholes_uv(
+    vec2 in_uv, float effect_intensity,
+    float zoom_intensity,
+    float zoom, vec2 grad
+)
+{
+    return mix(in_uv, in_uv + grad * zoom * zoom_intensity, effect_intensity);
+}
+
 vec3 portholes(
-    vec3 in_color, float effect_intensity, vec2 uv,
+    vec2 in_uv, float effect_intensity,
     bool square_mode, float size, float space_to_border, float speed, float movement, bool time_mode, float distance_mode, float zoom_intensity,
     float change_center, float border, float smoothing, float border_smoothing, vec3 border_color
 )
 {
-    float m = 0.;
+    float minDist  = 100.;
+    float minDist2 = 100.;
 
-    float minDist   = 100.;
-    float minDist2  = 100.;
-    float cellIndex = 0.;
-
-    vec2  gv           = fract(uv * size + change_center) - change_center;
-    vec2  id           = floor(uv * size);
-    float tiles_length = 1. / size;
-
-    vec2 img_uv = (id + .5) * tiles_length;
-    img_uv.x /= _aspect_ratio;
-
-    VoronoiRes res  = voronoi(uv, time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
-    VoronoiRes resX = voronoi(uv + vec2(0.001, 0.), time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
-    VoronoiRes resY = voronoi(uv + vec2(0., 0.001), time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
+    VoronoiRes res  = voronoi(in_uv, time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
+    VoronoiRes resX = voronoi(in_uv + vec2(0.001, 0.), time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
+    VoronoiRes resY = voronoi(in_uv + vec2(0., 0.001), time_mode, space_to_border, size, speed, movement, square_mode, distance_mode);
     vec2       grad = vec2(resX.minDist - res.minDist, resY.minDist - res.minDist) /
                 0.001;
     float distance_to_center = res.minDist / res.minDist2;
     float distance_to_edges  = 1. - distance_to_center;
-    float zoom               = distance_to_edges;
+    vec2  uv                 = portholes_uv(in_uv, effect_intensity, zoom_intensity, distance_to_edges, grad);
 
-    vec2 uv2 = _uv;
-
-    vec3 out_color = mix(image(uv2 + grad * zoom * zoom_intensity), border_color, smoothstep(border, 1. - border, 1 - smooth_max_polynomial(distance_to_edges, distance_to_edges * border_smoothing, smoothing)));
-
-    return mix(in_color, out_color, effect_intensity);
+    vec3 out_color = mix(
+        image(uv),
+        border_color,
+        smoothstep(
+            border,
+            1. - border,
+            1 - smooth_max_polynomial(distance_to_edges, distance_to_edges * border_smoothing, smoothing)
+        ) * effect_intensity
+    );
+    return out_color;
 }

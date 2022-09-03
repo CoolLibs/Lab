@@ -9,11 +9,9 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_discretisation.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/color_discretization.glsl"
 
-INPUT RgbColor color1;
-INPUT RgbColor color2;
-INPUT RgbColor color3;
+INPUT ColorPalette Colors;
 
 INPUT float Effect_intensity;
 
@@ -21,9 +19,9 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = color_discretisation(
+    vec3 out_color = apply_color_palette(
         in_color, Effect_intensity,
-        color1, color2, color3
+        Colors, Colors.size // TODO(ASG) Can we pass arrays to shaders ?
     );
 
     out_Color = vec4(out_color, 1.);

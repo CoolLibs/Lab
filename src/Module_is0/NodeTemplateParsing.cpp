@@ -58,6 +58,9 @@ void parse_node_template(NodeTemplate& node_template, std::string_view source)
     }
 }
 
+#if LAB_ENABLE_TESTS
+#include <doctest/doctest.h>
+
 TEST_CASE("[is0::NodeParsing] parse_node_template()")
 {
     // Given
@@ -96,3 +99,4 @@ TEST_CASE("[is0::NodeParsing] find_capture()")
     size_t            aaa;
     CHECK(find_capture(source, &aaa) == "MY_SDF1 MY_SDF2");
 }
+#endif

@@ -9,12 +9,11 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_effects.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/contrast_brightness_saturation.glsl"
 
-INPUT RgbColor Color_coefficient;
-
-INPUT float Grey_coefficient;
-INPUT bool  One_color_mode;
+INPUT float Contrast;   // default 0.0
+INPUT float Brightness; // default 0.0
+INPUT float Saturation; // default 0.0
 
 INPUT float Effect_intensity;
 
@@ -22,10 +21,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = color_effects(
+    vec3 color = contrast_brightness_saturation(
         in_color, Effect_intensity,
-        Color_coefficient, Grey_coefficient, One_color_mode
+        Contrast, Brightness, Saturation
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

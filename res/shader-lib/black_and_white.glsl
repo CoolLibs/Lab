@@ -1,9 +1,9 @@
 vec3 black_and_white(
     vec3 in_color, float effect_intensity,
-    vec3 channels_contribution, bool normalize_checkbox
+    vec3 channels_contribution, bool Normalize
 )
 {
-    if (normalize_checkbox)
+    if (Normalize)
     {
         float sum_of_channels_contribution = dot(channels_contribution, vec3(1.));
         channels_contribution /= sum_of_channels_contribution;

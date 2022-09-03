@@ -34,8 +34,7 @@ vec3 white_balance_by_click(
     vec2 coordinate_for_white_balance
 )
 {
-    vec2 color_pick = coordinate_for_white_balance;
-    color_pick.x *= _aspect_ratio;
+    vec2  color_pick    = coordinate_for_white_balance;
     float dist          = length(in_uv - color_pick);
     float r             = 0.01;
     float circle_picker = 0;

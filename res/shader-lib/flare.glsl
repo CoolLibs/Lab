@@ -59,22 +59,23 @@ float sun(vec2 p, vec2 mouse)
 }
 
 vec3 flare(
-    vec3 in_color, float effect_intensity,
-    float x, float y, float Brightness, int Nb_of_circles, int Seed
+    vec2 in_uv, float effect_intensity,
+    float aspect_ratio,
+    vec2 position, float Brightness, int Nb_of_circles, int Seed
 )
 {
-    vec2 uv = _uv - 0.5;
-    uv.x *= _aspect_ratio;
+    vec2 uv = in_uv;
+    uv.x *= aspect_ratio;
 
-    vec2 mm = vec2(x, y) - 0.5;
-    mm.x *= _aspect_ratio;
+    vec2 mm = position;
+    mm.x *= aspect_ratio;
 
     vec3 circColor  = vec3(0.9, 0.2, 0.1);
     vec3 circColor2 = vec3(0.3, 0.1, 0.9);
 
     // now to make the sky not black
-    vec3 color = in_color;
-    vec3 flare = mix(vec3(0.3, 0.2, 0.02) / 0.9, vec3(0.2, 0.5, 0.8), uv.y) * 3. - Brightness;
+
+    vec3 flare = mix(vec3(0.3, 0.2, 0.02) / 0.9, vec3(0.2, 0.5, 0.8), uv.y) * 3. + Brightness - 1.;
 
     // this calls the function which adds three circle types every time through the loop based on parameters I
     // got by trying things out. rnd i*2000. and rnd i*20 are just to help randomize things more
@@ -89,7 +90,8 @@ vec3 flare(
     // multiply by the exponetial e^x ? of 1.0-length which kind of masks the brightness more so that
     // there is a sharper roll of of the light decay from the sun.
     flare *= exp(1.0 - length(uv - mm)) / 5.;
+    vec3 color = image(in_uv);
     color += flare;
     vec3 out_color = color;
-    return mix(in_color, out_color, effect_intensity);
+    return mix(image(in_uv), out_color, effect_intensity);
 }

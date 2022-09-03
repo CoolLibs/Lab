@@ -9,11 +9,10 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/contrast_saturation_brightness.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/color_inversion.glsl"
 
-INPUT float Contrast;   // default 1.0
-INPUT float Brightness; // default 1.0
-INPUT float Saturation; // default 1.0
+// default 1 min = 0
+INPUT vec3 Channels_contribution;
 
 INPUT float Effect_intensity;
 
@@ -21,10 +20,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = contrast_saturation_brightness(
+    vec3 color = color_inversion(
         in_color, Effect_intensity,
-        Contrast, Brightness, Saturation
+        Channels_contribution
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }

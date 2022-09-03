@@ -7,10 +7,9 @@ float symmetry_side(bool right, float ortho)
 
 vec2 symmetry(
     vec2 in_uv, float effect_intensity,
-    float center_x, float center_y, float angle_in_turns, bool right_or_left
+    vec2 center, float angle_in_turns, bool right_or_left
 )
 {
-    vec2  center = vec2(center_x, center_y);
     float angle  = angle_in_turns * TAU;
     vec2  u_line = vec2(sin(angle), -cos(angle));
 

@@ -22,14 +22,18 @@ INPUT float Effect_intensity;
 void main()
 {
     vec2 in_uv = _uv;
-    in_uv.x *= _aspect_ratio;
 
-    vec3 in_color = image(_uv);
-
-    vec3 out_color = voronoi(
-        in_color, Effect_intensity, in_uv,
+    vec2 out_uv = voronoi_uv(
+        in_uv, Effect_intensity,
         Scale, Speed, Movement, Time_mode, Distance_mode
     );
 
-    out_Color = vec4(out_color, 1.);
+    vec3 color = image(out_uv);
+
+    // vec3 color = voronoi_color(
+    //     in_uv,
+    //     Scale, Speed, Movement, Time_mode, Distance_mode
+    // );
+
+    out_Color = vec4(color, 1.);
 }

@@ -1,10 +1,10 @@
-vec3 color_discretisation(
+vec3 apply_color_palette(
     vec3 in_color, float effect_intensity,
     vec3 color1, vec3 color2, vec3 color3
 )
 {
     const int size                  = 3;
-    vec3      table_of_colors[size] = {color1, color2, color3};
+    vec3      table_of_colors[size] = vec3[](color1, color2, color3);
     vec3      col                   = table_of_colors[0];
     float     min_dist              = distance(in_color, table_of_colors[0]);
     for (int i = 1; i < size; i++)

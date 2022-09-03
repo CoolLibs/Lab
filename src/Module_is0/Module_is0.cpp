@@ -108,7 +108,14 @@ void Module_is0::imgui_windows(Ui_Ref) const
     std::string _path_for_load;
     if (Cool::ImGuiExtras::open_file_dialog(&_path_for_load, is0geometry_file_filter, _folder_path_for_save))
     {
-        Cool::Serialization::from_json(_editor, _path_for_load);
+        Cool::Serialization::from_json(_editor, _path_for_load)
+            .send_error_if_any([](const std::string& message) {
+                return Cool::Message{
+                    .category         = "Loading is0 save",
+                    .detailed_message = message,
+                    .severity         = Cool::MessageSeverity::Warning,
+                };
+            });
     }
     ImGui::PopID();
     // Random

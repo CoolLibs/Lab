@@ -9,11 +9,9 @@ uniform sampler2D _image;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_effects_alternative.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/8_bit_color.glsl"
 
-INPUT RgbColor Color_coefficient;
-
-INPUT float Grey_coefficient;
+INPUT int N;
 
 INPUT float Effect_intensity;
 
@@ -21,10 +19,10 @@ void main()
 {
     vec3 in_color = image(_uv);
 
-    vec3 out_color = color_effects_alternative(
+    vec3 color = bit_color(
         in_color, Effect_intensity,
-        Color_coefficient, Grey_coefficient
+        float(N)
     );
 
-    out_Color = vec4(out_color, 1.);
+    out_Color = vec4(color, 1.);
 }
