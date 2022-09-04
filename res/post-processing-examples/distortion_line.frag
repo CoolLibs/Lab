@@ -10,7 +10,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_line.glsl"
 
-INPUT float Continuous_seed;
+INPUT float Time;
 INPUT float Threshold; // default 0.7 min = 0 max = 2
 // 0 forbidden
 INPUT vec2 Distortion;
@@ -24,7 +24,7 @@ void main()
 
     vec2 out_uv = distortion_line(
         in_uv, Effect_intensity,
-        Continuous_seed, Threshold, Distortion, Steps
+        Time, Threshold, Distortion, Steps
     );
 
     vec3 color = image(out_uv);
