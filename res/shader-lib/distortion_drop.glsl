@@ -86,17 +86,16 @@ float map(vec3 p, float time, int N)
     return d;
 }
 
-vec3 distortion_drop(
+vec2 distortion_drop(
     vec2 in_uv, float effect_intensity,
-    vec2 center, float drops_size, float scale, float distortion, float time, vec3 border_color, int N
+    vec2 center, float drops_size, float scale, float distortion, float time, int N
 )
 {
     vec3 s = vec3(0, 0, -17);
     vec3 r = normalize(vec3(in_uv - center, scale));
 
-    vec3  p      = s;
-    float at     = 0.0;
-    bool  inside = false;
+    vec3 p      = s;
+    bool inside = false;
     // main raymarching loop
     for (int i = 0; i < 100; ++i)
     {
@@ -111,7 +110,6 @@ vec3 distortion_drop(
             break;
         }
         p += r * d;
-        at += 0.9 / (3.0 + abs(d));
     }
 
     // // if we hit a surface
@@ -127,9 +125,5 @@ vec3 distortion_drop(
 
     vec2 uv2 = p.xy * scale / (depth * r.z) + vec2(0.5, .5);
 
-    vec3 col = image(mix(in_uv, uv2 - 0.5 + center, effect_intensity));
-
-    col *= at * border_color;
-    // col *= pow(max(0.0, 1.3 - length(in_uv)), 0.8);
-    return col;
+    return mix(in_uv, uv2 - 0.5 + center, effect_intensity);
 }
