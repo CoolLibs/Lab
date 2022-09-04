@@ -5,7 +5,6 @@ uniform float _time;
 uniform float _aspect_ratio;
 out vec4      out_Color;
 
-uniform sampler2D _image;
 uniform sampler2D _texture;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"

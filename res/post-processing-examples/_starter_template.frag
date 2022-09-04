@@ -5,8 +5,6 @@ uniform float _time;
 uniform float _aspect_ratio;
 out vec4      out_Color;
 
-uniform sampler2D _image;
-
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 void main()
