@@ -45,9 +45,9 @@ float tick(float t, float d)
 }
 
 // Kaleidoscopic iterated function system
-vec3 kifs(vec3 p, float t)
+vec3 kifs(vec3 p, float t, int N)
 {
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < N; ++i)
     {
         float t1 = tick(t + float(i), 0.4 + float(i) * 0.1) + t * 0.3;
         p.xz *= rot(t1);
@@ -61,7 +61,7 @@ vec3 kifs(vec3 p, float t)
 
     return p;
 }
-float map(vec3 p, float time)
+float map(vec3 p, float time, int N)
 {
     vec3 bp = p;
 
@@ -70,8 +70,8 @@ float map(vec3 p, float time)
     p.xy *= rot(t1);
     p.yz *= rot(t1 * 1.3);
 
-    vec3 p2 = kifs(p, t0 * 0.3);
-    vec3 p3 = kifs(p + vec3(1, 0, 0.3), t0 * 0.2);
+    vec3 p2 = kifs(p, t0 * 0.3, N);
+    vec3 p3 = kifs(p + vec3(1, 0, 0.3), t0 * 0.2, N);
 
     float d  = sph(p2, 1.0);
     float d2 = cyl(p3.xz, 1.1);
@@ -88,11 +88,11 @@ float map(vec3 p, float time)
 
 vec3 distortion_drop(
     vec2 in_uv, float effect_intensity,
-    vec2 center, float drops_size, float size, float distortion, float time, vec3 border_color
+    vec2 center, float drops_size, float scale, float distortion, float time, vec3 border_color, int N
 )
 {
     vec3 s = vec3(0, 0, -17);
-    vec3 r = normalize(vec3(in_uv - center, size));
+    vec3 r = normalize(vec3(in_uv - center, scale));
 
     vec3  p      = s;
     float at     = 0.0;
@@ -100,7 +100,7 @@ vec3 distortion_drop(
     // main raymarching loop
     for (int i = 0; i < 100; ++i)
     {
-        float d = map(p, time);
+        float d = map(p, time, N);
         if (d < drops_size)
         {
             inside = true;
@@ -118,18 +118,18 @@ vec3 distortion_drop(
     if (inside)
     {
         vec2 off = vec2(0.01, 0);
-        vec3 n   = normalize(map(p, time) - vec3(map(p - off.xyy, time), map(p - off.yxy, time), map(p - off.yyx, time)));
+        vec3 n   = normalize(map(p, time, N) - vec3(map(p - off.xyy, time, N), map(p - off.yxy, time, N), map(p - off.yyx, time, N)));
         // refract the ray direction
         r = refract(r, n, distortion * effect_intensity);
     }
 
     float depth = length(p - s);
 
-    vec2 uv2 = p.xy * size / (depth * r.z) + vec2(0.5, .5);
+    vec2 uv2 = p.xy * scale / (depth * r.z) + vec2(0.5, .5);
 
     vec3 col = image(mix(in_uv, uv2 - 0.5 + center, effect_intensity));
 
-    col += at * border_color;
-    col *= pow(max(0.0, 1.3 - length(in_uv)), 0.8);
+    col *= at * border_color;
+    // col *= pow(max(0.0, 1.3 - length(in_uv)), 0.8);
     return col;
 }

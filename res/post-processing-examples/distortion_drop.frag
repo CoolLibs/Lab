@@ -14,6 +14,7 @@ INPUT float    Scale;                // default 1 min = 0.001 max = 1.5
 INPUT float    Time;
 INPUT Point2D  Center;
 INPUT RgbColor Border_color;
+INPUT int      N;
 
 INPUT float Effect_intensity;
 
@@ -23,8 +24,7 @@ void main()
 
     vec3 color = distortion_drop(
         in_uv, Effect_intensity,
-        Center, Drops_size, Scale, Distortion_intensity, Time, Border_color
+        Center, Drops_size, Scale, Distortion_intensity, Time, Border_color, N
     );
-
     out_Color = vec4(color, 1);
 }
