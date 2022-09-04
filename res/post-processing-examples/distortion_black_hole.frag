@@ -12,14 +12,10 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_black_hole.glsl"
 
 INPUT Angle Angle_in_turns;    // 0 to 1 (1 == 1 turn)
-INPUT float Hole_radius;       // positive values
-INPUT float Hole_intensity;    // 0 to 8
 INPUT float Hole_attractivity; // -1 to 1
-INPUT float Hole_smooth;       // -.5 to 1
 // range 0 to 1
-INPUT Point2D  Hole_center; // vec2(0.5,0.5)
-INPUT RgbColor Hole_color;
-INPUT int      Subdivision; // 0 forbidden
+INPUT Point2D Hole_center; // vec2(0.5,0.5)
+INPUT int     Subdivision; // 0 forbidden
 
 INPUT float Effect_intensity;
 
@@ -28,11 +24,13 @@ void main()
 {
     vec2 in_uv = _uv;
 
-    vec3 color = distortion_black_hole(
+    vec2 out_uv = distortion_black_hole(
         in_uv, Effect_intensity,
-        Hole_center, Angle_in_turns, Hole_color, Subdivision,
-        Hole_radius, Hole_intensity, Hole_attractivity, Hole_smooth
+        Hole_center, Angle_in_turns, Subdivision,
+        Hole_attractivity
     );
+
+    vec3 color = image(out_uv);
 
     out_Color = vec4(color, 1.);
 }
