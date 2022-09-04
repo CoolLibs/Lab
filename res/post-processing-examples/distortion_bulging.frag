@@ -8,7 +8,6 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_bulging.glsl"
 
-// default 0.5 range 0 to 1
 INPUT Point2D Center;
 INPUT float   Strength;
 
