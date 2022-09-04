@@ -87,13 +87,12 @@ float map(vec3 p, float time)
 }
 
 vec3 distortion_drop(
-    vec2  in_uv,
-    float drops_size, float size, float distortion, float time, vec3 border_color_coefficient
+    vec2 in_uv,
+    vec2 center, float drops_size, float size, float distortion, float time, vec3 border_color_coefficient
 )
 {
-    in_uv -= 0.5;
     vec3 s = vec3(0, 0, -17);
-    vec3 r = normalize(vec3(in_uv, size));
+    vec3 r = normalize(vec3(in_uv - center, size));
 
     vec3  p      = s;
     float at     = 0.0;
@@ -128,7 +127,7 @@ vec3 distortion_drop(
 
     vec2 uv2 = p.xy * size / (depth * r.z) + vec2(0.5, .5);
 
-    vec3 col = image(uv2);
+    vec3 col = image(uv2 - 0.5 + center);
 
     vec3 border_color = border_color_coefficient;
     col += at * border_color;
