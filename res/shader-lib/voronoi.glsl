@@ -4,19 +4,10 @@
 
 float voronoi(
     vec2  in_uv,
-    float scale, float speed, float movement, bool time_mode, float distance_mode
+    float scale, float time, float shape
 )
 {
     float m = 0.;
-    float t = 0;
-    if (time_mode)
-    {
-        t = _time * speed;
-    }
-    else
-    {
-        t = movement;
-    }
 
     float minimal_distance = 100.;
 
@@ -32,11 +23,11 @@ float voronoi(
             vec2 offs = vec2(x, y);
 
             vec2 n = hash_0_to_1_2D_to_2D(id + offs);
-            vec2 p = offs + sin(n * t) * .5;
+            vec2 p = offs + sin(n * time) * .5;
             p -= gv;
             float d = pow(
-                pow(abs(p.x), distance_mode) + pow(abs(p.y), distance_mode),
-                1 / distance_mode
+                pow(abs(p.x), shape) + pow(abs(p.y), shape),
+                1 / shape
             );
 
             if (d < minimal_distance)
@@ -50,14 +41,14 @@ float voronoi(
 }
 vec2 voronoi_uv(
     vec2 in_uv, float effect_intensity,
-    float scale, float speed, float movement, bool time_mode, float distance_mode
+    float scale, float time, float shape
 )
 {
     return mix(
         in_uv,
         vec2(voronoi(
             in_uv,
-            scale, speed, movement, time_mode, distance_mode
+            scale, time, shape
         )),
         effect_intensity
     );
@@ -65,11 +56,11 @@ vec2 voronoi_uv(
 
 vec3 voronoi_color(
     vec2  in_uv,
-    float scale, float speed, float movement, bool time_mode, float distance_mode
+    float scale, float time, float shape
 )
 {
     return vec3(voronoi(
         in_uv,
-        scale, speed, movement, time_mode, distance_mode
+        scale, time, shape
     ));
 }

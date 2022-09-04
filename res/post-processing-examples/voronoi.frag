@@ -9,10 +9,8 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/voronoi.glsl"
 
 INPUT float Scale; // 10
-INPUT float Speed;
-INPUT float Movement;
-INPUT bool  Time_mode;
-INPUT float Distance_mode; // 2
+INPUT float Time;
+INPUT float Shape; // 2 /// Choses which norm is used to define the distance. 2 is the usual euclidian distance.
 
 INPUT float Effect_intensity;
 
@@ -22,15 +20,10 @@ void main()
 
     vec2 out_uv = voronoi_uv(
         in_uv, Effect_intensity,
-        Scale, Speed, Movement, Time_mode, Distance_mode
+        Scale, Time, Shape
     );
 
     vec3 color = image(out_uv);
-
-    // vec3 color = voronoi_color(
-    //     in_uv,
-    //     Scale, Speed, Movement, Time_mode, Distance_mode
-    // );
 
     out_Color = vec4(color, 1.);
 }

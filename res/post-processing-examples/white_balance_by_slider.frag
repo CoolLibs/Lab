@@ -6,17 +6,16 @@
 
 #version 410
 
-layout(location = 0) in vec2 _uv;
 uniform float _time;
-uniform float _aspect_ratio;
 out vec4      out_Color;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/white_balance_by_slider.glsl"
 
-INPUT float Temperature; // default 1000 to 40000
+INPUT float Temperature;
 INPUT float Temperature_strength;
 INPUT float Luminance_preservation_factor;
 
@@ -24,7 +23,7 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv).xyz;
+    vec3 in_color = image(normalized_uv());
 
     vec3 color = white_balance_by_slider(
         in_color, Effect_intensity,

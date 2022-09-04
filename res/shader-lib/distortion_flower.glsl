@@ -2,7 +2,7 @@
 
 vec2 distortion_flower(
     vec2 in_uv, float Effect_intensity,
-    vec2 Center, float Scale, float Frequency, float Wave_compression, int subdivison
+    vec2 Center, float Scale, float Frequency, float Wave_compression, float subdivison
 )
 {
     vec2 uv = in_uv - Center;

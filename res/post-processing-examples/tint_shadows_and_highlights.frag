@@ -9,10 +9,10 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/tint_shadows_and_highlights.glsl"
 
-INPUT RgbColor Color_shadows;
-INPUT RgbColor Color_highlights;
-INPUT float    Shadows_intensity;
-INPUT float    Highlights_intensity;
+INPUT RgbColor Shadow_color;
+INPUT float    Shadow_strength;
+INPUT RgbColor Highlight_color;
+INPUT float    Highlight_strength;
 
 INPUT float Effect_intensity;
 
@@ -22,7 +22,7 @@ void main()
 
     vec3 color = tint_shadows_and_highlights(
         in_color, Effect_intensity,
-        Color_shadows, Color_highlights, Shadows_intensity, Highlights_intensity
+        Shadow_color, Highlight_color, Shadow_strength, Highlight_strength
     );
 
     out_Color = vec4(color, 1.);

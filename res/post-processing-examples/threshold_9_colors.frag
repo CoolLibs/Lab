@@ -30,7 +30,7 @@ INPUT RgbColor Color7;
 INPUT RgbColor Color8;
 INPUT RgbColor Color9;
 
-INPUT float Effect_intensity;
+// TODO(ASG) Move in a shader-demo folder
 
 void main()
 {

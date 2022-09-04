@@ -24,7 +24,7 @@ void main()
 
     vec2 out_uv = distortion_flower(
         in_uv, Effect_intensity,
-        Center, Scale, Frequency, Wave_compression, Subdivison
+        Center, Scale, Frequency, Wave_compression, float(Subdivison)
     );
 
     vec3 out_color = image(out_uv);
