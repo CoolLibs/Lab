@@ -2,12 +2,11 @@
 
 // https://www.shadertoy.com/view/4tlyD8
 
-layout(location = 0) in vec2 _uv;
 uniform float _time;
-uniform float _aspect_ratio;
 out vec4      out_Color;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 INPUT int     Sample_count;
@@ -19,10 +18,9 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec3 in_color = image(_uv);
-    vec2 uv       = _uv - 0.5;
+    vec2 uv       = normalized_uv();
+    vec3 in_color = image(uv);
     uv -= Center;
-    uv.x *= _aspect_ratio;
 
     float  inverseSampleCount = 1.0 / Sample_count;
     vec2   direction          = normalize(uv);
@@ -37,9 +35,9 @@ void main()
     mat3x2 offsets     = mat3x2(0);
     for (int i = 0; i < Sample_count; i++)
     {
-        accumulator.g += image(_uv + offsets[1]).g;
-        accumulator.b += image(_uv + offsets[2]).b;
-        accumulator.r += image(_uv + offsets[0]).r;
+        accumulator.g += image(uv + offsets[1]).g;
+        accumulator.b += image(uv + offsets[2]).b;
+        accumulator.r += image(uv + offsets[0]).r;
 
         offsets -= increments;
     }
