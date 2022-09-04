@@ -12,8 +12,8 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_kaleidoscope.glsl"
 
 INPUT Angle   Angle_distortion;
-INPUT float   Strength;
-INPUT Point2D Center; // default vec2(.5,.5)
+INPUT float   Strength; /// 0. forbidden
+INPUT Point2D Center;
 
 INPUT float Effect_intensity;
 
