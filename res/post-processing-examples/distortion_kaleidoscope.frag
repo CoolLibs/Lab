@@ -12,7 +12,7 @@ uniform sampler2D _image;
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_kaleidoscope.glsl"
 
 INPUT Angle   Angle_distortion;
-INPUT float   Scale;
+INPUT float   Strength;
 INPUT Point2D Center; // default vec2(.5,.5)
 
 INPUT float Effect_intensity;
@@ -20,12 +20,12 @@ INPUT float Effect_intensity;
 void main()
 {
     vec2 in_uv = _uv;
-    in_uv -= 0.5;
-    in_uv.x *= _aspect_ratio; // TODO(ASG check if we need to take aspect ratio into account in ALL shaders)
+    // in_uv -= 0.5;
+    // in_uv.x *= _aspect_ratio; // TODO(ASG check if we need to take aspect ratio into account in ALL shaders)
 
     vec2 out_uv = distortion_kaleidoscope(
         in_uv, Effect_intensity,
-        Center, Angle_distortion, Scale
+        Center, Angle_distortion, Strength
     );
 
     vec3 color = image(out_uv);
