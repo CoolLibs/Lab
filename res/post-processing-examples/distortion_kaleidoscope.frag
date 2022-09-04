@@ -25,7 +25,7 @@ void main()
 
     vec2 out_uv = distortion_kaleidoscope(
         in_uv, Effect_intensity,
-        Center, Angle_distortion, Strength
+        Center + 0.5, Angle_distortion, Strength
     );
 
     vec3 color = image(out_uv);
