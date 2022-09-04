@@ -3,13 +3,13 @@
 // TODO(ASG) Rename the effect
 
 vec2 distortion_black_hole(
-    vec2 in_uv, float Effect_intensity,
-    vec2 Hole_center, Angle Angle_in_turns, int Subdivision,
-    float Hole_attractivity
+    vec2 in_uv, float effect_intensity,
+    vec2 Center, float Angle_in_turns, float Subdivision,
+    float Attractivity
 
 )
 {
-    vec2 coord  = (in_uv - Hole_center) * 2.;
+    vec2 coord  = (in_uv - Center) * 2.;
     vec2 ncoord = coord;
 
     // rotation
@@ -22,7 +22,7 @@ vec2 distortion_black_hole(
     vec2  uv     = vec2(angle, radius);
 
     uv /= radians(360. / float(Subdivision));
-    uv.y += Hole_attractivity;
+    uv.y += Attractivity;
 
-    return mix(in_uv, uv, Effect_intensity);
+    return mix(in_uv, uv, effect_intensity);
 }
