@@ -11,12 +11,12 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/wormhole.glsl"
 
-INPUT float Atractivity; // default 0.008
-INPUT float Symmetry;    // min = 0 max = 0.5
-INPUT float Intensity;
-INPUT float Wormhole_smooth; // fobidden 0
-INPUT float Wormhole_size;   // fobidden 0
-INPUT vec2  Center;
+INPUT float   Atractivity; // default 0.008
+INPUT float   Symmetry;    // min = 0 max = 0.5
+INPUT float   Intensity;
+INPUT float   Wormhole_smooth; // fobidden 0
+INPUT float   Wormhole_size;   // fobidden 0
+INPUT Point2D Center;
 
 INPUT RgbColor Wormhole_color;
 

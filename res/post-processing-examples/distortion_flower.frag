@@ -10,11 +10,11 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_flower.glsl"
 
-INPUT vec2  Center;
-INPUT float Scale;
-INPUT float Frequency;
-INPUT float Wave_compression;
-INPUT int   Subdivison;
+INPUT Point2D Center;
+INPUT float   Scale;
+INPUT float   Frequency;
+INPUT float   Wave_compression;
+INPUT int     Subdivison;
 
 INPUT float Effect_intensity;
 

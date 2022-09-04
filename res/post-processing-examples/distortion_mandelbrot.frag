@@ -8,9 +8,8 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_mandelbrot.glsl"
 
-INPUT float Scale; // negative values to flip the pattern
-                   // default .5 min = 0 max = 1 // Point2D
-INPUT vec2 Center;
+INPUT float   Scale; // negative values to flip the pattern
+INPUT Point2D Center;
 // 0 forbidden
 INPUT float Subdivision; // min = 0 max = 20
 

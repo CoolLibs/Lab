@@ -10,9 +10,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_simple.glsl"
 
-// default 0.5 range 0 to 1
-// Point2D
-INPUT vec2 Center;
+INPUT Point2D Center;
 
 INPUT float Effect_intensity; // default 1 min 0 max 1
 

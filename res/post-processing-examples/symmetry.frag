@@ -8,11 +8,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry.glsl"
 
-// 0 to 1 default 0.5
-// Point2D
-INPUT vec2  Center;
-INPUT Angle Angle_symmetry;
-INPUT bool  Invert_symmetry;
+INPUT Point2D Center;
+INPUT Angle   Angle_symmetry;
+INPUT bool    Invert_symmetry;
 
 INPUT float Effect_intensity;
 

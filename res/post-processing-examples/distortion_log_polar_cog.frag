@@ -10,13 +10,12 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_log_polar.glsl"
 
-// default 0.5 range 0 to 1 //Point2D
-INPUT vec2  Center;
-INPUT float Scale1; //  range 0 to 7
-INPUT float Scale2;
-INPUT Angle Angle_in_turns; // 0 to 1 (1 == 1 turn)
-INPUT float Flowerness;     // default 0.01
-INPUT int   Subdivision;
+INPUT Point2D Center;
+INPUT float   Scale1; //  range 0 to 7
+INPUT float   Scale2;
+INPUT Angle   Angle_in_turns; // 0 to 1 (1 == 1 turn)
+INPUT float   Flowerness;     // default 0.01
+INPUT int     Subdivision;
 
 INPUT float Effect_intensity;
 

@@ -8,10 +8,10 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry_star.glsl"
 
-INPUT float Size;           // 0 forbidden 0.001 to 0.5
-INPUT Angle Angle_in_turns; // 0 to 1 (1 == 1 turn)
-INPUT int   Nb_iterations;
-INPUT vec2  Center;
+INPUT float   Size;           // 0 forbidden 0.001 to 0.5
+INPUT Angle   Angle_in_turns; // 0 to 1 (1 == 1 turn)
+INPUT int     Nb_iterations;
+INPUT Point2D Center;
 
 INPUT float Effect_intensity;
 

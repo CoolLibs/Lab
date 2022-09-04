@@ -10,10 +10,8 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/swirl_distortion.glsl"
 
-// default 0.5
-// Point2D
-INPUT vec2  Center;
-INPUT float Size; // only positive values
+INPUT Point2D Center;
+INPUT float   Size; // only positive values
 
 INPUT float Effect_intensity; // positive and negative values
 

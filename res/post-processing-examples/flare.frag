@@ -9,7 +9,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/flare.glsl"
 
-INPUT Point2D Position;   // vec2(0.5,0.5)
+INPUT Point2D Position;
 INPUT float   Brightness; // 0 min -1. max 1.
 
 INPUT int Number_of_circles; // default 10
