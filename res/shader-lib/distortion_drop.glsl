@@ -87,8 +87,8 @@ float map(vec3 p, float time)
 }
 
 vec3 distortion_drop(
-    vec2 in_uv,
-    vec2 center, float drops_size, float size, float distortion, float time, vec3 border_color_coefficient
+    vec2 in_uv, float effect_intensity,
+    vec2 center, float drops_size, float size, float distortion, float time, vec3 border_color
 )
 {
     vec3 s = vec3(0, 0, -17);
@@ -120,16 +120,15 @@ vec3 distortion_drop(
         vec2 off = vec2(0.01, 0);
         vec3 n   = normalize(map(p, time) - vec3(map(p - off.xyy, time), map(p - off.yxy, time), map(p - off.yyx, time)));
         // refract the ray direction
-        r = refract(r, n, distortion);
+        r = refract(r, n, distortion * effect_intensity);
     }
 
     float depth = length(p - s);
 
     vec2 uv2 = p.xy * size / (depth * r.z) + vec2(0.5, .5);
 
-    vec3 col = image(uv2 - 0.5 + center);
+    vec3 col = image(mix(in_uv, uv2 - 0.5 + center, effect_intensity));
 
-    vec3 border_color = border_color_coefficient;
     col += at * border_color;
     col *= pow(max(0.0, 1.3 - length(in_uv)), 0.8);
     return col;
