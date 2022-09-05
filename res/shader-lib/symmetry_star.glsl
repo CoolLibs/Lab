@@ -9,7 +9,7 @@ vec2 u(float angle)
 
 vec2 symmetry_star(
     vec2 in_uv, float effect_intensity,
-    vec2 center, float size, float angle_in_turns, float nb_iterations
+    vec2 center, float size, float angle, float nb_iterations
 )
 {
     vec2 out_uv = in_uv - center;
@@ -23,7 +23,7 @@ vec2 symmetry_star(
     float d      = dot(out_uv - vec2(0.5, 0), u_line);
     out_uv -= u_line * max(0., d) * 2.;
 
-    u_line = u(angle_in_turns * (2. / 3.) * PI);
+    u_line = u(angle / 3.);
     out_uv.x += 0.5;
 
     float scale = 3.;
