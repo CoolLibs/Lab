@@ -16,15 +16,10 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 uv = _uv;
-    uv *= 1.0 - uv.yx;
-    uv.x *= _aspect_ratio;
-    // TODO(ASG) Move uv transfo in function
-    // TODO(ASG) Rename params in function
     vec3 in_color = image(normalized_uv());
 
     vec3 color = vignetting(
-        in_color, Effect_intensity, uv,
+        in_color, Effect_intensity, _uv, _aspect_ratio,
         Strength, Radius, Color
     );
 
