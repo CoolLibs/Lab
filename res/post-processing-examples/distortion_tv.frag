@@ -10,8 +10,8 @@ out vec4      out_Color;
 
 INPUT float Time;
 INPUT float Strength;
-INPUT vec3  Channels_offset; // default vec3(20.,22.,14.)
-INPUT int   Nb_iteration;    // min = 1 max 23
+INPUT vec3  Channels_offset;
+INPUT int   Nb_iteration;
 
 INPUT float Effect_intensity;
 

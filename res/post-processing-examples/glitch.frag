@@ -8,9 +8,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/glitch.glsl"
 
 INPUT float Time;
-INPUT vec2  Squares_size; // default vec2(24., 9.)
+INPUT vec2  Squares_size;
 
-INPUT float Effect_intensity; // default .05 min 0. max 1.
+INPUT float Effect_intensity;
 
 void main()
 {

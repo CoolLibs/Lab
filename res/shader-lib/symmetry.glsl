@@ -1,20 +1,19 @@
 // #include "_COOL_RES_/shaders/math.glsl"
 
-float symmetry_side(bool right, float ortho)
+float symmetry_side(bool flip, float ortho)
 {
-    return right ? min(0, ortho) : max(0., ortho);
+    return flip ? min(0, ortho) : max(0., ortho);
 }
 
 vec2 symmetry(
     vec2 in_uv, float effect_intensity,
-    vec2 center, float angle_in_turns, bool right_or_left
+    vec2 center, float angle_in_radians, bool flip
 )
 {
-    float angle  = angle_in_turns * TAU;
-    vec2  u_line = vec2(sin(angle), -cos(angle));
+    vec2 u_line = vec2(sin(angle_in_radians), -cos(angle_in_radians));
 
     vec2 out_uv = in_uv - center;
-    out_uv      = center + out_uv - u_line * symmetry_side(right_or_left, dot(out_uv, u_line)) * 2.;
+    out_uv      = center + out_uv - u_line * symmetry_side(flip, dot(out_uv, u_line)) * 2.;
 
     return mix(in_uv, out_uv, effect_intensity);
 }

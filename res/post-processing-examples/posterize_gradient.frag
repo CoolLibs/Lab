@@ -9,7 +9,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/threshold.glsl"
 
-INPUT int      Number_of_colors; // min 2
+INPUT int      Number_of_colors;
 INPUT Gradient gradient;
 
 INPUT float Effect_intensity;
