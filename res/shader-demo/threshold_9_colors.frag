@@ -8,7 +8,6 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/color_effects.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/threshold_by_chosen_color.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/grid_9_colors.glsl"
 
 // Inputs for threshold_by_chosen_color
 INPUT int      Number_of_colors; // min 2
@@ -29,13 +28,13 @@ INPUT RgbColor Color7;
 INPUT RgbColor Color8;
 INPUT RgbColor Color9;
 
-// TODO(ASG) Move in a shader-demo folder
+INPUT float Effect_intensity;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
-    vec2 out_uv = grid_9_colors(in_uv, Effect_intensity);
+    vec2 out_uv = 3. * in_uv;
 
     vec3 in_color = image(fract(out_uv));
 
