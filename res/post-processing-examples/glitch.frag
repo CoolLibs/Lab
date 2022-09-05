@@ -16,10 +16,15 @@ void main()
 {
     vec2 in_uv = normalized_uv();
 
-    vec3 color = glitch(
-        in_uv, Effect_intensity,
+    float glitch = glitch(
+        in_uv,
         Squares_size, Time
     );
+    vec3 col1 = image(in_uv);
+    vec3 col2 = image(in_uv + vec2(glitch * Effect_intensity * rng(5., Time), 0.));
+    vec3 col3 = image(in_uv - vec2(glitch * Effect_intensity * rng(31, Time), 0.));
+
+    vec3 color = vec3(col1.r, col2.g, col3.b);
 
     out_Color = vec4(color, 1.);
 }
