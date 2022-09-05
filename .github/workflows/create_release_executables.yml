@@ -31,7 +31,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: CoolLab-Windows.zip
+        files: ${{github.workspace}}\bin\CoolLab-Windows.zip
 #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
     name: Linux Clang Release
