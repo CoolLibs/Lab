@@ -9,12 +9,10 @@ vec2 u(float angle)
 
 vec2 symmetry_star(
     vec2 in_uv, float effect_intensity,
-    float aspect_ratio,
     vec2 center, float size, float angle_in_turns, float nb_iterations
 )
 {
     vec2 out_uv = in_uv - center;
-    out_uv.x *= aspect_ratio;
     out_uv /= size;
 
     out_uv.x            = abs(out_uv.x);

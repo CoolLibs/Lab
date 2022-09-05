@@ -21,7 +21,7 @@ void main()
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = swirl_distortion(
-        in_uv, Effect_intensity, _aspect_ratio,
+        in_uv, Effect_intensity,
         Center, Strength, Size
     );
 

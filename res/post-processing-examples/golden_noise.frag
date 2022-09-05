@@ -14,7 +14,8 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 in_uv = normalized_uv();
+    vec2 in_uv = _uv + 1.;
+    in_uv.x *= _aspect_ratio;
 
     // vec2 out_uv = golden_noise_uv(
     //     in_uv, Effect_intensity,
