@@ -118,7 +118,7 @@ vec2 distortion_drop(
         vec2 off = vec2(0.01, 0);
         vec3 n   = normalize(map(p, time, N) - vec3(map(p - off.xyy, time, N), map(p - off.yxy, time, N), map(p - off.yyx, time, N)));
         // refract the ray direction
-        r = refract(r, n, distortion * effect_intensity);
+        r = refract(r, n, (-distortion + 1.) * effect_intensity);
     }
 
     float depth = length(p - s);
