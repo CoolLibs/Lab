@@ -8,9 +8,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_drop.glsl"
 
-INPUT float   Drops_size;           // default 0.2 min = .001 max = 1.5
-INPUT float   Distortion_intensity; // default 0.7 min = 0 max = 1
-INPUT float   Scale;                // default 1 min = 0.001 max = 1.5
+INPUT float   Drops_size;
+INPUT float   Distortion_intensity;
+INPUT float   Scale;
 INPUT float   Time;
 INPUT Point2D Center;
 INPUT int     N;
