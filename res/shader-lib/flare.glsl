@@ -59,16 +59,12 @@ float sun(vec2 p, vec2 mouse)
 }
 
 vec3 flare(
-    vec2 in_uv, float effect_intensity,
-    float aspect_ratio,
-    vec2 position, float brightness, int number_of_circles, int Seed
+    vec3 in_color, float effect_intensity, vec2 in_uv,
+    vec2 center, vec2 direction, float scale, float brightness, int number_of_circles, int Seed
 )
 {
-    vec2 uv = in_uv;
-    uv.x *= aspect_ratio;
-
-    vec2 mm = position;
-    mm.x *= aspect_ratio;
+    vec2 uv = (in_uv * scale - center);
+    vec2 mm = direction;
 
     vec3 circColor  = vec3(0.9, 0.2, 0.1);
     vec3 circColor2 = vec3(0.3, 0.1, 0.9);
@@ -90,8 +86,6 @@ vec3 flare(
     // multiply by the exponetial e^x ? of 1.0-length which kind of masks the brightness more so that
     // there is a sharper roll of of the light decay from the sun.
     flare *= exp(1.0 - length(uv - mm)) / 5.;
-    vec3 color = image(in_uv);
-    color += flare;
-    vec3 out_color = color;
-    return mix(image(in_uv), out_color, effect_intensity);
+
+    return mix(in_color, in_color + flare, effect_intensity);
 }
