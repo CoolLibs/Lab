@@ -1,0 +1,72 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "b21130bf-97e9-42ad-a49f-717084f663e5"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Gamma",
+                                        "Value": 2.200000047683716,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 5.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.399999976158142,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "Clamp",
+                                        "Value": true,
+                                        "Metadata": {},
+                                        "Default Value": true,
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
