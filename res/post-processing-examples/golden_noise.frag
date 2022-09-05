@@ -8,7 +8,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/golden_noise.glsl"
 
-INPUT float Seed; // default 48
+INPUT float Seed;
 
 INPUT float Effect_intensity;
 
