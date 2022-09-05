@@ -8,7 +8,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry_star.glsl"
 
-INPUT float   Scale; // 0 forbidden 0.001 to 0.5
+INPUT float   Scale;
 INPUT Angle   angle;
 INPUT int     Iterations;
 INPUT Point2D Center;

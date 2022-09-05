@@ -8,8 +8,8 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/vignetting.glsl"
 
-INPUT float    Strength; // Default 0.262
-INPUT float    Radius;   // default 21.
+INPUT float    Strength;
+INPUT float    Radius;
 INPUT RgbColor Color;
 
 INPUT float Effect_intensity;

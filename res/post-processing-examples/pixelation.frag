@@ -10,9 +10,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/pixelation.glsl"
 
-INPUT int   Nb_tiles_on_y_axis; // default 20
-INPUT float Border_thickness;   // default 0.531
-INPUT float Border_roundness;   // default 0.225
+INPUT int   Nb_tiles_on_y_axis;
+INPUT float Border_thickness;
+INPUT float Border_roundness;
 
 INPUT RgbColor Border_color;
 
