@@ -11,13 +11,18 @@ uniform sampler2D _texture;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion.glsl"
 
+INPUT float Strength;
+
 INPUT float Effect_intensity;
 
 void main()
 {
     vec2 in_uv = _uv;
 
-    vec2 out_uv = distortion(in_uv, Effect_intensity, _texture);
+    vec2 out_uv = distortion(
+        in_uv, Effect_intensity, _texture,
+        Strength
+    );
 
     vec3 color = image(out_uv);
 
