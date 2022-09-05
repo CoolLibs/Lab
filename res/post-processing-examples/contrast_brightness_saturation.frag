@@ -8,9 +8,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/contrast_brightness_saturation.glsl"
 
-INPUT float Contrast;   // default 0.0
-INPUT float Brightness; // default 0.0
-INPUT float Saturation; // default 0.0
+INPUT float Contrast;
+INPUT float Brightness;
+INPUT float Saturation;
 
 INPUT float Effect_intensity;
 
