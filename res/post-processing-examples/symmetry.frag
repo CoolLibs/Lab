@@ -9,8 +9,8 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry.glsl"
 
 INPUT Point2D Center;
-INPUT Angle   Angle_symmetry;
-INPUT bool    Invert_symmetry;
+INPUT Angle   angle;
+INPUT bool    Flip;
 
 INPUT float Effect_intensity;
 
@@ -20,7 +20,7 @@ void main()
 
     vec2 out_uv = symmetry(
         in_uv, Effect_intensity,
-        Center, Angle_symmetry, Invert_symmetry
+        Center, angle, Flip
     );
 
     vec3 color = image(out_uv);
