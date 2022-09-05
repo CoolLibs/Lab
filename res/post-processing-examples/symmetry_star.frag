@@ -21,7 +21,6 @@ void main()
 
     vec2 out_uv = symmetry_star(
         in_uv, Effect_intensity,
-        _aspect_ratio,
         Center, Size, Angle_in_turns, Nb_iterations
     );
 
