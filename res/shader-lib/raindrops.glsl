@@ -147,14 +147,14 @@ vec2 Drops(vec2 uv, float t, float l0, float l1, float l2)
 vec3 raindrops_uv(
     vec2 in_uv, float effect_intensity,
     float aspect_ratio,
-    float time_mod, float size, float rain_amount, float Blur
+    float time, float size, float rain_amount, float Blur
 )
 {
     vec2 aspect = vec2(2., 1.);
     vec2 uv     = in_uv * aspect * size;
     uv.x *= aspect_ratio;
 
-    float t       = time_mod;
+    float t       = time;
     float maxBlur = mix(3., 6., rain_amount);
     float minBlur = 2.;
 

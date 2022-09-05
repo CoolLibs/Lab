@@ -61,7 +61,7 @@ float sun(vec2 p, vec2 mouse)
 vec3 flare(
     vec2 in_uv, float effect_intensity,
     float aspect_ratio,
-    vec2 position, float Brightness, int Nb_of_circles, int Seed
+    vec2 position, float brightness, int number_of_circles, int Seed
 )
 {
     vec2 uv = in_uv;
@@ -75,11 +75,11 @@ vec3 flare(
 
     // now to make the sky not black
 
-    vec3 flare = mix(vec3(0.3, 0.2, 0.02) / 0.9, vec3(0.2, 0.5, 0.8), uv.y) * 3. + Brightness - 1.;
+    vec3 flare = mix(vec3(0.3, 0.2, 0.02) / 0.9, vec3(0.2, 0.5, 0.8), uv.y) * 3. + brightness - 1.;
 
     // this calls the function which adds three circle types every time through the loop based on parameters I
     // got by trying things out. rnd i*2000. and rnd i*20 are just to help randomize things more
-    for (float i = 0.; i < Nb_of_circles; i++)
+    for (float i = 0.; i < number_of_circles; i++)
     {
         flare += circle(uv, pow(rnd(i * Seed * 100.) * 1.8, 2.) + 1.41, 0.0, circColor + i, circColor2 + i, rnd(i * Seed) * 3. + 0.2 - .5, mm);
     }
