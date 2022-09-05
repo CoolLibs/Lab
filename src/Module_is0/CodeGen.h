@@ -20,13 +20,13 @@ struct FnNameParams {
 };
 
 struct FnSignatureParams {
-    const FnNameParams fn_name_params;
-    std::string_view   sdf_param_declaration;
+    FnNameParams     fn_name_params;
+    std::string_view sdf_param_declaration;
 };
 
 struct FnDefinitionParams {
-    const FnSignatureParams fn_signature_params;
-    std::string_view        body;
+    FnSignatureParams fn_signature_params;
+    std::string_view  body;
 };
 
 std::string function_name(const FnNameParams& p);
