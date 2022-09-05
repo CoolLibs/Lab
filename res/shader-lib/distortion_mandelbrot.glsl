@@ -9,7 +9,7 @@ vec2 distortion_mandelbrot(
     // position better to see the fractal
     C = -C.yx * 1.8 + vec2(-.5, 0);
 
-    float n = subdivision * effect_intensity;
+    float n = subdivision;
     vec2  Z = C * fract(n);
     for (int i = 0; i < int(subdivision); i++)
     {
@@ -19,5 +19,5 @@ vec2 distortion_mandelbrot(
     }
 
     // image map
-    return mix(in_uv, (-Z.yx * .3 + .5), Effect_intensity);
+    return mix(in_uv, (-Z.yx * .3 + .5 + center.xy) / scale, effect_intensity);
 }

@@ -22,9 +22,8 @@ void main()
 {
     vec2 in_uv = normalized_uv();
 
-    vec3 color = pixelation(
+    vec3 color = pixelation_with_border(
         in_uv, Effect_intensity,
-        _aspect_ratio,
         Nb_tiles_on_y_axis, Border_thickness, Smoothing, Border_color
     );
 
