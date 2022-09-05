@@ -7,7 +7,7 @@ out vec4      out_Color;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_discretization.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/apply_color_palette.glsl"
 
 INPUT ColorPalette Colors;
 
