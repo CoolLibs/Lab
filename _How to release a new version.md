@@ -1,5 +1,7 @@
 - Create a tag on the commit used for the release
-- Run the "Create release executables" wokflow from the Actions tab of GitHub. For **Use workflow from** make sure to replace `Branch: main` with the tag you just created.
-- Update it on our website
-- Update it on our uTip
+- Run the "Create release executables" wokflow from the *Actions* tab of GitHub. For **Use workflow from** make sure to replace `Branch: main` with the tag you just created.
+- Update the version on our Instagram
+- Update the version on our uTip
+- Update the version on our website
+- Put the executables to download on our website
 - Make a post / article about it
