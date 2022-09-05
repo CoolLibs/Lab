@@ -8,7 +8,6 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/color_inversion.glsl"
 
-// default 1 min = 0
 INPUT vec3 Channels_contribution;
 
 INPUT float Effect_intensity;

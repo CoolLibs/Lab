@@ -9,6 +9,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/gamma.glsl"
 
 INPUT float Gamma;
+INPUT bool  Clamp; /// Clamps the color between 0 and 1 before applying the Gamma power.
 
 INPUT float Effect_intensity;
 
@@ -18,7 +19,7 @@ void main()
 
     vec3 color = gamma_modifier(
         in_color, Effect_intensity,
-        Gamma
+        Gamma, Clamp
     );
 
     out_Color = vec4(color, 1.);

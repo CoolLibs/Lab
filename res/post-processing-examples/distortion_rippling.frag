@@ -11,7 +11,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_rippling.glsl"
 
 INPUT float Radius;
-INPUT float Thickness; // default .1
+INPUT float Thickness;
 INPUT vec2  Center;
 
 INPUT float Effect_intensity;
