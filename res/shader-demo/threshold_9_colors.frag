@@ -1,21 +1,19 @@
 #version 410
 
-layout(location = 0) in vec2 _uv;
 uniform float _time;
-uniform float _aspect_ratio;
 out vec4      out_Color;
 
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/color_effects.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/8_bit_color.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/threshold_by_chosen_color.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/grid_9_colors.glsl"
 
 // Inputs for threshold_by_chosen_color
 INPUT int      Number_of_colors; // min 2
 INPUT RgbColor Color0;
 
-// Inputs for color_effects
+// Inputs for 8_bit_color
 // INPUT float Grey_coefficient;
 // INPUT bool  One_color_mode;
 
@@ -30,15 +28,15 @@ INPUT RgbColor Color7;
 INPUT RgbColor Color8;
 INPUT RgbColor Color9;
 
-// TODO(ASG) Move in a shader-demo folder
+INPUT float Effect_intensity;
 
 void main()
 {
     vec2 in_uv = _uv;
 
-    vec2 out_uv = grid_9_colors(in_uv, Effect_intensity);
+    vec2 out_uv = 3. * in_uv;
 
-    vec3 in_color = image(fract(out_uv));
+    vec3 in_color = image(fract(out_uv) - 0.5);
 
     const int size = 3;
 
@@ -63,7 +61,7 @@ void main()
         Number_of_colors, Color0, current_color
     );
 
-    // vec3 color = color_effects(
+    // vec3 color = bit_color(
     //     in_color, Effect_intensity,
     //     current_color, Grey_coefficient, One_color_mode
     // );

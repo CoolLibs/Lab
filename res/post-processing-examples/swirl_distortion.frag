@@ -12,6 +12,7 @@ out vec4      out_Color;
 
 INPUT Point2D Center;
 INPUT float   Size; // only positive values
+INPUT float   Strength;
 
 INPUT float Effect_intensity; // positive and negative values
 
@@ -21,7 +22,7 @@ void main()
 
     vec2 out_uv = swirl_distortion(
         in_uv, Effect_intensity,
-        Center, Size
+        Center, Strength, Size
     );
 
     vec3 color = image(out_uv);

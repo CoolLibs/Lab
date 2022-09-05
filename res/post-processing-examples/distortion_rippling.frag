@@ -12,8 +12,7 @@ out vec4      out_Color;
 
 INPUT float Radius;
 INPUT float Thickness; // default .1
-// default .5 min = 0 max = 1
-INPUT vec2 Center;
+INPUT vec2  Center;
 
 INPUT float Effect_intensity;
 
