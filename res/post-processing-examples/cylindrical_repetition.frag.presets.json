@@ -1,0 +1,130 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "79369a82-1b62-46dd-8205-926c98c75c66"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 9,
+                                    "data": {
+                                        "Name": "angle",
+                                        "Value": {
+                                            "Radians": {
+                                                "Radians": 0.0
+                                            }
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "Radians": {
+                                                "Radians": 0.0
+                                            }
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Attractivity",
+                                        "Value": 0.2150000035762787,
+                                        "Metadata": {
+                                            "Min Value": -1.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 0.2150000035762787,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 3,
+                                    "data": {
+                                        "Name": "Center",
+                                        "Value": {
+                                            "Point2D": {
+                                                "x": 0.0,
+                                                "y": 0.0
+                                            }
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "Point2D": {
+                                                "x": 0.0,
+                                                "y": 0.0
+                                            }
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Subdivision",
+                                        "Value": 12.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 4.889999866485596,
+                                            "Bounded": false,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 12.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "Only_whole_subdivisions",
+                                        "Value": true,
+                                        "Metadata": {},
+                                        "Default Value": true,
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
