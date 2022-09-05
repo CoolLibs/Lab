@@ -1,4 +1,4 @@
-vec2 distortion(
+vec2 distortion_by_texture(
     vec2 in_uv, float effect_intensity, sampler2D texture_2D,
     float strength
 )
