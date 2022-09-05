@@ -10,7 +10,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_kaleidoscope_angular.glsl"
 
 INPUT Angle   Angle_distortion;
-INPUT float   Strength; /// 0. forbidden
+INPUT float   Strength;
 INPUT float   Strength2;
 INPUT Point2D Center;
 

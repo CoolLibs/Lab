@@ -8,13 +8,14 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/golden_noise.glsl"
 
-INPUT float Seed; // default 48
+INPUT float Seed;
 
 INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 in_uv = normalized_uv();
+    vec2 in_uv = _uv + 1.;
+    in_uv.x *= _aspect_ratio;
 
     // vec2 out_uv = golden_noise_uv(
     //     in_uv, Effect_intensity,

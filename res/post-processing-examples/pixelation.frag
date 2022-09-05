@@ -10,9 +10,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/pixelation.glsl"
 
-INPUT float Nb_tiles_on_y_axis; // default 20
-INPUT float Border_thickness;   // default 0.469 min 0. max 0.5
-INPUT float Smoothing;          // default 0.225
+INPUT int   Nb_tiles_on_y_axis; // default 20
+INPUT float Border_thickness;   // default 0.531
+INPUT float Border_roundness;   // default 0.225
 
 INPUT RgbColor Border_color;
 
@@ -24,7 +24,7 @@ void main()
 
     vec3 color = pixelation_with_border(
         in_uv, Effect_intensity,
-        Nb_tiles_on_y_axis, Border_thickness, Smoothing, Border_color
+        Nb_tiles_on_y_axis, 1. - Border_thickness, Border_roundness, Border_color
     );
 
     out_Color = vec4(color, 1.);

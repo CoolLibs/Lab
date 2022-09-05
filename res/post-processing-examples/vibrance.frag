@@ -8,7 +8,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/vibrance.glsl"
 
-INPUT float Vibrance; // default 0.
+INPUT float Vibrance;
 
 INPUT float Effect_intensity;
 

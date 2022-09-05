@@ -12,7 +12,7 @@ out vec4      out_Color;
 
 INPUT Point2D Center;
 
-INPUT float Effect_intensity; // default 1 min 0 max 1
+INPUT float Effect_intensity;
 
 void main()
 {
