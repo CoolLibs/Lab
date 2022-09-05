@@ -11,9 +11,9 @@ out vec4      out_Color;
 INPUT Direction2D Direction;
 INPUT Point2D     Center;
 INPUT float       Scale;
-INPUT float       Brightness;        // 0 min -1. max 1.
-INPUT int         Number_of_circles; // default 10
-INPUT int         Seed;              // default 20
+INPUT float       Brightness;
+INPUT int         Number_of_circles;
+INPUT int         Seed;
 
 INPUT float Effect_intensity;
 
