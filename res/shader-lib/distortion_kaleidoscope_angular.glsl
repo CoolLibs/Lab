@@ -11,9 +11,9 @@ vec2 distortion_kaleidoscope_angular(
                                   sin(distortion_angle)
                               );
     vec2 uvM = mod(
-        in_uv + normalize(in_uv - Center) * adjVec,
+        in_uv + normalize(in_uv - center) * adjVec,
         strength
     );
 
-    return mix(in_uv, uvM, Effect_intensity);
+    return mix(in_uv, uvM, effect_intensity);
 }
