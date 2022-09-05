@@ -5,10 +5,10 @@ vec2 distortion_rippling(
     vec2 center, float radius, float thickness
 )
 {
-    vec2  uv      = in_uv - center;
-    float d       = length(uv);
-    float radius  = radius * 0.25;
-    float distort = cos(((d - (radius - thickness)) / thickness) * (PI / 2.0));
+    vec2  uv            = in_uv - center;
+    float d             = length(uv);
+    float radius_effect = radius * 0.25;
+    float distort       = cos(((d - (radius_effect - thickness)) / thickness) * (PI / 2.0));
 
     // Try adding any of these for some extra flavor
     // distort /= cos(distort); 			// 1
