@@ -1,0 +1,90 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "66bed0a1-074e-459f-a234-35666bc678a7"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 3,
+                                    "data": {
+                                        "Name": "Center",
+                                        "Value": {
+                                            "Point2D": {
+                                                "x": 0.0,
+                                                "y": 0.0
+                                            }
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "Point2D": {
+                                                "x": 0.0,
+                                                "y": 0.0
+                                            }
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 9,
+                                    "data": {
+                                        "Name": "angle",
+                                        "Value": {
+                                            "Radians": {
+                                                "Radians": 1.5707963705062867
+                                            }
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "Radians": {
+                                                "Radians": 1.5707963705062867
+                                            }
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "Flip",
+                                        "Value": false,
+                                        "Metadata": {},
+                                        "Default Value": false,
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

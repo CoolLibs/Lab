@@ -23,7 +23,7 @@ vec2 symmetry_star(
     float d      = dot(out_uv - vec2(0.5, 0), u_line);
     out_uv -= u_line * max(0., d) * 2.;
 
-    u_line = u(angle / 3.);
+    u_line = u(angle);
     out_uv.x += 0.5;
 
     float scale = 3.;
