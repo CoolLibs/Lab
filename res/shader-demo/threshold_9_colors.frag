@@ -32,11 +32,11 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 in_uv = normalized_uv();
+    vec2 in_uv = _uv;
 
     vec2 out_uv = 3. * in_uv;
 
-    vec3 in_color = image(fract(out_uv));
+    vec3 in_color = image(fract(out_uv) - 0.5);
 
     const int size = 3;
 
