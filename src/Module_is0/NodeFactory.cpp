@@ -2,6 +2,7 @@
 #include <Cool/File/File.h>
 #include <Cool/Log/ToUser.h>
 #include <filesystem>
+#include <wafl/wafl.hpp>
 #include "NodeTemplateParsing.h"
 
 NodeFactory::NodeFactory(std::string_view nodes_folder_path)
@@ -12,7 +13,7 @@ NodeFactory::NodeFactory(std::string_view nodes_folder_path)
 
 void NodeFactory::clear_filter()
 {
-    _filter.Clear();
+    _filter          = "";
     _focus_on_filter = true;
 }
 
@@ -56,8 +57,8 @@ std::optional<Node> NodeFactory::imgui()
         ImGui::SetKeyboardFocusHere();
         _focus_on_filter = false;
     }
-    _filter.Draw("Search");
-    if (!_filter.IsActive())
+    bool wants_to_select_first_node = ImGui::InputText("Search", &_filter, ImGuiInputTextFlags_EnterReturnsTrue);
+    if (_filter.empty())
     {
         for_each_node_template([&](const NodeTemplate& node_template) {
             if (ImGui::MenuItem(node_template.name.c_str())) {
@@ -71,8 +72,13 @@ std::optional<Node> NodeFactory::imgui()
         {
             for (size_t i = 0; i < folder.nodes_count; ++i)
             {
-                if (_filter.PassFilter(_node_templates[nodes_counts].name.c_str()))
+                if (wafl::similarity_match({.input = _filter, .reference = _node_templates[nodes_counts].name}) >= wafl::Matches::Strongly)
                 {
+                    if (wants_to_select_first_node)
+                    {
+                        select_node_template(_node_templates[nodes_counts]);
+                        wants_to_select_first_node = false;
+                    }
                     if (ImGui::Selectable(_node_templates[nodes_counts].name.c_str()))
                     {
                         select_node_template(_node_templates[nodes_counts]);
@@ -81,11 +87,19 @@ std::optional<Node> NodeFactory::imgui()
                 nodes_counts++;
             }
         }
-        for_each_node_template([&](const NodeTemplate& node_template) {
+        for_each_node_template(
+            [&](const NodeTemplate& node_template) {
+            if (wants_to_select_first_node)
+            {
+                select_node_template(node_template);
+                wants_to_select_first_node = false;
+            }
             if (ImGui::Selectable(node_template.name.c_str()))
             {
                 select_node_template(node_template);
-            } }, [&](const NodeTemplatesFolder& folder) { return _filter.PassFilter(folder.name.c_str()); });
+            } },
+            [&](const NodeTemplatesFolder& folder) { return wafl::similarity_match({.input = _filter, .reference = folder.name}) >= wafl::Matches::Strongly; }
+        );
     }
 
     return res;
