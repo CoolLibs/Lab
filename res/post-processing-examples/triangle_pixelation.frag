@@ -9,32 +9,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
-INPUT float scale; // 16
+INPUT float Scale; // 16
 
 INPUT float Effect_intensity;
-
-bool IsLessThan(vec3 a, vec3 b)
-{
-    return (a.x <= b.x || a.y <= b.y || a.z <= b.z);
-}
-
-vec3 SRGBToLinear(in vec3 sRGBCol)
-{
-    vec3 linearRGBLo = sRGBCol / 12.92;
-    vec3 linearRGBHi = pow((sRGBCol + 0.055) / 1.055, vec3(2.4));
-    vec3 linearRGB   = IsLessThan(sRGBCol, vec3(0.04045)) ? linearRGBLo : linearRGBHi;
-    return linearRGB;
-}
-
-vec3 linearToSRGB(in vec3 linearCol)
-{
-    vec3 sRGBLo = linearCol * 12.92;
-    vec3 sRGBHi = (pow(abs(linearCol), vec3(1.0 / 2.4)) * 1.055) - 0.055;
-    vec3 sRGB   = IsLessThan(linearCol, vec3(0.0031308)) ? sRGBLo : sRGBHi;
-    return sRGB; // pow( linearCol, vec3( 1.0 / 2.2 ) );
-}
-
-//
 
 const int   samples  = 2;
 const float fSamples = float(samples * samples * 2 * 2);
@@ -42,6 +19,14 @@ const float fSamples = float(samples * samples * 2 * 2);
 void main()
 {
     vec2 in_uv = normalized_uv();
+
+    if (Effect_intensity == 0.)
+    {
+        out_Color = vec4(image(in_uv), 1.);
+        return;
+    }
+
+    float scale = Scale / Effect_intensity;
 
     vec2 uv       = in_uv;
     vec2 mosaicUV = floor(uv * scale) / scale;
@@ -53,7 +38,7 @@ void main()
         step(uv.x, uv.y) / (2.0 * scale)
     );
 
-    vec2 sampleUV = mix(in_uv, mosaicUV + triOffset, Effect_intensity);
+    vec2 sampleUV = mosaicUV + triOffset;
 
     vec3 sample2d = vec3(0.0);
     for (int x = -samples; x < samples; x++)
@@ -62,12 +47,12 @@ void main()
         {
             vec2 subSampleUV = sampleUV;
             subSampleUV += (vec2(1., 1.0) / vec2(scale * fSamples)) * vec2(float(samples + x), float(samples + y));
-            sample2d += SRGBToLinear(image(subSampleUV));
+            sample2d += image(subSampleUV);
         }
     }
     sample2d /= fSamples;
 
-    vec3 color = linearToSRGB(sample2d);
+    vec3 color = sample2d;
 
     out_Color = vec4(color, 1.);
 }
