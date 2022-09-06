@@ -11,7 +11,7 @@ out vec4      out_Color;
 INPUT float Time;
 INPUT float Strength;
 INPUT vec3  Channels_offset;
-INPUT int   Nb_iteration;
+INPUT int   Iterations;
 
 INPUT float Effect_intensity;
 
@@ -24,7 +24,7 @@ void main()
             in_uv + (terrain(
                          Effect_intensity,
                          in_uv.y * Channels_offset.x + Time,
-                         Nb_iteration,
+                         Iterations,
                          Strength
                      ) /
                      200.)

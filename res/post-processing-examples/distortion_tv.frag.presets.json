@@ -77,7 +77,7 @@
                                 {
                                     "index": 1,
                                     "data": {
-                                        "Name": "Nb_iteration",
+                                        "Name": "Iterations",
                                         "Value": 32,
                                         "Metadata": {
                                             "Min Value": 1,

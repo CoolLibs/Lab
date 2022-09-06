@@ -60,7 +60,7 @@ float sun(vec2 p, vec2 mouse)
 
 vec3 flare(
     vec3 in_color, float effect_intensity, vec2 in_uv,
-    vec2 center, vec2 direction, float scale, float brightness, int number_of_circles, int Seed
+    vec2 center, vec2 direction, float scale, float brightness, int number_of_circles, int seed
 )
 {
     vec2 uv = (in_uv * scale - center);
@@ -77,7 +77,7 @@ vec3 flare(
     // got by trying things out. rnd i*2000. and rnd i*20 are just to help randomize things more
     for (float i = 0.; i < number_of_circles; i++)
     {
-        flare += circle(uv, pow(rnd(i * Seed * 100.) * 1.8, 2.) + 1.41, 0.0, circColor + i, circColor2 + i, rnd(i * Seed) * 3. + 0.2 - .5, mm);
+        flare += circle(uv, pow(rnd(i * seed * 100.) * 1.8, 2.) + 1.41, 0.0, circColor + i, circColor2 + i, rnd(i * seed) * 3. + 0.2 - .5, mm);
     }
     // get angle and length of the sun (uv - mouse)
     float a = atan(uv.y - mm.y, uv.x - mm.x);
