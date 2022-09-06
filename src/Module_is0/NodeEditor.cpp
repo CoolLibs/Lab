@@ -171,7 +171,11 @@ void NodeEditor::imgui_window()
         }
         if (ImGui::BeginPopup("_node_templates_list"))
         {
-            node_tree_has_changed |= imgui_nodes_menu();
+            if (imgui_nodes_menu())
+            {
+                ImGui::CloseCurrentPopup();
+                node_tree_has_changed = true;
+            }
             ImGui::EndPopup();
         }
         for (auto& node : _tree.nodes)

@@ -26,7 +26,7 @@ private:
     std::vector<NodeTemplate>        _node_templates;
     std::vector<NodeTemplatesFolder> _folders;
     std::string                      _nodes_folder_path;
-    ImGuiTextFilter                  _filter;
+    std::string                      _filter;
     bool                             _focus_on_filter = true;
 };
 
