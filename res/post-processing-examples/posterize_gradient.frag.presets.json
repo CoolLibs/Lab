@@ -6,7 +6,7 @@
                     {
                         "first": {
                             "value0": {
-                                "value0": "a89ae985-72b4-4ea7-b3c1-260a5d3ba7a0"
+                                "value0": "7ec66eeb-62ac-4f88-8dd9-0dce890b3b8c"
                             }
                         },
                         "second": {
@@ -23,13 +23,13 @@
                                         },
                                         "Default Value": 10,
                                         "Default Metadata": {
-                                            "Min Value": 2,
+                                            "Min Value": 0,
                                             "Max Value": 10
                                         }
                                     }
                                 },
                                 {
-                                    "index": 12,
+                                    "index": 13,
                                     "data": {
                                         "Name": "gradient",
                                         "Value": {
@@ -47,7 +47,7 @@
                                                 },
                                                 {
                                                     "Mark position": {
-                                                        "Relative position": 0.4740000069141388
+                                                        "Relative position": 0.4480000138282776
                                                     },
                                                     "Mark color": {
                                                         "x": 0.8725489974021912,
@@ -79,7 +79,7 @@
                                             "Gradient": [
                                                 {
                                                     "Mark position": {
-                                                        "Relative position": 0.019999999552965165
+                                                        "Relative position": 0.0
                                                     },
                                                     "Mark color": {
                                                         "x": 0.18612736463546754,
@@ -90,7 +90,7 @@
                                                 },
                                                 {
                                                     "Mark position": {
-                                                        "Relative position": 0.4740000069141388
+                                                        "Relative position": 0.4480000138282776
                                                     },
                                                     "Mark color": {
                                                         "x": 0.8725489974021912,
