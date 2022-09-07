@@ -6,6 +6,7 @@ out vec4      out_Color;
 // #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
+// #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 
 INPUT float        Nb_of_pixels_on_y_axis;
 INPUT ColorPalette Palette;
@@ -39,24 +40,27 @@ void main()
     vec3 src = image(coord);
 
     // Track the two best colors
-    vec3  dst0 = vec3(0), dst1 = vec3(0);
-    float best0 = 1e3, best1 = 1e3;
+    float luminance = clamp(cool__luminance(in_color), 0., 0.99999);
 
-    for (int i = 0; i < Palette_length; i++)
+    int idx0 = int(floor(luminance * Palette_length));
+    int idx1;
+    if (fract(luminance * Palette_length) < 0.5)
     {
-        vec3  tst = Palette(i);
-        float err = compare(src, tst);
-        if (err < best0)
-        {
-            best1 = best0;
-            dst1  = dst0;
-            best0 = err;
-            dst0  = tst;
-        }
+        if (idx0 != 0)
+            idx1 = idx0 - 1;
+        else
+            idx1 = idx0 + 1;
+    }
+    else
+    {
+        if (idx0 != Palette_length - 1)
+            idx1 = idx0 + 1;
+        else
+            idx1 = idx0 - 1;
     }
 
-    best0 = sqrt(best0);
-    best1 = sqrt(best1);
+    float dist0 = sqrt(distance(luminance, (idx0 + 0.5) / Palette_length));
+    float dist1 = sqrt(distance(luminance, (idx1 + 0.5) / Palette_length));
 
     vec3 color =
         mod(c.x + c.y, 2.0) >
@@ -64,9 +68,9 @@ void main()
                      c * 2.0
                  ) *
                  0.75) +
-                    (best1 / (best0 + best1))
-            ? dst1
-            : dst0;
+                    (dist1 / (dist0 + dist1))
+            ? Palette(idx1)
+            : Palette(idx0);
     color = mix(in_color, color, Effect_intensity);
 
     out_Color = vec4(color, 1.);
