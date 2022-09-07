@@ -9,7 +9,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/threshold.glsl"
 
-INPUT ColorPalette Colors;
+INPUT ColorPalette Palette;
 
 INPUT float Effect_intensity;
 
@@ -18,9 +18,9 @@ void main()
     vec3 in_color = image(normalized_uv());
 
     float luminance = cool__luminance(in_color);
-    luminance       = threshold(luminance, Colors_length);
+    luminance       = threshold(luminance, Palette_length);
 
-    vec3 color = Colors(int(luminance * (Colors_length - 1.)));
+    vec3 color = Palette(int(luminance * (Palette_length - 1.)));
 
     color = mix(in_color, color, Effect_intensity);
 

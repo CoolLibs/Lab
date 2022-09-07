@@ -10,7 +10,7 @@ out vec4      out_Color;
 
 INPUT float Scale; // 10
 INPUT float Time;
-INPUT float Shape; // 2 /// Choses which norm is used to define the distance. 2 is the usual euclidian distance.
+INPUT float Shape; // 2 /// Chooses which norm is used to define the distance. 2 is the usual euclidian distance.
 
 INPUT float Effect_intensity;
 

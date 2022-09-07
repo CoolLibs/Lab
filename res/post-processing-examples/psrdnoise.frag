@@ -9,11 +9,11 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/fbm.glsl"
 
 INPUT float Scale;
-INPUT float Gain;       // default = 0.5
-INPUT float Lacunarity; // default =2
-INPUT int   Octaves;    // min=1
+INPUT float Gain;
+INPUT float Lacunarity;
+INPUT int   Octaves;
 
-INPUT float Effect_intensity; // default 1
+INPUT float Effect_intensity;
 
 void main()
 {
