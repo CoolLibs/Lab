@@ -7,8 +7,8 @@ vec3 shadows_highlights(
     float shadows, float highlights
 )
 {
-    shadows    = effect_intensity * (shadows + 1.);
-    highlights = effect_intensity * (highlights + 1.);
+    shadows    = effect_intensity * shadows + 1.;
+    highlights = effect_intensity * highlights + 1.;
 
     float luminance = cool__luminance(in_color);
 
