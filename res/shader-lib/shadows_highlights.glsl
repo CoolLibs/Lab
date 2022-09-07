@@ -10,7 +10,7 @@ vec3 shadows_highlights(
     shadows    = effect_intensity * (shadows + 1.);
     highlights = effect_intensity * (highlights + 1.);
 
-    float luminance = luminance(in_color);
+    float luminance = cool__luminance(in_color);
 
     //(shadows+1.0) changed to just shadows:
     float shadow    = clamp((pow(luminance, 1.0 / shadows) + (-0.76) * pow(luminance, 2.0 / shadows)) - luminance, 0.0, 1.0);

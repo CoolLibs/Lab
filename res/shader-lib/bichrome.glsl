@@ -5,7 +5,7 @@ vec3 bichrome(
     vec3 color1, vec3 color2
 )
 {
-    float luminance = luminance(in_color);
+    float luminance = cool__luminance(in_color);
     vec3  out_color = mix(color1, color2, luminance);
     return mix(in_color, out_color, effect_intensity);
 }

@@ -17,7 +17,7 @@ void main()
 {
     vec3 in_color = image(normalized_uv());
 
-    float luminance = luminance(in_color);
+    float luminance = cool__luminance(in_color);
     luminance       = threshold(luminance, Colors_length);
 
     vec3 color = Colors(int(luminance * (Colors_length - 1.)));

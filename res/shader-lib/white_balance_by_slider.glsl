@@ -20,7 +20,7 @@ vec3 white_balance_by_slider(
 {
     float temperature_in_kelvins = mix(1000, 40000, temperature); // because our parameter goes from 0 to 1
     vec3  out_color              = mix(in_color, in_color * colorTemperatureToRGB(temperature_in_kelvins), temperature_strength);
-    out_color *= mix(1.0, luminance(in_color) / max(luminance(out_color), 1e-5), luminance_preservation_factor);
+    out_color *= mix(1.0, cool__luminance(in_color) / max(cool__luminance(out_color), 1e-5), luminance_preservation_factor);
 
     return mix(in_color, out_color, effect_intensity);
 }

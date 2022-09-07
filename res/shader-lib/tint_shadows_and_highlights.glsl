@@ -3,7 +3,7 @@
 
 vec3 desaturate(vec3 color, float amount)
 {
-    float luminance = luminance(color);
+    float luminance = cool__luminance(color);
     return mix(color, vec3(luminance), amount);
 }
 
