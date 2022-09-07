@@ -8,6 +8,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
 INPUT float Spread;
+INPUT float Effect_intensity;
 
 #define X_RANGE 2.0
 #define Y_RANGE 2.0
@@ -108,6 +109,7 @@ vec3 KuwaharaFilter(vec2 uv)
 
 void main()
 {
-    vec3 color = KuwaharaFilter(normalized_uv());
-    out_Color  = vec4(color, 1.);
+    vec2 uv    = normalized_uv();
+    vec3 color = KuwaharaFilter(uv * 1.8);
+    out_Color  = vec4(mix(image(uv), color, Effect_intensity), 1.);
 }
