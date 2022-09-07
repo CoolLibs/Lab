@@ -11,6 +11,7 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/distortion_simple.glsl"
 
 INPUT Point2D Center;
+INPUT float   Strength;
 
 INPUT float Effect_intensity;
 
@@ -20,7 +21,7 @@ void main()
 
     vec2 out_uv = distortion_simple(
         in_uv, Effect_intensity,
-        Center
+        Center, Strength
     );
 
     vec3 color = image(out_uv);
