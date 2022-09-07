@@ -6,12 +6,32 @@
                     {
                         "first": {
                             "value0": {
-                                "value0": "36669f88-92d4-4197-ba52-d6e34c1b67f3"
+                                "value0": "f12e9a85-3739-4b1b-acab-bb1185f30564"
                             }
                         },
                         "second": {
                             "Name": "Default",
                             "Values": [
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Scale",
+                                        "Value": 1.9670000076293946,
+                                        "Metadata": {
+                                            "Min Value": 0.0010000000474974514,
+                                            "Max Value": 3.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.9670000076293946,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
                                 {
                                     "index": 3,
                                     "data": {
@@ -35,15 +55,15 @@
                                 {
                                     "index": 2,
                                     "data": {
-                                        "Name": "Strength",
-                                        "Value": 0.25,
+                                        "Name": "Iterations",
+                                        "Value": 9.0,
                                         "Metadata": {
-                                            "Min Value": -1.7000000476837159,
-                                            "Max Value": 0.9900000095367432,
+                                            "Min Value": 0.0,
+                                            "Max Value": 20.0,
                                             "Bounded": true,
                                             "Drag speed": 0.009999999776482582
                                         },
-                                        "Default Value": 0.25,
+                                        "Default Value": 9.0,
                                         "Default Metadata": {
                                             "Min Value": 0.0,
                                             "Max Value": 1.0,
@@ -56,14 +76,14 @@
                                     "index": 2,
                                     "data": {
                                         "Name": "Effect_intensity",
-                                        "Value": 1.0,
+                                        "Value": 0.9879999756813049,
                                         "Metadata": {
                                             "Min Value": 0.0,
                                             "Max Value": 1.0,
                                             "Bounded": true,
                                             "Drag speed": 0.009999999776482582
                                         },
-                                        "Default Value": 1.0,
+                                        "Default Value": 0.9879999756813049,
                                         "Default Metadata": {
                                             "Min Value": 0.0,
                                             "Max Value": 1.0,

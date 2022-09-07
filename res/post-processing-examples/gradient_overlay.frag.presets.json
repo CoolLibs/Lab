@@ -1,0 +1,154 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "fdb9082b-c6dd-4ecc-84f1-aa0a1d3e1912"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 3,
+                                    "data": {
+                                        "Name": "Start_point",
+                                        "Value": {
+                                            "Point2D": {
+                                                "x": -0.4569999873638153,
+                                                "y": 0.20399999618530274
+                                            }
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "Point2D": {
+                                                "x": -0.4569999873638153,
+                                                "y": 0.20399999618530274
+                                            }
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 3,
+                                    "data": {
+                                        "Name": "End_point",
+                                        "Value": {
+                                            "Point2D": {
+                                                "x": 0.013000000268220902,
+                                                "y": 0.5270000100135803
+                                            }
+                                        },
+                                        "Metadata": {},
+                                        "Default Value": {
+                                            "Point2D": {
+                                                "x": 0.013000000268220902,
+                                                "y": 0.5270000100135803
+                                            }
+                                        },
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 7,
+                                    "data": {
+                                        "Name": "Start_color",
+                                        "Value": {
+                                            "RGB": {
+                                                "x": 0.29832279682159426,
+                                                "y": 0.8987479209899902,
+                                                "z": 0.936274528503418
+                                            }
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": false
+                                        },
+                                        "Default Value": {
+                                            "RGB": {
+                                                "x": 0.29832279682159426,
+                                                "y": 0.8987479209899902,
+                                                "z": 0.936274528503418
+                                            }
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 7,
+                                    "data": {
+                                        "Name": "End_color",
+                                        "Value": {
+                                            "RGB": {
+                                                "x": 0.9999995231628418,
+                                                "y": 0.0,
+                                                "z": 1.0
+                                            }
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": false
+                                        },
+                                        "Default Value": {
+                                            "RGB": {
+                                                "x": 0.9999995231628418,
+                                                "y": 0.0,
+                                                "z": 1.0
+                                            }
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Strength",
+                                        "Value": 0.6510000228881836,
+                                        "Metadata": {
+                                            "Min Value": -2.0,
+                                            "Max Value": 2.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 0.6510000228881836,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
