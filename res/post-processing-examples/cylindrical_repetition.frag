@@ -3,12 +3,11 @@
 uniform float _time;
 out vec4      out_Color;
 
-// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/cylindrical_repetition.glsl"
 
-INPUT Angle   angle; // TODO(JF) Rename variable as Angle once we have removed input_definitions.glsl
+INPUT Angle   Angle;
 INPUT float   Attractivity;
 INPUT Point2D Center;
 INPUT float   Subdivisions; /// Use a whole number if you don't want to see a seem, or check "Only whole subdivisions".
@@ -23,7 +22,7 @@ void main()
 
     vec2 out_uv = cylindrical_repetition(
         in_uv, Effect_intensity, _aspect_ratio,
-        Center, angle, Only_whole_subdivisions ? floor(Subdivisions) : Subdivisions, Attractivity
+        Center, Angle, Only_whole_subdivisions ? floor(Subdivisions) : Subdivisions, Attractivity
     );
 
     vec3 color = image(out_uv);

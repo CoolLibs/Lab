@@ -4,7 +4,6 @@ uniform float _time;
 
 out vec4 out_Color;
 
-// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/kernel_convolution.glsl"

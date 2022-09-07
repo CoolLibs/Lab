@@ -7,7 +7,6 @@ out vec4      out_Color;
 
 uniform sampler2D _image;
 
-// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/raindrops.glsl"
 

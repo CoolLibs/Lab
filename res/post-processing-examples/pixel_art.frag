@@ -3,12 +3,11 @@
 uniform float _time;
 out vec4      out_Color;
 
-// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 
-INPUT float        Nb_of_pixels_on_y_axis;
+INPUT float        Scale;
 INPUT ColorPalette Palette;
 
 INPUT float Effect_intensity;
@@ -34,8 +33,8 @@ void main()
     vec2 in_uv    = normalized_uv();
     vec3 in_color = image(in_uv);
 
-    vec2 c     = floor(in_uv * Nb_of_pixels_on_y_axis);
-    vec2 coord = c / Nb_of_pixels_on_y_axis;
+    vec2 c     = floor(in_uv * Scale);
+    vec2 coord = c / Scale;
 
     vec3 src = image(coord);
 

@@ -15,7 +15,7 @@
                                 {
                                     "index": 1,
                                     "data": {
-                                        "Name": "Nb_tiles_on_y_axis",
+                                        "Name": "Scale",
                                         "Value": 20,
                                         "Metadata": {
                                             "Min Value": 1,

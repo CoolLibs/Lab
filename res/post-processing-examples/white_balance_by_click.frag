@@ -3,13 +3,11 @@
 uniform float _time;
 out vec4      out_Color;
 
-// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/white_balance_by_click.glsl"
 
-// Point2D
-INPUT vec2 Coordinate_for_white_balance;
+INPUT Point2D Coordinate_for_white_balance;
 
 INPUT float Effect_intensity;
 

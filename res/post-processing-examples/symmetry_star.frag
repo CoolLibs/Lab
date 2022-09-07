@@ -3,13 +3,12 @@
 uniform float _time;
 out vec4      out_Color;
 
-// #include "_COOL_RES_/shaders/input_definitions.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/symmetry_star.glsl"
 
 INPUT float   Scale;
-INPUT Angle   angle;
+INPUT Angle   Angle;
 INPUT int     Iterations;
 INPUT Point2D Center;
 
@@ -21,7 +20,7 @@ void main()
 
     vec2 out_uv = symmetry_star(
         in_uv, Effect_intensity,
-        Center, Scale, angle, Iterations
+        Center, Scale, Angle, Iterations
     );
 
     vec3 color = image(out_uv);

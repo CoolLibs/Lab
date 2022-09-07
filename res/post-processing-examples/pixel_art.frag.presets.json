@@ -15,7 +15,7 @@
                                 {
                                     "index": 2,
                                     "data": {
-                                        "Name": "Nb_of_pixels_on_y_axis",
+                                        "Name": "Scale",
                                         "Value": 250.0,
                                         "Metadata": {
                                             "Min Value": 2.0,
