@@ -1,0 +1,62 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "367e6814-3e49-4f91-bbca-5ab078a4a1e2"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Saturation",
+                                        "Value": 0.0,
+                                        "Metadata": {
+                                            "Min Value": -1.0,
+                                            "Max Value": 2.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 0.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
