@@ -8,11 +8,9 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/pixelation_voronoi.glsl"
 
-INPUT float Size;
-INPUT float Speed;
-INPUT float Movement;
-INPUT bool  Time_mode;
-INPUT float Distance_mode;
+INPUT float Scale;
+INPUT float Time;
+INPUT float Shape; // 2 /// Choses which norm is used to define the distance. 2 is the usual euclidian distance.
 
 INPUT float Effect_intensity;
 
@@ -22,7 +20,7 @@ void main()
 
     vec2 out_uv = pixelation_voronoi(
         in_uv, Effect_intensity,
-        Size, Speed, Movement, Time_mode, Distance_mode
+        Scale, Time, Shape
     );
 
     vec3 color = image(out_uv);

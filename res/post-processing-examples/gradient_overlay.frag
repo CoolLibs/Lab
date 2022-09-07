@@ -8,13 +8,13 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/gradient_overlay.glsl"
 
-INPUT vec2 Gradient_pos_a;
-INPUT vec2 Gradient_pos_b;
+INPUT Point2D Start_point;
+INPUT Point2D End_point;
 
-INPUT RgbColor Gradient_color_a;
-INPUT RgbColor Gradient_color_b;
+INPUT RgbColor Start_color;
+INPUT RgbColor End_color;
 
-INPUT float Gradient_presence;
+INPUT float Strength;
 
 INPUT float Effect_intensity;
 
@@ -25,7 +25,7 @@ void main()
 
     vec3 color = gradient_overlay(
         in_color, Effect_intensity, in_uv,
-        Gradient_pos_a, Gradient_pos_b, Gradient_color_a, Gradient_color_b, Gradient_presence
+        Start_point, End_point, Start_color, End_color, Strength
     );
 
     out_Color = vec4(color, 1.);

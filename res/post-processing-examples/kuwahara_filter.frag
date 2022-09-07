@@ -7,11 +7,10 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 
-INPUT float off;
+INPUT float Spread;
 
-#define SLOPE_FILTER 1
-#define X_RANGE      2.0
-#define Y_RANGE      2.0
+#define X_RANGE 2.0
+#define Y_RANGE 2.0
 
 float GetPixelAngle(vec2 uv)
 {
@@ -29,7 +28,7 @@ float GetPixelAngle(vec2 uv)
         for (float y = -1.0; y <= 1.0; y++)
         {
             vec2  offset     = vec2(x, y);
-            vec2  Coords     = uv + offset * off;
+            vec2  Coords     = uv + offset * Spread / 1000.;
             vec3  PixelColor = image(Coords);
             float PixelValue = dot(PixelColor, vec3(0.3, 0.59, 0.11));
 
@@ -54,13 +53,9 @@ vec4 GetKernelMeanAndVariance(vec2 uv, vec4 Range, mat2 RotationMatrix)
         {
             vec2 offset = vec2(0.0);
 
-#if SLOPE_FILTER
             offset = vec2(x, y) * RotationMatrix;
-#else
-            offset = vec2(x, y);
-#endif
 
-            vec2 Coords     = (uv + offset * off) / _aspect_ratio;
+            vec2 Coords     = (uv + offset * Spread / 1000.) / _aspect_ratio;
             vec3 PixelColor = image(Coords);
 
             Mean += PixelColor;
