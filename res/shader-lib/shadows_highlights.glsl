@@ -1,21 +1,32 @@
-// TODO : Must be delete ? / not the best way to implement that, with too mush parameters.
+// https://stackoverflow.com/a/26529322/15432269
 
-vec3 accentuate_shadows(vec3 image, float factor_shadows, float power_shadows, float dir_shadows)
-{
-    return image + image * -dir_shadows * exp(-factor_shadows * pow(image, vec3(power_shadows)));
-}
-
-vec3 accentuate_highlights(vec3 image, float factor_highlights, float power_highlights, float dir_highlights)
-{
-    return image + image * dir_highlights * exp(-factor_highlights * pow(image, vec3(power_highlights)));
-}
+// #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 
 vec3 shadows_highlights(
     vec3 in_color, float effect_intensity,
-    float factor_shadows, float power_shadows, float dir_shadows,
-    float factor_highlights, float power_highlights, float dir_highlights
+    float shadows, float highlights
 )
 {
-    vec3 out_color = accentuate_shadows(accentuate_highlights(in_color, factor_highlights, power_highlights, dir_highlights), factor_shadows, power_shadows, dir_shadows);
-    return mix(in_color, out_color, effect_intensity);
+    shadows    = effect_intensity * (shadows + 1.);
+    highlights = effect_intensity * (highlights + 1.);
+
+    float luminance = luminance(in_color);
+
+    //(shadows+1.0) changed to just shadows:
+    float shadow    = clamp((pow(luminance, 1.0 / shadows) + (-0.76) * pow(luminance, 2.0 / shadows)) - luminance, 0.0, 1.0);
+    float highlight = clamp((1.0 - (pow(1.0 - luminance, 1.0 / (2.0 - highlights)) + (-0.8) * pow(1.0 - luminance, 2.0 / (2.0 - highlights)))) - luminance, -1.0, 0.0);
+    vec3  result    = vec3(0.0, 0.0, 0.0) + ((luminance + shadow + highlight) - 0.0) * ((in_color - vec3(0.0, 0.0, 0.0)) / (luminance - 0.0));
+
+    // blend toward white if highlights is more than 1
+    float contrastedLuminance = ((luminance - 0.5) * 1.5) + 0.5;
+    float whiteInterp         = contrastedLuminance * contrastedLuminance * contrastedLuminance;
+    float whiteTarget         = clamp(highlights, 1.0, 2.0) - 1.0;
+    result                    = mix(result, vec3(1.0), whiteInterp * whiteTarget);
+
+    // blend toward black if shadows is less than 1
+    float invContrastedLuminance = 1.0 - contrastedLuminance;
+    float blackInterp            = invContrastedLuminance * invContrastedLuminance * invContrastedLuminance;
+    float blackTarget            = 1.0 - clamp(shadows, 0.0, 1.0);
+
+    return mix(result, vec3(0.0), blackInterp * blackTarget);
 }
