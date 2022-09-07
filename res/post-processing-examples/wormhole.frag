@@ -1,7 +1,5 @@
 #version 410
 
-// #include "_COOL_RES_/shaders/math.glsl"
-
 uniform float _time;
 out vec4      out_Color;
 
@@ -10,8 +8,8 @@ out vec4      out_Color;
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/wormhole.glsl"
 
-INPUT float   Atractivity; // default 0.008
-INPUT float   Symmetry;    // min = 0 max = 0.5
+INPUT float   Attractivity; // default 0.008
+INPUT float   Subdivisions; // min = 0 max = 0.5
 INPUT Point2D Center;
 
 INPUT float Effect_intensity;
@@ -22,7 +20,7 @@ void main()
 
     vec2 out_uv = wormhole(
         in_uv, Effect_intensity,
-        Center, Atractivity, Symmetry
+        Center, Attractivity, Subdivisions
     );
 
     vec3 color = image(out_uv);
