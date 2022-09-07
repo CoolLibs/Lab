@@ -1,0 +1,134 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "456c5200-6a9f-4517-aa4d-224a6d491151"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 7,
+                                    "data": {
+                                        "Name": "Shadow_color",
+                                        "Value": {
+                                            "RGB": {
+                                                "x": 0.5834858417510986,
+                                                "y": 0.48058435320854189,
+                                                "z": 0.9803921580314636
+                                            }
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": false
+                                        },
+                                        "Default Value": {
+                                            "RGB": {
+                                                "x": 0.5834858417510986,
+                                                "y": 0.48058435320854189,
+                                                "z": 0.9803921580314636
+                                            }
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Shadow_strength",
+                                        "Value": 0.17599999904632569,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 0.30000001192092898,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 0.17599999904632569,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 7,
+                                    "data": {
+                                        "Name": "Highlight_color",
+                                        "Value": {
+                                            "RGB": {
+                                                "x": 1.0,
+                                                "y": 0.753460168838501,
+                                                "z": 0.16176468133926392
+                                            }
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": false
+                                        },
+                                        "Default Value": {
+                                            "RGB": {
+                                                "x": 1.0,
+                                                "y": 0.753460168838501,
+                                                "z": 0.16176468133926392
+                                            }
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Highlight_strength",
+                                        "Value": 0.14499999582767487,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 0.30000001192092898,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 0.14499999582767487,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Effect_intensity",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
