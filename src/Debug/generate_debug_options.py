@@ -43,6 +43,11 @@ def all_debug_options():
             name_in_ui="Test is0 Nodes",
             kind=Kind.BUTTON,
         ),
+        DebugOption(
+            name_in_code="test_custom_shaders__window",
+            name_in_ui="Test Custom Shaders",
+            kind=Kind.WINDOW,
+        ),
     ]
 
 

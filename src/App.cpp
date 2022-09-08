@@ -12,6 +12,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
+#include "Debug/test_custom_shaders.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
@@ -43,6 +44,8 @@ App::~App()
 
 void App::compile_all_is0_nodes()
 {
+    Cool::Log::Debug::console().clear_all();
+
     for (const auto& node_template : _is0_module->nodes_templates())
     {
         _is0_module->remove_all_nodes();
@@ -252,6 +255,14 @@ void App::imgui_windows()
             imgui_commands_and_registries_debug_windows();
         }
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
+        DebugOptions::test_custom_shaders__window([&]() {
+            test_custom_shaders(
+                input_provider(2.f, 0.f),
+                input_factory(),
+                input_destructor(),
+                update_context()
+            );
+        });
 
         Cool::DebugOptions::test_message_console__window([]() {
             static auto test_message_console = Cool::TestMessageConsole{};

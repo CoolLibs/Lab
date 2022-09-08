@@ -39,6 +39,15 @@ public:
         }
     }
     [[nodiscard]] static auto test_is0_nodes() -> bool& { return instance().test_is0_nodes; }
+    static void               test_custom_shaders__window(std::function<void()> callback)
+    {
+        if (instance().test_custom_shaders__window)
+        {
+            ImGui::Begin("Test Custom Shaders", &instance().test_custom_shaders__window);
+            callback();
+            ImGui::End();
+        }
+    }
 
 private:
     struct Instance {
@@ -48,6 +57,7 @@ private:
         bool log_when_rendering{false};
         bool test_all_variable_widgets__window{false};
         bool test_is0_nodes{false};
+        bool test_custom_shaders__window{false};
 
     private:
         // Serialization
@@ -60,7 +70,8 @@ private:
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
-                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window)
+                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
+                cereal::make_nvp("Test Custom Shaders", test_custom_shaders__window)
             );
         }
     };
@@ -72,6 +83,7 @@ private:
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
         instance().test_all_variable_widgets__window          = false;
+        instance().test_custom_shaders__window                = false;
     }
 
     static void save_to_file()
@@ -142,6 +154,11 @@ private:
             if (ImGui::IsItemClicked())
                 instance().test_is0_nodes = true;
         }
+
+        if (wafl::similarity_match({filter, "Test Custom Shaders"}) >= wafl::Matches::Strongly)
+        {
+            ImGui::Checkbox("Test Custom Shaders", &instance().test_custom_shaders__window);
+        }
     }
 
     static void toggle_first_option(std::string_view filter)
@@ -179,6 +196,12 @@ private:
         if (wafl::similarity_match({filter, "Test is0 Nodes"}) >= wafl::Matches::Strongly)
         {
             instance().test_is0_nodes = !instance().test_is0_nodes;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Test Custom Shaders"}) >= wafl::Matches::Strongly)
+        {
+            instance().test_custom_shaders__window = !instance().test_custom_shaders__window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }
