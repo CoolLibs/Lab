@@ -5,7 +5,6 @@ out vec4      out_Color;
 
 // #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/image.glsl"
-// #include "_ROOT_FOLDER_/res/shader-lib/rgb_hsv_conversion.glsl"
 // #include "_ROOT_FOLDER_/res/shader-lib/color_detection.glsl"
 
 INPUT RgbColor Color;
