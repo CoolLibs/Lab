@@ -12,7 +12,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Debug/DebugOptions.h"
-#include "Debug/test_custom_shaders.h"
+#include "Debug/compile_all_custom_shaders.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
@@ -44,12 +44,10 @@ App::~App()
 
 void App::compile_all_is0_nodes()
 {
-    Cool::Log::Debug::console().clear_all();
-
     for (const auto& node_template : _is0_module->nodes_templates())
     {
         _is0_module->remove_all_nodes();
-        Cool::Log::Debug::info("Test is0 Nodes", node_template.name);
+        Cool::Log::Debug::info("Test is0 Node", node_template.name);
         _is0_module->add_node(NodeFactoryU::node_from_template(node_template));
         _is0_module->recompile(update_context(), true);
     }
@@ -94,13 +92,6 @@ void App::update()
         _custom_shader_module->update(update_context());
         check_inputs();
     }
-
-#if DEBUG
-    if (DebugOptions::test_is0_nodes())
-    {
-        compile_all_is0_nodes();
-    }
-#endif
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
@@ -255,13 +246,32 @@ void App::imgui_windows()
             imgui_commands_and_registries_debug_windows();
         }
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
-        DebugOptions::test_custom_shaders__window([&]() {
-            test_custom_shaders(
-                input_provider(2.f, 0.f),
-                input_factory(),
-                input_destructor(),
-                update_context()
-            );
+        DebugOptions::test_shaders_compilation__window([&]() {
+            const auto compile_custom_shaders = [&]() {
+                compile_all_custom_shaders(
+                    input_provider(2.f, 0.f),
+                    input_factory(),
+                    input_destructor(),
+                    update_context()
+                );
+            };
+            if (ImGui::Button("Compile everything"))
+            {
+                Cool::Log::Debug::console().clear_all();
+                compile_custom_shaders();
+                compile_all_is0_nodes();
+            }
+            ImGui::Separator();
+            if (ImGui::Button("Compile all Custom Shaders"))
+            {
+                Cool::Log::Debug::console().clear_all();
+                compile_custom_shaders();
+            }
+            if (ImGui::Button("Compile all is0 Nodes"))
+            {
+                Cool::Log::Debug::console().clear_all();
+                compile_all_is0_nodes();
+            }
         });
 
         Cool::DebugOptions::test_message_console__window([]() {

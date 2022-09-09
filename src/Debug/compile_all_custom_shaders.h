@@ -7,7 +7,7 @@
 
 namespace Lab {
 
-void test_custom_shaders(
+void compile_all_custom_shaders(
     Cool::InputProvider_Ref,
     Cool::InputFactory_Ref,
     Cool::InputDestructor_Ref,
