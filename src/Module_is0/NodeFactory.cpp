@@ -132,8 +132,17 @@ void NodeFactory::reload_templates()
             try
             {
                 NodeTemplate node_template;
-                node_template.name = file.path().stem().string();
-                parse_node_template(node_template, Cool::File::to_string(file.path().string()));
+                node_template.name      = file.path().stem().string();
+                const auto file_content = Cool::File::to_string(file.path().string());
+                if (!file_content)
+                {
+                    Cool::Log::ToUser::warning(
+                        "NodeFactory::reload_templates()",
+                        fmt::format("Failed to open file \"{}\":\n{}", file.path().string(), file_content.error())
+                    );
+                    continue;
+                }
+                parse_node_template(node_template, *file_content);
                 _node_templates.push_back(node_template);
                 _folders.back().nodes_count++;
             }

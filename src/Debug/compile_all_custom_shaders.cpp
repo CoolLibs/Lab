@@ -30,7 +30,7 @@ void compile_all_custom_shaders(
             const auto file_name = std::filesystem::canonical(file).string();
             Cool::Log::Debug::info("Test Custom Shader", file_name);
             auto       shader      = FullscreenShader{};
-            const auto source_code = Cool::File::to_string(file.string());
+            const auto source_code = *Cool::File::to_string(file.string()); // Don't need to check for the error potentially returned by File::to_string() because we know that `file` is an existing file. (+ we are in a debug function and it is not a big deal if it crashes)
             const auto inputs      = Cool::parse_all_inputs(source_code, Cool::DirtyFlag{}, input_factory);
             shader
                 .compile(Cool::preprocess_inputs(source_code, inputs, input_provider), update_ctx)
