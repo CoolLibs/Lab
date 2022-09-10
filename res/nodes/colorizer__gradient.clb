@@ -1,0 +1,6 @@
+INPUT Gradient gradient
+
+Color main(float t)
+{
+    return gradient(t);
+}

@@ -1,0 +1,6 @@
+INPUT Texture image;
+
+Color main(UV uv)
+{
+    return image(uv);
+}

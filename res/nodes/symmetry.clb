@@ -1,0 +1,4 @@
+UV main(UV uv)
+{
+    return uv.yx;
+}
