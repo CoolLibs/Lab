@@ -120,29 +120,29 @@ void NodeFactory::reload_templates()
     _folders.clear();
     for (const auto& entry : std::filesystem::directory_iterator{_nodes_folder_path})
     {
-        if (entry.is_directory())
+        if (!entry.is_directory())
+            continue;
+
+        _folders.push_back({entry.path().stem().string(), 0});
+        for (const auto& file : std::filesystem::directory_iterator{entry.path()})
         {
-            _folders.push_back({entry.path().stem().string(), 0});
-            for (const auto& file : std::filesystem::directory_iterator{entry.path()})
+            if (!file.is_regular_file())
+                continue;
+
+            try
             {
-                if (file.is_regular_file())
-                {
-                    try
-                    {
-                        NodeTemplate node_template;
-                        node_template.name = file.path().stem().string();
-                        parse_node_template(node_template, Cool::File::to_string(file.path().string()));
-                        _node_templates.push_back(node_template);
-                        _folders.back().nodes_count++;
-                    }
-                    catch (const std::exception& e)
-                    {
-                        Cool::Log::ToUser::warning(
-                            "is0::NodeFactory::" + file.path().stem().string(),
-                            fmt::format("Failed to parse node from file '{}':\n{}", file.path().string(), e.what())
-                        );
-                    }
-                }
+                NodeTemplate node_template;
+                node_template.name = file.path().stem().string();
+                parse_node_template(node_template, Cool::File::to_string(file.path().string()));
+                _node_templates.push_back(node_template);
+                _folders.back().nodes_count++;
+            }
+            catch (const std::exception& e)
+            {
+                Cool::Log::ToUser::warning(
+                    "is0::NodeFactory::" + file.path().stem().string(),
+                    fmt::format("Failed to parse node from file '{}':\n{}", file.path().string(), e.what())
+                );
             }
         }
     }
