@@ -168,19 +168,32 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     if (!is_dirty(_shader.dirty_flag()))
         return;
 
-    const auto current_path = provider(_file);
-    if (!Cool::File::exists(current_path.string()))
-    {
+    const auto reset_shader = [&]() {
         _previous_path = "";
         _shader.pipeline().reset();
         _presets_manager.reset();
+    };
+
+    const auto current_path = provider(_file);
+    if (!Cool::File::exists(current_path.string()))
+    {
+        reset_shader();
         return;
     }
 
     const auto source_code = Cool::File::to_string(current_path.string());
-    parse_shader_for_params(source_code, input_factory, input_destructor);
+    if (!source_code) // Did not manage to read file, it is maybe protected by password.
+    {
+        _shader_compilation_error.send(
+            make_shader_compilation_error_message(name(), current_path.string(), source_code.error())
+        );
+        reset_shader();
+        return;
+    }
+
+    parse_shader_for_params(*source_code, input_factory, input_destructor);
     _shader
-        .compile(Cool::preprocess_inputs(source_code, inputs(), provider), update_ctx)
+        .compile(Cool::preprocess_inputs(*source_code, inputs(), provider), update_ctx)
         .send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
             return make_shader_compilation_error_message(name(), current_path.string(), msg);
         });

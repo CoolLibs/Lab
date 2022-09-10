@@ -33,7 +33,7 @@ void main()
             in_uv + (terrain(
                          Effect_intensity,
                          in_uv.y * Channels_offset.y + Time,
-                         Nb_iteration,
+                         Iterations,
                          Strength
                      ) /
                      201.)
@@ -43,7 +43,7 @@ void main()
             in_uv + (terrain(
                          Effect_intensity,
                          in_uv.y * Channels_offset.z + Time,
-                         Nb_iteration,
+                         Iterations,
                          Strength
                      ) /
                      202.)

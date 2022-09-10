@@ -24,16 +24,24 @@ static void load_code(std::vector<T>& code, const std::filesystem::directory_ent
             try
             {
                 T params;
+
+                const auto parse_into = [&](auto&& destination) {
+                    destination.name        = file.path().stem().string();
+                    const auto file_content = Cool::File::to_string(file.path().string());
+                    if (!file_content)
+                    {
+                        Cool::Log::ToUser::warning(
+                            "RenderEffectsManager::load_code()",
+                            file_content.error()
+                        );
+                        return;
+                    }
+                    parse_base_code(destination, *file_content);
+                };
                 if constexpr (std::is_same_v<T, BaseCode>)
-                {
-                    params.name = file.path().stem().string();
-                    parse_base_code(params, Cool::File::to_string(file.path().string()));
-                }
-                else
-                { // T is RenderEffect
-                    params.base.name = file.path().stem().string();
-                    parse_base_code(params.base, Cool::File::to_string(file.path().string()));
-                }
+                    parse_into(params);
+                else // T is RenderEffect
+                    parse_into(params.base);
                 code.push_back(params);
             }
             catch (const std::exception& e)

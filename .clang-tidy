@@ -1,8 +1,10 @@
 ---
 Checks: '
   *,
+  -readability-implicit-bool-conversion
+  -readability-identifier-length,
+  -cppcoreguidelines-avoid-magic-numbers,
   -readability-redundant-access-specifiers,
-  -readability-else-after-return,
   -readability-redundant-string-init,
   -cppcoreguidelines-pro-type-union-access,
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay, -hicpp-no-array-decay,

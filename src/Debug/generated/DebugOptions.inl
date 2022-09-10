@@ -38,7 +38,15 @@ public:
             ImGui::End();
         }
     }
-    [[nodiscard]] static auto test_is0_nodes() -> bool& { return instance().test_is0_nodes; }
+    static void test_shaders_compilation__window(std::function<void()> callback)
+    {
+        if (instance().test_shaders_compilation__window)
+        {
+            ImGui::Begin("Test Shaders Compilation", &instance().test_shaders_compilation__window);
+            callback();
+            ImGui::End();
+        }
+    }
 
 private:
     struct Instance {
@@ -47,7 +55,7 @@ private:
         bool show_commands_and_registries_debug_windows{false};
         bool log_when_rendering{false};
         bool test_all_variable_widgets__window{false};
-        bool test_is0_nodes{false};
+        bool test_shaders_compilation__window{false};
 
     private:
         // Serialization
@@ -60,7 +68,8 @@ private:
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
-                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window)
+                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
             );
         }
     };
@@ -72,6 +81,7 @@ private:
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
         instance().test_all_variable_widgets__window          = false;
+        instance().test_shaders_compilation__window           = false;
     }
 
     static void save_to_file()
@@ -134,13 +144,9 @@ private:
             ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
         }
 
-        if (wafl::similarity_match({filter, "Test is0 Nodes"}) >= wafl::Matches::Strongly)
+        if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
-            instance().test_is0_nodes = ImGui::Button("##Test is0 Nodes", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
-            ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
-            ImGui::Text("Test is0 Nodes");
-            if (ImGui::IsItemClicked())
-                instance().test_is0_nodes = true;
+            ImGui::Checkbox("Test Shaders Compilation", &instance().test_shaders_compilation__window);
         }
     }
 
@@ -176,9 +182,9 @@ private:
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
-        if (wafl::similarity_match({filter, "Test is0 Nodes"}) >= wafl::Matches::Strongly)
+        if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
-            instance().test_is0_nodes = !instance().test_is0_nodes;
+            instance().test_shaders_compilation__window = !instance().test_shaders_compilation__window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }
