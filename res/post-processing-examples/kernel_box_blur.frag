@@ -32,7 +32,7 @@ float[kernel_array_size] box_blur()
 void main()
 {
     vec2 in_uv                               = normalized_uv();
-    float[kernel_array_size] kernel_box_blur = bokeh_blur();
+    float[kernel_array_size] kernel_box_blur = box_blur();
     CONVOLUTION(kernel_box_blur, kernel_box_blur.length(), image, in_uv, Spread, Effect_intensity);
     out_Color = vec4(color, 1.);
 }

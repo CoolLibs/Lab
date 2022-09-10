@@ -1,4 +1,4 @@
-// #include "_ROOT_FOLDER_/res/shader-lib/rgb_hsv_conversion.frag"
+// #include "_ROOT_FOLDER_/res/shader-lib/rgb_hsv_conversion.glsl"
 
 float color_detection(
     vec3 in_color,
