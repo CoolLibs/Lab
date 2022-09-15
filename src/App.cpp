@@ -257,19 +257,19 @@ void App::imgui_windows()
             };
             if (ImGui::Button("Compile everything"))
             {
-                Cool::Log::Debug::console().clear_all();
+                Cool::Log::Debug::console().clear();
                 compile_custom_shaders();
                 compile_all_is0_nodes();
             }
             ImGui::Separator();
             if (ImGui::Button("Compile all Custom Shaders"))
             {
-                Cool::Log::Debug::console().clear_all();
+                Cool::Log::Debug::console().clear();
                 compile_custom_shaders();
             }
             if (ImGui::Button("Compile all is0 Nodes"))
             {
-                Cool::Log::Debug::console().clear_all();
+                Cool::Log::Debug::console().clear();
                 compile_all_is0_nodes();
             }
         });
