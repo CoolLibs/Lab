@@ -5,12 +5,24 @@
 namespace Lab {
 
 struct FunctionSignature {
-    PrimitiveType from;
-    PrimitiveType to;
+    AnyPrimitiveType from;
+    AnyPrimitiveType to;
 
     friend auto operator==(const FunctionSignature&, const FunctionSignature&) -> bool = default;
 };
 
-auto missing_functions(FunctionSignature current, FunctionSignature desired) -> std::vector<FunctionSignature>;
+namespace Signature {
+
+static constexpr auto Image = FunctionSignature{
+    .from = PrimitiveType::UV{},
+    .to   = PrimitiveType::RgbColor{},
+};
+
+static constexpr auto FloatField = FunctionSignature{
+    .from = PrimitiveType::UV{},
+    .to   = PrimitiveType::Float{},
+};
+
+} // namespace Signature
 
 } // namespace Lab

@@ -24,6 +24,7 @@
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
+#include "Nodes/Module_Nodes.h"
 #include "UI/ThemeManager.h"
 
 namespace Lab {
@@ -107,14 +108,14 @@ private:
     Cool::Clock_Realtime                 _clock;
     Cool::ImageSizeConstraint            _preview_constraint;
     Cool::RenderableViewManager          _views; // Must be before the views because it is used to create them
-    Cool::RenderableView&                _is0_view;
+    Cool::RenderableView&                _nodes_view;
     Cool::RenderableView&                _custom_shader_view;
     Cool::Exporter                       _exporter;
     Cool::DirtyRegistry                  _dirty_registry; // Before the modules because it is used to create them
     History                              _history{};
     ThemeManager                         _theme_manager{};
     float                                _last_time{0.f};
-    std::unique_ptr<Module_is0>          _is0_module;
+    std::unique_ptr<Module_Nodes>        _nodes_module;
     std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger                        _command_logger{};
     Cool::OpenGL::Texture                _texture;
@@ -129,7 +130,7 @@ private:
             cereal::make_nvp("Variable Registries", _variable_registries),
             cereal::make_nvp("Dirty Registry", _dirty_registry),
             cereal::make_nvp("History", _history),
-            cereal::make_nvp("is0 Module", _is0_module),
+            cereal::make_nvp("is0 Module", _nodes_module),
             cereal::make_nvp("Custom Shader Module", _custom_shader_module),
             cereal::make_nvp("Preview Constraint", _preview_constraint),
             cereal::make_nvp("Camera Manager", _camera_manager)
