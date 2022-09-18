@@ -107,6 +107,7 @@ static auto gen_desired_body(
     NodeID const& /*id*/,
     FunctionSignature const& desired_signature,
     std::string_view         name,
+    std::string_view         input_function_name,
     NodeLibrary&             library
 )
     -> std::optional<GlslCode>
@@ -120,7 +121,7 @@ static auto gen_desired_body(
             auto&& desired_from, auto&& desired_to) { return gen_desired_function_body(
                                                           current_from, current_to,
                                                           desired_from, desired_to,
-                                                          name
+                                                          name, input_function_name
                                                       ); },
         def->signature.from, def->signature.to,
         desired_signature.from, desired_signature.to
@@ -132,10 +133,11 @@ auto gen_desired_function(
     NodeID const&            id,
     FunctionSignature const& desired_signature,
     std::string_view         name,
+    std::string_view         input_function_name,
     NodeLibrary&             library
 ) -> std::optional<GlslCode>
 {
-    const auto body = gen_desired_body(node, id, desired_signature, name, library);
+    const auto body = gen_desired_body(node, id, desired_signature, name, input_function_name, library);
     if (!body)
         return std::nullopt;
 

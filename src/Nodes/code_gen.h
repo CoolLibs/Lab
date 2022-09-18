@@ -19,6 +19,7 @@ auto gen_desired_function(
     NodeID const&,
     FunctionSignature const& desired_signature,
     std::string_view         name,
+    std::string_view         input_function_name,
     NodeLibrary&             library
 ) -> std::optional<GlslCode>;
 
