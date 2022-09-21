@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include "Randomizer.h"
 
-NodeEditor::NodeEditor(std::string_view nodes_folder_path)
+NodeEditor::NodeEditor(std::filesystem::path nodes_folder_path)
     : _factory{nodes_folder_path}
 {
 }

@@ -5,7 +5,7 @@
 #include <wafl/wafl.hpp>
 #include "NodeTemplateParsing.h"
 
-NodeFactory::NodeFactory(std::string_view nodes_folder_path)
+NodeFactory::NodeFactory(std::filesystem::path nodes_folder_path)
     : _nodes_folder_path{nodes_folder_path}
 {
     reload_templates();
