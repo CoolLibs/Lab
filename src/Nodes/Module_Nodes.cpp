@@ -14,7 +14,7 @@ void Module_Nodes::update(UpdateContext_Ref)
 
 void Module_Nodes::imgui_windows(Ui_Ref) const
 {
-    // TODO(JF) Use `ui`
+    _nodes_editor.imgui_window();
 }
 
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst

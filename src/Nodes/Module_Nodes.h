@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
 
@@ -19,7 +20,8 @@ protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
 private:
-    FullscreenShader _shader;
+    FullscreenShader            _shader;
+    mutable Cool::Nodes::Editor _nodes_editor{"bla"};
 };
 
 } // namespace Lab

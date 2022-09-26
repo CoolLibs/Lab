@@ -17,3 +17,17 @@ Actually signatures don't need to take list of things, one input type and one ou
 A node can define multiple functions (aka have two output pins). For example a UV grid creates both a UV->UV function (fract) and also a UV->ivec2 function (floor). Its nice to have them in the same node so they can share params (like number of cells).
 
 This generalized system will also solve problems in is0 like the fact that I want the repeat to be able to randomize the SDF of each cell. Now we can take a second Input that is a (SDF, ivec3)->SDF node.
+
+BETTER IDEA for the grid randomization. A grid takes UVs and returns (UV, InstanceId2D). This will be turned into a node that takes one function (UV, InstanceId2D) -> ? and returns a function UV -> ?.
+A function UV->Color can be turned into (UV, InstanceId2D)-> Color easily by just ignoring the InstanceId2D. And we can create randomizer and other effects that modify each instance. For example scale randomizer takes an image as input and creates a (UV, InstanceId2D)-> Color function by doing
+```glsl
+float rand = random(instance_id_2D);
+return image(uv * rand);
+```
+This function is the same as the input image (maybe scaled differently), except that when instanced, each instance will have a different scale.
+
+This graph gives a grid of circles with random scales:
+```mermaid
+flowchart LR
+    Circle --> Scale_Randomizer --> Grid
+```
