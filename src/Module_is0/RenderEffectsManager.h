@@ -37,15 +37,15 @@ private:
     }
 };
 
-RenderEffects load_effects(std::string_view render_effects_folder_path);
+RenderEffects load_effects(std::filesystem::path render_effects_folder_path);
 RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_render_effects);
-RenderEffects reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects);
+RenderEffects reload_effects(std::filesystem::path render_effects_folder_path, const RenderEffects& render_effects);
 
 class RenderEffectsManager {
 public:
-    RenderEffects render_effects;
-    std::string   render_effects_folder_path;
-    explicit RenderEffectsManager(std::string_view render_effects_folder_path);
+    RenderEffects         render_effects;
+    std::filesystem::path render_effects_folder_path;
+    explicit RenderEffectsManager(std::filesystem::path render_effects_folder_path);
 
 private:
     // Serialization

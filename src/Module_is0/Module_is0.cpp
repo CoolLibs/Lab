@@ -3,7 +3,6 @@
 #include <Cool/Input/Input.h>
 #include "CodeGen.h"
 #include "Common/make_shader_compilation_error_message.h"
-#include "NodeEditorSerialization.h"
 
 namespace Lab {
 
@@ -87,37 +86,6 @@ void Module_is0::imgui_windows(Ui_Ref) const
         _editor.update_templates_and_nodes();
         _effects.render_effects = reload_effects(_effects.render_effects_folder_path, _effects.render_effects);
     }
-    // To save a file
-    const std::vector<nfdfilteritem_t> is0geometry_file_filter = {
-        {"Save", "is0geometry"},
-    };
-    pick_file_path_to_save(_folder_path_for_save, _file_name_for_save);
-    const std::string saving_path = saving_path_string();
-    if (Cool::File::exists(saving_path))
-    {
-        Cool::ImGuiExtras::warning_text("This file already exists. Are you sure you want to overwrite it?");
-    }
-    if (ImGui::Button("Save"))
-    {
-        Cool::Serialization::to_json(_editor, saving_path);
-    }
-    // To load a file
-    ImGui::Text("Load a save");
-    ImGui::SameLine();
-    ImGui::PushID(485);
-    std::string _path_for_load;
-    if (Cool::ImGuiExtras::open_file_dialog(&_path_for_load, is0geometry_file_filter, _folder_path_for_save))
-    {
-        Cool::Serialization::from_json(_editor, _path_for_load)
-            .send_error_if_any([](const std::string& message) {
-                return Cool::Message{
-                    .category         = "Loading is0 save",
-                    .detailed_message = message,
-                    .severity         = Cool::MessageSeverity::Warning,
-                };
-            });
-    }
-    ImGui::PopID();
     // Random
     if (ImGui::Button("Generate a random object"))
     {
@@ -129,11 +97,6 @@ void Module_is0::imgui_windows(Ui_Ref) const
 
     // This line has to be at the end to have is0 focused when we open the app
     _editor.imgui_window();
-}
-
-std::string Module_is0::saving_path_string() const
-{
-    return std::filesystem::weakly_canonical(_folder_path_for_save + "/" + _file_name_for_save + ".is0geometry").string();
 }
 
 auto Module_is0::all_inputs() const -> Cool::AllInputRefsToConst

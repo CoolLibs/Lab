@@ -27,7 +27,7 @@ App::App(Cool::WindowManager& windows)
     , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory())}
     , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
-    , _texture{Cool::Path::root() + "/res/image resources/ETOILE5.png"}
+    , _texture{Cool::Path::root() / "res/image resources/ETOILE5.png"}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
     _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());

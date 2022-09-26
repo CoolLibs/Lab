@@ -46,9 +46,9 @@ void compile_all_custom_shaders(
         }
     };
 
-    test_all_shaders_in(Cool::Path::root() + "/res/post-processing-examples");
-    test_all_shaders_in(Cool::Path::root() + "/res/shader-demo");
-    test_all_shaders_in(Cool::Path::root() + "/res/shader-examples");
+    test_all_shaders_in(Cool::Path::root() / "res/post-processing-examples");
+    test_all_shaders_in(Cool::Path::root() / "res/shader-demo");
+    test_all_shaders_in(Cool::Path::root() / "res/shader-examples");
 }
 
 } // namespace Lab

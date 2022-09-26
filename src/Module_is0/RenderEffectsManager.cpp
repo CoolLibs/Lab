@@ -7,7 +7,7 @@
 #include "BaseCodeParsing.h"
 #include "CodeGen.h"
 
-RenderEffectsManager::RenderEffectsManager(std::string_view render_effects_folder_path)
+RenderEffectsManager::RenderEffectsManager(std::filesystem::path render_effects_folder_path)
     : render_effects{load_effects(render_effects_folder_path)}
     , render_effects_folder_path{render_effects_folder_path}
 {
@@ -55,7 +55,7 @@ static void load_code(std::vector<T>& code, const std::filesystem::directory_ent
     }
 }
 
-RenderEffects load_effects(std::string_view render_effects_folder_path)
+RenderEffects load_effects(std::filesystem::path render_effects_folder_path)
 {
     RenderEffects effects_gestion;
     for (const auto& entry : std::filesystem::directory_iterator{render_effects_folder_path})
@@ -160,7 +160,7 @@ RenderEffects merge(const RenderEffects& old_render_effects, RenderEffects new_r
     return new_render_effects;
 }
 
-RenderEffects reload_effects(std::string_view render_effects_folder_path, const RenderEffects& render_effects)
+RenderEffects reload_effects(std::filesystem::path render_effects_folder_path, const RenderEffects& render_effects)
 {
     return merge(render_effects, load_effects(render_effects_folder_path));
 }

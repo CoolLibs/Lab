@@ -61,16 +61,8 @@ public:
             input.should_highlight(),
             [&] {
                 input.update(_set_dirty); // TODO(JF) shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
-                std::string path = input.file_watcher.path().string();
-                ImGui::Text("Path:");
-                ImGui::SameLine();
-                if (ImGui::InputText("##2132541", &path))
-                {
-                    input.file_watcher.set_path(path);
-                    _set_dirty(input._dirty_flag);
-                }
-                ImGui::SameLine();
-                if (Cool::ImGuiExtras::open_file_dialog(&path, Cool::NfdFileFilter::FragmentShader, Cool::File::whithout_file_name(path)))
+                std::filesystem::path path = input.file_watcher.path();
+                if (Cool::ImGuiExtras::file_and_folder("Path", &path, Cool::NfdFileFilter::FragmentShader)) // TODO(JF) Don't hardcode the file filters
                 {
                     input.file_watcher.set_path(path);
                     _set_dirty(input._dirty_flag);

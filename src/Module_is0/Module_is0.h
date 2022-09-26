@@ -38,8 +38,8 @@ private:
 
     FullscreenShader             _shader;
     Cool::Input<Cool::Camera>    _camera_input;
-    mutable NodeEditor           _editor{Cool::Path::root() + "/res/is0 nodes"};
-    mutable RenderEffectsManager _effects{Cool::Path::root() + "/res/is0 Render Effects"};
+    mutable NodeEditor           _editor{Cool::Path::root() / "res/is0 nodes"};
+    mutable RenderEffectsManager _effects{Cool::Path::root() / "res/is0 Render Effects"};
     mutable std::string          _shader_code;
     mutable Cool::ImGuiWindow    _shader_code_window{"is0 Shader Code", false};
     mutable bool                 _must_recompile              = false; // TODO(JF) use a DirtyFlag instead (which is alreadt in FullscreenShader)
@@ -47,8 +47,6 @@ private:
     CodeGen::LightProperties     _light;
     CodeGen::MaterialProperties  _material;
     int                          _in_use_render = 0;
-    mutable std::string          _folder_path_for_save;
-    mutable std::string          _file_name_for_save;
     Cool::MessageSender          _shader_compilation_error{};
 
 private:
@@ -77,8 +75,6 @@ private:
         archive(
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
             cereal::make_nvp("Node Editor", _editor),
-            cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
-            cereal::make_nvp("File Name For Save", _file_name_for_save),
             cereal::make_nvp("Render Effects Manager", _effects),
             cereal::make_nvp("Shader", _shader),
             cereal::make_nvp("Camera Input", _camera_input)

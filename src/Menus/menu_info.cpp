@@ -50,12 +50,12 @@ void menu_info()
 #endif
             line(
                 [] { ImGui::TextDisabled("Working directory"); },
-                [] { ImGui::Text("%s", Cool::Path::root().c_str()); }
+                [] { ImGui::Text("%s", Cool::Path::root().string().c_str()); }
             );
 
             line(
                 [] { ImGui::TextDisabled("Cool directory"); },
-                [] { ImGui::Text("%s", Cool::Path::cool_res().c_str()); }
+                [] { ImGui::Text("%s", Cool::Path::cool_res().string().c_str()); }
             );
 
             ImGui::EndTable();
