@@ -135,7 +135,7 @@ private:
             cereal::make_nvp("Camera Manager", _camera_manager)
         );
     }
-#if !IS0_TEST_NODES && DEBUG
+#if DEBUG
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 #endif
 };

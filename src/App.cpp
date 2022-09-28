@@ -7,6 +7,7 @@
 #include <Cool/Parameter/ParametersHistory.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/ClockU.h>
+#include <Cool/UserSettings/UserSettings.h>
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
@@ -326,15 +327,21 @@ void App::menu_settings()
 {
     if (ImGui::BeginMenu("Settings"))
     {
+        Cool::user_settings().imgui();
+        ImGui::Separator();
+
         _history.imgui_max_size();
         ImGui::Separator();
         ImGui::Separator();
         ImGui::Separator();
+
         _history.imgui_max_saved_size();
         ImGui::Separator();
         ImGui::Separator();
         ImGui::Separator();
+
         _theme_manager.imgui();
+
         ImGui::EndMenu();
     }
 }
