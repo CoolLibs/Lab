@@ -31,3 +31,18 @@ This graph gives a grid of circles with random scales:
 flowchart LR
     Circle --> Scale_Randomizer --> Grid
 ```
+
+## Examples
+
+### Color splashes
+
+```mermaid
+flowchart LR
+    Noise1 & Noise2 --> Smooth_greater_than --> Colorizer_Gradient
+```
+
+`Smooth_greater_than` returns 0 or 1 depending on which input is greater (with a quick continuous transition from 0 to 1 when the two inputs are approximately equal)
+
+**?** How do we generalize that to three noises? We need a "greater than" that returns 0, 0.5 or 1 (Notice that we don't return integers but fractions, because we love the [0, 1] range) depending on which input is greatest.
+
+And instead of choosing the greater one, we can also choose the middle one or the smallest one. It should give quite different shapes, especially the middle one.
