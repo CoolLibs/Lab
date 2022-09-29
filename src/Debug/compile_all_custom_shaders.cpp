@@ -35,9 +35,9 @@ void compile_all_custom_shaders(
             if (!inputs)
             {
                 console.send({
-                    .category         = "Test Custom Shader",
-                    .detailed_message = inputs.error(),
-                    .severity         = Cool::MessageSeverity::Error,
+                    .category = "Test Custom Shader",
+                    .message  = inputs.error(),
+                    .severity = Cool::MessageSeverity::Error,
                 });
                 continue;
             }

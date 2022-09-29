@@ -11,9 +11,9 @@ inline auto make_shader_compilation_error_message(
 ) -> Cool::Message
 {
     return Cool::Message{
-        .category         = module_name,
-        .detailed_message = fmt::format("\"{}\"\n{}", shader_name, message),
-        .severity         = Cool::MessageSeverity::Error,
+        .category = module_name,
+        .message  = fmt::format("\"{}\"\n{}", shader_name, message),
+        .severity = Cool::MessageSeverity::Error,
     };
 }
 
