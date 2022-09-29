@@ -1,5 +1,6 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
+#include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/InputParser/InputParser.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/String/String.h>
@@ -91,7 +92,9 @@ static void modify_default_variables_of_the_inputs(
 void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 {
     Ui_Ref::window({.name = "Custom Shader"}, [&]() {
-        ui.widget(_file);
+        Cool::ImGuiExtras::bring_attention_if(_shader_compilation_error.should_highlight(), [&]() {
+            ui.widget(_file);
+        });
         ImGui::Separator();
         ImGui::NewLine();
         for (auto& input : inputs())
