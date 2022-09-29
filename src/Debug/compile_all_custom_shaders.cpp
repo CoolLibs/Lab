@@ -32,14 +32,24 @@ void compile_all_custom_shaders(
             auto       shader      = FullscreenShader{};
             const auto source_code = *Cool::File::to_string(file.string()); // Don't need to check for the error potentially returned by File::to_string() because we know that `file` is an existing file. (+ we are in a debug function and it is not a big deal if it crashes)
             const auto inputs      = Cool::parse_all_inputs(source_code, Cool::DirtyFlag{}, input_factory);
+            if (!inputs)
+            {
+                console.send({
+                    .category         = "Test Custom Shader",
+                    .detailed_message = inputs.error(),
+                    .severity         = Cool::MessageSeverity::Error,
+                });
+                continue;
+            }
+
             shader
-                .compile(Cool::preprocess_inputs(source_code, inputs, input_provider), update_ctx)
+                .compile(Cool::preprocess_inputs(source_code, *inputs, input_provider), update_ctx)
                 .send_error_if_any([&](const std::string& msg) {
                     return make_shader_compilation_error_message("Test Custom Shader", file_name, msg);
                 },
                                    console);
 
-            for (const auto& input : inputs)
+            for (const auto& input : *inputs)
             {
                 input_destructor(input);
             }
