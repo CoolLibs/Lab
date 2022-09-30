@@ -273,7 +273,8 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         if (it != new_inputs.end())
         {
             auto description = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the newly-parsed description
-            *it              = std::move(input);
+            destroy(*it);
+            *it = std::move(input);
             std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
         }
         else
