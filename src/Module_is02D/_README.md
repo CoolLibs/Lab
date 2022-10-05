@@ -1,8 +1,5 @@
 # _is0-2D_
 
-## What is _is0-2D_ ?
-
-
 ## Learning about shaders and SDFs
 
 You can watch these videos, in that order:
