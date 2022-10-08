@@ -22,6 +22,18 @@ protected:
 private:
     FullscreenShader            _shader;
     mutable Cool::Nodes::Editor _nodes_editor{"bla"};
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
+            cereal::make_nvp("Node Editor", _nodes_editor)
+        );
+    }
 };
 
 } // namespace Lab

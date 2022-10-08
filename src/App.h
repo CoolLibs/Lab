@@ -132,6 +132,7 @@ private:
             cereal::make_nvp("History", _history),
             cereal::make_nvp("is0 Module", _nodes_module),
             cereal::make_nvp("Custom Shader Module", _custom_shader_module),
+            cereal::make_nvp("Nodes Module", _nodes_module),
             cereal::make_nvp("Preview Constraint", _preview_constraint),
             cereal::make_nvp("Camera Manager", _camera_manager)
         );

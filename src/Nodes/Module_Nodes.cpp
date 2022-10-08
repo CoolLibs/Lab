@@ -15,6 +15,12 @@ void Module_Nodes::update(UpdateContext_Ref)
 void Module_Nodes::imgui_windows(Ui_Ref) const
 {
     _nodes_editor.imgui_window();
+    ImGui::Begin("Nodes Debug");
+    if (ImGui::Button("Add a node"))
+    {
+        _nodes_editor.add_node({});
+    }
+    ImGui::End();
 }
 
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst

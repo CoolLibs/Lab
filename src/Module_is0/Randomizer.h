@@ -1,6 +1,6 @@
-#pragma once
+// #pragma once
 
-#include "NodeFactory.h"
-#include "NodeTree.h"
+// #include "NodeFactory.h"
+// #include "NodeTree.h"
 
-NodeTree random_node_tree(const NodeFactory& factory, int max_depth = 5);
+// NodeTree random_node_tree(const NodeFactory& factory, int max_depth = 5);
