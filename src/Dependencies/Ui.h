@@ -71,7 +71,8 @@ public:
         );
     }
 
-    void set_dirty(const Cool::DirtyFlag flag) { _set_dirty(flag); }
+    void set_dirty(Cool::DirtyFlag const& flag) { _set_dirty(flag); }
+    auto dirty_setter() const -> Cool::SetDirty_Ref { return _set_dirty; }
 
     auto variable_registries() const -> const Cool::VariableRegistries& { return _variable_registries; }
     auto variable_registries() -> Cool::VariableRegistries& { return _variable_registries; }

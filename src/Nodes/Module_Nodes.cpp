@@ -12,9 +12,9 @@ void Module_Nodes::update(UpdateContext_Ref)
 {
 }
 
-void Module_Nodes::imgui_windows(Ui_Ref) const
+void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    _nodes_editor.imgui_window();
+    _nodes_editor.imgui_window(ui.dirty_setter());
     ImGui::Begin("Nodes Debug");
     if (ImGui::Button("Add a node"))
     {

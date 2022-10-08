@@ -14,7 +14,7 @@ public:
 
 private:
     std::vector<NodeDefinition> _definitions;
-    // TODO(JF) Folder Watcher, or at file watcher for each current node to auto refresh it
+    // TODO(JF) Folder Watcher, or at least a file watcher for each current node to auto refresh it
 };
 
 } // namespace Lab
