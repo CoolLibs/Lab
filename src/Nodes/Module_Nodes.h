@@ -3,6 +3,7 @@
 #include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
+#include "NodesConfig.h"
 
 namespace Lab {
 
@@ -20,8 +21,8 @@ protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
 private:
-    FullscreenShader            _shader;
-    mutable Cool::Nodes::Editor _nodes_editor{"bla"};
+    FullscreenShader                         _shader;
+    mutable Cool::Nodes::Editor<NodesConfig> _nodes_editor{"Nodes Editor"};
 
 private:
     // Serialization
