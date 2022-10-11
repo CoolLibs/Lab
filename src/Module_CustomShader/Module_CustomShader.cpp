@@ -219,7 +219,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         if (path_has_changed)
         {
             _presets_manager.emplace(preset_path(current_path));
-            apply_first_preset_if_there_is_one(variable_registries);
+            // apply_first_preset_if_there_is_one(variable_registries); // TODO(JF) Reintroduce once we have the merger and don't crash on invalid presets
         }
     }
 
