@@ -165,7 +165,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::InputFactory_Ref    input_factory,
     Cool::InputDestructor_Ref input_destructor,
     UpdateContext_Ref         update_ctx,
-    Cool::VariableRegistries& variable_registries
+    Cool::VariableRegistries& /* variable_registries */
 )
 {
     // Check dirty flag
