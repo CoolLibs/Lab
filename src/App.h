@@ -132,7 +132,8 @@ private:
             cereal::make_nvp("is0 Module", _is0_module),
             cereal::make_nvp("Custom Shader Module", _custom_shader_module),
             cereal::make_nvp("Preview Constraint", _preview_constraint),
-            cereal::make_nvp("Camera Manager", _camera_manager)
+            cereal::make_nvp("Camera Manager", _camera_manager),
+            cereal::make_nvp("Exporter (Image and Video)", _exporter)
         );
     }
 #if DEBUG
