@@ -212,7 +212,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         }
     }
 
-    // Apply presets if necessary
+    // Update presets manager if the path has changed
     {
         const bool path_has_changed = _previous_path != current_path;
         _previous_path              = current_path;
