@@ -429,10 +429,12 @@ void App::check_inputs__export_windows()
 
     if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl)
     {
+        _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
         _exporter.image_export_window().open();
     }
     if (ImGui::IsKeyReleased(ImGuiKey_E) && io.KeyCtrl)
     {
+        _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
         _exporter.video_export_window().open();
     }
 }
