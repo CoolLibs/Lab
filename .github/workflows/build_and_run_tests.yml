@@ -24,9 +24,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl 
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}\build\Debug\${{env.TARGET}} 
@@ -42,9 +43,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}\build\Release\${{env.TARGET}} 
@@ -59,9 +61,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -T ClangCL
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}\build\Debug\${{env.TARGET}} 
@@ -77,9 +80,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -T ClangCL
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}\build\Release\${{env.TARGET}} 
@@ -97,9 +101,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}/build/${{env.TARGET}} 
@@ -118,9 +123,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}/build/${{env.TARGET}} 
@@ -139,9 +145,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}/build/${{env.TARGET}} 
@@ -160,9 +167,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}/build/${{env.TARGET}} 
@@ -178,9 +186,10 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=$(brew --prefix llvm@14)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@14)/bin/clang++
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}/build/${{env.TARGET}} 
@@ -196,9 +205,11 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@14)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@14)/bin/clang++
+      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
+      _AS_ERRORS_FOR_COOLLAB=ON
 
     - name: Build
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
 
     - name: Run
       run: ${{github.workspace}}/build/${{env.TARGET}} 
