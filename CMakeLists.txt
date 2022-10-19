@@ -20,7 +20,7 @@ else()
 endif()
 
 # Maybe enable warnings as errors
-set(WARNINGS_AS_ERRORS_FOR_COOLLAB OFF CACHE BOOL "True iff you want to treat warnings as errors") # Might be overriden in the CMake cache
+set(WARNINGS_AS_ERRORS_FOR_COOLLAB OFF CACHE BOOL "ON iff you want to treat warnings as errors") # Might be overriden in the CMake cache
 if(WARNINGS_AS_ERRORS_FOR_COOLLAB)
     if(MSVC)
         target_compile_options(CooLab-Properties INTERFACE /WX)
