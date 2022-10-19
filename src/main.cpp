@@ -3,6 +3,7 @@
 
 int main()
 {
+    int a;
     Cool::run<Lab::App>({Cool::WindowConfig{
         .title                  = "CoolLab",
         .maximize_on_startup_if = true,
