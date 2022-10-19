@@ -32,7 +32,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}\build\Debug\${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}} 
 #-----------------------------------------------------------------------------------------------
   Windows_Clang_Debug:
@@ -73,7 +73,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}\build\Debug\${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}} 
 #-----------------------------------------------------------------------------------------------
   Linux_GCC_Debug: 
@@ -117,7 +117,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
     
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
       
 #-----------------------------------------------------------------------------------------------
@@ -141,7 +141,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
     
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
     
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
@@ -189,7 +189,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
@@ -231,5 +231,5 @@ jobs:
     - name: Build tests
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
-    - name: Run
+    - name: Run tests
       run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
