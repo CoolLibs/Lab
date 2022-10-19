@@ -22,8 +22,8 @@ jobs:
       with:
           submodules: recursive
     
-    -name: Enable warnings as errors
-      run: cmake -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON
+    - name: Enable warnings as errors
+      run: cmake -B ${{github.workspace}}\build -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl 
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl 
