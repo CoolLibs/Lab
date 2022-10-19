@@ -9,7 +9,8 @@ on:
 
 
 env:
-  TARGET: Tests-CoolLab # Should be the name of the target you created in your CMakeLists.txt and want to build and run
+  EXE-TARGET: CoolLab
+  TESTS-TARGET: Tests-CoolLab
 
 
 jobs:
@@ -25,11 +26,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl 
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
     - name: Run
-      run: ${{github.workspace}}\build\Debug\${{env.TARGET}} 
+      run: ${{github.workspace}}\build\Debug\${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
   Windows_MSVC_Release:
@@ -43,11 +47,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
     - name: Run
-      run: ${{github.workspace}}\build\Release\${{env.TARGET}} 
+      run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}} 
 #-----------------------------------------------------------------------------------------------
   Windows_Clang_Debug:
     name: Windows Clang Debug
@@ -60,11 +67,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TARGET}}
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
     - name: Run
-      run: ${{github.workspace}}\build\Debug\${{env.TARGET}} 
+      run: ${{github.workspace}}\build\Debug\${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
   Windows_Clang_Release:
@@ -78,11 +88,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
     - name: Run
-      run: ${{github.workspace}}\build\Release\${{env.TARGET}} 
+      run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}} 
 #-----------------------------------------------------------------------------------------------
   Linux_GCC_Debug: 
     name: Linux GCC Debug
@@ -98,11 +111,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
-
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
+    
     - name: Run
-      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
       
 #-----------------------------------------------------------------------------------------------
   Linux_GCC_Release: 
@@ -119,11 +135,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
-
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
+    
     - name: Run
-      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
   Linux_Clang_Debug:
@@ -139,12 +158,15 @@ jobs:
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+    
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
-
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
+    
     - name: Run
-      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release: 
@@ -161,11 +183,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
     - name: Run
-      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Debug:
@@ -179,11 +204,14 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=$(brew --prefix llvm@14)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@14)/bin/clang++
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TARGET}}
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
     - name: Run
-      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
 
 #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release: 
@@ -197,8 +225,11 @@ jobs:
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@14)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@14)/bin/clang++
 
-    - name: Build
-      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+    - name: Build exe
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
+    
+    - name: Build tests
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
     - name: Run
-      run: ${{github.workspace}}/build/${{env.TARGET}} 
+      run: ${{github.workspace}}/build/${{env.TESTS-TARGET}} 
