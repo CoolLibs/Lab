@@ -63,15 +63,23 @@ static void apply_settings_to_inputs(
     Cool::VariableRegistries&             registry
 )
 {
-    for (size_t i = 0; i < inputs.size(); ++i)
+    try
     {
-        std::visit([&](auto&& input) {
-            registry.set(
-                input._default_variable_id,
-                get_concrete_variable(input, settings[i])
-            );
-        },
-                   inputs[i]);
+        for (size_t i = 0; i < inputs.size(); ++i)
+        {
+            std::visit([&](auto&& input) {
+                registry.set(
+                    input._default_variable_id,
+                    get_concrete_variable(input, settings.at(i))
+                );
+            },
+                       inputs.at(i));
+        }
+    }
+    catch (...)
+    {
+        // TODO(JF) Remove this try-catch once we update presets properly
+        Cool::Log::Debug::warning("Presets", "This preset does not match the INPUTs of the shader anymore, it has not been applied fully.");
     }
 }
 
