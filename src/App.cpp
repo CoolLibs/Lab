@@ -320,14 +320,10 @@ void App::menu_export()
 {
     if (ImGui::BeginMenu("Export"))
     {
-        _exporter.imgui_menu_items(
-            Cool::OpenImageExporter_Callback{[&]() {
-                command_executor().execute(Command_OpenImageExporter{});
-            }},
-            Cool::OpenVideoExporter_Callback{[&]() {
-                command_executor().execute(Command_OpenVideoExporter{});
-            }}
-        );
+        _exporter.imgui_menu_items({
+            .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
+            .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
+        });
         ImGui::EndMenu();
     }
 }
