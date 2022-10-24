@@ -79,7 +79,7 @@ static void apply_settings_to_inputs(
     catch (...)
     {
         // TODO(JF) Remove this try-catch once we update presets properly
-        Cool::Log::Debug::warning("Presets", "This preset does not match the INPUTs of the shader anymore, it has not been applied fully.");
+        Cool::Log::ToUser::warning("Presets", "This preset does not match the INPUTs of the shader anymore, it has not been applied fully.");
     }
 }
 
