@@ -13,8 +13,8 @@ public:
     std::string definition_name;
 
 private:
-    std::vector<Cool::Nodes::Pin> _input_pins;
-    std::vector<Cool::Nodes::Pin> _output_pins;
+    std::vector<Cool::Pin> _input_pins;
+    std::vector<Cool::Pin> _output_pins;
 
 private:
     friend class cereal::access;

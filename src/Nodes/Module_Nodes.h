@@ -21,8 +21,9 @@ protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
 private:
-    FullscreenShader                         _shader;
-    mutable Cool::Nodes::Editor<NodesConfig> _nodes_editor{"Nodes Editor"};
+    FullscreenShader                       _shader;
+    mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
+    Cool::NodesLibrary<NodeDefinition>     _nodes_library;
 
 private:
     // Serialization

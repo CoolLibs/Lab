@@ -77,7 +77,7 @@ static auto valid_glsl(std::string s)
 
 static auto base_function_name(
     NodeDefinition const& definition,
-    NodeID const&         id
+    Cool::NodeId const&   id
 ) -> std::string
 {
     using namespace fmt::literals;
@@ -85,14 +85,14 @@ static auto base_function_name(
         FMT_COMPILE(
             R"STR({name}_{id})STR"
         ),
-        "name"_a = valid_glsl(definition.name), // NB: We don't have to worry about the unicity of that name because we append an ID anyway
+        "name"_a = valid_glsl(definition.name()), // NB: We don't have to worry about the unicity of that name because we append an ID anyway
         "id"_a   = to_string(id.underlying_uuid())
     );
 }
 
 auto gen_base_function(
     NodeDefinition const& definition,
-    NodeID const&         id
+    Cool::NodeId const&   id
 ) -> GlslCode
 {
     return gen_function({
@@ -104,15 +104,15 @@ auto gen_base_function(
 
 static auto gen_desired_body(
     Node const& node,
-    NodeID const& /*id*/,
-    FunctionSignature const& desired_signature,
-    std::string_view         name,
-    std::string_view         input_function_name,
-    NodeLibrary&             library
+    Cool::NodeId const& /*id*/,
+    FunctionSignature const&                    desired_signature,
+    std::string_view                            name,
+    std::string_view                            input_function_name,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition
 )
     -> std::optional<GlslCode>
 {
-    const NodeDefinition* def = library.get_definition(node.definition_name);
+    const NodeDefinition* def = get_node_definition(node.definition_name);
     if (!def)
         return std::nullopt;
 
@@ -129,15 +129,15 @@ static auto gen_desired_body(
 }
 
 auto gen_desired_function(
-    Node const&              node,
-    NodeID const&            id,
-    FunctionSignature const& desired_signature,
-    std::string_view         name,
-    std::string_view         input_function_name,
-    NodeLibrary&             library
+    Node const&                                 node,
+    Cool::NodeId const&                         id,
+    FunctionSignature const&                    desired_signature,
+    std::string_view                            name,
+    std::string_view                            input_function_name,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition
 ) -> std::optional<GlslCode>
 {
-    const auto body = gen_desired_body(node, id, desired_signature, name, input_function_name, library);
+    const auto body = gen_desired_body(node, id, desired_signature, name, input_function_name, get_node_definition);
     if (!body)
         return std::nullopt;
 
