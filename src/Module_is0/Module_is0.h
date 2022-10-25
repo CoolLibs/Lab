@@ -63,8 +63,8 @@ private:
     //     if (!_file_name_for_save.empty()) { // TODO(JF) should be done in a separate type so that is0 can have a single `serialize` function. Also, we should be saving the whole project, not just is0.
     //         const std::string      saving_path = saving_path_string();
     //         const std::string      message     = "Do you want to save your work in " + saving_path + "?";
-    //         const boxer::Selection sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
-    //         if (sel == boxer::Selection::Yes) {
+    //         const boxer::Selection sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::OKCancel);
+    //         if (sel == boxer::Selection::OK) {
     //             Cool::Serialization::to_json(_editor, saving_path);
     //         }
     //     }
