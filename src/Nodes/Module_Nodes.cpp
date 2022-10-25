@@ -31,8 +31,8 @@ auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 
 auto Module_Nodes::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
-    return Module::is_dirty(check_dirty) ||
-           check_dirty(_shader.dirty_flag());
+    return Module::is_dirty(check_dirty)
+           || check_dirty(_shader.dirty_flag());
 };
 
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref)

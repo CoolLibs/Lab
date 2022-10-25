@@ -59,9 +59,9 @@ static auto gen_function(gen_function__params p)
 static auto is_not_alphanumeric(char c) -> bool
 {
     return !(
-        ('0' <= c && c <= '9') ||
-        ('a' <= c && c <= 'z') ||
-        ('A' <= c && c <= 'Z')
+        ('0' <= c && c <= '9')
+        || ('a' <= c && c <= 'z')
+        || ('A' <= c && c <= 'Z')
     );
 }
 
