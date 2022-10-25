@@ -410,8 +410,8 @@ void App::check_inputs__history()
     }
 
     // Redo
-    if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y)) ||
-        (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
+    if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y))
+        || (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
     {
         _history.move_forward(exec);
         Cool::ParametersHistory::get().move_forward();
