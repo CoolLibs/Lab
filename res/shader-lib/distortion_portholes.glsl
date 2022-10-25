@@ -87,14 +87,13 @@ vec2 distortion_portholes(
     float minDist  = FLT_MAX;
     float minDist2 = FLT_MAX;
 
-    VoronoiRes res  = voronoi(in_uv, grid_irregularity, scale, time, keep_points_in_a_disk, shape);
-    VoronoiRes resX = voronoi(in_uv + vec2(0.001, 0.), grid_irregularity, scale, time, keep_points_in_a_disk, shape);
-    VoronoiRes resY = voronoi(in_uv + vec2(0., 0.001), grid_irregularity, scale, time, keep_points_in_a_disk, shape);
-    vec2       grad = vec2(resX.minDist - res.minDist, resY.minDist - res.minDist) /
-                0.001;
-    float distance_to_center = res.minDist / res.minDist2;
-    float distance_to_edges  = 1. - distance_to_center;
-    vec2  uv                 = portholes_uv(in_uv, effect_intensity, distortion, distance_to_edges, grad);
+    VoronoiRes res                = voronoi(in_uv, grid_irregularity, scale, time, keep_points_in_a_disk, shape);
+    VoronoiRes resX               = voronoi(in_uv + vec2(0.001, 0.), grid_irregularity, scale, time, keep_points_in_a_disk, shape);
+    VoronoiRes resY               = voronoi(in_uv + vec2(0., 0.001), grid_irregularity, scale, time, keep_points_in_a_disk, shape);
+    vec2       grad               = vec2(resX.minDist - res.minDist, resY.minDist - res.minDist) / 0.001;
+    float      distance_to_center = res.minDist / res.minDist2;
+    float      distance_to_edges  = 1. - distance_to_center;
+    vec2       uv                 = portholes_uv(in_uv, effect_intensity, distortion, distance_to_edges, grad);
 
     return mix(in_uv, uv, effect_intensity);
 }

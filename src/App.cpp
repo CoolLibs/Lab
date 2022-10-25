@@ -7,10 +7,13 @@
 #include <Cool/Parameter/ParametersHistory.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/ClockU.h>
+#include <Cool/UserSettings/UserSettings.h>
 #include <cmd/imgui.hpp>
 #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
+#include "Commands/Command_OpenImageExporter.h"
+#include "Commands/Command_OpenVideoExporter.h"
 #include "Debug/DebugOptions.h"
 #include "Debug/compile_all_custom_shaders.h"
 #include "Menus/menu_info.h"
@@ -317,7 +320,10 @@ void App::menu_export()
 {
     if (ImGui::BeginMenu("Export"))
     {
-        _exporter.imgui_menu_items();
+        _exporter.imgui_menu_items({
+            .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
+            .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
+        });
         ImGui::EndMenu();
     }
 }
@@ -326,15 +332,21 @@ void App::menu_settings()
 {
     if (ImGui::BeginMenu("Settings"))
     {
+        Cool::user_settings().imgui();
+        ImGui::Separator();
+
         _history.imgui_max_size();
         ImGui::Separator();
         ImGui::Separator();
         ImGui::Separator();
+
         _history.imgui_max_saved_size();
         ImGui::Separator();
         ImGui::Separator();
         ImGui::Separator();
+
         _theme_manager.imgui();
+
         ImGui::EndMenu();
     }
 }
@@ -398,8 +410,8 @@ void App::check_inputs__history()
     }
 
     // Redo
-    if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y)) ||
-        (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
+    if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y))
+        || (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
     {
         _history.move_forward(exec);
         Cool::ParametersHistory::get().move_forward();
@@ -418,16 +430,12 @@ void App::check_inputs__history()
 
 void App::check_inputs__export_windows()
 {
-    const auto& io = ImGui::GetIO();
+    auto const& io = ImGui::GetIO();
 
     if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl)
-    {
-        _exporter.image_export_window().open();
-    }
+        command_executor().execute(Command_OpenImageExporter{});
     if (ImGui::IsKeyReleased(ImGuiKey_E) && io.KeyCtrl)
-    {
-        _exporter.video_export_window().open();
-    }
+        command_executor().execute(Command_OpenVideoExporter{});
 }
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
@@ -452,6 +460,18 @@ void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& eve
     {
         view.view.dispatch_mouse_move_event(view_event(event, view));
     }
+}
+
+void App::open_image_exporter()
+{
+    _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
+    _exporter.image_export_window().open();
+}
+
+void App::open_video_exporter()
+{
+    _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
+    _exporter.video_export_window().open();
 }
 
 } // namespace Lab

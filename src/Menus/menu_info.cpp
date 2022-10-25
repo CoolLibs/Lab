@@ -9,10 +9,10 @@ void menu_info()
 {
     if (ImGui::BeginMenu("Info"))
     {
-        static constexpr ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter |
-                                                 ImGuiTableFlags_BordersV |
-                                                 ImGuiTableFlags_BordersH |
-                                                 ImGuiTableFlags_SizingFixedFit;
+        static constexpr ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter
+                                                 | ImGuiTableFlags_BordersV
+                                                 | ImGuiTableFlags_BordersH
+                                                 | ImGuiTableFlags_SizingFixedFit;
 
         static constexpr auto line = [](auto&& func1, auto&& func2) {
             ImGui::TableNextRow();

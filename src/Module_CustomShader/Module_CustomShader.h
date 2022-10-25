@@ -35,8 +35,8 @@ public:
 
     auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool override
     {
-        return Module::is_dirty(check_dirty) ||
-               check_dirty(_shader.dirty_flag());
+        return Module::is_dirty(check_dirty)
+               || check_dirty(_shader.dirty_flag());
     }
 
 private:
@@ -48,11 +48,14 @@ private:
         UpdateContext_Ref,
         Cool::VariableRegistries&
     );
-    void parse_shader_for_params(
+
+    /// Might return an error message if parsing failed
+    auto parse_shader_for_inputs(
         std::string_view fragment_shader_source_code,
         Cool::InputFactory_Ref,
         Cool::InputDestructor_Ref
-    );
+    ) -> std::optional<std::string>;
+
     void apply_first_preset_if_there_is_one(Cool::VariableRegistries& variable_registries);
 
     auto inputs() const -> std::vector<Cool::AnyInput>& { return _inputs; }

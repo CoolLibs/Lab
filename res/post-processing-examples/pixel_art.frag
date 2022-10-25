@@ -62,12 +62,11 @@ void main()
     float dist1 = sqrt(distance(luminance, (idx1 + 0.5) / Palette_length));
 
     vec3 color =
-        mod(c.x + c.y, 2.0) >
-                (hash(
-                     c * 2.0
-                 ) *
-                 0.75) +
-                    (dist1 / (dist0 + dist1))
+        mod(c.x + c.y, 2.0) > (hash(
+                                   c * 2.0
+                               )
+                               * 0.75)
+                                  + (dist1 / (dist0 + dist1))
             ? Palette(idx1)
             : Palette(idx0);
     color = mix(in_color, color, Effect_intensity);

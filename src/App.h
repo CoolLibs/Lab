@@ -51,6 +51,9 @@ public:
     void on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event) override;
     void on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event) override;
 
+    void open_image_exporter();
+    void open_video_exporter();
+
 private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_one_module(Module&, Cool::RenderTarget&, float time);
@@ -66,7 +69,7 @@ private:
     auto set_dirty_flag                             () { return Cool::SetDirty_Ref{_dirty_registry}; }
     auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_variable_registries, _camera_manager}}; }
-    auto command_execution_context                  () { return CommandExecutionContext_Ref{{_history, _variable_registries, _camera_manager, set_variable_dirty(),_dirty_registry }}; }
+    auto command_execution_context                  () { return CommandExecutionContext_Ref{{*this, _history, _variable_registries, _camera_manager, set_variable_dirty(),_dirty_registry }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, make_reversible_commands_context()}; }
@@ -134,10 +137,11 @@ private:
             cereal::make_nvp("Custom Shader Module", _custom_shader_module),
             cereal::make_nvp("Nodes Module", _nodes_module),
             cereal::make_nvp("Preview Constraint", _preview_constraint),
-            cereal::make_nvp("Camera Manager", _camera_manager)
+            cereal::make_nvp("Camera Manager", _camera_manager),
+            cereal::make_nvp("Exporter (Image and Video)", _exporter)
         );
     }
-#if !IS0_TEST_NODES && DEBUG
+#if DEBUG
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 #endif
 };

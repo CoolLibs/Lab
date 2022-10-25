@@ -5,15 +5,28 @@ add_executable(${PROJECT_NAME})
 add_library(CooLab-Properties INTERFACE) # This is needed by both CoolLab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE CooLab-Properties)
 
+# Choose C++ version
 target_compile_features(CooLab-Properties INTERFACE cxx_std_20)
 
+# Set the folder where the executable is created
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Set the folder where the executable is created
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
+# Set warning level
 if(MSVC)
-    target_compile_options(CooLab-Properties INTERFACE /WX /W3)
+    target_compile_options(CooLab-Properties INTERFACE /W3)
 else()
-    target_compile_options(CooLab-Properties INTERFACE -Werror -Wall -Wextra -Wpedantic -pedantic-errors)
+    target_compile_options(CooLab-Properties INTERFACE -Wall -Wextra -Wpedantic -pedantic-errors)
+endif()
+
+# Maybe enable warnings as errors
+set(WARNINGS_AS_ERRORS_FOR_COOLLAB OFF CACHE BOOL "ON iff you want to treat warnings as errors") # Might be overriden in the CMake cache
+if(WARNINGS_AS_ERRORS_FOR_COOLLAB)
+    if(MSVC)
+        target_compile_options(CooLab-Properties INTERFACE /WX)
+    else()
+        target_compile_options(CooLab-Properties INTERFACE -Werror)
+    endif()
 endif()
 
 # Choose our GPU API and its version

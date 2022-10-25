@@ -52,23 +52,23 @@
 // private:
 //     // Serialization
 //     friend class cereal::access;
-//     // template<class Archive>
-//     // void save(Archive& archive) const
-//     // {
-//     //     archive(cereal::base_class<Module>(this),
-//     //             cereal::make_nvp("Node Editor", _editor),
-//     //             cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
-//     //             cereal::make_nvp("File Name For Save", _file_name_for_save),
-//     //             cereal::make_nvp("Render Effects Manager", _effects));
-//     //     if (!_file_name_for_save.empty()) { // TODO(JF) should be done in a separate type so that is0 can have a single `serialize` function. Also, we should be saving the whole project, not just is0.
-//     //         const std::string      saving_path = saving_path_string();
-//     //         const std::string      message     = "Do you want to save your work in " + saving_path + "?";
-//     //         const boxer::Selection sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::YesNo);
-//     //         if (sel == boxer::Selection::Yes) {
-//     //             Cool::Serialization::to_json(_editor, saving_path);
-//     //         }
-//     //     }
-//     // }
+// template<class Archive>
+// void save(Archive& archive) const
+// {
+//     archive(cereal::base_class<Module>(this),
+//             cereal::make_nvp("Node Editor", _editor),
+//             cereal::make_nvp("Folder Path For Save", _folder_path_for_save),
+//             cereal::make_nvp("File Name For Save", _file_name_for_save),
+//             cereal::make_nvp("Render Effects Manager", _effects));
+//     if (!_file_name_for_save.empty()) { // TODO(JF) should be done in a separate type so that is0 can have a single `serialize` function. Also, we should be saving the whole project, not just is0.
+//         const std::string      saving_path = saving_path_string();
+//         const std::string      message     = "Do you want to save your work in " + saving_path + "?";
+//         const boxer::Selection sel         = boxer::show(message.c_str(), "Save", boxer::Style::Question, boxer::Buttons::OKCancel);
+//         if (sel == boxer::Selection::OK) {
+//             Cool::Serialization::to_json(_editor, saving_path);
+//         }
+//     }
+// }
 //     template<class Archive>
 //     void serialize(Archive& archive)
 //     {

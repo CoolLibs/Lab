@@ -1,5 +1,6 @@
 #include "Module_CustomShader.h"
 #include <Cool/Camera/CameraShaderU.h>
+#include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/InputParser/InputParser.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/String/String.h>
@@ -62,15 +63,23 @@ static void apply_settings_to_inputs(
     Cool::VariableRegistries&             registry
 )
 {
-    for (size_t i = 0; i < inputs.size(); ++i)
+    try
     {
-        std::visit([&](auto&& input) {
-            registry.set(
-                input._default_variable_id,
-                get_concrete_variable(input, settings[i])
-            );
-        },
-                   inputs[i]);
+        for (size_t i = 0; i < inputs.size(); ++i)
+        {
+            std::visit([&](auto&& input) {
+                registry.set(
+                    input._default_variable_id,
+                    get_concrete_variable(input, settings.at(i))
+                );
+            },
+                       inputs.at(i));
+        }
+    }
+    catch (...)
+    {
+        // TODO(JF) Remove this try-catch once we update presets properly
+        Cool::Log::ToUser::warning("Presets", "This preset does not match the INPUTs of the shader anymore, it has not been applied fully.");
     }
 }
 
@@ -91,7 +100,9 @@ static void modify_default_variables_of_the_inputs(
 void Module_CustomShader::imgui_windows(Ui_Ref ui) const
 {
     Ui_Ref::window({.name = "Custom Shader"}, [&]() {
-        ui.widget(_file);
+        Cool::ImGuiExtras::bring_attention_if(_shader_compilation_error.should_highlight(), [&]() {
+            ui.widget(_file);
+        });
         ImGui::Separator();
         ImGui::NewLine();
         for (auto& input : inputs())
@@ -132,22 +143,22 @@ void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Came
 void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
     refresh_pipeline_if_necessary(in.provider, in.is_dirty, in.input_factory, in.input_destructor, update_ctx, in.variable_registries);
-    if (_shader.pipeline().shader())
-    {
-        _shader.pipeline().shader()->bind();
-        _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
-        _shader.pipeline().shader()->set_uniform("_time", in.provider(Cool::Input_Time{}));
+    if (!_shader.pipeline().shader())
+        return;
 
-        for (auto& input : inputs())
-        {
-            std::visit([&](auto&& input) {
-                set_uniform(*_shader.pipeline().shader(), input.name(), in.provider(input));
-            },
-                       input);
-        }
-        Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
-        _shader.pipeline().draw();
+    _shader.pipeline().shader()->bind();
+    _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+    _shader.pipeline().shader()->set_uniform("_time", in.provider(Cool::Input_Time{}));
+
+    for (auto& input : inputs())
+    {
+        std::visit([&](auto&& input) {
+            set_uniform(*_shader.pipeline().shader(), input.name(), in.provider(input));
+        },
+                   input);
     }
+    Cool::CameraShaderU::set_uniform(*_shader.pipeline().shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
+    _shader.pipeline().draw();
 }
 
 static auto preset_path(std::filesystem::path path) -> std::filesystem::path
@@ -162,18 +173,22 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
     Cool::InputFactory_Ref    input_factory,
     Cool::InputDestructor_Ref input_destructor,
     UpdateContext_Ref         update_ctx,
-    Cool::VariableRegistries& variable_registries
+    Cool::VariableRegistries& /* variable_registries */
 )
 {
+    // Check dirty flag
     if (!is_dirty(_shader.dirty_flag()))
         return;
+    update_ctx.set_clean(_shader.dirty_flag());
 
+    //
     const auto reset_shader = [&]() {
         _previous_path = "";
         _shader.pipeline().reset();
         _presets_manager.reset();
     };
 
+    // Check if file path exists
     const auto current_path = provider(_file);
     if (!Cool::File::exists(current_path.string()))
     {
@@ -181,6 +196,7 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         return;
     }
 
+    // Load shader from file
     const auto source_code = Cool::File::to_string(current_path.string());
     if (!source_code) // Did not manage to read file, it is maybe protected by password.
     {
@@ -191,20 +207,36 @@ void Module_CustomShader::refresh_pipeline_if_necessary(
         return;
     }
 
-    parse_shader_for_params(*source_code, input_factory, input_destructor);
+    // Parse INPUTs
+    {
+        const auto err = parse_shader_for_inputs(*source_code, input_factory, input_destructor);
+        if (err)
+        {
+            _shader_compilation_error.send(
+                make_shader_compilation_error_message(name(), current_path.string(), *err)
+            );
+            reset_shader();
+            return;
+        }
+    }
+
+    // Update presets manager if the path has changed
+    {
+        const bool path_has_changed = _previous_path != current_path;
+        _previous_path              = current_path;
+        if (path_has_changed)
+        {
+            _presets_manager.emplace(preset_path(current_path));
+            // apply_first_preset_if_there_is_one(variable_registries); // TODO(JF) Reintroduce once we have the merger and don't crash on invalid presets
+        }
+    }
+
+    // Compile the shader
     _shader
         .compile(Cool::preprocess_inputs(*source_code, inputs(), provider), update_ctx)
         .send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
             return make_shader_compilation_error_message(name(), current_path.string(), msg);
         });
-
-    const bool path_has_changed = _previous_path != current_path;
-    _previous_path              = current_path;
-    if (path_has_changed)
-    {
-        _presets_manager.emplace(preset_path(current_path));
-        apply_first_preset_if_there_is_one(variable_registries);
-    }
 }
 
 void Module_CustomShader::apply_first_preset_if_there_is_one(Cool::VariableRegistries& variable_registries)
@@ -221,8 +253,8 @@ static auto name(const Cool::AnyInput& input)
 
 static auto inputs_have_the_same_type_and_name(const Cool::AnyInput& input1, const Cool::AnyInput& input2) -> bool
 {
-    return input1.index() == input2.index() &&
-           name(input1) == name(input2);
+    return input1.index() == input2.index()
+           && name(input1) == name(input2);
 }
 
 static auto iterator_to_same_input(const Cool::AnyInput& input, std::vector<Cool::AnyInput>& old_inputs)
@@ -249,7 +281,8 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         if (it != new_inputs.end())
         {
             auto description = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the newly-parsed description
-            *it              = std::move(input);
+            destroy(*it);
+            *it = std::move(input);
             std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
         }
         else
@@ -259,15 +292,20 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
-void Module_CustomShader::parse_shader_for_params(
+auto Module_CustomShader::parse_shader_for_inputs(
     std::string_view          source_code,
     Cool::InputFactory_Ref    input_factory,
     Cool::InputDestructor_Ref input_destructor
-)
+) -> std::optional<std::string>
 {
     auto new_inputs = Cool::parse_all_inputs(source_code, dirty_flag(), input_factory);
-    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(inputs(), new_inputs, input_destructor);
-    inputs() = std::move(new_inputs);
+    if (!new_inputs)
+        return new_inputs.error();
+
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(inputs(), *new_inputs, input_destructor);
+    inputs() = std::move(*new_inputs);
+
+    return std::nullopt;
 }
 
 void Module_CustomShader::set_image_in_shader(std::string_view name, int slot, GLuint texture_id)
