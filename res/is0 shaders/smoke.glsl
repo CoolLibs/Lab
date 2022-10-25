@@ -38,14 +38,14 @@ float noise(vec3 x)
     float vh = dot(gh, w - vec3(1.0, 1.0, 1.0));
 
     // interpolation
-    return va +
-           u.x * (vb - va) +
-           u.y * (vc - va) +
-           u.z * (ve - va) +
-           u.x * u.y * (va - vb - vc + vd) +
-           u.y * u.z * (va - vc - ve + vg) +
-           u.z * u.x * (va - vb - ve + vf) +
-           u.x * u.y * u.z * (-va + vb + vc - vd + ve - vf - vg + vh);
+    return va
+           + u.x * (vb - va)
+           + u.y * (vc - va)
+           + u.z * (ve - va)
+           + u.x * u.y * (va - vb - vc + vd)
+           + u.y * u.z * (va - vc - ve + vg)
+           + u.z * u.x * (va - vb - ve + vf)
+           + u.x * u.y * u.z * (-va + vb + vc - vd + ve - vf - vg + vh);
 }
 
 float fbm(vec3 x, float H)

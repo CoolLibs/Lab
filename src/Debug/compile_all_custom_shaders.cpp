@@ -21,8 +21,8 @@ void compile_all_custom_shaders(
         for (const auto& entry : std::filesystem::directory_iterator(folder))
         {
             const auto file = entry.path();
-            if (!entry.is_regular_file() ||
-                file.extension() != ".frag")
+            if (!entry.is_regular_file()
+                || file.extension() != ".frag")
             {
                 continue;
             }

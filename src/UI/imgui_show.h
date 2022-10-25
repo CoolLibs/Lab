@@ -21,11 +21,11 @@ template<typename T>
 void imgui_show(const reg::Registry<T>& registry)
 {
     std::shared_lock                 lock{registry.mutex()};
-    static constexpr ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame |
-                                             ImGuiTableFlags_Resizable |
-                                             ImGuiTableFlags_BordersOuter |
-                                             ImGuiTableFlags_BordersV |
-                                             ImGuiTableFlags_ContextMenuInBody;
+    static constexpr ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame
+                                             | ImGuiTableFlags_Resizable
+                                             | ImGuiTableFlags_BordersOuter
+                                             | ImGuiTableFlags_BordersV
+                                             | ImGuiTableFlags_ContextMenuInBody;
 
     if (ImGui::BeginTable("table1", 2, flags))
     {

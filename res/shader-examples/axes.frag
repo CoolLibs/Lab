@@ -59,11 +59,12 @@ vec3 normal(vec3 p)
     float      d = sdf(p).x;
     const vec2 e = vec2(.001, 0);
 
-    vec3 n = d - vec3(
-                     sdf(p - e.xyy).x,
-                     sdf(p - e.yxy).x,
-                     sdf(p - e.yyx).x
-                 );
+    vec3 n = d
+             - vec3(
+                 sdf(p - e.xyy).x,
+                 sdf(p - e.yxy).x,
+                 sdf(p - e.yyx).x
+             );
 
     return normalize(n);
 }

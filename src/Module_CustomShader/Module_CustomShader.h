@@ -35,8 +35,8 @@ public:
 
     auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool override
     {
-        return Module::is_dirty(check_dirty) ||
-               check_dirty(_shader.dirty_flag());
+        return Module::is_dirty(check_dirty)
+               || check_dirty(_shader.dirty_flag());
     }
 
 private:

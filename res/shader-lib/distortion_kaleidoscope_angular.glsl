@@ -6,10 +6,11 @@ vec2 distortion_kaleidoscope_angular(
 )
 {
     strength    = 1. / strength;
-    vec2 adjVec = strength2 * vec2(
-                                  cos(distortion_angle),
-                                  sin(distortion_angle)
-                              );
+    vec2 adjVec = strength2
+                  * vec2(
+                      cos(distortion_angle),
+                      sin(distortion_angle)
+                  );
     vec2 uvM = mod(
         in_uv + normalize(in_uv - center) * adjVec,
         strength

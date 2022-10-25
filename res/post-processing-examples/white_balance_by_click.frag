@@ -13,7 +13,7 @@ INPUT float Effect_intensity;
 
 void main()
 {
-    vec2 uv = normalized_uv();
+    vec2 uv       = normalized_uv();
     vec3 in_color = image(uv);
 
     vec3 color = white_balance_by_click(

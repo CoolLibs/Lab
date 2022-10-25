@@ -42,8 +42,8 @@ vec2 getGrad(vec2 pos, float delta)
     return vec2(
                dot((getCol(pos + d.xy) - getCol(pos - d.xy)).xyz, vec3(.333)),
                dot((getCol(pos + d.yx) - getCol(pos - d.yx)).xyz, vec3(.333))
-           ) /
-           delta;
+           )
+           / delta;
 }
 
 vec2 getGrad2(vec2 pos, float delta)
@@ -53,8 +53,8 @@ vec2 getGrad2(vec2 pos, float delta)
     return vec2(
                dot((getCol2(pos + d.xy) - getCol2(pos - d.xy)).xyz, vec3(.333)),
                dot((getCol2(pos + d.yx) - getCol2(pos - d.yx)).xyz, vec3(.333))
-           ) /
-           delta;
+           )
+           / delta;
 }
 
 vec4 getRand(vec2 pos)

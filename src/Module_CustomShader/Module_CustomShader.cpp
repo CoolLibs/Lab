@@ -253,8 +253,8 @@ static auto name(const Cool::AnyInput& input)
 
 static auto inputs_have_the_same_type_and_name(const Cool::AnyInput& input1, const Cool::AnyInput& input2) -> bool
 {
-    return input1.index() == input2.index() &&
-           name(input1) == name(input2);
+    return input1.index() == input2.index()
+           && name(input1) == name(input2);
 }
 
 static auto iterator_to_same_input(const Cool::AnyInput& input, std::vector<Cool::AnyInput>& old_inputs)
