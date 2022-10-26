@@ -27,6 +27,9 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+        archive(
+            cereal::make_nvp("Definition", _definition_name)
+        );
     }
 };
 
