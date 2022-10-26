@@ -8,12 +8,9 @@ namespace Lab {
 struct NodesConfig {
     using NodeT           = Node;
     using NodeDefinitionT = NodeDefinition;
-    static auto name(Node const&) -> const char* { return "Some Node"; }
-    static auto make_node(NodeDefinition const&) -> Node
-    {
-        // TODO(JF)
-        return Node{};
-    }
+
+    static auto name(Node const& node) -> std::string;
+    static auto make_node(NodeDefinition const& def) -> Node;
 };
 
 } // namespace Lab

@@ -5,14 +5,20 @@ namespace Lab {
 
 class Node {
 public:
+    Node() = default;
+    explicit Node(std::string_view definition_name)
+        : _definition_name{definition_name}
+    {}
+
+    auto definition_name() const -> std::string { return _definition_name; }
+
     auto input_pins() const -> const auto& { return _input_pins; }
     auto input_pins() -> auto& { return _input_pins; }
     auto output_pins() const -> const auto& { return _output_pins; }
     auto output_pins() -> auto& { return _output_pins; }
 
-    std::string definition_name;
-
 private:
+    std::string            _definition_name;
     std::vector<Cool::Pin> _input_pins;
     std::vector<Cool::Pin> _output_pins;
 

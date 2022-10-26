@@ -112,7 +112,7 @@ static auto gen_desired_body(
 )
     -> std::optional<GlslCode>
 {
-    const NodeDefinition* def = get_node_definition(node.definition_name);
+    const NodeDefinition* def = get_node_definition(node.definition_name());
     if (!def)
         return std::nullopt;
 

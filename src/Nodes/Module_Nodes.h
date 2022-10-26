@@ -4,6 +4,7 @@
 #include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
 #include "NodesConfig.h"
+#include "NodesLibrary.h"
 
 namespace Lab {
 
@@ -23,7 +24,7 @@ protected:
 private:
     FullscreenShader                       _shader;
     mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
-    Cool::NodesLibrary<NodeDefinition>     _nodes_library;
+    NodesLibrary                           _nodes_library;
 
 private:
     // Serialization

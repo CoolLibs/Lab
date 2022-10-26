@@ -5,6 +5,9 @@
 
 namespace Lab {
 
-using NodesLibrary = Cool::NodesLibrary<NodeDefinition>;
+class NodesLibrary : public Cool::NodesLibrary<NodeDefinition> {
+public:
+    NodesLibrary();
+};
 
-}
+} // namespace Lab

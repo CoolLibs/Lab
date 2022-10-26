@@ -16,10 +16,6 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
     _nodes_editor.imgui_window(_nodes_library, ui.dirty_setter());
     ImGui::Begin("Nodes Debug");
-    if (ImGui::Button("Add a node"))
-    {
-        _nodes_editor.add_node({});
-    }
     ImGui::End();
 }
 
