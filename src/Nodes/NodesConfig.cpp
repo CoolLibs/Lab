@@ -1,5 +1,3 @@
-#pragma once
-
 #include "NodesConfig.h"
 
 namespace Lab {
