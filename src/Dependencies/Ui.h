@@ -37,15 +37,18 @@ public:
     }
 
     template<typename T>
-    void widget(const Cool::Input<T>& input)
+    void widget(Cool::Input<T>& input)
     {
         ImGui::PushID(&input);
         // TODO(JF) add a way to change the current_variable
         // And show the UI of the current_variable if it is set
-        const auto variable = _variable_registries.get().get(input._default_variable_id);
-        if (variable)
+
+        // NB: We don't lock the registry here because it is already locked above (might be clunky though)
+        auto* default_variable = _variable_registries.get().of<Cool::Variable<T>>().get_mutable_ref(input._default_variable_id);
+        if (default_variable)
         {
-            widget<T>(input._default_variable_id, *variable);
+            widget<T>(input._default_variable_id, *default_variable);
+
             if (input._description)
             {
                 ImGui::SameLine();
@@ -78,7 +81,7 @@ public:
 
 private:
     template<typename T>
-    void widget(const Cool::VariableId<T>& id, Cool::Variable<T> variable)
+    void widget(const Cool::VariableId<T>& id, Cool::Variable<T>& variable)
     {
         Cool::imgui(
             variable,
