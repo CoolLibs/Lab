@@ -28,7 +28,9 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Definition", _definition_name)
+            cereal::make_nvp("Definition", _definition_name),
+            cereal::make_nvp("Input Pins", _input_pins),
+            cereal::make_nvp("Output Pins", _output_pins)
         );
     }
 };
