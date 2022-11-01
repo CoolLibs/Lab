@@ -18,9 +18,9 @@ public:
     auto output_pins() -> auto& { return _output_pins; }
 
 private:
-    std::string            _definition_name;
-    std::vector<Cool::Pin> _input_pins;
-    std::vector<Cool::Pin> _output_pins;
+    std::string                  _definition_name;
+    std::vector<Cool::InputPin>  _input_pins;
+    std::vector<Cool::OutputPin> _output_pins;
 
 private:
     friend class cereal::access;
