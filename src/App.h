@@ -80,7 +80,8 @@ private:
     auto dirty_flag_factory                         () { return Cool::DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_dirty_registry}; }
-    auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor()}}; }
+    auto set_dirty__functor                         () { return Cool::SetDirty_Ref{_dirty_registry}; }
+    auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor(), set_dirty__functor()}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();

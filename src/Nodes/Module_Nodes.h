@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"
 #include "Dependencies/Module.h"
@@ -18,13 +19,21 @@ public:
     auto all_inputs() const -> Cool::AllInputRefsToConst override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
 
+    void compile(UpdateContext_Ref update_ctx, bool for_testing_nodes = false);
+
 protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
 private:
-    FullscreenShader                       _shader;
+    void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes);
+
+private:
+    std::string                            _shader_code{};
+    FullscreenShader                       _shader{};
     mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
-    NodesLibrary                           _nodes_library;
+    NodesLibrary                           _nodes_library{};
+    mutable bool                           _must_recompile{true};
+    Cool::MessageSender                    _shader_compilation_error{};
 
 private:
     // Serialization
