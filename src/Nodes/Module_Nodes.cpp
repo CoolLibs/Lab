@@ -12,7 +12,7 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 
 void Module_Nodes::update(UpdateContext_Ref update_ctx)
 {
-    // if (_must_recompile || update_ctx.)
+    if (_must_recompile)
     {
         _must_recompile = false;
         compile(update_ctx);
@@ -55,9 +55,9 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 #endif
 }
 
-void Module_Nodes::imgui_windows(Ui_Ref ui) const
+void Module_Nodes::imgui_windows(Ui_Ref) const
 {
-    _must_recompile |= _nodes_editor.imgui_window(_nodes_library, ui.dirty_setter());
+    _must_recompile |= _nodes_editor.imgui_window(_nodes_library);
 
     ImGui::Begin("Nodes Code");
     if (ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
