@@ -1,5 +1,6 @@
 #include "Module_Nodes.h"
 #include "Common/make_shader_compilation_error_message.h"
+#include "generate_shader_code.h"
 
 namespace Lab {
 
@@ -11,7 +12,7 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 
 void Module_Nodes::update(UpdateContext_Ref update_ctx)
 {
-    if (_must_recompile)
+    // if (_must_recompile || update_ctx.)
     {
         _must_recompile = false;
         compile(update_ctx);
@@ -21,7 +22,9 @@ void Module_Nodes::update(UpdateContext_Ref update_ctx)
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
-    _shader_code = "void main() { gl_FragColor = vec4(vec3(0.5, 0.1, 0.9), 1.); }";
+    if (_nodes_editor.graph().nodes().is_empty())
+        return;
+    _shader_code = generate_shader_code(_nodes_editor.graph(), _nodes_library, _nodes_editor.graph().nodes().begin()->first);
 
     const auto maybe_err = _shader.compile(
         _shader_code,
@@ -36,7 +39,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     if (!for_testing_nodes)
     {
         maybe_err.send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
-            return make_shader_compilation_error_message(name(), "Ray Marcher", msg);
+            return make_shader_compilation_error_message(name(), "Shader Generator", msg);
         });
     }
 #if DEBUG
@@ -44,7 +47,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     {
         maybe_err.send_error_if_any(
             [&](const std::string& msg) {
-                return make_shader_compilation_error_message("Test is0 Nodes", "Ray Marcher", msg);
+                return make_shader_compilation_error_message("Test Nodes", "Ray Marcher", msg);
             },
             Cool::Log::Debug::console()
         );
@@ -55,6 +58,15 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
     _must_recompile |= _nodes_editor.imgui_window(_nodes_library, ui.dirty_setter());
+
+    ImGui::Begin("Nodes Code");
+    if (ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+    {
+        // _must_recompile = true;
+        // ui.set_dirty()
+        // _shader.compile(_shader_code, "is0 Ray Marcher", ); // TODO(JF) just set shader dirty
+    }
+    ImGui::End();
     ImGui::Begin("Nodes Debug");
     ImGui::End();
 }

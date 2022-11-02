@@ -28,7 +28,7 @@ private:
     void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes);
 
 private:
-    std::string                            _shader_code{};
+    mutable std::string                    _shader_code{};
     FullscreenShader                       _shader{};
     mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
     NodesLibrary                           _nodes_library{};
