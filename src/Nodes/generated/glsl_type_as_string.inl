@@ -5,10 +5,10 @@
  * -----------------------------------------------------------------------------
  */
 if constexpr (std::is_same_v<T, PrimitiveType::Color>)
-    return "vec3";
+    return "/*Color*/ vec3";
 if constexpr (std::is_same_v<T, PrimitiveType::UV>)
-    return "vec2";
+    return "/*UV*/ vec2";
 if constexpr (std::is_same_v<T, PrimitiveType::SignedDistance>)
-    return "float";
+    return "/*SignedDistance*/ float";
 if constexpr (std::is_same_v<T, PrimitiveType::Float>)
-    return "float";
+    return "/*Float*/ float";
