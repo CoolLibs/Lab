@@ -90,6 +90,25 @@ auto gen_desired_function_body(
     )};
 }
 
+template<PrimitiveTypeC A, PrimitiveTypeC B, PrimitiveTypeC C>
+auto gen_desired_function_body(
+    A /*current_from*/, B /*current_to*/,
+    A /*desired_from*/, C /*desired_to*/,
+    std::string_view function_name,
+    std::string_view input_function_name
+) -> GlslCode
+{
+    using namespace fmt::literals;
+    // Request input function to be going from B to C
+    return {fmt::format(
+        FMT_COMPILE(
+            R"STR(return {input_function_name}({function_name}(in1));)STR"
+        ),
+        "function_name"_a       = function_name,
+        "input_function_name"_a = input_function_name
+    )};
+}
+
 } // namespace Lab
 
 // TODO test all of these, to make sure overload resolution doesn't change when we add options
