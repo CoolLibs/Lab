@@ -1,5 +1,6 @@
 #include "Module_Nodes.h"
 #include "Common/make_shader_compilation_error_message.h"
+#include "Debug/DebugOptions.h"
 #include "generate_shader_code.h"
 
 namespace Lab {
@@ -14,6 +15,10 @@ void Module_Nodes::update(UpdateContext_Ref update_ctx)
 {
     if (_must_recompile)
     {
+#if DEBUG
+        if (DebugOptions::log_when_compiling_nodes())
+            Cool::Log::Debug::info("Nodes", "Compiled");
+#endif
         _must_recompile = false;
         compile(update_ctx);
         update_ctx.set_dirty(dirty_flag());

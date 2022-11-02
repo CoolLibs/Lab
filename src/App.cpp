@@ -145,9 +145,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 {
 #if DEBUG
     if (DebugOptions::log_when_rendering())
-    {
         Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
-    }
 #endif
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);

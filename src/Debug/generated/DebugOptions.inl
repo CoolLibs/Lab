@@ -7,11 +7,15 @@
 
 #if DEBUG
 
-#include <Cool/DebugOptions/DebugOptionsManager.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/as_json.h>
 #include <wafl/wafl.hpp>
+
+namespace Cool {
+template<typename... Ts>
+class DebugOptionsManager; // Forward declare this class so that the friend declaration that comes later on doesn't fail.
+}
 
 namespace Lab {
 
@@ -29,6 +33,7 @@ public:
     [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
     [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
+    [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
     static void               test_all_variable_widgets__window(std::function<void()> callback)
     {
         if (instance().test_all_variable_widgets__window)
@@ -54,6 +59,7 @@ private:
         bool show_imgui_demo_window{false};
         bool show_commands_and_registries_debug_windows{false};
         bool log_when_rendering{false};
+        bool log_when_compiling_nodes{false};
         bool test_all_variable_widgets__window{false};
         bool test_shaders_compilation__window{false};
 
@@ -68,6 +74,7 @@ private:
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
+                cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
                 cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
             );
@@ -80,6 +87,7 @@ private:
         instance().show_imgui_demo_window                     = false;
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
+        instance().log_when_compiling_nodes                   = false;
         instance().test_all_variable_widgets__window          = false;
         instance().test_shaders_compilation__window           = false;
     }
@@ -139,6 +147,11 @@ private:
             ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
         }
 
+        if (wafl::similarity_match({filter, "Log when compiling nodes"}) >= wafl::Matches::Strongly)
+        {
+            ImGui::Checkbox("Log when compiling nodes", &instance().log_when_compiling_nodes);
+        }
+
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
             ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
@@ -173,6 +186,12 @@ private:
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
             instance().log_when_rendering = !instance().log_when_rendering;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Log when compiling nodes"}) >= wafl::Matches::Strongly)
+        {
+            instance().log_when_compiling_nodes = !instance().log_when_compiling_nodes;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 

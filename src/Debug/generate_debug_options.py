@@ -34,6 +34,10 @@ def all_debug_options():
             name_in_ui="Log when rendering",
         ),
         DebugOption(
+            name_in_code="log_when_compiling_nodes",
+            name_in_ui="Log when compiling nodes",
+        ),
+        DebugOption(
             name_in_code="test_all_variable_widgets__window",
             name_in_ui="Test all Variable Widgets",
             kind=Kind.WINDOW,
