@@ -4,7 +4,7 @@
  * Instead, go to "generator.py" and edit the "glsl_type_as_string" function there.
  * -----------------------------------------------------------------------------
  */
-if constexpr (std::is_same_v<T, PrimitiveType::RgbColor>)
+if constexpr (std::is_same_v<T, PrimitiveType::Color>)
     return "vec3";
 if constexpr (std::is_same_v<T, PrimitiveType::UV>)
     return "vec2";

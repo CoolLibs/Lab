@@ -7,7 +7,7 @@ NodesLibrary::NodesLibrary()
     this->add_definition({
         ._name     = "Black & White",
         .signature = {
-            .from = PrimitiveType::RgbColor{},
+            .from = PrimitiveType::Color{},
             .to   = PrimitiveType::Float{},
         },
         .function_body = {R"STR(

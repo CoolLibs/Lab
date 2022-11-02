@@ -15,7 +15,7 @@ namespace Signature {
 
 static constexpr auto Image = FunctionSignature{
     .from = PrimitiveType::UV{},
-    .to   = PrimitiveType::RgbColor{},
+    .to   = PrimitiveType::Color{},
 };
 
 static constexpr auto FloatField = FunctionSignature{

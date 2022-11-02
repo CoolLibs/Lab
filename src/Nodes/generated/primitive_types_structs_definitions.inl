@@ -4,7 +4,7 @@
  * Instead, go to "generator.py" and edit the "primitive_types_structs_definitions" function there.
  * -----------------------------------------------------------------------------
  */
-struct RgbColor {};
+struct Color {};
 struct UV {};
 struct SignedDistance {};
 struct Float {};

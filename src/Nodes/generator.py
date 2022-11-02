@@ -10,7 +10,7 @@ class PrimitiveType:
 
 def all_primitive_types():
     return [
-        PrimitiveType(cpp="RgbColor", glsl="vec3"),
+        PrimitiveType(cpp="Color", glsl="vec3"),
         PrimitiveType(cpp="UV", glsl="vec2"),
         PrimitiveType(cpp="SignedDistance", glsl="float"),
         PrimitiveType(cpp="Float", glsl="float"),

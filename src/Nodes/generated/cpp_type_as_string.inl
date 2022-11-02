@@ -4,8 +4,8 @@
  * Instead, go to "generator.py" and edit the "cpp_type_as_string" function there.
  * -----------------------------------------------------------------------------
  */
-if constexpr (std::is_same_v<T, PrimitiveType::RgbColor>)
-    return "RgbColor";
+if constexpr (std::is_same_v<T, PrimitiveType::Color>)
+    return "Color";
 if constexpr (std::is_same_v<T, PrimitiveType::UV>)
     return "UV";
 if constexpr (std::is_same_v<T, PrimitiveType::SignedDistance>)

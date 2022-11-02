@@ -4,7 +4,7 @@
  * Instead, go to "generator.py" and edit the "primitive_types_list" function there.
  * -----------------------------------------------------------------------------
  */
-PrimitiveType::RgbColor,
+PrimitiveType::Color,
     PrimitiveType::UV,
     PrimitiveType::SignedDistance,
     PrimitiveType::Float
