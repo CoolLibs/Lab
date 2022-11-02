@@ -11,7 +11,13 @@ auto gen_desired_function_body(
     std::string_view /*input_function_name*/
 ) -> GlslCode
 {
-    return {"[gen_desired_function_body()] ERROR NO KNOWN CONVERSION"};
+    return {fmt::format(
+        "[gen_desired_function_body()] Error: No known conversion from '{}->{}' to '{}->{}'.",
+        cpp_type_as_string<A>(),
+        cpp_type_as_string<B>(),
+        cpp_type_as_string<C>(),
+        cpp_type_as_string<D>()
+    )};
 }
 
 template<PrimitiveTypeC A, PrimitiveTypeC B>

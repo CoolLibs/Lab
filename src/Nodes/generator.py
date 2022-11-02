@@ -25,9 +25,15 @@ def primitive_types_structs_definitions():
     return "\n".join(map(lambda type: f"struct {type.cpp} {{}};", all_primitive_types()))
 
 
-def to_glsl():
+def glsl_type_as_string():
     return "\n".join(map(lambda type:
                          f'if constexpr (std::is_same_v<T, PrimitiveType::{type.cpp}>) return "{type.glsl}";',
+                         all_primitive_types()))
+
+
+def cpp_type_as_string():
+    return "\n".join(map(lambda type:
+                         f'if constexpr (std::is_same_v<T, PrimitiveType::{type.cpp}>) return "{type.cpp}";',
                          all_primitive_types()))
 
 
@@ -49,6 +55,7 @@ if __name__ == '__main__':
         files=[
             primitive_types_list,
             primitive_types_structs_definitions,
-            to_glsl,
+            glsl_type_as_string,
+            cpp_type_as_string,
         ],
     )

@@ -13,7 +13,7 @@ static auto gen_params(
         FMT_COMPILE(
             R"STR({type} in1)STR"
         ),
-        "type"_a = to_glsl(signature.from)
+        "type"_a = glsl_type_as_string(signature.from)
     );
 }
 
@@ -27,7 +27,7 @@ static auto gen_function_declaration(
         FMT_COMPILE(
             R"STR({return_type} {name}({params}))STR"
         ),
-        "return_type"_a = to_glsl(signature.to),
+        "return_type"_a = glsl_type_as_string(signature.to),
         "name"_a        = name,
         "params"_a      = gen_params(signature)
     );

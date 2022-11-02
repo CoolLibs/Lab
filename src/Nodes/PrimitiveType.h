@@ -20,14 +20,20 @@ using AnyPrimitiveType = std::variant<
     >;
 
 template<PrimitiveTypeC T>
-auto to_glsl(T) -> std::string
+auto glsl_type_as_string(T) -> std::string
 {
-#include "generated/to_glsl.inl"
+#include "generated/glsl_type_as_string.inl"
 }
 
-inline auto to_glsl(AnyPrimitiveType type) -> std::string
+inline auto glsl_type_as_string(AnyPrimitiveType type) -> std::string
 {
-    return std::visit([](auto&& type) { return to_glsl(type); }, type);
+    return std::visit([](auto&& type) { return glsl_type_as_string(type); }, type);
+}
+
+template<PrimitiveTypeC T>
+auto cpp_type_as_string() -> std::string
+{
+#include "generated/cpp_type_as_string.inl"
 }
 
 } // namespace Lab
