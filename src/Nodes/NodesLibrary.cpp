@@ -17,13 +17,13 @@ return dot(color, vec3(0.2126, 0.7152, 0.0722));
     });
 
     this->add_definition({
-        ._name     = "Blop",
+        ._name     = "Checkerboard",
         .signature = {
-            .from = PrimitiveType::Float{},
+            .from = PrimitiveType::UV{},
             .to   = PrimitiveType::Float{},
         },
         .function_body = {R"STR(
-return 1.;
+return int(in1.x + in1.y) % 2 == 0 ? 0. : 1.;
     )STR"},
         .inputs        = {},
     });
