@@ -27,13 +27,13 @@ App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
     , _main_window{windows.main_window()}
     , _nodes_view{_views.make_view("View | Nodes")}
-    , _custom_shader_view{_views.make_view("View | Custom Shader")}
+    // , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory())}
-    , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
+    // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
     , _texture{Cool::Path::root() / "res/image resources/ETOILE5.png"}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
-    _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
+    // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
@@ -78,40 +78,41 @@ void App::update()
         _last_time = _clock.time();
 
         set_dirty_flag()(_nodes_module->dirty_flag());
-        set_dirty_flag()(_custom_shader_module->dirty_flag());
+        // set_dirty_flag()(_custom_shader_module->dirty_flag());
     }
     if (_nodes_view.render_target.needs_resizing())
     {
         set_dirty_flag()(_nodes_module->dirty_flag());
     }
-    if (_custom_shader_view.render_target.needs_resizing())
-    {
-        set_dirty_flag()(_custom_shader_module->dirty_flag());
-    }
+    // if (_custom_shader_view.render_target.needs_resizing())
+    // {
+    // set_dirty_flag()(_custom_shader_module->dirty_flag());
+    // }
 
     if (inputs_are_allowed())
     {
         _nodes_module->update(update_context());
-        _custom_shader_module->update(update_context());
+        // _custom_shader_module->update(update_context());
         check_inputs();
     }
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
 {
-    auto vec  = _custom_shader_module->all_inputs();
+    // auto vec  = _custom_shader_module->all_inputs();
     auto vec2 = _nodes_module->all_inputs();
-    for (const auto& x : vec2)
-    {
-        vec.push_back(x);
-    }
-    return vec;
+    // for (const auto& x : vec2)
+    // {
+    //     vec.push_back(x);
+    // }
+    // return vec;
+    return vec2;
 }
 
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _custom_shader_view.render_target,
+        .render_target = _nodes_view.render_target,
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }};
@@ -166,23 +167,23 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
     });
 }
 
-void App::render_is0(Cool::RenderTarget& render_target, float time, img::Size size)
+void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
 {
     render_target.set_size(size);
     render_one_module(*_nodes_module, render_target, time);
 }
 
-void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
-{
-    _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target.get().texture_id());
-    _custom_shader_module->set_image_in_shader("_texture", 1, _texture.ID());
-    render_one_module(*_custom_shader_module, render_target, time);
-}
+// void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
+// {
+// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target.get().texture_id());
+// _custom_shader_module->set_image_in_shader("_texture", 1, _texture.ID());
+// render_one_module(*_custom_shader_module, render_target, time);
+// }
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_is0(_nodes_view.render_target, time, render_target.desired_size());
-    render_custom_shader(render_target, time);
+    render_nodes(_nodes_view.render_target, time, render_target.desired_size());
+    // render_custom_shader(render_target, time);
 }
 
 void App::imgui_commands_and_registries_debug_windows()
@@ -216,7 +217,7 @@ void App::imgui_commands_and_registries_debug_windows()
 void App::imgui_windows()
 {
     _nodes_view.imgui_window();
-    _custom_shader_view.imgui_window();
+    // _custom_shader_view.imgui_window();
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
@@ -226,7 +227,7 @@ void App::imgui_windows()
     {
         const auto the_ui = ui();
         _nodes_module->imgui_windows(the_ui);
-        _custom_shader_module->imgui_windows(the_ui);
+        // _custom_shader_module->imgui_windows(the_ui);
         // Time
         ImGui::Begin("Time");
         Cool::ClockU::imgui_timeline(_clock);

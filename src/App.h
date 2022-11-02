@@ -57,8 +57,8 @@ public:
 private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_one_module(Module&, Cool::RenderTarget&, float time);
-    void render_is0(Cool::RenderTarget& render_target, float time, img::Size size);
-    void render_custom_shader(Cool::RenderTarget& render_target, float time);
+    void render_nodes(Cool::RenderTarget& render_target, float time, img::Size size);
+    // void render_custom_shader(Cool::RenderTarget& render_target, float time);
 
     void check_inputs();
     void check_inputs__history();
@@ -105,23 +105,23 @@ private:
     void compile_all_is0_nodes();
 
 private:
-    Cool::VariableRegistries             _variable_registries; // First because modules need the registries when they get created
-    CameraManager                        _camera_manager;      // First because modules need the camera id when they get created
-    Cool::Window&                        _main_window;
-    Cool::Clock_Realtime                 _clock;
-    Cool::ImageSizeConstraint            _preview_constraint;
-    Cool::RenderableViewManager          _views; // Must be before the views because it is used to create them
-    Cool::RenderableView&                _nodes_view;
-    Cool::RenderableView&                _custom_shader_view;
-    Cool::Exporter                       _exporter;
-    Cool::DirtyRegistry                  _dirty_registry; // Before the modules because it is used to create them
-    History                              _history{};
-    ThemeManager                         _theme_manager{};
-    float                                _last_time{0.f};
-    std::unique_ptr<Module_Nodes>        _nodes_module;
-    std::unique_ptr<Module_CustomShader> _custom_shader_module;
-    CommandLogger                        _command_logger{};
-    Cool::OpenGL::Texture                _texture;
+    Cool::VariableRegistries    _variable_registries; // First because modules need the registries when they get created
+    CameraManager               _camera_manager;      // First because modules need the camera id when they get created
+    Cool::Window&               _main_window;
+    Cool::Clock_Realtime        _clock;
+    Cool::ImageSizeConstraint   _preview_constraint;
+    Cool::RenderableViewManager _views; // Must be before the views because it is used to create them
+    Cool::RenderableView&       _nodes_view;
+    // Cool::RenderableView&         _custom_shader_view;
+    Cool::Exporter                _exporter;
+    Cool::DirtyRegistry           _dirty_registry; // Before the modules because it is used to create them
+    History                       _history{};
+    ThemeManager                  _theme_manager{};
+    float                         _last_time{0.f};
+    std::unique_ptr<Module_Nodes> _nodes_module;
+    // std::unique_ptr<Module_CustomShader> _custom_shader_module;
+    CommandLogger         _command_logger{};
+    Cool::OpenGL::Texture _texture;
 
 private:
     // Serialization
@@ -134,7 +134,7 @@ private:
             cereal::make_nvp("Dirty Registry", _dirty_registry),
             cereal::make_nvp("History", _history),
             cereal::make_nvp("is0 Module", _nodes_module),
-            cereal::make_nvp("Custom Shader Module", _custom_shader_module),
+            // cereal::make_nvp("Custom Shader Module", _custom_shader_module),
             cereal::make_nvp("Nodes Module", _nodes_module),
             cereal::make_nvp("Preview Constraint", _preview_constraint),
             cereal::make_nvp("Camera Manager", _camera_manager),
