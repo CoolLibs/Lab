@@ -218,14 +218,19 @@ auto generate_shader_code(
 
     using namespace fmt::literals;
     return fmt::format(
-        FMT_COMPILE(R"STR(
+        FMT_COMPILE(R"STR(#version 410
+
+uniform float _time;
+out vec4      out_Color;
+
+#include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 
 {main_function_definition}
 
 void main()
 {{
     vec2 uv = normalized_uv();
-    gl_FragColor = vec4({main_function_name}(uv), 1.);
+    out_Color = vec4({main_function_name}(uv), 1.);
 }}
 
 )STR"
