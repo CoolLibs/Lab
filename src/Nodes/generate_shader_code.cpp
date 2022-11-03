@@ -151,7 +151,7 @@ static auto gen_desired_body(
     Node const& node,
     Cool::NodeId const& /*id*/,
     FunctionSignature const&                    desired_signature,
-    std::string_view                            name,
+    std::string_view                            base_function_name,
     std::string_view                            input_function_name,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition
 )
@@ -166,7 +166,7 @@ static auto gen_desired_body(
             auto&& desired_from, auto&& desired_to) { return gen_desired_function_body(
                                                           current_from, current_to,
                                                           desired_from, desired_to,
-                                                          name, input_function_name
+                                                          base_function_name, input_function_name
                                                       ); },
         def->signature.from, def->signature.to,
         desired_signature.from, desired_signature.to
@@ -186,7 +186,7 @@ auto gen_desired_function(
 
     const auto name = desired_function_name(*node_definition, id, desired_signature);
 
-    const auto body = gen_desired_body(node, id, desired_signature, name, "pouet pouet", get_node_definition);
+    const auto body = gen_desired_body(node, id, desired_signature, base_function_name(*node_definition, id), "pouet pouet", get_node_definition);
     if (!body)
         return std::nullopt; // TODO(JF) Return unexpected
 

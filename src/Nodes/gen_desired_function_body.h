@@ -7,7 +7,7 @@ template<PrimitiveTypeC A, PrimitiveTypeC B, PrimitiveTypeC C, PrimitiveTypeC D>
 auto gen_desired_function_body(
     A /*current_from*/, B /*current_to*/,
     C /*desired_from*/, D /*desired_to*/,
-    std::string_view /*function_name*/,
+    std::string_view /*base_function_name*/,
     std::string_view /*input_function_name*/
 ) -> std::string
 {
@@ -24,16 +24,16 @@ template<PrimitiveTypeC A, PrimitiveTypeC B>
 auto gen_desired_function_body(
     A /*current_from*/, B /*current_to*/,
     A /*desired_from*/, B /*desired_to*/,
-    std::string_view function_name,
+    std::string_view base_function_name,
     std::string_view /*input_function_name*/
 ) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
         FMT_COMPILE(
-            R"STR(return {function_name}(in1);)STR"
+            R"STR(return {base_function_name}(in1);)STR"
         ),
-        "function_name"_a = function_name
+        "base_function_name"_a = base_function_name
     )};
 }
 
@@ -41,16 +41,16 @@ template<PrimitiveTypeC A>
 auto gen_desired_function_body(
     A /*current_from*/, A /*current_to*/,
     A /*desired_from*/, A /*desired_to*/,
-    std::string_view function_name,
+    std::string_view base_function_name,
     std::string_view /*input_function_name*/
 ) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
         FMT_COMPILE(
-            R"STR(return {function_name}(in1);)STR"
+            R"STR(return {base_function_name}(in1);)STR"
         ),
-        "function_name"_a = function_name
+        "base_function_name"_a = base_function_name
     )};
 }
 
@@ -58,16 +58,16 @@ template<PrimitiveTypeC A, PrimitiveTypeC B>
 auto gen_desired_function_body(
     A /*current_from*/, A /*current_to*/,
     A /*desired_from*/, B /*desired_to*/,
-    std::string_view function_name,
+    std::string_view base_function_name,
     std::string_view input_function_name
 ) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
         FMT_COMPILE(
-            R"STR(return {input_function_name}({function_name}(in1));)STR"
+            R"STR(return {input_function_name}({base_function_name}(in1));)STR"
         ),
-        "function_name"_a       = function_name,
+        "base_function_name"_a  = base_function_name,
         "input_function_name"_a = input_function_name
     )};
 }
@@ -76,16 +76,16 @@ template<PrimitiveTypeC A, PrimitiveTypeC B>
 auto gen_desired_function_body(
     B /*current_from*/, B /*current_to*/,
     A /*desired_from*/, B /*desired_to*/,
-    std::string_view function_name,
+    std::string_view base_function_name,
     std::string_view input_function_name
 ) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
         FMT_COMPILE(
-            R"STR(return {function_name}({input_function_name}(in1));)STR"
+            R"STR(return {base_function_name}({input_function_name}(in1));)STR"
         ),
-        "function_name"_a       = function_name,
+        "base_function_name"_a  = base_function_name,
         "input_function_name"_a = input_function_name
     )};
 }
@@ -94,7 +94,7 @@ template<PrimitiveTypeC A, PrimitiveTypeC B, PrimitiveTypeC C>
 auto gen_desired_function_body(
     A /*current_from*/, B /*current_to*/,
     A /*desired_from*/, C /*desired_to*/,
-    std::string_view function_name,
+    std::string_view base_function_name,
     std::string_view input_function_name
 ) -> std::string
 {
@@ -102,9 +102,9 @@ auto gen_desired_function_body(
     // Request input function to be going from B to C
     return {fmt::format(
         FMT_COMPILE(
-            R"STR(return {input_function_name}({function_name}(in1));)STR"
+            R"STR(return {input_function_name}({base_function_name}(in1));)STR"
         ),
-        "function_name"_a       = function_name,
+        "base_function_name"_a  = base_function_name,
         "input_function_name"_a = input_function_name
     )};
 }

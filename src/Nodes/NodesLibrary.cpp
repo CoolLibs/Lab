@@ -39,6 +39,18 @@ return fract(vec3(in1, 0.));
     )STR"},
         .inputs        = {},
     });
+
+    this->add_definition({
+        ._name     = "Zoom Out",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::UV{},
+        },
+        .function_body = {R"STR(
+return in1 * 10.;
+    )STR"},
+        .inputs        = {},
+    });
 }
 
 } // namespace Lab

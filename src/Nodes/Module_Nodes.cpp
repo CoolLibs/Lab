@@ -97,6 +97,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref)
 
     shader.bind();
     shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
+    shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
 
     pipeline.draw();
 }
