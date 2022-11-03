@@ -27,6 +27,18 @@ return int(in1.x + in1.y) % 2 == 0 ? 0. : 1.;
     )STR"},
         .inputs        = {},
     });
+
+    this->add_definition({
+        ._name     = "TestImage",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::Color{},
+        },
+        .function_body = {R"STR(
+return fract(vec3(in1, 0.));
+    )STR"},
+        .inputs        = {},
+    });
 }
 
 } // namespace Lab
