@@ -1,7 +1,6 @@
 #pragma once
 
 #include "FunctionSignature.h"
-#include "GlslCode.h"
 #include "NodeInput.h"
 
 namespace Lab {
@@ -9,7 +8,7 @@ namespace Lab {
 struct NodeDefinition {
     const std::string       _name;
     const FunctionSignature signature;
-    const GlslCode          function_body;
+    const std::string       function_body;
 
     const std::vector<NodeInput> inputs;
 

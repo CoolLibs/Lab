@@ -3,7 +3,6 @@
 #include <Cool/Nodes/NodeId.h>
 #include <fmt/compile.h>
 #include "FunctionSignature.h"
-#include "GlslCode.h"
 #include "Node.h"
 #include "NodeDefinition.h"
 #include "gen_desired_function_body.h"
@@ -39,14 +38,14 @@ static auto gen_function_declaration(
     );
 }
 
-struct gen_function__params {
+struct Params__gen_function_definition {
     FunctionSignature const& signature;
     std::string_view         name;
-    GlslCode const&          body;
+    std::string_view         body;
 };
 
-static auto gen_function(gen_function__params p)
-    -> GlslCode
+static auto gen_function_definition(Params__gen_function_definition p)
+    -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
@@ -58,8 +57,24 @@ static auto gen_function(gen_function__params p)
 )STR"
         ),
         "declaration"_a = gen_function_declaration(p.signature, p.name),
-        "body"_a        = p.body.data
+        "body"_a        = p.body
     )};
+}
+
+namespace {
+struct Function {
+    std::string name;
+    std::string definition;
+};
+} // namespace
+
+static auto gen_function__impl(Params__gen_function_definition p)
+    -> Function
+{
+    return {
+        .name       = std::string{p.name},
+        .definition = gen_function_definition(p),
+    };
 }
 
 static auto is_not_alphanumeric(char c) -> bool
@@ -78,7 +93,12 @@ static auto valid_glsl(std::string s)
 {
     // For glsl variable name rules, see https://www.informit.com/articles/article.aspx?p=2731929&seqNum=3, section "Declaring Variables".
     s.erase(std::remove_if(s.begin(), s.end(), &is_not_alphanumeric), s.end()); // `s` can only contain letters and numbers (and _, but two consecutive underscores is invalid so we don't allow any: this is the simplest way to enforce that rule, at the cost of slightly uglier names)
-    return "node_" + s;                                                         // We need a prefix to make sure `s` does not start with a number.
+    return "_" + s;                                                             // We need a prefix to make sure `s` does not start with a number.
+}
+
+static auto to_string(FunctionSignature signature) -> std::string
+{
+    return fmt::format("{}_to_{}", cpp_type_as_string(signature.from), cpp_type_as_string(signature.to));
 }
 
 static auto base_function_name(
@@ -89,22 +109,41 @@ static auto base_function_name(
     using namespace fmt::literals;
     return fmt::format(
         FMT_COMPILE(
-            R"STR({name}_{id})STR"
+            R"STR({name}{id})STR"
         ),
         "name"_a = valid_glsl(definition.name()), // NB: We don't have to worry about the unicity of that name because we append an ID anyway
-        "id"_a   = to_string(id.underlying_uuid())
+        "id"_a   = valid_glsl(to_string(id.underlying_uuid()))
+    );
+}
+
+static auto desired_function_name(
+    NodeDefinition const& definition,
+    Cool::NodeId const&   id,
+    FunctionSignature     signature
+) -> std::string
+{
+    using namespace fmt::literals;
+    return fmt::format(
+        FMT_COMPILE(
+            R"STR({name}{signature}{id})STR"
+        ),
+        "name"_a      = valid_glsl(definition.name()), // NB: We don't have to worry about the unicity of that name because we append an ID anyway
+        "signature"_a = valid_glsl(to_string(signature)),
+        "id"_a        = valid_glsl(to_string(id.underlying_uuid()))
     );
 }
 
 auto gen_base_function(
-    NodeDefinition const& definition,
+    NodeDefinition const& node_definition,
     Cool::NodeId const&   id
-) -> GlslCode
+) -> Function
 {
-    return gen_function({
-        .signature = definition.signature,
-        .name      = base_function_name(definition, id),
-        .body      = definition.function_body,
+    const auto name = base_function_name(node_definition, id);
+
+    return gen_function__impl({
+        .signature = node_definition.signature,
+        .name      = base_function_name(node_definition, id),
+        .body      = node_definition.function_body,
     });
 }
 
@@ -116,7 +155,7 @@ static auto gen_desired_body(
     std::string_view                            input_function_name,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition
 )
-    -> std::optional<GlslCode>
+    -> std::optional<std::string>
 {
     const NodeDefinition* def = get_node_definition(node.definition_name());
     if (!def)
@@ -138,16 +177,20 @@ auto gen_desired_function(
     Node const&                                 node,
     Cool::NodeId const&                         id,
     FunctionSignature const&                    desired_signature,
-    std::string_view                            name,
-    std::string_view                            input_function_name,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition
-) -> std::optional<GlslCode>
+) -> std::optional<Function>
 {
-    const auto body = gen_desired_body(node, id, desired_signature, name, input_function_name, get_node_definition);
-    if (!body)
-        return std::nullopt;
+    const auto node_definition = get_node_definition(node.definition_name());
+    if (!node_definition)
+        return std::nullopt; // TODO(JF) Return unexpected "Definition not found"
 
-    return gen_function({
+    const auto name = desired_function_name(*node_definition, id, desired_signature);
+
+    const auto body = gen_desired_body(node, id, desired_signature, name, "pouet pouet", get_node_definition);
+    if (!body)
+        return std::nullopt; // TODO(JF) Return unexpected
+
+    return gen_function__impl({
         .signature = desired_signature,
         .name      = name,
         .body      = *body,
@@ -164,15 +207,13 @@ auto generate_shader_code(
     if (!main_node)
         return "";
 
-    const auto main_function_definition = gen_desired_function(
+    const auto main_function = gen_desired_function(
         *main_node,
         main_node_id,
         Signature::Image,
-        "main_function",
-        "prout",
         Cool::GetNodeDefinition_Ref{nodes_library}
     );
-    if (!main_function_definition)
+    if (!main_function)
         return "";
 
     using namespace fmt::literals;
@@ -184,12 +225,13 @@ auto generate_shader_code(
 void main()
 {{
     vec2 uv = normalized_uv();
-    gl_FragColor = vec4(main_function(uv), 1.);
+    gl_FragColor = vec4({main_function_name}(uv), 1.);
 }}
 
 )STR"
         ),
-        "main_function_definition"_a = main_function_definition->data
+        "main_function_definition"_a = main_function->definition,
+        "main_function_name"_a       = main_function->name
     );
 }
 

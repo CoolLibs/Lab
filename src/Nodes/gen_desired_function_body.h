@@ -9,7 +9,7 @@ auto gen_desired_function_body(
     C /*desired_from*/, D /*desired_to*/,
     std::string_view /*function_name*/,
     std::string_view /*input_function_name*/
-) -> GlslCode
+) -> std::string
 {
     return {fmt::format(
         "[gen_desired_function_body()] Error: No known conversion from '{}->{}' to '{}->{}'.",
@@ -26,7 +26,7 @@ auto gen_desired_function_body(
     A /*desired_from*/, B /*desired_to*/,
     std::string_view function_name,
     std::string_view /*input_function_name*/
-) -> GlslCode
+) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
@@ -43,7 +43,7 @@ auto gen_desired_function_body(
     A /*desired_from*/, A /*desired_to*/,
     std::string_view function_name,
     std::string_view /*input_function_name*/
-) -> GlslCode
+) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
@@ -60,7 +60,7 @@ auto gen_desired_function_body(
     A /*desired_from*/, B /*desired_to*/,
     std::string_view function_name,
     std::string_view input_function_name
-) -> GlslCode
+) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
@@ -78,7 +78,7 @@ auto gen_desired_function_body(
     A /*desired_from*/, B /*desired_to*/,
     std::string_view function_name,
     std::string_view input_function_name
-) -> GlslCode
+) -> std::string
 {
     using namespace fmt::literals;
     return {fmt::format(
@@ -96,7 +96,7 @@ auto gen_desired_function_body(
     A /*desired_from*/, C /*desired_to*/,
     std::string_view function_name,
     std::string_view input_function_name
-) -> GlslCode
+) -> std::string
 {
     using namespace fmt::literals;
     // Request input function to be going from B to C
