@@ -22,7 +22,7 @@ def primitive_types_list():
 
 
 def primitive_types_structs_definitions():
-    return "\n".join(map(lambda type: f"struct {type.cpp} {{}};", all_primitive_types()))
+    return "\n".join(map(lambda type: f"struct {type.cpp} {{auto operator<=>({type.cpp} const&) const = default;}};", all_primitive_types()))
 
 
 def glsl_type_as_string():

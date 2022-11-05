@@ -2,9 +2,11 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <fmt/compile.h>
+#include "Function.h"
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeDefinition.h"
+#include "gen_default_function.h"
 #include "gen_desired_function_body.h"
 
 namespace Lab {
@@ -61,13 +63,6 @@ static auto gen_function_definition(Params__gen_function_definition p)
     )};
 }
 
-namespace {
-struct Function {
-    std::string name;
-    std::string definition;
-};
-} // namespace
-
 static auto gen_function__impl(Params__gen_function_definition p)
     -> Function
 {
@@ -104,14 +99,15 @@ static auto to_string(FunctionSignature signature) -> std::string
 static auto base_function_name(
     NodeDefinition const& definition,
     Cool::NodeId const&   id
-) -> std::string
+)
+    -> std::string
 {
     using namespace fmt::literals;
     return fmt::format(
         FMT_COMPILE(
             R"STR({name}{id})STR"
         ),
-        "name"_a = valid_glsl(definition.name()), // NB: We don't have to worry about the unicity of that name because we append an ID anyway
+        "name"_a = valid_glsl(definition.name()), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
         "id"_a   = valid_glsl(to_string(id.underlying_uuid()))
     );
 }
@@ -120,14 +116,15 @@ static auto desired_function_name(
     NodeDefinition const& definition,
     Cool::NodeId const&   id,
     FunctionSignature     signature
-) -> std::string
+)
+    -> std::string
 {
     using namespace fmt::literals;
     return fmt::format(
         FMT_COMPILE(
             R"STR({name}{signature}{id})STR"
         ),
-        "name"_a      = valid_glsl(definition.name()), // NB: We don't have to worry about the unicity of that name because we append an ID anyway
+        "name"_a      = valid_glsl(definition.name()), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
         "signature"_a = valid_glsl(to_string(signature)),
         "id"_a        = valid_glsl(to_string(id.underlying_uuid()))
     );
@@ -136,7 +133,8 @@ static auto desired_function_name(
 auto gen_base_function(
     NodeDefinition const& node_definition,
     Cool::NodeId const&   id
-) -> Function
+)
+    -> Function
 {
     const auto name = base_function_name(node_definition, id);
 
@@ -174,44 +172,74 @@ static auto gen_desired_body(
 }
 
 auto gen_desired_function(
-    Node const&                                 node,
     Cool::NodeId const&                         id,
     FunctionSignature const&                    desired_signature,
-    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition
-) -> std::optional<Function>
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Graph const&                                graph
+)
+    -> std::optional<Function>
 {
-    const auto node_definition = get_node_definition(node.definition_name());
+    const auto node = graph.nodes().get(id);
+    if (!node)
+        return gen_default_function(desired_signature);
+
+    const auto node_definition = get_node_definition(node->definition_name());
     if (!node_definition)
         return std::nullopt; // TODO(JF) Return unexpected "Definition not found"
 
+    const auto base_function = gen_base_function(*node_definition, id);
+
+    const auto input_function_signature = std::visit(
+        [](auto&& A, auto&& B, auto&& C, auto&& D) { return input_function_desired_signature(A, B, C, D); },
+        node_definition->signature.from, node_definition->signature.to,
+        desired_signature.from, desired_signature.to
+    );
+
+    const auto input_function = input_function_signature
+                                    ? gen_desired_function(
+                                        graph.predecessor_node_id(id),
+                                        *input_function_signature,
+                                        get_node_definition,
+                                        graph
+                                    )
+                                    : std::make_optional(
+                                        Function{
+                                            .name       = "",
+                                            .definition = "",
+                                        }
+                                    );
+    if (!input_function)
+        return input_function;
+
     const auto name = desired_function_name(*node_definition, id, desired_signature);
 
-    const auto body = gen_desired_body(node, id, desired_signature, base_function_name(*node_definition, id), "pouet pouet", get_node_definition);
+    const auto body = gen_desired_body(*node, id, desired_signature, base_function.name, input_function->name, get_node_definition);
     if (!body)
         return std::nullopt; // TODO(JF) Return unexpected
 
-    return gen_function__impl({
+    auto function = gen_function__impl({
         .signature = desired_signature,
         .name      = name,
         .body      = *body,
     });
+
+    function.definition = input_function->definition + "\n\n" + base_function.definition + "\n\n" + function.definition;
+
+    return function;
 }
 
 auto generate_shader_code(
-    Graph const&        graph,
-    NodesLibrary const& nodes_library,
-    Cool::NodeId const& main_node_id
-) -> std::string
+    Graph const&                                       graph,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> const& get_node_definition,
+    Cool::NodeId const&                                main_node_id
+)
+    -> std::string
 {
-    const auto main_node = graph.nodes().get(main_node_id);
-    if (!main_node)
-        return "";
-
     const auto main_function = gen_desired_function(
-        *main_node,
         main_node_id,
         Signature::Image,
-        Cool::GetNodeDefinition_Ref{nodes_library}
+        get_node_definition,
+        graph
     );
     if (!main_function)
         return "";

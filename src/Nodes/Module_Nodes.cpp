@@ -29,7 +29,11 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
     if (_nodes_editor.graph().nodes().is_empty())
         return;
-    _shader_code = generate_shader_code(_nodes_editor.graph(), _nodes_library, _nodes_editor.graph().nodes().begin()->first);
+    _shader_code = generate_shader_code(
+        _nodes_editor.graph(),
+        Cool::GetNodeDefinition_Ref{_nodes_library},
+        _nodes_editor.graph().nodes().begin()->first // TODO(JF) Properly get the main node id
+    );
 
     const auto maybe_err = _shader.compile(
         _shader_code,

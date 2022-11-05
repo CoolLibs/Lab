@@ -4,7 +4,15 @@
  * Instead, go to "generator.py" and edit the "primitive_types_structs_definitions" function there.
  * -----------------------------------------------------------------------------
  */
-struct Color {};
-struct UV {};
-struct SignedDistance {};
-struct Float {};
+struct Color {
+    auto operator<=>(Color const&) const = default;
+};
+struct UV {
+    auto operator<=>(UV const&) const = default;
+};
+struct SignedDistance {
+    auto operator<=>(SignedDistance const&) const = default;
+};
+struct Float {
+    auto operator<=>(Float const&) const = default;
+};

@@ -23,6 +23,11 @@ static constexpr auto FloatField = FunctionSignature{
     .to   = PrimitiveType::Float{},
 };
 
+static constexpr auto Colorizer = FunctionSignature{
+    .from = PrimitiveType::Float{},
+    .to   = PrimitiveType::Color{},
+};
+
 } // namespace Signature
 
 } // namespace Lab

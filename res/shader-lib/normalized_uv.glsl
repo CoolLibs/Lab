@@ -5,7 +5,7 @@ vec2 normalize_uv(vec2 uv)
 {
     uv -= 0.5;
     uv.x *= _aspect_ratio;
-    return uv;
+    return uv * 2.;
 }
 
 vec2 normalized_uv()
@@ -15,6 +15,7 @@ vec2 normalized_uv()
 
 vec2 unnormalize_uv(vec2 uv)
 {
+    uv /= 2.;
     uv.x /= _aspect_ratio;
     uv += 0.5;
     return uv;

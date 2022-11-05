@@ -11,7 +11,7 @@ NodesLibrary::NodesLibrary()
             .to   = PrimitiveType::Float{},
         },
         .function_body = {R"STR(
-return dot(color, vec3(0.2126, 0.7152, 0.0722));
+return dot(in1, vec3(0.2126, 0.7152, 0.0722));
     )STR"},
         .inputs        = {},
     });
@@ -23,7 +23,7 @@ return dot(color, vec3(0.2126, 0.7152, 0.0722));
             .to   = PrimitiveType::Float{},
         },
         .function_body = {R"STR(
-return int(in1.x + in1.y) % 2 == 0 ? 0. : 1.;
+return (int(in1.x*10.) + int(in1.y*10.)) % 2 == 0 ? 0. : 1.;
     )STR"},
         .inputs        = {},
     });
