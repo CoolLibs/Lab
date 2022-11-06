@@ -7,7 +7,7 @@
 #include "Node.h"
 #include "NodeDefinition.h"
 #include "gen_default_function.h"
-#include "gen_desired_function_body.h"
+#include "gen_desired_function_implementation.h"
 
 namespace Lab {
 
@@ -136,8 +136,6 @@ auto gen_base_function(
 )
     -> Function
 {
-    const auto name = base_function_name(node_definition, id);
-
     return gen_function__impl({
         .signature = node_definition.signature,
         .name      = base_function_name(node_definition, id),
@@ -145,7 +143,7 @@ auto gen_base_function(
     });
 }
 
-static auto gen_desired_body(
+static auto gen_desired_implementation(
     Node const& node,
     Cool::NodeId const& /*id*/,
     FunctionSignature const&                    desired_signature,
@@ -153,7 +151,7 @@ static auto gen_desired_body(
     std::string_view                            input_function_name,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition
 )
-    -> std::optional<std::string>
+    -> std::optional<FunctionImplementation>
 {
     const NodeDefinition* def = get_node_definition(node.definition_name());
     if (!def)
@@ -161,7 +159,7 @@ static auto gen_desired_body(
 
     return std::visit(
         [&](auto&& current_from, auto&& current_to,
-            auto&& desired_from, auto&& desired_to) { return gen_desired_function_body(
+            auto&& desired_from, auto&& desired_to) { return gen_desired_function_implementation(
                                                           current_from, current_to,
                                                           desired_from, desired_to,
                                                           base_function_name, input_function_name
@@ -213,17 +211,20 @@ auto gen_desired_function(
 
     const auto name = desired_function_name(*node_definition, id, desired_signature);
 
-    const auto body = gen_desired_body(*node, id, desired_signature, base_function.name, input_function->name, get_node_definition);
-    if (!body)
+    const auto impl = gen_desired_implementation(*node, id, desired_signature, base_function.name, input_function->name, get_node_definition);
+    if (!impl)
         return std::nullopt; // TODO(JF) Return unexpected
 
     auto function = gen_function__impl({
         .signature = desired_signature,
         .name      = name,
-        .body      = *body,
+        .body      = impl->function_body,
     });
 
-    function.definition = input_function->definition + "\n\n" + base_function.definition + "\n\n" + function.definition;
+    function.definition = input_function->definition + "\n\n"
+                          + impl->before_function + "\n\n"
+                          + base_function.definition + "\n\n"
+                          + function.definition;
 
     return function;
 }
