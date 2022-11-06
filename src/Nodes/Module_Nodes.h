@@ -32,6 +32,7 @@ private:
     FullscreenShader                       _shader{};
     mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
     NodesLibrary                           _nodes_library{};
+    mutable Cool::NodeId                   _main_node_id{};
     mutable bool                           _must_recompile{true};
     Cool::MessageSender                    _shader_compilation_error{};
 
@@ -43,7 +44,8 @@ private:
     {
         archive(
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
-            cereal::make_nvp("Node Editor", _nodes_editor)
+            cereal::make_nvp("Node Editor", _nodes_editor),
+            cereal::make_nvp("Main Node ID", _main_node_id)
         );
     }
 };

@@ -32,7 +32,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     _shader_code = generate_shader_code(
         _nodes_editor.graph(),
         Cool::GetNodeDefinition_Ref{_nodes_library},
-        _nodes_editor.graph().nodes().begin()->first // TODO(JF) Properly get the main node id
+        _main_node_id
     );
 
     const auto maybe_err = _shader.compile(
@@ -77,6 +77,27 @@ void Module_Nodes::imgui_windows(Ui_Ref) const
     }
     ImGui::End();
     ImGui::Begin("Nodes Debug");
+    {
+        std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
+        const auto       main_node = _nodes_editor.graph().nodes().get(_main_node_id);
+        if (ImGui::BeginCombo("Main Node ID", (main_node ? main_node->definition_name() : ""s).c_str()))
+        {
+            for (auto const& [id, node] : _nodes_editor.graph().nodes())
+            {
+                const bool is_selected = id == _main_node_id;
+                if (ImGui::Selectable(node.definition_name().c_str(), is_selected))
+                {
+                    _main_node_id   = id;
+                    _must_recompile = true;
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+    }
     ImGui::End();
 }
 
