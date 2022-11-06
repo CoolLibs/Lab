@@ -51,6 +51,18 @@ return in1 * 10.;
     )STR"},
         .inputs        = {},
     });
+
+    this->add_definition({
+        ._name     = "Gradient Colorizer",
+        .signature = {
+            .from = PrimitiveType::Float{},
+            .to   = PrimitiveType::Color{},
+        },
+        .function_body = {R"STR(
+return mix(vec3(1., 0., 0.), vec3(0., 0., 1.), in1);
+    )STR"},
+        .inputs        = {},
+    });
 }
 
 } // namespace Lab
