@@ -196,6 +196,38 @@ auto gen_desired_function_implementation(
     };
 }
 
+template<PrimitiveTypeC A, PrimitiveTypeC B, PrimitiveTypeC C>
+auto input_function_desired_signature(
+    A /*current_from*/, B /*current_to*/,
+    C /*desired_from*/, B /*desired_to*/
+) -> std::optional<FunctionSignature>
+{
+    return FunctionSignature{
+        .from = C{},
+        .to   = A{},
+    };
+}
+template<PrimitiveTypeC A, PrimitiveTypeC B, PrimitiveTypeC C>
+auto gen_desired_function_implementation(
+    A /*current_from*/, B /*current_to*/,
+    C /*desired_from*/, B /*desired_to*/,
+    std::string_view base_function_name,
+    std::string_view input_function_name
+) -> FunctionImplementation
+{
+    using namespace fmt::literals;
+    return {
+        .before_function = "",
+        .function_body   = fmt::format(
+            FMT_COMPILE(
+                R"STR(return {base_function_name}({input_function_name}(in1));)STR"
+            ),
+            "base_function_name"_a  = base_function_name,
+            "input_function_name"_a = input_function_name
+        ),
+    };
+}
+
 } // namespace Lab
 
 // TODO test all of these, to make sure overload resolution doesn't change when we add options
