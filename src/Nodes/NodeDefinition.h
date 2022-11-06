@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Cool/Dependencies/Input.h>
 #include "FunctionSignature.h"
 #include "NodeInput.h"
 
@@ -10,7 +11,8 @@ struct NodeDefinition {
     const FunctionSignature signature;
     const std::string       function_body;
 
-    const std::vector<NodeInput> inputs;
+    const std::vector<NodeInput>                inputs;       // Things that will get a pin
+    const std::vector<Cool::AnyInputDefinition> properties{}; // Things that will just be sliders etc. on the node itself
 
     auto name() const { return _name; }
 };

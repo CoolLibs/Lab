@@ -62,6 +62,7 @@ return in1 * 10.;
 return mix(vec3(1., 0., 0.), vec3(0., 0., 1.), in1);
     )STR"},
         .inputs        = {},
+        .properties    = {Cool::Input<Cool::Gradient>{"gradient"}},
     });
 }
 
