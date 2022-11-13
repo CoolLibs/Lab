@@ -50,6 +50,7 @@ return fract(vec3(in1, 0.));
 return in1 * 10.;
     )STR"},
         .inputs        = {},
+        .properties    = {Cool::InputDefinition<float>{"Zoom"}},
     });
 
     this->add_definition({

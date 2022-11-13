@@ -73,10 +73,10 @@ private:
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, make_reversible_commands_context()}; }
-    auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag()}; }
     auto input_provider                             (float render_target_aspect_ratio, float time) { return Cool::InputProvider_Ref{_variable_registries, render_target_aspect_ratio, time}; }
     auto input_destructor                           () { return Cool::InputDestructor_Ref{_variable_registries}; }
     auto input_factory                              () { return Cool::InputFactory_Ref{_variable_registries, _camera_manager.id()}; }
+    auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag(), input_factory()}; }
     auto dirty_flag_factory                         () { return Cool::DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_dirty_registry}; }

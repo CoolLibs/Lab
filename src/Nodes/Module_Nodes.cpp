@@ -64,9 +64,9 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 #endif
 }
 
-void Module_Nodes::imgui_windows(Ui_Ref) const
+void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    _must_recompile |= _nodes_editor.imgui_window(_nodes_library);
+    _must_recompile |= _nodes_editor.imgui_window(NodesConfig{ui.input_factory(), Cool::DirtyFlag{}}, _nodes_library); // TODO(JF) Use an actual dirty flag stored in the Module_Nodes class
 
     ImGui::Begin("Nodes Code");
     if (ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))

@@ -2,18 +2,20 @@
 
 namespace Lab {
 
-auto NodesConfig::name(Node const& node) -> std::string
+auto NodesConfig::name(Node const& node) const -> std::string
 {
     return node.definition_name();
 }
 
-auto NodesConfig::make_node(NodeDefinition const& def) -> Node
+auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
 {
     auto node = Node{def.name()};
 
-    // for (auto const& )
     node.input_pins().push_back(Cool::InputPin{"IN"});
     node.output_pins().push_back(Cool::OutputPin{"OUT"});
+
+    for (auto const& property_def : def.properties)
+        node.properties().push_back(_input_factory.get().make(property_def, _dirty_flag));
 
     return node;
 }
