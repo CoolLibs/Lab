@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/InputDefinition.h>
 #include "FunctionSignature.h"
 #include "NodeInput.h"
 
