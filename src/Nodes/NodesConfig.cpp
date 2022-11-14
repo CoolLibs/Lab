@@ -7,6 +7,12 @@ auto NodesConfig::name(Node const& node) const -> std::string
     return node.definition_name();
 }
 
+void NodesConfig::imgui_node_body(Node& node) const
+{
+    for (auto& property : node.properties())
+        _ui.widget(property);
+}
+
 auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
 {
     auto node = Node{def.name()};

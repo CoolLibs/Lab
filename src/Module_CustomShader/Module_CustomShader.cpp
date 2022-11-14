@@ -106,12 +106,8 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
         ImGui::Separator();
         ImGui::NewLine();
         for (auto& input : inputs())
-        {
-            std::visit([&ui](auto&& input) {
-                ui.widget(input);
-            },
-                       input);
-        }
+            ui.widget(input);
+
         if (_presets_manager)
         {
             ImGui::Separator();

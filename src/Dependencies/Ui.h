@@ -58,6 +58,11 @@ public:
         ImGui::PopID();
     }
 
+    void widget(Cool::AnyInput& input)
+    {
+        std::visit([&](auto&& input) { widget(input); }, input);
+    }
+
     void widget(Cool::Input_File& input)
     {
         Cool::ImGuiExtras::bring_attention_if(
