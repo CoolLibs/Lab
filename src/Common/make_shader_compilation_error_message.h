@@ -12,7 +12,7 @@ inline auto make_shader_compilation_error_message(
 {
     return Cool::Message{
         .category = module_name,
-        .message  = fmt::format("\"{}\"\n{}", shader_name, message),
+        .message  = shader_name.empty() ? message : fmt::format("\"{}\"\n{}", shader_name, message),
         .severity = Cool::MessageSeverity::Error,
     };
 }

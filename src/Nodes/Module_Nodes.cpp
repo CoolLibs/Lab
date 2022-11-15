@@ -57,7 +57,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     if (!for_testing_nodes)
     {
         maybe_err.send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
-            return make_shader_compilation_error_message(name(), "Shader Nodes", msg);
+            return make_shader_compilation_error_message(name(), "", msg);
         });
     }
 #if DEBUG
@@ -65,7 +65,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     {
         maybe_err.send_error_if_any(
             [&](const std::string& msg) {
-                return make_shader_compilation_error_message("Test Nodes", "Ray Marcher", msg);
+                return make_shader_compilation_error_message("Test Nodes", "", msg);
             },
             Cool::Log::Debug::console()
         );
