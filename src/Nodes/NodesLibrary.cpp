@@ -4,6 +4,7 @@ namespace Lab {
 
 NodesLibrary::NodesLibrary()
 {
+    // TODO(JF) Once we start loading from file, catch exceptions thrown by definition creation, log the errors, and just don't add the given definition
     this->add_definition({{
         .name      = "Black & White",
         .signature = {

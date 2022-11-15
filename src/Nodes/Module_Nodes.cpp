@@ -29,12 +29,20 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
     if (_nodes_editor.graph().nodes().is_empty())
         return;
-    _shader_code = generate_shader_code(
+    auto const shader_code = generate_shader_code(
         _nodes_editor.graph(),
         Cool::GetNodeDefinition_Ref{_nodes_library},
         _main_node_id,
         update_ctx.input_provider()
     );
+
+    if (!shader_code)
+    {
+        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
+        return;
+    }
+
+    _shader_code = *shader_code;
 
     const auto maybe_err = _shader.compile(
         _shader_code,
@@ -49,7 +57,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     if (!for_testing_nodes)
     {
         maybe_err.send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
-            return make_shader_compilation_error_message(name(), "Shader Generator", msg);
+            return make_shader_compilation_error_message(name(), "Shader Nodes", msg);
         });
     }
 #if DEBUG
