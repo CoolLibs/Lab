@@ -61,10 +61,43 @@ return in1 / `Zoom`;
             .to   = PrimitiveType::Color{},
         },
         .function_body = {R"STR(
-return mix(vec3(1., 0., 0.), vec3(0., 0., 1.), in1);
+return `Gradient`(in1).rgb;
     )STR"},
         .inputs        = {},
         .properties    = {Cool::InputDefinition<Cool::Gradient>{"`Gradient`"}},
+    }});
+
+    this->add_definition({{
+        .name      = "Circle",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::Float{},
+        },
+        .function_body = {R"STR(
+return smoothstep(`Edge Blur`, 0., length(in1) - `Radius`);
+    )STR"},
+        .inputs        = {},
+        .properties    = {
+            Cool::InputDefinition<float>{"`Radius`"},
+            Cool::InputDefinition<float>{"`Edge Blur`"},
+        },
+    }});
+
+    this->add_definition({{
+        .name      = "Displacement",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::UV{},
+        },
+        .function_body = {R"STR(
+in1.y += `Amplitude` * sin(in1.x * `Frequency`);
+return in1;
+    )STR"},
+        .inputs        = {},
+        .properties    = {
+            Cool::InputDefinition<float>{"`Amplitude`"},
+            Cool::InputDefinition<float>{"`Frequency`"},
+        },
     }});
 }
 
