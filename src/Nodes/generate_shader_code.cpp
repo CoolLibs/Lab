@@ -137,15 +137,14 @@ auto gen_base_function(
     -> Function
 {
     return gen_function__impl({
-        .signature = node_definition.signature,
+        .signature = node_definition.signature(),
         .name      = base_function_name(node_definition, id),
-        .body      = node_definition.function_body,
+        .body      = node_definition.function_body(),
     });
 }
 
 static auto gen_desired_implementation(
-    Node const& node,
-    Cool::NodeId const& /*id*/,
+    Node const&                                 node,
     FunctionSignature const&                    desired_signature,
     std::string_view                            base_function_name,
     std::string_view                            input_function_name,
@@ -164,7 +163,7 @@ static auto gen_desired_implementation(
                                                           desired_from, desired_to,
                                                           base_function_name, input_function_name
                                                       ); },
-        def->signature.from, def->signature.to,
+        def->signature().from, def->signature().to,
         desired_signature.from, desired_signature.to
     );
 }
@@ -189,7 +188,7 @@ auto gen_desired_function(
 
     const auto input_function_signature = std::visit(
         [](auto&& A, auto&& B, auto&& C, auto&& D) { return input_function_desired_signature(A, B, C, D); },
-        node_definition->signature.from, node_definition->signature.to,
+        node_definition->signature().from, node_definition->signature().to,
         desired_signature.from, desired_signature.to
     );
 
@@ -211,7 +210,7 @@ auto gen_desired_function(
 
     const auto name = desired_function_name(*node_definition, id, desired_signature);
 
-    const auto impl = gen_desired_implementation(*node, id, desired_signature, base_function.name, input_function->name, get_node_definition);
+    const auto impl = gen_desired_implementation(*node, desired_signature, base_function.name, input_function->name, get_node_definition);
     if (!impl)
         return std::nullopt; // TODO(JF) Return unexpected
 
