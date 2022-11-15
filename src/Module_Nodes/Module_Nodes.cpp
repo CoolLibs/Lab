@@ -1,4 +1,5 @@
 #include "Module_Nodes.h"
+#include <Cool/StrongTypes/set_uniform.h>
 #include "Common/make_shader_compilation_error_message.h"
 #include "Debug/DebugOptions.h"
 #include "generate_shader_code.h"
@@ -132,6 +133,24 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref)
     shader.bind();
     shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+
+    {
+        std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
+        for (auto const& [_, node] : _nodes_editor.graph().nodes())
+        {
+            for (auto const& prop : node.properties())
+            {
+                std::visit([&](auto&& prop) {
+                    Cool::set_uniform(
+                        shader,
+                        valid_property_name(prop.name(), prop._default_variable_id),
+                        in.provider(prop)
+                    );
+                },
+                           prop);
+            }
+        }
+    }
 
     pipeline.draw();
 }
