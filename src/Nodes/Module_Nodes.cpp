@@ -32,7 +32,8 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     _shader_code = generate_shader_code(
         _nodes_editor.graph(),
         Cool::GetNodeDefinition_Ref{_nodes_library},
-        _main_node_id
+        _main_node_id,
+        update_ctx.input_provider()
     );
 
     const auto maybe_err = _shader.compile(

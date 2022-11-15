@@ -8,12 +8,12 @@
 namespace Lab {
 
 struct NodeDefinition_Data {
-    const std::string       name{};
-    const FunctionSignature signature{};
-    const std::string       function_body{};
+    std::string       name{};
+    FunctionSignature signature{};
+    std::string       function_body{};
 
-    const std::vector<NodeInput>                inputs{};     // Things that will get a pin
-    const std::vector<Cool::AnyInputDefinition> properties{}; // Things that will just be sliders etc. on the node itself
+    std::vector<NodeInput>                inputs{};     // Things that will get a pin
+    std::vector<Cool::AnyInputDefinition> properties{}; // Things that will just be sliders etc. on the node itself
 };
 
 class NodeDefinition {

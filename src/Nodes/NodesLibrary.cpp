@@ -47,10 +47,10 @@ return fract(vec3(in1, 0.));
             .to   = PrimitiveType::UV{},
         },
         .function_body = {R"STR(
-return in1 / "Zoom";
+return in1 / `Zoom`;
     )STR"},
         .inputs        = {},
-        .properties    = {Cool::InputDefinition<float>{"\"Zoom\""}},
+        .properties    = {Cool::InputDefinition<float>{"`Zoom`"}},
     }});
 
     this->add_definition({{
@@ -63,7 +63,7 @@ return in1 / "Zoom";
 return mix(vec3(1., 0., 0.), vec3(0., 0., 1.), in1);
     )STR"},
         .inputs        = {},
-        .properties    = {Cool::InputDefinition<Cool::Gradient>{"\"Gradient\""}},
+        .properties    = {Cool::InputDefinition<Cool::Gradient>{"`Gradient`"}},
     }});
 }
 

@@ -81,7 +81,7 @@ private:
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_dirty_registry}; }
     auto set_dirty__functor                         () { return Cool::SetDirty_Ref{_dirty_registry}; }
-    auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor(), set_dirty__functor()}}; }
+    auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor(), set_dirty__functor(), input_provider(0.f, -100000.f /* Dummy values, they should not be needed. Currently this is only used by shader code generation to inject of very specific types like Gradient */)}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();

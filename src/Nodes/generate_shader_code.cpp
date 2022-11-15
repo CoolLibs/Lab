@@ -1,6 +1,8 @@
 #include "generate_shader_code.h"
+#include <Cool/InputParser/InputParser.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
+#include <Cool/String/String.h>
 #include <fmt/compile.h>
 #include "Function.h"
 #include "FunctionSignature.h"
@@ -41,9 +43,10 @@ static auto gen_function_declaration(
 }
 
 struct Params__gen_function_definition {
-    FunctionSignature const& signature;
-    std::string_view         name;
-    std::string_view         body;
+    FunctionSignature const& signature{};
+    std::string_view         name{};
+    std::string_view         body{};
+    std::string_view         before_function{};
 };
 
 static auto gen_function_definition(Params__gen_function_definition p)
@@ -52,14 +55,17 @@ static auto gen_function_definition(Params__gen_function_definition p)
     using namespace fmt::literals;
     return {fmt::format(
         FMT_COMPILE(
-            R"STR({declaration}
+            R"STR({before_function}
+            
+{declaration}
 {{
     {body}
 }}
 )STR"
         ),
-        "declaration"_a = gen_function_declaration(p.signature, p.name),
-        "body"_a        = p.body
+        "before_function"_a = p.before_function,
+        "declaration"_a     = gen_function_declaration(p.signature, p.name),
+        "body"_a            = p.body
     )};
 }
 
@@ -116,13 +122,12 @@ static auto desired_function_name(
     NodeDefinition const& definition,
     Cool::NodeId const&   id,
     FunctionSignature     signature
-)
-    -> std::string
+) -> std::string
 {
     using namespace fmt::literals;
     return fmt::format(
         FMT_COMPILE(
-            R"STR({name}{signature}{id})STR"
+            "{name}{signature}{id}"
         ),
         "name"_a      = valid_glsl(definition.name()), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
         "signature"_a = valid_glsl(to_string(signature)),
@@ -130,17 +135,71 @@ static auto desired_function_name(
     );
 }
 
-auto gen_base_function(
-    NodeDefinition const& node_definition,
-    Cool::NodeId const&   id
-)
-    -> Function
+static auto gen_properties(
+    std::vector<Cool::AnyInput> const& properties,
+    Cool::InputProvider_Ref            input_provider
+) -> std::string
 {
-    return gen_function__impl({
-        .signature = node_definition.signature(),
-        .name      = base_function_name(node_definition, id),
-        .body      = node_definition.function_body(),
+    using namespace fmt::literals;
+    std::stringstream res{};
+
+    for (auto const& prop : properties)
+        res << Cool::gen_input_shader_code(
+            prop,
+            input_provider,
+            std::visit([](auto&& prop) { return fmt::format("`{}`", prop.name()); }, prop) // Re-add backticks around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
+        ) << '\n';
+
+    return res.str();
+}
+
+static auto valid_property_name(std::string const& name, reg::AnyId const& property_default_variable_id) // We use a unique id per property to make sure they don't clash with anything. For example if the node was called Zoom and its property was also called Zoom, both the function and the uniform variable would get the same name.
+    -> std::string
+{
+    using namespace fmt::literals;
+    return fmt::format(
+        FMT_COMPILE(
+            "{name}{id}"
+        ),
+        "name"_a = valid_glsl(name),
+        "id"_a   = valid_glsl(to_string(property_default_variable_id.underlying_uuid()))
+    );
+}
+
+static auto make_property_names_valid(
+    std::string                        code,
+    std::vector<Cool::AnyInput> const& properties
+) -> std::string
+{
+    for (auto const& prop : properties)
+        std::visit([&](auto&& prop) {
+            Cool::String::replace_all(code, fmt::format("`{}`", prop.name()), valid_property_name(prop.name(), prop._default_variable_id));
+        },
+                   prop);
+    // TODO check that there is no `...` left, else error message
+
+    return code;
+}
+
+auto gen_base_function(
+    NodeDefinition const&              node_definition,
+    std::vector<Cool::AnyInput> const& node_properties,
+    Cool::InputProvider_Ref            input_provider,
+    Cool::NodeId const&                id
+) -> Function
+{
+    const auto func = gen_function__impl({
+        .signature       = node_definition.signature(),
+        .name            = base_function_name(node_definition, id),
+        .body            = node_definition.function_body(),
+        .before_function = gen_properties(node_properties, input_provider),
     });
+
+    // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
+    return Function{
+        .name       = func.name,
+        .definition = make_property_names_valid(func.definition, node_properties),
+    };
 }
 
 static auto gen_desired_implementation(
@@ -172,7 +231,8 @@ auto gen_desired_function(
     Cool::NodeId const&                         id,
     FunctionSignature const&                    desired_signature,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Graph const&                                graph
+    Graph const&                                graph,
+    Cool::InputProvider_Ref                     input_provider
 )
     -> std::optional<Function>
 {
@@ -184,7 +244,7 @@ auto gen_desired_function(
     if (!node_definition)
         return std::nullopt; // TODO(JF) Return unexpected "Definition not found"
 
-    const auto base_function = gen_base_function(*node_definition, id);
+    const auto base_function = gen_base_function(*node_definition, node->properties(), input_provider, id);
 
     const auto input_function_signature = std::visit(
         [](auto&& A, auto&& B, auto&& C, auto&& D) { return input_function_desired_signature(A, B, C, D); },
@@ -197,7 +257,8 @@ auto gen_desired_function(
                                         graph.predecessor_node_id(id),
                                         *input_function_signature,
                                         get_node_definition,
-                                        graph
+                                        graph,
+                                        input_provider
                                     )
                                     : std::make_optional(
                                         Function{
@@ -231,7 +292,8 @@ auto gen_desired_function(
 auto generate_shader_code(
     Graph const&                                       graph,
     Cool::GetNodeDefinition_Ref<NodeDefinition> const& get_node_definition,
-    Cool::NodeId const&                                main_node_id
+    Cool::NodeId const&                                main_node_id,
+    Cool::InputProvider_Ref                            input_provider
 )
     -> std::string
 {
@@ -239,7 +301,8 @@ auto generate_shader_code(
         main_node_id,
         Signature::Image,
         get_node_definition,
-        graph
+        graph,
+        input_provider
     );
     if (!main_function)
         return "";
