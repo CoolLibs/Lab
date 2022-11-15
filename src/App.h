@@ -23,8 +23,8 @@
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Module_CustomShader/Module_CustomShader.h"
+#include "Module_Nodes/Module_Nodes.h"
 #include "Module_is0/Module_is0.h"
-#include "Nodes/Module_Nodes.h"
 #include "UI/ThemeManager.h"
 
 namespace Lab {
