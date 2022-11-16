@@ -83,6 +83,16 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 {
     Cool::AllInputRefsToConst inputs;
+
+    std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
+    for (auto const& [_, node] : _nodes_editor.graph().nodes())
+    {
+        for (auto const& input : node.properties())
+        {
+            inputs.push_back(std::visit([](auto&& input) { return Cool::AnyInputRefToConst{input}; }, input));
+        }
+    }
+
     return inputs;
 }
 
