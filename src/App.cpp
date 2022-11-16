@@ -167,6 +167,9 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 
 void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
 {
+    if (!_nodes_module->is_dirty(is_dirty__functor()))
+        return;
+
     render_target.set_size(size);
     render_one_module(*_nodes_module, render_target, time);
 }
