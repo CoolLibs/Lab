@@ -95,6 +95,8 @@ auto Module_Nodes::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
+    in.set_clean(_shader.dirty_flag());
+
     if (in.is_dirty(_regenerate_code_flag))
     {
 #if DEBUG
@@ -107,6 +109,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 
     if (!_shader.pipeline().shader())
         return;
+
     auto const& pipeline = _shader.pipeline();
     auto const& shader   = *pipeline.shader();
 
