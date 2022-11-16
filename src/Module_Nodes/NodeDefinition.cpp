@@ -19,8 +19,6 @@ NodeDefinition::NodeDefinition(NodeDefinition_Data const& data)
             }
 
             prop.name = prop.name.substr(1, prop.name.size() - 2);
-
-            int a;
         },
                    prop);
     }
