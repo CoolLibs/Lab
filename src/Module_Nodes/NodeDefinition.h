@@ -3,7 +3,7 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputDefinition.h>
 #include "FunctionSignature.h"
-#include "NodeInput.h"
+#include "NodeInputDefinition.h"
 
 namespace Lab {
 
@@ -12,19 +12,19 @@ struct NodeDefinition_Data {
     FunctionSignature signature{};
     std::string       function_body{};
 
-    std::vector<NodeInput>                inputs{};     // Things that will get a pin
-    std::vector<Cool::AnyInputDefinition> properties{}; // Things that will just be sliders etc. on the node itself
+    std::vector<NodeInputDefinition>      inputs{};     // Things that can only come from a pin
+    std::vector<Cool::AnyInputDefinition> properties{}; // Things that will default to a widget on the node if nothing is plugged into the pin
 };
 
 class NodeDefinition {
 public:
     NodeDefinition(NodeDefinition_Data const&);
 
-    auto name() const -> std::string const& { return _data.name; }
-    auto signature() const -> FunctionSignature const& { return _data.signature; }
-    auto function_body() const -> std::string const& { return _data.function_body; }
-    auto inputs() const -> std::vector<NodeInput> const& { return _data.inputs; }
-    auto properties() const -> std::vector<Cool::AnyInputDefinition> const& { return _data.properties; }
+    auto name() const -> auto const& { return _data.name; }
+    auto signature() const -> auto const& { return _data.signature; }
+    auto function_body() const -> auto const& { return _data.function_body; }
+    auto inputs() const -> auto const& { return _data.inputs; }
+    auto properties() const -> auto const& { return _data.properties; }
 
 private:
     NodeDefinition_Data _data;

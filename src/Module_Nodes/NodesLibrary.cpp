@@ -99,6 +99,32 @@ return in1;
             Cool::InputDefinition<float>{"`Frequency`"},
         },
     }});
+
+    this->add_definition({{
+        .name      = "RGB Drift",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::Color{},
+        },
+        .function_body = {R"STR(
+vec2 uv = in1;
+return vec3(
+    `Image`(uv + vec2(0.0, 0.0)).r,
+    `Image`(uv + vec2(0.1, 0.0)).g,
+    `Image`(uv + vec2(0.2, 0.0)).b
+);
+    )STR"},
+        .inputs        = {
+            {{
+                       .name      = "`Image`",
+                       .signature = {
+                           .from = PrimitiveType::UV{},
+                           .to   = PrimitiveType::Color{},
+                },
+            }},
+        },
+        .properties = {},
+    }});
 }
 
 } // namespace Lab

@@ -6,6 +6,7 @@ namespace Lab {
 NodeDefinition::NodeDefinition(NodeDefinition_Data const& data)
     : _data{data}
 {
+    // TODO(JF) Refactor that code duplicated with NodeInputDefinition.cpp
     // Check that the property names are valid, and remove the backticks from them.
     for (auto& prop : _data.properties)
     {
