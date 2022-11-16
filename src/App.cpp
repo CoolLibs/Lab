@@ -57,8 +57,21 @@ void App::compile_all_is0_nodes()
     // _nodes_module->remove_all_nodes();
 }
 
+void App::set_everybody_dirty()
+{
+    std::unique_lock lock{_dirty_registry.mutex()};
+    for (auto& [_, is_dirty] : _dirty_registry)
+        is_dirty.is_dirty = true;
+}
+
 void App::update()
 {
+    if (_is_first_frame)
+    {
+        _is_first_frame = false;
+        set_everybody_dirty();
+    }
+
     if (!_exporter.is_exporting())
     {
         _clock.update();

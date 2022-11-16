@@ -104,6 +104,7 @@ private:
     }
 
     void compile_all_is0_nodes();
+    void set_everybody_dirty();
 
 private:
     Cool::VariableRegistries    _variable_registries; // First because modules need the registries when they get created
@@ -122,7 +123,8 @@ private:
     std::unique_ptr<Module_Nodes> _nodes_module;
     // std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger         _command_logger{};
-    Cool::OpenGL::Texture _texture;
+    Cool::OpenGL::Texture _texture; // TODO(JF) Remove me, this was just a hardcoded thing while we had no nodes
+    bool                  _is_first_frame{true};
 
 private:
     // Serialization
