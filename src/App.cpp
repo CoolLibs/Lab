@@ -396,16 +396,6 @@ void App::check_inputs__history()
     {
         _history.move_backward(exec);
         Cool::ParametersHistory::get().move_backward();
-        // TODO(JF) Remove this hack.
-        // Force recompilation of all shaders when a variable changes to allow gradient variables to update (bc they need to generate shader code)
-        {
-            auto&            registry = _dirty_registry;
-            std::unique_lock lock{registry.mutex()};
-            for (auto& [_, is_dirty] : registry)
-            {
-                is_dirty.is_dirty = true;
-            }
-        }
     }
 
     // Redo
@@ -414,16 +404,6 @@ void App::check_inputs__history()
     {
         _history.move_forward(exec);
         Cool::ParametersHistory::get().move_forward();
-        // TODO(JF) Remove this hack.
-        // Force recompilation of all shaders when a variable changes to allow gradient variables to update (bc they need to generate shader code)
-        {
-            auto&            registry = _dirty_registry;
-            std::unique_lock lock{registry.mutex()};
-            for (auto& [_, is_dirty] : registry)
-            {
-                is_dirty.is_dirty = true;
-            }
-        }
     }
 }
 

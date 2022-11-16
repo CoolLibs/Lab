@@ -33,7 +33,7 @@ private:
     mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
     NodesLibrary                           _nodes_library{};
     mutable Cool::NodeId                   _main_node_id{};
-    mutable bool                           _must_recompile{true};
+    Cool::DirtyFlag                        _regenerate_code_flag;
     Cool::MessageSender                    _shader_compilation_error{};
 
 private:

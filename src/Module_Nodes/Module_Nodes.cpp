@@ -9,22 +9,11 @@ namespace Lab {
 Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
     : Module{"Nodes", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
+    , _regenerate_code_flag{dirty_flag_factory.make()}
 {
 }
 
-void Module_Nodes::update(UpdateContext_Ref update_ctx)
-{
-    if (_must_recompile)
-    {
-#if DEBUG
-        if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::Debug::info("Nodes", "Compiled");
-#endif
-        _must_recompile = false;
-        compile(update_ctx);
-        update_ctx.set_dirty(dirty_flag());
-    }
-}
+void Module_Nodes::update(UpdateContext_Ref) {}
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
@@ -76,7 +65,8 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    _must_recompile |= _nodes_editor.imgui_window(NodesConfig{ui.input_factory(), ui, _main_node_id, Cool::DirtyFlag{}, Cool::DirtyFlag{}}, _nodes_library); // TODO(JF) Use an actual dirty flag stored in the Module_Nodes class
+    if (_nodes_editor.imgui_window(NodesConfig{ui.input_factory(), ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag}, _nodes_library))
+        ui.set_dirty(_regenerate_code_flag);
 
     ImGui::Begin("Nodes Code");
     if (ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
@@ -87,27 +77,6 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
     }
     ImGui::End();
     ImGui::Begin("Nodes Debug");
-    {
-        std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
-        const auto       main_node = _nodes_editor.graph().nodes().get(_main_node_id);
-        if (ImGui::BeginCombo("Main Node ID", (main_node ? main_node->definition_name() : ""s).c_str()))
-        {
-            for (auto const& [id, node] : _nodes_editor.graph().nodes())
-            {
-                const bool is_selected = id == _main_node_id;
-                if (ImGui::Selectable(node.definition_name().c_str(), is_selected))
-                {
-                    _main_node_id   = id;
-                    _must_recompile = true;
-                }
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-    }
     ImGui::End();
 }
 
@@ -120,11 +89,22 @@ auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 auto Module_Nodes::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
     return Module::is_dirty(check_dirty)
-           || check_dirty(_shader.dirty_flag());
+           || check_dirty(_shader.dirty_flag())
+           || check_dirty(_regenerate_code_flag);
 };
 
-void Module_Nodes::render(RenderParams in, UpdateContext_Ref)
+void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
+    if (in.is_dirty(_regenerate_code_flag))
+    {
+#if DEBUG
+        if (DebugOptions::log_when_compiling_nodes())
+            Cool::Log::Debug::info("Nodes", "Compiled");
+#endif
+        compile(update_ctx);
+        in.set_clean(_regenerate_code_flag);
+    }
+
     if (!_shader.pipeline().shader())
         return;
     auto const& pipeline = _shader.pipeline();
