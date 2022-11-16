@@ -204,18 +204,26 @@ static auto make_property_names_valid(
     ));
 }
 
+static auto gen_inputs(std::vector<NodeInputDefinition> const& node_inputs)
+    -> std::string
+{
+    return "";
+}
+
 auto gen_base_function(
-    NodeDefinition const&              node_definition,
-    std::vector<Cool::AnyInput> const& node_properties,
-    Cool::InputProvider_Ref            input_provider,
-    Cool::NodeId const&                id
+    NodeDefinition const&                   node_definition,
+    std::vector<Cool::AnyInput> const&      node_properties,
+    std::vector<NodeInputDefinition> const& node_inputs,
+    Cool::InputProvider_Ref                 input_provider,
+    Cool::NodeId const&                     id
 ) -> tl::expected<Function, std::string>
 {
     const auto func = gen_function__impl({
         .signature       = node_definition.signature(),
         .name            = base_function_name(node_definition, id),
         .body            = node_definition.function_body(),
-        .before_function = gen_properties(node_properties, input_provider),
+        .before_function = gen_properties(node_properties, input_provider) + "\n\n"
+                           + gen_inputs(node_inputs),
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
@@ -269,7 +277,7 @@ auto gen_desired_function(
             node->definition_name()
         ));
 
-    const auto base_function = gen_base_function(*node_definition, node->properties(), input_provider, id);
+    const auto base_function = gen_base_function(*node_definition, node->properties(), node_definition->inputs(), input_provider, id);
     if (!base_function)
         return tl::make_unexpected(fmt::format(
             "Code for node \"{}\" is invalid:\n{}",
