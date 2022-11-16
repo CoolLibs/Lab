@@ -143,10 +143,6 @@ static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polar
 
 void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
 {
-#if DEBUG
-    if (DebugOptions::log_when_rendering())
-        Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
-#endif
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -163,6 +159,10 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
             update_context()
         );
     });
+#if DEBUG
+    if (DebugOptions::log_when_rendering())
+        Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
+#endif
 }
 
 void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
