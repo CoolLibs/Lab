@@ -1,6 +1,6 @@
 #version 410
 
-//#include "_COOL_RES_/shaders/math.glsl"
+// #include "_COOL_RES_/shaders/math.glsl"
 
 uniform float _time;
 out vec4      out_Color;

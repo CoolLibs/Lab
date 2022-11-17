@@ -51,9 +51,9 @@ VoronoiRes voronoi(vec2 uv, float grid_irregularity, float scale, float time, bo
 
             vec2  p_to_gv = p - gv;
             float d       = pow(
-                      pow(abs(p_to_gv.x), shape) + pow(abs(p_to_gv.y), shape),
-                      1 / shape
-                  );
+                pow(abs(p_to_gv.x), shape) + pow(abs(p_to_gv.y), shape),
+                1 / shape
+            );
 
             if (d < res.minDist)
             {

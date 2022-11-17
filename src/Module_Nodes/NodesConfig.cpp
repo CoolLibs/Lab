@@ -33,10 +33,9 @@ auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
 
     node.input_pins().push_back(Cool::InputPin{"IN"});
     node.output_pins().push_back(Cool::OutputPin{"OUT"});
-    
+
     for (auto const& input : def.inputs())
         node.input_pins().push_back(Cool::InputPin{input.name()});
-    
 
     for (auto const& property_def : def.properties())
     {

@@ -11,10 +11,10 @@ vec3 gradient_overlay(
     float t              = clamp(atp_dot_atb / atb2, 0.0, 1.0);
     vec3  gradient_color = mix(gradient_color_a, gradient_color_b, t);
     vec3  color          = mix(
-                  in_color,
-                  in_color * gradient_color,
-                  gradient_presence * effect_intensity
-              );
+        in_color,
+        in_color * gradient_color,
+        gradient_presence * effect_intensity
+    );
 
     return color;
 }

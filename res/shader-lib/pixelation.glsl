@@ -20,10 +20,10 @@ vec3 pixelation_with_border(
     float distance_to_center = smooth_max_polynomial((-abs(gv.x) + 1. - border), (-abs(gv.y) + 1. - border), border_roundness);
     float epsilon            = 0.01;
     vec3  out_color          = mix(
-                  border_color,
-                  image(img_uv),
-                  1. - smoothstep(border - epsilon, border + epsilon, distance_to_center) * effect_intensity
-              );
+        border_color,
+        image(img_uv),
+        1. - smoothstep(border - epsilon, border + epsilon, distance_to_center) * effect_intensity
+    );
 
     return out_color;
 }

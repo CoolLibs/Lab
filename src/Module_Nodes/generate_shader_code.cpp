@@ -238,8 +238,8 @@ struct GeneratedInputs {
 };
 
 static auto gen_inputs(
-    Node const& node,
-    NodeDefinition const& node_definition,
+    Node const&                                 node,
+    NodeDefinition const&                       node_definition,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Graph const&                                graph,
     Cool::InputProvider_Ref                     input_provider
@@ -268,7 +268,7 @@ static auto gen_inputs(
 }
 
 static auto gen_base_function(
-    Node const& node,
+    Node const&                                 node,
     NodeDefinition const&                       node_definition,
     Cool::NodeId const&                         id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
@@ -276,7 +276,7 @@ static auto gen_base_function(
     Cool::InputProvider_Ref                     input_provider
 ) -> tl::expected<Function, std::string>
 {
-    auto const inputs = gen_inputs(node,node_definition, get_node_definition, graph, input_provider);
+    auto const inputs = gen_inputs(node, node_definition, get_node_definition, graph, input_provider);
     if (!inputs)
         return tl::make_unexpected(inputs.error());
 
@@ -347,7 +347,8 @@ static auto gen_desired_function(
 
     const auto base_function = gen_base_function(
         *node, *node_definition, id,
-    get_node_definition, graph, input_provider);
+        get_node_definition, graph, input_provider
+    );
     if (!base_function)
         return tl::make_unexpected(fmt::format(
             "Code for node \"{}\" is invalid:\n{}",
