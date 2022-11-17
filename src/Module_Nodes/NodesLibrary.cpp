@@ -125,6 +125,35 @@ return vec3(
         },
         .properties = {Cool::InputDefinition<float>{"`Drift`"}},
     }});
+
+    this->add_definition({{
+        .name      = "Over",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::Color{},
+        },
+        .function_body = {R"STR(
+vec2 uv = in1;
+return mix(`Under`(uv), `Over`(uv), `Over Opacity`);
+    )STR"},
+        .inputs        = {
+            {{
+                       .name      = "`Over`",
+                       .signature = {
+                           .from = PrimitiveType::UV{},
+                           .to   = PrimitiveType::Color{},
+                },
+            }},
+            {{
+                       .name      = "`Under`",
+                       .signature = {
+                           .from = PrimitiveType::UV{},
+                           .to   = PrimitiveType::Color{},
+                },
+            }},
+        },
+        .properties = {Cool::InputDefinition<float>{"`Over Opacity`"}},
+    }});
 }
 
 } // namespace Lab
