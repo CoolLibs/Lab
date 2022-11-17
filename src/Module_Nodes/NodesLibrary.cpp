@@ -109,9 +109,9 @@ return in1;
         .function_body = {R"STR(
 vec2 uv = in1;
 return vec3(
-    `Image`(uv + vec2(0.0, 0.0)).r,
-    `Image`(uv + vec2(0.1, 0.0)).g,
-    `Image`(uv + vec2(0.2, 0.0)).b
+    `Image`(uv + vec2(-1. * `Drift`, 0.0)).r,
+    `Image`(uv + vec2( 0. * `Drift`, 0.0)).g,
+    `Image`(uv + vec2(+1. * `Drift`, 0.0)).b
 );
     )STR"},
         .inputs        = {
@@ -123,7 +123,7 @@ return vec3(
                 },
             }},
         },
-        .properties = {},
+        .properties = {Cool::InputDefinition<float>{"`Drift`"}},
     }});
 }
 

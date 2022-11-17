@@ -13,6 +13,14 @@
 
 namespace Lab {
 
+static auto gen_desired_function(
+    Cool::NodeId const&                         id,
+    FunctionSignature const&                    desired_signature,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Graph const&                                graph,
+    Cool::InputProvider_Ref                     input_provider
+) -> tl::expected<Function, std::string>;
+
 static auto gen_params(
     FunctionSignature const& signature
 ) -> std::string
@@ -166,74 +174,134 @@ auto valid_property_name(std::string const& name, reg::AnyId const& property_def
     );
 }
 
-static auto list_all_property_names(std::vector<Cool::AnyInput> const& properties)
+static auto list_all_property_and_input_names(std::vector<Cool::AnyInput> const& properties, std::vector<NodeInputDefinition> const& inputs)
     -> std::string
 {
     std::stringstream res{};
 
     for (auto const& prop : properties)
         res << fmt::format("  - `{}`", std::visit([](auto&& prop) { return prop.name(); }, prop)) << '\n';
+    for (auto const& input : inputs)
+        res << fmt::format("  - `{}`", input.name()) << '\n';
 
     return res.str();
 }
 
-static auto make_property_names_valid(
+static auto replace_property_names(
     std::string                        code,
     std::vector<Cool::AnyInput> const& properties
-) -> tl::expected<std::string, std::string>
+) -> std::string
 {
     for (auto const& prop : properties)
+    {
         std::visit([&](auto&& prop) {
             Cool::String::replace_all(code, fmt::format("`{}`", prop.name()), valid_property_name(prop.name(), prop._default_variable_id));
         },
                    prop);
+    }
 
-    // Check that there is no backticks left. If there are, then the user made a typo
+    return code;
+}
+
+static auto replace_input_names(
+    std::string                                         code,
+    std::unordered_map<std::string, std::string> const& real_names
+) -> std::string
+{
+    for (auto const& [old_name, new_name] : real_names)
+        Cool::String::replace_all(code, fmt::format("`{}`", old_name), new_name);
+
+    return code;
+}
+
+static auto check_there_are_no_backticks_left(std::string const& code, std::string const& input_names_list)
+    -> std::optional<std::string>
+{
     auto const pos = code.find('`');
     if (pos == std::string::npos)
-        return code;
+        return std::nullopt;
 
     auto const pos2 = code.find('`', pos + 1);
     if (pos2 == std::string::npos)
-        return tl::make_unexpected("A backtick (`) has no matching closing backtick. Did you make a typo?");
+        return "A backtick (`) has no matching closing backtick. Did you make a typo?";
 
-    return tl::make_unexpected(fmt::format(
-        "\"{}\" is not a valid property name. Here are all the properties you defined:\n{}",
+    return fmt::format(
+        "\"{}\" is not a valid input name. Here are all the inputs you defined:\n{}",
         Cool::String::substring(code, pos, pos2 + 1),
-        list_all_property_names(properties)
-    ));
+        input_names_list
+    );
 }
 
-static auto gen_inputs(std::vector<NodeInputDefinition> const& node_inputs)
-    -> std::string
+struct GeneratedInputs {
+    std::string                                  code;
+    std::unordered_map<std::string, std::string> real_names;
+};
+
+static auto gen_inputs(
+    std::vector<NodeInputDefinition> const&     node_inputs,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Graph const&                                graph,
+    Cool::InputProvider_Ref                     input_provider
+)
+    -> tl::expected<GeneratedInputs, std::string>
 {
-    return "";
+    GeneratedInputs res;
+
+    for (auto const& input : node_inputs)
+    {
+        auto const function = gen_desired_function(
+            {} /*TODO(JF) pass the id of the plugged node if any*/,
+            input.signature(),
+            get_node_definition,
+            graph,
+            input_provider
+        );
+        if (!function)
+            return tl::make_unexpected(function.error());
+
+        res.code += function->definition;
+        res.real_names[input.name()] = function->name;
+    }
+
+    return res;
 }
 
-auto gen_base_function(
-    NodeDefinition const&                   node_definition,
-    std::vector<Cool::AnyInput> const&      node_properties,
-    std::vector<NodeInputDefinition> const& node_inputs,
-    Cool::InputProvider_Ref                 input_provider,
-    Cool::NodeId const&                     id
+static auto gen_base_function(
+    NodeDefinition const&                       node_definition,
+    std::vector<Cool::AnyInput> const&          node_properties,
+    std::vector<NodeInputDefinition> const&     node_inputs,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Graph const&                                graph,
+    Cool::InputProvider_Ref                     input_provider,
+    Cool::NodeId const&                         id
 ) -> tl::expected<Function, std::string>
 {
-    const auto func = gen_function__impl({
+    auto const inputs = gen_inputs(node_inputs, get_node_definition, graph, input_provider);
+    if (!inputs)
+        return tl::make_unexpected(inputs.error());
+
+    auto const func = gen_function__impl({
         .signature       = node_definition.signature(),
         .name            = base_function_name(node_definition, id),
         .body            = node_definition.function_body(),
         .before_function = gen_properties(node_properties, input_provider) + "\n\n"
-                           + gen_inputs(node_inputs),
+                           + inputs->code,
     });
 
-    // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
-    auto const definition = make_property_names_valid(func.definition, node_properties);
-    if (!definition)
-        return tl::make_unexpected(definition.error());
+    // { // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
+    auto definition = replace_property_names(func.definition, node_properties);
+    definition      = replace_input_names(definition, inputs->real_names);
+
+    {
+        auto const error = check_there_are_no_backticks_left(definition, list_all_property_and_input_names(node_properties, node_inputs));
+        if (error)
+            return tl::make_unexpected(*error);
+    }
+    // }
 
     return Function{
         .name       = func.name,
-        .definition = *definition,
+        .definition = definition,
     };
 }
 
@@ -257,7 +325,7 @@ static auto gen_desired_implementation(
     );
 }
 
-auto gen_desired_function(
+static auto gen_desired_function(
     Cool::NodeId const&                         id,
     FunctionSignature const&                    desired_signature,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
@@ -277,7 +345,7 @@ auto gen_desired_function(
             node->definition_name()
         ));
 
-    const auto base_function = gen_base_function(*node_definition, node->properties(), node_definition->inputs(), input_provider, id);
+    const auto base_function = gen_base_function(*node_definition, node->properties(), node_definition->inputs(), get_node_definition, graph, input_provider, id);
     if (!base_function)
         return tl::make_unexpected(fmt::format(
             "Code for node \"{}\" is invalid:\n{}",
