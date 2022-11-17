@@ -33,12 +33,18 @@ auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
 
     node.input_pins().push_back(Cool::InputPin{"IN"});
     node.output_pins().push_back(Cool::OutputPin{"OUT"});
+    
+    for (auto const& input : def.inputs())
+        node.input_pins().push_back(Cool::InputPin{input.name()});
+    
 
     for (auto const& property_def : def.properties())
+    {
         node.properties().push_back(_input_factory.get().make(
             property_def,
             Cool::requires_shader_code_generation(property_def) ? _regenerate_code_flag : _rerender_flag
         ));
+    }
 
     return node;
 }

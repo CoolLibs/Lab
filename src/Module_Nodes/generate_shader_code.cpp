@@ -238,7 +238,8 @@ struct GeneratedInputs {
 };
 
 static auto gen_inputs(
-    std::vector<NodeInputDefinition> const&     node_inputs,
+    Node const& node,
+    NodeDefinition const& node_definition,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Graph const&                                graph,
     Cool::InputProvider_Ref                     input_provider
@@ -247,10 +248,10 @@ static auto gen_inputs(
 {
     GeneratedInputs res;
 
-    for (auto const& input : node_inputs)
+    for (auto const& input : node_definition.inputs())
     {
         auto const function = gen_desired_function(
-            {} /*TODO(JF) pass the id of the plugged node if any*/,
+            graph.input_node_id(node.input_pins()[1].id()), // TODO(JF) Get pin index properly
             input.signature(),
             get_node_definition,
             graph,
@@ -267,16 +268,15 @@ static auto gen_inputs(
 }
 
 static auto gen_base_function(
+    Node const& node,
     NodeDefinition const&                       node_definition,
-    std::vector<Cool::AnyInput> const&          node_properties,
-    std::vector<NodeInputDefinition> const&     node_inputs,
+    Cool::NodeId const&                         id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Graph const&                                graph,
-    Cool::InputProvider_Ref                     input_provider,
-    Cool::NodeId const&                         id
+    Cool::InputProvider_Ref                     input_provider
 ) -> tl::expected<Function, std::string>
 {
-    auto const inputs = gen_inputs(node_inputs, get_node_definition, graph, input_provider);
+    auto const inputs = gen_inputs(node,node_definition, get_node_definition, graph, input_provider);
     if (!inputs)
         return tl::make_unexpected(inputs.error());
 
@@ -284,16 +284,16 @@ static auto gen_base_function(
         .signature       = node_definition.signature(),
         .name            = base_function_name(node_definition, id),
         .body            = node_definition.function_body(),
-        .before_function = gen_properties(node_properties, input_provider) + "\n\n"
+        .before_function = gen_properties(node.properties(), input_provider) + "\n\n"
                            + inputs->code,
     });
 
     // { // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
-    auto definition = replace_property_names(func.definition, node_properties);
+    auto definition = replace_property_names(func.definition, node.properties());
     definition      = replace_input_names(definition, inputs->real_names);
 
     {
-        auto const error = check_there_are_no_backticks_left(definition, list_all_property_and_input_names(node_properties, node_inputs));
+        auto const error = check_there_are_no_backticks_left(definition, list_all_property_and_input_names(node.properties(), node_definition.inputs()));
         if (error)
             return tl::make_unexpected(*error);
     }
@@ -345,7 +345,9 @@ static auto gen_desired_function(
             node->definition_name()
         ));
 
-    const auto base_function = gen_base_function(*node_definition, node->properties(), node_definition->inputs(), get_node_definition, graph, input_provider, id);
+    const auto base_function = gen_base_function(
+        *node, *node_definition, id,
+    get_node_definition, graph, input_provider);
     if (!base_function)
         return tl::make_unexpected(fmt::format(
             "Code for node \"{}\" is invalid:\n{}",
@@ -360,7 +362,7 @@ static auto gen_desired_function(
 
     const auto input_function = input_function_signature
                                     ? gen_desired_function(
-                                        graph.predecessor_node_id(id),
+                                        graph.input_node_id(node->input_pins()[0].id()), // TODO(JF) Cleaner way to get the main pin id
                                         *input_function_signature,
                                         get_node_definition,
                                         graph,
