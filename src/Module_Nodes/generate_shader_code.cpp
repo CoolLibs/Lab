@@ -248,10 +248,11 @@ static auto gen_inputs(
 {
     GeneratedInputs res;
 
+    size_t input_idx{0};
     for (auto const& input : node_definition.inputs())
     {
         auto const function = gen_desired_function(
-            graph.input_node_id(node.input_pins()[1].id()), // TODO(JF) Get pin index properly
+            graph.input_node_id(node.pin_of_input(input_idx).id()),
             input.signature(),
             get_node_definition,
             graph,
@@ -262,6 +263,8 @@ static auto gen_inputs(
 
         res.code += function->definition;
         res.real_names[input.name()] = function->name;
+
+        input_idx++;
     }
 
     return res;
@@ -363,7 +366,7 @@ static auto gen_desired_function(
 
     const auto input_function = input_function_signature
                                     ? gen_desired_function(
-                                        graph.input_node_id(node->input_pins()[0].id()), // TODO(JF) Cleaner way to get the main pin id
+                                        graph.input_node_id(node->main_pin().id()),
                                         *input_function_signature,
                                         get_node_definition,
                                         graph,
