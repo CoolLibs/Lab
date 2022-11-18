@@ -2,9 +2,7 @@
 
 ## Learning about shaders and SDFs
 
-You can watch these videos, in that order:
-
-- [Painting with Maths in Google Sheets](https://youtu.be/JnCkF62gkOY)
+You can watch these videos:
 
 - [Practical intro to shader programming by _The Art of Code_](https://www.youtube.com/watch?v=u5HAYVHsasc)
 
