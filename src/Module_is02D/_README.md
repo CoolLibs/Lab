@@ -19,7 +19,3 @@ You can watch these videos, in that order:
 - [Domain Warping](https://iquilezles.org/articles/warp/)
 
 - [List of primitives and effects](https://iquilezles.org/articles/distfunctions2d/)
-
-## Inspiration
-
-- [willstall](https://www.instagram.com/willstall/)
