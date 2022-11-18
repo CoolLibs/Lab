@@ -16,11 +16,15 @@ Function::Function(Function_Data const& data, AlreadyGeneratedFunctions& check)
     : name{data.name}
 {
     // Only generate the definition code if it has not yet been generated
-    if (check.has_already_been_generated(data.name))
-        return;
-
-    check.push(data.name);
-    definition = data.definition;
+    if (!check.has_already_been_generated(data.name))
+    {
+        check.push(data.name);
+        definition = data.definition;
+    }
+    else
+    {
+        definition = fmt::format("/* Function \"{}\" has already been generated. */", data.name);
+    }
 };
 
 } // namespace Lab
