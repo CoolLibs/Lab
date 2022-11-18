@@ -29,7 +29,7 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
 
 auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
 {
-    auto node = Node{def.name()};
+    auto node = Node{def.name(), def.inputs().size()};
 
     node.input_pins().push_back(Cool::InputPin{"IN"});
     node.output_pins().push_back(Cool::OutputPin{"OUT"});
@@ -43,6 +43,7 @@ auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
             property_def,
             Cool::requires_shader_code_generation(property_def) ? _regenerate_code_flag : _rerender_flag
         ));
+        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& property_def) { return property_def.name; }, property_def)});
     }
 
     return node;

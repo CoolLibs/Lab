@@ -10,6 +10,7 @@
 #include "NodeDefinition.h"
 #include "gen_default_function.h"
 #include "gen_desired_function_implementation.h"
+#include "input_to_primitive_type.h"
 
 namespace Lab {
 
@@ -27,9 +28,13 @@ static auto gen_params(
 ) -> std::string
 {
     using namespace fmt::literals;
+
+    if (signature.from == AnyPrimitiveType{PrimitiveType::Void{}})
+        return "";
+
     return fmt::format(
         FMT_COMPILE(
-            R"STR({type} in1)STR"
+            "{type} in1"
         ),
         "type"_a = glsl_type_as_string(signature.from)
     );
@@ -145,24 +150,6 @@ static auto desired_function_name(
     );
 }
 
-static auto gen_properties(
-    std::vector<Cool::AnyInput> const& properties,
-    Cool::InputProvider_Ref            input_provider
-) -> std::string
-{
-    using namespace fmt::literals;
-    std::stringstream res{};
-
-    for (auto const& prop : properties)
-        res << Cool::gen_input_shader_code(
-            prop,
-            input_provider,
-            std::visit([](auto&& prop) { return fmt::format("`{}`", prop.name()); }, prop) // Re-add backticks around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
-        ) << '\n';
-
-    return res.str();
-}
-
 auto valid_property_name(std::string const& name, reg::AnyId const& property_default_variable_id) // We use a unique id per property to make sure they don't clash with anything. For example if the node was called Zoom and its property was also called Zoom, both the function and the uniform variable would get the same name.
     -> std::string
 {
@@ -174,6 +161,68 @@ auto valid_property_name(std::string const& name, reg::AnyId const& property_def
         "name"_a = valid_glsl(name),
         "id"_a   = valid_glsl(to_string(property_default_variable_id.underlying_uuid()))
     );
+}
+
+struct Properties {
+    std::string              code;
+    std::vector<std::string> real_names;
+};
+
+static auto gen_properties(
+    Node const&                                 node,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Graph const&                                graph,
+    Cool::InputProvider_Ref                     input_provider,
+    AlreadyGeneratedFunctions&                  already_generated_functions
+) -> tl::expected<Properties, std::string>
+{
+    using namespace fmt::literals;
+    std::stringstream code{};
+    Properties        res{};
+
+    size_t property_index{0};
+    for (auto const& prop : node.properties())
+    {
+        auto const input_pin     = node.pin_of_property(property_index);
+        auto const input_node_id = graph.input_node_id(input_pin.id());
+        if (graph.nodes().contains(input_node_id))
+        {
+            auto const property_type = input_to_primitive_type(prop);
+            if (!property_type)
+                return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
+
+            auto const input_func = gen_desired_function(
+                input_node_id,
+                {.from = PrimitiveType::Void{}, .to = *property_type},
+                get_node_definition,
+                graph,
+                input_provider,
+                already_generated_functions
+            );
+            if (!input_func)
+                return tl::make_unexpected(input_func.error());
+
+            code << input_func->definition;
+            res.real_names.push_back(fmt::format("{}()", input_func->name)); // Input name will be replaced with a call to the corresponding function
+        }
+        else
+        {
+            code << Cool::gen_input_shader_code(
+                prop,
+                input_provider,
+                std::visit([](auto&& prop) { return fmt::format("`{}`", prop.name()); }, prop) // Re-add backticks around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
+            ) << '\n';
+
+            res.real_names.push_back(std::visit(
+                [](auto&& prop) { return valid_property_name(prop.name(), prop._default_variable_id); }, prop
+            ));
+        }
+
+        property_index++;
+    }
+
+    res.code = code.str();
+    return res;
 }
 
 static auto list_all_property_and_input_names(std::vector<Cool::AnyInput> const& properties, std::vector<NodeInputDefinition> const& inputs)
@@ -191,15 +240,18 @@ static auto list_all_property_and_input_names(std::vector<Cool::AnyInput> const&
 
 static auto replace_property_names(
     std::string                        code,
-    std::vector<Cool::AnyInput> const& properties
+    std::vector<Cool::AnyInput> const& properties,
+    std::vector<std::string> const&    real_name
 ) -> std::string
 {
+    size_t i{0};
     for (auto const& prop : properties)
     {
         std::visit([&](auto&& prop) {
-            Cool::String::replace_all(code, fmt::format("`{}`", prop.name()), valid_property_name(prop.name(), prop._default_variable_id));
+            Cool::String::replace_all(code, fmt::format("`{}`", prop.name()), real_name[i]);
         },
                    prop);
+        i++;
     }
 
     return code;
@@ -288,16 +340,20 @@ static auto gen_base_function(
     if (!inputs)
         return tl::make_unexpected(inputs.error());
 
+    auto const properties_code = gen_properties(node, get_node_definition, graph, input_provider, already_generated_functions);
+    if (!properties_code)
+        return tl::make_unexpected(properties_code.error());
+
     auto func = gen_function__impl({
                                        .signature       = node_definition.signature(),
                                        .name            = base_function_name(node_definition, id),
                                        .body            = node_definition.function_body(),
-                                       .before_function = gen_properties(node.properties(), input_provider) + "\n\n" + inputs->code,
+                                       .before_function = properties_code->code + "\n\n" + inputs->code,
                                    },
                                    already_generated_functions);
 
     // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
-    func.definition = replace_property_names(func.definition, node.properties());
+    func.definition = replace_property_names(func.definition, node.properties(), properties_code->real_names);
     func.definition = replace_input_names(func.definition, inputs->real_names);
 
     {

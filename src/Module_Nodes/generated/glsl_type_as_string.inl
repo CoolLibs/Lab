@@ -8,7 +8,7 @@ if constexpr (std::is_same_v<T, PrimitiveType::Color>)
     return "/*Color*/ vec3";
 if constexpr (std::is_same_v<T, PrimitiveType::UV>)
     return "/*UV*/ vec2";
-if constexpr (std::is_same_v<T, PrimitiveType::SignedDistance>)
-    return "/*SignedDistance*/ float";
 if constexpr (std::is_same_v<T, PrimitiveType::Float>)
     return "/*Float*/ float";
+if constexpr (std::is_same_v<T, PrimitiveType::Void>)
+    return "/*Void*/ void";

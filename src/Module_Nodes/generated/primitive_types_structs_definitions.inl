@@ -10,9 +10,9 @@ struct Color {
 struct UV {
     auto operator<=>(UV const&) const = default;
 };
-struct SignedDistance {
-    auto operator<=>(SignedDistance const&) const = default;
-};
 struct Float {
     auto operator<=>(Float const&) const = default;
+};
+struct Void {
+    auto operator<=>(Void const&) const = default;
 };

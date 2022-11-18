@@ -154,6 +154,48 @@ return mix(`Under`(uv), `Over`(uv), `Over Opacity`);
         },
         .properties = {Cool::InputDefinition<float>{"`Over Opacity`"}},
     }});
+
+    this->add_definition({{
+        .name      = "Time",
+        .signature = {
+            .from = PrimitiveType::Void{},
+            .to   = PrimitiveType::Float{},
+        },
+        .function_body = {R"STR(
+return _time;
+    )STR"},
+        .inputs        = {},
+        .properties    = {},
+    }});
+
+    this->add_definition({{
+        .name      = "nsin",
+        .signature = {
+            .from = PrimitiveType::Float{},
+            .to   = PrimitiveType::Float{},
+        },
+        .function_body = {R"STR(
+return sin(in1 * 6.28) * 0.5 + 0.5;
+    )STR"},
+        .inputs        = {},
+        .properties    = {},
+    }});
+
+    this->add_definition({{
+        .name      = "Multiply (float)",
+        .signature = {
+            .from = PrimitiveType::Void{},
+            .to   = PrimitiveType::Float{},
+        },
+        .function_body = {R"STR(
+return `A` * `B`;
+    )STR"},
+        .inputs        = {},
+        .properties    = {
+            Cool::InputDefinition<float>{"`A`"},
+            Cool::InputDefinition<float>{"`B`"},
+        },
+    }});
 }
 
 } // namespace Lab

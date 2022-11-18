@@ -6,5 +6,5 @@
  */
 PrimitiveType::Color,
     PrimitiveType::UV,
-    PrimitiveType::SignedDistance,
-    PrimitiveType::Float
+    PrimitiveType::Float,
+    PrimitiveType::Void

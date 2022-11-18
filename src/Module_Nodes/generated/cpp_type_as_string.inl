@@ -8,7 +8,7 @@ if constexpr (std::is_same_v<T, PrimitiveType::Color>)
     return "Color";
 if constexpr (std::is_same_v<T, PrimitiveType::UV>)
     return "UV";
-if constexpr (std::is_same_v<T, PrimitiveType::SignedDistance>)
-    return "SignedDistance";
 if constexpr (std::is_same_v<T, PrimitiveType::Float>)
     return "Float";
+if constexpr (std::is_same_v<T, PrimitiveType::Void>)
+    return "Void";
