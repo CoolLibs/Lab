@@ -12,13 +12,13 @@ You can watch these videos, in that order:
 
 ## Resources about SDFs
 
-- [List of primitives and effects](https://iquilezles.org/articles/distfunctions2d/)
+- [More videos from _The Art of Code_](https://youtu.be/rvDo9LvfoVE?list=PLGmrMu-IwbgsVjE7SAtFaWyhZXyBjJNnO)
+
+- [30daysofshade](http://30daysofshade.com/)
 
 - [Domain Warping](https://iquilezles.org/articles/warp/)
 
-- [More videos from _The Art of Code_](https://youtu.be/AfKGMUDWfuE?list=PLGmrMu-IwbgtMxMiV3x4IrHPlPmg7FD-P)
-
-- [30daysofshade](http://30daysofshade.com/)
+- [List of primitives and effects](https://iquilezles.org/articles/distfunctions2d/)
 
 ## Inspiration
 
