@@ -1,6 +1,6 @@
-# _is0-2D_
+# _Image Nodes_
 
-## Learning about shaders and SDFs
+## Learning about shaders
 
 You can watch these videos:
 
@@ -8,7 +8,7 @@ You can watch these videos:
 
 - [Domain distortion by _The Art of Code_](https://youtu.be/jKuXA0trQPE)
 
-## Resources about SDFs
+## Resources about shaders
 
 - [More videos from _The Art of Code_](https://youtu.be/rvDo9LvfoVE?list=PLGmrMu-IwbgsVjE7SAtFaWyhZXyBjJNnO)
 
