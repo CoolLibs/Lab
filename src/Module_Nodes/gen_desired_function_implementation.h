@@ -24,11 +24,12 @@ template<PrimitiveTypeC A, PrimitiveTypeC B, PrimitiveTypeC C, PrimitiveTypeC D>
 auto gen_desired_function_implementation(
     A /*current_from*/, B /*current_to*/,
     C /*desired_from*/, D /*desired_to*/,
-    std::string_view base_function_name,
-    std::string_view input_function_name
+    std::string_view           base_function_name,
+    std::string_view           input_function_name,
+    AlreadyGeneratedFunctions& already_generated_functions
 ) -> FunctionImplementation
 {
-    const auto default_function = gen_default_function({.from = B{}, .to = D{}});
+    const auto default_function = gen_default_function({.from = B{}, .to = D{}}, already_generated_functions);
 
     using namespace fmt::literals;
     return {
@@ -57,7 +58,8 @@ auto gen_desired_function_implementation(
     A /*current_from*/, A /*current_to*/,
     A /*desired_from*/, A /*desired_to*/,
     std::string_view base_function_name,
-    std::string_view /*input_function_name*/
+    std::string_view /*input_function_name*/,
+    AlreadyGeneratedFunctions& /* already_generated_functions */
 ) -> FunctionImplementation
 {
     using namespace fmt::literals;
@@ -85,7 +87,8 @@ auto gen_desired_function_implementation(
     A /*current_from*/, B /*current_to*/,
     A /*desired_from*/, B /*desired_to*/,
     std::string_view base_function_name,
-    std::string_view /*input_function_name*/
+    std::string_view /*input_function_name*/,
+    AlreadyGeneratedFunctions& /* already_generated_functions */
 ) -> FunctionImplementation
 {
     using namespace fmt::literals;
@@ -116,7 +119,8 @@ auto gen_desired_function_implementation(
     A /*current_from*/, A /*current_to*/,
     A /*desired_from*/, B /*desired_to*/,
     std::string_view base_function_name,
-    std::string_view input_function_name
+    std::string_view input_function_name,
+    AlreadyGeneratedFunctions& /* already_generated_functions */
 ) -> FunctionImplementation
 {
     using namespace fmt::literals;
@@ -148,7 +152,8 @@ auto gen_desired_function_implementation(
     B /*current_from*/, B /*current_to*/,
     A /*desired_from*/, B /*desired_to*/,
     std::string_view base_function_name,
-    std::string_view input_function_name
+    std::string_view input_function_name,
+    AlreadyGeneratedFunctions& /* already_generated_functions */
 ) -> FunctionImplementation
 {
     using namespace fmt::literals;
@@ -180,7 +185,8 @@ auto gen_desired_function_implementation(
     A /*current_from*/, B /*current_to*/,
     A /*desired_from*/, C /*desired_to*/,
     std::string_view base_function_name,
-    std::string_view input_function_name
+    std::string_view input_function_name,
+    AlreadyGeneratedFunctions& /* already_generated_functions */
 ) -> FunctionImplementation
 {
     using namespace fmt::literals;
@@ -212,7 +218,8 @@ auto gen_desired_function_implementation(
     A /*current_from*/, B /*current_to*/,
     C /*desired_from*/, B /*desired_to*/,
     std::string_view base_function_name,
-    std::string_view input_function_name
+    std::string_view input_function_name,
+    AlreadyGeneratedFunctions& /* already_generated_functions */
 ) -> FunctionImplementation
 {
     using namespace fmt::literals;
@@ -230,4 +237,4 @@ auto gen_desired_function_implementation(
 
 } // namespace Lab
 
-// TODO test all of these, to make sure overload resolution doesn't change when we add options
+// TODO(JF) test all of these, to make sure overload resolution doesn't change when we add options

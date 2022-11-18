@@ -18,7 +18,8 @@ static auto gen_desired_function(
     FunctionSignature const&                    desired_signature,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Graph const&                                graph,
-    Cool::InputProvider_Ref                     input_provider
+    Cool::InputProvider_Ref                     input_provider,
+    AlreadyGeneratedFunctions&                  already_generated_functions
 ) -> tl::expected<Function, std::string>;
 
 static auto gen_params(
@@ -77,13 +78,14 @@ static auto gen_function_definition(Params__gen_function_definition p)
     )};
 }
 
-static auto gen_function__impl(Params__gen_function_definition p)
+static auto gen_function__impl(Params__gen_function_definition p, AlreadyGeneratedFunctions& already_generated_functions)
     -> Function
 {
-    return {
-        .name       = std::string{p.name},
-        .definition = gen_function_definition(p),
-    };
+    return {{
+                .name       = std::string{p.name},
+                .definition = gen_function_definition(p),
+            },
+            already_generated_functions};
 }
 
 static auto is_not_alphanumeric(char c) -> bool
@@ -242,7 +244,8 @@ static auto gen_inputs(
     NodeDefinition const&                       node_definition,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Graph const&                                graph,
-    Cool::InputProvider_Ref                     input_provider
+    Cool::InputProvider_Ref                     input_provider,
+    AlreadyGeneratedFunctions&                  already_generated_functions
 )
     -> tl::expected<GeneratedInputs, std::string>
 {
@@ -256,7 +259,8 @@ static auto gen_inputs(
             input.signature(),
             get_node_definition,
             graph,
-            input_provider
+            input_provider,
+            already_generated_functions
         );
         if (!function)
             return tl::make_unexpected(function.error());
@@ -276,43 +280,41 @@ static auto gen_base_function(
     Cool::NodeId const&                         id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Graph const&                                graph,
-    Cool::InputProvider_Ref                     input_provider
+    Cool::InputProvider_Ref                     input_provider,
+    AlreadyGeneratedFunctions&                  already_generated_functions
 ) -> tl::expected<Function, std::string>
 {
-    auto const inputs = gen_inputs(node, node_definition, get_node_definition, graph, input_provider);
+    auto const inputs = gen_inputs(node, node_definition, get_node_definition, graph, input_provider, already_generated_functions);
     if (!inputs)
         return tl::make_unexpected(inputs.error());
 
-    auto const func = gen_function__impl({
-        .signature       = node_definition.signature(),
-        .name            = base_function_name(node_definition, id),
-        .body            = node_definition.function_body(),
-        .before_function = gen_properties(node.properties(), input_provider) + "\n\n"
-                           + inputs->code,
-    });
+    auto func = gen_function__impl({
+                                       .signature       = node_definition.signature(),
+                                       .name            = base_function_name(node_definition, id),
+                                       .body            = node_definition.function_body(),
+                                       .before_function = gen_properties(node.properties(), input_provider) + "\n\n" + inputs->code,
+                                   },
+                                   already_generated_functions);
 
-    // { // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
-    auto definition = replace_property_names(func.definition, node.properties());
-    definition      = replace_input_names(definition, inputs->real_names);
+    // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
+    func.definition = replace_property_names(func.definition, node.properties());
+    func.definition = replace_input_names(func.definition, inputs->real_names);
 
     {
-        auto const error = check_there_are_no_backticks_left(definition, list_all_property_and_input_names(node.properties(), node_definition.inputs()));
+        auto const error = check_there_are_no_backticks_left(func.definition, list_all_property_and_input_names(node.properties(), node_definition.inputs()));
         if (error)
             return tl::make_unexpected(*error);
     }
-    // }
 
-    return Function{
-        .name       = func.name,
-        .definition = definition,
-    };
+    return func;
 }
 
 static auto gen_desired_implementation(
-    NodeDefinition const&    node_definition,
-    FunctionSignature const& desired_signature,
-    std::string_view         base_function_name,
-    std::string_view         input_function_name
+    NodeDefinition const&      node_definition,
+    FunctionSignature const&   desired_signature,
+    std::string_view           base_function_name,
+    std::string_view           input_function_name,
+    AlreadyGeneratedFunctions& already_generated_functions
 )
     -> FunctionImplementation
 {
@@ -321,7 +323,7 @@ static auto gen_desired_implementation(
             auto&& desired_from, auto&& desired_to) { return gen_desired_function_implementation(
                                                           current_from, current_to,
                                                           desired_from, desired_to,
-                                                          base_function_name, input_function_name
+                                                          base_function_name, input_function_name, already_generated_functions
                                                       ); },
         node_definition.signature().from, node_definition.signature().to,
         desired_signature.from, desired_signature.to
@@ -333,13 +335,14 @@ static auto gen_desired_function(
     FunctionSignature const&                    desired_signature,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Graph const&                                graph,
-    Cool::InputProvider_Ref                     input_provider
+    Cool::InputProvider_Ref                     input_provider,
+    AlreadyGeneratedFunctions&                  already_generated_functions
 )
     -> tl::expected<Function, std::string>
 {
     const auto node = graph.nodes().get(id);
     if (!node)
-        return gen_default_function(desired_signature);
+        return gen_default_function(desired_signature, already_generated_functions);
 
     const auto node_definition = get_node_definition(node->definition_name());
     if (!node_definition)
@@ -350,7 +353,7 @@ static auto gen_desired_function(
 
     const auto base_function = gen_base_function(
         *node, *node_definition, id,
-        get_node_definition, graph, input_provider
+        get_node_definition, graph, input_provider, already_generated_functions
     );
     if (!base_function)
         return tl::make_unexpected(fmt::format(
@@ -370,25 +373,28 @@ static auto gen_desired_function(
                                         *input_function_signature,
                                         get_node_definition,
                                         graph,
-                                        input_provider
+                                        input_provider,
+                                        already_generated_functions
                                     )
                                     : tl::expected<Function, std::string>{
-                                        Function{
-                                            .name       = "",
-                                            .definition = "",
-                                        }};
+                                        Function{{
+                                                     .name       = "",
+                                                     .definition = "",
+                                                 },
+                                                 already_generated_functions}};
     if (!input_function)
         return input_function;
 
     const auto name = desired_function_name(*node_definition, id, desired_signature);
 
-    const auto impl = gen_desired_implementation(*node_definition, desired_signature, base_function->name, input_function->name);
+    const auto impl = gen_desired_implementation(*node_definition, desired_signature, base_function->name, input_function->name, already_generated_functions);
 
     auto function = gen_function__impl({
-        .signature = desired_signature,
-        .name      = name,
-        .body      = impl.function_body,
-    });
+                                           .signature = desired_signature,
+                                           .name      = name,
+                                           .body      = impl.function_body,
+                                       },
+                                       already_generated_functions);
 
     function.definition = input_function->definition + "\n\n"
                           + impl.before_function + "\n\n"
@@ -406,12 +412,14 @@ auto generate_shader_code(
 )
     -> tl::expected<std::string, std::string>
 {
-    const auto main_function = gen_desired_function(
+    auto       already_generated_functions = AlreadyGeneratedFunctions{};
+    const auto main_function               = gen_desired_function(
         main_node_id,
         Signature::Image,
         get_node_definition,
         graph,
-        input_provider
+        input_provider,
+        already_generated_functions
     );
     if (!main_function)
         return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function.error()));

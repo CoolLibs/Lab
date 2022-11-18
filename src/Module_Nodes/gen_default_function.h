@@ -4,6 +4,6 @@
 
 namespace Lab {
 
-auto gen_default_function(FunctionSignature) -> Function;
+auto gen_default_function(FunctionSignature, AlreadyGeneratedFunctions&) -> Function;
 
 } // namespace Lab
