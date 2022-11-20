@@ -36,12 +36,11 @@ auto gen_desired_function_implementation(
         .before_function = default_function.definition,
         .function_body   = fmt::format(
             FMT_COMPILE(
-                R"STR(return {default_function_name}({base_function_name}({input_function_name}({in1})));)STR"
+                R"STR(return {default_function_name}({base_function_name}({input_function_name}(in1)));)STR"
             ),
             "default_function_name"_a = default_function.name,
             "base_function_name"_a    = base_function_name,
-            "input_function_name"_a   = input_function_name,
-            "in1"_a                   = std::is_same_v<PrimitiveType::Void, A> ? "" : "in1"
+            "input_function_name"_a   = input_function_name
         ),
     };
 }
@@ -68,10 +67,9 @@ auto gen_desired_function_implementation(
         .before_function = "",
         .function_body   = fmt::format(
             FMT_COMPILE(
-                R"STR(return {base_function_name}({in1});)STR"
+                R"STR(return {base_function_name}(in1);)STR"
             ),
-            "base_function_name"_a = base_function_name,
-            "in1"_a                = std::is_same_v<PrimitiveType::Void, A> ? "" : "in1"
+            "base_function_name"_a = base_function_name
         ),
     };
 }
@@ -98,10 +96,9 @@ auto gen_desired_function_implementation(
         .before_function = "",
         .function_body   = fmt::format(
             FMT_COMPILE(
-                R"STR(return {base_function_name}({in1});)STR"
+                R"STR(return {base_function_name}(in1);)STR"
             ),
-            "base_function_name"_a = base_function_name,
-            "in1"_a                = std::is_same_v<PrimitiveType::Void, A> ? "" : "in1"
+            "base_function_name"_a = base_function_name
         ),
     };
 }
@@ -131,11 +128,10 @@ auto gen_desired_function_implementation(
         .before_function = "",
         .function_body   = fmt::format(
             FMT_COMPILE(
-                R"STR(return {input_function_name}({base_function_name}({in1}));)STR"
+                R"STR(return {input_function_name}({base_function_name}(in1));)STR"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = input_function_name,
-            "in1"_a                 = std::is_same_v<PrimitiveType::Void, A> ? "" : "in1"
+            "input_function_name"_a = input_function_name
         ),
     };
 }
@@ -165,11 +161,10 @@ auto gen_desired_function_implementation(
         .before_function = "",
         .function_body   = fmt::format(
             FMT_COMPILE(
-                R"STR(return {base_function_name}({input_function_name}({in1}));)STR"
+                R"STR(return {base_function_name}({input_function_name}(in1));)STR"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = input_function_name,
-            "in1"_a                 = std::is_same_v<PrimitiveType::Void, A> ? "" : "in1"
+            "input_function_name"_a = input_function_name
         ),
     };
 }
@@ -199,11 +194,10 @@ auto gen_desired_function_implementation(
         .before_function = "",
         .function_body   = fmt::format(
             FMT_COMPILE(
-                R"STR(return {input_function_name}({base_function_name}({in1}));)STR"
+                R"STR(return {input_function_name}({base_function_name}(in1));)STR"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = input_function_name,
-            "in1"_a                 = std::is_same_v<PrimitiveType::Void, A> ? "" : "in1"
+            "input_function_name"_a = input_function_name
         ),
     };
 }
@@ -233,11 +227,10 @@ auto gen_desired_function_implementation(
         .before_function = "",
         .function_body   = fmt::format(
             FMT_COMPILE(
-                R"STR(return {base_function_name}({input_function_name}({in1}));)STR"
+                R"STR(return {base_function_name}({input_function_name}(in1));)STR"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = input_function_name,
-            "in1"_a                 = std::is_same_v<PrimitiveType::Void, A> ? "" : "in1"
+            "input_function_name"_a = input_function_name
         ),
     };
 }

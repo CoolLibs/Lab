@@ -28,10 +28,6 @@ static auto gen_params(
 ) -> std::string
 {
     using namespace fmt::literals;
-
-    if (signature.from == AnyPrimitiveType{PrimitiveType::Void{}})
-        return "";
-
     return fmt::format(
         FMT_COMPILE(
             "{type} in1"

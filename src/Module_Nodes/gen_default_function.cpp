@@ -31,6 +31,22 @@ vec3 default_colorizer(float x)
                         already_generated_functions};
     }
 
+    if (signature.to == AnyPrimitiveType{PrimitiveType::Void{}})
+    {
+        auto const name = fmt::format("default_{}_to_void", cpp_type_as_string(signature.from));
+        return Function{{
+                            .name       = name,
+                            .definition = fmt::format(R"STR(
+int {}({})
+{{
+    return 0;
+}}
+)STR",
+                                                      name, glsl_type_as_string(signature.from)),
+                        },
+                        already_generated_functions};
+    }
+
     return Function{{
                         .name       = "ERROR_NO_DEFAULT_FUNCTION",
                         .definition = fmt::format("ERROR: Could not generate a default function from {} to {}", cpp_type_as_string(signature.from), cpp_type_as_string(signature.to)),

@@ -11,4 +11,4 @@ if constexpr (std::is_same_v<T, PrimitiveType::UV>)
 if constexpr (std::is_same_v<T, PrimitiveType::Float>)
     return "/*Float*/ float";
 if constexpr (std::is_same_v<T, PrimitiveType::Void>)
-    return "/*Void*/ void";
+    return "/*Void*/ int";

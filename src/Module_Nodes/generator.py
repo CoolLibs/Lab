@@ -15,7 +15,8 @@ def all_primitive_types():
         # PrimitiveType(cpp="SignedDistance", glsl="float"),
         PrimitiveType(cpp="Float", glsl="float"),
         # PrimitiveType(cpp="Vec3", glsl="vec3"),
-        PrimitiveType(cpp="Void", glsl="void"),
+        # Trick: because we always want to have exactly one type, we represent Void as an int that will be ignored
+        PrimitiveType(cpp="Void", glsl="int"),
     ]
 
 
