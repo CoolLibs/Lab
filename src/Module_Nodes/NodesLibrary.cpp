@@ -18,6 +18,19 @@ return dot(in1, vec3(0.2126, 0.7152, 0.0722));
     }});
 
     this->add_definition({{
+        .name      = "Saturation",
+        .signature = {
+            .from = PrimitiveType::Color{},
+            .to   = PrimitiveType::Color{},
+        },
+        .function_body = {R"STR(
+return mix(vec3(dot(in1, vec3(0.2126, 0.7152, 0.0722))), in1, `Saturation`);
+    )STR"},
+        .inputs        = {},
+        .properties    = {Cool::InputDefinition<float>{"`Saturation`"}},
+    }});
+
+    this->add_definition({{
         .name      = "Checkerboard",
         .signature = {
             .from = PrimitiveType::UV{},
@@ -169,13 +182,13 @@ return _time;
     }});
 
     this->add_definition({{
-        .name      = "nsin",
+        .name      = "Sine (Normalized)",
         .signature = {
             .from = PrimitiveType::Float{},
             .to   = PrimitiveType::Float{},
         },
         .function_body = {R"STR(
-return sin(in1 * 6.28) * 0.5 + 0.5;
+return sin((in1 - 0.25) * 6.28) * 0.5 + 0.5;
     )STR"},
         .inputs        = {},
         .properties    = {},
@@ -195,6 +208,19 @@ return `A` * `B`;
             Cool::InputDefinition<float>{"`A`"},
             Cool::InputDefinition<float>{"`B`"},
         },
+    }});
+
+    this->add_definition({{
+        .name      = "Vertical Gradient",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::Float{},
+        },
+        .function_body = {R"STR(
+return in1.y*0.5+0.5;
+    )STR"},
+        .inputs        = {},
+        .properties    = {},
     }});
 }
 
