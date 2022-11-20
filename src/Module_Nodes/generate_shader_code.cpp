@@ -189,7 +189,7 @@ static auto gen_properties(
 
             auto const input_func = gen_desired_function(
                 input_node_id,
-                {.from = PrimitiveType::Void{}, .to = *property_type},
+                {.from = PrimitiveType::UV{}, .to = *property_type},
                 get_node_definition,
                 graph,
                 input_provider,
@@ -199,7 +199,7 @@ static auto gen_properties(
                 return tl::make_unexpected(input_func.error());
 
             code << input_func->definition;
-            res.real_names.push_back(fmt::format("{}()", input_func->name)); // Input name will be replaced with a call to the corresponding function
+            res.real_names.push_back(fmt::format("{}(normalized_uv())", input_func->name)); // Input name will be replaced with a call to the corresponding function
         }
         else
         {
