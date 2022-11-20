@@ -23,6 +23,19 @@ NodeDefinition::NodeDefinition(NodeDefinition_Data const& data)
         },
                    prop);
     }
+
+    for (auto& output_index_name : _data.output_indices)
+    {
+        if (output_index_name.size() < 2 /* Make sure indexing at `output_index_name.size() - 1` is safe */
+            || output_index_name[0] != '`' || output_index_name[output_index_name.size() - 1] != '`')
+        {
+            throw std::runtime_error(fmt::format(
+                "All the OUTPUT names must start and end with backticks (`).\nName \"{}\" is invalid.", output_index_name
+            ));
+        }
+
+        output_index_name = output_index_name.substr(1, output_index_name.size() - 2);
+    }
 }
 
 } // namespace Lab

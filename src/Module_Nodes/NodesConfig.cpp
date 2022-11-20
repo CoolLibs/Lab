@@ -46,6 +46,9 @@ auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
         node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& property_def) { return property_def.name; }, property_def)});
     }
 
+    for (auto const& output_index_name : def.output_indices())
+        node.output_pins().push_back(Cool::OutputPin{output_index_name});
+
     return node;
 }
 

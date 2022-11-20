@@ -159,6 +159,19 @@ auto valid_property_name(std::string const& name, reg::AnyId const& property_def
     );
 }
 
+static auto make_valid_output_index_name(Cool::OutputPin const& pin)
+    -> std::string
+{
+    using namespace fmt::literals;
+    return fmt::format(
+        FMT_COMPILE(
+            "{name}{id}"
+        ),
+        "name"_a = valid_glsl(pin.name()),
+        "id"_a   = valid_glsl(to_string(pin.id().underlying_uuid()))
+    );
+}
+
 struct Properties {
     std::string              code;
     std::vector<std::string> real_names;
@@ -180,26 +193,35 @@ static auto gen_properties(
     for (auto const& prop : node.properties())
     {
         auto const input_pin     = node.pin_of_property(property_index);
-        auto const input_node_id = graph.input_node_id(input_pin.id());
-        if (graph.nodes().contains(input_node_id))
+        auto       output_pin    = Cool::OutputPin{};
+        auto const input_node_id = graph.input_node_id(input_pin.id(), &output_pin);
+        auto const node          = graph.nodes().get(input_node_id);
+        if (node)
         {
-            auto const property_type = input_to_primitive_type(prop);
-            if (!property_type)
-                return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
+            if (node->main_output_pin() == output_pin)
+            {
+                auto const property_type = input_to_primitive_type(prop);
+                if (!property_type)
+                    return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
 
-            auto const input_func = gen_desired_function(
-                input_node_id,
-                {.from = PrimitiveType::UV{}, .to = *property_type},
-                get_node_definition,
-                graph,
-                input_provider,
-                already_generated_functions
-            );
-            if (!input_func)
-                return tl::make_unexpected(input_func.error());
+                auto const input_func = gen_desired_function(
+                    input_node_id,
+                    {.from = PrimitiveType::UV{}, .to = *property_type},
+                    get_node_definition,
+                    graph,
+                    input_provider,
+                    already_generated_functions
+                );
+                if (!input_func)
+                    return tl::make_unexpected(input_func.error());
 
-            code << input_func->definition;
-            res.real_names.push_back(fmt::format("{}(normalized_uv())", input_func->name)); // Input name will be replaced with a call to the corresponding function
+                code << input_func->definition;
+                res.real_names.push_back(fmt::format("{}(normalized_uv())", input_func->name)); // Input name will be replaced with a call to the corresponding function
+            }
+            else // We are plugged to an output index
+            {
+                res.real_names.push_back(make_valid_output_index_name(output_pin));
+            }
         }
         else
         {
@@ -221,7 +243,11 @@ static auto gen_properties(
     return res;
 }
 
-static auto list_all_property_and_input_names(std::vector<Cool::AnyInput> const& properties, std::vector<NodeInputDefinition> const& inputs)
+static auto list_all_property_and_input_and_output_names(
+    std::vector<Cool::AnyInput> const&      properties,
+    std::vector<NodeInputDefinition> const& inputs,
+    std::vector<std::string> const&         output_indices_names
+)
     -> std::string
 {
     std::stringstream res{};
@@ -230,6 +256,8 @@ static auto list_all_property_and_input_names(std::vector<Cool::AnyInput> const&
         res << fmt::format("  - `{}`", std::visit([](auto&& prop) { return prop.name(); }, prop)) << '\n';
     for (auto const& input : inputs)
         res << fmt::format("  - `{}`", input.name()) << '\n';
+    for (auto const& name : output_indices_names)
+        res << fmt::format("  - `{}`", name) << '\n';
 
     return res.str();
 }
@@ -260,6 +288,23 @@ static auto replace_input_names(
 {
     for (auto const& [old_name, new_name] : real_names)
         Cool::String::replace_all(code, fmt::format("`{}`", old_name), new_name);
+
+    return code;
+}
+
+static auto replace_output_indices_names(
+    std::string code,
+    Node const& node
+) -> std::string
+{
+    for (size_t i = 1; i < node.output_pins().size(); ++i)
+    {
+        Cool::String::replace_all(
+            code,
+            fmt::format("`{}`", node.output_pins()[i].name()),
+            make_valid_output_index_name(node.output_pins()[i])
+        );
+    }
 
     return code;
 }
@@ -302,19 +347,28 @@ static auto gen_inputs(
     size_t input_idx{0};
     for (auto const& input : node_definition.inputs())
     {
-        auto const function = gen_desired_function(
-            graph.input_node_id(node.pin_of_input(input_idx).id()),
-            input.signature(),
-            get_node_definition,
-            graph,
-            input_provider,
-            already_generated_functions
-        );
-        if (!function)
-            return tl::make_unexpected(function.error());
+        auto       output_pin    = Cool::OutputPin{};
+        auto const input_node_id = graph.input_node_id(node.pin_of_input(input_idx).id(), &output_pin);
+        if (output_pin == node.main_output_pin())
+        {
+            auto const function = gen_desired_function(
+                input_node_id,
+                input.signature(),
+                get_node_definition,
+                graph,
+                input_provider,
+                already_generated_functions
+            );
+            if (!function)
+                return tl::make_unexpected(function.error());
 
-        res.code += function->definition;
-        res.real_names[input.name()] = function->name;
+            res.code += function->definition;
+            res.real_names[input.name()] = function->name;
+        }
+        else // We are plugged to an output index
+        {
+            res.real_names[input.name()] = make_valid_output_index_name(output_pin);
+        }
 
         input_idx++;
     }
@@ -351,9 +405,10 @@ static auto gen_base_function(
     // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
     func.definition = replace_property_names(func.definition, node.properties(), properties_code->real_names);
     func.definition = replace_input_names(func.definition, inputs->real_names);
+    func.definition = replace_output_indices_names(func.definition, node);
 
     {
-        auto const error = check_there_are_no_backticks_left(func.definition, list_all_property_and_input_names(node.properties(), node_definition.inputs()));
+        auto const error = check_there_are_no_backticks_left(func.definition, list_all_property_and_input_and_output_names(node.properties(), node_definition.inputs(), node_definition.output_indices()));
         if (error)
             return tl::make_unexpected(*error);
     }
@@ -421,7 +476,7 @@ static auto gen_desired_function(
 
     const auto input_function = input_function_signature
                                     ? gen_desired_function(
-                                        graph.input_node_id(node->main_pin().id()),
+                                        graph.input_node_id(node->main_input_pin().id()),
                                         *input_function_signature,
                                         get_node_definition,
                                         graph,
@@ -456,6 +511,19 @@ static auto gen_desired_function(
     return function;
 }
 
+static auto gen_all_output_indices_declarations(Graph const& graph)
+    -> std::string
+{
+    std::stringstream res{};
+
+    std::shared_lock lock{graph.nodes().mutex()};
+    for (auto const& [_, node] : graph.nodes())
+        for (size_t i = 1; i < node.output_pins().size(); ++i)
+            res << fmt::format("float {};\n", make_valid_output_index_name(node.output_pins()[i]));
+
+    return res.str();
+}
+
 auto generate_shader_code(
     Graph const&                                       graph,
     Cool::GetNodeDefinition_Ref<NodeDefinition> const& get_node_definition,
@@ -485,6 +553,8 @@ out vec4      out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 
+{output_indices_declarations}
+
 {main_function_definition}
 
 void main()
@@ -495,8 +565,9 @@ void main()
 
 )STR"
         ),
-        "main_function_definition"_a = main_function->definition,
-        "main_function_name"_a       = main_function->name
+        "output_indices_declarations"_a = gen_all_output_indices_declarations(graph),
+        "main_function_definition"_a    = main_function->definition,
+        "main_function_name"_a          = main_function->name
     );
 }
 

@@ -222,6 +222,46 @@ return in1.y*0.5+0.5;
         .inputs        = {},
         .properties    = {},
     }});
+
+    this->add_definition({{
+        .name      = "Grid",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::UV{},
+        },
+        .function_body  = {R"STR(
+vec2 uv = unnormalize_uv_with_aspect_ratio(in1, 1.) * `Nb cells`;
+vec2 gid = floor(uv);
+`Index X` = gid.x;
+`Index Y` = gid.y;
+return normalize_uv_with_aspect_ratio(fract(uv), 1.);
+    )STR"},
+        .inputs         = {},
+        .properties     = {Cool::InputDefinition<float>{"`Nb cells`"}},
+        .output_indices = {
+            "`Index X`",
+            "`Index Y`",
+        },
+    }});
+
+    this->add_definition({{
+        .name      = "Random 2D",
+        .signature = {
+            .from = PrimitiveType::Void{},
+            .to   = PrimitiveType::Float{},
+        },
+        .function_body = {R"STR(
+vec2 seeds = vec2(`Seed X`, `Seed Y`);
+float rand = fract(sin(dot(seeds, vec2(12.9898, 78.233))) * 43758.5453);
+return rand * (`Max` - `Min`) + `Min`;
+    )STR"},
+        .properties    = {
+            Cool::InputDefinition<float>{"`Seed X`"},
+            Cool::InputDefinition<float>{"`Seed Y`"},
+            Cool::InputDefinition<float>{"`Min`"},
+            Cool::InputDefinition<float>{"`Max`"},
+        },
+    }});
 }
 
 } // namespace Lab
