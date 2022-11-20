@@ -37,7 +37,7 @@ vec3 default_colorizer(float x)
         return Function{{
                             .name       = name,
                             .definition = fmt::format(R"STR(
-int {}({})
+int {}({} unused_parameter)
 {{
     return 0;
 }}
