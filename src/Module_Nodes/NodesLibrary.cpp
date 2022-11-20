@@ -114,6 +114,35 @@ return in1;
     }});
 
     this->add_definition({{
+        .name      = "Rotate 90°",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::UV{},
+        },
+        .function_body = {R"STR(
+return vec2(in1.y, -in1.x);
+    )STR"},
+        .inputs        = {},
+        .properties    = {},
+    }});
+
+    this->add_definition({{
+        .name      = "Scale",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::UV{},
+        },
+        .function_body = {R"STR(
+return in1 * vec2(`Scale X`, `Scale Y`);
+    )STR"},
+        .inputs        = {},
+        .properties    = {
+            Cool::InputDefinition<float>{"`Scale X`"},
+            Cool::InputDefinition<float>{"`Scale Y`"},
+        },
+    }});
+
+    this->add_definition({{
         .name      = "RGB Drift",
         .signature = {
             .from = PrimitiveType::UV{},
@@ -241,6 +270,36 @@ return normalize_uv_with_aspect_ratio(fract(uv), 1.);
         .output_indices = {
             "`Index X`",
             "`Index Y`",
+        },
+    }});
+
+    this->add_definition({{
+        .name      = "Render N Times",
+        .signature = {
+            .from = PrimitiveType::UV{},
+            .to   = PrimitiveType::Color{},
+        },
+        .function_body = {R"STR(
+vec3 color = vec3(0.);
+for (int i = 0; i < `N`; ++i)
+{
+    `Index` = i;
+    color += `Image`(in1);
+}
+return color;
+    )STR"},
+        .inputs        = {
+            {{
+                       .name      = "`Image`",
+                       .signature = {
+                           .from = PrimitiveType::UV{},
+                           .to   = PrimitiveType::Color{},
+                },
+            }},
+        },
+        .properties     = {Cool::InputDefinition<int>{"`N`"}},
+        .output_indices = {
+            "`Index`",
         },
     }});
 
