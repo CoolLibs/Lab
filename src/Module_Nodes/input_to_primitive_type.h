@@ -5,6 +5,6 @@
 
 namespace Lab {
 
-auto input_to_primitive_type(Cool::AnyInput const&) -> std::optional<AnyPrimitiveType>;
+auto input_to_primitive_type(Cool::AnyInput const&) -> std::optional<PrimitiveType>;
 
 }

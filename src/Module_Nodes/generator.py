@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 
 
@@ -20,23 +19,19 @@ def all_primitive_types():
     ]
 
 
-def primitive_types_list():
-    return ",\n".join(map(lambda type: f"PrimitiveType::{type.cpp}", all_primitive_types()))
+def primitive_types_enum_members():
+    return ",\n".join(map(lambda type: f"{type.cpp}", all_primitive_types()))
 
 
-def primitive_types_structs_definitions():
-    return "\n".join(map(lambda type: f"struct {type.cpp} {{auto operator<=>({type.cpp} const&) const = default;}};", all_primitive_types()))
-
-
-def glsl_type_as_string():
+def glsl_type_as_string_cases():
     return "\n".join(map(lambda type:
-                         f'if constexpr (std::is_same_v<T, PrimitiveType::{type.cpp}>) return "/*{type.cpp}*/ {type.glsl}";',
+                         f'case PrimitiveType::{type.cpp}: return "/*{type.cpp}*/ {type.glsl}";',
                          all_primitive_types()))
 
 
-def cpp_type_as_string():
+def cpp_type_as_string_cases():
     return "\n".join(map(lambda type:
-                         f'if constexpr (std::is_same_v<T, PrimitiveType::{type.cpp}>) return "{type.cpp}";',
+                         f'case PrimitiveType::{type.cpp}: return "{type.cpp}";',
                          all_primitive_types()))
 
 
@@ -56,9 +51,8 @@ if __name__ == '__main__':
     generate_files.generate(
         folder="generated",
         files=[
-            primitive_types_list,
-            primitive_types_structs_definitions,
-            glsl_type_as_string,
-            cpp_type_as_string,
+            primitive_types_enum_members,
+            glsl_type_as_string_cases,
+            cpp_type_as_string_cases,
         ],
     )

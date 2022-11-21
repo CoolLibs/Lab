@@ -3,7 +3,6 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
-#include <fmt/compile.h>
 #include "Function.h"
 #include "FunctionSignature.h"
 #include "Node.h"
@@ -206,7 +205,7 @@ static auto gen_properties(
 
                 auto const input_func = gen_desired_function(
                     input_node_id,
-                    {.from = PrimitiveType::UV{}, .to = *property_type},
+                    {.from = PrimitiveType::UV, .to = *property_type},
                     get_node_definition,
                     graph,
                     input_provider,
@@ -426,15 +425,9 @@ static auto gen_desired_implementation(
 )
     -> FunctionImplementation
 {
-    return std::visit(
-        [&](auto&& current_from, auto&& current_to,
-            auto&& desired_from, auto&& desired_to) { return gen_desired_function_implementation(
-                                                          current_from, current_to,
-                                                          desired_from, desired_to,
-                                                          base_function_name, input_function_name, already_generated_functions
-                                                      ); },
-        node_definition.signature().from, node_definition.signature().to,
-        desired_signature.from, desired_signature.to
+    return gen_desired_function_implementation(
+        node_definition.signature(), desired_signature,
+        base_function_name, input_function_name, already_generated_functions
     );
 }
 
@@ -448,18 +441,18 @@ static auto gen_desired_function(
 )
     -> tl::expected<Function, std::string>
 {
-    const auto node = graph.nodes().get(id);
+    auto const node = graph.nodes().get(id);
     if (!node)
         return gen_default_function(desired_signature, already_generated_functions);
 
-    const auto node_definition = get_node_definition(node->definition_name());
+    auto const node_definition = get_node_definition(node->definition_name());
     if (!node_definition)
         return tl::make_unexpected(fmt::format(
             "Node definition \"{}\" was not found. Are you missing a file in your nodes folder?",
             node->definition_name()
         ));
 
-    const auto base_function = gen_base_function(
+    auto const base_function = gen_base_function(
         *node, *node_definition, id,
         get_node_definition, graph, input_provider, already_generated_functions
     );
@@ -469,13 +462,11 @@ static auto gen_desired_function(
             node_definition->name(), base_function.error()
         ));
 
-    const auto input_function_signature = std::visit(
-        [](auto&& A, auto&& B, auto&& C, auto&& D) { return input_function_desired_signature(A, B, C, D); },
-        node_definition->signature().from, node_definition->signature().to,
-        desired_signature.from, desired_signature.to
+    auto const input_function_signature = input_function_desired_signature(
+        node_definition->signature(), desired_signature
     );
 
-    const auto input_function = input_function_signature
+    auto const input_function = input_function_signature
                                     ? gen_desired_function(
                                         graph.input_node_id(node->main_input_pin().id()),
                                         *input_function_signature,
@@ -493,9 +484,9 @@ static auto gen_desired_function(
     if (!input_function)
         return input_function;
 
-    const auto name = desired_function_name(*node_definition, id, desired_signature);
+    auto const name = desired_function_name(*node_definition, id, desired_signature);
 
-    const auto impl = gen_desired_implementation(*node_definition, desired_signature, base_function->name, input_function->name, already_generated_functions);
+    auto const impl = gen_desired_implementation(*node_definition, desired_signature, base_function->name, input_function->name, already_generated_functions);
 
     auto function = gen_function__impl({
                                            .signature = desired_signature,
@@ -534,7 +525,7 @@ auto generate_shader_code(
     -> tl::expected<std::string, std::string>
 {
     auto       already_generated_functions = AlreadyGeneratedFunctions{};
-    const auto main_function               = gen_desired_function(
+    auto const main_function               = gen_desired_function(
         main_node_id,
         Signature::Image,
         get_node_definition,

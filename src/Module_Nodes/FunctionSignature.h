@@ -5,8 +5,8 @@
 namespace Lab {
 
 struct FunctionSignature {
-    AnyPrimitiveType from;
-    AnyPrimitiveType to;
+    PrimitiveType from;
+    PrimitiveType to;
 
     friend auto operator==(const FunctionSignature&, const FunctionSignature&) -> bool = default;
 };
@@ -14,18 +14,18 @@ struct FunctionSignature {
 namespace Signature {
 
 static constexpr auto Image = FunctionSignature{
-    .from = PrimitiveType::UV{},
-    .to   = PrimitiveType::Color{},
+    .from = PrimitiveType::UV,
+    .to   = PrimitiveType::Color,
 };
 
 static constexpr auto FloatField = FunctionSignature{
-    .from = PrimitiveType::UV{},
-    .to   = PrimitiveType::Float{},
+    .from = PrimitiveType::UV,
+    .to   = PrimitiveType::Float,
 };
 
 static constexpr auto Colorizer = FunctionSignature{
-    .from = PrimitiveType::Float{},
-    .to   = PrimitiveType::Color{},
+    .from = PrimitiveType::Float,
+    .to   = PrimitiveType::Color,
 };
 
 } // namespace Signature
