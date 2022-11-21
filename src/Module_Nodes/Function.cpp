@@ -15,15 +15,15 @@ auto AlreadyGeneratedFunctions::has_already_been_generated(std::string const& na
 Function::Function(Function_Data const& data, AlreadyGeneratedFunctions& check)
     : name{data.name}
 {
-    // Only generate the definition code if it has not yet been generated
+    // Only generate the implementation code if it has not yet been generated
     if (!check.has_already_been_generated(data.name))
     {
         check.push(data.name);
-        definition = data.definition;
+        implementation = data.implementation;
     }
     else
     {
-        definition = fmt::format("/* Function \"{}\" has already been generated. */", data.name);
+        implementation = fmt::format("/* Function \"{}\" has already been generated. */", data.name);
     }
 };
 

@@ -4,7 +4,7 @@ namespace Lab {
 
 struct Function_Data {
     std::string name;
-    std::string definition;
+    std::string implementation;
 };
 
 class AlreadyGeneratedFunctions {
@@ -24,7 +24,7 @@ struct Function {
     Function(Function_Data const&, AlreadyGeneratedFunctions&);
 
     std::string name;
-    std::string definition{};
+    std::string implementation;
 };
 
 } // namespace Lab

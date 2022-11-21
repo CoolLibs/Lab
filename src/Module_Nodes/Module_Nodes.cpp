@@ -19,10 +19,11 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
     if (_nodes_editor.graph().nodes().is_empty())
         return;
+
     auto const shader_code = generate_shader_code(
+        _main_node_id,
         _nodes_editor.graph(),
         Cool::GetNodeDefinition_Ref{_nodes_library},
-        _main_node_id,
         update_ctx.input_provider()
     );
 
