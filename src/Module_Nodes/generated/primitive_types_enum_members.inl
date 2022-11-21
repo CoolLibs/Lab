@@ -6,5 +6,7 @@
  */
 Color,
     UV,
+    SignedDistance,
     Float,
+    Vec3,
     Void

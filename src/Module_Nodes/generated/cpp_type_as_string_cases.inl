@@ -6,5 +6,7 @@
  */
 case PrimitiveType::Color: return "Color";
 case PrimitiveType::UV: return "UV";
+case PrimitiveType::SignedDistance: return "SignedDistance";
 case PrimitiveType::Float: return "Float";
+case PrimitiveType::Vec3: return "Vec3";
 case PrimitiveType::Void: return "Void"; 

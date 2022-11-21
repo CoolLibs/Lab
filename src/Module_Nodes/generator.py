@@ -4,18 +4,42 @@ from dataclasses import dataclass
 @dataclass
 class PrimitiveType:
     cpp: str
+    corresponding_input_type: str
     glsl: str
 
 
 def all_primitive_types():
     return [
-        PrimitiveType(cpp="Color", glsl="vec3"),
-        PrimitiveType(cpp="UV", glsl="vec2"),
-        # PrimitiveType(cpp="SignedDistance", glsl="float"),
-        PrimitiveType(cpp="Float", glsl="float"),
-        # PrimitiveType(cpp="Vec3", glsl="vec3"),
+        PrimitiveType(
+            cpp="Color",
+            corresponding_input_type="Cool::RgbColor",
+            glsl="vec3"
+        ),
+        PrimitiveType(
+            cpp="UV",
+            corresponding_input_type="Cool::Point2D",
+            glsl="vec2"),
+        PrimitiveType(
+            cpp="SignedDistance",
+            corresponding_input_type=None,
+            glsl="float"
+        ),
+        PrimitiveType(
+            cpp="Float",
+            corresponding_input_type="float",
+            glsl="float"
+        ),
+        PrimitiveType(
+            cpp="Vec3",
+            corresponding_input_type="glm::vec3",
+            glsl="vec3"
+        ),
         # Trick: because we always want to have exactly one type, we represent Void as an int that will be ignored
-        PrimitiveType(cpp="Void", glsl="int"),
+        PrimitiveType(
+            cpp="Void",
+            corresponding_input_type=None,
+            glsl="int"
+        ),
     ]
 
 
@@ -32,6 +56,27 @@ def glsl_type_as_string_cases():
 def cpp_type_as_string_cases():
     return "\n".join(map(lambda type:
                          f'case PrimitiveType::{type.cpp}: return "{type.cpp}";',
+                         all_primitive_types()))
+
+
+def check_that_each_primitive_type_corresponds_to_a_different_input_type():
+    input_types = []
+    for type in all_primitive_types():
+        if type.corresponding_input_type is not None:
+            input_types.append(type.corresponding_input_type)
+
+    for i in range(len(input_types)):
+        for j in range(i):
+            if input_types[i] == input_types[j]:
+                raise Exception(
+                    f"You can't have two primitive types corresponding to the same input type ({input_types[i]})")
+
+
+def input_to_primitive_type():
+    check_that_each_primitive_type_corresponds_to_a_different_input_type()
+    return "\n".join(map(lambda type: f'''
+if (std::holds_alternative<Cool::Input<{type.corresponding_input_type}>>(input))
+    return PrimitiveType::{type.cpp};''' if type.corresponding_input_type is not None else "",
                          all_primitive_types()))
 
 
@@ -54,5 +99,6 @@ if __name__ == '__main__':
             primitive_types_enum_members,
             glsl_type_as_string_cases,
             cpp_type_as_string_cases,
+            input_to_primitive_type,
         ],
     )

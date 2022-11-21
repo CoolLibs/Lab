@@ -6,5 +6,7 @@
  */
 case PrimitiveType::Color: return "/*Color*/ vec3";
 case PrimitiveType::UV: return "/*UV*/ vec2";
+case PrimitiveType::SignedDistance: return "/*SignedDistance*/ float";
 case PrimitiveType::Float: return "/*Float*/ float";
+case PrimitiveType::Vec3: return "/*Vec3*/ vec3";
 case PrimitiveType::Void: return "/*Void*/ int"; 
