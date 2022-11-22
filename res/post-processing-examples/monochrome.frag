@@ -10,14 +10,14 @@ out vec4      out_Color;
 INPUT RgbColor Color;
 INPUT float    Brightness;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = monochrome(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Color, Brightness
     );
 

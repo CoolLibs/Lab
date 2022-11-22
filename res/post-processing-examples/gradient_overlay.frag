@@ -15,7 +15,7 @@ INPUT RgbColor End_color;
 
 INPUT float Strength;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
@@ -23,7 +23,7 @@ void main()
     vec3 in_color = image(in_uv);
 
     vec3 color = gradient_overlay(
-        in_color, Effect_intensity, in_uv,
+        in_color, Mask, in_uv,
         Start_point, End_point, Start_color, End_color, Strength
     );
 

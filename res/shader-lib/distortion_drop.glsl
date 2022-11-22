@@ -87,7 +87,7 @@ float map(vec3 p, float time, int N)
 }
 
 vec2 distortion_drop(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     vec2 center, float drops_size, float scale, float distortion, float time, int N
 )
 {
@@ -118,12 +118,12 @@ vec2 distortion_drop(
         vec2 off = vec2(0.01, 0);
         vec3 n   = normalize(map(p, time, N) - vec3(map(p - off.xyy, time, N), map(p - off.yxy, time, N), map(p - off.yyx, time, N)));
         // refract the ray direction
-        r = refract(r, n, (-distortion + 1.) * effect_intensity);
+        r = refract(r, n, (-distortion + 1.) * mask);
     }
 
     float depth = length(p - s);
 
     vec2 uv2 = p.xy * scale / (depth * r.z) + vec2(0.5, .5);
 
-    return mix(in_uv, uv2 - 0.5 + center, effect_intensity);
+    return mix(in_uv, uv2 - 0.5 + center, mask);
 }

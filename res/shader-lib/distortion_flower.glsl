@@ -1,7 +1,7 @@
 // https://www.shadertoy.com/view/stSGDW
 
 vec2 distortion_flower(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     vec2 center, float scale, float frequency, float wave_compression, float subdivison
 )
 {
@@ -14,5 +14,5 @@ vec2 distortion_flower(
     a = a * (r / 50.0);
     a = 200000.0 * sin(a * 6.0) * (r / 30.0) * frequency;
 
-    return mix(in_uv, uv * vec2(cos(a / 20.0), cos(a / 20. * wave_compression)), effect_intensity);
+    return mix(in_uv, uv * vec2(cos(a / 20.0), cos(a / 20. * wave_compression)), mask);
 }

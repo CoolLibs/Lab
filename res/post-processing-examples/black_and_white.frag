@@ -10,14 +10,14 @@ out vec4      out_Color;
 INPUT vec3 Channels_contribution;
 INPUT bool Normalize; /// Makes sure the sum of "Channels contribution" is 1
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = black_and_white(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Channels_contribution, Normalize
     );
 

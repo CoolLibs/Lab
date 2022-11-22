@@ -17,11 +17,11 @@ vec2 distort(vec2 pixel, float power)
 }
 
 vec2 distortion_bulging(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     float strength, vec2 center
 )
 {
     vec2 uv = in_uv / -1; // invert
-    uv      = center - distort(uv + center, strength * effect_intensity + 1.);
+    uv      = center - distort(uv + center, strength * mask + 1.);
     return uv;
 }

@@ -10,14 +10,14 @@ out vec4      out_Color;
 INPUT float Shadows;
 INPUT float Highlights;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = shadows_highlights(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Shadows, Highlights
     );
 

@@ -13,14 +13,14 @@ INPUT float   Strength;
 INPUT float   Strength2;
 INPUT Point2D Center;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = distortion_kaleidoscope_angular(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Center, Angle_distortion, Strength, Strength2
     );
 

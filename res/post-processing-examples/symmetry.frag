@@ -11,14 +11,14 @@ INPUT Point2D Center;
 INPUT Angle   Angle;
 INPUT bool    Flip;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = symmetry(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Center, Angle, Flip
     );
 

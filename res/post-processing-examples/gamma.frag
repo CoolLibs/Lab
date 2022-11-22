@@ -10,14 +10,14 @@ out vec4      out_Color;
 INPUT float Gamma;
 INPUT bool  Clamp; /// Clamps the color between 0 and 1 before applying the Gamma power.
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = gamma_modifier(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Gamma, Clamp
     );
 

@@ -6,7 +6,7 @@ float Sigmoid(float x, float strength)
 }
 
 vec3 sigmoid_contrast(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     float strength
 )
 {
@@ -17,6 +17,6 @@ vec3 sigmoid_contrast(
             Sigmoid(in_color.g, strength),
             Sigmoid(in_color.b, strength)
         ),
-        effect_intensity
+        mask
     );
 }

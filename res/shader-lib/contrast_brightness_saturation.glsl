@@ -1,7 +1,7 @@
 // #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 
 vec3 contrast_brightness_saturation(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     float contrast, float brightness, float saturation
 )
 {
@@ -12,5 +12,5 @@ vec3 contrast_brightness_saturation(
     vec3       contrast_color     = mix(average_luminosity, saturation_color, contrast + 1.);
 
     vec3 out_color = contrast_color;
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_color, out_color, mask);
 }

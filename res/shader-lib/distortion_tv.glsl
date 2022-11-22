@@ -2,7 +2,7 @@
 // https://www.shadertoy.com/view/XtlXzj
 
 float terrain(
-    float effect_intensity,
+    float mask,
     float x, int number_of_iteration, float strength
 )
 {
@@ -13,7 +13,7 @@ float terrain(
     x *= 3.;
     for (float n = 0.; n < number_of_iteration; n++)
     {
-        v += ((sin((x * sin(n / 2.142)) + (n / 1.41))) / number_of_iteration) * strength * (effect_intensity + 1.);
+        v += ((sin((x * sin(n / 2.142)) + (n / 1.41))) / number_of_iteration) * strength * (mask + 1.);
     }
     return pow(v, 3.);
 }

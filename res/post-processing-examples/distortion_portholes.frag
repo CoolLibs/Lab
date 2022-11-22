@@ -14,12 +14,12 @@ INPUT float Shape;      // 2 /// Choses which norm is used to define the distanc
 INPUT float Distortion; // 0.001
 INPUT float Time;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 uv = distortion_portholes(
-        normalized_uv(), Effect_intensity,
+        normalized_uv(), Mask,
         !Allow_very_distorted_cells, Scale, Grid_irregularity, Time, Shape, Distortion
     );
 

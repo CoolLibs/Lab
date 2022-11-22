@@ -11,7 +11,7 @@ out vec4 out_Color;
 INPUT float Spread;
 INPUT float Sigma;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 // https://en.wikipedia.org/wiki/Kernel_(image_processing)
 
@@ -41,6 +41,6 @@ void main()
 {
     vec2 in_uv                                    = normalized_uv();
     float[kernel_array_size] kernel_gaussian_blur = gaussian_blur();
-    CONVOLUTION(kernel_gaussian_blur, kernel_array_size, image, in_uv, Spread, Effect_intensity);
+    CONVOLUTION(kernel_gaussian_blur, kernel_array_size, image, in_uv, Spread, Mask);
     out_Color = vec4(color, 1.);
 }

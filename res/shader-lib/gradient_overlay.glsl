@@ -1,5 +1,5 @@
 vec3 gradient_overlay(
-    vec3 in_color, float effect_intensity, vec2 in_uv,
+    vec3 in_color, float mask, vec2 in_uv,
     vec2 gradient_pos_a, vec2 gradient_pos_b, vec3 gradient_color_a, vec3 gradient_color_b, float gradient_presence
 )
 {
@@ -13,7 +13,7 @@ vec3 gradient_overlay(
     vec3  color          = mix(
         in_color,
         in_color * gradient_color,
-        gradient_presence * effect_intensity
+        gradient_presence * mask
     );
 
     return color;

@@ -12,14 +12,14 @@ INPUT Angle   Angle;
 INPUT int     Iterations;
 INPUT Point2D Center;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = symmetry_star(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Center, Scale, Angle, Iterations
     );
 

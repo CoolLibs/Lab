@@ -20,7 +20,7 @@ float highlights_detection(vec3 image)
 }
 
 vec3 tint_shadows_and_highlights(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     vec3 color_shadows, vec3 color_highlights, float shadows_intensity, float highlights_intensity
 )
 {
@@ -29,5 +29,5 @@ vec3 tint_shadows_and_highlights(
 
     vec3 out_color = mix(mix(in_color, color_highlights, highlights * highlights_intensity), color_shadows, shadows * shadows_intensity);
 
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_color, out_color, mask);
 }

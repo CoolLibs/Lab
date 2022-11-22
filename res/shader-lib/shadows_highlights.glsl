@@ -3,12 +3,12 @@
 // #include "_ROOT_FOLDER_/res/shader-lib/luminance.glsl"
 
 vec3 shadows_highlights(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     float shadows, float highlights
 )
 {
-    shadows    = effect_intensity * shadows + 1.;
-    highlights = effect_intensity * highlights + 1.;
+    shadows    = mask * shadows + 1.;
+    highlights = mask * highlights + 1.;
 
     float luminance = cool__luminance(in_color);
 

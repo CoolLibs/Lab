@@ -12,14 +12,14 @@ INPUT float    Shadow_strength;
 INPUT RgbColor Highlight_color;
 INPUT float    Highlight_strength;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = tint_shadows_and_highlights(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Shadow_color, Highlight_color, Shadow_strength, Highlight_strength
     );
 

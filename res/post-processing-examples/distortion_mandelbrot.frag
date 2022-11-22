@@ -11,14 +11,14 @@ INPUT float   Scale;
 INPUT Point2D Center;
 INPUT float   Iterations;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = distortion_mandelbrot(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Center, Scale, Iterations
     );
 

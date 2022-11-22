@@ -13,7 +13,7 @@ INPUT float   Falloff;
 INPUT float   Blur;
 INPUT Point2D Center;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
@@ -23,7 +23,7 @@ void main()
 
     float  inverseSampleCount = 1.0 / Sample_count;
     vec2   direction          = normalize(uv);
-    vec2   velocity           = direction * Blur * pow(length(uv), Falloff) * Effect_intensity;
+    vec2   velocity           = direction * Blur * pow(length(uv), Falloff) * Mask;
     mat3x2 increments         = mat3x2(
         velocity * 1.0 * inverseSampleCount,
         velocity * 2.0 * inverseSampleCount,

@@ -10,7 +10,7 @@ out vec4 out_Color;
 
 INPUT float Spread;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 // https://en.wikipedia.org/wiki/Kernel_(image_processing)
 
@@ -23,6 +23,6 @@ INPUT float Effect_intensity;
 void main()
 {
     vec2 in_uv = normalized_uv();
-    CONVOLUTION(edge1, edge1.length(), image, in_uv, Spread, Effect_intensity);
+    CONVOLUTION(edge1, edge1.length(), image, in_uv, Spread, Mask);
     out_Color = vec4(color, 1.);
 }

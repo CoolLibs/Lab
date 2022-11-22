@@ -24,14 +24,14 @@ INPUT float Frequency;
 INPUT float Scale;
 INPUT float Fractalness;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = classic_noise_uv(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Frequency, Fractalness, Scale
     );
 

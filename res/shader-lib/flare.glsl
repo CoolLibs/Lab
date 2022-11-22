@@ -59,7 +59,7 @@ float sun(vec2 p, vec2 mouse)
 }
 
 vec3 flare(
-    vec3 in_color, float effect_intensity, vec2 in_uv,
+    vec3 in_color, float mask, vec2 in_uv,
     vec2 center, vec2 direction, float scale, float brightness, int number_of_circles, int seed
 )
 {
@@ -87,5 +87,5 @@ vec3 flare(
     // there is a sharper roll of of the light decay from the sun.
     flare *= exp(1.0 - length(uv - mm)) / 5.;
 
-    return mix(in_color, in_color + flare, effect_intensity);
+    return mix(in_color, in_color + flare, mask);
 }

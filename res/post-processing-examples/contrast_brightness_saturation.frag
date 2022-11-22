@@ -11,14 +11,14 @@ INPUT float Contrast;
 INPUT float Brightness;
 INPUT float Saturation;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = contrast_brightness_saturation(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Contrast, Brightness, Saturation
     );
 

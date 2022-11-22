@@ -15,14 +15,14 @@ INPUT float Border_roundness;
 
 INPUT RgbColor Border_color;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec3 color = pixelation_with_border(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Scale, 1. - Border_thickness, Border_roundness, Border_color
     );
 

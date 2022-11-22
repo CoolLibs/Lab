@@ -13,14 +13,14 @@ INPUT Point2D Center;
 INPUT float   Size; // only positive values
 INPUT float   Strength;
 
-INPUT float Effect_intensity; // positive and negative values
+INPUT float Mask; // positive and negative values
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = swirl_distortion(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Center, Strength, Size
     );
 

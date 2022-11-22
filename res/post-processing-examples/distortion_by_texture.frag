@@ -12,14 +12,14 @@ uniform sampler2D _texture;
 
 INPUT float Strength;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = _uv;
 
     vec2 out_uv = distortion_by_texture(
-        in_uv, Effect_intensity, _texture,
+        in_uv, Mask, _texture,
         Strength
     );
 

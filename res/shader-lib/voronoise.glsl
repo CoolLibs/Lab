@@ -72,14 +72,14 @@ vec2 cellular(vec2 P)
 }
 
 vec2 voronoise_uv(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     float scale
 )
 {
     return mix(
         in_uv,
         vec2(cellular(in_uv * scale).x / cellular(in_uv * scale).y),
-        effect_intensity
+        mask
     );
 }
 

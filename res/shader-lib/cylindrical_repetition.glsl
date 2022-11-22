@@ -3,7 +3,7 @@
 // #include "_COOL_RES_/shaders/math.glsl"
 
 vec2 cylindrical_repetition(
-    vec2 in_uv, float effect_intensity, float aspect_ratio,
+    vec2 in_uv, float mask, float aspect_ratio,
     vec2 center, float rotation_in_radians, float subdivisions, float attractivity
 )
 {
@@ -17,5 +17,5 @@ vec2 cylindrical_repetition(
     radius += attractivity;
 
     vec2 uv = vec2(angle, radius);
-    return mix(in_uv, uv + center, effect_intensity);
+    return mix(in_uv, uv + center, mask);
 }
