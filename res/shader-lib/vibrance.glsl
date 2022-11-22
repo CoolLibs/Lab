@@ -1,5 +1,5 @@
 vec3 vibrance(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     float vibrance
 )
 {
@@ -9,5 +9,5 @@ vec3 vibrance(
 
     vec3 out_color = in_color - (color_max - in_color) * amount;
 
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_color, out_color, mask);
 }

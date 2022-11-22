@@ -9,14 +9,14 @@ out vec4      out_Color;
 
 INPUT Hue Hue;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = Cool__hue(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Hue
     );
 

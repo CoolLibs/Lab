@@ -11,14 +11,14 @@ INPUT float    Strength;
 INPUT float    Radius;
 INPUT RgbColor Color;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = vignetting(
-        in_color, Effect_intensity, _uv, _aspect_ratio,
+        in_color, Mask, _uv, _aspect_ratio,
         Strength, Radius, Color
     );
 

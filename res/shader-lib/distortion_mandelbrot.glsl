@@ -1,7 +1,7 @@
 // https://www.shadertoy.com/view/MsXXD7
 
 vec2 distortion_mandelbrot(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     vec2 center, float scale, float nb_iterations
 )
 {
@@ -19,5 +19,5 @@ vec2 distortion_mandelbrot(
 
     // image map
     vec2 uv = (-Z.yx * .3 + .5 + center) / scale;
-    return mix(in_uv, uv, effect_intensity);
+    return mix(in_uv, uv, mask);
 }

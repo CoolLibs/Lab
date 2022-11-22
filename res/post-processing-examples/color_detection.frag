@@ -10,7 +10,7 @@ out vec4      out_Color;
 INPUT RgbColor Color;
 INPUT float    Saturation;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {

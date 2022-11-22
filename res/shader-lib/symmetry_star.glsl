@@ -8,7 +8,7 @@ vec2 u(float angle)
 }
 
 vec2 symmetry_star(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     vec2 center, float size, float angle, float nb_iterations
 )
 {
@@ -41,5 +41,5 @@ vec2 symmetry_star(
     out_uv *= size;
     out_uv += center;
 
-    return mix(in_uv, out_uv, effect_intensity);
+    return mix(in_uv, out_uv, mask);
 }

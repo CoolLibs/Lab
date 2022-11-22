@@ -40,7 +40,7 @@ float voronoi(
     return minimal_distance;
 }
 vec2 voronoi_uv(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     float scale, float time, float shape
 )
 {
@@ -50,7 +50,7 @@ vec2 voronoi_uv(
             in_uv,
             scale, time, shape
         )),
-        effect_intensity
+        mask
     );
 }
 

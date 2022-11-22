@@ -10,7 +10,7 @@ out vec4      out_Color;
 
 INPUT float Scale; // 16
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 const int   samples  = 2;
 const float fSamples = float(samples * samples * 2 * 2);
@@ -19,13 +19,13 @@ void main()
 {
     vec2 in_uv = normalized_uv();
 
-    if (Effect_intensity == 0.)
+    if (Mask == 0.)
     {
         out_Color = vec4(image(in_uv), 1.);
         return;
     }
 
-    float scale = Scale / Effect_intensity;
+    float scale = Scale / Mask;
 
     vec2 uv       = in_uv;
     vec2 mosaicUV = floor(uv * scale) / scale;

@@ -15,14 +15,14 @@ INPUT float Blur;  //
 INPUT float Time_mod;
 INPUT float Rain_amount; // between 0 and 1
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec3 color = raindrops_uv(
-        in_uv, Effect_intensity, _image,
+        in_uv, Mask, _image,
         Time_mod, Scale, Rain_amount, Blur
     );
 

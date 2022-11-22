@@ -11,7 +11,7 @@ out vec4      out_Color;
 INPUT int      Number_of_colors;
 INPUT Gradient gradient;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
@@ -22,7 +22,7 @@ void main()
 
     vec3 color = gradient(luminance).rgb;
 
-    color = mix(in_color, color, Effect_intensity);
+    color = mix(in_color, color, Mask);
 
     out_Color = vec4(color, 1.);
 }

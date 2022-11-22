@@ -11,14 +11,14 @@ INPUT float Scale; // 10
 INPUT float Time;
 INPUT float Shape; // 2 /// Chooses which norm is used to define the distance. 2 is the usual euclidian distance.
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = voronoi_uv(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Scale, Time, Shape
     );
 

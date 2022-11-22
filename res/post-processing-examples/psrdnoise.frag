@@ -12,14 +12,14 @@ INPUT float Gain;
 INPUT float Lacunarity;
 INPUT int   Octaves;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = fbm(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Scale, Lacunarity, Gain, Octaves
     );
 

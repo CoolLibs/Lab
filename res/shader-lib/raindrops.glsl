@@ -145,7 +145,7 @@ vec2 Drops(vec2 uv, float t, float l0, float l1, float l2)
 }
 
 vec3 raindrops_uv(
-    vec2 in_uv, float effect_intensity, sampler2D image,
+    vec2 in_uv, float mask, sampler2D image,
     float time, float size, float rain_amount, float Blur
 )
 {
@@ -169,6 +169,6 @@ vec3 raindrops_uv(
 
     float focus = mix(maxBlur - c.y, minBlur, S(.1, .2, c.x)) * Blur;
 
-    vec2 out_uv = mix(in_uv, in_uv + n, effect_intensity);
-    return textureLod(image, unnormalize_uv(out_uv), focus * effect_intensity).rgb;
+    vec2 out_uv = mix(in_uv, in_uv + n, mask);
+    return textureLod(image, unnormalize_uv(out_uv), focus * mask).rgb;
 }

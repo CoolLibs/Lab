@@ -14,14 +14,14 @@ INPUT float   Time;
 INPUT Point2D Center;
 INPUT int     N;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec2 in_uv = normalized_uv();
 
     vec2 out_uv = distortion_drop(
-        in_uv, Effect_intensity,
+        in_uv, Mask,
         Center, Drops_size, Scale, Distortion_intensity, Time, N
     );
 

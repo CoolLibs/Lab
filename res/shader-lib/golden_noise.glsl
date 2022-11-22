@@ -12,15 +12,15 @@ float golden_noise(in vec2 xy, in float seed)
 }
 
 vec2 golden_noise_uv(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     float seed
 )
 {
-    return mix(in_uv, vec2(golden_noise(in_uv, seed)), effect_intensity);
+    return mix(in_uv, vec2(golden_noise(in_uv, seed)), mask);
 }
 
 vec3 golden_noise_color(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     float seed
 )
 {

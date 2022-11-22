@@ -30,7 +30,7 @@ mat3 cbCAT(vec3 xyz_est, vec3 xyz_target)
 
 /*uniform vec3 color_pick=vec3(iMouse.x,iMouse.y,1.0);*/
 vec3 white_balance_by_click(
-    vec3 in_color, float effect_intensity, vec2 in_uv,
+    vec3 in_color, float mask, vec2 in_uv,
     vec2 coordinate_for_white_balance
 )
 {
@@ -54,5 +54,5 @@ vec3 white_balance_by_click(
 
     vec3 out_color = M * in_color + circle_picker;
 
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_color, out_color, mask);
 }

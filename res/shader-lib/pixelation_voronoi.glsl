@@ -1,7 +1,7 @@
 // #include "_COOL_RES_/shaders/math.glsl"
 
 vec2 pixelation_voronoi(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     float scale, float time, float shape
 )
 {
@@ -40,5 +40,5 @@ vec2 pixelation_voronoi(
     }
     vec2 image_uv = cid / scale;
 
-    return mix(in_uv, image_uv, effect_intensity);
+    return mix(in_uv, image_uv, mask);
 }

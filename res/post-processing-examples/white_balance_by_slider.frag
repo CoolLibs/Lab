@@ -18,14 +18,14 @@ INPUT float Temperature;
 INPUT float Temperature_strength;
 INPUT float Luminance_preservation_factor;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
     vec3 in_color = image(normalized_uv());
 
     vec3 color = white_balance_by_slider(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Temperature, Temperature_strength, Luminance_preservation_factor
     );
 

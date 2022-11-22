@@ -6,7 +6,7 @@ float symmetry_side(bool flip, float ortho)
 }
 
 vec2 symmetry(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     vec2 center, float angle_in_radians, bool flip
 )
 {
@@ -15,5 +15,5 @@ vec2 symmetry(
     vec2 out_uv = in_uv - center;
     out_uv      = center + out_uv - u_line * symmetry_side(flip, dot(out_uv, u_line)) * 2.;
 
-    return mix(in_uv, out_uv, effect_intensity);
+    return mix(in_uv, out_uv, mask);
 }

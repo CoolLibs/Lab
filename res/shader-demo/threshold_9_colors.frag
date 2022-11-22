@@ -27,7 +27,7 @@ INPUT RgbColor Color7;
 INPUT RgbColor Color8;
 INPUT RgbColor Color9;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
@@ -56,12 +56,12 @@ void main()
     vec3 current_color = table_of_colors[size * grid_id.x + grid_id.y];
 
     vec3 color = threshold_by_chosen_color(
-        in_color, Effect_intensity,
+        in_color, Mask,
         Number_of_colors, Color0, current_color
     );
 
     // vec3 color = bit_color(
-    //     in_color, Effect_intensity,
+    //     in_color, Mask,
     //     current_color, Grey_coefficient, One_color_mode
     // );
 

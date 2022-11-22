@@ -1,5 +1,5 @@
 vec3 tint(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     float tint
 )
 {
@@ -26,5 +26,5 @@ vec3 tint(
 
     vec3 out_color = vec3(dot(yIQ, kYIQToR), dot(yIQ, kYIQToG), dot(yIQ, kYIQToB));
 
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_color, out_color, mask);
 }

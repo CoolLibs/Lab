@@ -9,7 +9,7 @@ out vec4      out_Color;
 
 INPUT Point2D Coordinate_for_white_balance;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
@@ -17,7 +17,7 @@ void main()
     vec3 in_color = image(uv);
 
     vec3 color = white_balance_by_click(
-        in_color, Effect_intensity, uv,
+        in_color, Mask, uv,
         Coordinate_for_white_balance
     );
 

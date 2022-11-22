@@ -14,7 +14,7 @@ INPUT float       Brightness;
 INPUT int         Number_of_circles;
 INPUT int         Seed;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
@@ -22,7 +22,7 @@ void main()
     vec3 in_color = image(in_uv);
 
     vec3 color = flare(
-        in_color, Effect_intensity, in_uv,
+        in_color, Mask, in_uv,
         Center, Direction, Scale, Brightness, Number_of_circles, Seed
     );
 

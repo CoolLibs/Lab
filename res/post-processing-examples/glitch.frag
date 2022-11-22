@@ -9,7 +9,7 @@ out vec4      out_Color;
 INPUT float Time;
 INPUT vec2  Squares_size;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 void main()
 {
@@ -20,8 +20,8 @@ void main()
         Squares_size, Time
     );
     vec3 col1 = image(in_uv);
-    vec3 col2 = image(in_uv + vec2(glitch * Effect_intensity * rng(5., Time), 0.));
-    vec3 col3 = image(in_uv - vec2(glitch * Effect_intensity * rng(31, Time), 0.));
+    vec3 col2 = image(in_uv + vec2(glitch * Mask * rng(5., Time), 0.));
+    vec3 col3 = image(in_uv - vec2(glitch * Mask * rng(31, Time), 0.));
 
     vec3 color = vec3(col1.r, col2.g, col3.b);
 

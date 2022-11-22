@@ -10,7 +10,7 @@ out vec4      out_Color;
 INPUT float        Scale;
 INPUT ColorPalette Palette;
 
-INPUT float Effect_intensity;
+INPUT float Mask;
 
 float hash(vec2 p)
 {
@@ -69,7 +69,7 @@ void main()
                                   + (dist1 / (dist0 + dist1))
             ? Palette(idx1)
             : Palette(idx0);
-    color = mix(in_color, color, Effect_intensity);
+    color = mix(in_color, color, Mask);
 
     out_Color = vec4(color, 1.);
 }

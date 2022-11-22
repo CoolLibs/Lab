@@ -14,7 +14,7 @@ vec3 colorTemperatureToRGB(const in float temperature)
 }
 
 vec3 white_balance_by_slider(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     float temperature, float temperature_strength, float luminance_preservation_factor
 )
 {
@@ -22,5 +22,5 @@ vec3 white_balance_by_slider(
     vec3  out_color              = mix(in_color, in_color * colorTemperatureToRGB(temperature_in_kelvins), temperature_strength);
     out_color *= mix(1.0, cool__luminance(in_color) / max(cool__luminance(out_color), 1e-5), luminance_preservation_factor);
 
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_color, out_color, mask);
 }

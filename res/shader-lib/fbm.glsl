@@ -2,7 +2,7 @@
 // #include "_ROOT_FOLDER_/res/shader-lib/psrdnoise.glsl"
 
 vec2 fbm(
-    vec2 in_uv, float effect_intensity,
+    vec2 in_uv, float mask,
     float scale, float lacunarity, float gain, int octaves
 )
 {
@@ -20,5 +20,5 @@ vec2 fbm(
         uv *= lacunarity;
         amplitude *= gain;
     }
-    return mix(in_uv, vec2(value), effect_intensity);
+    return mix(in_uv, vec2(value), mask);
 }

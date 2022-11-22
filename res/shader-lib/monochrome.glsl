@@ -14,10 +14,10 @@ vec3 monochrome_impl(float luminance, vec3 color, float target_luminance)
 }
 
 vec3 monochrome(
-    vec3 in_color, float effect_intensity,
+    vec3 in_color, float mask,
     vec3 color, float brightness
 )
 {
     vec3 out_color = monochrome_impl(cool__luminance(in_color), color, 1. - brightness);
-    return mix(in_color, out_color, effect_intensity);
+    return mix(in_color, out_color, mask);
 }
