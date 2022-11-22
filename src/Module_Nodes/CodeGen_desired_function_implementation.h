@@ -1,20 +1,16 @@
 #pragma once
-#include "CodeGenContext_Ref.h"
+#include "CodeGenContext.h"
 #include "FunctionSignature.h"
 
 namespace Lab {
 
-struct FunctionImplementation {
-    std::string before_function;
-    std::string function_body;
-};
-
+// Returns the function's body, or an error message in the unexpected case.
 auto gen_desired_function_implementation(
     FunctionSignature current,
     FunctionSignature desired,
     std::string_view  base_function_name,
     InputFunctionGenerator_Ref,
     DefaultFunctionGenerator_Ref
-) -> tl::expected<FunctionImplementation, std::string>;
+) -> tl::expected<std::string, std::string>;
 
 } // namespace Lab

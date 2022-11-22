@@ -3,7 +3,7 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
-#include "CodeGenContext_Ref.h"
+#include "CodeGenContext.h"
 #include "CodeGen_default_function.h"
 #include "CodeGen_desired_function_implementation.h"
 #include "Function.h"
@@ -68,16 +68,6 @@ static auto gen_function_definition(Params__gen_function_definition p)
         "declaration"_a     = gen_function_declaration(p.signature, p.name),
         "body"_a            = p.body
     )};
-}
-
-static auto gen_function__impl(Params__gen_function_definition p, AlreadyGeneratedFunctions& already_generated_functions)
-    -> Function
-{
-    return {{
-                .name           = std::string{p.name},
-                .implementation = gen_function_definition(p),
-            },
-            already_generated_functions};
 }
 
 static auto is_not_alphanumeric(char c) -> bool
@@ -169,8 +159,8 @@ struct Properties {
 };
 
 static auto gen_properties(
-    Node const&        node,
-    CodeGenContext_Ref context
+    Node const&     node,
+    CodeGenContext& context
 ) -> tl::expected<Properties, std::string>
 {
     using namespace fmt::literals;
@@ -181,8 +171,8 @@ static auto gen_properties(
     {
         auto const input_pin     = node.pin_of_property(property_index);
         auto       output_pin    = Cool::OutputPin{};
-        auto const input_node_id = context.graph.input_node_id(input_pin.id(), &output_pin);
-        auto const node          = context.graph.nodes().get(input_node_id);
+        auto const input_node_id = context.graph().input_node_id(input_pin.id(), &output_pin);
+        auto const node          = context.graph().nodes().get(input_node_id);
         if (node)
         {
             if (node->main_output_pin() == output_pin)
@@ -191,16 +181,15 @@ static auto gen_properties(
                 if (!property_type)
                     return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
 
-                auto const input_func = gen_desired_function(
+                auto const input_func_name = gen_desired_function(
                     {.from = PrimitiveType::UV, .to = *property_type},
                     input_node_id,
                     context
                 );
-                if (!input_func)
-                    return tl::make_unexpected(input_func.error());
+                if (!input_func_name)
+                    return tl::make_unexpected(input_func_name.error());
 
-                res.code += input_func->implementation;
-                res.real_names.push_back(fmt::format("{}(normalized_uv())", input_func->name)); // Input name will be replaced with a call to the corresponding function
+                res.real_names.push_back(fmt::format("{}(normalized_uv())", *input_func_name)); // Input name will be replaced with a call to the corresponding function
             }
             else // We are plugged to an output index
             {
@@ -211,7 +200,7 @@ static auto gen_properties(
         {
             res.code += Cool::gen_input_shader_code(
                             prop,
-                            context.input_provider,
+                            context.input_provider(),
                             std::visit([](auto&& prop) { return fmt::format("`{}`", prop.name()); }, prop) // Re-add backticks around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
                         )
                         + '\n';
@@ -312,14 +301,13 @@ static auto check_there_are_no_backticks_left(std::string const& code, std::stri
 }
 
 struct GeneratedInputs {
-    std::string                                  code;
     std::unordered_map<std::string, std::string> real_names;
 };
 
 static auto gen_inputs(
     Node const&           node,
     NodeDefinition const& node_definition,
-    CodeGenContext_Ref    context
+    CodeGenContext&       context
 ) -> tl::expected<GeneratedInputs, std::string>
 {
     GeneratedInputs res;
@@ -328,20 +316,19 @@ static auto gen_inputs(
     {
         auto const& input         = node_definition.inputs()[input_idx];
         auto        output_pin    = Cool::OutputPin{};
-        auto const  input_node_id = context.graph.input_node_id(node.pin_of_input(input_idx).id(), &output_pin);
-        auto const  input_node    = context.graph.nodes().get(input_node_id);
+        auto const  input_node_id = context.graph().input_node_id(node.pin_of_input(input_idx).id(), &output_pin);
+        auto const  input_node    = context.graph().nodes().get(input_node_id);
         if (!input_node || output_pin == input_node->main_output_pin()) // If we are plugged to the main output of a node (or to nothing, in which case we will generate a default function), then generate the corresponding function
         {
-            auto const function = gen_desired_function(
+            auto const func_name = gen_desired_function(
                 input.signature(),
                 input_node_id,
                 context
             );
-            if (!function)
-                return tl::make_unexpected(function.error());
+            if (!func_name)
+                return tl::make_unexpected(func_name.error());
 
-            res.code += function->implementation;
-            res.real_names[input.name()] = function->name;
+            res.real_names[input.name()] = *func_name;
         }
         else // We are plugged to an output index
         {
@@ -356,8 +343,8 @@ static auto gen_base_function(
     Node const&           node,
     NodeDefinition const& node_definition,
     Cool::NodeId const&   id,
-    CodeGenContext_Ref    context
-) -> tl::expected<Function, std::string>
+    CodeGenContext&       context
+) -> ExpectedFunctionName
 {
     auto const inputs = gen_inputs(node, node_definition, context);
     if (!inputs)
@@ -367,37 +354,40 @@ static auto gen_base_function(
     if (!properties_code)
         return tl::make_unexpected(properties_code.error());
 
-    auto func = gen_function__impl({
-                                       .signature       = node_definition.signature(),
-                                       .name            = base_function_name(node_definition, id),
-                                       .before_function = properties_code->code + "\n\n" + inputs->code,
-                                       .body            = node_definition.function_body(),
-                                   },
-                                   context.already_generated_functions);
+    auto const func_name = base_function_name(node_definition, id);
+
+    auto func_implementation = gen_function_definition({
+        .signature       = node_definition.signature(),
+        .name            = func_name,
+        .before_function = properties_code->code,
+        .body            = node_definition.function_body(),
+    });
 
     // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
-    func.implementation = replace_property_names(func.implementation, node.properties(), properties_code->real_names);
-    func.implementation = replace_input_names(func.implementation, inputs->real_names);
-    func.implementation = replace_output_indices_names(func.implementation, node);
+    func_implementation = replace_property_names(func_implementation, node.properties(), properties_code->real_names);
+    func_implementation = replace_input_names(func_implementation, inputs->real_names);
+    func_implementation = replace_output_indices_names(func_implementation, node);
 
     {
-        auto const error = check_there_are_no_backticks_left(func.implementation, list_all_property_and_input_and_output_names(node.properties(), node_definition.inputs(), node_definition.output_indices()));
+        auto const error = check_there_are_no_backticks_left(func_implementation, list_all_property_and_input_and_output_names(node.properties(), node_definition.inputs(), node_definition.output_indices()));
         if (error)
             return tl::make_unexpected(*error);
     }
 
-    return func;
+    context.push_function({.name = func_name, .implementation = func_implementation});
+
+    return func_name;
 }
 
 auto gen_desired_function(
     FunctionSignature   desired_signature,
     Cool::NodeId const& id,
-    CodeGenContext_Ref  context
-) -> tl::expected<Function, std::string>
+    CodeGenContext&     context
+) -> ExpectedFunctionName
 {
-    auto const node = context.graph.nodes().get(id);
+    auto const node = context.graph().nodes().get(id);
     if (!node) // Use a default function in no node is currently plugged in
-        return gen_default_function(desired_signature, context.already_generated_functions);
+        return gen_default_function(desired_signature, context);
 
     auto const node_definition = context.get_node_definition(node->definition_name());
     if (!node_definition)
@@ -406,37 +396,37 @@ auto gen_desired_function(
             node->definition_name()
         ));
 
-    auto const base_function = gen_base_function(*node, *node_definition, id, context);
-    if (!base_function)
+    auto const base_function_name = gen_base_function(*node, *node_definition, id, context);
+    if (!base_function_name)
         return tl::make_unexpected(fmt::format(
             "Failed to generate code for node \"{}\":\n{}",
-            node_definition->name(), base_function.error()
+            node_definition->name(), base_function_name.error()
         ));
 
-    auto const impl = gen_desired_function_implementation(
+    auto const func_body = gen_desired_function_implementation(
         node_definition->signature(),
         desired_signature,
-        base_function->name,
+        *base_function_name,
         InputFunctionGenerator_Ref{context, *node},
         DefaultFunctionGenerator_Ref{context}
     );
-    if (!impl)
+    if (!func_body)
         return tl::make_unexpected(fmt::format(
             "Failed to generate conversion code for node \"{}\":\n{}",
-            node_definition->name(), impl.error()
+            node_definition->name(), func_body.error()
         ));
 
-    auto const function = gen_function__impl(
-        {
-            .signature       = desired_signature,
-            .name            = desired_function_name(*node_definition, id, desired_signature),
-            .before_function = impl->before_function + '\n' + base_function->implementation,
-            .body            = impl->function_body,
-        },
-        context.already_generated_functions
-    );
+    auto const func_name       = desired_function_name(*node_definition, id, desired_signature);
+    auto const func_definition = gen_function_definition({
+        .signature       = desired_signature,
+        .name            = func_name,
+        .before_function = "",
+        .body            = *func_body,
+    });
 
-    return function;
+    context.push_function({.name = func_name, .implementation = func_definition});
+
+    return func_name;
 }
 
 } // namespace Lab

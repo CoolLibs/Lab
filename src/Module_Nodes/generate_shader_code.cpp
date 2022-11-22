@@ -24,14 +24,14 @@ auto generate_shader_code(
 )
     -> tl::expected<std::string, std::string>
 {
-    auto       already_generated_functions = AlreadyGeneratedFunctions{};
-    auto const main_function               = gen_desired_function(
+    auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
+    auto const main_function_name = gen_desired_function(
         Signature::Image,
         main_node_id,
-        CodeGenContext_Ref{graph, get_node_definition, input_provider, already_generated_functions}
+        context
     );
-    if (!main_function)
-        return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function.error()));
+    if (!main_function_name)
+        return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
 
     using namespace fmt::literals;
     return fmt::format(
@@ -55,8 +55,8 @@ void main()
 )STR"
         ),
         "output_indices_declarations"_a  = gen_all_output_indices_declarations(graph),
-        "main_function_implementation"_a = main_function->implementation,
-        "main_function_name"_a           = main_function->name
+        "main_function_implementation"_a = context.code(),
+        "main_function_name"_a           = *main_function_name
     );
 }
 

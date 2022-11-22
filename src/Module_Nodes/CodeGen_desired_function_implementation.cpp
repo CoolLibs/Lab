@@ -46,134 +46,113 @@ auto gen_desired_function_implementation(
     std::string_view             base_function_name,
     InputFunctionGenerator_Ref   gen_input_function,
     DefaultFunctionGenerator_Ref gen_default_function
-) -> tl::expected<FunctionImplementation, std::string>
+) -> tl::expected<std::string, std::string>
 {
     using namespace fmt::literals;
 
     // A->A  ~~>  A->A
     if (all_equal(current, desired))
     {
-        return FunctionImplementation{
-            .before_function = "",
-            .function_body   = fmt::format(
-                FMT_COMPILE(
-                    "return {base_function_name}(in1);"
-                ),
-                "base_function_name"_a = base_function_name
+        return fmt::format(
+            FMT_COMPILE(
+                "return {base_function_name}(in1);"
             ),
-        };
+            "base_function_name"_a = base_function_name
+        );
     }
 
     // A->B  ~~>  A->B
     if (same_signature(current, desired))
     {
-        return FunctionImplementation{
-            .before_function = "",
-            .function_body   = fmt::format(
-                FMT_COMPILE(
-                    "return {base_function_name}(in1);"
-                ),
-                "base_function_name"_a = base_function_name
+        return fmt::format(
+            FMT_COMPILE(
+                "return {base_function_name}(in1);"
             ),
-        };
+            "base_function_name"_a = base_function_name
+        );
     }
 
     // A->A  ~~>  A->B
     if (transforming_input(current, desired))
     {
-        auto const input_func = gen_input_function(desired);
-        if (!input_func)
-            return tl::make_unexpected(input_func.error());
+        auto const input_func_name = gen_input_function(desired);
+        if (!input_func_name)
+            return tl::make_unexpected(input_func_name.error());
 
-        return FunctionImplementation{
-            .before_function = input_func->implementation,
-            .function_body   = fmt::format(
-                FMT_COMPILE(
-                    "return {input_function_name}({base_function_name}(in1));"
-                ),
-                "base_function_name"_a  = base_function_name,
-                "input_function_name"_a = input_func->name
+        return fmt::format(
+            FMT_COMPILE(
+                "return {input_function_name}({base_function_name}(in1));"
             ),
-        };
+            "base_function_name"_a  = base_function_name,
+            "input_function_name"_a = *input_func_name
+        );
     }
 
     // B->B  ~~>  A->B
     if (transforming_output(current, desired))
     {
-        auto const input_func = gen_input_function(desired);
-        if (!input_func)
-            return tl::make_unexpected(input_func.error());
+        auto const input_func_name = gen_input_function(desired);
+        if (!input_func_name)
+            return tl::make_unexpected(input_func_name.error());
 
-        return FunctionImplementation{
-            .before_function = input_func->implementation,
-            .function_body   = fmt::format(
-                FMT_COMPILE(
-                    "return {base_function_name}({input_function_name}(in1));"
-                ),
-                "base_function_name"_a  = base_function_name,
-                "input_function_name"_a = input_func->name
+        return fmt::format(
+            FMT_COMPILE(
+                "return {base_function_name}({input_function_name}(in1));"
             ),
-        };
+            "base_function_name"_a  = base_function_name,
+            "input_function_name"_a = *input_func_name
+        );
     }
 
     // A->B  ~~>  A->C
     if (converting_output(current, desired))
     {
-        auto const input_func = gen_input_function({.from = current.to, .to = desired.to});
-        if (!input_func)
-            return tl::make_unexpected(input_func.error());
+        auto const input_func_name = gen_input_function({.from = current.to, .to = desired.to});
+        if (!input_func_name)
+            return tl::make_unexpected(input_func_name.error());
 
-        return FunctionImplementation{
-            .before_function = input_func->implementation,
-            .function_body   = fmt::format(
-                FMT_COMPILE(
-                    "return {input_function_name}({base_function_name}(in1));"
-                ),
-                "base_function_name"_a  = base_function_name,
-                "input_function_name"_a = input_func->name
+        return fmt::format(
+            FMT_COMPILE(
+                "return {input_function_name}({base_function_name}(in1));"
             ),
-        };
+            "base_function_name"_a  = base_function_name,
+            "input_function_name"_a = *input_func_name
+        );
     }
 
     // A->B  ~~>  C->B
     if (converting_input(current, desired))
     {
-        auto const input_func = gen_input_function({.from = desired.from, .to = current.from});
-        if (!input_func)
-            return tl::make_unexpected(input_func.error());
+        auto const input_func_name = gen_input_function({.from = desired.from, .to = current.from});
+        if (!input_func_name)
+            return tl::make_unexpected(input_func_name.error());
 
-        return FunctionImplementation{
-            .before_function = input_func->implementation,
-            .function_body   = fmt::format(
-                FMT_COMPILE(
-                    "return {base_function_name}({input_function_name}(in1));"
-                ),
-                "base_function_name"_a  = base_function_name,
-                "input_function_name"_a = input_func->name
+        return fmt::format(
+            FMT_COMPILE(
+                "return {base_function_name}({input_function_name}(in1));"
             ),
-        };
+            "base_function_name"_a  = base_function_name,
+            "input_function_name"_a = *input_func_name
+        );
     }
 
     // Catch all case
-    auto const default_func = gen_default_function({.from = current.to, .to = desired.to});
-    if (!default_func)
-        return tl::make_unexpected(default_func.error());
+    auto const default_func_name = gen_default_function({.from = current.to, .to = desired.to});
+    if (!default_func_name)
+        return tl::make_unexpected(default_func_name.error());
 
-    auto const input_func = gen_input_function({.from = desired.from, .to = current.from});
-    if (!input_func)
-        return tl::make_unexpected(input_func.error());
+    auto const input_func_name = gen_input_function({.from = desired.from, .to = current.from});
+    if (!input_func_name)
+        return tl::make_unexpected(input_func_name.error());
 
-    return FunctionImplementation{
-        .before_function = default_func->implementation + '\n' + input_func->implementation,
-        .function_body   = fmt::format(
-            FMT_COMPILE(
-                "return {default_function_name}({base_function_name}({input_function_name}(in1)));"
-            ),
-            "default_function_name"_a = default_func->name,
-            "base_function_name"_a    = base_function_name,
-            "input_function_name"_a   = input_func->name
+    return fmt::format(
+        FMT_COMPILE(
+            "return {default_function_name}({base_function_name}({input_function_name}(in1)));"
         ),
-    };
+        "default_function_name"_a = *default_func_name,
+        "base_function_name"_a    = base_function_name,
+        "input_function_name"_a   = *input_func_name
+    );
 }
 
 } // namespace Lab
