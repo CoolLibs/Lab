@@ -224,6 +224,19 @@ return sin((in1 - 0.25) * 6.28) * 0.5 + 0.5;
     }});
 
     this->add_definition({{
+        .name      = "Flip (x: 1 - x)",
+        .signature = {
+            .from = PrimitiveType::Float,
+            .to   = PrimitiveType::Float,
+        },
+        .function_body = {R"STR(
+return 1. - in1;
+    )STR"},
+        .inputs        = {},
+        .properties    = {},
+    }});
+
+    this->add_definition({{
         .name      = "Multiply (float)",
         .signature = {
             .from = PrimitiveType::Void,
