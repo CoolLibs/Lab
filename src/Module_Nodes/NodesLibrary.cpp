@@ -87,7 +87,7 @@ return `Gradient`(in1).rgb;
             .to   = PrimitiveType::Float,
         },
         .function_body = {R"STR(
-return smoothstep(`Edge Blur`, 0., length(in1) - `Radius`);
+return smoothstep(`Edge Blur`, -`Edge Blur`, length(in1) - `Radius`);
     )STR"},
         .inputs        = {},
         .properties    = {
