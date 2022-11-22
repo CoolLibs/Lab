@@ -81,7 +81,7 @@ return `Gradient`(in1).rgb;
     }});
 
     this->add_definition({{
-        .name      = "Circle",
+        .name      = "Circle (Mask)",
         .signature = {
             .from = PrimitiveType::UV,
             .to   = PrimitiveType::Float,
