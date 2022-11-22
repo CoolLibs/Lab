@@ -18,6 +18,7 @@ vec3 default_image(vec2 uv)
                         },
                         already_generated_functions};
     }
+
     if (signature == FunctionSignature{.from = PrimitiveType::Float, .to = PrimitiveType::Color})
     {
         return Function{{
@@ -44,6 +45,20 @@ int {}({} unused_parameter)
 }}
 )STR",
                                                           name, glsl_type_as_string(signature.from)),
+                        },
+                        already_generated_functions};
+    }
+
+    if (signature == FunctionSignature{.from = PrimitiveType::UV, .to = PrimitiveType::Float})
+    {
+        return Function{{
+                            .name           = "default_uv_to_float",
+                            .implementation = R"STR(
+float default_uv_to_float(vec2 uv)
+{
+    return uv.x * 0.5 / _aspect_ratio + 0.5;
+}
+)STR",
                         },
                         already_generated_functions};
     }
