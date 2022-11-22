@@ -40,15 +40,18 @@ public:
     }
 
     template<typename T>
-    void widget(const Cool::Input<T>& input)
+    void widget(Cool::Input<T>& input)
     {
         ImGui::PushID(&input);
         // TODO(JF) add a way to change the current_variable
         // And show the UI of the current_variable if it is set
-        const auto variable = _variable_registries.get().get(input._default_variable_id);
-        if (variable)
+
+        // NB: We don't lock the registry here because it is already locked above (might be clunky though)
+        auto* default_variable = _variable_registries.get().of<Cool::Variable<T>>().get_mutable_ref(input._default_variable_id);
+        if (default_variable)
         {
-            widget<T>(input._default_variable_id, *variable);
+            widget<T>(input._default_variable_id, *default_variable);
+
             if (input._description)
             {
                 ImGui::SameLine();
@@ -89,19 +92,27 @@ public:
 
 private:
     template<typename T>
-    void widget(const Cool::VariableId<T>& id, Cool::Variable<T> variable)
+    void widget(const Cool::VariableId<T>& id, Cool::Variable<T>& variable)
     {
+        const auto prev_value    = variable.value;
+        const auto prev_metadata = variable.metadata;
         Cool::imgui(
             variable,
             {
                 .on_value_changed =
-                    [&]() { _command_executor.execute(
-                                Command_SetVariable<T>{.id = id, .value = variable.value}
+                    [&]() {
+                        const auto new_value = variable.value;
+                        variable.value       = prev_value; // To make sure the reversible command that will be created sees the correct previous value.
+                        _command_executor.execute(
+                                Command_SetVariable<T>{.id = id, .value = new_value}
                             ); },
 
                 .on_metadata_changed =
-                    [&]() { _command_executor.execute(
-                                Command_SetVariableMetadata<T>{.id = id, .metadata = variable.metadata}
+                    [&]() {
+                        const auto new_metadata = variable.metadata;
+                        variable.metadata       = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
+                        _command_executor.execute(
+                                Command_SetVariableMetadata<T>{.id = id, .metadata = new_metadata}
                             ); },
 
                 .on_value_editing_finished =

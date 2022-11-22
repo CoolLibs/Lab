@@ -1,25 +1,19 @@
-# _is0-2D_
+# _Image Nodes_
 
-## Learning about shaders and SDFs
+## Learning about shaders
 
-You can watch these videos, in that order:
-
-- [Painting with Maths in Google Sheets](https://youtu.be/JnCkF62gkOY)
+You can watch these videos:
 
 - [Practical intro to shader programming by _The Art of Code_](https://www.youtube.com/watch?v=u5HAYVHsasc)
 
 - [Domain distortion by _The Art of Code_](https://youtu.be/jKuXA0trQPE)
 
-## Resources about SDFs
+## Resources about shaders
 
-- [List of primitives and effects](https://iquilezles.org/articles/distfunctions2d/)
-
-- [Domain Warping](https://iquilezles.org/articles/warp/)
-
-- [More videos from _The Art of Code_](https://youtu.be/AfKGMUDWfuE?list=PLGmrMu-IwbgtMxMiV3x4IrHPlPmg7FD-P)
+- [More videos from _The Art of Code_](https://youtu.be/rvDo9LvfoVE?list=PLGmrMu-IwbgsVjE7SAtFaWyhZXyBjJNnO)
 
 - [30daysofshade](http://30daysofshade.com/)
 
-## Inspiration
+- [Domain Warping](https://iquilezles.org/articles/warp/)
 
-- [willstall](https://www.instagram.com/willstall/)
+- [List of primitives and effects](https://iquilezles.org/articles/distfunctions2d/)

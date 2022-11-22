@@ -112,7 +112,7 @@ private:
                     .severity = Cool::MessageSeverity::Warning,
                 };
             },
-                               Cool::Log::Debug::console());
+                               Cool::Log::ToUser::console());
         return the_instance;
     }
 
