@@ -87,12 +87,30 @@ return `Gradient`(in1).rgb;
             .to   = PrimitiveType::Float,
         },
         .function_body = {R"STR(
-return smoothstep(`Edge Blur`, -`Edge Blur`, length(in1) - `Radius`);
+return smoothstep(`Edge Blur`, -`Edge Blur`, length(in1 - `Center`) - `Radius`);
     )STR"},
         .inputs        = {},
         .properties    = {
             Cool::InputDefinition<float>{"`Radius`"},
             Cool::InputDefinition<float>{"`Edge Blur`"},
+            Cool::InputDefinition<Cool::Point2D>{"`Center`"},
+        },
+    }});
+
+    this->add_definition({{
+        .name      = "Circle (Curve)",
+        .signature = {
+            .from = PrimitiveType::Float,
+            .to   = PrimitiveType::UV,
+        },
+        .function_body = {R"STR(
+float angle = 6.28 * in1;
+return `Center` + `Radius` * vec2(cos(angle), sin(angle));
+    )STR"},
+        .inputs        = {},
+        .properties    = {
+            Cool::InputDefinition<float>{"`Radius`"},
+            Cool::InputDefinition<Cool::Point2D>{"`Center`"},
         },
     }});
 
@@ -204,10 +222,13 @@ return mix(`Under`(uv), `Over`(uv), `Over Opacity`);
             .to   = PrimitiveType::Float,
         },
         .function_body = {R"STR(
-return _time;
+return _time * `Speed` + `Offset`;
     )STR"},
         .inputs        = {},
-        .properties    = {},
+        .properties    = {
+            Cool::InputDefinition<float>{"`Speed`"},
+            Cool::InputDefinition<float>{"`Offset`"},
+        },
     }});
 
     this->add_definition({{
