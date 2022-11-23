@@ -2,12 +2,6 @@
 
 namespace Lab {
 
-// A->A  ~~>  A->A
-static auto all_equal(FunctionSignature current, FunctionSignature desired) -> bool
-{
-    return current.from == current.to && current == desired;
-}
-
 // A->B  ~~>  A->B
 static auto same_signature(FunctionSignature current, FunctionSignature desired) -> bool
 {
@@ -49,17 +43,6 @@ auto gen_desired_function_implementation(
 ) -> tl::expected<std::string, std::string>
 {
     using namespace fmt::literals;
-
-    // A->A  ~~>  A->A
-    if (all_equal(current, desired))
-    {
-        return fmt::format(
-            FMT_COMPILE(
-                "return {base_function_name}(in1);"
-            ),
-            "base_function_name"_a = base_function_name
-        );
-    }
 
     // A->B  ~~>  A->B
     if (same_signature(current, desired))
