@@ -29,9 +29,10 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
 
 auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
 {
-    auto node = Node{def.name(), def.inputs().size()};
+    auto node = Node{def.name(), def.signature_arity(), def.inputs().size()};
 
-    node.input_pins().push_back(Cool::InputPin{"IN"});
+    for (size_t i = 0; i < def.signature_arity(); ++i)
+        node.input_pins().push_back(Cool::InputPin{fmt::format("IN{}", i + 1)});
     node.output_pins().push_back(Cool::OutputPin{"OUT"});
 
     for (auto const& input : def.inputs())

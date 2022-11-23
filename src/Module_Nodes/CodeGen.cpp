@@ -15,20 +15,32 @@
 namespace Lab {
 
 static auto gen_params(
-    FunctionSignature const& signature
+    FunctionSignature const& signature,
+    size_t                   signature_arity
 ) -> std::string
 {
     using namespace fmt::literals;
-    return fmt::format(
-        FMT_COMPILE(
-            "{type} in1"
-        ),
-        "type"_a = glsl_type_as_string(signature.from)
-    );
+
+    std::string res{};
+    for (size_t i = 0; i < signature_arity; ++i)
+    {
+        res += fmt::format(
+            FMT_COMPILE(
+                "{type} in{index}"
+            ),
+            "type"_a  = glsl_type_as_string(signature.from),
+            "index"_a = i + 1
+        );
+        if (i != signature_arity - 1)
+            res += ", ";
+    }
+
+    return res;
 }
 
 static auto gen_function_declaration(
     FunctionSignature const& signature,
+    size_t                   signature_arity,
     std::string_view         name
 ) -> std::string
 {
@@ -39,12 +51,13 @@ static auto gen_function_declaration(
         ),
         "return_type"_a = glsl_type_as_string(signature.to),
         "name"_a        = name,
-        "params"_a      = gen_params(signature)
+        "params"_a      = gen_params(signature, signature_arity)
     );
 }
 
 struct Params__gen_function_definition {
     FunctionSignature const& signature{};
+    size_t                   signature_arity{};
     std::string_view         name{};
     std::string_view         before_function{};
     std::string_view         body{};
@@ -65,7 +78,7 @@ static auto gen_function_definition(Params__gen_function_definition p)
 )STR"
         ),
         "before_function"_a = p.before_function,
-        "declaration"_a     = gen_function_declaration(p.signature, p.name),
+        "declaration"_a     = gen_function_declaration(p.signature, p.signature_arity, p.name),
         "body"_a            = p.body
     )};
 }
@@ -358,6 +371,7 @@ static auto gen_base_function(
 
     auto func_implementation = gen_function_definition({
         .signature       = node_definition.signature(),
+        .signature_arity = node_definition.signature_arity(),
         .name            = func_name,
         .before_function = properties_code->code,
         .body            = node_definition.function_body(),
@@ -406,6 +420,7 @@ auto gen_desired_function(
     auto const func_body = gen_desired_function_implementation(
         node_definition->signature(),
         desired_signature,
+        node_definition->signature_arity(),
         *base_function_name,
         InputFunctionGenerator_Ref{context, *node},
         DefaultFunctionGenerator_Ref{context}
@@ -419,6 +434,7 @@ auto gen_desired_function(
     auto const func_name       = desired_function_name(*node_definition, id, desired_signature);
     auto const func_definition = gen_function_definition({
         .signature       = desired_signature,
+        .signature_arity = 1,
         .name            = func_name,
         .before_function = "",
         .body            = *func_body,

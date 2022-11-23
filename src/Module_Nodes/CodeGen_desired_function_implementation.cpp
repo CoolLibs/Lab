@@ -34,9 +34,24 @@ static auto converting_input(FunctionSignature current, FunctionSignature desire
 
 // TODO(JF) test all of these, to make sure overload resolution doesn't change when we add options
 
+static auto gen_args(size_t arity) -> std::string
+{
+    std::string res{};
+
+    for (size_t i = 0; i < arity; ++i)
+    {
+        res += fmt::format("in{}", i + 1);
+        if (i != arity - 1)
+            res += ", ";
+    }
+
+    return res;
+}
+
 auto gen_desired_function_implementation(
     FunctionSignature            current,
     FunctionSignature            desired,
+    size_t                       current_signature_arity,
     std::string_view             base_function_name,
     InputFunctionGenerator_Ref   gen_input_function,
     DefaultFunctionGenerator_Ref gen_default_function
@@ -49,9 +64,10 @@ auto gen_desired_function_implementation(
     {
         return fmt::format(
             FMT_COMPILE(
-                "return {base_function_name}(in1);"
+                "return {base_function_name}({args});"
             ),
-            "base_function_name"_a = base_function_name
+            "base_function_name"_a = base_function_name,
+            "args"_a               = gen_args(current_signature_arity)
         );
     }
 
@@ -64,10 +80,11 @@ auto gen_desired_function_implementation(
 
         return fmt::format(
             FMT_COMPILE(
-                "return {input_function_name}({base_function_name}(in1));"
+                "return {input_function_name}({base_function_name}({args}));"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
+            "input_function_name"_a = *input_func_name,
+            "args"_a                = gen_args(current_signature_arity)
         );
     }
 
@@ -80,10 +97,11 @@ auto gen_desired_function_implementation(
 
         return fmt::format(
             FMT_COMPILE(
-                "return {base_function_name}({input_function_name}(in1));"
+                "return {base_function_name}({input_function_name}({args}));"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
+            "input_function_name"_a = *input_func_name,
+            "args"_a                = gen_args(current_signature_arity)
         );
     }
 
@@ -96,10 +114,11 @@ auto gen_desired_function_implementation(
 
         return fmt::format(
             FMT_COMPILE(
-                "return {input_function_name}({base_function_name}(in1));"
+                "return {input_function_name}({base_function_name}({args}));"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
+            "input_function_name"_a = *input_func_name,
+            "args"_a                = gen_args(current_signature_arity)
         );
     }
 
@@ -112,10 +131,11 @@ auto gen_desired_function_implementation(
 
         return fmt::format(
             FMT_COMPILE(
-                "return {base_function_name}({input_function_name}(in1));"
+                "return {base_function_name}({input_function_name}({args}));"
             ),
             "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
+            "input_function_name"_a = *input_func_name,
+            "args"_a                = gen_args(current_signature_arity)
         );
     }
 
@@ -130,11 +150,12 @@ auto gen_desired_function_implementation(
 
     return fmt::format(
         FMT_COMPILE(
-            "return {default_function_name}({base_function_name}({input_function_name}(in1)));"
+            "return {default_function_name}({base_function_name}({input_function_name}({args})));"
         ),
         "default_function_name"_a = *default_func_name,
         "base_function_name"_a    = base_function_name,
-        "input_function_name"_a   = *input_func_name
+        "input_function_name"_a   = *input_func_name,
+        "args"_a                  = gen_args(current_signature_arity)
     );
 }
 

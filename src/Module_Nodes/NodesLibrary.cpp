@@ -187,35 +187,6 @@ return vec3(
     }});
 
     this->add_definition({{
-        .name      = "Over",
-        .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Color,
-        },
-        .function_body = {R"STR(
-vec2 uv = in1;
-return mix(`Under`(uv), `Over`(uv), `Over Opacity`);
-    )STR"},
-        .inputs        = {
-            {{
-                       .name      = "`Over`",
-                       .signature = {
-                           .from = PrimitiveType::UV,
-                           .to   = PrimitiveType::Color,
-                },
-            }},
-            {{
-                       .name      = "`Under`",
-                       .signature = {
-                           .from = PrimitiveType::UV,
-                           .to   = PrimitiveType::Color,
-                },
-            }},
-        },
-        .properties = {Cool::InputDefinition<float>{"`Over Opacity`"}},
-    }});
-
-    this->add_definition({{
         .name      = "Time",
         .signature = {
             .from = PrimitiveType::Void,
@@ -353,6 +324,50 @@ return rand * (`Max` - `Min`) + `Min`;
             Cool::InputDefinition<float>{"`Seed Y`"},
             Cool::InputDefinition<float>{"`Min`"},
             Cool::InputDefinition<float>{"`Max`"},
+        },
+    }});
+
+    this->add_definition({{
+        .name      = "Over",
+        .signature = {
+            .from = PrimitiveType::UV,
+            .to   = PrimitiveType::Color,
+        },
+        .function_body = {R"STR(
+vec2 uv = in1;
+return mix(`Under`(uv), `Over`(uv), `Over Opacity`);
+    )STR"},
+        .inputs        = {
+            {{
+                       .name      = "`Over`",
+                       .signature = {
+                           .from = PrimitiveType::UV,
+                           .to   = PrimitiveType::Color,
+                },
+            }},
+            {{
+                       .name      = "`Under`",
+                       .signature = {
+                           .from = PrimitiveType::UV,
+                           .to   = PrimitiveType::Color,
+                },
+            }},
+        },
+        .properties = {Cool::InputDefinition<float>{"`Over Opacity`"}},
+    }});
+
+    this->add_definition({{
+        .name      = "Over (Blend Mode)",
+        .signature = {
+            .from = PrimitiveType::Color,
+            .to   = PrimitiveType::Color,
+        },
+        .signature_arity = 2,
+        .function_body   = {R"STR(
+return mix(in2, in1, `Over Opacity`);
+    )STR"},
+        .properties      = {
+            Cool::InputDefinition<float>{"`Over Opacity`"},
         },
     }});
 }

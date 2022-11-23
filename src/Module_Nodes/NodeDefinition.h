@@ -10,6 +10,7 @@ namespace Lab {
 struct NodeDefinition_Data {
     std::string       name{};
     FunctionSignature signature{};
+    size_t            signature_arity{1};
     std::string       function_body{};
 
     std::vector<NodeInputDefinition>      inputs{};         // Things that can only come from a pin
@@ -23,6 +24,7 @@ public:
 
     auto name() const -> auto const& { return _data.name; }
     auto signature() const -> auto const& { return _data.signature; }
+    auto signature_arity() const -> auto { return _data.signature_arity; }
     auto function_body() const -> auto const& { return _data.function_body; }
     auto inputs() const -> auto const& { return _data.inputs; }
     auto properties() const -> auto const& { return _data.properties; }

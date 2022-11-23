@@ -8,6 +8,7 @@ namespace Lab {
 auto gen_desired_function_implementation(
     FunctionSignature current,
     FunctionSignature desired,
+    size_t            current_signature_arity,
     std::string_view  base_function_name,
     InputFunctionGenerator_Ref,
     DefaultFunctionGenerator_Ref
