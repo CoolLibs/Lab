@@ -9,8 +9,8 @@ auto gen_desired_function_implementation(
     FunctionSignature current,
     FunctionSignature desired,
     std::string_view  base_function_name,
-    InputFunctionGenerator_Ref,
-    DefaultFunctionGenerator_Ref
+    Cool::InputPin const&,
+    CodeGenContext&
 ) -> tl::expected<std::string, std::string>;
 
 } // namespace Lab

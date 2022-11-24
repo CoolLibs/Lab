@@ -1,140 +1,167 @@
 #include "CodeGen_desired_function_implementation.h"
-
-namespace Lab {
-
-// A->B  ~~>  A->B
-static auto same_signature(FunctionSignature current, FunctionSignature desired) -> bool
-{
-    return current == desired;
-}
-
-// A->A  ~~>  A->B
-static auto transforming_input(FunctionSignature current, FunctionSignature desired) -> bool
-{
-    return current.from == current.to && current.to == desired.from;
-}
-
-// B->B  ~~>  A->B
-static auto transforming_output(FunctionSignature current, FunctionSignature desired) -> bool
-{
-    return current.from == current.to && current.from == desired.to;
-}
-
-// A->B  ~~>  A->C
-static auto converting_output(FunctionSignature current, FunctionSignature desired) -> bool
-{
-    return current.from == desired.from && current.to != desired.to;
-}
-
-// A->B  ~~>  C->B
-static auto converting_input(FunctionSignature current, FunctionSignature desired) -> bool
-{
-    return current.to == desired.to && current.from != desired.from;
-}
+#include "CodeGen.h"
+#include "CodeGen_default_function.h"
 
 // TODO(JF) test all of these, to make sure overload resolution doesn't change when we add options
 
+namespace Lab {
+
+namespace {
+
+class TransformationStrategy_DoNothing {
+public:
+    auto gen_func(Cool::InputPin const&, CodeGenContext&)
+        -> ExpectedFunctionName
+    {
+        return "";
+    }
+};
+
+class TransformationStrategy_UseDefaultFunction {
+public:
+    auto gen_func(Cool::InputPin const&, CodeGenContext& context)
+        -> ExpectedFunctionName
+    {
+        return gen_default_function(
+            _signature,
+            context
+        );
+    }
+
+    explicit TransformationStrategy_UseDefaultFunction(FunctionSignature signature)
+        : _signature{signature} {}
+
+private:
+    FunctionSignature _signature;
+};
+
+class TransformationStrategy_UseInputNode {
+public:
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context)
+        -> ExpectedFunctionName
+    {
+        return gen_desired_function(
+            _signature,
+            context.graph().input_node_id(pin.id()),
+            context
+        );
+    }
+
+    explicit TransformationStrategy_UseInputNode(FunctionSignature signature)
+        : _signature{signature} {}
+
+private:
+    FunctionSignature _signature;
+};
+
+class TransformationStrategy_UseInputNodeIfItExists {
+public:
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context)
+        -> ExpectedFunctionName
+    {
+        auto const node_id = context.graph().input_node_id(pin.id());
+
+        if (!context.graph().nodes().contains(node_id))
+            return ""; // The default behaviour of gen_desired_function() when there is no input node is to try to generate a default function, which is not what we want in the case of this strategy. This is what differentiates it from TransformationStrategy_UseInputNode
+
+        return gen_desired_function(
+            _signature,
+            node_id,
+            context
+        );
+    }
+
+    explicit TransformationStrategy_UseInputNodeIfItExists(FunctionSignature signature)
+        : _signature{signature} {}
+
+private:
+    FunctionSignature _signature;
+};
+
+class TransformationStrategy {
+public:
+    using TransformationStrategyVariant = std::variant<
+        TransformationStrategy_DoNothing,
+        TransformationStrategy_UseDefaultFunction,
+        TransformationStrategy_UseInputNode,
+        TransformationStrategy_UseInputNodeIfItExists>;
+
+    TransformationStrategy(TransformationStrategyVariant strategy)
+        : _strategy{strategy} {}
+
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context)
+        -> ExpectedFunctionName
+    {
+        return std::visit([&](auto&& strategy) { return strategy.gen_func(pin, context); }, _strategy);
+    }
+
+private:
+    TransformationStrategyVariant _strategy;
+};
+
+static auto input_transformation(
+    FunctionSignature current,
+    FunctionSignature desired
+) -> TransformationStrategy
+{
+    auto const signature = FunctionSignature{.from = desired.from, .to = current.from};
+
+    if (current.from != desired.from) // Input needs to be converted in order to have the right type
+        return {TransformationStrategy_UseInputNode{signature}};
+
+    if (current.to == desired.to) // Input pin is not used to convert output, so we will still apply it to our input so that it is used somewhere
+        return {TransformationStrategy_UseInputNodeIfItExists{signature}};
+
+    // Input pin is used elsewhere and we don't need it here, so use nothing
+    return {TransformationStrategy_DoNothing{}};
+}
+
+static auto output_transformation(
+    FunctionSignature current,
+    FunctionSignature desired
+) -> TransformationStrategy
+{
+    if (current.to == desired.to)
+        // We don't need to convert the output
+        return {TransformationStrategy_DoNothing{}};
+
+    auto const signature = FunctionSignature{.from = current.to, .to = desired.to};
+
+    if (current.from != desired.from)
+        // Use a default function because the input pin is already used to convert the inputs
+        return {TransformationStrategy_UseDefaultFunction{signature}};
+
+    // Use the input pin, it is not used to transform the inputs
+    return {TransformationStrategy_UseInputNode{signature}};
+}
+
+} // namespace
+
 auto gen_desired_function_implementation(
-    FunctionSignature            current,
-    FunctionSignature            desired,
-    std::string_view             base_function_name,
-    InputFunctionGenerator_Ref   gen_input_function,
-    DefaultFunctionGenerator_Ref gen_default_function
+    FunctionSignature     current,
+    FunctionSignature     desired,
+    std::string_view      base_function_name,
+    Cool::InputPin const& pin,
+    CodeGenContext&       context
+
 ) -> tl::expected<std::string, std::string>
 {
     using namespace fmt::literals;
 
-    // A->B  ~~>  A->B
-    if (same_signature(current, desired))
-    {
-        return fmt::format(
-            FMT_COMPILE(
-                "return {base_function_name}(in1);"
-            ),
-            "base_function_name"_a = base_function_name
-        );
-    }
-
-    // A->A  ~~>  A->B
-    if (transforming_input(current, desired))
-    {
-        auto const input_func_name = gen_input_function(desired);
-        if (!input_func_name)
-            return tl::make_unexpected(input_func_name.error());
-
-        return fmt::format(
-            FMT_COMPILE(
-                "return {input_function_name}({base_function_name}(in1));"
-            ),
-            "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
-        );
-    }
-
-    // B->B  ~~>  A->B
-    if (transforming_output(current, desired))
-    {
-        auto const input_func_name = gen_input_function(desired);
-        if (!input_func_name)
-            return tl::make_unexpected(input_func_name.error());
-
-        return fmt::format(
-            FMT_COMPILE(
-                "return {base_function_name}({input_function_name}(in1));"
-            ),
-            "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
-        );
-    }
-
-    // A->B  ~~>  A->C
-    if (converting_output(current, desired))
-    {
-        auto const input_func_name = gen_input_function({.from = current.to, .to = desired.to});
-        if (!input_func_name)
-            return tl::make_unexpected(input_func_name.error());
-
-        return fmt::format(
-            FMT_COMPILE(
-                "return {input_function_name}({base_function_name}(in1));"
-            ),
-            "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
-        );
-    }
-
-    // A->B  ~~>  C->B
-    if (converting_input(current, desired))
-    {
-        auto const input_func_name = gen_input_function({.from = desired.from, .to = current.from});
-        if (!input_func_name)
-            return tl::make_unexpected(input_func_name.error());
-
-        return fmt::format(
-            FMT_COMPILE(
-                "return {base_function_name}({input_function_name}(in1));"
-            ),
-            "base_function_name"_a  = base_function_name,
-            "input_function_name"_a = *input_func_name
-        );
-    }
-
-    // Catch all case
-    auto const default_func_name = gen_default_function({.from = current.to, .to = desired.to});
-    if (!default_func_name)
-        return tl::make_unexpected(default_func_name.error());
-
-    auto const input_func_name = gen_input_function({.from = desired.from, .to = current.from});
-    if (!input_func_name)
-        return tl::make_unexpected(input_func_name.error());
+    auto const input_transformation_name = input_transformation(current, desired).gen_func(pin, context);
+    if (!input_transformation_name)
+        return input_transformation_name;
+    auto const output_transformation_name = output_transformation(current, desired).gen_func(pin, context);
+    if (!output_transformation_name)
+        return output_transformation_name;
 
     return fmt::format(
         FMT_COMPILE(
-            "return {default_function_name}({base_function_name}({input_function_name}(in1)));"
+            "return {transform_output}({base_function}({transform_input}(in1)));"
         ),
-        "default_function_name"_a = *default_func_name,
-        "base_function_name"_a    = base_function_name,
-        "input_function_name"_a   = *input_func_name
+        "base_function"_a    = base_function_name,
+        "transform_input"_a  = *input_transformation_name,
+        "transform_output"_a = *output_transformation_name
     );
 }
 

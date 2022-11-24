@@ -7,19 +7,6 @@
 
 namespace Lab {
 
-namespace internal {
-class AlreadyGeneratedFunctions {
-public:
-    AlreadyGeneratedFunctions(){};
-
-    void push(std::string const& name);
-    auto has_already_been_generated(std::string const& name) const -> bool;
-
-private:
-    std::vector<std::string> _names;
-};
-} // namespace internal
-
 class CodeGenContext {
 public:
     CodeGenContext(
@@ -42,38 +29,24 @@ public:
     auto code() const -> std::string { return _code; }
 
 private:
-    std::string                         _code{};
-    internal::AlreadyGeneratedFunctions _already_generated_functions{};
+    class AlreadyGeneratedFunctions {
+    public:
+        AlreadyGeneratedFunctions(){};
+
+        void push(std::string const& name);
+        auto has_already_been_generated(std::string const& name) const -> bool;
+
+    private:
+        std::vector<std::string> _names;
+    };
+
+private:
+    std::string               _code{};
+    AlreadyGeneratedFunctions _already_generated_functions{};
 
     Graph const&                                _graph;
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
     Cool::InputProvider_Ref                     _input_provider;
-};
-
-class InputFunctionGenerator_Ref {
-public:
-    InputFunctionGenerator_Ref(CodeGenContext& context, Node const& node)
-        : _context{context}
-        , _node{node}
-    {}
-
-    auto operator()(FunctionSignature) -> ExpectedFunctionName;
-
-private:
-    std::reference_wrapper<CodeGenContext> _context;
-    std::reference_wrapper<Node const>     _node;
-};
-
-class DefaultFunctionGenerator_Ref {
-public:
-    explicit DefaultFunctionGenerator_Ref(CodeGenContext& context)
-        : _context{context}
-    {}
-
-    auto operator()(FunctionSignature) -> ExpectedFunctionName;
-
-private:
-    std::reference_wrapper<CodeGenContext> _context;
 };
 
 } // namespace Lab
