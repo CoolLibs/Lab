@@ -216,6 +216,19 @@ return sin((in1 - 0.25) * 6.28) * 0.5 + 0.5;
     }});
 
     this->add_definition({{
+        .name      = "Pow",
+        .signature = {
+            .from = PrimitiveType::Float,
+            .to   = PrimitiveType::Float,
+        },
+        .function_body = {R"STR(
+return pow(in1, `Exponent`);
+    )STR"},
+        .inputs        = {},
+        .properties    = {Cool::InputDefinition<float>{"`Exponent`"}},
+    }});
+
+    this->add_definition({{
         .name      = "Flip (x: 1 - x)",
         .signature = {
             .from = PrimitiveType::Float,

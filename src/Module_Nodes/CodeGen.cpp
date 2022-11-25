@@ -400,7 +400,7 @@ auto gen_desired_function(
 ) -> ExpectedFunctionName
 {
     auto const node = context.graph().nodes().get(id);
-    if (!node) // Use a default function in no node is currently plugged in
+    if (!node) // Use a default function if no node is currently plugged in
         return gen_default_function(desired_signature, context);
 
     auto const node_definition = context.get_node_definition(node->definition_name());
@@ -422,8 +422,8 @@ auto gen_desired_function(
         desired_signature,
         node_definition->signature_arity(),
         *base_function_name,
-        InputFunctionGenerator_Ref{context, *node},
-        DefaultFunctionGenerator_Ref{context}
+        node->main_input_pin(),
+        context
     );
     if (!func_body)
         return tl::make_unexpected(fmt::format(
