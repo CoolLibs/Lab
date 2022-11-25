@@ -203,7 +203,7 @@ return vec3(
         .signature = {
             .from  = PrimitiveType::Void,
             .to    = PrimitiveType::Float,
-            .arity = 1,
+            .arity = 0,
         },
         .function_body = {R"STR(
 return _time * `Speed` + `Offset`;
@@ -262,7 +262,7 @@ return 1. - in1;
         .signature = {
             .from  = PrimitiveType::Void,
             .to    = PrimitiveType::Float,
-            .arity = 1,
+            .arity = 0,
         },
         .function_body = {R"STR(
 return `A` * `B`;
@@ -322,18 +322,13 @@ vec3 color = vec3(0.);
 for (int i = 0; i < `N`; ++i)
 {
     `Index` = i;
-    color += `Image`(in1);
+    color = `Blend Mode`(`Image`(in1), color);
 }
 return color;
     )STR"},
         .inputs        = {
-            {{
-                       .name      = "`Image`",
-                       .signature = {
-                           .from = PrimitiveType::UV,
-                           .to   = PrimitiveType::Color,
-                },
-            }},
+            {{.name = "`Image`", .signature = Signature::Image}},
+            {{.name = "`Blend Mode`", .signature = Signature::BlendMode}},
         },
         .properties     = {Cool::InputDefinition<int>{"`N`"}},
         .output_indices = {
@@ -346,7 +341,7 @@ return color;
         .signature = {
             .from  = PrimitiveType::Void,
             .to    = PrimitiveType::Float,
-            .arity = 1,
+            .arity = 0,
         },
         .function_body = {R"STR(
 vec2 seeds = vec2(`Seed X`, `Seed Y`);
