@@ -135,34 +135,55 @@ static auto output_transformation(
     return {TransformationStrategy_UseInputNode{signature}};
 }
 
+static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, Node const& node) -> std::string
+{
+    std::string res{};
+
+    for (size_t i = 0; i < node.signature_arity(); ++i)
+    {
+        res += fmt::format("{}(in{})", transforms_names[i], i + 1);
+        if (i != node.signature_arity() - 1)
+            res += ", ";
+    }
+
+    return res;
+}
+
 } // namespace
 
 auto gen_desired_function_implementation(
-    FunctionSignature     current,
-    FunctionSignature     desired,
-    size_t                current_signature_arity,
-    std::string_view      base_function_name,
-    Cool::InputPin const& pin,
-    CodeGenContext&       context
+    FunctionSignature current,
+    FunctionSignature desired,
+    std::string_view  base_function_name,
+    Node const&       node,
+    CodeGenContext&   context
 
 ) -> tl::expected<std::string, std::string>
 {
     using namespace fmt::literals;
 
-    auto const input_transformation_name = input_transformation(current, desired).gen_func(pin, context);
-    if (!input_transformation_name)
-        return input_transformation_name;
-    auto const output_transformation_name = output_transformation(current, desired).gen_func(pin, context);
+    auto input_transformation_names = std::vector<std::string>{};
+    input_transformation_names.reserve(node.signature_arity());
+    for (size_t i = 0; i < node.signature_arity(); ++i)
+    {
+        auto const input_transformation_name = input_transformation(current, desired).gen_func(node.main_input_pin(i), context);
+        if (!input_transformation_name)
+            return input_transformation_name;
+
+        input_transformation_names.push_back(*input_transformation_name);
+    }
+
+    auto const output_transformation_name = output_transformation(current, desired).gen_func(node.main_input_pin(0), context);
     if (!output_transformation_name)
         return output_transformation_name;
 
     return fmt::format(
         FMT_COMPILE(
-            "return {transform_output}({base_function}({transform_input}(in1)));"
+            "return {transform_output}({base_function}({transformed_inputs}));"
         ),
-        "base_function"_a    = base_function_name,
-        "transform_input"_a  = *input_transformation_name,
-        "transform_output"_a = *output_transformation_name
+        "base_function"_a      = base_function_name,
+        "transformed_inputs"_a = gen_transformed_inputs(input_transformation_names, node),
+        "transform_output"_a   = *output_transformation_name
     );
 }
 

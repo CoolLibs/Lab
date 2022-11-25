@@ -8,9 +8,8 @@ namespace Lab {
 auto gen_desired_function_implementation(
     FunctionSignature current,
     FunctionSignature desired,
-    size_t            current_signature_arity,
     std::string_view  base_function_name,
-    Cool::InputPin const&,
+    Node const&,
     CodeGenContext&
 ) -> tl::expected<std::string, std::string>;
 

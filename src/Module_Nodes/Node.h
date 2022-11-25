@@ -21,8 +21,13 @@ public:
     auto output_pins() -> auto& { return _output_pins; }
     auto properties() -> auto& { return _properties; }
     auto properties() const -> auto const& { return _properties; }
+    auto signature_arity() const -> auto { return _signature_arity; }
 
-    auto main_input_pin() const -> Cool::InputPin const& { return _input_pins[0]; }
+    auto main_input_pin(size_t main_input_index) const -> Cool::InputPin const&
+    {
+        assert(main_input_index < _signature_arity);
+        return _input_pins[main_input_index];
+    }
     auto main_output_pin() const -> Cool::OutputPin const& { return _output_pins[0]; }
     /// This corresponds to a subset of all the input_pints(); the ones that correspond to an INPUT of the node.
     auto pin_of_input(size_t input_index) const -> Cool::InputPin const& { return _input_pins[_signature_arity + input_index]; }

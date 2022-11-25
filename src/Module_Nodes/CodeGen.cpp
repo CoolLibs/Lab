@@ -420,9 +420,8 @@ auto gen_desired_function(
     auto const func_body = gen_desired_function_implementation(
         node_definition->signature(),
         desired_signature,
-        node_definition->signature_arity(),
         *base_function_name,
-        node->main_input_pin(),
+        *node,
         context
     );
     if (!func_body)
