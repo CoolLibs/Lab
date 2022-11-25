@@ -104,7 +104,7 @@ static auto input_transformation(
     FunctionSignature desired
 ) -> TransformationStrategy
 {
-    auto const signature = FunctionSignature{.from = desired.from, .to = current.from};
+    auto const signature = FunctionSignature{.from = desired.from, .to = current.from, .arity = 1};
 
     if (current.from != desired.from) // Input needs to be converted in order to have the right type
         return {TransformationStrategy_UseInputNode{signature}};
@@ -125,7 +125,7 @@ static auto output_transformation(
         // We don't need to convert the output
         return {TransformationStrategy_DoNothing{}};
 
-    auto const signature = FunctionSignature{.from = current.to, .to = desired.to};
+    auto const signature = FunctionSignature{.from = current.to, .to = desired.to, .arity = 1};
 
     if (current.from != desired.from)
         // Use a default function because the input pin is already used to convert the inputs
@@ -135,14 +135,16 @@ static auto output_transformation(
     return {TransformationStrategy_UseInputNode{signature}};
 }
 
-static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, Node const& node) -> std::string
+static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, Node const& node, size_t current_arity, size_t desired_arity) -> std::string
 {
+    assert(transforms_names.size() == current_arity);
+
     std::string res{};
 
-    for (size_t i = 0; i < node.signature_arity(); ++i)
+    for (size_t i = 0; i < current_arity; ++i)
     {
-        res += fmt::format("{}(in{})", transforms_names[i], i + 1);
-        if (i != node.signature_arity() - 1)
+        res += fmt::format("{}(in{})", transforms_names[i], std::min(i + 1u, desired_arity));
+        if (i != current_arity - 1)
             res += ", ";
     }
 
@@ -163,8 +165,8 @@ auto gen_desired_function_implementation(
     using namespace fmt::literals;
 
     auto input_transformation_names = std::vector<std::string>{};
-    input_transformation_names.reserve(node.signature_arity());
-    for (size_t i = 0; i < node.signature_arity(); ++i)
+    input_transformation_names.reserve(current.arity);
+    for (size_t i = 0; i < current.arity; ++i)
     {
         auto const input_transformation_name = input_transformation(current, desired).gen_func(node.main_input_pin(i), context);
         if (!input_transformation_name)
@@ -182,7 +184,7 @@ auto gen_desired_function_implementation(
             "return {transform_output}({base_function}({transformed_inputs}));"
         ),
         "base_function"_a      = base_function_name,
-        "transformed_inputs"_a = gen_transformed_inputs(input_transformation_names, node),
+        "transformed_inputs"_a = gen_transformed_inputs(input_transformation_names, node, current.arity, desired.arity),
         "transform_output"_a   = *output_transformation_name
     );
 }

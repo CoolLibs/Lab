@@ -14,15 +14,13 @@
 
 namespace Lab {
 
-static auto gen_params(
-    FunctionSignature const& signature,
-    size_t                   signature_arity
-) -> std::string
+static auto gen_params(FunctionSignature const& signature)
+    -> std::string
 {
     using namespace fmt::literals;
 
     std::string res{};
-    for (size_t i = 0; i < signature_arity; ++i)
+    for (size_t i = 0; i < signature.arity; ++i)
     {
         res += fmt::format(
             FMT_COMPILE(
@@ -31,7 +29,7 @@ static auto gen_params(
             "type"_a  = glsl_type_as_string(signature.from),
             "index"_a = i + 1
         );
-        if (i != signature_arity - 1)
+        if (i != signature.arity - 1)
             res += ", ";
     }
 
@@ -40,7 +38,6 @@ static auto gen_params(
 
 static auto gen_function_declaration(
     FunctionSignature const& signature,
-    size_t                   signature_arity,
     std::string_view         name
 ) -> std::string
 {
@@ -51,13 +48,12 @@ static auto gen_function_declaration(
         ),
         "return_type"_a = glsl_type_as_string(signature.to),
         "name"_a        = name,
-        "params"_a      = gen_params(signature, signature_arity)
+        "params"_a      = gen_params(signature)
     );
 }
 
 struct Params__gen_function_definition {
     FunctionSignature const& signature{};
-    size_t                   signature_arity{};
     std::string_view         name{};
     std::string_view         before_function{};
     std::string_view         body{};
@@ -78,7 +74,7 @@ static auto gen_function_definition(Params__gen_function_definition p)
 )STR"
         ),
         "before_function"_a = p.before_function,
-        "declaration"_a     = gen_function_declaration(p.signature, p.signature_arity, p.name),
+        "declaration"_a     = gen_function_declaration(p.signature, p.name),
         "body"_a            = p.body
     )};
 }
@@ -100,11 +96,6 @@ static auto valid_glsl(std::string s)
     // For glsl variable name rules, see https://www.informit.com/articles/article.aspx?p=2731929&seqNum=3, section "Declaring Variables".
     s.erase(std::remove_if(s.begin(), s.end(), &is_not_alphanumeric), s.end()); // `s` can only contain letters and numbers (and _, but two consecutive underscores is invalid so we don't allow any: this is the simplest way to enforce that rule, at the cost of slightly uglier names)
     return "_" + s;                                                             // We need a prefix to make sure `s` does not start with a number.
-}
-
-static auto to_string(FunctionSignature signature) -> std::string
-{
-    return fmt::format("{}_to_{}", cpp_type_as_string(signature.from), cpp_type_as_string(signature.to));
 }
 
 static auto base_function_name(
@@ -371,7 +362,6 @@ static auto gen_base_function(
 
     auto func_implementation = gen_function_definition({
         .signature       = node_definition.signature(),
-        .signature_arity = node_definition.signature_arity(),
         .name            = func_name,
         .before_function = properties_code->code,
         .body            = node_definition.function_body(),
@@ -433,7 +423,6 @@ auto gen_desired_function(
     auto const func_name       = desired_function_name(*node_definition, id, desired_signature);
     auto const func_definition = gen_function_definition({
         .signature       = desired_signature,
-        .signature_arity = 1,
         .name            = func_name,
         .before_function = "",
         .body            = *func_body,

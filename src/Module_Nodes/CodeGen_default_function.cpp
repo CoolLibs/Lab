@@ -5,7 +5,7 @@ namespace Lab {
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
-    if (signature == FunctionSignature{.from = PrimitiveType::UV, .to = PrimitiveType::Color})
+    if (signature == Signature::Image)
     {
         return context.push_function({
             .name           = "default_image",
@@ -18,7 +18,7 @@ vec3 default_image(vec2 uv)
         });
     }
 
-    if (signature == FunctionSignature{.from = PrimitiveType::Float, .to = PrimitiveType::Color})
+    if (signature == Signature::Colorizer)
     {
         return context.push_function({
             .name           = "default_colorizer",
@@ -33,9 +33,9 @@ vec3 default_colorizer(float x)
 
     if (signature.to == PrimitiveType::Void)
     {
-        auto const name = fmt::format("default_{}_to_void", cpp_type_as_string(signature.from));
+        auto const name = fmt::format("default_", to_string(signature));
         return context.push_function({
-            .name           = name,
+            .name           = name, // TODO(JF) Handle arity:
             .implementation = fmt::format(R"STR(
 int {}({} unused_parameter)
 {{
@@ -46,7 +46,7 @@ int {}({} unused_parameter)
         });
     }
 
-    if (signature == FunctionSignature{.from = PrimitiveType::UV, .to = PrimitiveType::Float})
+    if (signature == Signature::FloatField)
     {
         return context.push_function({
             .name           = "default_uv_to_float",
@@ -61,7 +61,7 @@ float default_uv_to_float(vec2 uv)
 
     return tl::make_unexpected(fmt::format(
         "Could not generate a default function from {} to {}.",
-        cpp_type_as_string(signature.from), cpp_type_as_string(signature.to)
+        cpp_type_as_string(signature.from) /* TODO(JF) Write this type as many times as the arity */, cpp_type_as_string(signature.to), signature.arity
     ));
 }
 

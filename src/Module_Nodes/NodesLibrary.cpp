@@ -8,8 +8,9 @@ NodesLibrary::NodesLibrary()
     this->add_definition({{
         .name      = "Black & White",
         .signature = {
-            .from = PrimitiveType::Color,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::Color,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return dot(in1, vec3(0.2126, 0.7152, 0.0722));
@@ -20,8 +21,9 @@ return dot(in1, vec3(0.2126, 0.7152, 0.0722));
     this->add_definition({{
         .name      = "Saturation",
         .signature = {
-            .from = PrimitiveType::Color,
-            .to   = PrimitiveType::Color,
+            .from  = PrimitiveType::Color,
+            .to    = PrimitiveType::Color,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return mix(vec3(dot(in1, vec3(0.2126, 0.7152, 0.0722))), in1, `Saturation`);
@@ -33,8 +35,9 @@ return mix(vec3(dot(in1, vec3(0.2126, 0.7152, 0.0722))), in1, `Saturation`);
     this->add_definition({{
         .name      = "Checkerboard",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return (int(in1.x*10.) + int(in1.y*10.)) % 2 == 0 ? 0. : 1.;
@@ -45,8 +48,9 @@ return (int(in1.x*10.) + int(in1.y*10.)) % 2 == 0 ? 0. : 1.;
     this->add_definition({{
         .name      = "TestImage",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Color,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::Color,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return fract(vec3(in1, 0.));
@@ -57,8 +61,9 @@ return fract(vec3(in1, 0.));
     this->add_definition({{
         .name      = "Zoom",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::UV,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::UV,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return in1 / `Zoom`;
@@ -70,8 +75,9 @@ return in1 / `Zoom`;
     this->add_definition({{
         .name      = "Gradient Colorizer",
         .signature = {
-            .from = PrimitiveType::Float,
-            .to   = PrimitiveType::Color,
+            .from  = PrimitiveType::Float,
+            .to    = PrimitiveType::Color,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return `Gradient`(in1).rgb;
@@ -83,8 +89,9 @@ return `Gradient`(in1).rgb;
     this->add_definition({{
         .name      = "Circle (Mask)",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return smoothstep(`Edge Blur`, -`Edge Blur`, length(in1 - `Center`) - `Radius`);
@@ -100,8 +107,9 @@ return smoothstep(`Edge Blur`, -`Edge Blur`, length(in1 - `Center`) - `Radius`);
     this->add_definition({{
         .name      = "Circle (Curve)",
         .signature = {
-            .from = PrimitiveType::Float,
-            .to   = PrimitiveType::UV,
+            .from  = PrimitiveType::Float,
+            .to    = PrimitiveType::UV,
+            .arity = 1,
         },
         .function_body = {R"STR(
 float angle = 6.28 * in1;
@@ -117,8 +125,9 @@ return `Center` + `Radius` * vec2(cos(angle), sin(angle));
     this->add_definition({{
         .name      = "Displacement",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::UV,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::UV,
+            .arity = 1,
         },
         .function_body = {R"STR(
 in1.y += `Amplitude` * sin(in1.x * `Frequency`);
@@ -134,8 +143,9 @@ return in1;
     this->add_definition({{
         .name      = "Rotate 90°",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::UV,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::UV,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return vec2(in1.y, -in1.x);
@@ -147,8 +157,9 @@ return vec2(in1.y, -in1.x);
     this->add_definition({{
         .name      = "Scale",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::UV,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::UV,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return in1 * vec2(`Scale X`, `Scale Y`);
@@ -163,8 +174,9 @@ return in1 * vec2(`Scale X`, `Scale Y`);
     this->add_definition({{
         .name      = "RGB Drift",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Color,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::Color,
+            .arity = 1,
         },
         .function_body = {R"STR(
 vec2 uv = in1;
@@ -189,8 +201,9 @@ return vec3(
     this->add_definition({{
         .name      = "Time",
         .signature = {
-            .from = PrimitiveType::Void,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::Void,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return _time * `Speed` + `Offset`;
@@ -205,8 +218,9 @@ return _time * `Speed` + `Offset`;
     this->add_definition({{
         .name      = "Sine (Normalized)",
         .signature = {
-            .from = PrimitiveType::Float,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::Float,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return sin((in1 - 0.25) * 6.28) * 0.5 + 0.5;
@@ -218,8 +232,9 @@ return sin((in1 - 0.25) * 6.28) * 0.5 + 0.5;
     this->add_definition({{
         .name      = "Pow",
         .signature = {
-            .from = PrimitiveType::Float,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::Float,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return pow(in1, `Exponent`);
@@ -231,8 +246,9 @@ return pow(in1, `Exponent`);
     this->add_definition({{
         .name      = "Flip (x: 1 - x)",
         .signature = {
-            .from = PrimitiveType::Float,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::Float,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return 1. - in1;
@@ -244,8 +260,9 @@ return 1. - in1;
     this->add_definition({{
         .name      = "Multiply (float)",
         .signature = {
-            .from = PrimitiveType::Void,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::Void,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return `A` * `B`;
@@ -260,8 +277,9 @@ return `A` * `B`;
     this->add_definition({{
         .name      = "Vertical Gradient",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 return in1.y*0.5+0.5;
@@ -273,8 +291,9 @@ return in1.y*0.5+0.5;
     this->add_definition({{
         .name      = "Grid",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::UV,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::UV,
+            .arity = 1,
         },
         .function_body  = {R"STR(
 vec2 uv = unnormalize_uv_with_aspect_ratio(in1, 1.) * `Nb cells`;
@@ -294,8 +313,9 @@ return normalize_uv_with_aspect_ratio(fract(uv), 1.);
     this->add_definition({{
         .name      = "Render N Times",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Color,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::Color,
+            .arity = 1,
         },
         .function_body = {R"STR(
 vec3 color = vec3(0.);
@@ -324,8 +344,9 @@ return color;
     this->add_definition({{
         .name      = "Random 2D",
         .signature = {
-            .from = PrimitiveType::Void,
-            .to   = PrimitiveType::Float,
+            .from  = PrimitiveType::Void,
+            .to    = PrimitiveType::Float,
+            .arity = 1,
         },
         .function_body = {R"STR(
 vec2 seeds = vec2(`Seed X`, `Seed Y`);
@@ -343,8 +364,9 @@ return rand * (`Max` - `Min`) + `Min`;
     this->add_definition({{
         .name      = "Over",
         .signature = {
-            .from = PrimitiveType::UV,
-            .to   = PrimitiveType::Color,
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::Color,
+            .arity = 1,
         },
         .function_body = {R"STR(
 vec2 uv = in1;
@@ -372,14 +394,14 @@ return mix(`Under`(uv), `Over`(uv), `Over Opacity`);
     this->add_definition({{
         .name      = "Over (Blend Mode)",
         .signature = {
-            .from = PrimitiveType::Color,
-            .to   = PrimitiveType::Color,
+            .from  = PrimitiveType::Color,
+            .to    = PrimitiveType::Color,
+            .arity = 2,
         },
-        .signature_arity = 2,
-        .function_body   = {R"STR(
+        .function_body = {R"STR(
 return mix(in2, in1, `Over Opacity`);
     )STR"},
-        .properties      = {
+        .properties    = {
             Cool::InputDefinition<float>{"`Over Opacity`"},
         },
     }});

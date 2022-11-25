@@ -21,7 +21,6 @@ public:
     auto output_pins() -> auto& { return _output_pins; }
     auto properties() -> auto& { return _properties; }
     auto properties() const -> auto const& { return _properties; }
-    auto signature_arity() const -> auto { return _signature_arity; }
 
     auto main_input_pin(size_t main_input_index) const -> Cool::InputPin const&
     {
