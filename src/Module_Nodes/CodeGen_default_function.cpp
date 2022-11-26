@@ -121,7 +121,7 @@ float default_uv_to_float(vec2 uv)
             .implementation = R"STR(
 vec4 default_blend_mode(vec4 over, vec4 under)
 {
-    // This is a over (aka blend, aka mix). We assume premultiplied alpha.
+    // This is a over (aka Normal Blend Mode). We assume premultiplied alpha.
     return over + (1. - over.a) * under;
 }
 )STR",
