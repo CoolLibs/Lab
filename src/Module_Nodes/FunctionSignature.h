@@ -7,7 +7,7 @@ namespace Lab {
 struct FunctionSignature {
     PrimitiveType from;
     PrimitiveType to;
-    size_t        arity;
+    size_t        arity{1};
 
     friend auto operator==(const FunctionSignature&, const FunctionSignature&) -> bool = default;
 };
