@@ -17,7 +17,7 @@ def all_primitive_types():
         ),
         PrimitiveType(
             cpp="RGBA",
-            corresponding_input_type="Cool::StraightRgbaColor",
+            corresponding_input_type="Cool::PremultipliedRgbaColor",
             glsl="vec4"
         ),
         PrimitiveType(

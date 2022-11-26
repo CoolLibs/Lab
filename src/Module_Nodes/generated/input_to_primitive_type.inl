@@ -8,7 +8,7 @@
 if (std::holds_alternative<Cool::Input<Cool::RgbColor>>(input))
     return PrimitiveType::RGB;
 
-if (std::holds_alternative<Cool::Input<Cool::StraightRgbaColor>>(input))
+if (std::holds_alternative<Cool::Input<Cool::PremultipliedRgbaColor>>(input))
     return PrimitiveType::RGBA;
 
 if (std::holds_alternative<Cool::Input<Cool::Point2D>>(input))
