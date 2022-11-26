@@ -135,7 +135,7 @@ static auto output_transformation(
     return {TransformationStrategy_UseInputNode{signature}};
 }
 
-static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, Node const& node, size_t current_arity, size_t desired_arity) -> std::string
+static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, size_t current_arity, size_t desired_arity) -> std::string
 {
     assert(transforms_names.size() == current_arity);
 
@@ -168,14 +168,16 @@ auto gen_desired_function_implementation(
     input_transformation_names.reserve(current.arity);
     for (size_t i = 0; i < current.arity; ++i)
     {
-        auto const input_transformation_name = input_transformation(current, desired).gen_func(node.main_input_pin(i), context);
+        auto const input_transformation_name = input_transformation(current, desired)
+                                                   .gen_func(node.main_input_pin(i), context);
         if (!input_transformation_name)
             return input_transformation_name;
 
         input_transformation_names.push_back(*input_transformation_name);
     }
 
-    auto const output_transformation_name = output_transformation(current, desired).gen_func(node.main_input_pin(0), context);
+    auto const output_transformation_name = output_transformation(current, desired)
+                                                .gen_func(current.arity > 0 ? node.main_input_pin(0) : Cool::InputPin{}, context);
     if (!output_transformation_name)
         return output_transformation_name;
 
@@ -184,7 +186,7 @@ auto gen_desired_function_implementation(
             "return {transform_output}({base_function}({transformed_inputs}));"
         ),
         "base_function"_a      = base_function_name,
-        "transformed_inputs"_a = gen_transformed_inputs(input_transformation_names, node, current.arity, desired.arity),
+        "transformed_inputs"_a = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity),
         "transform_output"_a   = *output_transformation_name
     );
 }

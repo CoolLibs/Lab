@@ -34,11 +34,10 @@ def all_primitive_types():
             corresponding_input_type="glm::vec3",
             glsl="vec3"
         ),
-        # Trick: because we always want to have exactly one type, we represent Void as an int that will be ignored
         PrimitiveType(
             cpp="Void",
             corresponding_input_type=None,
-            glsl="int"
+            glsl="void"
         ),
     ]
 
