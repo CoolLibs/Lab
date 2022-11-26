@@ -2,6 +2,24 @@
 
 namespace Lab {
 
+static auto comma_separated(std::string const& str, size_t count)
+    -> std::string
+{
+    std::string res;
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        res += str;
+        if (i != count - 1)
+            res += ", ";
+    }
+
+    if (count == 1)
+        return res;
+    else
+        return fmt::format("({})", res);
+}
+
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
@@ -35,7 +53,7 @@ vec3 default_colorizer(float x)
     {
         auto const name = fmt::format("default_", to_string(signature));
         return context.push_function({
-            .name           = name, // TODO(JF) Handle arity:
+            .name           = name,
             .implementation = fmt::format(R"STR(
 int {}({} unused_parameter)
 {{
@@ -61,7 +79,7 @@ float default_uv_to_float(vec2 uv)
 
     return tl::make_unexpected(fmt::format(
         "Could not generate a default function from {} to {}.",
-        cpp_type_as_string(signature.from) /* TODO(JF) Write this type as many times as the arity */, cpp_type_as_string(signature.to), signature.arity
+        comma_separated(cpp_type_as_string(signature.from), signature.arity), cpp_type_as_string(signature.to), signature.arity
     ));
 }
 
