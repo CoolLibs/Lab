@@ -26,7 +26,7 @@ auto generate_shader_code(
 {
     auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
     auto const main_function_name = gen_desired_function(
-        Signature::Image,
+        Signature::ImageRGBA,
         main_node_id,
         context
     );
@@ -49,7 +49,7 @@ out vec4      out_Color;
 void main()
 {{
     vec2 uv = normalized_uv();
-    out_Color = vec4({main_function_name}(uv), 1.);
+    out_Color = vec4({main_function_name}(uv));
 }}
 
 )STR"

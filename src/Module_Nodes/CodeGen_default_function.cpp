@@ -23,12 +23,12 @@ static auto comma_separated(std::string const& str, size_t count)
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
-    if (signature == Signature::Image)
+    if (signature == Signature::ImageRGB)
     {
         return context.push_function({
-            .name           = "default_image",
+            .name           = "default_image_rgb",
             .implementation = R"STR(
-vec3 default_image(vec2 uv)
+vec3 default_image_rgb(vec2 uv)
 {
     return vec3(uv, 0.);
 }
@@ -36,12 +36,25 @@ vec3 default_image(vec2 uv)
         });
     }
 
-    if (signature == Signature::Colorizer)
+    if (signature == Signature::ImageRGBA)
     {
         return context.push_function({
-            .name           = "default_colorizer",
+            .name           = "default_image_rgba",
             .implementation = R"STR(
-vec3 default_colorizer(float x)
+vec4 default_image_rgba(vec2 uv)
+{
+    return vec4(uv, 0., 1.);
+}
+)STR",
+        });
+    }
+
+    if (signature == Signature::ColorizerRGB)
+    {
+        return context.push_function({
+            .name           = "default_colorizer_rgb",
+            .implementation = R"STR(
+vec3 default_colorizer_rgb(float x)
 {
     return vec3(x);
 }
@@ -49,18 +62,42 @@ vec3 default_colorizer(float x)
         });
     }
 
-    if (signature.to == PrimitiveType::Void)
+    if (signature == Signature::ColorizerRGBA)
     {
-        auto const name = fmt::format("default_", to_string(signature));
         return context.push_function({
-            .name           = name,
-            .implementation = fmt::format(R"STR(
-int {}({} unused_parameter)
-{{
-    return 0;
-}}
+            .name           = "default_colorizer_rgba",
+            .implementation = R"STR(
+vec4 default_colorizer_rgba(float x)
+{
+    return vec4(x);
+}
 )STR",
-                                          name, glsl_type_as_string(signature.from)),
+        });
+    }
+
+    if (signature == FunctionSignature{.from = PrimitiveType::RGB, .to = PrimitiveType::RGBA})
+    {
+        return context.push_function({
+            .name           = "default_rgb_to_rgba",
+            .implementation = R"STR(
+vec4 default_rgb_to_rgba(vec3 rgb)
+{
+    return vec4(rgb, 1.);
+}
+)STR",
+        });
+    }
+
+    if (signature == FunctionSignature{.from = PrimitiveType::RGBA, .to = PrimitiveType::RGB})
+    {
+        return context.push_function({
+            .name           = "default_rgba_to_rgb",
+            .implementation = R"STR(
+vec3 default_rgba_to_rgb(vec4 rgba)
+{
+    return rgba.rgb;
+}
+)STR",
         });
     }
 

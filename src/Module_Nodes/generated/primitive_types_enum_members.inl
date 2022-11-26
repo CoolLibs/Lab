@@ -4,7 +4,8 @@
  * Instead, go to "generator.py" and edit the "primitive_types_enum_members" function there.
  * -----------------------------------------------------------------------------
  */
-Color,
+RGB,
+    RGBA,
     UV,
     SignedDistance,
     Float,

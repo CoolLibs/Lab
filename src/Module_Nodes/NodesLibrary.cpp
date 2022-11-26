@@ -8,7 +8,7 @@ NodesLibrary::NodesLibrary()
     this->add_definition({{
         .name      = "Black & White",
         .signature = {
-            .from  = PrimitiveType::Color,
+            .from  = PrimitiveType::RGB,
             .to    = PrimitiveType::Float,
             .arity = 1,
         },
@@ -21,8 +21,8 @@ return dot(in1, vec3(0.2126, 0.7152, 0.0722));
     this->add_definition({{
         .name      = "Saturation",
         .signature = {
-            .from  = PrimitiveType::Color,
-            .to    = PrimitiveType::Color,
+            .from  = PrimitiveType::RGB,
+            .to    = PrimitiveType::RGB,
             .arity = 1,
         },
         .function_body = {R"STR(
@@ -49,7 +49,7 @@ return (int(in1.x*10.) + int(in1.y*10.)) % 2 == 0 ? 0. : 1.;
         .name      = "TestImage",
         .signature = {
             .from  = PrimitiveType::UV,
-            .to    = PrimitiveType::Color,
+            .to    = PrimitiveType::RGB,
             .arity = 1,
         },
         .function_body = {R"STR(
@@ -76,11 +76,11 @@ return in1 / `Zoom`;
         .name      = "Gradient Colorizer",
         .signature = {
             .from  = PrimitiveType::Float,
-            .to    = PrimitiveType::Color,
+            .to    = PrimitiveType::RGBA,
             .arity = 1,
         },
         .function_body = {R"STR(
-return `Gradient`(in1).rgb;
+return `Gradient`(in1);
     )STR"},
         .inputs        = {},
         .properties    = {Cool::InputDefinition<Cool::Gradient>{"`Gradient`"}},
@@ -175,7 +175,7 @@ return in1 * vec2(`Scale X`, `Scale Y`);
         .name      = "RGB Drift",
         .signature = {
             .from  = PrimitiveType::UV,
-            .to    = PrimitiveType::Color,
+            .to    = PrimitiveType::RGBA,
             .arity = 1,
         },
         .function_body = {R"STR(
@@ -191,7 +191,7 @@ return vec3(
                        .name      = "`Image`",
                        .signature = {
                            .from = PrimitiveType::UV,
-                           .to   = PrimitiveType::Color,
+                           .to   = PrimitiveType::RGBA,
                 },
             }},
         },
@@ -314,11 +314,11 @@ return normalize_uv_with_aspect_ratio(fract(uv), 1.);
         .name      = "Render N Times",
         .signature = {
             .from  = PrimitiveType::UV,
-            .to    = PrimitiveType::Color,
+            .to    = PrimitiveType::RGBA,
             .arity = 1,
         },
         .function_body = {R"STR(
-vec3 color = vec3(0.);
+vec4 color = vec4(0.);
 for (int i = 0; i < `N`; ++i)
 {
     `Index` = i;
@@ -327,7 +327,7 @@ for (int i = 0; i < `N`; ++i)
 return color;
     )STR"},
         .inputs        = {
-            {{.name = "`Image`", .signature = Signature::Image}},
+            {{.name = "`Image`", .signature = Signature::ImageRGBA}},
             {{.name = "`Blend Mode`", .signature = Signature::BlendMode}},
         },
         .properties     = {Cool::InputDefinition<int>{"`N`"}},
@@ -357,48 +357,33 @@ return rand * (`Max` - `Min`) + `Min`;
     }});
 
     this->add_definition({{
-        .name      = "Over",
-        .signature = {
-            .from  = PrimitiveType::UV,
-            .to    = PrimitiveType::Color,
-            .arity = 1,
-        },
-        .function_body = {R"STR(
-vec2 uv = in1;
-return mix(`Under`(uv), `Over`(uv), `Over Opacity`);
-    )STR"},
-        .inputs        = {
-            {{
-                       .name      = "`Over`",
-                       .signature = {
-                           .from = PrimitiveType::UV,
-                           .to   = PrimitiveType::Color,
-                },
-            }},
-            {{
-                       .name      = "`Under`",
-                       .signature = {
-                           .from = PrimitiveType::UV,
-                           .to   = PrimitiveType::Color,
-                },
-            }},
-        },
-        .properties = {Cool::InputDefinition<float>{"`Over Opacity`"}},
-    }});
-
-    this->add_definition({{
         .name      = "Over (Blend Mode)",
         .signature = {
-            .from  = PrimitiveType::Color,
-            .to    = PrimitiveType::Color,
+            .from  = PrimitiveType::RGBA,
+            .to    = PrimitiveType::RGBA,
             .arity = 2,
         },
         .function_body = {R"STR(
-return mix(in2, in1, `Over Opacity`);
+vec4 over = in1;
+vec4 under = in2;
+return over + (1. - over.a) * under;
     )STR"},
-        .properties    = {
-            Cool::InputDefinition<float>{"`Over Opacity`"},
+        .properties    = {},
+    }});
+
+    this->add_definition({{
+        .name      = "Add (Blend Mode)",
+        .signature = {
+            .from  = PrimitiveType::RGBA,
+            .to    = PrimitiveType::RGBA,
+            .arity = 2,
         },
+        .function_body = {R"STR(
+vec4 over = in1;
+vec4 under = in2;
+return over + under;
+    )STR"},
+        .properties    = {},
     }});
 }
 

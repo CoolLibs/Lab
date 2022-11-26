@@ -11,9 +11,14 @@ class PrimitiveType:
 def all_primitive_types():
     return [
         PrimitiveType(
-            cpp="Color",
+            cpp="RGB",
             corresponding_input_type="Cool::RgbColor",
             glsl="vec3"
+        ),
+        PrimitiveType(
+            cpp="RGBA",
+            corresponding_input_type="Cool::StraightRgbaColor",
+            glsl="vec4"
         ),
         PrimitiveType(
             cpp="UV",

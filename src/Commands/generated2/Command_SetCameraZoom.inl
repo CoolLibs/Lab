@@ -47,8 +47,7 @@ struct ReversibleCommand_SetCameraZoom {
 
     auto to_string() const -> std::string
     {
-        return "Set camera zoom from " + Cool::stringify(old_value)
-               + " to " + Cool::stringify(forward_command.value);
+        return "Set camera zoom from " + Cool::stringify(old_value) + " to " + Cool::stringify(forward_command.value);
     }
 
     auto merge(const ReversibleCommand_SetCameraZoom& previous) const -> std::optional<ReversibleCommand_SetCameraZoom>

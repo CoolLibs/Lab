@@ -4,7 +4,8 @@
  * Instead, go to "generator.py" and edit the "glsl_type_as_string_cases" function there.
  * -----------------------------------------------------------------------------
  */
-case PrimitiveType::Color: return "/*Color*/ vec3";
+case PrimitiveType::RGB: return "/*RGB*/ vec3";
+case PrimitiveType::RGBA: return "/*RGBA*/ vec4";
 case PrimitiveType::UV: return "/*UV*/ vec2";
 case PrimitiveType::SignedDistance: return "/*SignedDistance*/ float";
 case PrimitiveType::Float: return "/*Float*/ float";

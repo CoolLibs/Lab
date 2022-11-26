@@ -19,9 +19,15 @@ inline auto to_string(FunctionSignature signature) -> std::string
 
 namespace Signature {
 
-static constexpr auto Image = FunctionSignature{
+static constexpr auto ImageRGB = FunctionSignature{
     .from  = PrimitiveType::UV,
-    .to    = PrimitiveType::Color,
+    .to    = PrimitiveType::RGB,
+    .arity = 1,
+};
+
+static constexpr auto ImageRGBA = FunctionSignature{
+    .from  = PrimitiveType::UV,
+    .to    = PrimitiveType::RGBA,
     .arity = 1,
 };
 
@@ -31,15 +37,21 @@ static constexpr auto FloatField = FunctionSignature{
     .arity = 1,
 };
 
-static constexpr auto Colorizer = FunctionSignature{
+static constexpr auto ColorizerRGB = FunctionSignature{
     .from  = PrimitiveType::Float,
-    .to    = PrimitiveType::Color,
+    .to    = PrimitiveType::RGB,
+    .arity = 1,
+};
+
+static constexpr auto ColorizerRGBA = FunctionSignature{
+    .from  = PrimitiveType::Float,
+    .to    = PrimitiveType::RGBA,
     .arity = 1,
 };
 
 static constexpr auto BlendMode = FunctionSignature{
-    .from  = PrimitiveType::Color, // TODO(JF) Use RGBA
-    .to    = PrimitiveType::Color, // TODO(JF) Use RGBA
+    .from  = PrimitiveType::RGBA,
+    .to    = PrimitiveType::RGBA,
     .arity = 2,
 };
 

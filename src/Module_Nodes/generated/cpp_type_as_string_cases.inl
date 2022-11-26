@@ -4,7 +4,8 @@
  * Instead, go to "generator.py" and edit the "cpp_type_as_string_cases" function there.
  * -----------------------------------------------------------------------------
  */
-case PrimitiveType::Color: return "Color";
+case PrimitiveType::RGB: return "RGB";
+case PrimitiveType::RGBA: return "RGBA";
 case PrimitiveType::UV: return "UV";
 case PrimitiveType::SignedDistance: return "SignedDistance";
 case PrimitiveType::Float: return "Float";

@@ -6,7 +6,10 @@
  */
 
 if (std::holds_alternative<Cool::Input<Cool::RgbColor>>(input))
-    return PrimitiveType::Color;
+    return PrimitiveType::RGB;
+
+if (std::holds_alternative<Cool::Input<Cool::StraightRgbaColor>>(input))
+    return PrimitiveType::RGBA;
 
 if (std::holds_alternative<Cool::Input<Cool::Point2D>>(input))
     return PrimitiveType::UV;
