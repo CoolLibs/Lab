@@ -50,6 +50,7 @@ void main()
 {{
     vec2 uv = normalized_uv();
     out_Color = vec4({main_function_name}(uv));
+    out_Color.rgb /= out_Color.a; // Output straight alpha
 }}
 
 )STR"
