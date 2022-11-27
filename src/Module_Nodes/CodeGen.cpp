@@ -17,7 +17,7 @@ namespace Lab {
 static auto gen_params(FunctionSignature const& signature)
     -> std::string
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
 
     std::string res{};
     for (size_t i = 0; i < signature.arity; ++i)
@@ -41,7 +41,7 @@ static auto gen_function_declaration(
     std::string_view         name
 ) -> std::string
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
             R"STR({return_type} {name}({params}))STR"
@@ -52,17 +52,17 @@ static auto gen_function_declaration(
     );
 }
 
-struct Params__gen_function_definition {
+struct Params_gen_function_definition {
     FunctionSignature const& signature{};
     std::string_view         name{};
     std::string_view         before_function{};
     std::string_view         body{};
 };
 
-static auto gen_function_definition(Params__gen_function_definition p)
+static auto gen_function_definition(Params_gen_function_definition p)
     -> std::string
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
     return {fmt::format(
         FMT_COMPILE(
             R"STR({before_function}
@@ -81,7 +81,7 @@ static auto gen_function_definition(Params__gen_function_definition p)
 
 static auto is_not_alphanumeric(char c) -> bool
 {
-    return !(
+    return !( // NOLINT(readability-simplify-boolean-expr)
         ('0' <= c && c <= '9')
         || ('a' <= c && c <= 'z')
         || ('A' <= c && c <= 'Z')
@@ -104,7 +104,7 @@ static auto base_function_name(
 )
     -> std::string
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
             R"STR({name}{id})STR"
@@ -120,7 +120,7 @@ static auto desired_function_name(
     FunctionSignature     signature
 ) -> std::string
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
             "{name}{signature}{id}"
@@ -134,7 +134,7 @@ static auto desired_function_name(
 auto valid_property_name(std::string const& name, reg::AnyId const& property_default_variable_id) // We use a unique id per property to make sure they don't clash with anything. For example if the node was called Zoom and its property was also called Zoom, both the function and the uniform variable would get the same name.
     -> std::string
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
             "{name}{id}"
@@ -147,7 +147,7 @@ auto valid_property_name(std::string const& name, reg::AnyId const& property_def
 auto make_valid_output_index_name(Cool::OutputPin const& pin)
     -> std::string
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
             "{name}{id}"
@@ -167,8 +167,8 @@ static auto gen_properties(
     CodeGenContext& context
 ) -> tl::expected<Properties, std::string>
 {
-    using namespace fmt::literals;
-    Properties res{};
+    using fmt::literals::operator""_a;
+    Properties           res{};
 
     size_t property_index{0};
     for (auto const& prop : node.properties())

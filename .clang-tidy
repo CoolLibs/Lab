@@ -12,6 +12,7 @@ Checks: '
   -cppcoreguidelines-pro-bounds-array-to-pointer-decay, -hicpp-no-array-decay,
   -hicpp-signed-bitwise,
   -hicpp-named-parameter, -readability-named-parameter,
+  -misc-no-recursion,
   -cppcoreguidelines-pro-type-vararg, -hicpp-vararg,
   -google-runtime-references,
   -fuchsia-default-arguments-*,
