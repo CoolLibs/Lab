@@ -8,6 +8,8 @@ namespace Lab {
 class NodesLibrary : public Cool::NodesLibrary<NodeDefinition> {
 public:
     NodesLibrary();
+
+    void add_node_definition(NodeDefinition_Data definition);
 };
 
 } // namespace Lab

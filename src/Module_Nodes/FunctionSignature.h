@@ -55,6 +55,18 @@ static constexpr auto BlendMode = FunctionSignature{
     .arity = 2,
 };
 
+static constexpr auto RGBTransformation = FunctionSignature{
+    .from  = PrimitiveType::RGB,
+    .to    = PrimitiveType::RGB,
+    .arity = 1,
+};
+
+static constexpr auto RGBATransformation = FunctionSignature{
+    .from  = PrimitiveType::RGBA,
+    .to    = PrimitiveType::RGBA,
+    .arity = 1,
+};
+
 } // namespace Signature
 
 } // namespace Lab
