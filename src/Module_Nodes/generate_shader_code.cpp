@@ -33,7 +33,7 @@ auto generate_shader_code(
     if (!main_function_name)
         return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
 
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(R"STR(#version 410
 
