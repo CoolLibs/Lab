@@ -7,10 +7,17 @@
 
 namespace Lab {
 
+struct FunctionPieces {
+    std::string       name;
+    FunctionSignature signature;
+    std::string       body;
+};
+
 struct NodeDefinition_Data {
-    std::string       name{};
-    FunctionSignature signature{};
-    std::string       function_body{};
+    std::string                 name;
+    FunctionSignature           signature;
+    std::string                 function_body;
+    std::vector<FunctionPieces> helper_functions{};
 
     std::vector<NodeInputDefinition>      inputs{};         // Things that can only come from a pin
     std::vector<Cool::AnyInputDefinition> properties{};     // Things that will default to a widget on the node if nothing is plugged into the pin
@@ -27,6 +34,7 @@ public:
     auto inputs() const -> auto const& { return _data.inputs; }
     auto properties() const -> auto const& { return _data.properties; }
     auto output_indices() const -> auto const& { return _data.output_indices; }
+    auto helper_functions() const -> auto const& { return _data.helper_functions; }
 
 private:
     NodeDefinition_Data _data;

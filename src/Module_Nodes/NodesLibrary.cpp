@@ -393,11 +393,11 @@ return over + under;
 vec2 uv = in1;
 return `Image`(uv) * `Mask`(uv);
     )STR"},
-        .properties    = {},
         .inputs        = {
             {{.name = "`Image`", .signature = Signature::ImageRGBA}},
             {{.name = "`Mask`", .signature = Signature::FloatField}},
         },
+        .properties = {},
     }});
 }
 

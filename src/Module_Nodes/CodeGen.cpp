@@ -343,6 +343,24 @@ static auto gen_inputs(
     return res;
 }
 
+static auto gen_helper_functions(std::vector<FunctionPieces> const& helper_functions, Cool::NodeId const& /* id */)
+    -> std::string
+{
+    std::string res{};
+
+    for (auto const& func : helper_functions)
+    {
+        res += gen_function_definition({
+            .signature = func.signature,
+            .name      = func.name, // TODO(JF) Make sure the name becomes unique by appending the id
+            .body      = func.body,
+        });
+        res += '\n';
+    }
+
+    return res;
+}
+
 static auto gen_base_function(
     Node const&           node,
     NodeDefinition const& node_definition,
@@ -363,8 +381,9 @@ static auto gen_base_function(
     auto func_implementation = gen_function_definition({
         .signature       = node_definition.signature(),
         .name            = func_name,
-        .before_function = properties_code->code,
-        .body            = node_definition.function_body(),
+        .before_function = properties_code->code + '\n'
+                           + gen_helper_functions(node_definition.helper_functions(), id),
+        .body = node_definition.function_body(),
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
