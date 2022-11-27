@@ -1,4 +1,6 @@
 #include "CodeGen_default_function.h"
+#include "Module_Nodes/FunctionSignature.h"
+#include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
 
@@ -23,6 +25,8 @@ static auto comma_separated(std::string const& str, size_t count)
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
+    using fmt::literals::operator""_a;
+
     if (signature == Signature::ImageRGB)
     {
         return context.push_function({
@@ -125,6 +129,25 @@ vec4 default_blend_mode(vec4 over, vec4 under)
     return over + (1. - over.a) * under;
 }
 )STR",
+        });
+    }
+
+    if (signature.from == PrimitiveType::Void)
+    {
+        auto const glsl_type = raw_glsl_type_as_string(signature.to);
+        auto const name      = fmt::format("default_constant_{}", glsl_type);
+        return context.push_function({
+            .name           = name,
+            .implementation = fmt::format(
+                FMT_COMPILE(R"STR(
+{type} {name}()
+{{
+    return {type}(0);
+}}
+)STR"),
+                "type"_a = glsl_type,
+                "name"_a = name
+            ),
         });
     }
 

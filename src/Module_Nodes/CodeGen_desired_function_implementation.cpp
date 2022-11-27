@@ -1,6 +1,7 @@
 #include "CodeGen_desired_function_implementation.h"
 #include "CodeGen.h"
 #include "CodeGen_default_function.h"
+#include "Module_Nodes/PrimitiveType.h"
 
 // TODO(JF) test all of these, to make sure overload resolution doesn't change when we add options
 
@@ -10,7 +11,7 @@ namespace {
 
 class TransformationStrategy_DoNothing {
 public:
-    auto gen_func(Cool::InputPin const&, CodeGenContext&)
+    static auto gen_func(Cool::InputPin const&, CodeGenContext&)
         -> ExpectedFunctionName
     {
         return "";
@@ -19,7 +20,7 @@ public:
 
 class TransformationStrategy_UseDefaultFunction {
 public:
-    auto gen_func(Cool::InputPin const&, CodeGenContext& context)
+    auto gen_func(Cool::InputPin const&, CodeGenContext& context) const
         -> ExpectedFunctionName
     {
         return gen_default_function(
@@ -37,7 +38,7 @@ private:
 
 class TransformationStrategy_UseInputNode {
 public:
-    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context)
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context) const
         -> ExpectedFunctionName
     {
         return gen_desired_function(
@@ -56,7 +57,7 @@ private:
 
 class TransformationStrategy_UseInputNodeIfItExists {
 public:
-    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context)
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context) const
         -> ExpectedFunctionName
     {
         auto const node_id = context.graph().input_node_id(pin.id());
@@ -86,10 +87,11 @@ public:
         TransformationStrategy_UseInputNode,
         TransformationStrategy_UseInputNodeIfItExists>;
 
-    TransformationStrategy(TransformationStrategyVariant strategy)
-        : _strategy{strategy} {}
+    TransformationStrategy(TransformationStrategyVariant strategy) // NOLINT (google-explicit-constructor)
+        : _strategy{strategy}
+    {}
 
-    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context)
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context) const
         -> ExpectedFunctionName
     {
         return std::visit([&](auto&& strategy) { return strategy.gen_func(pin, context); }, _strategy);
@@ -99,12 +101,18 @@ private:
     TransformationStrategyVariant _strategy;
 };
 
+} // namespace
+
 static auto input_transformation(
     FunctionSignature current,
     FunctionSignature desired
 ) -> TransformationStrategy
 {
-    auto const signature = FunctionSignature{.from = desired.from, .to = current.from, .arity = 1};
+    auto const signature = FunctionSignature{
+        .from  = desired.from,
+        .to    = current.from,
+        .arity = desired.from != PrimitiveType::Void ? 1u : 0u,
+    };
 
     if (current.from != desired.from) // Input needs to be converted in order to have the right type
         return {TransformationStrategy_UseInputNode{signature}};
@@ -125,7 +133,11 @@ static auto output_transformation(
         // We don't need to convert the output
         return {TransformationStrategy_DoNothing{}};
 
-    auto const signature = FunctionSignature{.from = current.to, .to = desired.to, .arity = 1};
+    auto const signature = FunctionSignature{
+        .from  = current.to,
+        .to    = desired.to,
+        .arity = current.to != PrimitiveType::Void ? 1u : 0u,
+    };
 
     if (current.from != desired.from)
         // Use a default function because the input pin is already used to convert the inputs
@@ -133,6 +145,15 @@ static auto output_transformation(
 
     // Use the input pin, it is not used to transform the inputs
     return {TransformationStrategy_UseInputNode{signature}};
+}
+
+static auto argument_name(size_t i, size_t desired_arity)
+    -> std::string
+{
+    if (desired_arity == 0)
+        return "";
+
+    return fmt::format("in{}", std::min(i + 1u, desired_arity));
 }
 
 static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, size_t current_arity, size_t desired_arity) -> std::string
@@ -143,15 +164,13 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
 
     for (size_t i = 0; i < current_arity; ++i)
     {
-        res += fmt::format("{}(in{})", transforms_names[i], std::min(i + 1u, desired_arity));
+        res += fmt::format("{}({})", transforms_names[i], argument_name(i, desired_arity));
         if (i != current_arity - 1)
             res += ", ";
     }
 
     return res;
 }
-
-} // namespace
 
 auto gen_desired_function_implementation(
     FunctionSignature current,
@@ -162,7 +181,7 @@ auto gen_desired_function_implementation(
 
 ) -> tl::expected<std::string, std::string>
 {
-    using namespace fmt::literals;
+    using fmt::literals::operator""_a;
 
     auto input_transformation_names = std::vector<std::string>{};
     input_transformation_names.reserve(current.arity);

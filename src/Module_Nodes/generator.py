@@ -57,6 +57,12 @@ def glsl_type_as_string_cases():
                          all_primitive_types()))
 
 
+def raw_glsl_type_as_string_cases():
+    return "\n".join(map(lambda type:
+                         f'case PrimitiveType::{type.cpp}: return "{type.glsl}";',
+                         all_primitive_types()))
+
+
 def cpp_type_as_string_cases():
     return "\n".join(map(lambda type:
                          f'case PrimitiveType::{type.cpp}: return "{type.cpp}";',
@@ -102,6 +108,7 @@ if __name__ == '__main__':
         files=[
             primitive_types_enum_members,
             glsl_type_as_string_cases,
+            raw_glsl_type_as_string_cases,
             cpp_type_as_string_cases,
             input_to_primitive_type,
         ],

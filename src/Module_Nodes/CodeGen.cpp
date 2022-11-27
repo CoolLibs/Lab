@@ -188,14 +188,14 @@ static auto gen_properties(
                     return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
 
                 auto const input_func_name = gen_desired_function(
-                    {.from = PrimitiveType::UV, .to = *property_type},
+                    {.from = PrimitiveType::Void, .to = *property_type, .arity = 0},
                     input_node_id,
                     context
                 );
                 if (!input_func_name)
                     return tl::make_unexpected(input_func_name.error());
 
-                res.real_names.push_back(fmt::format("{}(normalized_uv())", *input_func_name)); // Input name will be replaced with a call to the corresponding function
+                res.real_names.push_back(fmt::format("{}()", *input_func_name)); // Input name will be replaced with a call to the corresponding function
             }
             else // We are plugged to an output index
             {
