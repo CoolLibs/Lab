@@ -13,6 +13,8 @@ void NodesLibrary::add_node_definition(NodeDefinition_Data definition)
         definition.signature     = Signature::RGBATransformation;
         definition.function_body = fmt::format(
             R"STR(
+    if (in1.a < 0.000001)
+        return in1;
     vec3 rgb = in1.rgb / in1.a;
     rgb      = {}(rgb);
     return vec4(rgb * in1.a, in1.a);
@@ -82,6 +84,20 @@ return in1 + `Brightness`;
     });
 
     this->add_node_definition({
+        .name      = "Red Channel",
+        .signature = {
+            .from  = PrimitiveType::RGB,
+            .to    = PrimitiveType::RGB,
+            .arity = 1,
+        },
+        .function_body = {R"STR(
+return vec3(in1.r, 0., 0.);
+    )STR"},
+        .inputs        = {},
+        .properties    = {},
+    });
+
+    this->add_node_definition({
         .name      = "Checkerboard",
         .signature = {
             .from  = PrimitiveType::UV,
@@ -95,7 +111,7 @@ return (int(in1.x*10.) + int(in1.y*10.)) % 2 == 0 ? 0. : 1.;
     });
 
     this->add_node_definition({
-        .name      = "TestImage",
+        .name      = "Test Image",
         .signature = {
             .from  = PrimitiveType::UV,
             .to    = PrimitiveType::RGB,
@@ -105,6 +121,20 @@ return (int(in1.x*10.) + int(in1.y*10.)) % 2 == 0 ? 0. : 1.;
 return fract(vec3(in1, 0.));
     )STR"},
         .inputs        = {},
+    });
+
+    this->add_node_definition({
+        .name      = "Color",
+        .signature = {
+            .from  = PrimitiveType::Void,
+            .to    = PrimitiveType::RGBA,
+            .arity = 0,
+        },
+        .function_body = {R"STR(
+return `Color`;
+    )STR"},
+        .inputs        = {},
+        .properties    = {Cool::InputDefinition<Cool::PremultipliedRgbaColor>{"`Color`"}},
     });
 
     this->add_node_definition({
