@@ -3,11 +3,13 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
+#include <string>
 #include "CodeGenContext.h"
 #include "CodeGen_default_function.h"
 #include "CodeGen_desired_function_implementation.h"
 #include "Function.h"
 #include "FunctionSignature.h"
+#include "Module_Nodes/NodeDefinition.h"
 #include "Node.h"
 #include "NodeDefinition.h"
 #include "input_to_primitive_type.h"
@@ -173,7 +175,7 @@ static auto gen_properties(
     size_t property_index{0};
     for (auto const& prop : node.properties())
     {
-        auto const input_pin     = node.pin_of_property(property_index);
+        auto const input_pin     = node.pin_of_property(property_index); // NOLINT(performance-unnecessary-copy-initialization)
         auto       output_pin    = Cool::OutputPin{};
         auto const input_node_id = context.graph().input_node_id(input_pin.id(), &output_pin);
         auto const node          = context.graph().nodes().get(input_node_id);
@@ -304,6 +306,17 @@ static auto check_there_are_no_backticks_left(std::string const& code, std::stri
     );
 }
 
+static auto replace_helper_functions(std::string code, std::vector<FunctionPieces> const& old_functions, std::vector<std::string> const& new_names)
+    -> std::string
+{
+    assert(old_functions.size() == new_names.size());
+
+    for (size_t i = 0; i < new_names.size(); ++i)
+        code = Cool::String::replace_all_words(code, old_functions[i].name, new_names[i]);
+
+    return code;
+}
+
 struct GeneratedInputs {
     std::unordered_map<std::string, std::string> real_names;
 };
@@ -343,19 +356,27 @@ static auto gen_inputs(
     return res;
 }
 
-static auto gen_helper_functions(std::vector<FunctionPieces> const& helper_functions, Cool::NodeId const& /* id */)
-    -> std::string
+struct GeneratedHelperFunctions {
+    std::string              code;
+    std::vector<std::string> new_names;
+};
+
+static auto gen_helper_functions(std::vector<FunctionPieces> const& helper_functions, Cool::NodeId const& id)
+    -> GeneratedHelperFunctions
 {
-    std::string res{};
+    auto res = GeneratedHelperFunctions{};
 
     for (auto const& func : helper_functions)
     {
-        res += gen_function_definition({
+        auto const name = valid_glsl(fmt::format("{}{}", func.name, to_string(id.underlying_uuid())));
+        res.new_names.push_back(name);
+
+        res.code += gen_function_definition({
             .signature = func.signature,
-            .name      = func.name, // TODO(JF) Make sure the name becomes unique by appending the id
+            .name      = name,
             .body      = func.body,
         });
-        res += '\n';
+        res.code += '\n';
     }
 
     return res;
@@ -378,11 +399,13 @@ static auto gen_base_function(
 
     auto const func_name = base_function_name(node_definition, id);
 
+    auto const helper_functions = gen_helper_functions(node_definition.helper_functions(), id);
+
     auto func_implementation = gen_function_definition({
         .signature       = node_definition.signature(),
         .name            = func_name,
         .before_function = properties_code->code + '\n'
-                           + gen_helper_functions(node_definition.helper_functions(), id),
+                           + helper_functions.code,
         .body = node_definition.function_body(),
     });
 
@@ -390,6 +413,7 @@ static auto gen_base_function(
     func_implementation = replace_property_names(func_implementation, node.properties(), properties_code->real_names);
     func_implementation = replace_input_names(func_implementation, inputs->real_names);
     func_implementation = replace_output_indices_names(func_implementation, node);
+    func_implementation = replace_helper_functions(func_implementation, node_definition.helper_functions(), helper_functions.new_names);
 
     {
         auto const error = check_there_are_no_backticks_left(func_implementation, list_all_property_and_input_and_output_names(node.properties(), node_definition.inputs(), node_definition.output_indices()));
@@ -412,7 +436,7 @@ auto gen_desired_function(
     if (!node) // Use a default function if no node is currently plugged in
         return gen_default_function(desired_signature, context);
 
-    auto const node_definition = context.get_node_definition(node->definition_name());
+    auto const node_definition = context.get_node_definition(node->definition_name()); // NOLINT(readability-qualified-auto)
     if (!node_definition)
         return tl::make_unexpected(fmt::format(
             "Node definition \"{}\" was not found. Are you missing a file in your nodes folder?",
