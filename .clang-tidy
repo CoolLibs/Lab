@@ -13,6 +13,7 @@ Checks: '
   -hicpp-signed-bitwise,
   -hicpp-named-parameter, -readability-named-parameter,
   -misc-no-recursion,
+  -performance-no-automatic-move,
   -cppcoreguidelines-pro-type-vararg, -hicpp-vararg,
   -google-runtime-references,
   -fuchsia-default-arguments-*,
