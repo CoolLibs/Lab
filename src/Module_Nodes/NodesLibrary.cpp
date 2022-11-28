@@ -1,4 +1,6 @@
 #include "NodesLibrary.h"
+#include "Module_Nodes/FunctionSignature.h"
+#include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
 
@@ -477,6 +479,29 @@ return `Image`(uv) * `Mask`(uv);
             {{.name = "`Mask`", .signature = Signature::FloatField}},
         },
         .properties = {},
+    });
+
+    this->add_node_definition({
+        .name          = "Curve Renderer",
+        .signature     = Signature::FloatField,
+        .function_body = {R"STR(
+float mask = 0.;
+for (int i = 0; i < `N`; ++i)
+{
+    float t = i / float(`N`);
+    vec2 center = `Curve`(t);
+    mask += smoothstep(`Edge Blur`, -`Edge Blur`, length(in1 - center) - `Radius`);
+}
+return mask;
+    )STR"},
+        .inputs        = {
+            {{.name = "`Curve`", .signature = Signature::ParametricCurve}},
+        },
+        .properties = {
+            Cool::InputDefinition<int>{"`N`"},
+            Cool::InputDefinition<float>{"`Radius`"},
+            Cool::InputDefinition<float>{"`Edge Blur`"},
+        },
     });
 }
 
