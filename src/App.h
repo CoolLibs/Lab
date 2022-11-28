@@ -122,9 +122,8 @@ private:
     float                         _last_time{0.f};
     std::unique_ptr<Module_Nodes> _nodes_module;
     // std::unique_ptr<Module_CustomShader> _custom_shader_module;
-    CommandLogger         _command_logger{};
-    Cool::OpenGL::Texture _texture; // TODO(JF) Remove me, this was just a hardcoded thing while we had no nodes
-    bool                  _is_first_frame{true};
+    CommandLogger _command_logger{};
+    bool          _is_first_frame{true};
 
 private:
     // Serialization

@@ -29,8 +29,7 @@ App::App(Cool::WindowManager& windows)
     , _nodes_view{_views.make_view("View | Nodes")}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory())}
-    // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
-    , _texture{Cool::Path::root() / "res/image resources/ETOILE5.png"}
+// , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
@@ -190,7 +189,6 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
 // {
 // _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target.get().texture_id());
-// _custom_shader_module->set_image_in_shader("_texture", 1, _texture.ID());
 // render_one_module(*_custom_shader_module, render_target, time);
 // }
 
