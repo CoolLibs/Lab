@@ -118,6 +118,20 @@ float default_uv_to_float(vec2 uv)
         });
     }
 
+    if (signature == Signature::ParametricCurve)
+    {
+        return context.push_function({
+            .name           = "default_curve",
+            .implementation = R"STR(
+vec2 default_curve(float t)
+{
+    float angle = TAU * t;
+    return vec2(cos(angle), sin(angle));
+}
+)STR",
+        });
+    }
+
     if (signature == Signature::BlendMode)
     {
         return context.push_function({

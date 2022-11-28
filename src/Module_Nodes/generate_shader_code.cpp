@@ -41,6 +41,7 @@ uniform float _time;
 out vec4      out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
+#include "_COOL_RES_/shaders/math.glsl"
 
 {output_indices_declarations}
 
