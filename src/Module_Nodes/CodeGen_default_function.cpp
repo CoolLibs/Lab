@@ -148,6 +148,18 @@ vec4 default_blend_mode(vec4 over, vec4 under)
 
     if (signature.from == PrimitiveType::Void)
     {
+        if (signature.to == PrimitiveType::UV) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
+        {
+            return context.push_function({
+                .name           = "default_uv",
+                .implementation = R"STR(
+vec2 default_uv()
+{
+    return normalized_uv();
+}
+)STR",
+            });
+        }
         auto const glsl_type = raw_glsl_type_as_string(signature.to);
         auto const name      = fmt::format("default_constant_{}", glsl_type);
         return context.push_function({
