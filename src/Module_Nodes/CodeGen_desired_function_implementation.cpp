@@ -201,16 +201,20 @@ auto gen_desired_function_implementation(
     if (!output_transformation_name)
         return output_transformation_name;
 
-    auto const transformed_inputs = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity);
+    auto const call_base_function = fmt::format(
+        "{}({})",
+        base_function_name,
+        gen_transformed_inputs(input_transformation_names, current.arity, desired.arity)
+    );
 
     return fmt::format(
-        FMT_COMPILE(
-            "{modify_uvs}\nreturn {transform_output}({transformed_inputs});"
-        ),
-        "modify_uvs"_a         = current == Signature::UVTransformation ? fmt::format("coollab_context.uv = {}({});", base_function_name, transformed_inputs) : "",
-        "base_function"_a      = base_function_name,
-        "transformed_inputs"_a = current == Signature::UVTransformation ? "coollab_context.uv" : fmt::format("{}({})", base_function_name, transformed_inputs),
-        "transform_output"_a   = *output_transformation_name
+        FMT_COMPILE(R"STR(
+{modify_uvs}
+return {transform_output}({base_function_output});
+)STR"),
+        "modify_uvs"_a           = current == Signature::UVTransformation ? fmt::format("coollab_context.uv = {};", call_base_function) : "",
+        "base_function_output"_a = current == Signature::UVTransformation ? "coollab_context.uv" : call_base_function,
+        "transform_output"_a     = *output_transformation_name
     );
 }
 
