@@ -32,7 +32,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         return context.push_function({
             .name           = "default_image_rgb",
             .implementation = R"STR(
-vec3 default_image_rgb(vec2 uv)
+vec3 default_image_rgb/*coollabdef*/(vec2 uv)
 {
     return vec3(uv, 0.);
 }
@@ -45,7 +45,7 @@ vec3 default_image_rgb(vec2 uv)
         return context.push_function({
             .name           = "default_image_rgba",
             .implementation = R"STR(
-vec4 default_image_rgba(vec2 uv)
+vec4 default_image_rgba/*coollabdef*/(vec2 uv)
 {
     return vec4(uv, 0., 1.);
 }
@@ -58,7 +58,7 @@ vec4 default_image_rgba(vec2 uv)
         return context.push_function({
             .name           = "default_colorizer_rgb",
             .implementation = R"STR(
-vec3 default_colorizer_rgb(float x)
+vec3 default_colorizer_rgb/*coollabdef*/(float x)
 {
     return vec3(x);
 }
@@ -71,7 +71,7 @@ vec3 default_colorizer_rgb(float x)
         return context.push_function({
             .name           = "default_colorizer_rgba",
             .implementation = R"STR(
-vec4 default_colorizer_rgba(float x)
+vec4 default_colorizer_rgba/*coollabdef*/(float x)
 {
     return vec4(x);
 }
@@ -84,7 +84,7 @@ vec4 default_colorizer_rgba(float x)
         return context.push_function({
             .name           = "default_rgb_to_rgba",
             .implementation = R"STR(
-vec4 default_rgb_to_rgba(vec3 rgb)
+vec4 default_rgb_to_rgba/*coollabdef*/(vec3 rgb)
 {
     return vec4(rgb, 1.);
 }
@@ -97,7 +97,7 @@ vec4 default_rgb_to_rgba(vec3 rgb)
         return context.push_function({
             .name           = "default_rgba_to_rgb",
             .implementation = R"STR(
-vec3 default_rgba_to_rgb(vec4 rgba)
+vec3 default_rgba_to_rgb/*coollabdef*/(vec4 rgba)
 {
     return rgba.rgb;
 }
@@ -110,7 +110,7 @@ vec3 default_rgba_to_rgb(vec4 rgba)
         return context.push_function({
             .name           = "default_uv_to_float",
             .implementation = R"STR(
-float default_uv_to_float(vec2 uv)
+float default_uv_to_float/*coollabdef*/(vec2 uv)
 {
     return uv.x * 0.5 / _aspect_ratio + 0.5;
 }
@@ -123,7 +123,7 @@ float default_uv_to_float(vec2 uv)
         return context.push_function({
             .name           = "default_curve",
             .implementation = R"STR(
-vec2 default_curve(float t)
+vec2 default_curve/*coollabdef*/(float t)
 {
     float angle = TAU * t;
     return vec2(cos(angle), sin(angle));
@@ -137,7 +137,7 @@ vec2 default_curve(float t)
         return context.push_function({
             .name           = "default_blend_mode",
             .implementation = R"STR(
-vec4 default_blend_mode(vec4 over, vec4 under)
+vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
 {
     // This is a over (aka Normal Blend Mode). We assume premultiplied alpha.
     return over + (1. - over.a) * under;
@@ -153,9 +153,9 @@ vec4 default_blend_mode(vec4 over, vec4 under)
             return context.push_function({
                 .name           = "default_uv",
                 .implementation = R"STR(
-vec2 default_uv()
+vec2 default_uv/*coollabdef*/()
 {
-    return normalized_uv();
+    return coollab_context.uv;
 }
 )STR",
             });
@@ -166,7 +166,7 @@ vec2 default_uv()
             .name           = name,
             .implementation = fmt::format(
                 FMT_COMPILE(R"STR(
-{type} {name}()
+{type} {name}/*coollabdef*/()
 {{
     return {type}(0);
 }}

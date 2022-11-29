@@ -46,7 +46,7 @@ static auto gen_function_declaration(
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
-            R"STR({return_type} {name}({params}))STR"
+            R"STR({return_type} {name}/*coollabdef*/({params}))STR"
         ),
         "return_type"_a = glsl_type_as_string(signature.to),
         "name"_a        = name,
@@ -400,6 +400,12 @@ static auto gen_base_function(
     auto const func_name = base_function_name(node_definition, id);
 
     auto const helper_functions = gen_helper_functions(node_definition.helper_functions(), id);
+
+    // HACK to make sure we are aware that these functions have been generated, used when adding a parameter to all the functions during `inject_context_argument_in_all_functions()`.
+    // We don't care about adding them through push_function() because their names will be unique anyways.
+    // And we need them to be defined after properties_code->code
+    for (auto const& func_name : helper_functions.new_names)
+        context.push_function(Function{.name = func_name, .implementation = ""});
 
     auto func_implementation = gen_function_definition({
         .signature       = node_definition.signature(),

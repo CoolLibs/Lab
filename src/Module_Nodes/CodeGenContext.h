@@ -28,6 +28,8 @@ public:
 
     auto code() const -> std::string { return _code; }
 
+    auto function_names() const -> std::vector<std::string> const& { return _already_generated_functions.names(); }
+
 private:
     class AlreadyGeneratedFunctions {
     public:
@@ -35,6 +37,8 @@ private:
 
         void push(std::string const& name);
         auto has_already_been_generated(std::string const& name) const -> bool;
+
+        auto names() const -> std::vector<std::string> const& { return _names; }
 
     private:
         std::vector<std::string> _names;

@@ -24,6 +24,7 @@ void NodesLibrary::add_node_definition(NodeDefinition_Data definition)
             base_name
         );
     }
+
     Cool::NodesLibrary<NodeDefinition>::add_definition(definition);
 }
 
@@ -151,6 +152,20 @@ return in1 / `Zoom`;
     )STR"},
         .inputs        = {},
         .properties    = {Cool::InputDefinition<float>{"`Zoom`"}},
+    });
+
+    this->add_node_definition({
+        .name      = "Translation",
+        .signature = {
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::UV,
+            .arity = 1,
+        },
+        .function_body = {R"STR(
+return in1 + `Translation`;
+    )STR"},
+        .inputs        = {},
+        .properties    = {Cool::InputDefinition<Cool::Point2D>{"`Translation`"}},
     });
 
     this->add_node_definition({

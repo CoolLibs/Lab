@@ -1,6 +1,7 @@
 #include "CodeGen_desired_function_implementation.h"
 #include "CodeGen.h"
 #include "CodeGen_default_function.h"
+#include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/PrimitiveType.h"
 
 // TODO(JF) test all of these, to make sure overload resolution doesn't change when we add options
@@ -200,12 +201,15 @@ auto gen_desired_function_implementation(
     if (!output_transformation_name)
         return output_transformation_name;
 
+    auto const transformed_inputs = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity);
+
     return fmt::format(
         FMT_COMPILE(
-            "return {transform_output}({base_function}({transformed_inputs}));"
+            "{modify_uvs}\nreturn {transform_output}({transformed_inputs});"
         ),
+        "modify_uvs"_a         = current == Signature::UVTransformation ? fmt::format("coollab_context.uv = {}({});", base_function_name, transformed_inputs) : "",
         "base_function"_a      = base_function_name,
-        "transformed_inputs"_a = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity),
+        "transformed_inputs"_a = current == Signature::UVTransformation ? "coollab_context.uv" : fmt::format("{}({})", base_function_name, transformed_inputs),
         "transform_output"_a   = *output_transformation_name
     );
 }

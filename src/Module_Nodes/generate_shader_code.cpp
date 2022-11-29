@@ -1,5 +1,7 @@
 #include "generate_shader_code.h"
+#include <string>
 #include "CodeGen.h"
+#include "Cool/String/String.h"
 
 namespace Lab {
 
@@ -14,6 +16,21 @@ static auto gen_all_output_indices_declarations(Graph const& graph)
             res << fmt::format("float {};\n", make_valid_output_index_name(node.output_pins()[i]));
 
     return res.str();
+}
+
+static auto inject_context_argument_in_all_functions(std::string code, std::vector<std::string> const& function_names)
+    -> std::string
+{
+    for (auto const& name : function_names)
+    {
+        Cool::String::replace_all(code, name + "(", name + "(coollab_context, ");
+        Cool::String::replace_all(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
+    }
+
+    // Fixup the extra commas for functions that had no arguments initially
+    Cool::String::replace_all(code, ", )", ")");
+
+    return code;
 }
 
 auto generate_shader_code(
@@ -43,6 +60,11 @@ out vec4      out_Color;
 #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 
+struct CoollabContext
+{{
+    vec2 uv;
+}};
+
 {output_indices_declarations}
 
 {main_function_implementation}
@@ -50,14 +72,16 @@ out vec4      out_Color;
 void main()
 {{
     vec2 uv = normalized_uv();
-    out_Color = vec4({main_function_name}(uv));
+    CoollabContext coollab_context;
+    coollab_context.uv = uv;
+    out_Color = {main_function_name}(coollab_context, uv);
     out_Color.rgb /= out_Color.a; // Output straight alpha
 }}
 
 )STR"
         ),
         "output_indices_declarations"_a  = gen_all_output_indices_declarations(graph),
-        "main_function_implementation"_a = context.code(),
+        "main_function_implementation"_a = inject_context_argument_in_all_functions(context.code(), context.function_names()),
         "main_function_name"_a           = *main_function_name
     );
 }

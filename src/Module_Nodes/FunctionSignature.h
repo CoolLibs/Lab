@@ -67,6 +67,12 @@ static constexpr auto RGBATransformation = FunctionSignature{
     .arity = 1,
 };
 
+static constexpr auto UVTransformation = FunctionSignature{
+    .from  = PrimitiveType::UV,
+    .to    = PrimitiveType::UV,
+    .arity = 1,
+};
+
 static constexpr auto ParametricCurve = FunctionSignature{
     .from  = PrimitiveType::Float,
     .to    = PrimitiveType::UV,
