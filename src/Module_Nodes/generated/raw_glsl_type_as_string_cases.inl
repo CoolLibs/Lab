@@ -4,10 +4,14 @@
  * Instead, go to "generator.py" and edit the "raw_glsl_type_as_string_cases" function there.
  * -----------------------------------------------------------------------------
  */
+case PrimitiveType::Int: return "int";
+case PrimitiveType::Float: return "float";
+case PrimitiveType::Vec2: return "vec2";
+case PrimitiveType::Vec3: return "vec3";
+case PrimitiveType::Vec4: return "vec4";
 case PrimitiveType::RGB: return "vec3";
 case PrimitiveType::RGBA: return "vec4";
 case PrimitiveType::UV: return "vec2";
 case PrimitiveType::SignedDistance: return "float";
-case PrimitiveType::Float: return "float";
-case PrimitiveType::Vec3: return "vec3";
-case PrimitiveType::Void: return "void"; 
+case PrimitiveType::Void: return "void";
+case PrimitiveType::Any: return "ERROR the Any type should have been converted earlier in the compilation process."; 

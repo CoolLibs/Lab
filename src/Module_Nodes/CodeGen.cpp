@@ -9,6 +9,7 @@
 #include "CodeGen_desired_function_implementation.h"
 #include "Function.h"
 #include "FunctionSignature.h"
+#include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Node.h"
 #include "NodeDefinition.h"
@@ -39,8 +40,8 @@ static auto gen_params(FunctionSignature const& signature)
 }
 
 static auto gen_function_declaration(
-    FunctionSignature const& signature,
-    std::string_view         name
+    FunctionSignature signature,
+    std::string_view  name
 ) -> std::string
 {
     using fmt::literals::operator""_a;
@@ -382,6 +383,20 @@ static auto gen_helper_functions(std::vector<FunctionPieces> const& helper_funct
     return res;
 }
 
+/// Returns the signature where all template types have been resolved to a concrete type.
+static auto concrete_signature(NodeDefinition const& def, Node const& node)
+    -> FunctionSignature
+{
+    if (!def.signature().is_template())
+        return def.signature();
+
+    return {
+        .from  = node.chosen_any_type(),
+        .to    = node.chosen_any_type(),
+        .arity = def.signature().arity,
+    };
+}
+
 static auto gen_base_function(
     Node const&           node,
     NodeDefinition const& node_definition,
@@ -408,7 +423,7 @@ static auto gen_base_function(
         context.push_function(Function{.name = func_name, .implementation = ""});
 
     auto func_implementation = gen_function_definition({
-        .signature       = node_definition.signature(),
+        .signature       = concrete_signature(node_definition, node),
         .name            = func_name,
         .before_function = properties_code->code + '\n'
                            + helper_functions.code,
@@ -457,7 +472,7 @@ auto gen_desired_function(
         ));
 
     auto const func_body = gen_desired_function_implementation(
-        node_definition->signature(),
+        concrete_signature(*node_definition, *node),
         desired_signature,
         *base_function_name,
         *node,

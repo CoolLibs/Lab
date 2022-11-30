@@ -5,6 +5,21 @@
  * -----------------------------------------------------------------------------
  */
 
+if (std::holds_alternative<Cool::Input<int>>(input))
+    return PrimitiveType::Int;
+
+if (std::holds_alternative<Cool::Input<float>>(input))
+    return PrimitiveType::Float;
+
+if (std::holds_alternative<Cool::Input<glm::vec2>>(input))
+    return PrimitiveType::Vec2;
+
+if (std::holds_alternative<Cool::Input<glm::vec3>>(input))
+    return PrimitiveType::Vec3;
+
+if (std::holds_alternative<Cool::Input<glm::vec4>>(input))
+    return PrimitiveType::Vec4;
+
 if (std::holds_alternative<Cool::Input<Cool::RgbColor>>(input))
     return PrimitiveType::RGB;
 
@@ -13,9 +28,3 @@ if (std::holds_alternative<Cool::Input<Cool::PremultipliedRgbaColor>>(input))
 
 if (std::holds_alternative<Cool::Input<Cool::Point2D>>(input))
     return PrimitiveType::UV;
-
-if (std::holds_alternative<Cool::Input<float>>(input))
-    return PrimitiveType::Float;
-
-if (std::holds_alternative<Cool::Input<glm::vec3>>(input))
-    return PrimitiveType::Vec3;

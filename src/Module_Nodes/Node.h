@@ -1,16 +1,19 @@
 #pragma once
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Nodes/Pin.h>
+#include <optional>
+#include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
 
 class Node {
 public:
     Node() = default;
-    Node(std::string_view definition_name, size_t signature_arity, size_t number_of_inputs)
+    Node(std::string_view definition_name, size_t signature_arity, size_t number_of_inputs, bool isTemplateNode)
         : _definition_name{definition_name}
         , _signature_arity{signature_arity}
         , _number_of_inputs{number_of_inputs}
+        , _chosen_any_type{isTemplateNode ? std::make_optional(PrimitiveType::Float) : std::nullopt}
     {}
 
     auto definition_name() const -> std::string { return _definition_name; }
@@ -33,6 +36,10 @@ public:
     auto pin_of_property(size_t property_index) const -> Cool::InputPin const& { return _input_pins[_signature_arity + _number_of_inputs + property_index]; }
     auto pin_of_output_index(size_t output_index_index) const -> Cool::OutputPin const& { return _output_pins[_signature_arity + output_index_index]; }
 
+    /// Only call this if this node is a template node
+    auto chosen_any_type() const -> PrimitiveType { return _chosen_any_type.value(); }
+    auto imgui_chosen_any_type() -> bool;
+
 private:
     std::string                  _definition_name;
     std::vector<Cool::InputPin>  _input_pins;
@@ -40,6 +47,8 @@ private:
     std::vector<Cool::AnyInput>  _properties;
     size_t                       _signature_arity;
     size_t                       _number_of_inputs;
+
+    std::optional<PrimitiveType> _chosen_any_type{}; // Only present if the node has `Any` in its signature.
 
 private:
     friend class cereal::access;
@@ -52,7 +61,8 @@ private:
             cereal::make_nvp("Output Pins", _output_pins),
             cereal::make_nvp("Properties", _properties),
             cereal::make_nvp("Signature Arity", _signature_arity),
-            cereal::make_nvp("Number of inputs", _number_of_inputs)
+            cereal::make_nvp("Number of inputs", _number_of_inputs),
+            cereal::make_nvp("Chosen Any type", _chosen_any_type)
         );
     }
 };

@@ -1,5 +1,6 @@
 #include "NodesConfig.h"
 #include <Cool/Dependencies/requires_shader_code_generation.h>
+#include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
 
@@ -23,13 +24,16 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
         }
     }
 
+    if (node.imgui_chosen_any_type())
+        _ui.set_dirty(_regenerate_code_flag);
+
     for (auto& property : node.properties())
         _ui.widget(property);
 }
 
 auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
 {
-    auto node = Node{def.name(), def.signature().arity, def.inputs().size()};
+    auto node = Node{def.name(), def.signature().arity, def.inputs().size(), def.signature().is_template()};
 
     for (size_t i = 0; i < def.signature().arity; ++i)
         node.input_pins().push_back(Cool::InputPin{fmt::format("IN{}", i + 1)});

@@ -1,4 +1,5 @@
 #include "NodesLibrary.h"
+#include "Cool/StrongTypes/RgbColor.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/PrimitiveType.h"
 
@@ -354,20 +355,43 @@ return 1. - in1;
     });
 
     this->add_node_definition({
-        .name      = "Multiply (float)",
+        .name      = "Constant Float",
         .signature = {
             .from  = PrimitiveType::Void,
             .to    = PrimitiveType::Float,
             .arity = 0,
         },
+        .function_body  = {"return `x`;"},
+        .inputs         = {},
+        .properties     = {Cool::InputDefinition<float>{"`x`"}},
+        .output_indices = {},
+    });
+
+    this->add_node_definition({
+        .name      = "Constant RGB",
+        .signature = {
+            .from  = PrimitiveType::Void,
+            .to    = PrimitiveType::RGB,
+            .arity = 0,
+        },
+        .function_body  = {"return `Color`;"},
+        .inputs         = {},
+        .properties     = {Cool::InputDefinition<Cool::RgbColor>{"`Color`"}},
+        .output_indices = {},
+    });
+
+    this->add_node_definition({
+        .name      = "Multiply",
+        .signature = {
+            .from  = PrimitiveType::Any,
+            .to    = PrimitiveType::Any,
+            .arity = 2,
+        },
         .function_body = {R"STR(
-return `A` * `B`;
+return in1 * in2;
     )STR"},
         .inputs        = {},
-        .properties    = {
-            Cool::InputDefinition<float>{"`A`"},
-            Cool::InputDefinition<float>{"`B`"},
-        },
+        .properties    = {},
     });
 
     this->add_node_definition({

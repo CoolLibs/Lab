@@ -1,6 +1,7 @@
 #include "CodeGen_default_function.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/PrimitiveType.h"
+#include "fmt/compile.h"
 
 namespace Lab {
 
