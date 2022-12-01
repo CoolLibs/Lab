@@ -97,7 +97,6 @@ def all_primitive_types():
 
 def primitive_types_enum_members():
     from pipe import map
-    # TODO(JF) Make sure the types that will be in the dropdown are all first, so that their underlying int matches
     return ",\n".join(all_primitive_types()
                       | map(lambda type: f"{type.cpp}"))
 
@@ -145,15 +144,42 @@ if (std::holds_alternative<Cool::Input<{type.corresponding_input_type}>>(input))
     return PrimitiveType::{type.cpp};''' if type.corresponding_input_type is not None else ""))
 
 
+def all_template_primitive_types():
+    from pipe import where
+    return all_primitive_types() | where(lambda type: type.can_be_a_template_type)
+
+
 def template_node_type_dropdown_string():
     from pipe import where, map
 
-    types_names = (all_primitive_types()
-                   | where(lambda type: type.can_be_a_template_type)
+    types_names = (all_template_primitive_types()
                    | map(lambda type: f' {type.user_facing_name}')
                    )
 
     return '"' + '\\0'.join(types_names) + '\\0"'
+
+
+def index_generator():
+    i = 0
+    while True:
+        yield i
+        i += 1
+
+
+def type_to_template_combo_index():
+    from pipe import where, map
+    index = index_generator()
+    return "\n".join(all_template_primitive_types()
+                     | map(lambda type: f'''case PrimitiveType::{type.cpp}: return {next(index)};''')
+                     )
+
+
+def template_combo_index_to_type():
+    from pipe import where, map
+    index = index_generator()
+    return "\n".join(all_template_primitive_types()
+                     | map(lambda type: f'''case {next(index)}: return PrimitiveType::{type.cpp};''')
+                     )
 
 
 if __name__ == '__main__':
@@ -178,5 +204,7 @@ if __name__ == '__main__':
             cpp_type_as_string_cases,
             input_to_primitive_type,
             template_node_type_dropdown_string,
+            type_to_template_combo_index,
+            template_combo_index_to_type,
         ],
     )
