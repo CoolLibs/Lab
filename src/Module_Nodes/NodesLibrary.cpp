@@ -277,10 +277,14 @@ return in1 * vec2(`Scale X`, `Scale Y`);
         },
         .function_body = {R"STR(
 vec2 uv = in1;
-return vec3(
-    `Image`(uv + vec2(-1. * `Drift`, 0.0)).r,
-    `Image`(uv + vec2( 0. * `Drift`, 0.0)).g,
-    `Image`(uv + vec2(+1. * `Drift`, 0.0)).b
+vec4 R = `Image`(uv + vec2(-1. * `Drift`, 0.0));
+vec4 G = `Image`(uv + vec2( 0. * `Drift`, 0.0));
+vec4 B = `Image`(uv + vec2(+1. * `Drift`, 0.0));
+return vec4(
+    R.r,
+    G.g,
+    B.b,
+    max(max(R.a, G.a), B.a)
 );
     )STR"},
         .inputs        = {
