@@ -96,53 +96,63 @@ def all_primitive_types():
 
 
 def primitive_types_enum_members():
+    from pipe import map
     # TODO(JF) Make sure the types that will be in the dropdown are all first, so that their underlying int matches
-    return ",\n".join(map(lambda type: f"{type.cpp}", all_primitive_types()))
+    return ",\n".join(all_primitive_types()
+                      | map(lambda type: f"{type.cpp}"))
 
 
 def glsl_type_as_string_cases():
-    return "\n".join(map(lambda type:
-                         f'case PrimitiveType::{type.cpp}: return "/*{type.cpp}*/ {type.glsl}";',
-                         all_primitive_types()))
+    from pipe import map
+    return "\n".join(all_primitive_types()
+                     | map(lambda type: f'case PrimitiveType::{type.cpp}: return "/*{type.cpp}*/ {type.glsl}";'))
 
 
 def raw_glsl_type_as_string_cases():
-    return "\n".join(map(lambda type:
-                         f'case PrimitiveType::{type.cpp}: return "{type.glsl}";',
-                         all_primitive_types()))
+    from pipe import map
+    return "\n".join(all_primitive_types()
+                     | map(lambda type: f'case PrimitiveType::{type.cpp}: return "{type.glsl}";'))
 
 
 def cpp_type_as_string_cases():
-    return "\n".join(map(lambda type:
-                         f'case PrimitiveType::{type.cpp}: return "{type.cpp}";',
-                         all_primitive_types()))
+    from pipe import map
+    return "\n".join(all_primitive_types()
+                     | map(lambda type: f'case PrimitiveType::{type.cpp}: return "{type.cpp}";'))
 
 
 def check_that_each_primitive_type_corresponds_to_a_different_input_type():
-    input_types = []
-    for type in all_primitive_types():
-        if type.corresponding_input_type is not None:
-            input_types.append(type.corresponding_input_type)
+    import collections
+    from pipe import where, map
 
-    for i in range(len(input_types)):
-        for j in range(i):
-            if input_types[i] == input_types[j]:
-                raise Exception(
-                    f"You can't have two primitive types corresponding to the same input type ({input_types[i]})")
+    input_types = list(all_primitive_types()
+                       | map(lambda type: type.corresponding_input_type)
+                       | where(lambda x: x is not None))
+
+    duplicates = [item for item, count in collections.Counter(input_types).items()
+                  if count > 1]
+
+    if len(duplicates) > 0:
+        raise Exception(
+            f"You can't have two primitive types corresponding to the same input type ({', '.join(duplicates)})")
 
 
 def input_to_primitive_type():
+    from pipe import map
     check_that_each_primitive_type_corresponds_to_a_different_input_type()
-    return "\n".join(map(lambda type: f'''
+    return "\n".join(all_primitive_types()
+                     | map(lambda type: f'''
 if (std::holds_alternative<Cool::Input<{type.corresponding_input_type}>>(input))
-    return PrimitiveType::{type.cpp};''' if type.corresponding_input_type is not None else "",
-                         all_primitive_types()))
+    return PrimitiveType::{type.cpp};''' if type.corresponding_input_type is not None else ""))
 
 
 def template_node_type_dropdown_string():
-    types = filter(lambda type: type.can_be_a_template_type,
-                   all_primitive_types())
-    types_names = map(lambda type: f' {type.user_facing_name}', types)
+    from pipe import where, map
+
+    types_names = (all_primitive_types()
+                   | where(lambda type: type.can_be_a_template_type)
+                   | map(lambda type: f' {type.user_facing_name}')
+                   )
+
     return '"' + '\\0'.join(types_names) + '\\0"'
 
 
