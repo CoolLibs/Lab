@@ -55,14 +55,14 @@ def all_primitive_types():
             user_facing_name="RGB",
             corresponding_input_type="Cool::RgbColor",
             glsl="vec3",
-            can_be_a_template_type=False,
+            can_be_a_template_type=True,
         ),
         PrimitiveType(
             cpp="RGBA",
             user_facing_name="RGBA",
             corresponding_input_type="Cool::PremultipliedRgbaColor",
             glsl="vec4",
-            can_be_a_template_type=False,
+            can_be_a_template_type=True,
         ),
         PrimitiveType(
             cpp="UV",

@@ -8,4 +8,6 @@ case PrimitiveType::Int: return 0;
 case PrimitiveType::Float: return 1;
 case PrimitiveType::Vec2: return 2;
 case PrimitiveType::Vec3: return 3;
-case PrimitiveType::Vec4: return 4; 
+case PrimitiveType::Vec4: return 4;
+case PrimitiveType::RGB: return 5;
+case PrimitiveType::RGBA: return 6; 
