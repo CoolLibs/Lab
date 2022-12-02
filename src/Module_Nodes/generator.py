@@ -159,24 +159,19 @@ def template_node_type_dropdown_string():
     return '"' + '\\0'.join(types_names) + '\\0"'
 
 
-def index_generator():
-    i = 0
-    while True:
-        yield i
-        i += 1
-
-
 def type_to_template_combo_index():
-    from pipe import where, map
-    index = index_generator()
+    from pipe import map
+    import itertools
+    index = itertools.count()
     return "\n".join(all_template_primitive_types()
                      | map(lambda type: f'''case PrimitiveType::{type.cpp}: return {next(index)};''')
                      )
 
 
 def template_combo_index_to_type():
-    from pipe import where, map
-    index = index_generator()
+    from pipe import map
+    import itertools
+    index = itertools.count()
     return "\n".join(all_template_primitive_types()
                      | map(lambda type: f'''case {next(index)}: return PrimitiveType::{type.cpp};''')
                      )
