@@ -1,4 +1,5 @@
 #include "CodeGen.h"
+#include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
 #include <Cool/InputParser/InputParser.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
@@ -193,8 +194,7 @@ static auto gen_properties(
                     input_node_id,
                     context
                 );
-                if (!input_func_name)
-                    return tl::make_unexpected(input_func_name.error());
+                RETURN_IF_UNEXPECTED(input_func_name);
 
                 res.real_names.push_back(fmt::format("{}()", *input_func_name)); // Input name will be replaced with a call to the corresponding function
             }
@@ -343,8 +343,7 @@ static auto gen_inputs(
                 input_node_id,
                 context
             );
-            if (!func_name)
-                return tl::make_unexpected(func_name.error());
+            RETURN_IF_UNEXPECTED(func_name);
 
             res.real_names[input.name()] = *func_name;
         }
@@ -405,12 +404,10 @@ static auto gen_base_function(
 ) -> ExpectedFunctionName
 {
     auto const inputs = gen_inputs(node, node_definition, context);
-    if (!inputs)
-        return tl::make_unexpected(inputs.error());
+    RETURN_IF_UNEXPECTED(inputs);
 
     auto const properties_code = gen_properties(node, context);
-    if (!properties_code)
-        return tl::make_unexpected(properties_code.error());
+    RETURN_IF_UNEXPECTED(properties_code);
 
     auto const func_name = base_function_name(node_definition, id);
 
