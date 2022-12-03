@@ -1,12 +1,14 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
 class PrimitiveType:
     cpp: str
     user_facing_name: str
-    corresponding_input_type: str
+    corresponding_input_type: Optional[str]
     glsl: str
+    parsed_from: Optional[str]
     can_be_a_template_type: bool
 
 
@@ -20,6 +22,7 @@ def all_primitive_types():
             user_facing_name="Int",
             corresponding_input_type="int",
             glsl="int",
+            parsed_from="int",
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -27,6 +30,7 @@ def all_primitive_types():
             user_facing_name="Float",
             corresponding_input_type="float",
             glsl="float",
+            parsed_from="float",
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -34,6 +38,7 @@ def all_primitive_types():
             user_facing_name="Vec2",
             corresponding_input_type="glm::vec2",
             glsl="vec2",
+            parsed_from="vec2",
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -41,6 +46,7 @@ def all_primitive_types():
             user_facing_name="Vec3",
             corresponding_input_type="glm::vec3",
             glsl="vec3",
+            parsed_from="vec3",
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -48,6 +54,7 @@ def all_primitive_types():
             user_facing_name="Vec4",
             corresponding_input_type="glm::vec4",
             glsl="vec4",
+            parsed_from="vec4",
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -55,6 +62,7 @@ def all_primitive_types():
             user_facing_name="RGB",
             corresponding_input_type="Cool::RgbColor",
             glsl="vec3",
+            parsed_from="RGB",
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -62,6 +70,7 @@ def all_primitive_types():
             user_facing_name="RGBA",
             corresponding_input_type="Cool::PremultipliedRgbaColor",
             glsl="vec4",
+            parsed_from="RGBA",
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -69,6 +78,7 @@ def all_primitive_types():
             user_facing_name="UV",
             corresponding_input_type="Cool::Point2D",
             glsl="vec2",
+            parsed_from="UV",
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -76,6 +86,7 @@ def all_primitive_types():
             user_facing_name="Signed Distance",
             corresponding_input_type=None,
             glsl="float",
+            parsed_from="SignedDistance",
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -83,6 +94,7 @@ def all_primitive_types():
             user_facing_name="Void",
             corresponding_input_type=None,
             glsl="void",
+            parsed_from=None,
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -90,6 +102,7 @@ def all_primitive_types():
             user_facing_name="Any",
             corresponding_input_type=None,
             glsl="ERROR the Any type should have been converted earlier in the compilation process.",
+            parsed_from="Any",
             can_be_a_template_type=False,
         ),
     ]
@@ -177,6 +190,22 @@ def template_combo_index_to_type():
                      )
 
 
+def parse_primitive_type():
+    from pipe import map, where
+    return "\n".join(all_primitive_types()
+                     | where(lambda x: x.parsed_from is not None)
+                     | map(lambda type: f'''if (str == "{type.parsed_from}") {{ return PrimitiveType::{type.cpp}; }}''')
+                     )
+
+
+def string_listing_the_parsed_types():
+    from pipe import map, where
+    return 'R"STR(' + "\n".join(all_primitive_types()
+                                | where(lambda x: x.parsed_from is not None)
+                                | map(lambda type: f'  - {type.parsed_from}')
+                                ) + ')STR"'
+
+
 if __name__ == '__main__':
     # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
     # So we need to add the path manually to sys.path
@@ -201,5 +230,7 @@ if __name__ == '__main__':
             template_node_type_dropdown_string,
             type_to_template_combo_index,
             template_combo_index_to_type,
+            parse_primitive_type,
+            string_listing_the_parsed_types,
         ],
     )

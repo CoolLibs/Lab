@@ -14,9 +14,7 @@ struct FunctionPieces {
 };
 
 struct NodeDefinition_Data {
-    std::string                 name;
-    FunctionSignature           signature;
-    std::string                 function_body;
+    FunctionPieces              main_function{};
     std::vector<FunctionPieces> helper_functions{};
 
     std::vector<NodeInputDefinition>      inputs{};         // Things that can only come from a pin
@@ -28,9 +26,9 @@ class NodeDefinition {
 public:
     NodeDefinition(NodeDefinition_Data const&);
 
-    auto name() const -> auto const& { return _data.name; }
-    auto signature() const -> auto const& { return _data.signature; }
-    auto function_body() const -> auto const& { return _data.function_body; }
+    auto name() const -> auto const& { return _data.main_function.name; }
+    auto signature() const -> auto const& { return _data.main_function.signature; }
+    auto function_body() const -> auto const& { return _data.main_function.body; }
     auto inputs() const -> auto const& { return _data.inputs; }
     auto properties() const -> auto const& { return _data.properties; }
     auto output_indices() const -> auto const& { return _data.output_indices; }
