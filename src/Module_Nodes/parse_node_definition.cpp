@@ -205,6 +205,24 @@ static auto make_main_function_pieces(FunctionPieces const& pieces, std::string 
     return res;
 }
 
+static auto check_that_helper_functions_dont_use_the_any_type(std::vector<FunctionPieces> const& functions)
+    -> std::optional<std::string>
+{
+    for (auto const& function : functions)
+    {
+        if (
+            function.signature.output_type == PrimitiveType::Any
+            || std::any_of(function.signature.parameters.begin(), function.signature.parameters.end(), [](ParamDesc const& param) {
+                   return param.type == PrimitiveType::Any;
+               })
+        )
+        {
+            return fmt::format("The Any type is only allowed for the main function. You cannot use it in {}.", function.name);
+        }
+    }
+    return std::nullopt;
+}
+
 auto parse_node_definition(std::string const& name, std::string text)
     -> tl::expected<NodeDefinition_Data, std::string>
 {
@@ -228,6 +246,11 @@ auto parse_node_definition(std::string const& name, std::string text)
 
     functions->erase(main_function_it);
     res.helper_functions = *functions;
+    {
+        auto const err = check_that_helper_functions_dont_use_the_any_type(*functions);
+        if (err)
+            return tl::make_unexpected(*err);
+    }
 
     return res;
 }
