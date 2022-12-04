@@ -51,24 +51,20 @@ float add(float x, float y){
 
 )STR"));
 
-    this->add_node_definition(*parse_node_definition("Time Test", R"STR(
+    this->add_node_definition(*parse_node_definition("Time", R"STR(
 float main()
 {
     return _time;
 }
 )STR"));
-    this->add_node_definition(*parse_node_definition("Time2 Test", R"STR(
-float main( )
+
+    this->add_node_definition(*parse_node_definition("Test Image", R"STR(
+RGBA main(UV uv)
 {
-    return _time;
+    return vec4(fract(uv), 0., 1.);
 }
 )STR"));
-    this->add_node_definition(*parse_node_definition("Time3 Test", R"STR(
-float main(   )
-{
-    return _time;
-}
-)STR"));
+
     // TODO(JF) Once we start loading from file, catch exceptions thrown by definition creation, log the errors, and just don't add the given definition
     //     this->add_node_definition({
     //         .name      = "Black & White",
