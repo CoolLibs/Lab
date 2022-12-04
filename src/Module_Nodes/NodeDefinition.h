@@ -8,13 +8,19 @@
 namespace Lab {
 
 struct FunctionPieces {
-    std::string       name;
-    FunctionSignature signature;
-    std::string       body;
+    std::string               name;
+    CompleteFunctionSignature signature;
+    std::string               body;
+};
+
+struct MainFunctionPieces {
+    std::string           name;
+    MainFunctionSignature signature;
+    std::string           body;
 };
 
 struct NodeDefinition_Data {
-    FunctionPieces              main_function{};
+    MainFunctionPieces          main_function{};
     std::vector<FunctionPieces> helper_functions{};
 
     std::vector<NodeInputDefinition>      inputs{};         // Things that can only come from a pin
@@ -27,7 +33,8 @@ public:
     NodeDefinition(NodeDefinition_Data const&);
 
     auto name() const -> auto const& { return _data.main_function.name; }
-    auto signature() const -> auto const& { return _data.main_function.signature; }
+    auto signature() const -> auto const& { return _data.main_function.signature.signature; }
+    auto parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
     auto function_body() const -> auto const& { return _data.main_function.body; }
     auto inputs() const -> auto const& { return _data.inputs; }
     auto properties() const -> auto const& { return _data.properties; }

@@ -18,22 +18,22 @@
 
 namespace Lab {
 
-static auto gen_params(FunctionSignature const& signature)
+static auto gen_params(CompleteFunctionSignature const& signature)
     -> std::string
 {
     using fmt::literals::operator""_a;
 
     std::string res{};
-    for (size_t i = 0; i < signature.arity; ++i)
+    for (size_t i = 0; i < signature.parameters.size(); ++i)
     {
         res += fmt::format(
             FMT_COMPILE(
-                "{type} in{index}"
+                "{type} {name}"
             ),
-            "type"_a  = glsl_type_as_string(signature.from),
-            "index"_a = i + 1
+            "type"_a = glsl_type_as_string(signature.parameters[i].type),
+            "name"_a = signature.parameters[i].name
         );
-        if (i != signature.arity - 1)
+        if (i != signature.parameters.size() - 1)
             res += ", ";
     }
 
@@ -41,8 +41,8 @@ static auto gen_params(FunctionSignature const& signature)
 }
 
 static auto gen_function_declaration(
-    FunctionSignature signature,
-    std::string_view  name
+    CompleteFunctionSignature const& signature,
+    std::string_view                 name
 ) -> std::string
 {
     using fmt::literals::operator""_a;
@@ -50,17 +50,17 @@ static auto gen_function_declaration(
         FMT_COMPILE(
             R"STR({return_type} {name}/*coollabdef*/({params}))STR"
         ),
-        "return_type"_a = glsl_type_as_string(signature.to),
+        "return_type"_a = glsl_type_as_string(signature.output_type),
         "name"_a        = name,
         "params"_a      = gen_params(signature)
     );
 }
 
 struct Params_gen_function_definition {
-    FunctionSignature const& signature{};
-    std::string_view         name{};
-    std::string_view         before_function{};
-    std::string_view         body{};
+    CompleteFunctionSignature const& signature{};
+    std::string_view                 name{};
+    std::string_view                 before_function{};
+    std::string_view                 body{};
 };
 
 static auto gen_function_definition(Params_gen_function_definition p)
@@ -389,7 +389,7 @@ static auto concrete_signature(NodeDefinition const& def, Node const& node)
     if (!def.signature().is_template())
         return def.signature();
 
-    return {
+    return FunctionSignature{
         .from  = node.chosen_any_type(),
         .to    = node.chosen_any_type(),
         .arity = def.signature().arity,
@@ -420,7 +420,10 @@ static auto gen_base_function(
         context.push_function(Function{.name = func_name, .implementation = ""});
 
     auto func_implementation = gen_function_definition({
-        .signature       = concrete_signature(node_definition, node),
+        .signature       = make_complete_function_signature(MainFunctionSignature{
+                  .signature       = concrete_signature(node_definition, node),
+                  .parameter_names = node_definition.parameter_names(),
+        }),
         .name            = func_name,
         .before_function = properties_code->code + '\n'
                            + helper_functions.code,
@@ -442,6 +445,17 @@ static auto gen_base_function(
     context.push_function({.name = func_name, .implementation = func_implementation});
 
     return func_name;
+}
+
+static auto make_default_parameter_names(size_t arity)
+    -> std::vector<std::string>
+{
+    auto res = std::vector<std::string>{};
+
+    for (size_t i = 0; i < arity; ++i)
+        res.push_back(fmt::format("in{}", i + 1));
+
+    return res;
 }
 
 auto gen_desired_function(
@@ -483,7 +497,10 @@ auto gen_desired_function(
 
     auto const func_name       = desired_function_name(*node_definition, id, desired_signature);
     auto const func_definition = gen_function_definition({
-        .signature       = desired_signature,
+        .signature       = make_complete_function_signature(MainFunctionSignature{
+                  .signature       = desired_signature,
+                  .parameter_names = make_default_parameter_names(desired_signature.arity),
+        }),
         .name            = func_name,
         .before_function = "",
         .body            = *func_body,

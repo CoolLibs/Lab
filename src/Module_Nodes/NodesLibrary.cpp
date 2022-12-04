@@ -1,4 +1,5 @@
 #include "NodesLibrary.h"
+#include <string>
 #include "Cool/StrongTypes/RgbColor.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/PrimitiveType.h"
@@ -9,13 +10,17 @@ namespace Lab {
 void NodesLibrary::add_node_definition(NodeDefinition_Data definition)
 {
     // HACK to apply pre-divide / post-multiply to rgb post-process effects
-    if (definition.main_function.signature == Signature::RGBTransformation)
+    if (definition.main_function.signature.signature == Signature::RGBTransformation)
     {
         auto const base_name = fmt::format("RGB{}", definition.main_function.name);
-        definition.helper_functions.push_back({.name = base_name, .signature = definition.main_function.signature, .body = definition.main_function.body});
+        definition.helper_functions.push_back(FunctionPieces{
+            .name      = base_name,
+            .signature = make_complete_function_signature(definition.main_function.signature),
+            .body      = definition.main_function.body,
+        });
 
-        definition.main_function.signature = Signature::RGBATransformation;
-        definition.main_function.body      = fmt::format(
+        definition.main_function.signature.signature = Signature::RGBATransformation;
+        definition.main_function.body                = fmt::format(
             R"STR(
     if (in1.a < 0.000001)
         return in1;
