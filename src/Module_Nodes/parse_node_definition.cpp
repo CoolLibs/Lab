@@ -169,7 +169,15 @@ static auto make_main_function_signature(CompleteFunctionSignature const& signat
                              ? PrimitiveType::Void
                              : signature.parameters[0].type;
 
-    // TODO(JF) Check that all signature.parameters have the same type
+    for (auto const& param : signature.parameters)
+    {
+        if (param.type != res.signature.from)
+            return tl::make_unexpected(fmt::format(
+                "The main function cannot have different parameters types. Found {} and {}.\nIf you need more parameters, consider using an INPUT instead.",
+                cpp_type_as_string(res.signature.from),
+                cpp_type_as_string(param.type)
+            ));
+    }
 
     std::transform(
         signature.parameters.begin(), signature.parameters.end(),
