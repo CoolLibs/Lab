@@ -1,0 +1,11 @@
+INPUT float my_input;
+
+float main(float x)
+{
+    return add(x, 1.);
+}
+
+float add(float x, float y)
+{
+    return x + y;
+}

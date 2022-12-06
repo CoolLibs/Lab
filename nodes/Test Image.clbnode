@@ -1,0 +1,4 @@
+RGBA main(UV uv)
+{
+    return vec4(fract(uv), 0., 1.);
+}

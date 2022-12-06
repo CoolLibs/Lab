@@ -1,0 +1,4 @@
+float main()
+{
+    return _time;
+}

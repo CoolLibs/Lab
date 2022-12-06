@@ -3,6 +3,7 @@
 #include "Common/make_shader_compilation_error_message.h"
 #include "Debug/DebugOptions.h"
 #include "generate_shader_code.h"
+#include "parse_node_definition.h"
 
 namespace Lab {
 
@@ -13,7 +14,10 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
 }
 
-void Module_Nodes::update(UpdateContext_Ref) {}
+void Module_Nodes::update(UpdateContext_Ref)
+{
+    _nodes_folder_watcher.update(_nodes_library, &parse_node_definition);
+}
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {

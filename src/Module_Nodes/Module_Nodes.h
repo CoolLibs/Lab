@@ -3,6 +3,8 @@
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"
+#include "Cool/Nodes/NodesFolderWatcher.h"
+#include "Cool/Path/Path.h"
 #include "Dependencies/Module.h"
 #include "NodesConfig.h"
 #include "NodesLibrary.h"
@@ -32,6 +34,7 @@ private:
     FullscreenShader                       _shader{};
     mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
     NodesLibrary                           _nodes_library{};
+    Cool::NodesFolderWatcher               _nodes_folder_watcher{Cool::Path::root() / "nodes"};
     mutable Cool::NodeId                   _main_node_id{};
     Cool::DirtyFlag                        _regenerate_code_flag;
     Cool::MessageSender                    _shader_compilation_error{};

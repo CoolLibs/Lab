@@ -223,8 +223,37 @@ static auto check_that_helper_functions_dont_use_the_any_type(std::vector<Functi
     return std::nullopt;
 }
 
-auto parse_node_definition(std::string const& name, std::string text)
-    -> tl::expected<NodeDefinition_Data, std::string>
+/// HACK to apply pre-divide / post-multiply to rgb post-process effects
+auto convert_rgb_transform_to_rgba(NodeDefinition_Data definition)
+    -> NodeDefinition_Data
+{
+    if (definition.main_function.signature.signature != Signature::RGBTransformation)
+        return definition;
+
+    auto const base_name = fmt::format("RGB{}", definition.main_function.name);
+    definition.helper_functions.push_back(FunctionPieces{
+        .name      = base_name,
+        .signature = make_complete_function_signature(definition.main_function.signature),
+        .body      = definition.main_function.body,
+    });
+
+    definition.main_function.signature.signature = Signature::RGBATransformation;
+    definition.main_function.body                = fmt::format(
+        R"STR(
+    if (in1.a < 0.000001)
+        return in1;
+    vec3 rgb = in1.rgb / in1.a;
+    rgb      = {}(rgb);
+    return vec4(rgb * in1.a, in1.a);
+)STR",
+        base_name
+    );
+
+    return definition;
+}
+
+auto parse_node_definition(std::filesystem::path const& filepath, std::string text)
+    -> tl::expected<NodeDefinition, std::string>
 {
     NodeDefinition_Data res{};
 
@@ -240,7 +269,7 @@ auto parse_node_definition(std::string const& name, std::string text)
     if (main_function_it == functions->end())
         return tl::make_unexpected("Missing a main function.");
 
-    auto const main_function = make_main_function_pieces(*main_function_it, name);
+    auto const main_function = make_main_function_pieces(*main_function_it, filepath.stem().string());
     RETURN_IF_UNEXPECTED(main_function);
     res.main_function = *main_function;
 
@@ -252,7 +281,7 @@ auto parse_node_definition(std::string const& name, std::string text)
             return tl::make_unexpected(*err);
     }
 
-    return res;
+    return convert_rgb_transform_to_rgba(res);
 }
 
 } // namespace Lab

@@ -4,6 +4,7 @@
 
 namespace Lab {
 
-auto parse_node_definition(std::string const& name, std::string text) -> tl::expected<NodeDefinition_Data, std::string>;
+auto parse_node_definition(std::filesystem::path const& filepath, std::string text)
+    -> tl::expected<NodeDefinition, std::string>;
 
 } // namespace Lab
