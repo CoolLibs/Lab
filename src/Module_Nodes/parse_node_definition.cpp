@@ -3,6 +3,8 @@
 #include <Cool/String/String.h>
 #include <algorithm>
 #include <iterator>
+#include "Cool/Log/Debug.h"
+#include "Debug/DebugOptions.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/PrimitiveType.h"
@@ -255,6 +257,11 @@ auto convert_rgb_transform_to_rgba(NodeDefinition_Data definition)
 auto parse_node_definition(std::filesystem::path const& filepath, std::string text)
     -> tl::expected<NodeDefinition, std::string>
 {
+#if DEBUG
+    if (DebugOptions::log_when_parsing_node_definition())
+        Cool::Log::Debug::info("Nodes", fmt::format("Parsing node definition from {}.", filepath));
+#endif
+
     NodeDefinition_Data res{};
 
     text = Cool::String::remove_comments(text);

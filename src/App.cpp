@@ -71,6 +71,13 @@ void App::update()
         set_everybody_dirty();
     }
 
+    if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
+    {
+        _nodes_module->update(update_context());
+        // _custom_shader_module->update(update_context());
+        check_inputs();
+    }
+
     if (!_exporter.is_exporting())
     {
         _clock.update();
@@ -100,13 +107,6 @@ void App::update()
     // {
     // set_dirty_flag()(_custom_shader_module->dirty_flag());
     // }
-
-    if (inputs_are_allowed())
-    {
-        _nodes_module->update(update_context());
-        // _custom_shader_module->update(update_context());
-        check_inputs();
-    }
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst

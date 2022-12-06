@@ -3,6 +3,7 @@
 #include "Common/make_shader_compilation_error_message.h"
 #include "Debug/DebugOptions.h"
 #include "generate_shader_code.h"
+#include "imgui.h"
 #include "parse_node_definition.h"
 
 namespace Lab {
@@ -82,6 +83,10 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
     }
     ImGui::End();
     ImGui::Begin("Nodes Debug");
+    if (ImGui::Button("Refresh Definitions"))
+    {
+        _nodes_folder_watcher.force_refresh();
+    }
     ImGui::End();
 }
 

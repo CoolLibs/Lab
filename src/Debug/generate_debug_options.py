@@ -38,6 +38,10 @@ def all_debug_options():
             name_in_ui="Log when compiling nodes",
         ),
         DebugOption(
+            name_in_code="log_when_parsing_node_definition",
+            name_in_ui="Log when parsing node definition",
+        ),
+        DebugOption(
             name_in_code="test_all_variable_widgets__window",
             name_in_ui="Test all Variable Widgets",
             kind=Kind.WINDOW,
