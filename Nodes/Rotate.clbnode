@@ -1,5 +1,6 @@
 
 INPUT Angle `Angle`;
+INPUT Point2D `Center`;
 
 UV main(UV uv)
 {
@@ -10,5 +11,5 @@ UV main(UV uv)
         c, -s,
         s, c
     );
-    return rot * uv;
+    return rot * (uv - `Center`) + `Center`;
 }
