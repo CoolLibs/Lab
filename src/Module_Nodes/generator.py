@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, List
 
 
 @dataclass
 class PrimitiveType:
     cpp: str
     user_facing_name: str
-    corresponding_input_type: Optional[str]
+    corresponding_input_types: List[str]
     glsl: str
     parsed_from: Optional[str]
     can_be_a_template_type: bool
@@ -20,7 +20,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Int",
             user_facing_name="Int",
-            corresponding_input_type="int",
+            corresponding_input_types=["int"],
             glsl="int",
             parsed_from="int",
             can_be_a_template_type=True,
@@ -28,7 +28,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Float",
             user_facing_name="Float",
-            corresponding_input_type="float",
+            corresponding_input_types=["float", "Cool::Angle"],
             glsl="float",
             parsed_from="float",
             can_be_a_template_type=True,
@@ -36,7 +36,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Vec2",
             user_facing_name="Vec2",
-            corresponding_input_type="glm::vec2",
+            corresponding_input_types=["glm::vec2"],
             glsl="vec2",
             parsed_from="vec2",
             can_be_a_template_type=True,
@@ -44,7 +44,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Vec3",
             user_facing_name="Vec3",
-            corresponding_input_type="glm::vec3",
+            corresponding_input_types=["glm::vec3"],
             glsl="vec3",
             parsed_from="vec3",
             can_be_a_template_type=True,
@@ -52,7 +52,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Vec4",
             user_facing_name="Vec4",
-            corresponding_input_type="glm::vec4",
+            corresponding_input_types=["glm::vec4"],
             glsl="vec4",
             parsed_from="vec4",
             can_be_a_template_type=True,
@@ -60,7 +60,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="RGB",
             user_facing_name="RGB",
-            corresponding_input_type="Cool::RgbColor",
+            corresponding_input_types=["Cool::RgbColor"],
             glsl="vec3",
             parsed_from="RGB",
             can_be_a_template_type=True,
@@ -68,7 +68,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="RGBA",
             user_facing_name="RGBA",
-            corresponding_input_type="Cool::PremultipliedRgbaColor",
+            corresponding_input_types=["Cool::PremultipliedRgbaColor"],
             glsl="vec4",
             parsed_from="RGBA",
             can_be_a_template_type=True,
@@ -76,7 +76,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="UV",
             user_facing_name="UV",
-            corresponding_input_type="Cool::Point2D",
+            corresponding_input_types=["Cool::Point2D"],
             glsl="vec2",
             parsed_from="UV",
             can_be_a_template_type=False,
@@ -84,7 +84,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="SignedDistance",
             user_facing_name="Signed Distance",
-            corresponding_input_type=None,
+            corresponding_input_types=[],
             glsl="float",
             parsed_from="SignedDistance",
             can_be_a_template_type=False,
@@ -92,7 +92,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Void",
             user_facing_name="Void",
-            corresponding_input_type=None,
+            corresponding_input_types=[],
             glsl="void",
             parsed_from=None,
             can_be_a_template_type=False,
@@ -100,7 +100,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Any",
             user_facing_name="Any",
-            corresponding_input_type=None,
+            corresponding_input_types=[],
             glsl="ERROR the Any type should have been converted earlier in the compilation process.",
             parsed_from="Any",
             can_be_a_template_type=False,
@@ -134,11 +134,11 @@ def cpp_type_as_string_cases():
 
 def check_that_each_primitive_type_corresponds_to_a_different_input_type():
     import collections
-    from pipe import where, map
+    from pipe import chain, map
 
     input_types = list(all_primitive_types()
-                       | map(lambda type: type.corresponding_input_type)
-                       | where(lambda x: x is not None))
+                       | map(lambda type: type.corresponding_input_types)
+                       | chain)
 
     duplicates = [item for item, count in collections.Counter(input_types).items()
                   if count > 1]
@@ -149,12 +149,14 @@ def check_that_each_primitive_type_corresponds_to_a_different_input_type():
 
 
 def input_to_primitive_type():
-    from pipe import map
+    from pipe import map, chain
     check_that_each_primitive_type_corresponds_to_a_different_input_type()
     return "\n".join(all_primitive_types()
+                     | map(lambda type: type.corresponding_input_types | map(lambda t: [t, type.cpp]))
+                     | chain
                      | map(lambda type: f'''
-if (std::holds_alternative<Cool::Input<{type.corresponding_input_type}>>(input))
-    return PrimitiveType::{type.cpp};''' if type.corresponding_input_type is not None else ""))
+if (std::holds_alternative<Cool::Input<{type[0]}>>(input))
+    return PrimitiveType::{type[1]};'''))
 
 
 def all_template_primitive_types():

@@ -11,6 +11,9 @@ if (std::holds_alternative<Cool::Input<int>>(input))
 if (std::holds_alternative<Cool::Input<float>>(input))
     return PrimitiveType::Float;
 
+if (std::holds_alternative<Cool::Input<Cool::Angle>>(input))
+    return PrimitiveType::Float;
+
 if (std::holds_alternative<Cool::Input<glm::vec2>>(input))
     return PrimitiveType::Vec2;
 
