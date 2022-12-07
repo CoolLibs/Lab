@@ -55,7 +55,7 @@ target_include_directories(CooLab-Properties INTERFACE src lib)
 # Copy resources to the output folder (where the executable is created) after each build
 include("Cool/CMakeUtils/files_and_folders.cmake")
 Cool__target_copy_folder(${PROJECT_NAME} "res")
-Cool__target_copy_folder(${PROJECT_NAME} "nodes")
+Cool__target_copy_folder(${PROJECT_NAME} "Nodes")
 
 if(MSVC)
     target_compile_options(CooLab-Properties INTERFACE /bigobj) # We use too many templates apparently so we need this flag O:)
