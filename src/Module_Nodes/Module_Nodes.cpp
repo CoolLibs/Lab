@@ -15,9 +15,10 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
 }
 
-void Module_Nodes::update(UpdateContext_Ref)
+void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    _nodes_folder_watcher.update(_nodes_library, &parse_node_definition);
+    if (_nodes_folder_watcher.update(_nodes_library, &parse_node_definition))
+        ctx.set_dirty(_regenerate_code_flag);
 }
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
