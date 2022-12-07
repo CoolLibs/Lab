@@ -17,18 +17,22 @@ auto NodeDefinition::make(NodeDefinition_Data const& data)
     // Check that the property names are valid, and remove the backticks from them.
     for (auto& prop : def._data.properties)
     {
-        std::visit([](auto& prop) {
+        auto const err = std::visit([](auto& prop) -> std::optional<std::string> {
             if (prop.name.size() < 2 /* Make sure indexing at `prop.name.size() - 1` is safe */
                 || prop.name[0] != '`' || prop.name[prop.name.size() - 1] != '`')
             {
-                return tl::make_unexpected(fmt::format(
+                return fmt::format(
                     "All the PROPERTY names must start and end with backticks (`).\nName \"{}\" is invalid.", prop.name
-                ));
+                );
             }
 
             prop.name = prop.name.substr(1, prop.name.size() - 2);
+            return std::nullopt;
         },
-                   prop);
+                                    prop);
+
+        if (err)
+            return tl::make_unexpected(*err);
     }
 
     for (auto& output_index_name : def._data.output_indices)

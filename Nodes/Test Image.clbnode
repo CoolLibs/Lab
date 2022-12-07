@@ -1,4 +1,7 @@
+
+INPUT float `Blue`; // Then call it x
+
 RGBA main(UV uv)
 {
-    return vec4(fract(uv), 0., 1.);
+    return vec4(fract(uv), `Blue`, 1.);
 }

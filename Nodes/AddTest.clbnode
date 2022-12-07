@@ -1,4 +1,4 @@
-INPUT float my_input;
+INPUT float `my_input`;
 
 float main(float x)
 {

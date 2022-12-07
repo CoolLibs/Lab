@@ -3,6 +3,7 @@
 #include <Cool/String/String.h>
 #include <algorithm>
 #include <iterator>
+#include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Log/Debug.h"
 #include "Debug/DebugOptions.h"
 #include "Module_Nodes/FunctionSignature.h"
@@ -286,6 +287,41 @@ auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::
 auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
+    static constexpr auto input_keyword = "INPUT"sv;
+
+    size_t offset = text.find(input_keyword);
+    while (offset != std::string::npos)
+    {
+        offset += input_keyword.length();
+        auto const end_of_line = text.find(';', offset);
+
+        auto const error_message = [&](std::string_view str) {
+            return fmt::format("Invalid INPUT declaration: {}. While reading:\n{}", str, Cool::String::substring(text, offset - input_keyword.length(), end_of_line != std::string::npos ? end_of_line + 1 : text.length()));
+        };
+
+        if (end_of_line == std::string::npos)
+            return error_message("missing semicolon (;)");
+
+        auto const type_pos = Cool::String::find_next_word_position(text, offset);
+        if (!type_pos || type_pos->second > end_of_line)
+            return error_message("missing type");
+
+        auto const name_pos = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = type_pos->second,
+            .opening = '`',
+            .closing = '`',
+        });
+        if (!name_pos || name_pos->second > end_of_line)
+            return error_message("missing name. A name must start and end with backticks (`)");
+
+        res.properties.emplace_back(Cool::InputDefinition<float>{
+            .name = Cool::String::substring(text, name_pos->first, name_pos->second + 1),
+        });
+
+        offset = text.find(input_keyword, end_of_line + 1);
+    }
+
     return std::nullopt;
 }
 
