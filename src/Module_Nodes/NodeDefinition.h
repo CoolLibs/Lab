@@ -4,6 +4,7 @@
 #include <Cool/Dependencies/InputDefinition.h>
 #include "FunctionSignature.h"
 #include "NodeInputDefinition.h"
+#include "tl/expected.hpp"
 
 namespace Lab {
 
@@ -30,7 +31,8 @@ struct NodeDefinition_Data {
 
 class NodeDefinition {
 public:
-    NodeDefinition(NodeDefinition_Data const&);
+    static auto make(NodeDefinition_Data const&) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
+        -> tl::expected<NodeDefinition, std::string>;
 
     auto name() const -> auto const& { return _data.main_function.name; }
     auto signature() const -> auto const& { return _data.main_function.signature.signature; }
@@ -40,6 +42,9 @@ public:
     auto properties() const -> auto const& { return _data.properties; }
     auto output_indices() const -> auto const& { return _data.output_indices; }
     auto helper_functions() const -> auto const& { return _data.helper_functions; }
+
+private:
+    explicit NodeDefinition(NodeDefinition_Data const&); // Use NodeDefinition::make() to create a NodeDefinition
 
 private:
     NodeDefinition_Data _data;

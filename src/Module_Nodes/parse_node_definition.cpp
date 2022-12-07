@@ -288,7 +288,7 @@ auto parse_node_definition(std::filesystem::path const& filepath, std::string te
             return tl::make_unexpected(*err);
     }
 
-    return convert_rgb_transform_to_rgba(res);
+    return NodeDefinition::make(convert_rgb_transform_to_rgba(res));
 }
 
 } // namespace Lab
