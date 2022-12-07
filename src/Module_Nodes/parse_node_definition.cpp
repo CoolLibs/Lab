@@ -2,9 +2,11 @@
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
 #include <Cool/String/String.h>
 #include <algorithm>
+#include <exception>
 #include <iterator>
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Log/Debug.h"
+#include "Cool/type_from_string/type_from_string.h"
 #include "Debug/DebugOptions.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/NodeDefinition.h"
@@ -315,9 +317,22 @@ auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& re
         if (!name_pos || name_pos->second > end_of_line)
             return error_message("missing name. A name must start and end with backticks (`)");
 
-        res.properties.emplace_back(Cool::InputDefinition<float>{
-            .name = Cool::String::substring(text, name_pos->first, name_pos->second + 1),
-        });
+        auto const type = Cool::String::substring(text, *type_pos);
+        auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
+
+        try
+        {
+            res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
+                Cool::InputDefinition,
+                type,
+                Cool::AnyInputDefinition,
+                (name)
+            ));
+        }
+        catch (std::exception const& e)
+        {
+            return error_message(fmt::format("{}\n", e.what()));
+        }
 
         offset = text.find(input_keyword, end_of_line + 1);
     }

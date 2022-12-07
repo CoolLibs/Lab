@@ -1,5 +1,5 @@
 
-INPUT float `Blue`; // Then call it x
+INPUT float `Blue`;
 
 RGBA main(UV uv)
 {
