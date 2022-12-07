@@ -254,6 +254,41 @@ auto convert_rgb_transform_to_rgba(NodeDefinition_Data definition)
     return definition;
 }
 
+auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)
+    -> std::optional<std::string>
+{
+    auto functions = parse_all_functions(text);
+    if (!functions)
+        return functions.error();
+
+    auto const main_function_it = std::find_if(functions->begin(), functions->end(), [](FunctionPieces const& func) {
+        return func.name == "main";
+    });
+    if (main_function_it == functions->end())
+        return "Missing a main function.";
+
+    auto const main_function = make_main_function_pieces(*main_function_it, filepath.stem().string());
+    if (!main_function)
+        return main_function.error();
+    res.main_function = *main_function;
+
+    functions->erase(main_function_it);
+    res.helper_functions = *functions;
+    {
+        auto const err = check_that_helper_functions_dont_use_the_any_type(*functions);
+        if (err)
+            return *err;
+    }
+
+    return std::nullopt;
+}
+
+auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
+    -> std::optional<std::string>
+{
+    return std::nullopt;
+}
+
 auto parse_node_definition(std::filesystem::path const& filepath, std::string text)
     -> tl::expected<NodeDefinition, std::string>
 {
@@ -266,24 +301,13 @@ auto parse_node_definition(std::filesystem::path const& filepath, std::string te
 
     text = Cool::String::remove_comments(text);
 
-    auto functions = parse_all_functions(text);
-    if (!functions)
-        return tl::make_unexpected(functions.error());
-
-    auto const main_function_it = std::find_if(functions->begin(), functions->end(), [](FunctionPieces const& func) {
-        return func.name == "main";
-    });
-    if (main_function_it == functions->end())
-        return tl::make_unexpected("Missing a main function.");
-
-    auto const main_function = make_main_function_pieces(*main_function_it, filepath.stem().string());
-    RETURN_IF_UNEXPECTED(main_function);
-    res.main_function = *main_function;
-
-    functions->erase(main_function_it);
-    res.helper_functions = *functions;
     {
-        auto const err = check_that_helper_functions_dont_use_the_any_type(*functions);
+        auto const err = find_main_and_helper_functions(filepath, text, res);
+        if (err)
+            return tl::make_unexpected(*err);
+    }
+    {
+        auto const err = find_inputs_and_properties(text, res);
         if (err)
             return tl::make_unexpected(*err);
     }
