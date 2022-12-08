@@ -326,6 +326,41 @@ static auto parse_signature(std::vector<std::string> const& words)
     };
 }
 
+static auto parse_property(std::string const& type_as_string, std::string const& name, NodeDefinition_Data& res)
+    -> std::optional<std::string>
+{
+    try
+    {
+        res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
+            Cool::InputDefinition,
+            type_as_string,
+            Cool::AnyInputDefinition,
+            (name)
+        ));
+    }
+    catch (std::exception const& e)
+    {
+        return e.what();
+    }
+
+    return std::nullopt;
+}
+
+static auto parse_input(std::vector<std::string> const& type_words, std::string const& name, NodeDefinition_Data& res)
+    -> std::optional<std::string>
+{
+    auto const signature = parse_signature(type_words);
+    if (!signature)
+        return signature.error();
+
+    res.inputs.emplace_back(NodeInputDefinition_Data{
+        .name      = name,
+        .signature = *signature,
+    });
+
+    return std::nullopt;
+}
+
 static auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
@@ -360,32 +395,12 @@ static auto find_inputs_and_properties(std::string const& text, NodeDefinition_D
         if (type_words.empty())
             return error_message("missing type");
 
-        if (type_words.size() == 1)
         {
-            try
-            {
-                res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
-                    Cool::InputDefinition,
-                    type_words[0],
-                    Cool::AnyInputDefinition,
-                    (name)
-                ));
-            }
-            catch (std::exception const& e)
-            {
-                return error_message(fmt::format("{}\n", e.what()));
-            }
-        }
-        else
-        {
-            auto const signature = parse_signature(type_words);
-            if (!signature)
-                return error_message(fmt::format("{}\n", signature.error()));
-
-            res.inputs.emplace_back(NodeInputDefinition_Data{
-                .name      = name,
-                .signature = *signature,
-            });
+            auto const err = type_words.size() == 1
+                                 ? parse_property(type_words[0], name, res)
+                                 : parse_input(type_words, name, res);
+            if (err)
+                return error_message(fmt::format("{}\n", *err));
         }
 
         offset = text.find(input_keyword, end_of_line + 1);
