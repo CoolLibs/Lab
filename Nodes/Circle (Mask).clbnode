@@ -1,0 +1,10 @@
+
+INPUT float `Radius`;
+INPUT float `Edge blur`;
+INPUT             Point2D `Center`;
+
+float main(UV uv)
+{
+    float d = length(uv - `Center`);
+    return smoothstep(`Edge blur`, 0., d - `Radius`);
+}

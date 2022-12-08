@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <exception>
 #include <iterator>
+#include <string>
+#include <vector>
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Log/Debug.h"
 #include "Cool/type_from_string/type_from_string.h"
@@ -27,7 +29,7 @@ static auto parse_primitive_type(std::string const& str)
     ));
 }
 
-auto parse_parameters(std::string const& parameters_list)
+static auto parse_parameters(std::string const& parameters_list)
     -> tl::expected<ParametersList, std::string>
 {
     auto params = ParametersList{};
@@ -229,7 +231,7 @@ static auto check_that_helper_functions_dont_use_the_any_type(std::vector<Functi
 }
 
 /// HACK to apply pre-divide / post-multiply to rgb post-process effects
-auto convert_rgb_transform_to_rgba(NodeDefinition_Data definition)
+static auto convert_rgb_transform_to_rgba(NodeDefinition_Data definition)
     -> NodeDefinition_Data
 {
     if (definition.main_function.signature.signature != Signature::RGBTransformation)
@@ -257,7 +259,7 @@ auto convert_rgb_transform_to_rgba(NodeDefinition_Data definition)
     return definition;
 }
 
-auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)
+static auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     auto functions = parse_all_functions(text);
@@ -286,7 +288,45 @@ auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::
     return std::nullopt;
 }
 
-auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
+static auto parse_signature(std::vector<std::string> const& words)
+    -> tl::expected<FunctionSignature, std::string>
+{
+    assert(words.size() >= 2);
+
+    auto const output_type = parse_primitive_type(words.back());
+    if (!output_type)
+        return tl::make_unexpected(output_type.error());
+
+    auto const input_type = parse_primitive_type(words.front());
+    if (!input_type)
+        return tl::make_unexpected(input_type.error());
+
+    // Error checking
+    if (input_type == PrimitiveType::Void)
+        return tl::make_unexpected("'Void' is not allowed as an INPUT type.");
+    if (input_type == PrimitiveType::Any)
+        return tl::make_unexpected("'Any' is not allowed as an INPUT type.");
+    for (size_t i = 1; i < words.size() - 1; ++i)
+    {
+        auto const other_input_type = parse_primitive_type(words[i]);
+        if (!other_input_type)
+            return tl::make_unexpected(other_input_type.error());
+        if (*input_type != *other_input_type)
+            return tl::make_unexpected(fmt::format(
+                "INPUT functions cannot have different parameters types. Found {} and {}.",
+                cpp_type_as_string(*input_type),
+                cpp_type_as_string(*other_input_type)
+            ));
+    }
+
+    return FunctionSignature{
+        .from  = *input_type,
+        .to    = *output_type,
+        .arity = words.size() - 1,
+    };
+}
+
+static auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     static constexpr auto input_keyword = "INPUT"sv;
@@ -304,34 +344,48 @@ auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& re
         if (end_of_line == std::string::npos)
             return error_message("missing semicolon (;)");
 
-        auto const type_pos = Cool::String::find_next_word_position(text, offset);
-        if (!type_pos || type_pos->second > end_of_line)
-            return error_message("missing type");
-
         auto const name_pos = Cool::String::find_matching_pair({
             .text    = text,
-            .offset  = type_pos->second,
+            .offset  = offset,
             .opening = '`',
             .closing = '`',
         });
         if (!name_pos || name_pos->second > end_of_line)
             return error_message("missing name. A name must start and end with backticks (`)");
 
-        auto const type = Cool::String::substring(text, *type_pos);
         auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
 
-        try
+        auto const type_words = Cool::String::all_words(Cool::String::substring(text, offset, name_pos->first));
+
+        if (type_words.empty())
+            return error_message("missing type");
+
+        if (type_words.size() == 1)
         {
-            res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
-                Cool::InputDefinition,
-                type,
-                Cool::AnyInputDefinition,
-                (name)
-            ));
+            try
+            {
+                res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
+                    Cool::InputDefinition,
+                    type_words[0],
+                    Cool::AnyInputDefinition,
+                    (name)
+                ));
+            }
+            catch (std::exception const& e)
+            {
+                return error_message(fmt::format("{}\n", e.what()));
+            }
         }
-        catch (std::exception const& e)
+        else
         {
-            return error_message(fmt::format("{}\n", e.what()));
+            auto const signature = parse_signature(type_words);
+            if (!signature)
+                return error_message(fmt::format("{}\n", signature.error()));
+
+            res.inputs.emplace_back(NodeInputDefinition_Data{
+                .name      = name,
+                .signature = *signature,
+            });
         }
 
         offset = text.find(input_keyword, end_of_line + 1);
