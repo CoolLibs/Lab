@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <exception>
 #include <iterator>
+#include <optional>
 #include <string>
 #include <vector>
 #include "Cool/Dependencies/InputDefinition.h"
@@ -13,6 +14,7 @@
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/PrimitiveType.h"
+#include "stringify/stringify.hpp"
 #include "tl/expected.hpp"
 
 namespace Lab {
@@ -409,6 +411,53 @@ static auto find_inputs_and_properties(std::string const& text, NodeDefinition_D
     return std::nullopt;
 }
 
+static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
+    -> std::optional<std::string>
+{
+    // TODO(JF) Refactor duplicated code with find_inputs_and_properties()
+    static constexpr auto output_keyword = "OUTPUT"sv;
+
+    size_t offset = text.find(output_keyword);
+    while (offset != std::string::npos)
+    {
+        offset += output_keyword.length();
+        auto const end_of_line = text.find(';', offset);
+
+        auto const error_message = [&](std::string_view str) {
+            return fmt::format("Invalid OUTPUT declaration: {}. While reading:\n{}", str, Cool::String::substring(text, offset - output_keyword.length(), end_of_line != std::string::npos ? end_of_line + 1 : text.length()));
+        };
+
+        if (end_of_line == std::string::npos)
+            return error_message("missing semicolon (;)");
+
+        auto const name_pos = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = offset,
+            .opening = '`',
+            .closing = '`',
+        });
+        if (!name_pos || name_pos->second > end_of_line)
+            return error_message("missing name. A name must start and end with backticks (`)");
+
+        auto const type_words = Cool::String::all_words(Cool::String::substring(text, offset, name_pos->first));
+
+        if (type_words.empty())
+            return error_message("missing type");
+        if (type_words.size() > 1)
+            return error_message(fmt::format("too many words; expected a type declaration, got {}", Cool::stringify(type_words)));
+        if (type_words[0] != "float")
+            return error_message(fmt::format("invalid type. 'float' is the only allowed OUTPUT type. Found '{}'", type_words[0]));
+        {
+            auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
+            res.output_indices.emplace_back(name);
+        }
+
+        offset = text.find(output_keyword, end_of_line + 1);
+    }
+
+    return std::nullopt;
+}
+
 auto parse_node_definition(std::filesystem::path const& filepath, std::string text)
     -> tl::expected<NodeDefinition, std::string>
 {
@@ -428,6 +477,11 @@ auto parse_node_definition(std::filesystem::path const& filepath, std::string te
     }
     {
         auto const err = find_inputs_and_properties(text, res);
+        if (err)
+            return tl::make_unexpected(*err);
+    }
+    {
+        auto const err = find_outputs(text, res);
         if (err)
             return tl::make_unexpected(*err);
     }

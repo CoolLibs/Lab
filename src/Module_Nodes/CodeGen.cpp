@@ -301,7 +301,7 @@ static auto check_there_are_no_backticks_left(std::string const& code, std::stri
         return "A backtick (`) has no matching closing backtick. Did you make a typo?";
 
     return fmt::format(
-        "\"{}\" is not a valid input name. Here are all the inputs you defined:\n{}",
+        "\"{}\" is not an input or output that you declared. Here are all the names you declared:\n{}",
         Cool::String::substring(code, pos, pos2 + 1),
         input_names_list
     );
