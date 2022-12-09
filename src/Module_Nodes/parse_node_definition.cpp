@@ -6,6 +6,7 @@
 #include <iterator>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Log/Debug.h"
@@ -363,19 +364,18 @@ static auto parse_input(std::vector<std::string> const& type_words, std::string 
     return std::nullopt;
 }
 
-static auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
+template<typename Callable>
+static auto find_declaration(std::string const& text, std::string_view keyword, Callable&& handle_type_words)
     -> std::optional<std::string>
 {
-    static constexpr auto input_keyword = "INPUT"sv;
-
-    size_t offset = text.find(input_keyword);
+    size_t offset = text.find(keyword);
     while (offset != std::string::npos)
     {
-        offset += input_keyword.length();
+        offset += keyword.length();
         auto const end_of_line = text.find(';', offset);
 
         auto const error_message = [&](std::string_view str) {
-            return fmt::format("Invalid INPUT declaration: {}. While reading:\n{}", str, Cool::String::substring(text, offset - input_keyword.length(), end_of_line != std::string::npos ? end_of_line + 1 : text.length()));
+            return fmt::format("Invalid {} declaration: {}. While reading:\n{}", keyword, str, Cool::String::substring(text, offset - keyword.length(), end_of_line != std::string::npos ? end_of_line + 1 : text.length()));
         };
 
         if (end_of_line == std::string::npos)
@@ -390,72 +390,54 @@ static auto find_inputs_and_properties(std::string const& text, NodeDefinition_D
         if (!name_pos || name_pos->second > end_of_line)
             return error_message("missing name. A name must start and end with backticks (`)");
 
-        auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
-
         auto const type_words = Cool::String::all_words(Cool::String::substring(text, offset, name_pos->first));
 
         if (type_words.empty())
             return error_message("missing type");
 
         {
-            auto const err = type_words.size() == 1
-                                 ? parse_property(type_words[0], name, res)
-                                 : parse_input(type_words, name, res);
+            auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
+
+            auto const err = handle_type_words(type_words, name);
             if (err)
                 return error_message(fmt::format("{}\n", *err));
         }
 
-        offset = text.find(input_keyword, end_of_line + 1);
+        offset = text.find(keyword, end_of_line + 1);
     }
 
     return std::nullopt;
 }
 
+static auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
+    -> std::optional<std::string>
+{
+    return find_declaration(
+        text,
+        "INPUT",
+        [&](std::vector<std::string> const& type_words, std::string const& name) -> std::optional<std::string> {
+            return type_words.size() == 1
+                       ? parse_property(type_words[0], name, res)
+                       : parse_input(type_words, name, res);
+        }
+    );
+}
+
 static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
-    // TODO(JF) Refactor duplicated code with find_inputs_and_properties()
-    static constexpr auto output_keyword = "OUTPUT"sv;
-
-    size_t offset = text.find(output_keyword);
-    while (offset != std::string::npos)
-    {
-        offset += output_keyword.length();
-        auto const end_of_line = text.find(';', offset);
-
-        auto const error_message = [&](std::string_view str) {
-            return fmt::format("Invalid OUTPUT declaration: {}. While reading:\n{}", str, Cool::String::substring(text, offset - output_keyword.length(), end_of_line != std::string::npos ? end_of_line + 1 : text.length()));
-        };
-
-        if (end_of_line == std::string::npos)
-            return error_message("missing semicolon (;)");
-
-        auto const name_pos = Cool::String::find_matching_pair({
-            .text    = text,
-            .offset  = offset,
-            .opening = '`',
-            .closing = '`',
-        });
-        if (!name_pos || name_pos->second > end_of_line)
-            return error_message("missing name. A name must start and end with backticks (`)");
-
-        auto const type_words = Cool::String::all_words(Cool::String::substring(text, offset, name_pos->first));
-
-        if (type_words.empty())
-            return error_message("missing type");
-        if (type_words.size() > 1)
-            return error_message(fmt::format("too many words; expected a type declaration, got {}", Cool::stringify(type_words)));
-        if (type_words[0] != "float")
-            return error_message(fmt::format("invalid type. 'float' is the only allowed OUTPUT type. Found '{}'", type_words[0]));
-        {
-            auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
+    return find_declaration(
+        text,
+        "OUTPUT",
+        [&](std::vector<std::string> const& type_words, std::string const& name) -> std::optional<std::string> {
+            if (type_words.size() > 1)
+                return fmt::format("too many words; expected a type declaration, got {}", Cool::stringify(type_words));
+            if (type_words[0] != "float")
+                return fmt::format("invalid type. 'float' is the only allowed OUTPUT type. Found '{}'", type_words[0]);
             res.output_indices.emplace_back(name);
+            return std::nullopt;
         }
-
-        offset = text.find(output_keyword, end_of_line + 1);
-    }
-
-    return std::nullopt;
+    );
 }
 
 auto parse_node_definition(std::filesystem::path const& filepath, std::string text)
