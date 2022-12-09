@@ -1,0 +1,16 @@
+
+INPUT float `Nb cells`;
+
+OUTPUT float `X Index`;
+OUTPUT float `Y Index`;
+
+UV main(UV uv)
+{
+    vec2 guv = fract(uv / `Nb cells`) * `Nb cells`;
+    vec2 gid = floor(uv / `Nb cells`) * `Nb cells`;
+
+    `X Index` = gid.x;
+    `Y Index` = gid.y;
+
+    return guv;
+}

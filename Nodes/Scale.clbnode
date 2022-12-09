@@ -1,0 +1,7 @@
+
+INPUT float `Scale`;
+
+Any main(Any x)
+{
+    return x * `Scale`;
+}
