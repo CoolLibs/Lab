@@ -6,11 +6,11 @@ OUTPUT float `Y Index`;
 
 UV main(UV uv)
 {
-    vec2 guv = fract(uv / `Nb cells`) * `Nb cells`;
-    vec2 gid = floor(uv / `Nb cells`) * `Nb cells`;
+    uv = unnormalize_uv_with_aspect_ratio(uv, 1.) * `Nb cells`;
 
+    vec2 gid    = floor(uv);
     `X Index` = gid.x;
     `Y Index` = gid.y;
 
-    return guv;
+    return normalize_uv_with_aspect_ratio(fract(uv), 1.);
 }

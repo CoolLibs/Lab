@@ -3,6 +3,7 @@
 #include "CodeGen_default_function.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/PrimitiveType.h"
+#include "tl/expected.hpp"
 
 // TODO(JF) test all of these, to make sure overload resolution doesn't change when we add options
 
@@ -44,7 +45,7 @@ public:
     {
         return gen_desired_function(
             _signature,
-            context.graph().input_node_id(pin.id()),
+            pin,
             context
         );
     }
@@ -61,15 +62,11 @@ public:
     auto gen_func(Cool::InputPin const& pin, CodeGenContext& context) const
         -> ExpectedFunctionName
     {
-        auto const node_id = context.graph().input_node_id(pin.id());
-
-        if (!context.graph().nodes().contains(node_id))
-            return ""; // The default behaviour of gen_desired_function() when there is no input node is to try to generate a default function, which is not what we want in the case of this strategy. This is what differentiates it from TransformationStrategy_UseInputNode
-
         return gen_desired_function(
             _signature,
-            node_id,
-            context
+            pin,
+            context,
+            false /*fallback_to_a_default_function*/ // The default behavior of gen_desired_function() when there is no input node is to try to generate a default function, which is not what we want in the case of this strategy. This is what differentiates it from TransformationStrategy_UseInputNode
         );
     }
 

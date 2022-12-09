@@ -4,10 +4,12 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
+#include <optional>
 #include <string>
 #include "CodeGenContext.h"
 #include "CodeGen_default_function.h"
 #include "CodeGen_desired_function_implementation.h"
+#include "Cool/Nodes/Pin.h"
 #include "Function.h"
 #include "FunctionSignature.h"
 #include "Module_Nodes/FunctionSignature.h"
@@ -191,6 +193,7 @@ static auto gen_properties(
 
                 auto const input_func_name = gen_desired_function(
                     {.from = PrimitiveType::Void, .to = *property_type, .arity = 0},
+                    *node,
                     input_node_id,
                     context
                 );
@@ -340,6 +343,7 @@ static auto gen_inputs(
         {
             auto const func_name = gen_desired_function(
                 input.signature(),
+                input_node,
                 input_node_id,
                 context
             );
@@ -458,24 +462,109 @@ static auto make_default_parameter_names(size_t arity)
     return res;
 }
 
+static auto gen_output_function(Cool::OutputPin const& pin, CodeGenContext& context)
+    -> ExpectedFunctionName
+{
+    auto const output_name = make_valid_output_index_name(pin);
+    auto const func_name   = fmt::format("get{}", output_name);
+
+    return context.push_function({
+        .name           = func_name,
+        .implementation = fmt::format(
+            R"STR(
+float {}/*coollabdef*/()
+{{
+    return {};
+}}
+)STR",
+            func_name, output_name
+        ),
+    });
+}
+
+auto gen_desired_function(
+    FunctionSignature     desired_signature,
+    Cool::InputPin const& pin,
+    CodeGenContext&       context,
+    bool                  fallback_to_a_default_function
+) -> ExpectedFunctionName
+{
+    Cool::OutputPin output_pin;
+    auto const      node_id = context.graph().input_node_id(pin.id(), &output_pin);
+    auto const      node    = context.graph().nodes().get(node_id);
+
+    if (node && output_pin != node->main_output_pin())
+    // We are plugged to an ouput index, use that to generate a constant function.
+    {
+        return gen_output_function(output_pin, context);
+    }
+
+    return gen_desired_function(
+        desired_signature,
+        node,
+        node_id,
+        context,
+        fallback_to_a_default_function
+    );
+}
+
 auto gen_desired_function(
     FunctionSignature   desired_signature,
+    Cool::NodeId const& id,
+    CodeGenContext&     context,
+    bool                fallback_to_a_default_function
+) -> ExpectedFunctionName
+{
+    auto const maybe_node = context.graph().nodes().get(id);
+
+    return gen_desired_function(
+        desired_signature,
+        maybe_node,
+        id,
+        context,
+        fallback_to_a_default_function
+    );
+}
+
+auto gen_desired_function(
+    FunctionSignature          desired_signature,
+    std::optional<Node> const& maybe_node,
+    Cool::NodeId const&        id,
+    CodeGenContext&            context,
+    bool                       fallback_to_a_default_function
+) -> ExpectedFunctionName
+{
+    if (!maybe_node)
+    {
+        if (!fallback_to_a_default_function)
+            return "";
+
+        return gen_default_function(desired_signature, context);
+    }
+
+    return gen_desired_function(
+        desired_signature,
+        *maybe_node,
+        id,
+        context
+    );
+}
+
+auto gen_desired_function(
+    FunctionSignature   desired_signature,
+    Node const&         node,
     Cool::NodeId const& id,
     CodeGenContext&     context
 ) -> ExpectedFunctionName
 {
-    auto const node = context.graph().nodes().get(id);
-    if (!node) // Use a default function if no node is currently plugged in
-        return gen_default_function(desired_signature, context);
-
-    auto const node_definition = context.get_node_definition(node->definition_name()); // NOLINT(readability-qualified-auto)
+    auto const node_definition = context.get_node_definition(node.definition_name()); // NOLINT(readability-qualified-auto)
     if (!node_definition)
         return tl::make_unexpected(fmt::format(
             "Node definition \"{}\" was not found. Are you missing a file in your nodes folder?",
-            node->definition_name()
+            node.definition_name()
         ));
 
-    auto const base_function_name = gen_base_function(*node, *node_definition, id, context);
+    auto const base_function_name = gen_base_function(node, *node_definition, id, context);
     if (!base_function_name)
         return tl::make_unexpected(fmt::format(
             "Failed to generate code for node \"{}\":\n{}",
@@ -483,10 +572,10 @@ auto gen_desired_function(
         ));
 
     auto const func_body = gen_desired_function_implementation(
-        concrete_signature(*node_definition, *node),
+        concrete_signature(*node_definition, node),
         desired_signature,
         *base_function_name,
-        *node,
+        node,
         context
     );
     if (!func_body)

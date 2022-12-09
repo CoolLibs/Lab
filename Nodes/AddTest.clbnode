@@ -2,7 +2,7 @@ INPUT float `my_input`;
 
 float main(float x)
 {
-    return add(x, 1.);
+    return add(x, `my_input`);
 }
 
 float add(float x, float y)
