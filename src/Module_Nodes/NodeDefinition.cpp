@@ -1,18 +1,20 @@
 #include "NodeDefinition.h"
 #include <Cool/String/String.h>
+#include "Cool/Variables/PresetManager.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "tl/expected.hpp"
 
 namespace Lab {
 
-NodeDefinition::NodeDefinition(NodeDefinition_Data const& data)
+NodeDefinition::NodeDefinition(NodeDefinition_Data const& data, std::filesystem::path const& presets_file_path)
     : _data{data}
+    , _presets_manager(std::make_shared<Cool::PresetManager>(presets_file_path))
 {}
 
-auto NodeDefinition::make(NodeDefinition_Data const& data)
+auto NodeDefinition::make(NodeDefinition_Data const& data, std::filesystem::path const& presets_file_path)
     -> tl::expected<NodeDefinition, std::string>
 {
-    auto def = NodeDefinition{data};
+    auto def = NodeDefinition{data, presets_file_path};
     // TODO(JF) Refactor that code duplicated with NodeInputDefinition.cpp
     // Check that the property names are valid, and remove the backticks from them.
     for (auto& prop : def._data.properties)

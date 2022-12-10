@@ -1,6 +1,7 @@
 #include "Module_Nodes.h"
 #include <Cool/StrongTypes/set_uniform.h>
 #include "Common/make_shader_compilation_error_message.h"
+#include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Debug/DebugOptions.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
@@ -72,7 +73,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    if (_nodes_editor.imgui_window(NodesConfig{ui.input_factory(), ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag}, _nodes_library))
+    if (_nodes_editor.imgui_window(NodesConfig{ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag}, _nodes_library))
         ui.set_dirty(_regenerate_code_flag);
 
     ImGui::Begin("Nodes Code");

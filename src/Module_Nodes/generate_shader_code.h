@@ -9,7 +9,7 @@ namespace Lab {
 auto generate_shader_code(
     Cool::NodeId const& main_node_id,
     Graph const&,
-    Cool::GetNodeDefinition_Ref<NodeDefinition> const&,
+    Cool::GetNodeDefinition_Ref<NodeDefinition>,
     Cool::InputProvider_Ref
 ) -> tl::expected<std::string, std::string>;
 

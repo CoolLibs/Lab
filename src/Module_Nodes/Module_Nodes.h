@@ -33,7 +33,7 @@ private:
     mutable std::string                    _shader_code{};
     FullscreenShader                       _shader{};
     mutable Cool::NodesEditor<NodesConfig> _nodes_editor{"Nodes Editor"};
-    NodesLibrary                           _nodes_library{};
+    mutable NodesLibrary                                             _nodes_library{};
     mutable /*TODO(JF) remove the mutable*/ Cool::NodesFolderWatcher _nodes_folder_watcher{Cool::Path::root() / "Nodes"};
     mutable Cool::NodeId                   _main_node_id{};
     Cool::DirtyFlag                        _regenerate_code_flag;

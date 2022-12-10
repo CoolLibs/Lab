@@ -34,10 +34,10 @@ static auto inject_context_argument_in_all_functions(std::string code, std::vect
 }
 
 auto generate_shader_code(
-    Cool::NodeId const&                                main_node_id,
-    Graph const&                                       graph,
-    Cool::GetNodeDefinition_Ref<NodeDefinition> const& get_node_definition,
-    Cool::InputProvider_Ref                            input_provider
+    Cool::NodeId const&                         main_node_id,
+    Graph const&                                graph,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Cool::InputProvider_Ref                     input_provider
 )
     -> tl::expected<std::string, std::string>
 {

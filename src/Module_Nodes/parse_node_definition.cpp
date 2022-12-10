@@ -440,7 +440,7 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
     );
 }
 
-auto parse_node_definition(std::filesystem::path const& filepath, std::string text)
+auto parse_node_definition(std::filesystem::path filepath, std::string text)
     -> tl::expected<NodeDefinition, std::string>
 {
 #if DEBUG
@@ -468,7 +468,11 @@ auto parse_node_definition(std::filesystem::path const& filepath, std::string te
             return tl::make_unexpected(*err);
     }
 
-    return NodeDefinition::make(convert_rgb_transform_to_rgba(res));
+    filepath += ".presets.json";
+    return NodeDefinition::make(
+        convert_rgb_transform_to_rgba(res),
+        filepath
+    );
 }
 
 } // namespace Lab

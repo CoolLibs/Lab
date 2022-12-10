@@ -2,6 +2,8 @@
 
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputDefinition.h>
+#include <memory>
+#include "Cool/Variables/PresetManager.h"
 #include "FunctionSignature.h"
 #include "NodeInputDefinition.h"
 #include "tl/expected.hpp"
@@ -31,7 +33,7 @@ struct NodeDefinition_Data {
 
 class NodeDefinition {
 public:
-    static auto make(NodeDefinition_Data const&) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
+    static auto make(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
         -> tl::expected<NodeDefinition, std::string>;
 
     auto name() const -> auto const& { return _data.main_function.name; }
@@ -43,11 +45,14 @@ public:
     auto output_indices() const -> auto const& { return _data.output_indices; }
     auto helper_functions() const -> auto const& { return _data.helper_functions; }
 
+    auto imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
+
 private:
-    explicit NodeDefinition(NodeDefinition_Data const&); // Use NodeDefinition::make() to create a NodeDefinition
+    NodeDefinition(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path); // Use NodeDefinition::make() to create a NodeDefinition
 
 private:
     NodeDefinition_Data _data;
+    std::shared_ptr<Cool::PresetManager> _presets_manager; // TODO(JF) Make this a gsl::not_null
 };
 
 } // namespace Lab
