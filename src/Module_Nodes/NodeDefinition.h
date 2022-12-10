@@ -45,6 +45,7 @@ public:
     auto output_indices() const -> auto const& { return _data.output_indices; }
     auto helper_functions() const -> auto const& { return _data.helper_functions; }
 
+    auto presets_manager() const -> auto const& { return *_presets_manager; }
     auto imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
 
 private:
