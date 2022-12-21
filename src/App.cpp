@@ -99,10 +99,6 @@ void App::update()
         set_dirty_flag()(_nodes_module->dirty_flag());
         // set_dirty_flag()(_custom_shader_module->dirty_flag());
     }
-    if (_nodes_view.render_target.needs_resizing())
-    {
-        set_dirty_flag()(_nodes_module->dirty_flag());
-    }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {
     // set_dirty_flag()(_custom_shader_module->dirty_flag());
@@ -179,6 +175,9 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 
 void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
 {
+    if (render_target.needs_resizing())
+        set_dirty_flag()(_nodes_module->dirty_flag());
+
     if (!_nodes_module->is_dirty(is_dirty__functor()))
         return;
 
