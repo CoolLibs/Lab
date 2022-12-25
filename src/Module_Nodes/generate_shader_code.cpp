@@ -59,6 +59,7 @@ out vec4      out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
+#include "_COOL_RES_/shaders/color_conversions.glsl"
 
 struct CoollabContext
 {{
@@ -76,6 +77,7 @@ void main()
     coollab_context.uv = uv;
     out_Color = {main_function_name}(coollab_context, uv);
     out_Color.rgb /= out_Color.a; // Output straight alpha
+    out_Color.rgb = Cool_linear_to_sRGB(out_Color.rgb);
 }}
 
 )STR"
