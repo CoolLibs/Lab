@@ -16,7 +16,7 @@ def all_primitive_types():
     ###
     # NB: The order of definition is important; it corresponds to the order the types will appear in in the dropdown of template node
     ###
-    return [
+    res = [
         PrimitiveType(
             cpp="Int",
             user_facing_name="Int",
@@ -106,6 +106,72 @@ def all_primitive_types():
             can_be_a_template_type=False,
         ),
     ]
+
+    res.extend(primitive_types_for_color_spaces())
+
+    return res
+
+
+@dataclass
+class ColorSpace:
+    name_in_code: str
+    user_facing_name: str
+
+
+def color_spaces():
+    return [
+        ColorSpace(
+            name_in_code="sRGB",
+            user_facing_name="sRGB",
+        ),
+        ColorSpace(
+            name_in_code="LinearRGB",
+            user_facing_name="Linear RGB",
+        ),
+        ColorSpace(
+            name_in_code="CIELAB",
+            user_facing_name="CIELAB",
+        ),
+        ColorSpace(
+            name_in_code="HSLuv",
+            user_facing_name="HSLuv",
+        ),
+    ]
+
+
+def primitive_types_for_color_spaces() -> List[PrimitiveType]:
+    res = []
+
+    for color_space in color_spaces():
+        # No alpha
+        res.append(PrimitiveType(
+            cpp=color_space.name_in_code,
+            user_facing_name=color_space.user_facing_name,
+            corresponding_input_types=[],
+            glsl="vec3",
+            parsed_from=color_space.name_in_code,
+            can_be_a_template_type=False,
+        ))
+        # Premultiplied alpha
+        res.append(PrimitiveType(
+            cpp=color_space.name_in_code + "_PremultipliedA",
+            user_facing_name=color_space.user_facing_name + ", Premultiplied Alpha",
+            corresponding_input_types=[],
+            glsl="vec4",
+            parsed_from=color_space.name_in_code + "_PremultipliedA",
+            can_be_a_template_type=False,
+        ))
+        # Straight alpha
+        res.append(PrimitiveType(
+            cpp=color_space.name_in_code + "_StraightA",
+            user_facing_name=color_space.user_facing_name + ", Straight Alpha",
+            corresponding_input_types=[],
+            glsl="vec4",
+            parsed_from=color_space.name_in_code + "_StraightA",
+            can_be_a_template_type=False,
+        ))
+
+    return res
 
 
 def primitive_types_enum_members():

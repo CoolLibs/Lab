@@ -13,4 +13,16 @@ R"STR(  - int
   - RGBA
   - UV
   - SignedDistance
-  - Any)STR"
+  - Any
+  - sRGB
+  - sRGB_PremultipliedA
+  - sRGB_StraightA
+  - LinearRGB
+  - LinearRGB_PremultipliedA
+  - LinearRGB_StraightA
+  - CIELAB
+  - CIELAB_PremultipliedA
+  - CIELAB_StraightA
+  - HSLuv
+  - HSLuv_PremultipliedA
+  - HSLuv_StraightA)STR"

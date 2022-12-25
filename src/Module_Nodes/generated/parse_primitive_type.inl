@@ -44,3 +44,51 @@ if (str == "Any")
 {
     return PrimitiveType::Any;
 }
+if (str == "sRGB")
+{
+    return PrimitiveType::sRGB;
+}
+if (str == "sRGB_PremultipliedA")
+{
+    return PrimitiveType::sRGB_PremultipliedA;
+}
+if (str == "sRGB_StraightA")
+{
+    return PrimitiveType::sRGB_StraightA;
+}
+if (str == "LinearRGB")
+{
+    return PrimitiveType::LinearRGB;
+}
+if (str == "LinearRGB_PremultipliedA")
+{
+    return PrimitiveType::LinearRGB_PremultipliedA;
+}
+if (str == "LinearRGB_StraightA")
+{
+    return PrimitiveType::LinearRGB_StraightA;
+}
+if (str == "CIELAB")
+{
+    return PrimitiveType::CIELAB;
+}
+if (str == "CIELAB_PremultipliedA")
+{
+    return PrimitiveType::CIELAB_PremultipliedA;
+}
+if (str == "CIELAB_StraightA")
+{
+    return PrimitiveType::CIELAB_StraightA;
+}
+if (str == "HSLuv")
+{
+    return PrimitiveType::HSLuv;
+}
+if (str == "HSLuv_PremultipliedA")
+{
+    return PrimitiveType::HSLuv_PremultipliedA;
+}
+if (str == "HSLuv_StraightA")
+{
+    return PrimitiveType::HSLuv_StraightA;
+}
