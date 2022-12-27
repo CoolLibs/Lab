@@ -216,12 +216,20 @@ def implicit_color_conversions():
                         vec3 to = {color_conversion}(from);
                         return to;
                     ''')
-                case _, "":
-                    continue  # Cannot lose alpha information
-                case "", _:
+                case _, "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
+                    gen_code(in_vec="vec4", out_vec="vec3", implementation=f'''
+                        vec3 to = {color_conversion}(from.xyz);
+                        return to;
+                    ''')
+                case "", "_StraightA":
                     gen_code(in_vec="vec3", out_vec="vec4", implementation=f'''
                         vec3 to = {color_conversion}(from);
-                        return vec4(to, 1.);
+                        return vec4(to, coollab_context.alpha);
+                    ''')
+                case "", "_PremultipliedA":
+                    gen_code(in_vec="vec3", out_vec="vec4", implementation=f'''
+                        vec3 to = {color_conversion}(from);
+                        return vec4(to, 1.) * coollab_context.alpha;
                     ''')
                 case "_StraightA", "_StraightA":
                     gen_code(in_vec="vec4", out_vec="vec4", implementation=f'''
@@ -244,6 +252,16 @@ def implicit_color_conversions():
                         vec3 to = {color_conversion}(from.xyz);
                         return vec4(to * from.a, from.a);
                     ''')
+    return res
+
+
+def has_an_alpha_channel():
+    res = ""
+    for color_space in color_spaces():
+        res += f"case PrimitiveType::{color_space.name_in_code}_StraightA:\n"
+        res += f"case PrimitiveType::{color_space.name_in_code}_PremultipliedA:\n"
+
+    res += "return true;"
     return res
 
 def primitive_types_enum_members():
@@ -373,5 +391,6 @@ if __name__ == '__main__':
             parse_primitive_type,
             string_listing_the_parsed_types,
             implicit_color_conversions,
+            has_an_alpha_channel,
         ],
     )

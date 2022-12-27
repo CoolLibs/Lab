@@ -174,6 +174,16 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
     return res;
 }
 
+static auto has_an_alpha_channel(PrimitiveType type) -> bool
+{
+    switch (type)
+    {
+#include "generated/has_an_alpha_channel.inl"
+    default:
+        return false;
+    }
+}
+
 auto gen_desired_function_implementation(
     FunctionSignature current,
     FunctionSignature desired,
@@ -205,22 +215,28 @@ auto gen_desired_function_implementation(
         return output_transformation_name;
 
     auto const call_base_function = fmt::format(
-        FMT_COMPILE("{implicit_output_conversion}({base_function}({inputs}))"),
-        "base_function"_a              = base_function_name,
-        "inputs"_a                     = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity, implicit_conversions.input.value_or("")),
-        "implicit_output_conversion"_a = implicit_conversions.output.value_or("")
+        FMT_COMPILE("{base_function}({inputs})"),
+        "base_function"_a = base_function_name,
+        "inputs"_a        = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity, implicit_conversions.input.value_or(""))
     );
 
-    auto const is_uv_transformation = current.from == PrimitiveType::UV && current.to == PrimitiveType::UV; // Don't take arity into account, a blend of two UVs would be acceptable too.
-return fmt::format(
-    FMT_COMPILE(R"STR(
-{modify_uvs}
-return {transform_output}({base_function_output});
+    auto const does_output_uv = current.to == PrimitiveType::UV
+                                || (current.to == PrimitiveType::Vec2 && desired.to == PrimitiveType::UV); // In case we want to output UV and implicitly convert from vec2, we want that transformation to apply to our global UV.
+    auto const does_output_alpha = has_an_alpha_channel(current.to);
+    return fmt::format(
+        FMT_COMPILE(R"STR(
+{store_uv}
+{store_alpha}
+return {transform_output}({implicit_output_conversion}({base_function_output}));
 )STR"),
-    "modify_uvs"_a           = is_uv_transformation ? fmt::format("coollab_context.uv = {};", call_base_function) : "",
-    "base_function_output"_a = is_uv_transformation ? "coollab_context.uv" : call_base_function,
-    "transform_output"_a     = *output_transformation_name
-);
+        "store_uv"_a                   = does_output_uv ? fmt::format("coollab_context.uv = {};", call_base_function) : "",
+        "store_alpha"_a                = does_output_alpha ? fmt::format("vec4 color = {}; coollab_context.alpha = color.a;", call_base_function) : "",
+        "base_function_output"_a       = does_output_uv      ? "coollab_context.uv"
+                                         : does_output_alpha ? "color"
+                                                             : call_base_function,
+        "transform_output"_a           = *output_transformation_name,
+        "implicit_output_conversion"_a = implicit_conversions.output.value_or("")
+    );
 }
 
 } // namespace Lab
