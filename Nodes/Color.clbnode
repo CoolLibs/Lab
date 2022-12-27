@@ -1,0 +1,7 @@
+
+INPUT StraightRGBA `Color`;
+
+sRGB_StraightA main()
+{
+    return `Color`;
+}

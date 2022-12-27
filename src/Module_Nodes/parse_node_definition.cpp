@@ -237,29 +237,31 @@ static auto check_that_helper_functions_dont_use_the_any_type(std::vector<Functi
 static auto convert_rgb_transform_to_rgba(NodeDefinition_Data definition)
     -> NodeDefinition_Data
 {
-    if (definition.main_function.signature.signature != Signature::RGBTransformation)
-        return definition;
-
-    auto const base_name = fmt::format("RGB{}", definition.main_function.name);
-    definition.helper_functions.push_back(FunctionPieces{
-        .name      = base_name,
-        .signature = make_complete_function_signature(definition.main_function.signature),
-        .body      = definition.main_function.body,
-    });
-
-    definition.main_function.signature.signature = Signature::RGBATransformation;
-    definition.main_function.body                = fmt::format(
-        R"STR(
-    if (in1.a < 0.000001)
-        return in1;
-    vec3 rgb = in1.rgb / in1.a;
-    rgb      = {}(rgb);
-    return vec4(rgb * in1.a, in1.a);
-)STR",
-        base_name
-    );
-
+    // TODO(JF)
     return definition;
+    //     if (definition.main_function.signature.signature != Signature::RGBTransformation)
+    //         return definition;
+
+    //     auto const base_name = fmt::format("RGB{}", definition.main_function.name);
+    //     definition.helper_functions.push_back(FunctionPieces{
+    //         .name      = base_name,
+    //         .signature = make_complete_function_signature(definition.main_function.signature),
+    //         .body      = definition.main_function.body,
+    //     });
+
+    //     definition.main_function.signature.signature = Signature::RGBATransformation;
+    //     definition.main_function.body                = fmt::format(
+    //         R"STR(
+    //     if (in1.a < 0.000001)
+    //         return in1;
+    //     vec3 rgb = in1.rgb / in1.a;
+    //     rgb      = {}(rgb);
+    //     return vec4(rgb * in1.a, in1.a);
+    // )STR",
+    //         base_name
+    //     );
+
+    //     return definition;
 }
 
 static auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)

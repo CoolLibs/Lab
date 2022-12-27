@@ -24,14 +24,6 @@ if (str == "vec4")
 {
     return PrimitiveType::Vec4;
 }
-if (str == "RGB")
-{
-    return PrimitiveType::RGB;
-}
-if (str == "RGBA")
-{
-    return PrimitiveType::RGBA;
-}
 if (str == "UV")
 {
     return PrimitiveType::UV;
@@ -39,6 +31,14 @@ if (str == "UV")
 if (str == "SignedDistance")
 {
     return PrimitiveType::SignedDistance;
+}
+if (str == "Angle")
+{
+    return PrimitiveType::Angle;
+}
+if (str == "Direction2D")
+{
+    return PrimitiveType::Direction2D;
 }
 if (str == "Any")
 {

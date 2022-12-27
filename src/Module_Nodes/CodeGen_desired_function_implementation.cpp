@@ -1,11 +1,13 @@
 #include "CodeGen_desired_function_implementation.h"
+#include <string>
 #include "CodeGen.h"
 #include "CodeGen_default_function.h"
+#include "CodeGen_implicit_conversion.h"
+#include "Module_Nodes/CodeGenContext.h"
+#include "Module_Nodes/CodeGen_implicit_conversion.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/PrimitiveType.h"
 #include "tl/expected.hpp"
-
-// TODO(JF) test all of these, to make sure overload resolution doesn't change when we add options
 
 namespace Lab {
 
@@ -102,8 +104,9 @@ private:
 } // namespace
 
 static auto input_transformation(
-    FunctionSignature current,
-    FunctionSignature desired
+    FunctionSignature          current,
+    FunctionSignature          desired,
+    ImplicitConversions const& implicit_conversions
 ) -> TransformationStrategy
 {
     auto const signature = FunctionSignature{
@@ -112,10 +115,10 @@ static auto input_transformation(
         .arity = desired.from != PrimitiveType::Void ? 1u : 0u,
     };
 
-    if (current.from != desired.from) // Input needs to be converted in order to have the right type
+    if (!implicit_conversions.input) // Input needs to be converted in order to have the right type
         return {TransformationStrategy_UseInputNode{signature}};
 
-    if (current.to == desired.to) // Input pin is not used to convert output, so we will still apply it to our input so that it is used somewhere
+    if (implicit_conversions.output) // Input pin is not used to convert output, so we will still apply it to our input so that it is used somewhere
         return {TransformationStrategy_UseInputNodeIfItExists{signature}};
 
     // Input pin is used elsewhere and we don't need it here, so use nothing
@@ -123,11 +126,12 @@ static auto input_transformation(
 }
 
 static auto output_transformation(
-    FunctionSignature current,
-    FunctionSignature desired
+    FunctionSignature          current,
+    FunctionSignature          desired,
+    ImplicitConversions const& implicit_conversions
 ) -> TransformationStrategy
 {
-    if (current.to == desired.to)
+    if (implicit_conversions.output)
         // We don't need to convert the output
         return {TransformationStrategy_DoNothing{}};
 
@@ -137,7 +141,7 @@ static auto output_transformation(
         .arity = current.to != PrimitiveType::Void ? 1u : 0u,
     };
 
-    if (current.from != desired.from)
+    if (!implicit_conversions.input)
         // Use a default function because the input pin is already used to convert the inputs
         return {TransformationStrategy_UseDefaultFunction{signature}};
 
@@ -154,7 +158,7 @@ static auto argument_name(size_t i, size_t desired_arity)
     return fmt::format("in{}", std::min(i + 1u, desired_arity));
 }
 
-static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, size_t current_arity, size_t desired_arity) -> std::string
+static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, size_t current_arity, size_t desired_arity, std::string const& implicit_conversion) -> std::string
 {
     assert(transforms_names.size() == current_arity);
 
@@ -162,7 +166,7 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
 
     for (size_t i = 0; i < current_arity; ++i)
     {
-        res += fmt::format("{}({})", transforms_names[i], argument_name(i, desired_arity));
+        res += fmt::format("{}({}({}))", transforms_names[i], implicit_conversion, argument_name(i, desired_arity));
         if (i != current_arity - 1)
             res += ", ";
     }
@@ -181,11 +185,13 @@ auto gen_desired_function_implementation(
 {
     using fmt::literals::operator""_a;
 
+    auto const implicit_conversions = gen_implicit_conversions(current, desired, context);
+
     auto input_transformation_names = std::vector<std::string>{};
     input_transformation_names.reserve(current.arity);
     for (size_t i = 0; i < current.arity; ++i)
     {
-        auto const input_transformation_name = input_transformation(current, desired)
+        auto const input_transformation_name = input_transformation(current, desired, implicit_conversions)
                                                    .gen_func(node.main_input_pin(i), context);
         if (!input_transformation_name)
             return input_transformation_name;
@@ -193,26 +199,28 @@ auto gen_desired_function_implementation(
         input_transformation_names.push_back(*input_transformation_name);
     }
 
-    auto const output_transformation_name = output_transformation(current, desired)
+    auto const output_transformation_name = output_transformation(current, desired, implicit_conversions)
                                                 .gen_func(current.arity > 0 ? node.main_input_pin(0) : Cool::InputPin{}, context);
     if (!output_transformation_name)
         return output_transformation_name;
 
     auto const call_base_function = fmt::format(
-        "{}({})",
-        base_function_name,
-        gen_transformed_inputs(input_transformation_names, current.arity, desired.arity)
+        FMT_COMPILE("{implicit_output_conversion}({base_function}({inputs}))"),
+        "base_function"_a              = base_function_name,
+        "inputs"_a                     = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity, implicit_conversions.input.value_or("")),
+        "implicit_output_conversion"_a = implicit_conversions.output.value_or("")
     );
 
-    return fmt::format(
-        FMT_COMPILE(R"STR(
+    auto const is_uv_transformation = current.from == PrimitiveType::UV && current.to == PrimitiveType::UV; // Don't take arity into account, a blend of two UVs would be acceptable too.
+return fmt::format(
+    FMT_COMPILE(R"STR(
 {modify_uvs}
 return {transform_output}({base_function_output});
 )STR"),
-        "modify_uvs"_a           = current == Signature::UVTransformation ? fmt::format("coollab_context.uv = {};", call_base_function) : "",
-        "base_function_output"_a = current == Signature::UVTransformation ? "coollab_context.uv" : call_base_function,
-        "transform_output"_a     = *output_transformation_name
-    );
+    "modify_uvs"_a           = is_uv_transformation ? fmt::format("coollab_context.uv = {};", call_base_function) : "",
+    "base_function_output"_a = is_uv_transformation ? "coollab_context.uv" : call_base_function,
+    "transform_output"_a     = *output_transformation_name
+);
 }
 
 } // namespace Lab

@@ -1,9 +1,9 @@
 
-INPUT UV->RGBA `Image`;
+INPUT UV->sRGB_StraightA `Image`;
 INPUT float `Displacement`;
 INPUT Direction2D `Direction`;
 
-RGBA main(UV uv)
+sRGB_StraightA main(UV uv)
 {
     vec4 R = `Image`(uv + `Displacement` * `Direction` );
     vec4 G = `Image`(uv);

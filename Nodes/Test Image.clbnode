@@ -1,7 +1,7 @@
 
 INPUT float `Blue`;
 
-RGBA main(UV uv)
+sRGB_StraightA main(UV uv)
 {
     return vec4(fract(uv), `Blue`, 1.);
 }

@@ -2,6 +2,7 @@
 #include <string>
 #include "CodeGen.h"
 #include "Cool/String/String.h"
+#include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
 
@@ -43,7 +44,11 @@ auto generate_shader_code(
 {
     auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
     auto const main_function_name = gen_desired_function(
-        Signature::ImageRGBA,
+        FunctionSignature{
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::sRGB_StraightA, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
+            .arity = 1,
+        },
         main_node_id,
         context
     );
@@ -57,7 +62,7 @@ auto generate_shader_code(
 uniform float _time;
 out vec4      out_Color;
 
-#include "_ROOT_FOLDER_/res/shader-lib/normalized_uv.glsl"
+#include "_ROOT_FOLDER_/res/shader-utils/normalized_uv.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 
@@ -76,8 +81,6 @@ void main()
     CoollabContext coollab_context;
     coollab_context.uv = uv;
     out_Color = {main_function_name}(coollab_context, uv);
-    out_Color.rgb /= out_Color.a; // Output straight alpha
-    out_Color.rgb = Cool_linear_to_sRGB(out_Color.rgb);
 }}
 
 )STR"

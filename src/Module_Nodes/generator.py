@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import Optional, List, Any
 
 
 @dataclass
@@ -28,7 +28,7 @@ def all_primitive_types():
         PrimitiveType(
             cpp="Float",
             user_facing_name="Float",
-            corresponding_input_types=["float", "Cool::Angle"],
+            corresponding_input_types=["float"],
             glsl="float",
             parsed_from="float",
             can_be_a_template_type=True,
@@ -58,22 +58,6 @@ def all_primitive_types():
             can_be_a_template_type=True,
         ),
         PrimitiveType(
-            cpp="RGB",
-            user_facing_name="RGB",
-            corresponding_input_types=["Cool::RgbColor"],
-            glsl="vec3",
-            parsed_from="RGB",
-            can_be_a_template_type=True,
-        ),
-        PrimitiveType(
-            cpp="RGBA",
-            user_facing_name="RGBA",
-            corresponding_input_types=["Cool::PremultipliedRgbaColor"],
-            glsl="vec4",
-            parsed_from="RGBA",
-            can_be_a_template_type=True,
-        ),
-        PrimitiveType(
             cpp="UV",
             user_facing_name="UV",
             corresponding_input_types=["Cool::Point2D"],
@@ -87,6 +71,22 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="float",
             parsed_from="SignedDistance",
+            can_be_a_template_type=False,
+        ),
+        PrimitiveType(
+            cpp="Angle",
+            user_facing_name="Angle",
+            corresponding_input_types=["Cool::Angle"],
+            glsl="float",
+            parsed_from="Angle",
+            can_be_a_template_type=False,
+        ),
+        PrimitiveType(
+            cpp="Direction2D",
+            user_facing_name="Direction 2D",
+            corresponding_input_types=["Cool::Direction2D"],
+            glsl="vec2",
+            parsed_from="Direction2D",
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -116,6 +116,7 @@ def all_primitive_types():
 class ColorSpace:
     name_in_code: str
     user_facing_name: str
+    corresponds_to_imgui_input: bool = False
 
 
 def color_spaces():
@@ -123,6 +124,7 @@ def color_spaces():
         ColorSpace(
             name_in_code="sRGB",
             user_facing_name="sRGB",
+            corresponds_to_imgui_input=True,
         ),
         ColorSpace(
             name_in_code="LinearRGB",
@@ -147,6 +149,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
         res.append(PrimitiveType(
             cpp=color_space.name_in_code,
             user_facing_name=color_space.user_facing_name,
+            # TODO(JF) ["Cool::Color"] if color_space.corresponds_to_imgui_input else [],
             corresponding_input_types=[],
             glsl="vec3",
             parsed_from=color_space.name_in_code,
@@ -165,6 +168,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
         res.append(PrimitiveType(
             cpp=color_space.name_in_code + "_StraightA",
             user_facing_name=color_space.user_facing_name + ", Straight Alpha",
+            # TODO(JF) ["Cool::ColorAndAlpha"] if color_space.corresponds_to_imgui_input else [],
             corresponding_input_types=[],
             glsl="vec4",
             parsed_from=color_space.name_in_code + "_StraightA",
@@ -173,6 +177,74 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
 
     return res
 
+
+def alpha_spaces():
+    return ["", "_StraightA", "_PremultipliedA"]
+
+
+def implicit_color_conversions():
+    from itertools import product
+    res = ""
+    for color1, color2 in product(color_spaces(), color_spaces()):
+        for alpha1, alpha2 in product(alpha_spaces(), alpha_spaces()):
+            type1 = color1.name_in_code + alpha1
+            type2 = color2.name_in_code + alpha2
+            if type1 == type2:
+                continue
+
+            def gen_code(in_vec: str, out_vec: str, implementation: str):
+                nonlocal res
+                res += f'''
+                if (from == PrimitiveType::{type1} && to == PrimitiveType::{type2})
+                {{
+                    return context.push_function({{
+                        .name           = "CoolLab_{type1}_to_{type2}",
+                        .implementation = R"STR(
+                            {out_vec} CoolLab_{type1}_to_{type2}/*coollabdef*/({in_vec} from)
+                            {{
+                                {implementation}
+                            }}
+                            )STR",
+                    }});
+                }}
+                '''
+
+            color_conversion = f"Cool_{color1.name_in_code}_to_{color2.name_in_code}" if color1 != color2 else ""
+            match alpha1, alpha2:
+                case "", "":
+                    gen_code(in_vec="vec3", out_vec="vec3", implementation=f'''
+                        vec3 to = {color_conversion}(from);
+                        return to;
+                    ''')
+                case _, "":
+                    continue  # Cannot lose alpha information
+                case "", _:
+                    gen_code(in_vec="vec3", out_vec="vec4", implementation=f'''
+                        vec3 to = {color_conversion}(from);
+                        return vec4(to, 1.);
+                    ''')
+                case "_StraightA", "_StraightA":
+                    gen_code(in_vec="vec4", out_vec="vec4", implementation=f'''
+                        vec3 to = {color_conversion}(from.xyz);
+                        return vec4(to, from.a);
+                    ''')
+                case "_PremultipliedA", "_PremultipliedA":
+                    gen_code(in_vec="vec4", out_vec="vec4", implementation=f'''
+                        // We need to unpremultiply for the color conversion, and re-premultiply afterwards
+                        vec3 to = {color_conversion}(from.xyz / from.a);
+                        return vec4(to * from.a, from.a);
+                    ''')
+                case "_PremultipliedA", "_StraightA":
+                    gen_code(in_vec="vec4", out_vec="vec4", implementation=f'''
+                        vec3 to = {color_conversion}(from.xyz / from.a);
+                        return vec4(to, from.a);
+                    ''')
+                case "_StraightA", "_PremultipliedA":
+                    gen_code(in_vec="vec4", out_vec="vec4", implementation=f'''
+                        vec3 to = {color_conversion}(from.xyz);
+                        return vec4(to * from.a, from.a);
+                    ''')
+    return res
 
 def primitive_types_enum_members():
     from pipe import map
@@ -300,5 +372,6 @@ if __name__ == '__main__':
             template_combo_index_to_type,
             parse_primitive_type,
             string_listing_the_parsed_types,
+            implicit_color_conversions,
         ],
     )

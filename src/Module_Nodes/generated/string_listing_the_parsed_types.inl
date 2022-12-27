@@ -9,10 +9,10 @@ R"STR(  - int
   - vec2
   - vec3
   - vec4
-  - RGB
-  - RGBA
   - UV
   - SignedDistance
+  - Angle
+  - Direction2D
   - Any
   - sRGB
   - sRGB_PremultipliedA

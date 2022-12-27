@@ -1,0 +1,9 @@
+
+INPUT float `R`;
+INPUT float `G`;
+INPUT float `B`;
+
+sRGB main()
+{
+    return vec3(`R`, `G`, `B`);
+}

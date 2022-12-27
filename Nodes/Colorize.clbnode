@@ -1,0 +1,8 @@
+
+INPUT Gradient `Gradient`;
+INPUT UV->float `Percentage`;
+
+CIELAB_PremultipliedA main(UV uv)
+{
+    return `Gradient`(`Percentage`(uv));
+}
