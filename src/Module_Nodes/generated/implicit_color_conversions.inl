@@ -77,7 +77,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 CoolLab_sRGB_PremultipliedA_to_sRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz);
+                        vec3 to = (from.xyz / from.a);
                         return to;
                     
                             }
@@ -205,7 +205,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::LinearRGB
                             vec3 CoolLab_sRGB_PremultipliedA_to_LinearRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_to_LinearRGB(from.xyz);
+                        vec3 to = Cool_sRGB_to_LinearRGB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -350,7 +350,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::CIELAB)
                             vec3 CoolLab_sRGB_PremultipliedA_to_CIELAB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_to_CIELAB(from.xyz);
+                        vec3 to = Cool_sRGB_to_CIELAB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -495,7 +495,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::HSLuv)
                             vec3 CoolLab_sRGB_PremultipliedA_to_HSLuv/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_to_HSLuv(from.xyz);
+                        vec3 to = Cool_sRGB_to_HSLuv(from.xyz / from.a);
                         return to;
                     
                             }
@@ -640,7 +640,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::sRGB
                             vec3 CoolLab_LinearRGB_PremultipliedA_to_sRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_to_sRGB(from.xyz);
+                        vec3 to = Cool_LinearRGB_to_sRGB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -753,7 +753,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Line
                             vec3 CoolLab_LinearRGB_PremultipliedA_to_LinearRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz);
+                        vec3 to = (from.xyz / from.a);
                         return to;
                     
                             }
@@ -881,7 +881,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::CIEL
                             vec3 CoolLab_LinearRGB_PremultipliedA_to_CIELAB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_to_CIELAB(from.xyz);
+                        vec3 to = Cool_LinearRGB_to_CIELAB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -1026,7 +1026,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::HSLu
                             vec3 CoolLab_LinearRGB_PremultipliedA_to_HSLuv/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_to_HSLuv(from.xyz);
+                        vec3 to = Cool_LinearRGB_to_HSLuv(from.xyz / from.a);
                         return to;
                     
                             }
@@ -1171,7 +1171,7 @@ if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 CoolLab_CIELAB_PremultipliedA_to_sRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_to_sRGB(from.xyz);
+                        vec3 to = Cool_CIELAB_to_sRGB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -1316,7 +1316,7 @@ if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::LinearR
                             vec3 CoolLab_CIELAB_PremultipliedA_to_LinearRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_to_LinearRGB(from.xyz);
+                        vec3 to = Cool_CIELAB_to_LinearRGB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -1429,7 +1429,7 @@ if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::CIELAB)
                             vec3 CoolLab_CIELAB_PremultipliedA_to_CIELAB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz);
+                        vec3 to = (from.xyz / from.a);
                         return to;
                     
                             }
@@ -1557,7 +1557,7 @@ if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::HSLuv)
                             vec3 CoolLab_CIELAB_PremultipliedA_to_HSLuv/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_to_HSLuv(from.xyz);
+                        vec3 to = Cool_CIELAB_to_HSLuv(from.xyz / from.a);
                         return to;
                     
                             }
@@ -1702,7 +1702,7 @@ if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 CoolLab_HSLuv_PremultipliedA_to_sRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_to_sRGB(from.xyz);
+                        vec3 to = Cool_HSLuv_to_sRGB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -1847,7 +1847,7 @@ if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::LinearRG
                             vec3 CoolLab_HSLuv_PremultipliedA_to_LinearRGB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_to_LinearRGB(from.xyz);
+                        vec3 to = Cool_HSLuv_to_LinearRGB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -1992,7 +1992,7 @@ if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::CIELAB)
                             vec3 CoolLab_HSLuv_PremultipliedA_to_CIELAB/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_to_CIELAB(from.xyz);
+                        vec3 to = Cool_HSLuv_to_CIELAB(from.xyz / from.a);
                         return to;
                     
                             }
@@ -2105,7 +2105,7 @@ if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::HSLuv)
                             vec3 CoolLab_HSLuv_PremultipliedA_to_HSLuv/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz);
+                        vec3 to = (from.xyz / from.a);
                         return to;
                     
                             }

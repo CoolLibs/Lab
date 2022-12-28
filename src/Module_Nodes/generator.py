@@ -216,9 +216,14 @@ def implicit_color_conversions():
                         vec3 to = {color_conversion}(from);
                         return to;
                     ''')
-                case _, "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
+                case "_StraightA", "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
                     gen_code(in_vec="vec4", out_vec="vec3", implementation=f'''
                         vec3 to = {color_conversion}(from.xyz);
+                        return to;
+                    ''')
+                case "_PremultipliedA", "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
+                    gen_code(in_vec="vec4", out_vec="vec3", implementation=f'''
+                        vec3 to = {color_conversion}(from.xyz / from.a);
                         return to;
                     ''')
                 case "", "_StraightA":
