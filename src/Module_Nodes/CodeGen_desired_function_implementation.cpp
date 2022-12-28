@@ -230,7 +230,7 @@ auto gen_desired_function_implementation(
 return {transform_output}({implicit_output_conversion}({base_function_output}));
 )STR"),
         "store_uv"_a                   = does_output_uv ? fmt::format("coollab_context.uv = {};", call_base_function) : "",
-        "store_alpha"_a                = does_output_alpha ? fmt::format("vec4 color = {}; coollab_context.alpha = color.a;", call_base_function) : "",
+        "store_alpha"_a                = does_output_alpha ? fmt::format("vec4 color = {}; coollab_global_alpha = color.a;", call_base_function) : "",
         "base_function_output"_a       = does_output_uv      ? "coollab_context.uv"
                                          : does_output_alpha ? "color"
                                                              : call_base_function,

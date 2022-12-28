@@ -69,8 +69,9 @@ out vec4      out_Color;
 struct CoollabContext
 {{
     vec2 uv;
-    float alpha;
 }};
+
+float coollab_global_alpha = 1.;
 
 {output_indices_declarations}
 
@@ -81,7 +82,6 @@ void main()
     vec2 uv = normalized_uv();
     CoollabContext coollab_context;
     coollab_context.uv = uv;
-    coollab_context.alpha = 1.;
     out_Color = {main_function_name}(coollab_context, uv);
 }}
 

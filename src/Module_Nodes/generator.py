@@ -224,12 +224,12 @@ def implicit_color_conversions():
                 case "", "_StraightA":
                     gen_code(in_vec="vec3", out_vec="vec4", implementation=f'''
                         vec3 to = {color_conversion}(from);
-                        return vec4(to, coollab_context.alpha);
+                        return vec4(to, coollab_global_alpha);
                     ''')
                 case "", "_PremultipliedA":
                     gen_code(in_vec="vec3", out_vec="vec4", implementation=f'''
                         vec3 to = {color_conversion}(from);
-                        return vec4(to, 1.) * coollab_context.alpha;
+                        return vec4(to, 1.) * coollab_global_alpha;
                     ''')
                 case "_StraightA", "_StraightA":
                     gen_code(in_vec="vec4", out_vec="vec4", implementation=f'''
