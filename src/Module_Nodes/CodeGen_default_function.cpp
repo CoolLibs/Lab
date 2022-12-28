@@ -127,11 +127,13 @@ vec3 default_image_srgb/*coollabdef*/(vec2 uv)
 
     {
         auto const func = maybe_generate_default(
-            FunctionSignature{PrimitiveType::Float, PrimitiveType::sRGB},
-            "default_colorizer_srgb", R"STR(
-vec3 default_colorizer_srgb/*coollabdef*/(float x)
+            FunctionSignature{PrimitiveType::Float, PrimitiveType::CIELAB},
+            "default_colorizer_cielab", R"STR(
+vec3 default_colorizer_cielab/*coollabdef*/(float x)
 {
-    return vec3(x);
+    vec3 black_in_cielab = Cool_sRGB_to_CIELAB(vec3(0.));
+    vec3 white_in_cielab = Cool_sRGB_to_CIELAB(vec3(1.));
+    return mix(black_in_cielab, white_in_cielab, x);
 }
 )STR",
             signature, context
