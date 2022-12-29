@@ -2,30 +2,4 @@
 CIELAB_PremultipliedA main(CIELAB_PremultipliedA Over, CIELAB_PremultipliedA Under)
 {
     return Over + (1. - Over.a) * Under;
-    // vec4 over  = `Over`(uv);
-    // vec4 under = `Under`(uv);
-    // vec4 res   = vec4(0.);
-
-    // if (over.a < 0.0001)
-    //     return under;
-
-    // over.rgb /= over.a;
-    // under.rgb /= under.a;
-
-    // over.rgb  = rgb2lab(/* Cool_linear_to_sRGB */ (over.rgb));
-    // under.rgb = rgb2lab(/* Cool_linear_to_sRGB */ (under.rgb));
-
-    // // over.rgb *= over.a;
-    // // under.rgb *= under.a;
-
-    // res.rgb = over.rgb * over.a + under.rgb * (1. - over.a);
-
-    // // over.rgb /= over.a;
-    // // under.rgb /= under.a;
-
-    // res.rgb = /* Cool_sRGB_to_linear */ (lab2rgb(res.rgb));
-    // res.a   = 1.; // TODO(JF)
-    // res.rgb *= res.a;
-
-    // return res;
 }
