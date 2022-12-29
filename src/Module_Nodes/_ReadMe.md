@@ -46,3 +46,9 @@ flowchart LR
 **?** How do we generalize that to three noises? We need a "greater than" that returns 0, 0.5 or 1 (Notice that we don't return integers but fractions, because we love the [0, 1] range) depending on which input is greatest.
 
 And instead of choosing the greater one, we can also choose the middle one or the smallest one. It should give quite different shapes, especially the middle one.
+
+## How to add a color space
+
+- Go in *generator.py* and add it in the `color_spaces()` function.
+- Run the *generator.py* script you just modified.
+- Go in *Cool/res/shaders/color_conversions.glsl* and add all the conversions (from and to) between you new color space and all the other color spaces. This means you have 2 * previous_number_of_color_spaces functions to write. You can probably reuse some functions: for example `Cool_sRGB_from_CIELAB(c)` is implemented as simply `Cool_sRGB_from_XYZ(Cool_XYZ_from_CIELAB(c))`.
