@@ -194,9 +194,9 @@ def implicit_color_conversions():
                 if (from == PrimitiveType::{type1} && to == PrimitiveType::{type2})
                 {{
                     return context.push_function({{
-                        .name           = "CoolLab_{type1}_to_{type2}",
+                        .name           = "CoolLab_{type2}_from_{type1}",
                         .implementation = R"STR(
-                            {out_vec} CoolLab_{type1}_to_{type2}/*coollabdef*/({in_vec} from)
+                            {out_vec} CoolLab_{type2}_from_{type1}/*coollabdef*/({in_vec} from)
                             {{
                                 {implementation}
                             }}
@@ -205,7 +205,7 @@ def implicit_color_conversions():
                 }}
                 '''
 
-            color_conversion = f"Cool_{color1.name_in_code}_to_{color2.name_in_code}" if color1 != color2 else ""
+            color_conversion = f"Cool_{color2.name_in_code}_from_{color1.name_in_code}" if color1 != color2 else ""
             match alpha1, alpha2:
                 case "", "":
                     gen_code(in_vec="vec3", out_vec="vec3", implementation=f'''
