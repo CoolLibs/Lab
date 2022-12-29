@@ -23,7 +23,4 @@ case PrimitiveType::LinearRGB_PremultipliedA: return "LinearRGB_PremultipliedA";
 case PrimitiveType::LinearRGB_StraightA: return "LinearRGB_StraightA";
 case PrimitiveType::CIELAB: return "CIELAB";
 case PrimitiveType::CIELAB_PremultipliedA: return "CIELAB_PremultipliedA";
-case PrimitiveType::CIELAB_StraightA: return "CIELAB_StraightA";
-case PrimitiveType::HSLuv: return "HSLuv";
-case PrimitiveType::HSLuv_PremultipliedA: return "HSLuv_PremultipliedA";
-case PrimitiveType::HSLuv_StraightA: return "HSLuv_StraightA"; 
+case PrimitiveType::CIELAB_StraightA: return "CIELAB_StraightA"; 

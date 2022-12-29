@@ -23,7 +23,4 @@ Int,
     LinearRGB_StraightA,
     CIELAB,
     CIELAB_PremultipliedA,
-    CIELAB_StraightA,
-    HSLuv,
-    HSLuv_PremultipliedA,
-    HSLuv_StraightA
+    CIELAB_StraightA

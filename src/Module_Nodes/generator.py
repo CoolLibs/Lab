@@ -134,10 +134,6 @@ def color_spaces():
             name_in_code="CIELAB",
             user_facing_name="CIELAB",
         ),
-        ColorSpace(
-            name_in_code="HSLuv",
-            user_facing_name="HSLuv",
-        ),
     ]
 
 
