@@ -131,9 +131,7 @@ vec3 default_image_srgb/*coollabdef*/(vec2 uv)
             "default_colorizer_cielab", R"STR(
 vec3 default_colorizer_cielab/*coollabdef*/(float x)
 {
-    vec3 black_in_cielab = Cool_CIELAB_from_sRGB(vec3(0.));
-    vec3 white_in_cielab = Cool_CIELAB_from_sRGB(vec3(1.));
-    return mix(black_in_cielab, white_in_cielab, x);
+    return mix(Cool_black_in_cielab, Cool_white_in_cielab, x);
 }
 )STR",
             signature, context
