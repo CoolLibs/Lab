@@ -8,8 +8,11 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
+#include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Log/Debug.h"
+#include "Cool/StrongTypes/Gradient.h"
 #include "Cool/type_from_string/type_from_string.h"
 #include "Debug/DebugOptions.h"
 #include "Module_Nodes/FunctionSignature.h"
@@ -300,16 +303,43 @@ static auto parse_signature(std::vector<std::string> const& words)
     };
 }
 
+template<typename T>
+static auto make_input_definition(std::string const& name, std::string const& type) -> Cool::AnyInputDefinition
+{
+    auto def = Cool::InputDefinition<T>{.name = name};
+
+    if constexpr (std::is_same_v<T, Cool::Color>)
+    {
+        if (type == "sRGB")
+            def.desired_color_space = static_cast<int>(Cool::ColorSpace::sRGB);
+        else if (type == "LinearRGB")
+            def.desired_color_space = static_cast<int>(Cool::ColorSpace::LinearRGB);
+    }
+    else if constexpr (std::is_same_v<T, Cool::ColorAndAlpha>)
+    {
+        if (type == "sRGB_StraightA")
+            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_StraightA);
+        else if (type == "sRGB_PremultipliedA")
+            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_PremultipliedA);
+        else if (type == "LinearRGB_StraightA")
+            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_StraightA);
+        else if (type == "LinearRGB_PremultipliedA")
+            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_PremultipliedA);
+    }
+
+    return def;
+}
+
 static auto parse_property(std::string const& type_as_string, std::string const& name, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     try
     {
         res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
-            Cool::InputDefinition,
+            make_input_definition,
             type_as_string,
             Cool::AnyInputDefinition,
-            (name)
+            (name, type_as_string)
         ));
     }
     catch (std::exception const& e)

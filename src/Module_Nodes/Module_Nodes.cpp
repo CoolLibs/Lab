@@ -1,7 +1,12 @@
 #include "Module_Nodes.h"
 #include <Cool/StrongTypes/set_uniform.h>
+#include <stdexcept>
 #include "Common/make_shader_compilation_error_message.h"
+#include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
+#include "Cool/ColorSpaces/ColorSpace.h"
+#include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
+#include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
@@ -115,6 +120,49 @@ auto Module_Nodes::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
            || check_dirty(_regenerate_code_flag);
 };
 
+template<typename T>
+static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const& shader, Cool::InputProvider_Ref input_provider)
+{
+    auto const value = [&] {
+        if constexpr (std::is_same_v<T, Cool::Color>)
+        {
+            auto const col = input_provider(input);
+            switch (static_cast<Cool::ColorSpace>(input._desired_color_space))
+            {
+            case Cool::ColorSpace::LinearRGB:
+                return col.as_linear_rgb();
+            case Cool::ColorSpace::sRGB:
+                return col.as_srgb();
+            default:
+                throw std::runtime_error{fmt::format("Unknown color space value for {}: {}.", input.name(), input._desired_color_space)};
+            }
+        }
+        else if constexpr (std::is_same_v<T, Cool::ColorAndAlpha>)
+        {
+            auto const col = input_provider(input);
+            switch (static_cast<Cool::ColorAndAlphaSpace>(input._desired_color_space))
+            {
+            case Cool::ColorAndAlphaSpace::sRGB_StraightA:
+                return col.as_srgb_straight();
+            // case Cool::ColorSpace::sRGB:
+            //     return col.as_srgb();
+            default:
+                throw std::runtime_error{fmt::format("Unknown color and alpha space value for {}: {}.", input.name(), input._desired_color_space)};
+            }
+        }
+        else
+        {
+            return input_provider(input);
+        }
+    }();
+
+    Cool::set_uniform(
+        shader,
+        valid_property_name(input.name(), input._default_variable_id),
+        value
+    );
+}
+
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
     in.set_clean(_shader.dirty_flag());
@@ -146,11 +194,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
             for (auto const& prop : node.properties())
             {
                 std::visit([&](auto&& prop) {
-                    Cool::set_uniform(
-                        shader,
-                        valid_property_name(prop.name(), prop._default_variable_id),
-                        in.provider(prop)
-                    );
+                    send_uniform(prop, shader, in.provider);
                 },
                            prop);
             }
@@ -159,5 +203,4 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 
     pipeline.draw();
 }
-
 } // namespace Lab
