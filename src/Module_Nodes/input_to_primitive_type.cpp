@@ -1,4 +1,6 @@
 #include "input_to_primitive_type.h"
+#include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
+#include "Cool/ColorSpaces/ColorSpace.h"
 
 namespace Lab {
 

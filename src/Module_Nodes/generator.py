@@ -136,8 +136,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
         res.append(PrimitiveType(
             cpp=color_space.name_in_code,
             user_facing_name=color_space.user_facing_name,
-            corresponding_input_types=[
-                "Cool::Color"] if color_space.name_in_code == "sRGB" else [],
+            corresponding_input_types=["Cool::Color"],
             glsl="vec3",
             parsed_from=color_space.name_in_code,
             can_be_a_template_type=False,
@@ -146,7 +145,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
         res.append(PrimitiveType(
             cpp=color_space.name_in_code + "_PremultipliedA",
             user_facing_name=color_space.user_facing_name + ", Premultiplied Alpha",
-            corresponding_input_types=[],
+            corresponding_input_types=["Cool::ColorAndAlpha"],
             glsl="vec4",
             parsed_from=color_space.name_in_code + "_PremultipliedA",
             can_be_a_template_type=False,
@@ -155,8 +154,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
         res.append(PrimitiveType(
             cpp=color_space.name_in_code + "_StraightA",
             user_facing_name=color_space.user_facing_name + ", Straight Alpha",
-            corresponding_input_types=[
-                "Cool::ColorAndAlpha"] if color_space.name_in_code == "sRGB" else [],
+            corresponding_input_types=["Cool::ColorAndAlpha"],
             glsl="vec4",
             parsed_from=color_space.name_in_code + "_StraightA",
             can_be_a_template_type=False,
@@ -290,12 +288,20 @@ def check_that_each_primitive_type_corresponds_to_a_different_input_type():
                        | chain)
 
     duplicates = [item for item, count in collections.Counter(input_types).items()
-                  if count > 1]
+                  if count > 1 and item != "Cool::Color" and item != "Cool::ColorAndAlpha"]
 
     if len(duplicates) > 0:
         raise Exception(
             f"You can't have two primitive types corresponding to the same input type ({', '.join(duplicates)})")
 
+
+def check_color_space(type):
+    if type[0] == "Cool::Color":
+        return f"&& std::get<Cool::Input<{type[0]}>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::{type[1]})"
+    elif type[0] == "Cool::ColorAndAlpha":
+        return f"&& std::get<Cool::Input<{type[0]}>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::{type[1]})"
+    else:
+        return ""
 
 def input_to_primitive_type():
     from pipe import map, chain
@@ -304,7 +310,7 @@ def input_to_primitive_type():
                      | map(lambda type: type.corresponding_input_types | map(lambda t: [t, type.cpp]))
                      | chain
                      | map(lambda type: f'''
-if (std::holds_alternative<Cool::Input<{type[0]}>>(input))
+if (std::holds_alternative<Cool::Input<{type[0]}>>(input) {check_color_space(type)})
     return PrimitiveType::{type[1]};'''))
 
 
