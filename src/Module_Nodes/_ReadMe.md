@@ -49,6 +49,4 @@ And instead of choosing the greater one, we can also choose the middle one or th
 
 ## How to add a color space
 
-- Go in *generator.py* and add it in the `color_spaces()` function.
-- Run the *generator.py* script you just modified.
-- Go in *Cool/res/shaders/color_conversions.glsl* and add all the conversions (from and to) between you new color space and all the other color spaces. This means you have 2 * previous_number_of_color_spaces functions to write. You can probably reuse some functions: for example `Cool_sRGB_from_CIELAB(c)` is implemented as simply `Cool_sRGB_from_XYZ(Cool_XYZ_from_CIELAB(c))`.
+See *Cool/ColorSpaces/_ReadMe.md*.

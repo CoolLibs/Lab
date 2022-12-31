@@ -129,10 +129,7 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
             auto const col = input_provider(input);
             switch (static_cast<Cool::ColorSpace>(input._desired_color_space))
             {
-            case Cool::ColorSpace::LinearRGB:
-                return col.as_linear_rgb();
-            case Cool::ColorSpace::sRGB:
-                return col.as_srgb();
+#include "Cool/ColorSpaces/generated/convert_col_as.inl"
             default:
                 throw std::runtime_error{fmt::format("Unknown color space value for {}: {}.", input.name(), input._desired_color_space)};
             }
@@ -142,10 +139,7 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
             auto const col = input_provider(input);
             switch (static_cast<Cool::ColorAndAlphaSpace>(input._desired_color_space))
             {
-            case Cool::ColorAndAlphaSpace::sRGB_StraightA:
-                return col.as_srgb_straight();
-            // case Cool::ColorSpace::sRGB:
-            //     return col.as_srgb();
+#include "Cool/ColorSpaces/generated/convert_col_and_alpha_as.inl"
             default:
                 throw std::runtime_error{fmt::format("Unknown color and alpha space value for {}: {}.", input.name(), input._desired_color_space)};
             }

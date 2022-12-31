@@ -112,29 +112,20 @@ def all_primitive_types():
     return res
 
 
-@dataclass
-class ColorSpace:
-    name_in_code: str
-    user_facing_name: str
-    corresponds_to_imgui_input: bool = False
-
-
 def color_spaces():
-    return [
-        ColorSpace(
-            name_in_code="sRGB",
-            user_facing_name="sRGB",
-            corresponds_to_imgui_input=True,
-        ),
-        ColorSpace(
-            name_in_code="LinearRGB",
-            user_facing_name="Linear RGB",
-        ),
-        ColorSpace(
-            name_in_code="CIELAB",
-            user_facing_name="CIELAB",
-        ),
-    ]
+    # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
+    # So we need to add the path manually to sys.path
+    import os
+    import sys
+    from pathlib import Path
+    sys.path.append(os.path.join(
+        Path(os.path.abspath(__file__)).parent.parent.parent,
+        "Cool/src/Cool/ColorSpaces")
+    )
+    # End of HACK
+
+    import generator_colors
+    return generator_colors.color_spaces()
 
 
 def primitive_types_for_color_spaces() -> List[PrimitiveType]:
@@ -145,8 +136,8 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
         res.append(PrimitiveType(
             cpp=color_space.name_in_code,
             user_facing_name=color_space.user_facing_name,
-            # TODO(JF) ["Cool::Color"] if color_space.corresponds_to_imgui_input else [],
-            corresponding_input_types=[],
+            corresponding_input_types=[
+                "Cool::Color"] if color_space.name_in_code == "sRGB" else [],
             glsl="vec3",
             parsed_from=color_space.name_in_code,
             can_be_a_template_type=False,
@@ -164,8 +155,8 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
         res.append(PrimitiveType(
             cpp=color_space.name_in_code + "_StraightA",
             user_facing_name=color_space.user_facing_name + ", Straight Alpha",
-            # TODO(JF) ["Cool::ColorAndAlpha"] if color_space.corresponds_to_imgui_input else [],
-            corresponding_input_types=[],
+            corresponding_input_types=[
+                "Cool::ColorAndAlpha"] if color_space.name_in_code == "sRGB" else [],
             glsl="vec4",
             parsed_from=color_space.name_in_code + "_StraightA",
             can_be_a_template_type=False,
@@ -264,6 +255,7 @@ def has_an_alpha_channel():
 
     res += "return true;"
     return res
+
 
 def primitive_types_enum_members():
     from pipe import map

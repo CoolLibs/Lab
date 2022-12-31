@@ -310,21 +310,11 @@ static auto make_input_definition(std::string const& name, std::string const& ty
 
     if constexpr (std::is_same_v<T, Cool::Color>)
     {
-        if (type == "sRGB")
-            def.desired_color_space = static_cast<int>(Cool::ColorSpace::sRGB);
-        else if (type == "LinearRGB")
-            def.desired_color_space = static_cast<int>(Cool::ColorSpace::LinearRGB);
+        def.desired_color_space = static_cast<int>(Cool::parse_color_space(type));
     }
     else if constexpr (std::is_same_v<T, Cool::ColorAndAlpha>)
     {
-        if (type == "sRGB_StraightA")
-            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_StraightA);
-        else if (type == "sRGB_PremultipliedA")
-            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_PremultipliedA);
-        else if (type == "LinearRGB_StraightA")
-            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_StraightA);
-        else if (type == "LinearRGB_PremultipliedA")
-            def.desired_color_space = static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_PremultipliedA);
+        def.desired_color_space = static_cast<int>(Cool::parse_color_and_alpha_space(type));
     }
 
     return def;

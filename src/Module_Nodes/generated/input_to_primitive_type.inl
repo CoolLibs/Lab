@@ -28,3 +28,9 @@ if (std::holds_alternative<Cool::Input<Cool::Angle>>(input))
 
 if (std::holds_alternative<Cool::Input<Cool::Direction2D>>(input))
     return PrimitiveType::Direction2D;
+
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input))
+    return PrimitiveType::sRGB;
+
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input))
+    return PrimitiveType::sRGB_StraightA;
