@@ -142,6 +142,21 @@ vec3 default_colorizer_cielab/*coollabdef*/(float x)
 
     {
         auto const func = maybe_generate_default(
+            FunctionSignature{PrimitiveType::CIELAB, PrimitiveType::Float},
+            "default_black_and_white_cielab", R"STR(
+    float default_black_and_white_cielab/*coollabdef*/(vec3 lab)
+    {
+        return lab.x;
+    }
+    )STR",
+            signature, context
+        );
+        if (func)
+            return *func;
+    }
+
+    {
+        auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::UV, PrimitiveType::Float},
             "default_uv_to_float", R"STR(
 float default_uv_to_float/*coollabdef*/(vec2 uv)
