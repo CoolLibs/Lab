@@ -83,7 +83,7 @@ auto gen_implicit_conversions(FunctionSignature current, FunctionSignature desir
     -> ImplicitConversions
 {
     return ImplicitConversions{
-        .input  = gen_implicit_conversion(current.from, desired.from, context),
+        .input  = gen_implicit_conversion(desired.from, current.from, context),
         .output = gen_implicit_conversion(current.to, desired.to, context),
     };
 }
