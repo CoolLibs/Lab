@@ -1,4 +1,5 @@
 #include "Node.h"
+#include <stdexcept>
 #include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
@@ -8,7 +9,8 @@ static auto type_to_template_combo_index(PrimitiveType type) -> int
     switch (type)
     {
 #include "generated/type_to_template_combo_index.inl"
-        // TODO: case default: error
+    default:
+        throw std::logic_error{fmt::format("Unexpected primitive type as a template instance: {}.", static_cast<int>(type))};
     };
 }
 
@@ -17,7 +19,8 @@ static auto template_combo_index_to_type(int index) -> PrimitiveType
     switch (index)
     {
 #include "generated/template_combo_index_to_type.inl"
-        // TODO: case default: error
+    default:
+        throw std::logic_error{fmt::format("Unexpected index of primitive type as a template instance: {}.", index)};
     };
 }
 
