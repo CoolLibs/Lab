@@ -1,0 +1,16 @@
+
+INPUT float `Nb cells`;
+
+OUTPUT float `X Index`;
+OUTPUT float `Y Index`;
+
+UV main(UV uv)
+{
+    uv = unnormalize_uv_with_aspect_ratio(uv, 1.) * `Nb cells`;
+
+    vec2 gid    = floor(uv);
+    `X Index` = gid.x;
+    `Y Index` = gid.y;
+
+    return normalize_uv_with_aspect_ratio(fract(uv), 1.);
+}

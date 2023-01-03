@@ -1,0 +1,15 @@
+
+INPUT Angle `Angle`;
+INPUT Point2D `Center`;
+
+UV main(UV uv)
+{
+    float c = cos(`Angle`);
+    float s = sin(`Angle`);
+
+    mat2 rot = mat2(
+        c, -s,
+        s, c
+    );
+    return rot * (uv - `Center`) + `Center`;
+}

@@ -1,0 +1,7 @@
+
+INPUT Gradient `Gradient`;
+
+CIELAB_PremultipliedA main(float percentage)
+{
+    return `Gradient`(percentage);
+}

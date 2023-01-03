@@ -26,14 +26,13 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
     , _main_window{windows.main_window()}
-    , _is0_view{_views.make_view("View | is0")}
-    , _custom_shader_view{_views.make_view("View | Custom Shader")}
-    , _is0_module{std::make_unique<Module_is0>(dirty_flag_factory(), input_factory())}
-    , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
-    , _texture{Cool::Path::root() / "res/image resources/ETOILE5.png"}
+    , _nodes_view{_views.make_view("View | Nodes")}
+    // , _custom_shader_view{_views.make_view("View | Custom Shader")}
+    , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory())}
+// , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
-    _camera_manager.hook_events(_is0_view.view.mouse_events(), _variable_registries, command_executor());
-    _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
+    _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
+    // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
@@ -47,18 +46,38 @@ App::~App()
 
 void App::compile_all_is0_nodes()
 {
-    for (const auto& node_template : _is0_module->nodes_templates())
-    {
-        _is0_module->remove_all_nodes();
-        Cool::Log::Debug::info("Test is0 Node", node_template.name);
-        _is0_module->add_node(NodeFactoryU::node_from_template(node_template));
-        _is0_module->recompile(update_context(), true);
-    }
-    _is0_module->remove_all_nodes();
+    // for (const auto& node_template : _nodes_module->nodes_templates())
+    // {
+    //     _nodes_module->remove_all_nodes();
+    //     Cool::Log::Debug::info("Test is0 Node", node_template.name);
+    //     _nodes_module->add_node(NodeFactoryU::node_from_template(node_template));
+    //     _nodes_module->recompile(update_context(), true);
+    // }
+    // _nodes_module->remove_all_nodes();
+}
+
+void App::set_everybody_dirty()
+{
+    std::unique_lock lock{_dirty_registry.mutex()};
+    for (auto& [_, is_dirty] : _dirty_registry)
+        is_dirty.is_dirty = true;
 }
 
 void App::update()
 {
+    if (_is_first_frame)
+    {
+        _is_first_frame = false;
+        set_everybody_dirty();
+    }
+
+    if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
+    {
+        _nodes_module->update(update_context());
+        // _custom_shader_module->update(update_context());
+        check_inputs();
+    }
+
     if (!_exporter.is_exporting())
     {
         _clock.update();
@@ -77,41 +96,31 @@ void App::update()
     {
         _last_time = _clock.time();
 
-        set_dirty_flag()(_is0_module->dirty_flag());
-        set_dirty_flag()(_custom_shader_module->dirty_flag());
+        set_dirty_flag()(_nodes_module->dirty_flag());
+        // set_dirty_flag()(_custom_shader_module->dirty_flag());
     }
-    if (_is0_view.render_target.needs_resizing())
-    {
-        set_dirty_flag()(_is0_module->dirty_flag());
-    }
-    if (_custom_shader_view.render_target.needs_resizing())
-    {
-        set_dirty_flag()(_custom_shader_module->dirty_flag());
-    }
-
-    if (inputs_are_allowed())
-    {
-        _is0_module->update(update_context());
-        _custom_shader_module->update(update_context());
-        check_inputs();
-    }
+    // if (_custom_shader_view.render_target.needs_resizing())
+    // {
+    // set_dirty_flag()(_custom_shader_module->dirty_flag());
+    // }
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
 {
-    auto vec  = _custom_shader_module->all_inputs();
-    auto vec2 = _is0_module->all_inputs();
-    for (const auto& x : vec2)
-    {
-        vec.push_back(x);
-    }
-    return vec;
+    // auto vec  = _custom_shader_module->all_inputs();
+    auto vec2 = _nodes_module->all_inputs();
+    // for (const auto& x : vec2)
+    // {
+    //     vec.push_back(x);
+    // }
+    // return vec;
+    return vec2;
 }
 
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _custom_shader_view.render_target,
+        .render_target = _nodes_view.render_target,
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }};
@@ -142,12 +151,6 @@ static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polar
 
 void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
 {
-#if DEBUG
-    if (DebugOptions::log_when_rendering())
-    {
-        Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
-    }
-#endif
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -164,25 +167,34 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
             update_context()
         );
     });
+#if DEBUG
+    if (DebugOptions::log_when_rendering())
+        Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
+#endif
 }
 
-void App::render_is0(Cool::RenderTarget& render_target, float time, img::Size size)
+void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
 {
+    if (render_target.needs_resizing())
+        set_dirty_flag()(_nodes_module->dirty_flag());
+
+    if (!_nodes_module->is_dirty(is_dirty__functor()))
+        return;
+
     render_target.set_size(size);
-    render_one_module(*_is0_module, render_target, time);
+    render_one_module(*_nodes_module, render_target, time);
 }
 
-void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
-{
-    _custom_shader_module->set_image_in_shader("_image", 0, _is0_view.render_target.get().texture_id());
-    _custom_shader_module->set_image_in_shader("_texture", 1, _texture.ID());
-    render_one_module(*_custom_shader_module, render_target, time);
-}
+// void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
+// {
+// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target.get().texture_id());
+// render_one_module(*_custom_shader_module, render_target, time);
+// }
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_is0(_is0_view.render_target, time, render_target.desired_size());
-    render_custom_shader(render_target, time);
+    render_nodes(_nodes_view.render_target, time, render_target.desired_size());
+    // render_custom_shader(render_target, time);
 }
 
 void App::imgui_commands_and_registries_debug_windows()
@@ -215,8 +227,8 @@ void App::imgui_commands_and_registries_debug_windows()
 
 void App::imgui_windows()
 {
-    _is0_view.imgui_window();
-    _custom_shader_view.imgui_window();
+    _nodes_view.imgui_window();
+    // _custom_shader_view.imgui_window();
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
@@ -225,8 +237,8 @@ void App::imgui_windows()
     if (inputs_are_allowed())
     {
         const auto the_ui = ui();
-        _is0_module->imgui_windows(the_ui);
-        _custom_shader_module->imgui_windows(the_ui);
+        _nodes_module->imgui_windows(the_ui);
+        // _custom_shader_module->imgui_windows(the_ui);
         // Time
         ImGui::Begin("Time");
         Cool::ClockU::imgui_timeline(_clock);
@@ -397,16 +409,6 @@ void App::check_inputs__history()
     {
         _history.move_backward(exec);
         Cool::ParametersHistory::get().move_backward();
-        // TODO(JF) Remove this hack.
-        // Force recompilation of all shaders when a variable changes to allow gradient variables to update (bc they need to generate shader code)
-        {
-            auto&            registry = _dirty_registry;
-            std::unique_lock lock{registry.mutex()};
-            for (auto& [_, is_dirty] : registry)
-            {
-                is_dirty.is_dirty = true;
-            }
-        }
     }
 
     // Redo
@@ -415,16 +417,6 @@ void App::check_inputs__history()
     {
         _history.move_forward(exec);
         Cool::ParametersHistory::get().move_forward();
-        // TODO(JF) Remove this hack.
-        // Force recompilation of all shaders when a variable changes to allow gradient variables to update (bc they need to generate shader code)
-        {
-            auto&            registry = _dirty_registry;
-            std::unique_lock lock{registry.mutex()};
-            for (auto& [_, is_dirty] : registry)
-            {
-                is_dirty.is_dirty = true;
-            }
-        }
     }
 }
 

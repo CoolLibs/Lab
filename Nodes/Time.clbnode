@@ -1,0 +1,8 @@
+
+INPUT float `Speed`;
+INPUT float `Offset`;
+
+float main()
+{
+    return _time * `Speed` + `Offset`; // `_time` is a global constant defined in the shader.
+}

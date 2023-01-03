@@ -1,0 +1,5 @@
+
+float main(CIELAB color)
+{
+    return color.x;
+}

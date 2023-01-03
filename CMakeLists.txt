@@ -45,12 +45,6 @@ target_link_libraries(CooLab-Properties INTERFACE cmd::cmd)
 # Include range-v3
 target_include_directories(CooLab-Properties INTERFACE lib/range-v3/include)
 
-# Include ImNodes
-add_library(ImNodes lib/imnodes/imnodes.cpp)
-target_include_directories(ImNodes PRIVATE Cool/lib/imgui)
-target_link_libraries(CooLab-Properties INTERFACE ImNodes)
-target_compile_features(ImNodes PUBLIC cxx_std_11)
-
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
 target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
@@ -61,6 +55,7 @@ target_include_directories(CooLab-Properties INTERFACE src lib)
 # Copy resources to the output folder (where the executable is created) after each build
 include("Cool/CMakeUtils/files_and_folders.cmake")
 Cool__target_copy_folder(${PROJECT_NAME} "res")
+Cool__target_copy_folder(${PROJECT_NAME} "Nodes")
 
 if(MSVC)
     target_compile_options(CooLab-Properties INTERFACE /bigobj) # We use too many templates apparently so we need this flag O:)

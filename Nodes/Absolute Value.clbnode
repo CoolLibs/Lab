@@ -1,0 +1,5 @@
+
+Any main(Any x)
+{
+    return abs(x);
+}

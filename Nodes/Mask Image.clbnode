@@ -1,0 +1,8 @@
+
+INPUT UV->sRGB_PremultipliedA `Image`;
+INPUT UV->float `Mask`;
+
+sRGB_PremultipliedA main(UV uv)
+{
+    return `Mask`(uv) * `Image`(uv);
+}

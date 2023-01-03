@@ -1,9 +1,6 @@
 [submodule "Cool"]
 	path = Cool
 	url = https://github.com/CoolLibs/Cool
-[submodule "lib/imnodes"]
-	path = lib/imnodes
-	url = https://github.com/CoolLibs/imnodes
 [submodule "lib/cmd"]
 	path = lib/cmd
 	url = https://github.com/CoolLibs/cmd

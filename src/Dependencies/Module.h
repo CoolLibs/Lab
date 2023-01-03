@@ -29,6 +29,12 @@ public:
     };
 
     Module() = default;
+
+    Module(const Module&)                    = delete;
+    auto operator=(const Module&) -> Module& = delete;
+    Module(Module&&)                         = delete;
+    auto operator=(Module&&) -> Module&      = delete;
+
     Module(std::string_view name, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
         : _name{name}
         , _dirty_flag{dirty_flag_factory.make()}
@@ -37,7 +43,7 @@ public:
 
     virtual ~Module() = default;
 
-    auto name() const -> const std::string& { return _name; }
+    [[nodiscard]] auto name() const -> const std::string& { return _name; }
 
     void do_rendering(RenderParams params, UpdateContext_Ref update_ctx)
     {
@@ -47,14 +53,14 @@ public:
     virtual void imgui_windows(Ui_Ref ui) const = 0; /// The ui() method should be const, because it sould only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
     virtual void update(UpdateContext_Ref){};
 
-    virtual auto all_inputs() const -> Cool::AllInputRefsToConst = 0;
+    [[nodiscard]] virtual auto all_inputs() const -> Cool::AllInputRefsToConst = 0;
 
-    virtual auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
+    [[nodiscard]] virtual auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
     {
         return check_dirty(_dirty_flag);
     };
 
-    auto dirty_flag() { return _dirty_flag; }
+    [[nodiscard]] auto dirty_flag() const { return _dirty_flag; }
 
 private:
     virtual void render(RenderParams, UpdateContext_Ref) = 0;

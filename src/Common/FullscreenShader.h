@@ -13,7 +13,7 @@ namespace Lab {
 class FullscreenShader {
 public:
     FullscreenShader() = default;
-    explicit FullscreenShader(Cool::DirtyFlag dirty_flag)
+    explicit FullscreenShader(Cool::DirtyFlag const& dirty_flag)
         : _dirty_flag{dirty_flag}
     {}
 
@@ -22,7 +22,7 @@ public:
         UpdateContext_Ref
     ) -> Cool::OptionalErrorMessage;
 
-    auto dirty_flag() const -> const Cool::DirtyFlag& { return _dirty_flag; }
+    auto dirty_flag() const -> Cool::DirtyFlag const& { return _dirty_flag; }
     auto pipeline() -> Cool::FullscreenPipeline& { return _fullscreen_pipeline; }
 
 private:

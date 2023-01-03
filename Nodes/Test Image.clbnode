@@ -1,0 +1,7 @@
+
+INPUT float `Blue`;
+
+sRGB_StraightA main(UV uv)
+{
+    return vec4(fract(uv), `Blue`, 1.);
+}

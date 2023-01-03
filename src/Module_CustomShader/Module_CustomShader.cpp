@@ -4,6 +4,7 @@
 #include <Cool/InputParser/InputParser.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/String/String.h>
+#include <Cool/StrongTypes/set_uniform.h>
 #include <concepts>
 #include <glpp/glpp.hpp>
 #include <ranges>
@@ -17,7 +18,7 @@ namespace Lab {
 Module_CustomShader::Module_CustomShader(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"Custom Shader", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
-    , _camera_input{input_factory.make<Cool::Camera>(dirty_flag(), "Camera")}
+    , _camera_input{input_factory.make<Cool::Camera>({"Camera"}, dirty_flag())}
     , _file{_shader.dirty_flag()}
 {
 }
@@ -106,12 +107,8 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
         ImGui::Separator();
         ImGui::NewLine();
         for (auto& input : inputs())
-        {
-            std::visit([&ui](auto&& input) {
-                ui.widget(input);
-            },
-                       input);
-        }
+            ui.widget(input);
+
         if (_presets_manager)
         {
             ImGui::Separator();
@@ -120,24 +117,6 @@ void Module_CustomShader::imgui_windows(Ui_Ref ui) const
             });
         }
     });
-}
-
-template<typename T>
-static void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const T& value)
-{
-    shader.set_uniform(name, value);
-}
-
-template<>
-void set_uniform(const Cool::OpenGL::Shader& shader, std::string_view name, const Cool::RgbColor& value)
-{
-    shader.set_uniform(name, value.value);
-}
-
-void set_uniform(const Cool::OpenGL::Shader&, std::string_view, const Cool::Camera&)
-{
-    assert(false); // This isn't used at the moment because we set the camera3d manually for all shaders, but this should be changed
-    // Cool::CameraShaderU::set_uniform(shader, value);
 }
 
 void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
@@ -153,7 +132,7 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
     for (auto& input : inputs())
     {
         std::visit([&](auto&& input) {
-            set_uniform(*_shader.pipeline().shader(), input.name(), in.provider(input));
+            Cool::set_uniform(*_shader.pipeline().shader(), input.name(), in.provider(input));
         },
                    input);
     }

@@ -1,0 +1,5 @@
+
+CIELAB_PremultipliedA main(CIELAB_PremultipliedA Over, CIELAB_PremultipliedA Under)
+{
+    return Over + (1. - Over.a) * Under;
+}

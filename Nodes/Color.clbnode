@@ -1,0 +1,7 @@
+
+INPUT sRGB_StraightA `Color`;
+
+sRGB_StraightA main()
+{
+    return `Color`;
+}
