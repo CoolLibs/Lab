@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
+#include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Graph.h"
 #include "NodeDefinition.h"
 
