@@ -1,0 +1,19 @@
+
+INPUT UV->CIELAB_StraightA `Image`;
+INPUT int `N`;
+INPUT(CIELAB_StraightA, CIELAB_StraightA)->CIELAB_StraightA `Blend Mode`;
+
+OUTPUT float `Index`;
+
+CIELAB_StraightA main(UV uv)
+{
+    vec4 color = vec4(0.);
+
+    for (int i = 0; i < `N`; ++i)
+    {
+        `Index` = i;
+        color   = `Blend Mode`(`Image`(uv), color);
+    }
+
+    return color;
+}
