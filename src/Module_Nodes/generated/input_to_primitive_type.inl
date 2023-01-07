@@ -29,6 +29,15 @@ if (std::holds_alternative<Cool::Input<Cool::Angle>>(input))
 if (std::holds_alternative<Cool::Input<Cool::Direction2D>>(input))
     return PrimitiveType::Direction2D;
 
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::CIELAB))
+    return PrimitiveType::CIELAB;
+
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::CIELAB_PremultipliedA))
+    return PrimitiveType::CIELAB_PremultipliedA;
+
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::CIELAB_StraightA))
+    return PrimitiveType::CIELAB_StraightA;
+
 if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::sRGB))
     return PrimitiveType::sRGB;
 
@@ -46,12 +55,3 @@ if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<
 
 if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_StraightA))
     return PrimitiveType::LinearRGB_StraightA;
-
-if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::CIELAB))
-    return PrimitiveType::CIELAB;
-
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::CIELAB_PremultipliedA))
-    return PrimitiveType::CIELAB_PremultipliedA;
-
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::CIELAB_StraightA))
-    return PrimitiveType::CIELAB_StraightA;

@@ -44,6 +44,18 @@ if (str == "Any")
 {
     return PrimitiveType::Any;
 }
+if (str == "CIELAB")
+{
+    return PrimitiveType::CIELAB;
+}
+if (str == "CIELAB_PremultipliedA")
+{
+    return PrimitiveType::CIELAB_PremultipliedA;
+}
+if (str == "CIELAB_StraightA")
+{
+    return PrimitiveType::CIELAB_StraightA;
+}
 if (str == "sRGB")
 {
     return PrimitiveType::sRGB;
@@ -67,16 +79,4 @@ if (str == "LinearRGB_PremultipliedA")
 if (str == "LinearRGB_StraightA")
 {
     return PrimitiveType::LinearRGB_StraightA;
-}
-if (str == "CIELAB")
-{
-    return PrimitiveType::CIELAB;
-}
-if (str == "CIELAB_PremultipliedA")
-{
-    return PrimitiveType::CIELAB_PremultipliedA;
-}
-if (str == "CIELAB_StraightA")
-{
-    return PrimitiveType::CIELAB_StraightA;
 }

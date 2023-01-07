@@ -4,10 +4,10 @@
  * Instead, go to "generator.py" and edit the "has_an_alpha_channel" function there.
  * -----------------------------------------------------------------------------
  */
+case PrimitiveType::CIELAB_StraightA:
+case PrimitiveType::CIELAB_PremultipliedA:
 case PrimitiveType::sRGB_StraightA:
 case PrimitiveType::sRGB_PremultipliedA:
 case PrimitiveType::LinearRGB_StraightA:
 case PrimitiveType::LinearRGB_PremultipliedA:
-case PrimitiveType::CIELAB_StraightA:
-case PrimitiveType::CIELAB_PremultipliedA:
 return true;
