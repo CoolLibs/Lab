@@ -18,9 +18,9 @@ case PrimitiveType::Any: return "/*Any*/ ERROR the Any type should have been con
 case PrimitiveType::CIELAB: return "/*CIELAB*/ vec3";
 case PrimitiveType::CIELAB_PremultipliedA: return "/*CIELAB_PremultipliedA*/ vec4";
 case PrimitiveType::CIELAB_StraightA: return "/*CIELAB_StraightA*/ vec4";
-case PrimitiveType::sRGB: return "/*sRGB*/ vec3";
-case PrimitiveType::sRGB_PremultipliedA: return "/*sRGB_PremultipliedA*/ vec4";
-case PrimitiveType::sRGB_StraightA: return "/*sRGB_StraightA*/ vec4";
 case PrimitiveType::LinearRGB: return "/*LinearRGB*/ vec3";
 case PrimitiveType::LinearRGB_PremultipliedA: return "/*LinearRGB_PremultipliedA*/ vec4";
-case PrimitiveType::LinearRGB_StraightA: return "/*LinearRGB_StraightA*/ vec4"; 
+case PrimitiveType::LinearRGB_StraightA: return "/*LinearRGB_StraightA*/ vec4";
+case PrimitiveType::sRGB: return "/*sRGB*/ vec3";
+case PrimitiveType::sRGB_PremultipliedA: return "/*sRGB_PremultipliedA*/ vec4";
+case PrimitiveType::sRGB_StraightA: return "/*sRGB_StraightA*/ vec4"; 

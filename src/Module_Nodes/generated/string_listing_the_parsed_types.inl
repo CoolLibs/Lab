@@ -17,9 +17,9 @@ R"STR(  - int
   - CIELAB
   - CIELAB_PremultipliedA
   - CIELAB_StraightA
-  - sRGB
-  - sRGB_PremultipliedA
-  - sRGB_StraightA
   - LinearRGB
   - LinearRGB_PremultipliedA
-  - LinearRGB_StraightA)STR"
+  - LinearRGB_StraightA
+  - sRGB
+  - sRGB_PremultipliedA
+  - sRGB_StraightA)STR"

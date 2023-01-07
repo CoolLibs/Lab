@@ -18,9 +18,9 @@ Int,
     CIELAB,
     CIELAB_PremultipliedA,
     CIELAB_StraightA,
-    sRGB,
-    sRGB_PremultipliedA,
-    sRGB_StraightA,
     LinearRGB,
     LinearRGB_PremultipliedA,
-    LinearRGB_StraightA
+    LinearRGB_StraightA,
+    sRGB,
+    sRGB_PremultipliedA,
+    sRGB_StraightA

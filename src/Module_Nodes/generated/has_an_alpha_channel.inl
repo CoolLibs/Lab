@@ -6,8 +6,8 @@
  */
 case PrimitiveType::CIELAB_StraightA:
 case PrimitiveType::CIELAB_PremultipliedA:
-case PrimitiveType::sRGB_StraightA:
-case PrimitiveType::sRGB_PremultipliedA:
 case PrimitiveType::LinearRGB_StraightA:
 case PrimitiveType::LinearRGB_PremultipliedA:
+case PrimitiveType::sRGB_StraightA:
+case PrimitiveType::sRGB_PremultipliedA:
 return true;

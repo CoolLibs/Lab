@@ -56,18 +56,6 @@ if (str == "CIELAB_StraightA")
 {
     return PrimitiveType::CIELAB_StraightA;
 }
-if (str == "sRGB")
-{
-    return PrimitiveType::sRGB;
-}
-if (str == "sRGB_PremultipliedA")
-{
-    return PrimitiveType::sRGB_PremultipliedA;
-}
-if (str == "sRGB_StraightA")
-{
-    return PrimitiveType::sRGB_StraightA;
-}
 if (str == "LinearRGB")
 {
     return PrimitiveType::LinearRGB;
@@ -79,4 +67,16 @@ if (str == "LinearRGB_PremultipliedA")
 if (str == "LinearRGB_StraightA")
 {
     return PrimitiveType::LinearRGB_StraightA;
+}
+if (str == "sRGB")
+{
+    return PrimitiveType::sRGB;
+}
+if (str == "sRGB_PremultipliedA")
+{
+    return PrimitiveType::sRGB_PremultipliedA;
+}
+if (str == "sRGB_StraightA")
+{
+    return PrimitiveType::sRGB_StraightA;
 }

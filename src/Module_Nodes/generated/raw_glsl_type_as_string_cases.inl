@@ -18,9 +18,9 @@ case PrimitiveType::Any: return "ERROR the Any type should have been converted e
 case PrimitiveType::CIELAB: return "vec3";
 case PrimitiveType::CIELAB_PremultipliedA: return "vec4";
 case PrimitiveType::CIELAB_StraightA: return "vec4";
-case PrimitiveType::sRGB: return "vec3";
-case PrimitiveType::sRGB_PremultipliedA: return "vec4";
-case PrimitiveType::sRGB_StraightA: return "vec4";
 case PrimitiveType::LinearRGB: return "vec3";
 case PrimitiveType::LinearRGB_PremultipliedA: return "vec4";
-case PrimitiveType::LinearRGB_StraightA: return "vec4"; 
+case PrimitiveType::LinearRGB_StraightA: return "vec4";
+case PrimitiveType::sRGB: return "vec3";
+case PrimitiveType::sRGB_PremultipliedA: return "vec4";
+case PrimitiveType::sRGB_StraightA: return "vec4"; 
