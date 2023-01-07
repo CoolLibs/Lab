@@ -1,5 +1,0 @@
-
-float main(CIELAB_PremultipliedA color)
-{
-    return color.x;
-}

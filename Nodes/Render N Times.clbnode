@@ -1,11 +1,11 @@
 
-INPUT UV->CIELAB_StraightA `Image`;
+INPUT UV->CIELAB_PremultipliedA `Image`;
 INPUT int `N`;
-INPUT(CIELAB_StraightA, CIELAB_StraightA)->CIELAB_StraightA `Blend Mode`;
+INPUT(CIELAB_PremultipliedA, CIELAB_PremultipliedA)->CIELAB_PremultipliedA `Blend Mode`;
 
 OUTPUT float `Index`;
 
-CIELAB_StraightA main(UV uv)
+CIELAB_PremultipliedA main(UV uv)
 {
     vec4 color = vec4(0.);
 

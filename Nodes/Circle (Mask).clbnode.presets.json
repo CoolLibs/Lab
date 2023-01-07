@@ -3,7 +3,7 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "5d510817-fc7a-431e-a8fc-bc43cd748f57",
+                    "first": "7eb12f04-348b-4842-80a6-bb8efbd9a424",
                     "second": {
                         "Name": "Default",
                         "Values": [
@@ -13,17 +13,25 @@
                                     "Name": "Radius",
                                     "Value": 0.5,
                                     "Metadata": {
-                                        "Min Value": 0.0,
-                                        "Max Value": 1.0,
-                                        "Bounded": false,
-                                        "Drag speed": 0.009999999776482582
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
                                     },
                                     "Default Value": 0.5,
                                     "Default Metadata": {
-                                        "Min Value": 0.0,
-                                        "Max Value": 1.0,
-                                        "Bounded": false,
-                                        "Drag speed": 0.009999999776482582
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
                                     }
                                 }
                             },
@@ -33,17 +41,25 @@
                                     "Name": "Edge blur",
                                     "Value": 0.0,
                                     "Metadata": {
-                                        "Min Value": 0.0,
-                                        "Max Value": 1.0,
-                                        "Bounded": false,
-                                        "Drag speed": 0.009999999776482582
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
                                     },
                                     "Default Value": 0.0,
                                     "Default Metadata": {
-                                        "Min Value": 0.0,
-                                        "Max Value": 1.0,
-                                        "Bounded": false,
-                                        "Drag speed": 0.009999999776482582
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
                                     }
                                 }
                             },
@@ -57,14 +73,18 @@
                                             "y": 0.0
                                         }
                                     },
-                                    "Metadata": {},
+                                    "Metadata": {
+                                        "Drag speed": 0.000029999999242136256
+                                    },
                                     "Default Value": {
                                         "Point2D": {
                                             "x": 0.0,
                                             "y": 0.0
                                         }
                                     },
-                                    "Default Metadata": {}
+                                    "Default Metadata": {
+                                        "Drag speed": 0.000029999999242136256
+                                    }
                                 }
                             }
                         ]
