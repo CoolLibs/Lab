@@ -11,7 +11,7 @@ CIELAB_PremultipliedA main(UV uv)
 
     for (int i = 0; i < `N`; ++i)
     {
-        `Index` = i;
+        `Index` = float(i);
         color   = `Blend Mode`(`Image`(uv), color);
     }
 
