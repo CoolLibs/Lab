@@ -1,5 +1,0 @@
-
-float main(UV uv)
-{
-    return uv.x * 0.5 / _aspect_ratio + 0.5;
-}

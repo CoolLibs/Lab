@@ -1,7 +1,0 @@
-
-INPUT float `x`;
-
-float main()
-{
-    return `x`;
-}
