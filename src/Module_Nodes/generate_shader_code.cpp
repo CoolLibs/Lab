@@ -30,6 +30,7 @@ static auto inject_context_argument_in_all_functions(std::string code, std::vect
 
     // Fixup the extra commas for functions that had no arguments initially
     Cool::String::replace_all(code, ", )", ")");
+    Cool::String::replace_all(code, "(coollab_context, ()", "(coollab_context");
 
     return code;
 }
