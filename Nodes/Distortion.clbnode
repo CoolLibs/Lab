@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
+INPUT UV->UV `imageDistortion`;
+INPUT float `strength`;
+
+UV main(UV uv)
+{
+    return uv + `imageDistortion`(uv)*`strength`; 
+}
