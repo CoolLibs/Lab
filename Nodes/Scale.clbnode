@@ -5,8 +5,9 @@ INPUT float `Scale y`;
 
 UV main(UV uv){
     mat2 scale = mat2(
-        `Scale x`,0.0,
-        0.0,`Scale y`
+        1/`Scale x`,0.0,
+        0.0,1/`Scale y`
     );
+
     return scale*uv;
 }

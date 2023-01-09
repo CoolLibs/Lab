@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+INPUT UV->sRGB `Image`;
+INPUT float `Amount`
+
+sRGB main(UV uv){
+    float noise = (fract(sin(dot(uv, vec2(12.9898,78.233)*2.0)) * 43758.5453));
+    vec3 tex = `Image`(uv);
+    vec3 col = tex - noise * `Amount`;
+    return col;
+}
