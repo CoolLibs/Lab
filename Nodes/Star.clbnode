@@ -1,0 +1,19 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
+INPUT float `Glow`;
+
+float main(UV uv)
+{
+    float d = length(uv);
+    float m = 1./d*`Glow`/10.; 
+
+    float rays = max(0.0, 1.0-abs(uv.x*uv.y*500.0));
+    m += rays*`Glow`;
+
+    rays = max(0.0, 1.0-abs(uv.x*uv.y*500.0));
+    m += rays*.3*`Glow`;
+
+    m *= smoothstep(1.0, 0.08, d);
+    return m;
+
+}
