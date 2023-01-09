@@ -5,5 +5,5 @@ INPUT float `Y`;
 
 UV main(UV uv)
 {
-    return uv + vec2(`X`,`Y`);
-}
+    return uv - vec2(`X`,`Y`);
+} 
