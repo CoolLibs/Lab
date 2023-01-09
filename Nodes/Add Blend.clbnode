@@ -1,0 +1,6 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
+CIELAB_PremultipliedA main(CIELAB_PremultipliedA A, CIELAB_PremultipliedA B)
+{
+    return A + B;
+}

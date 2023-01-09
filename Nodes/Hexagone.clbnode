@@ -1,0 +1,37 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+INPUT float `SizeGrid`;
+INPUT Point2D `Center`;
+
+//INPUT float `Blur`;
+
+float random(vec2 co)
+{
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+vec3 hue( float c )
+{
+    return smoothstep(0.,1., abs(mod(c*6.+vec3(0,4,2), 6.)-3.)-1.);
+}
+
+vec2 main(UV uv)
+{
+    
+    // scale value between height and width;
+    vec2 s = vec2(1,sqrt(3));
+
+    uv*=`SizeGrid`;
+
+    // xy for the grid
+    //zw for the offset grid
+    vec4 hexCenter = round(vec4(uv,uv-vec2(.5,1.))/s.xyxy);
+    
+    // xy -> index of the hex  where the pixel is
+    // zw -> position into this hexagone
+    vec4 offset = vec4(uv-hexCenter.xy*s,uv-(hexCenter.zw+.5)*s);
+
+    float d1 = dot(offset.xy, offset.xy); // distance to the first center of the grid
+    float d2 = dot(offset.zw, offset.zw); // distance to the second center of the offset grid
+
+    return  d1<d2 ? offset.xy : offset.zw;
+}
