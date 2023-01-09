@@ -1,0 +1,6 @@
+INPUT float `Radius`;
+
+SignedDistance main(UV uv)
+{
+    return length(uv)-`Radius`;
+}

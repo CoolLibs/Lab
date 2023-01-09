@@ -1,0 +1,10 @@
+INPUT CIELAB `Shape Color`;
+INPUT CIELAB `Background Color`;
+
+CIELAB main(SignedDistance d){
+    vec3 col = (d>0.0) ?  `Background Color` : `Shape Color`;
+    col *= 1.0 - exp(-6.0*abs(d));
+    col *= 0.8 + 0.2*cos(150.0*d);
+    col = mix( col, vec3(1.0), 1.0-smoothstep(0.0,0.01,abs(d)) );
+    return col;
+}
