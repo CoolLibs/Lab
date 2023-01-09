@@ -2,7 +2,7 @@
 
 INPUT float `Radius`;
 INPUT float `Edge blur`;
-INPUT             Point2D `Center`;
+INPUT Point2D `Center`;
 
 float main(UV uv)
 {

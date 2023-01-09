@@ -1,0 +1,25 @@
+INPUT float `Height`;
+INPUT float `Length`;
+INPUT float `Blur`;
+INPUT  Point2D `Center`;
+
+float main(UV uv)
+{
+    float left = `Center`.x - `Length`/2.;
+    float right = `Center`.x + `Length`/2.;
+
+    float bottom = `Center`.y - `Height`/2.;
+    float top = `Center`.y + `Height`/2.;
+
+    float step1 = smoothstep(left-`Blur`,left+`Blur`, uv.x);
+    float step2 = smoothstep(right+`Blur`, right-`Blur`, uv.x);
+
+    float band1 = step1*step2;
+
+    float step3 = smoothstep(bottom-`Blur`,bottom+`Blur`, uv.y);
+    float step4 = smoothstep(top+`Blur`, top-`Blur`, uv.y);
+
+    float band2 = step3*step4;
+
+    return band1*band2;
+}
