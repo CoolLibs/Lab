@@ -3,7 +3,7 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "7660fdb1-89e2-4711-bec7-5b271c5cfd1b",
+                    "first": "2532e1eb-7d50-4ea6-871c-030855c56836",
                     "second": {
                         "Name": "Default",
                         "Values": [
@@ -14,7 +14,7 @@
                                     "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
+                                            "Has min bound": true,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
@@ -42,8 +42,8 @@
                                     "Value": 5,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
+                                            "Has min bound": true,
+                                            "Min": 2,
                                             "Has max bound": false,
                                             "Max": 12,
                                             "Drag speed": 0.03999999910593033,
@@ -70,8 +70,8 @@
                                     "Value": 3.0,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
+                                            "Has min bound": true,
+                                            "Min": 1.0099999904632569,
                                             "Has max bound": false,
                                             "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
@@ -95,7 +95,7 @@
                     }
                 },
                 {
-                    "first": "a3417924-5a05-4314-ab2f-8b66b325f104",
+                    "first": "6b183659-3d66-4c20-a56d-11c1238bbfea",
                     "second": {
                         "Name": "Triangle",
                         "Values": [
@@ -106,7 +106,7 @@
                                     "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
+                                            "Has min bound": true,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
@@ -134,8 +134,8 @@
                                     "Value": 3,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
+                                            "Has min bound": true,
+                                            "Min": 2,
                                             "Has max bound": false,
                                             "Max": 12,
                                             "Drag speed": 0.03999999910593033,
@@ -162,8 +162,8 @@
                                     "Value": 2.0,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
+                                            "Has min bound": true,
+                                            "Min": 1.0099999904632569,
                                             "Has max bound": false,
                                             "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
@@ -187,99 +187,7 @@
                     }
                 },
                 {
-                    "first": "9654bd74-ac9b-43fe-9dde-662b42fa5bd1",
-                    "second": {
-                        "Name": "Diamond",
-                        "Values": [
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Size",
-                                    "Value": 1.0,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 1.0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "index": 1,
-                                "data": {
-                                    "Name": "Branches",
-                                    "Value": 4,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 4,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Branch thickness",
-                                    "Value": 2.0,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 2.0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "first": "c5cedd71-5cd9-48eb-8d0d-a69e611523d3",
+                    "first": "3baa8062-1d6c-493e-8ed6-c1116f772a4c",
                     "second": {
                         "Name": "Star",
                         "Values": [
@@ -290,7 +198,7 @@
                                     "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
+                                            "Has min bound": true,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
@@ -318,8 +226,8 @@
                                     "Value": 4,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
+                                            "Has min bound": true,
+                                            "Min": 2,
                                             "Has max bound": false,
                                             "Max": 12,
                                             "Drag speed": 0.03999999910593033,
@@ -346,8 +254,8 @@
                                     "Value": 3.0,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
+                                            "Has min bound": true,
+                                            "Min": 1.0099999904632569,
                                             "Has max bound": false,
                                             "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,

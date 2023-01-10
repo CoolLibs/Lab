@@ -1,0 +1,18 @@
+// httuvs://iquilezles.org/articles/distfunctions2d/
+
+// float dot(UV uv, UV xy) {
+//     return uv.x*xy.x + uv.y*xy.y;
+// }
+
+SignedDistance main(UV uv) {
+
+    uv.x = abs(uv.x);
+    uv.y += 0.5;
+
+    if(uv.y+uv.x>1.0) {
+        return sqrt(dot(uv-vec2(0.25,0.75), uv-vec2(0.25,0.75))) - sqrt(2.0)/4.0;
+
+    }
+    return sqrt(min(dot(uv-vec2(0.00,1.00), uv-vec2(0.00,1.00)), dot(uv-0.5*max(uv.x+uv.y,0.0), uv-0.5*max(uv.x+uv.y,0.0)))) * sign(uv.x-uv.y);
+}
+
