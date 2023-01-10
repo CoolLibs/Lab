@@ -3,7 +3,7 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "b3b885dc-f9d7-49b3-84c2-6ff84194db59",
+                    "first": "74dfb4cb-910e-4373-95cf-6c492443e657",
                     "second": {
                         "Name": "Default",
                         "Values": [
@@ -11,18 +11,18 @@
                                 "index": 2,
                                 "data": {
                                     "Name": "Density",
-                                    "Value": 20.0,
+                                    "Value": 0.5429999828338623,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
                                             "Min": 0.0,
                                             "Has max bound": false,
-                                            "Max": 100.0,
+                                            "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
                                             "Use slider": true
                                         }
                                     },
-                                    "Default Value": 5.0,
+                                    "Default Value": 0.5429999828338623,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -38,19 +38,19 @@
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Intensity",
-                                    "Value": 5.0,
+                                    "Name": "Black / White",
+                                    "Value": -0.11800000071525574,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
-                                            "Min": 0.0,
+                                            "Min": -1.0,
                                             "Has max bound": false,
-                                            "Max": 10.0,
+                                            "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
                                             "Use slider": true
                                         }
                                     },
-                                    "Default Value": 10.0,
+                                    "Default Value": -0.11800000071525574,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
