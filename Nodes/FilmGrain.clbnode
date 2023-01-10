@@ -2,19 +2,21 @@
 
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-INPUT UV->sRGB `Image`;
-INPUT float `Threshold`;
-INPUT float `Noise`;
+INPUT UV->LinearRGB `Image`;
+INPUT float `Density`;
+INPUT float `Contrast`;
+INPUT float `Max`;
 
 
-sRGB main(UV uv){
+LinearRGB main(UV uv){
     float thresh = 0.2;
     
     vec2 rand = hash_0_to_1_2D_to_2D(uv);
     float hash = rand.x*100;
     float noise = 0;
-    if (hash-`Threshold`<0){
-       noise = pow(rand.y*2-1,1/`Noise`);
+    if (hash-`Density`<0){
+        float val = rand.y;//*2-1;
+        noise = (pow(abs(val),1/`Contrast`) * sign(val))/(1/`Max`);
     }
     vec3 tex = `Image`(uv);
     vec3 col = tex + noise;
