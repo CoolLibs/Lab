@@ -61,6 +61,7 @@ auto generate_shader_code(
         FMT_COMPILE(R"STR(#version 410
 
 uniform float _time;
+uniform float _height;
 out vec4      out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"

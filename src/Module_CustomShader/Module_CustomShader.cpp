@@ -127,6 +127,7 @@ void Module_CustomShader::render(RenderParams in, UpdateContext_Ref update_ctx)
 
     _shader.pipeline().shader()->bind();
     _shader.pipeline().shader()->set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+    _shader.pipeline().shader()->set_uniform("_height", in.provider(Cool::Input_Height{}));
     _shader.pipeline().shader()->set_uniform("_time", in.provider(Cool::Input_Time{}));
 
     for (auto& input : inputs())

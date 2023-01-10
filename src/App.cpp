@@ -157,7 +157,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         some_module.do_rendering(
             {
-                input_provider(aspect_ratio, time),
+                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time),
                 input_factory(),
                 input_destructor(),
                 is_dirty__functor(),
@@ -264,7 +264,7 @@ void App::imgui_windows()
         DebugOptions::test_shaders_compilation__window([&]() {
             const auto compile_custom_shaders = [&]() {
                 compile_all_custom_shaders(
-                    input_provider(2.f, 0.f),
+                    input_provider(2.f, 1.f, 0.f),
                     input_factory(),
                     input_destructor(),
                     update_context()

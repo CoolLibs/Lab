@@ -3,26 +3,54 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "588bc25d-1dbf-4ac5-a2e8-8d9fc3234cb9",
+                    "first": "b3b885dc-f9d7-49b3-84c2-6ff84194db59",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Amount",
-                                    "Value": 0.5,
+                                    "Name": "Density",
+                                    "Value": 20.0,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
-                                            "Min": -0.30000001192092898,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 100.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": true
+                                        }
+                                    },
+                                    "Default Value": 5.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
                                             "Use slider": false
                                         }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Intensity",
+                                    "Value": 5.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 10.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": true
+                                        }
                                     },
-                                    "Default Value": 0.10000000149011612,
+                                    "Default Value": 10.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
