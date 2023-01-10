@@ -1,0 +1,18 @@
+INPUT UV->float `Noise`;
+INPUT int `Octaves`;
+INPUT float `Amplitude`;
+INPUT float `Size`;
+
+float main (UV uv){
+    // Initial values
+    float value = 0.0;
+    float amplitude = `Amplitude`;
+
+    // Loop of octaves
+    for(int i=0; i<`Octaves`;i++){
+        value += amplitude * `Noise`(`Size`*uv);
+        uv*=2.;
+        amplitude*=.5;
+    }
+    return value;
+}
