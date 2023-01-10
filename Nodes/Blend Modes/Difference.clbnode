@@ -1,6 +1,6 @@
 
 
-sRGB main(sRGB Over, sRGB Under)
+CIELAB_PremultipliedA main(CIELAB_PremultipliedA Over, CIELAB_PremultipliedA Under)
 {
     return abs(Over - Under);
 }

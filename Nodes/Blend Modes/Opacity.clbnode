@@ -1,7 +1,7 @@
 
 INPUT float `percent`;
 
-CIELAB_PremultipliedA main(CIELAB_PremultipliedA Over, CIELAB_PremultipliedA Under)
+sRGB main(sRGB Over, sRGB Under)
 {
-    return (1.0-`percent`)*Over + `percent`*Under;
+    return `percent`*Over + (1.0-`percent`)*Under;
 }
