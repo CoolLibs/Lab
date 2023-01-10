@@ -63,7 +63,7 @@ auto generate_shader_code(
 uniform float _time;
 out vec4      out_Color;
 
-#include "_ROOT_FOLDER_/res/shader-utils/normalized_uv.glsl"
+#include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 

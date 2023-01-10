@@ -1,3 +1,7 @@
+/*
+ * Normalize UVs
+ */
+
 layout(location = 0) in vec2 _uv;
 uniform float _aspect_ratio;
 
@@ -29,4 +33,13 @@ vec2 unnormalize_uv_with_aspect_ratio(vec2 uv, float aspect_ratio)
 vec2 unnormalize_uv(vec2 uv)
 {
     return unnormalize_uv_with_aspect_ratio(uv, _aspect_ratio);
+}
+
+/*
+ * antialised_step
+ */
+
+float antialised_step(float thickness, float strength)
+{
+    return smoothstep(thickness+0.0025, thickness-0.0025, strength);
 }
