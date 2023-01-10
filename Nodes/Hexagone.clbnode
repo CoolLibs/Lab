@@ -2,7 +2,9 @@
 INPUT float `SizeGrid`;
 INPUT Point2D `Center`;
 
-//INPUT float `Blur`;
+OUTPUT float `Index X`;
+OUTPUT float `Index Y`;
+
 
 float random(vec2 co)
 {
@@ -20,6 +22,8 @@ vec2 main(UV uv)
     // scale value between height and width;
     vec2 s = vec2(1,sqrt(3));
 
+    //uv-= `Center`;
+
     uv*=`SizeGrid`;
 
     // xy for the grid
@@ -33,5 +37,7 @@ vec2 main(UV uv)
     float d1 = dot(offset.xy, offset.xy); // distance to the first center of the grid
     float d2 = dot(offset.zw, offset.zw); // distance to the second center of the offset grid
 
-    return  d1<d2 ? offset.xy : offset.zw;
+    `Index X` = 0.;
+
+    return  d1<d2 ? (offset.xy-`Center`) : (offset.zw-`Center`);
 }

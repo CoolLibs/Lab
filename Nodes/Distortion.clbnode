@@ -5,5 +5,5 @@ INPUT float `strength`;
 
 UV main(UV uv)
 {
-    return uv + `imageDistortion`(uv)*`strength`; 
+    return uv + `imageDistortion`(uv)*`strength`;
 }
