@@ -1,10 +1,24 @@
+#include <random>
+
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
 INPUT UV->sRGB `Image`;
-INPUT float `Amount`
+INPUT float `Threshold`;
+INPUT float `Noise`;
+
 
 sRGB main(UV uv){
-    float noise = (fract(sin(dot(uv, vec2(12.9898,78.233)*2.0)) * 43758.5453));
+    float thresh = 0.2;
+    
+    vec2 rand = hash_0_to_1_2D_to_2D(uv);
+    float hash = rand.x*100;
+    float noise = 0;
+    if (hash-`Threshold`<0){
+       noise = pow(rand.y*2-1,1/`Noise`);
+    }
     vec3 tex = `Image`(uv);
-    vec3 col = tex - noise * `Amount`;
+    vec3 col = tex + noise;
     return col;
 }
+
+
