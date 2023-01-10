@@ -1,6 +1,6 @@
 // https://iquilezles.org/articles/distfunctions2d/
-
-INPUT float `Size`;
+/// 
+INPUT float `Size`; ///
 INPUT int `Branches`;
 INPUT float `Branch thickness`;
 
