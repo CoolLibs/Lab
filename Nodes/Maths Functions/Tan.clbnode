@@ -1,0 +1,6 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
+Any main(Any value)
+{
+    return tan(value); 
+}
