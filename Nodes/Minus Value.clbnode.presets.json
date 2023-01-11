@@ -1,0 +1,15 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "31bb5345-1730-4099-aff7-a328d6f73b7e",
+                    "second": {
+                        "Name": "Default",
+                        "Values": []
+                    }
+                }
+            ]
+        }
+    }
+}

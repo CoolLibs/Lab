@@ -1,0 +1,50 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "1e3fb698-9273-43a1-9e60-2d6f8b10ccb9",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 4,
+                                "data": {
+                                    "Name": "Vector2",
+                                    "Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
