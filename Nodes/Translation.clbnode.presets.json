@@ -3,44 +3,16 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "cadd65a2-a79c-4624-a0e2-fa9de28ff0db",
+                    "first": "ae0971bd-d562-4a3c-9050-2aaa25c9e664",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 1,
-                                "data": {
-                                    "Name": "Detail",
-                                    "Value": 20,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0,
-                                            "Has max bound": true,
-                                            "Max": 200,
-                                            "Drag speed": 1.0,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 50,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
                                 "index": 4,
                                 "data": {
-                                    "Name": "Seed",
+                                    "Name": "Translation",
                                     "Value": {
-                                        "x": 0.0,
+                                        "x": 0.5,
                                         "y": 0.0
                                     },
                                     "Metadata": {
@@ -54,7 +26,7 @@
                                         }
                                     },
                                     "Default Value": {
-                                        "x": 0.0,
+                                        "x": 0.5,
                                         "y": 0.0
                                     },
                                     "Default Metadata": {

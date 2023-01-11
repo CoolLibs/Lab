@@ -1,9 +1,8 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-INPUT float `X`;
-INPUT float `Y`;
+INPUT vec2 `Translation`;
 
 UV main(UV uv)
 {
-    return uv - vec2(`X`,`Y`);
+    return uv - `Translation`;
 } 

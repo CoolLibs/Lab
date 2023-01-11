@@ -38,7 +38,7 @@
                             {
                                 "index": 1,
                                 "data": {
-                                    "Name": "Branches",
+                                    "Name": "Nb of Branches",
                                     "Value": 5,
                                     "Metadata": {
                                         "Bounds": {

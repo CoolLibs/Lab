@@ -38,7 +38,7 @@
                             {
                                 "index": 1,
                                 "data": {
-                                    "Name": "Vertex",
+                                    "Name": "Nb of Sides",
                                     "Value": 5,
                                     "Metadata": {
                                         "Bounds": {
