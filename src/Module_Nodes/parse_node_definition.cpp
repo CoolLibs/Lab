@@ -49,7 +49,7 @@ static auto parse_parameters(std::string const& parameters_list)
 
     auto const first_name_pos = Cool::String::find_next_word_position(parameters_list, first_type_pos->second);
     if (!first_name_pos)
-        return tl::make_unexpected("Missing parameter name.");
+        return tl::make_unexpected("Missing parameter name in main function.");
 
     params.push_back(ParamDesc{
         .name = Cool::String::substring(parameters_list, *first_name_pos),
