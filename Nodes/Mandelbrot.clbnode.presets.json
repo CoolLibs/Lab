@@ -11,11 +11,11 @@
                                 "index": 1,
                                 "data": {
                                     "Name": "Detail",
-                                    "Value": 20,
+                                    "Value": 50,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
-                                            "Min": 0,
+                                            "Min": 10,
                                             "Has max bound": true,
                                             "Max": 200,
                                             "Drag speed": 1.0,
