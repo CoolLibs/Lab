@@ -1,0 +1,27 @@
+INPUT float->UV `Curve`;
+INPUT int `Number of segments`;
+
+// https://iquilezles.org/articles/distfunctions2d/
+float sdSegment(vec2 p, vec2 a, vec2 b)
+{
+    vec2  pa = p - a, ba = b - a;
+    float h = saturate(dot(pa, ba) / dot(ba, ba));
+    return length(pa - ba * h);
+}
+
+SignedDistance main(UV uv)
+{
+    float dist_to_curve     = FLT_MAX;
+    vec2  previous_position = `Curve`(-1. /`Number of segments`);
+
+    for (int i = 0; i < `Number of segments`; i++)
+    {
+        vec2  current_position = `Curve`(i / float(`Number of segments`));
+        float segment          = sdSegment(uv, previous_position, current_position);
+
+        dist_to_curve     = min(dist_to_curve, segment);
+        previous_position = current_position;
+    }
+
+    return dist_to_curve;
+}

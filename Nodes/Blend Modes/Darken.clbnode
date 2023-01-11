@@ -1,0 +1,6 @@
+
+
+CIELAB_PremultipliedA main(CIELAB_PremultipliedA Over, CIELAB_PremultipliedA Under)
+{
+    return min(Over, Under);
+}

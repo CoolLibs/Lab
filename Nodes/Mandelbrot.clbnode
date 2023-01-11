@@ -1,0 +1,28 @@
+
+INPUT int `Detail`;
+
+vec2 complexMultiply(vec2 a, vec2 b) { 
+    return vec2(a.x*b.x - a.y*b.y, a.x*b.y + a.y*b.x); 
+}
+
+
+float main(UV uv) {
+    vec2 z = vec2(0.,0.);
+    vec2 c = uv;
+
+    bool inSet = true; 
+
+    for (int i=0; i<`Detail`; i++) {
+
+        z = complexMultiply(z,z) + c;
+
+        if (length(z) > 2.) {
+            inSet = false;
+            break;
+        }
+    }
+
+    return(float(inSet));
+
+
+}

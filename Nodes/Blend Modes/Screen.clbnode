@@ -1,0 +1,6 @@
+
+
+sRGB main(sRGB Over, sRGB Under)
+{
+    return Over + (1.-Over) * (1.-Under);
+}

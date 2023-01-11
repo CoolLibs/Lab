@@ -1,0 +1,44 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "3f41e0fa-1135-4368-8ff2-7c21ff079f75",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 1,
+                                "data": {
+                                    "Name": "Number of segments",
+                                    "Value": 100,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.09000000357627869,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 100,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.03999999910593033,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,7 @@
+
+INPUT float `percent`;
+
+sRGB main(sRGB Over, sRGB Under)
+{
+    return `percent`*Over + (1.0-`percent`)*Under;
+}
