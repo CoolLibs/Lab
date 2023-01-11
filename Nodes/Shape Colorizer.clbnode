@@ -1,0 +1,12 @@
+INPUT CIELAB `Shape Color`;
+INPUT CIELAB `Background Color`;
+INPUT CIELAB `Border Color`;
+
+// IQ's SDF debug view https://www.shadertoy.com/view/3ltSW2
+CIELAB main(SignedDistance d){
+    vec3 col = (d>0.0) ?  `Background Color` : `Shape Color`;
+    col *= 1.0 - exp(-4.0*abs(d)); // Darken border
+    col *= 0.8 + 0.2*cos(150.0*d); // Isolines
+    col = mix( col, `Border Color`, 1.0-smoothstep(0.0,0.01,abs(d)) ); // Highlight exact border 
+    return col;
+}

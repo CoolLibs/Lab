@@ -1,12 +1,6 @@
 INPUT int `gridSize`; //default 5 min 1 max 20
 INPUT float `t`;
 
-vec2 N22(vec2 p){
-    vec3 a = fract(p.xyx*vec3(123.34,234.34,345.65));
-    a+= dot(a, a+34.45);
-    return fract(vec2(a.x*a.y,a.y*a.z));
-}
-
 
 float main(UV uv)
 {
@@ -18,12 +12,12 @@ float main(UV uv)
 
     vec2 grid = fract(uv) -0.5;
     float d = length(uv-grid);
-    vec2 id = floor(uv);
+    ivec2 id = ivec2(floor(uv));
 
-    for(float y = -1.; y<=1.; y++){
-        for(float x = -1; x<=1.; x++){
-            vec2 offs = vec2(x,y);
-            vec2 n = N22(id+offs);
+    for(int y = -1; y<=1; y++){
+        for(int x = -1; x<=1; x++){
+            ivec2 offs = ivec2(x,y);
+            vec2 n = hash_0_to_1_2D_to_2D(id+offs);
             vec2 p = sin(n*(`t`+4.))/2.+offs;
             float d = length(grid-p);
 
