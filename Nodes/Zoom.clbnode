@@ -2,5 +2,5 @@ INPUT float `Zoom`;
 
 UV main(UV uv)
   {
-    return uv* (1/`Zoom`);
+    return uv /`Zoom`;
 }

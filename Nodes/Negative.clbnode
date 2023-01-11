@@ -1,0 +1,7 @@
+
+sRGB main(sRGB col){
+    col.x = 1-col.x;
+    col.y = 1-col.y;
+    col.z = 1-col.z;
+    return col;
+}
