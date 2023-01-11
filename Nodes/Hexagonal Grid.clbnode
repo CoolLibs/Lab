@@ -1,0 +1,49 @@
+INPUT float `SizeGrid`;
+
+INPUT Point2D `Center`;
+
+OUTPUT float `Index X`;
+OUTPUT float `Index Y`;
+
+float sqrt_3 = 1.73205;
+
+
+float HexDist(vec2 p){
+    vec2 abs_uv = abs(p);
+    float sqrt_3 = 1.73205;
+
+    float val = dot(abs_uv, normalize(vec2(1.,sqrt_3)));
+    val = max(val, abs_uv.x);
+    return  val;
+}
+
+vec4 HexCoord(vec2 uv){
+    float sqrt_3 = 1.73205;
+
+    vec2 r = vec2(1.,sqrt_3);
+    vec2 h = r*0.5;
+
+    vec2 a = mod(uv,r)-h;
+    vec2 b = mod(uv-h,r)-h;
+    
+    vec2 gv = dot(a,a) < dot(b,b) ? a : b;
+
+    vec2 id = uv-gv;
+
+    return vec4 (gv.x, gv.y, id.x, id.y);
+}
+
+vec2 main(UV uv)
+{
+
+    uv*=`SizeGrid`;
+
+    vec2 gv = HexCoord(uv).xy;
+    vec2 id = HexCoord(uv).zw;
+
+    `Index X` = id.x;
+    `Index Y` = id.y;
+
+    return gv;
+
+}

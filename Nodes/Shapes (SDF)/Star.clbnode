@@ -2,28 +2,40 @@
 /// 
 INPUT float `Size`; ///
 INPUT int `Branches`;
-INPUT float `Branch thickness`;
-
-float PI = 3.14159265;
+INPUT float `Pointiness`;
+INPUT float `Roundness`;
 
 SignedDistance main(UV uv)
 {
-    
-float an = PI/float(`Branches`);
-float en = PI/`Branch thickness`;
 
-vec2 acs = vec2 (cos(an), sin(an));
-vec2 ecs = vec2 (cos(en), sin (en));
+    float size2 = `Size` / cos(PI/float(`Branches`));
 
-float bn = mod(atan(uv.x, uv.y), 2.0*an) - an;
+    float an = PI/float(`Branches`);
 
-uv = length(uv)*vec2(cos(bn), abs(sin(bn)));
+    float t = `Pointiness`;
+    t = mix(2.0, float(`Branches`), t );
 
-uv-= `Size`*acs;
+    float r = mix(0.0, size2, `Roundness`);
 
-uv += ecs*clamp(-dot(uv,ecs), 0.0, `Size`*acs.y/ecs.y);
 
-return length(uv)*sign(uv.x);
+    float size = (size2-r);
+
+    float en = PI/t;
+
+
+
+    vec2 acs = vec2 (cos(an), sin(an));
+    vec2 ecs = vec2 (cos(en), sin(en));
+
+    // Symmetry
+    float bn = mod(atan(uv.x, uv.y), 2.0*an) - an;
+    uv = length(uv)*vec2(cos(bn), abs(sin(bn)));
+
+    uv-= size*acs;
+
+    uv += ecs*clamp(-dot(uv,ecs), 0.0, size*acs.y/ecs.y);
+
+    return length(uv)*sign(uv.x) -r;
 
 
 }
