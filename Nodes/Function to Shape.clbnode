@@ -1,0 +1,16 @@
+INPUT float->float `Function`;
+
+SignedDistance main(UV uv)
+{
+    float distance = FLT_MAX;
+    int vicinity = 3;
+
+    for (float i = -vicinity; i < vicinity; i+=0.1) {
+        float current_iteration = uv.x + i;
+        vec2 close_point = vec2(current_iteration, `Function`(current_iteration));
+
+        distance = min(distance, length(uv - close_point));
+    }
+
+    return distance;
+}

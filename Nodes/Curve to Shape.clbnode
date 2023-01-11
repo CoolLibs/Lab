@@ -1,4 +1,5 @@
 INPUT float->UV `Curve`;
+/// Precision of the curve
 INPUT int `Number of segments`;
 
 // https://iquilezles.org/articles/distfunctions2d/
