@@ -1,0 +1,32 @@
+// https://iquilezles.org/articles/distfunctions2d/
+/// 
+INPUT float `Size`; // x
+INPUT int `Vertex`; // n
+INPUT float `Roundness`;
+
+SignedDistance main(UV uv)
+{
+    float r = mix(0.0, `Size`, `Roundness`);
+
+    float size = (`Size`-r)/cos(PI/float(`Vertex`));
+
+    float an = PI/float(`Vertex`);
+
+
+    vec2 acs = vec2 (cos(an), sin(an));
+    vec2 ecs = vec2 (0.,1.);
+
+
+    // Symmetry
+    float bn = mod(atan(uv.x, uv.y), 2.0*an) - an;
+    uv = length(uv)*vec2(cos(bn), abs(sin(bn)));
+
+    uv-= size*acs;
+    uv += ecs*clamp(-dot(uv,ecs), 0.0, size*acs.y/ecs.y);
+
+    return length(uv)*sign(uv.x) - r;
+
+
+}
+
+
