@@ -1,12 +1,12 @@
 INPUT float `Phase X`;
-INPUT float `Phase Y`;
 INPUT int `Waves Y`;
 INPUT int `Waves X`;
 
 UV main(float t)
 {
+    t *= TAU;
     return vec2(
         cos(`Waves X` * t + `Phase X`),
-        sin(`Waves Y` * t + `Phase Y`)
+        sin(`Waves Y` * t)
     );
 }

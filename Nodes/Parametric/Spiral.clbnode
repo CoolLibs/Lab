@@ -1,0 +1,23 @@
+INPUT float `a`;
+INPUT int `Number of spiral`;
+
+vec2 spiral(float a, float t)
+{
+    float r = a * sqrt(t);
+    return vec2(
+        r * cos(TAU*t*`Number of spiral`) ,
+        r * sin(TAU*t*`Number of spiral`)
+    );
+}
+
+UV main(float t)
+{
+    if (t < 0.5) {
+        t = 1-2*t;
+        return spiral(`a`, t);
+    } else {
+        t = 2*t-1;
+        return spiral(-`a`, t);
+    }
+    
+}
