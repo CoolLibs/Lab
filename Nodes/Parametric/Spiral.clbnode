@@ -1,23 +1,14 @@
-INPUT float `a`;
-INPUT int `Number of spiral`;
+INPUT float `Radius`;
+INPUT int `Twist`;
 
-vec2 spiral(float a, float t)
+vec2 spiral(float radius, float t)
 {
-    float r = a * sqrt(t);
-    return vec2(
-        r * cos(TAU*t*`Number of spiral`) ,
-        r * sin(TAU*t*`Number of spiral`)
-    );
+    float r = radius * sqrt(t);
+    return vec2_from_polar(r, TAU * t *`Twist`);
 }
 
 UV main(float t)
 {
-    if (t < 0.5) {
-        t = 1-2*t;
-        return spiral(`a`, t);
-    } else {
-        t = 2*t-1;
-        return spiral(-`a`, t);
-    }
-    
+    return t < 0.5 ? spiral(`Radius`, 1. - 2. * t)
+                   : spiral(-`Radius`, 2. * t - 1.);
 }
