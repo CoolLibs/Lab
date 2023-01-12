@@ -99,9 +99,11 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     auto* def = _get_node_definition(node.definition_name());
     if (!def)
     {
+        ImGui::NewLine();
+        ImGui::Separator();
         Cool::ImGuiExtras::warning_text("Node definition file not found");
     }
-    else if (node.properties().size() != 0)
+    else if (!node.properties().empty())
     {
         ImGui::NewLine();
         ImGui::Separator();
