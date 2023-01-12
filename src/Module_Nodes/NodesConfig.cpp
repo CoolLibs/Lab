@@ -96,16 +96,15 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     for (auto& property : node.properties())
         _ui.widget(property);
 
-    ImGui::NewLine();
-    ImGui::Separator();
-
     auto* def = _get_node_definition(node.definition_name());
     if (!def)
     {
         Cool::ImGuiExtras::warning_text("Node definition file not found");
     }
-    else
+    else if (node.properties().size() != 0)
     {
+        ImGui::NewLine();
+        ImGui::Separator();
         // Get the variables from the inputs
         auto settings = settings_from_inputs(node.properties(), _ui.variable_registries());
         // Apply
