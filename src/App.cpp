@@ -396,6 +396,7 @@ void App::check_inputs()
     {
         check_inputs__history();
         check_inputs__export_windows();
+        check_inputs__timeline();
     }
 }
 
@@ -428,6 +429,14 @@ void App::check_inputs__export_windows()
         command_executor().execute(Command_OpenImageExporter{});
     if (ImGui::IsKeyReleased(ImGuiKey_E) && io.KeyCtrl)
         command_executor().execute(Command_OpenVideoExporter{});
+}
+
+void App::check_inputs__timeline()
+{
+    if (ImGui::IsKeyReleased(ImGuiKey_Space))
+    {
+        _clock.toggle_play_pause();
+    }
 }
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
