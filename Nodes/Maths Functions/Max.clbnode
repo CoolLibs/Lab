@@ -1,8 +1,6 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-INPUT vec2 `Translation`;
-
-UV main(UV uv)
+Any main(Any value1, Any value2)
 {
-    return uv - `Translation`;
-} 
+    return max(value1, value2); 
+}

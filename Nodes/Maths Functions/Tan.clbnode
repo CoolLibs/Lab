@@ -1,8 +1,6 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-INPUT vec2 `Translation`;
-
-UV main(UV uv)
+Any main(Any value)
 {
-    return uv - `Translation`;
-} 
+    return tan(value); 
+}
