@@ -1,31 +1,100 @@
-INPUT int `gridSize`; //default 5 min 1 max 20
+INPUT int `Grid Size`; // default 5 min 1 max 20
 INPUT float `t`;
 
+// RESOURCES : https://www.youtube.com/watch?v=VmrIDyYiJBA&ab_channel=TheArtofCode
+// https://andrewhungblog.wordpress.com/2018/07/28/shader-art-tutorial-hexagonal-grids/
+
+// const float sqrt_3 = 1.73205;
+
+// pix -> id of the first grid
+vec2 pix_to_grid_id1(vec2 uv)
+{
+    return floor((uv + vec2(0, 0.25)) / vec2(1., sqrt_3) - vec2(0, 0.25));
+}
+
+vec2 id1_to_center(vec2 id)
+{
+    return (id + 0.5) * vec2(1., sqrt_3);
+}
+
+// pix -> id of the second grid
+vec2 id2_to_center(vec2 id)
+{
+    return (id + 1.) * vec2(1., sqrt_3);
+}
+vec2 pix_to_grid_id2(vec2 uv)
+{
+    return floor((uv - vec2(0.5) + vec2(0, 0.25)) / vec2(1., sqrt_3) - vec2(0, 0.25));
+}
+
+vec2 ID_to_centerPix(vec2 id)
+{
+    return (vec2(id.x - id.y * .5, sqrt_3 / 2 * id.y) + vec2(0.5, 0.5 * sqrt_3)) /`Grid Size`;
+}
+
+// return the id of the pixel in the hexagonal grid
+vec2 hex_uv(vec2 uv)
+{
+    vec2 id1 = pix_to_grid_id1(uv);
+    vec2 id2 = pix_to_grid_id2(uv);
+
+    vec2 center1 = id1_to_center(id1);
+    vec2 center2 = id2_to_center(id2);
+
+    vec2 id = dot(uv - center1, uv - center1) <= dot(uv - center2, uv - center2)
+                  ? id1.x * vec2(1, 0) + id1.y * vec2(1, 2)
+                  : id2.x * vec2(1, 0) + id2.y * vec2(1, 2) + vec2(1, 1);
+    return id;
+}
+
+float rand(vec2 co)
+{
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
 
 float main(UV uv)
 {
-    float m = 0.;
-    vec3 color = vec3(m);
+    vec2 id = hex_uv(uv *`Grid Size`);
+
     float minDist = 1000.;
 
-    uv*= `gridSize`;
+    // 3 vectors to map a hexagone
+    vec2 a = vec2(-0.5, 0.5 / sqrt_3) /`Grid Size`;
+    vec2 b = vec2(0.5, 0.5 / sqrt_3) /`Grid Size`;
+    vec2 c = vec2(0., -1. / sqrt_3) /`Grid Size`;
 
-    vec2 grid = fract(uv) -0.5;
-    float d = length(uv-grid);
-    ivec2 id = ivec2(floor(uv));
+    ivec2 listAround[7] = ivec2[7](ivec2(0, 0), ivec2(-1, -1), ivec2(0, -1), ivec2(-1, 0), ivec2(1, 1), ivec2(0, 1), ivec2(1, 0));
 
-    for(int y = -1; y<=1; y++){
-        for(int x = -1; x<=1; x++){
-            ivec2 offs = ivec2(x,y);
-            vec2 n = hash_0_to_1_2D_to_2D(id+offs);
-            vec2 p = sin(n*(`t`+4.))/2.+offs;
-            float d = length(grid-p);
+    for (int i = 0; i <= 6; i++)
+    {
+        vec2 offsetID         = listAround[i];
+        vec2 offsetCellCenter = ID_to_centerPix(id + offsetID);
 
-            if (d<minDist){
-                minDist = d;
-            }
+        vec2 n      = hash_0_to_1_2D_to_2D(ivec2(id) + ivec2(offsetID));
+        n           = mix(vec2(0.4), vec2(1), n);
+        n           = sin(n * (`t`+ 4.) + 100) / 2;
+        vec2 offPos = offsetCellCenter;
+        int  part   = int(floor(rand(ivec2(id) + ivec2(offsetID)) * 3.));
+
+        if (part == 0)
+        {
+            offPos += n.x * a + n.y * b;
+        }
+        if (part == 1)
+        {
+            offPos += n.x * b + n.y * c;
+        }
+        else
+        {
+            offPos += n.x * c + n.y * a;
+        }
+
+        float d = length(uv - offPos);
+        if (d < minDist)
+        {
+            minDist = d;
         }
     }
 
-    return minDist;
+    return minDist *`Grid Size`;
 }
