@@ -97,7 +97,39 @@ static auto maybe_generate_default(FunctionSignature current_signature, std::str
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
-    using fmt::literals::operator""_a;
+    using fmt::literals::             operator""_a;
+    static constexpr std::string_view signed_to_float = "(sd < 0.) ? 1. : 0.";
+    {
+        auto const func = maybe_generate_default(
+            FunctionSignature{PrimitiveType::SignedDistance, PrimitiveType::Float},
+            "default_signed_to_float", fmt::format(R"STR(
+    float default_signed_to_float/*coollabdef*/(float sd)
+    {{
+        return {};
+    }}
+    )STR",
+                                                   signed_to_float),
+            signature, context
+        );
+        if (func)
+            return *func;
+    }
+
+    {
+        auto const func = maybe_generate_default(
+            FunctionSignature{PrimitiveType::SignedDistance, PrimitiveType::sRGB},
+            "default_signed_to_sRGB", fmt::format(R"STR(
+    vec3 default_signed_to_sRGB/*coollabdef*/(float sd)
+    {{
+        return vec3({});
+    }}
+    )STR",
+                                                  signed_to_float),
+            signature, context
+        );
+        if (func)
+            return *func;
+    }
 
     {
         auto const func = maybe_generate_default(
