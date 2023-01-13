@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(CoolLab)
 
-add_executable(${PROJECT_NAME}
-    "${CMAKE_SOURCE_DIR}/windows-app-ressources/lab.rc"
-)
+add_executable(${PROJECT_NAME})
 
 add_library(CooLab-Properties INTERFACE) # This is needed by both CoolLab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE CooLab-Properties)
@@ -42,6 +40,9 @@ set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,410,430>) # Must be >= 330 for Im
 add_subdirectory(Cool)
 target_link_libraries(CooLab-Properties INTERFACE Cool::Core)
 cool_setup(${PROJECT_NAME})
+
+# Set app icon
+Cool__set_app_icon(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/app-resources/lab.rc" "res/logo.png")
 
 # Include cmd
 add_subdirectory(lib/cmd)
