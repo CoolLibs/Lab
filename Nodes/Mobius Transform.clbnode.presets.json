@@ -8,38 +8,13 @@
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 2,
-                                "data": {
-                                    "Name": "b",
-                                    "Value": 1.0,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 1.0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "index": 2,
+                                "index": 4,
                                 "data": {
                                     "Name": "a",
-                                    "Value": 1.0,
+                                    "Value": {
+                                        "x": 1.0,
+                                        "y": 0.0
+                                    },
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -50,7 +25,10 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 1.0,
+                                    "Default Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -64,10 +42,47 @@
                                 }
                             },
                             {
-                                "index": 2,
+                                "index": 4,
+                                "data": {
+                                    "Name": "b",
+                                    "Value": {
+                                        "x": 1.0,
+                                        "y": 0.0
+                                    },
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 4,
                                 "data": {
                                     "Name": "c",
-                                    "Value": 1.0,
+                                    "Value": {
+                                        "x": 1.0,
+                                        "y": 0.0
+                                    },
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -78,7 +93,10 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 1.0,
+                                    "Default Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -92,10 +110,13 @@
                                 }
                             },
                             {
-                                "index": 2,
+                                "index": 4,
                                 "data": {
                                     "Name": "d",
-                                    "Value": 0.0,
+                                    "Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -106,7 +127,10 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
