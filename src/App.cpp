@@ -89,6 +89,7 @@ void App::update()
     }
     else
     {
+        set_dirty_flag()(_nodes_module->dirty_flag());
         _exporter.update(polaroid());
     }
 

@@ -63,12 +63,6 @@ float CoolLab_direction2D_to_angle/*coollabdef*/(vec2 dir)
     }
 
     // No need to do anything for these conversions, the difference is purely semantic.
-    if (from == PrimitiveType::Float && to == PrimitiveType::SignedDistance)
-        return "";
-    if (from == PrimitiveType::SignedDistance && to == PrimitiveType::Float)
-        return "";
-
-    // No need to do anything for these conversions, the difference is purely semantic.
     if (from == PrimitiveType::UV && to == PrimitiveType::Vec2)
         return "";
     if (from == PrimitiveType::Vec2 && to == PrimitiveType::UV)
