@@ -63,6 +63,7 @@ private:
     void check_inputs();
     void check_inputs__history();
     void check_inputs__export_windows();
+    void check_inputs__timeline();
 
     // clang-format off
     auto all_inputs() -> Cool::AllInputRefsToConst;
