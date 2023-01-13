@@ -1,6 +1,6 @@
-INPUT sRGB `Shadows`;
-INPUT sRGB `Midtones`;
-INPUT sRGB `Highlights`;
+INPUT  LinearRGB `Shadows`;
+INPUT LinearRGB  `Midtones`;
+INPUT LinearRGB  `Highlights`;
 
 // Wunkolo's correction filter https://www.shadertoy.com/view/tllfRf 
 
