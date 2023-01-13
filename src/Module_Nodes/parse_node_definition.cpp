@@ -325,7 +325,7 @@ static auto parse_property(std::string const& type_as_string, std::string const&
 {
     try
     {
-        res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
+        res.input_values.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
             make_input_definition,
             type_as_string,
             Cool::AnyInputDefinition,
@@ -347,7 +347,7 @@ static auto parse_input(std::vector<std::string> const& type_words, std::string 
     if (!signature)
         return signature.error();
 
-    res.inputs.emplace_back(NodeInputDefinition_Data{
+    res.input_function.emplace_back(NodeInputDefinition_Data{
         .name      = name,
         .signature = *signature,
     });
@@ -400,7 +400,7 @@ static auto find_declaration(std::string const& text, std::string_view keyword, 
     return std::nullopt;
 }
 
-static auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
+static auto find_inputs(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     return find_declaration(
@@ -431,6 +431,36 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
     );
 }
 
+template<typename T>
+void modify_description(const std::string& name_property, Cool::InputDefinition<T>& input, const std::string& description_text)
+{
+    if (input.name == name_property)
+        input.description = description_text;
+}
+
+static auto find_properties_descriptions(std::string const& text, NodeDefinition_Data& res)
+    -> std::optional<std::string>
+{
+    Cool::String::find_matching_pair_params description_part;
+    description_part.opening = '`';
+    description_part.closing = '`';
+    description_part.text    = text;
+
+    // auto list_input_value = std::get<T>(res);
+
+    auto couple_pos = Cool::String::find_matching_pair(description_part);
+    while (couple_pos.has_value())
+    {
+        std::string param_name = Cool::String::substring(text, *couple_pos);
+        for (auto& input_i : res.input_values)
+        {
+            std::visit([&](auto&& input_i) { modify_description(param_name, input_i, std::string("DEFAULT")); }, input_i);
+        }
+
+        description_part.offset = couple_pos->second + 1;
+    }
+}
+
 auto parse_node_definition(std::filesystem::path filepath, std::string text)
     -> tl::expected<NodeDefinition, std::string>
 {
@@ -441,6 +471,8 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
 
     NodeDefinition_Data res{};
 
+    std::string text_with_comments = text;
+
     text = Cool::String::remove_comments(text);
 
     {
@@ -449,7 +481,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
             return tl::make_unexpected(*err);
     }
     {
-        auto const err = find_inputs_and_properties(text, res);
+        auto const err = find_inputs(text, res);
         if (err)
             return tl::make_unexpected(*err);
     }
@@ -458,6 +490,8 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
         if (err)
             return tl::make_unexpected(*err);
     }
+
+    auto a = find_properties_descriptions(text, res);
 
     filepath += ".presets.json";
     return NodeDefinition::make(
