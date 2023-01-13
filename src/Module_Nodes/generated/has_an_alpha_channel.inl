@@ -10,4 +10,6 @@ case PrimitiveType::LinearRGB_StraightA:
 case PrimitiveType::LinearRGB_PremultipliedA:
 case PrimitiveType::sRGB_StraightA:
 case PrimitiveType::sRGB_PremultipliedA:
+case PrimitiveType::HSLuv_StraightA:
+case PrimitiveType::HSLuv_PremultipliedA:
 return true;

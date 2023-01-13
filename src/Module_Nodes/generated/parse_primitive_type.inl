@@ -80,3 +80,15 @@ if (str == "sRGB_StraightA")
 {
     return PrimitiveType::sRGB_StraightA;
 }
+if (str == "HSLuv")
+{
+    return PrimitiveType::HSLuv;
+}
+if (str == "HSLuv_PremultipliedA")
+{
+    return PrimitiveType::HSLuv_PremultipliedA;
+}
+if (str == "HSLuv_StraightA")
+{
+    return PrimitiveType::HSLuv_StraightA;
+}

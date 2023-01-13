@@ -23,4 +23,7 @@ Int,
     LinearRGB_StraightA,
     sRGB,
     sRGB_PremultipliedA,
-    sRGB_StraightA
+    sRGB_StraightA,
+    HSLuv,
+    HSLuv_PremultipliedA,
+    HSLuv_StraightA
