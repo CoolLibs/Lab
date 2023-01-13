@@ -41,7 +41,7 @@ add_subdirectory(Cool)
 target_link_libraries(CooLab-Properties INTERFACE Cool::Core)
 cool_setup(${PROJECT_NAME})
 
-# Set app icon
+# Set app icon (only if exists)
 Cool__set_app_icon(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/app-resources/lab.rc" "res/logo.png")
 
 # Include cmd
