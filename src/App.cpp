@@ -16,6 +16,7 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Debug/DebugOptions.h"
 #include "Debug/compile_all_custom_shaders.h"
+#include "Dependencies/Camera2DManager.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
@@ -32,6 +33,9 @@ App::App(Cool::WindowManager& windows)
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
+    hook_events(
+        _nodes_view.view.mouse_events(), _camera2D.value, [this]() { set_dirty_flag()(_nodes_module->dirty_flag()); }, _sensitivity
+    );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
@@ -228,6 +232,9 @@ void App::imgui_commands_and_registries_debug_windows()
 
 void App::imgui_windows()
 {
+    ImGui::Begin("Sensitivity");
+    ImGui::SliderFloat("dsfs", &_sensitivity, 1.f, 1.1f);
+    ImGui::End();
     _nodes_view.imgui_window();
     // _custom_shader_view.imgui_window();
 
@@ -253,6 +260,7 @@ void App::imgui_windows()
         if (imgui_widget(_camera2D))
             set_dirty_flag()(_nodes_module->dirty_flag());
         ImGui::End();
+
 #if DEBUG
         DebugOptions::show_framerate_window([&] {
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);

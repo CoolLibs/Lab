@@ -127,6 +127,7 @@ private:
     // std::unique_ptr<Module_CustomShader> _custom_shader_module;
     CommandLogger _command_logger{};
     bool          _is_first_frame{true};
+    float         _sensitivity{2.f};
 
 private:
     // Serialization
