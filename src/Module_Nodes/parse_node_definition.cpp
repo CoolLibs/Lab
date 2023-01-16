@@ -1,7 +1,9 @@
 #include "parse_node_definition.h"
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
 #include <Cool/String/String.h>
+#include <vcruntime.h>
 #include <algorithm>
+#include <cstdio>
 #include <exception>
 #include <iterator>
 #include <optional>
@@ -435,30 +437,70 @@ template<typename T>
 void modify_description(const std::string& name_property, Cool::InputDefinition<T>& input, const std::string& description_text)
 {
     if (input.name == name_property)
+    {
         input.description = description_text;
+    }
 }
 
 static auto find_properties_descriptions(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
-    Cool::String::find_matching_pair_params description_part;
-    description_part.opening = '`';
-    description_part.closing = '`';
-    description_part.text    = text;
+    // find the name
+    Cool::String::find_matching_pair_params name_part;
+    name_part.opening = '`';
+    name_part.closing = '`';
+    name_part.text    = text;
 
-    // auto list_input_value = std::get<T>(res);
+    // find the description
+    Cool::String::find_matching_pair_params desc_part;
+    desc_part.opening = ';';
+    desc_part.closing = '\n';
+    desc_part.text    = text;
 
-    auto couple_pos = Cool::String::find_matching_pair(description_part);
-    while (couple_pos.has_value())
+    auto couple_pos_name = Cool::String::find_matching_pair(name_part);
+
+    while (couple_pos_name)
     {
-        std::string param_name = Cool::String::substring(text, *couple_pos);
-        for (auto& input_i : res.input_values)
+        couple_pos_name      = Cool::String::find_matching_pair(name_part);
+        auto couple_pos_desc = Cool::String::find_matching_pair(desc_part);
+
+        if (!couple_pos_desc)
         {
-            std::visit([&](auto&& input_i) { modify_description(param_name, input_i, std::string("DEFAULT")); }, input_i);
+            name_part.offset = couple_pos_name->second + 1;
+            couple_pos_name  = Cool::String::find_matching_pair(name_part);
+            continue;
         }
 
-        description_part.offset = couple_pos->second + 1;
+        auto desc_part_text = Cool::String::substring(text, *couple_pos_desc);
+        if (desc_part_text.size() <= 1)
+        {
+            name_part.offset = couple_pos_name->second + 1;
+            desc_part.offset = couple_pos_desc->second + 1;
+
+            continue;
+        }
+
+        auto triple_slash = desc_part_text.find("///"); // check with end
+        triple_slash += 3;
+
+        auto description_text = Cool::String::substring(desc_part_text, triple_slash, couple_pos_desc->second);
+
+        couple_pos_name->second = couple_pos_name->second + 1;
+        // couple_pos_description->second = couple_pos_description->second + 1;
+
+        std::string param_name = Cool::String::substring(text, *couple_pos_name);
+
+        for (auto& input_i : res.input_values)
+        {
+            std::visit([&](auto&& input_i) { modify_description(param_name, input_i, description_text); }, input_i);
+        }
+
+        name_part.offset = couple_pos_name->second + 1;
+        desc_part.offset = couple_pos_desc->second + 1;
+
+        couple_pos_name = Cool::String::find_matching_pair(name_part);
     }
+    return std::nullopt;
 }
 
 auto parse_node_definition(std::filesystem::path filepath, std::string text)
@@ -491,7 +533,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
             return tl::make_unexpected(*err);
     }
 
-    auto a = find_properties_descriptions(text, res);
+    auto a = find_properties_descriptions(text_with_comments, res);
 
     filepath += ".presets.json";
     return NodeDefinition::make(
