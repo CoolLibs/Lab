@@ -442,6 +442,14 @@ void modify_description(const std::string& name_property, Cool::InputDefinition<
     }
 }
 
+std::string get_rid_of_triple_slashs(const std::string& text, const size_t& last)
+{
+    auto triple_slash = text.find("///"); // check with end
+    triple_slash += 3;
+
+    return Cool::String::substring(text, triple_slash, last);
+}
+
 static auto find_properties_descriptions(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
@@ -457,14 +465,17 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
     desc_part.closing = '\n';
     desc_part.text    = text;
 
+    // initialisation
     auto couple_pos_name = Cool::String::find_matching_pair(name_part);
 
+    // while we can find inputs
     while (couple_pos_name)
     {
+        // reupdate positions
         couple_pos_name      = Cool::String::find_matching_pair(name_part);
         auto couple_pos_desc = Cool::String::find_matching_pair(desc_part);
 
-        if (!couple_pos_desc)
+        if (!couple_pos_desc) // do we fin any comments ? -> for the  end of the file
         {
             name_part.offset = couple_pos_name->second + 1;
             couple_pos_name  = Cool::String::find_matching_pair(name_part);
@@ -472,7 +483,7 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
         }
 
         auto desc_part_text = Cool::String::substring(text, *couple_pos_desc);
-        if (desc_part_text.size() <= 1)
+        if (desc_part_text.size() <= 1) // si on a ;\n il ne faut pas regarder
         {
             name_part.offset = couple_pos_name->second + 1;
             desc_part.offset = couple_pos_desc->second + 1;
@@ -480,13 +491,9 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
             continue;
         }
 
-        auto triple_slash = desc_part_text.find("///"); // check with end
-        triple_slash += 3;
-
-        auto description_text = Cool::String::substring(desc_part_text, triple_slash, couple_pos_desc->second);
+        auto description_text = get_rid_of_triple_slashs(desc_part_text, couple_pos_desc->second);
 
         couple_pos_name->second = couple_pos_name->second + 1;
-        // couple_pos_description->second = couple_pos_description->second + 1;
 
         std::string param_name = Cool::String::substring(text, *couple_pos_name);
 
