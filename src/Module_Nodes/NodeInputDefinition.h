@@ -6,6 +6,7 @@ namespace Lab {
 struct NodeInputDefinition_Data {
     std::string       name{};
     FunctionSignature signature{};
+    // TODO desctipyion
 };
 
 class NodeInputDefinition {

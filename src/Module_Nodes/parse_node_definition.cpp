@@ -434,11 +434,11 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
 }
 
 template<typename T>
-void modify_description(const std::string& name_property, Cool::InputDefinition<T>& input, const std::string& description_text)
+void modify_description(const std::string& name_property, Cool::InputDefinition<T>& input, const std::string& param_description)
 {
     if (input.name == name_property)
     {
-        input.description = description_text;
+        input.description = param_description;
     }
 }
 
@@ -450,59 +450,80 @@ std::string get_rid_of_triple_slashs(const std::string& text, const size_t& last
     return Cool::String::substring(text, triple_slash, last);
 }
 
+static void set_input_description(NodeDefinition_Data& res, std::string const& input_name, std::string const& input_description)
+{
+    for (auto& input : res.input_values)
+    {
+        std::visit([&](auto&& input) { modify_description(input_name, input, input_description); }, input);
+    }
+
+    // TODO(TD) Descriptions for the input functions
+    // for (auto& input_i : res.input_function)
+    // {
+    //     if (input_i.name() == param_name)
+    //     // input_i.
+    // }
+}
+
 static auto find_properties_descriptions(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
+    // initialisation
     // find the name
-    Cool::String::find_matching_pair_params name_part;
-    name_part.opening = '`';
-    name_part.closing = '`';
-    name_part.text    = text;
+    // TODO only keep offset as mutable
+    Cool::String::find_matching_pair_params name_part{
+        .text    = text,
+        .opening = '`',
+        .closing = '`',
+    };
 
     // find the description
-    Cool::String::find_matching_pair_params desc_part;
-    desc_part.opening = ';';
-    desc_part.closing = '\n';
-    desc_part.text    = text;
-
-    // initialisation
-    auto couple_pos_name = Cool::String::find_matching_pair(name_part);
-
+    size_t desc_offset    = 0;
+    auto   input_name_pos = Cool::String::find_matching_pair(name_part);
     // while we can find inputs
-    while (couple_pos_name)
+    while (input_name_pos)
     {
         // reupdate positions
-        couple_pos_name      = Cool::String::find_matching_pair(name_part);
-        auto couple_pos_desc = Cool::String::find_matching_pair(desc_part);
+        auto const pos_of_text_after_the_input_declaration = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = desc_offset,
+            .opening = ';',
+            .closing = '\n',
+        });
 
-        if (!couple_pos_desc) // do we fin any comments ? -> for the  end of the file
+        auto const move_to_next_description = [&]() {
+            name_part.offset = input_name_pos->second + 1;
+            desc_offset      = pos_of_text_after_the_input_declaration->second + 1;
+            input_name_pos   = Cool::String::find_matching_pair(name_part);
+        };
+
+        if (!pos_of_text_after_the_input_declaration) // do we fin any comments ? -> for the  end of the file
             break;
 
-        auto desc_part_text = Cool::String::substring(text, *couple_pos_desc);
-        if (desc_part_text.size() <= 1) // si on a ;\n il ne faut pas regarder
-        {
-            name_part.offset = couple_pos_name->second + 1;
-            desc_part.offset = couple_pos_desc->second + 1;
+        auto const text_after_the_input_declaration = Cool::String::substring(text, *pos_of_text_after_the_input_declaration);
 
+        auto const triple_slash_pos = text_after_the_input_declaration.find("///"); // check with end
+        if (triple_slash_pos == std::string::npos)
+        {
+            move_to_next_description();
             continue;
         }
 
-        auto description_text = get_rid_of_triple_slashs(desc_part_text, couple_pos_desc->second);
+        auto const param_description = Cool::String::substring(
+            text_after_the_input_declaration,
+            triple_slash_pos + 3,
+            text_after_the_input_declaration.size()
+        );
 
-        couple_pos_name->second = couple_pos_name->second + 1;
+        input_name_pos->second = input_name_pos->second + 1;
 
-        std::string param_name = Cool::String::substring(text, *couple_pos_name);
+        std::string const param_name = Cool::String::substring(text, *input_name_pos);
 
-        for (auto& input_i : res.input_values)
-        {
-            std::visit([&](auto&& input_i) { modify_description(param_name, input_i, description_text); }, input_i);
-        }
+        set_input_description(res, param_name, param_description);
 
-        name_part.offset = couple_pos_name->second + 1;
-        desc_part.offset = couple_pos_desc->second + 1;
-
-        couple_pos_name = Cool::String::find_matching_pair(name_part);
+        move_to_next_description();
     }
+
     return std::nullopt;
 }
 
