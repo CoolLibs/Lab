@@ -476,11 +476,7 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
         auto couple_pos_desc = Cool::String::find_matching_pair(desc_part);
 
         if (!couple_pos_desc) // do we fin any comments ? -> for the  end of the file
-        {
-            name_part.offset = couple_pos_name->second + 1;
-            couple_pos_name  = Cool::String::find_matching_pair(name_part);
-            continue;
-        }
+            break;
 
         auto desc_part_text = Cool::String::substring(text, *couple_pos_desc);
         if (desc_part_text.size() <= 1) // si on a ;\n il ne faut pas regarder
