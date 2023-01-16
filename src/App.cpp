@@ -158,7 +158,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         some_module.do_rendering(
             {
-                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time),
+                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _camera2D.value.transform_matrix()),
                 input_factory(),
                 input_destructor(),
                 is_dirty__functor(),
@@ -248,6 +248,11 @@ void App::imgui_windows()
         ImGui::Begin("Camera");
         _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
+        // Camera 2D
+        ImGui::Begin("Camera 2D");
+        if (imgui_widget(_camera2D))
+            set_dirty_flag()(_nodes_module->dirty_flag());
+        ImGui::End();
 #if DEBUG
         DebugOptions::show_framerate_window([&] {
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
@@ -265,7 +270,7 @@ void App::imgui_windows()
         DebugOptions::test_shaders_compilation__window([&]() {
             const auto compile_custom_shaders = [&]() {
                 compile_all_custom_shaders(
-                    input_provider(2.f, 1.f, 0.f),
+                    input_provider(2.f, 1.f, 0.f, glm::mat3{1.f}),
                     input_factory(),
                     input_destructor(),
                     update_context()

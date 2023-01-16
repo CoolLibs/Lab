@@ -62,6 +62,7 @@ auto generate_shader_code(
 
 uniform float _time;
 uniform float _height;
+uniform mat3  _camera2D;
 out vec4      out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
@@ -82,6 +83,8 @@ float coollab_global_alpha = 1.;
 void main()
 {{
     vec2 uv = normalized_uv();
+    vec3 tmp = _camera2D * vec3(uv, 1.);
+    uv = tmp.xy / tmp.z;
     CoollabContext coollab_context;
     coollab_context.uv = uv;
     out_Color = {main_function_name}(coollab_context, uv);
