@@ -496,7 +496,7 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
             desc_offset = pos_of_text_after_the_input_declaration->second + 1;
         };
 
-        if (!pos_of_text_after_the_input_declaration) // do we find any comments ? -> for the  end of the file
+        if (!pos_of_text_after_the_input_declaration || !pos_of_the_input_name) // do we find any comments ? -> for the  end of the file
             break;
 
         auto const text_after_the_input_declaration = Cool::String::substring(text, *pos_of_text_after_the_input_declaration);
