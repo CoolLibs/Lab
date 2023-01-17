@@ -458,11 +458,11 @@ static void set_input_description(NodeDefinition_Data& res, std::string const& i
     }
 
     // TODO(TD) Descriptions for the input functions
-    // for (auto& input_i : res.input_function)
-    // {
-    //     if (input_i.name() == param_name)
-    //     // input_i.
-    // }
+    for (auto& input : res.input_function)
+    {
+        if ("`" + input.name() + "`" == input_name)
+            input.set_description(input_description);
+    }
 }
 
 static auto find_properties_descriptions(std::string const& text, NodeDefinition_Data& res)
@@ -471,8 +471,8 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
     size_t desc_offset = 0;
     size_t name_offset = 0;
 
-    std::optional<std::pair<size_t, size_t>> pos_of_the_input_name;
-    pos_of_the_input_name.emplace(std::pair<size_t, size_t>(0, 1));
+    std::optional<std::pair<size_t, size_t>> pos_of_the_input_name = std::pair<size_t, size_t>{};
+    // initialize the position to enter in the while loop but it is recalculate at each loop
 
     while (pos_of_the_input_name)
     {
@@ -491,13 +491,13 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
             .closing = '`',
         });
 
+        if (!pos_of_text_after_the_input_declaration || !pos_of_the_input_name) // do we find any comments ? -> for the  end of the file
+            break;
+
         auto const move_to_next_description = [&]() {
             name_offset = pos_of_the_input_name->second + 1;
             desc_offset = pos_of_text_after_the_input_declaration->second + 1;
         };
-
-        if (!pos_of_text_after_the_input_declaration || !pos_of_the_input_name) // do we find any comments ? -> for the  end of the file
-            break;
 
         auto const text_after_the_input_declaration = Cool::String::substring(text, *pos_of_text_after_the_input_declaration);
 
