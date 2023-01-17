@@ -35,11 +35,9 @@ vec2 unnormalize_uv(vec2 uv)
     return unnormalize_uv_with_aspect_ratio(uv, _aspect_ratio);
 }
 
-/*
- * antialised_step
- */
 
-float antialised_step(float thickness, float strength)
+/// Returns 1 when x is negative, 0 when x is positive, with a small transition around 0 to apply antialiasing.
+float antialised_step(float x)
 {
-    return smoothstep(thickness+0.0025, thickness-0.0025, strength);
+    return smoothstep(0.0025, -0.0025, x);
 }

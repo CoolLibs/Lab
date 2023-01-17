@@ -1,21 +1,14 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-INPUT float `b`;
-INPUT float `a`;
-INPUT float `c`;
-INPUT float `d`;
+INPUT vec2 `a`;
+INPUT vec2 `b`;
+INPUT vec2 `c`;
+INPUT vec2 `d`;
 
-// to understand the equation : http://www.pierreaudibert.fr/explor/TransformationsMobius.pdf
+// To understand the equation : http://www.pierreaudibert.fr/explor/TransformationsMobius.pdf [FR DOCUMENT]
+// [EN DOCMENT] : https://en.wikipedia.org/wiki/M%C3%B6bius_transformation
 
 UV main(UV uv)
 {
-    float a = `a`;
-    float b = `b`;
-    float c = `c`;
-    float d = `d`;
-
-    float x = (a*c*dot(uv,uv)+(a*d+b*c)*uv.x+b*d)/dot(c*uv+d,c*uv+d);
-    float y =(a*d-b*c)*uv.y/dot(c*uv+d,c*uv+d);
-    
-    return vec2(x,y);
+    return complex_division(complex_product(`a`, uv) + `b`, complex_product(`c`, uv) + `d`);
 }

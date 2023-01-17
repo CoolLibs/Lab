@@ -98,7 +98,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
     using fmt::literals::             operator""_a;
-    static constexpr std::string_view signed_to_float = "(sd < 0.) ? 1. : 0.";
+    static constexpr std::string_view signed_to_float = "antialised_step(sd)";
     {
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::SignedDistance, PrimitiveType::Float},
