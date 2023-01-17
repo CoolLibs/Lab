@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(CoolLab)
-
 add_executable(${PROJECT_NAME})
-
 add_library(CooLab-Properties INTERFACE) # This is needed by both CoolLab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE CooLab-Properties)
 
@@ -23,7 +21,6 @@ endif()
 
 # Maybe enable warnings as errors
 set(WARNINGS_AS_ERRORS_FOR_COOLLAB OFF CACHE BOOL "ON iff you want to treat warnings as errors") # Might be overriden in the CMake cache
-
 if(WARNINGS_AS_ERRORS_FOR_COOLLAB)
     if(MSVC)
         target_compile_options(CooLab-Properties INTERFACE /WX)
@@ -41,7 +38,7 @@ add_subdirectory(Cool)
 target_link_libraries(CooLab-Properties INTERFACE Cool::Core)
 cool_setup(${PROJECT_NAME})
 
-# Set app icon (only if exists)
+# Set app icon
 Cool__set_app_icon(${PROJECT_NAME} "${CMAKE_SOURCE_DIR}/app-resources/lab.rc" "res/logo.png")
 
 # Include cmd
