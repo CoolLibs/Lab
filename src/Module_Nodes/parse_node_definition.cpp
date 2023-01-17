@@ -468,20 +468,13 @@ static void set_input_description(NodeDefinition_Data& res, std::string const& i
 static auto find_properties_descriptions(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
-    // initialisation
-    // find the name
-    // TODO only keep offset as mutable
-    Cool::String::find_matching_pair_params name_part{
-        .text    = text,
-        .opening = '`',
-        .closing = '`',
-    };
+    size_t desc_offset = 0;
+    size_t name_offset = 0;
 
-    // find the description
-    size_t desc_offset    = 0;
-    auto   input_name_pos = Cool::String::find_matching_pair(name_part);
-    // while we can find inputs
-    while (input_name_pos)
+    std::optional<std::pair<size_t, size_t>> pos_of_the_input_name;
+    pos_of_the_input_name.emplace(std::pair<size_t, size_t>(0, 1));
+
+    while (pos_of_the_input_name)
     {
         // reupdate positions
         auto const pos_of_text_after_the_input_declaration = Cool::String::find_matching_pair({
@@ -491,18 +484,24 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
             .closing = '\n',
         });
 
+        pos_of_the_input_name = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = name_offset,
+            .opening = '`',
+            .closing = '`',
+        });
+
         auto const move_to_next_description = [&]() {
-            name_part.offset = input_name_pos->second + 1;
-            desc_offset      = pos_of_text_after_the_input_declaration->second + 1;
-            input_name_pos   = Cool::String::find_matching_pair(name_part);
+            name_offset = pos_of_the_input_name->second + 1;
+            desc_offset = pos_of_text_after_the_input_declaration->second + 1;
         };
 
-        if (!pos_of_text_after_the_input_declaration) // do we fin any comments ? -> for the  end of the file
+        if (!pos_of_text_after_the_input_declaration) // do we find any comments ? -> for the  end of the file
             break;
 
         auto const text_after_the_input_declaration = Cool::String::substring(text, *pos_of_text_after_the_input_declaration);
 
-        auto const triple_slash_pos = text_after_the_input_declaration.find("///"); // check with end
+        auto const triple_slash_pos = text_after_the_input_declaration.find("///");
         if (triple_slash_pos == std::string::npos)
         {
             move_to_next_description();
@@ -515,9 +514,9 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
             text_after_the_input_declaration.size()
         );
 
-        input_name_pos->second = input_name_pos->second + 1;
+        pos_of_the_input_name->second = pos_of_the_input_name->second + 1;
 
-        std::string const param_name = Cool::String::substring(text, *input_name_pos);
+        std::string const param_name = Cool::String::substring(text, *pos_of_the_input_name);
 
         set_input_description(res, param_name, param_description);
 
