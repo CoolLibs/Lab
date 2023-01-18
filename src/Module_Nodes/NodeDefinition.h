@@ -45,14 +45,17 @@ public:
     auto output_indices() const -> auto const& { return _data.output_indices; }
     auto helper_functions() const -> auto const& { return _data.helper_functions; }
 
-    auto presets_manager() const -> auto const& { return *_presets_manager; }
+    auto presets_manager() const -> auto const&
+    {
+        return *_presets_manager;
+    }
     auto imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
 
 private:
     NodeDefinition(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path); // Use NodeDefinition::make() to create a NodeDefinition
 
 private:
-    NodeDefinition_Data _data;
+    NodeDefinition_Data                  _data;
     std::shared_ptr<Cool::PresetManager> _presets_manager; // TODO(JF) Make this a gsl::not_null
 };
 

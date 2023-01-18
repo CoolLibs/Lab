@@ -31,16 +31,17 @@ public:
     using NodeDefinitionT = NodeDefinition;
 
     auto name(Node const&) const -> std::string;
+    auto cat_name(Node const&) const -> std::string;
     void imgui_node_body(Node&, Cool::NodeId const&) const;
-    auto make_node(NodeDefinition const&) const -> Node;
+    auto make_node(Cool::NodeCategoryIdentifier<NodeDefinition> cat_id) const -> Node;
 
 private:
-    Cool::InputFactory_Ref                               _input_factory;
-    mutable Cool::GetNodeDefinition_Ref<NodeDefinition>  _get_node_definition;
-    mutable Ui_Ref                                       _ui;
-    Cool::NodeId&                                        _main_node_id;
-    Cool::DirtyFlag                                      _rerender_flag;
-    Cool::DirtyFlag                                      _regenerate_code_flag;
+    Cool::InputFactory_Ref                              _input_factory;
+    mutable Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
+    mutable Ui_Ref                                      _ui;
+    Cool::NodeId&                                       _main_node_id;
+    Cool::DirtyFlag                                     _rerender_flag;
+    Cool::DirtyFlag                                     _regenerate_code_flag;
 };
 
 } // namespace Lab

@@ -20,7 +20,7 @@ public:
     {}
 
     auto graph() const -> Graph const& { return _graph; }
-    auto get_node_definition(std::string_view definition_name) const -> NodeDefinition const* { return _get_node_definition(definition_name); }
+    auto get_node_definition(Cool::NodeDefinitionIdentifier const& id_names) const -> NodeDefinition const* { return _get_node_definition(id_names); }
     auto input_provider() const -> Cool::InputProvider_Ref { return _input_provider; }
 
     /// Adds the code of the function to the global code, and returns its name as a convenience.
