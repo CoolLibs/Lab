@@ -33,8 +33,12 @@ App::App(Cool::WindowManager& windows)
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
-    hook_events(
-        _nodes_view.view.mouse_events(), _camera2D.value, [this]() { set_dirty_flag()(_nodes_module->dirty_flag()); }, [this]() { return _nodes_view.render_target.current_size().height(); }, [this]() { return img::SizeU::aspect_ratio(_nodes_view.render_target.current_size()); }, _sensitivity
+    hook_camera2D_events(
+        _nodes_view.view.mouse_events(),
+        _camera2D.value,
+        [this]() { set_dirty_flag()(_nodes_module->dirty_flag()); },
+        [this]() { return _nodes_view.render_target.current_size().height(); },
+        [this]() { return img::SizeU::aspect_ratio(_nodes_view.render_target.current_size()); }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {

@@ -11,7 +11,7 @@
 
 namespace Lab {
 
-void hook_events(
+void hook_camera2D_events(
     Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
     Cool::Camera2D&                                    camera,
     std::function<void()>                              on_change,
