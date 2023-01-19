@@ -220,7 +220,7 @@
 // bool effect_imgui(RenderEffect& render_effect)
 // {
 //     bool has_changed = false;
-//     ImGui::Text("%s", render_effect.base.name.c_str());
+//     ImGui::TextUnformatted(render_effect.base.name.c_str());
 //     ImGui::PushID(&render_effect);
 //     has_changed |= ImGui::Checkbox("Enabled", &render_effect.is_active);
 //     ImGui::PopID();
@@ -258,7 +258,7 @@
 // bool parameters_imgui(std::vector<BaseCode>& base_code, size_t& index)
 // {
 //     bool has_changed = false;
-//     ImGui::Text("%s", base_code[index].name.c_str());
+//     ImGui::TextUnformatted(base_code[index].name.c_str());
 //     has_changed |= get_index_imgui(base_code, index);
 //     has_changed |= base_code_imgui(base_code[index]);
 //     return has_changed;

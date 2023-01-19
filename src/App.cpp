@@ -16,6 +16,7 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Debug/DebugOptions.h"
 #include "Debug/compile_all_custom_shaders.h"
+#include "Dependencies/Camera2DManager.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
@@ -32,6 +33,13 @@ App::App(Cool::WindowManager& windows)
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
+    hook_camera2D_events(
+        _nodes_view.view.mouse_events(),
+        _camera2D.value,
+        [this]() { set_dirty_flag()(_nodes_module->dirty_flag()); },
+        [this]() { return _nodes_view.render_target.current_size().height(); },
+        [this]() { return img::SizeU::aspect_ratio(_nodes_view.render_target.current_size()); }
+    );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
@@ -158,7 +166,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         some_module.do_rendering(
             {
-                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time),
+                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _camera2D.value.transform_matrix()),
                 input_factory(),
                 input_destructor(),
                 is_dirty__functor(),
@@ -248,6 +256,12 @@ void App::imgui_windows()
         ImGui::Begin("Camera");
         _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
+        // Camera 2D
+        ImGui::Begin("Camera 2D");
+        if (imgui_widget(_camera2D))
+            set_dirty_flag()(_nodes_module->dirty_flag());
+        ImGui::End();
+
 #if DEBUG
         DebugOptions::show_framerate_window([&] {
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
@@ -265,7 +279,7 @@ void App::imgui_windows()
         DebugOptions::test_shaders_compilation__window([&]() {
             const auto compile_custom_shaders = [&]() {
                 compile_all_custom_shaders(
-                    input_provider(2.f, 1.f, 0.f),
+                    input_provider(2.f, 1.f, 0.f, glm::mat3{1.f}),
                     input_factory(),
                     input_destructor(),
                     update_context()
