@@ -52,7 +52,7 @@ private:
     NodeDefinition(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path); // Use NodeDefinition::make() to create a NodeDefinition
 
 private:
-    NodeDefinition_Data _data;
+    NodeDefinition_Data                  _data;
     std::shared_ptr<Cool::PresetManager> _presets_manager; // TODO(JF) Make this a gsl::not_null
 };
 

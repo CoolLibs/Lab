@@ -557,7 +557,7 @@ auto gen_desired_function(
     CodeGenContext&     context
 ) -> ExpectedFunctionName
 {
-    auto const node_definition = context.get_node_definition(node.definition_name()); // NOLINT(readability-qualified-auto)
+    auto const node_definition = context.get_node_definition(node.id_names()); // NOLINT(readability-qualified-auto)
     if (!node_definition)
         return tl::make_unexpected(fmt::format(
             "Node definition \"{}\" was not found. Are you missing a file in your nodes folder?",
