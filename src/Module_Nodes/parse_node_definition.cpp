@@ -1,9 +1,7 @@
 #include "parse_node_definition.h"
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
 #include <Cool/String/String.h>
-#include <vcruntime.h>
 #include <algorithm>
-#include <cstdio>
 #include <exception>
 #include <iterator>
 #include <optional>
@@ -434,7 +432,7 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
 }
 
 template<typename T>
-void modify_description(const std::string& name_property, Cool::InputDefinition<T>& input, const std::string& param_description)
+void set_node_definition_description(std::string const& name_property, Cool::InputDefinition<T>& input, std::string const& param_description)
 {
     if (input.name == name_property)
     {
@@ -442,19 +440,11 @@ void modify_description(const std::string& name_property, Cool::InputDefinition<
     }
 }
 
-std::string get_rid_of_triple_slashs(const std::string& text, const size_t& last)
-{
-    auto triple_slash = text.find("///"); // check with end
-    triple_slash += 3;
-
-    return Cool::String::substring(text, triple_slash, last);
-}
-
 static void set_input_description(NodeDefinition_Data& res, std::string const& input_name, std::string const& input_description)
 {
     for (auto& input : res.input_values)
     {
-        std::visit([&](auto&& input) { modify_description(input_name, input, input_description); }, input);
+        std::visit([&](auto&& input) { set_node_definition_description(input_name, input, input_description); }, input);
     }
 
     // TODO(TD) Descriptions for the input functions
@@ -536,7 +526,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
 
     NodeDefinition_Data res{};
 
-    std::string text_with_comments = text;
+    const std::string text_with_comments = text;
 
     text = Cool::String::remove_comments(text);
 

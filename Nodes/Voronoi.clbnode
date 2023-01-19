@@ -1,4 +1,4 @@
-INPUT int `Grid Size`; /// ceci est un commentaire
+INPUT int `Grid Size`;
 INPUT float `Time`;
 
 // RESOURCES : https://www.youtube.com/watch?v=VmrIDyYiJBA&ab_channel=TheArtofCode
