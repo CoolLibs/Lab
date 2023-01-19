@@ -1,6 +1,10 @@
 #include "NodesConfig.h"
 #include <Cool/Dependencies/requires_shader_code_generation.h>
+#include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Nodes/NodesLibrary.h"
+#include "Module_Nodes/Node.h"
+#include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/PrimitiveType.h"
 #include "imgui.h"
 
@@ -75,6 +79,11 @@ auto NodesConfig::name(Node const& node) const -> std::string
     return node.definition_name();
 }
 
+auto NodesConfig::category_name(Node const& node) const -> std::string
+{
+    return node.category_name();
+}
+
 void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
 {
     { // Main node selector
@@ -96,7 +105,7 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     for (auto& property : node.properties())
         _ui.widget(property);
 
-    auto* def = _get_node_definition(node.definition_name());
+    auto* def = _get_node_definition(node.id_names());
     if (!def)
     {
         ImGui::NewLine();
@@ -119,18 +128,23 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     }
 }
 
-auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
+auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const& cat_id) const -> Node
 {
-    auto node = Node{def.name(), def.signature().arity, def.inputs().size(), def.signature().is_template()};
+    auto node = Node{
+        {cat_id.def.name(), cat_id.category_name},
+        cat_id.def.signature().arity,
+        cat_id.def.inputs().size(),
+        cat_id.def.signature().is_template(),
+    };
 
-    for (size_t i = 0; i < def.signature().arity; ++i)
+    for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
         node.input_pins().push_back(Cool::InputPin{fmt::format("IN{}", i + 1)});
     node.output_pins().push_back(Cool::OutputPin{"OUT"});
 
-    for (auto const& input : def.inputs())
+    for (auto const& input : cat_id.def.inputs())
         node.input_pins().push_back(Cool::InputPin{input.name()});
 
-    for (auto const& property_def : def.properties())
+    for (auto const& property_def : cat_id.def.properties())
     {
         node.properties().push_back(_input_factory.make(
             property_def,
@@ -142,11 +156,11 @@ auto NodesConfig::make_node(NodeDefinition const& def) const -> Node
     // Get the variables from the inputs
     auto settings = settings_from_inputs(node.properties(), _ui.variable_registries());
     // Apply
-    def.presets_manager().apply_first_preset_if_there_is_one(settings);
+    cat_id.def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
     apply_settings_to_inputs(settings, node.properties(), _ui.variable_registries());
 
-    for (auto const& output_index_name : def.output_indices())
+    for (auto const& output_index_name : cat_id.def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
 
     return node;
