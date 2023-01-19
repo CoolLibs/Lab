@@ -19,36 +19,31 @@ void hook_camera2D_events(
     std::function<float()>                             get_height,
     std::function<float()>                             get_aspect_ratio
 )
-
 {
     events
-        // TO DO rotation when shift+scroll and explanation
         .scroll_event()
         .subscribe([&, on_change, get_height, get_aspect_ratio](Cool::MouseScrollEvent<Cool::ViewCoordinates> const& event) {
-            float       tmp_zoom;
-            float const sensitivity = Cool::user_settings().camera2D_zoom_sensitivity;
-            if (event.dy > 0.f)
-                tmp_zoom = sensitivity;
-            else
-                tmp_zoom = 1.f / sensitivity;
-            auto const mouse_pos_in_view_space  = glm::vec2{event.position / get_height() * 2.f} - glm::vec2(get_aspect_ratio(), 1.f);
-            glm::mat3  view_matrix              = camera.transform_matrix();
-            auto const mouse_pos_in_world_space = glm::vec2{view_matrix * glm::vec3{mouse_pos_in_view_space, 1.f}};
-            float      new_zoom                 = camera.zoom * tmp_zoom;
-            camera.translation                  = camera.translation * (1.f / tmp_zoom) + mouse_pos_in_world_space - (1.f / tmp_zoom) * mouse_pos_in_world_space;
-            camera.zoom                         = new_zoom;
+            float const sensitivity    = Cool::user_settings().camera2D_zoom_sensitivity;
+            float const zoom_variation = std::pow(sensitivity, event.dy);
+
+            auto const mouse_pos_in_view_space  = event.position / get_height() * 2.f - glm::vec2{get_aspect_ratio(), 1.f};
+            auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
+
+            camera.translation = camera.translation / zoom_variation + mouse_pos_in_world_space * (1.f - 1.f / zoom_variation);
+            camera.zoom *= zoom_variation;
+
             on_change();
         });
+
     events
         .drag()
         .update()
         .subscribe([&, on_change, get_height](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
-            if (event.delta != glm::vec2(0))
-            {
-                camera.translation -= ((event.delta) / get_height() * 2.f) / camera.zoom;
-            }
+            camera.translation -= event.delta / get_height() * 2.f / camera.zoom;
             on_change();
         });
+
+    // TODO rotation when shift+scroll and explanation
 }
 
 } // namespace Lab
