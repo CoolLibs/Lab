@@ -12,7 +12,7 @@ class Node {
 public:
     Node() = default;
     Node(Cool::NodeDefinitionIdentifier const& id_names, size_t signature_arity, size_t number_of_inputs, bool isTemplateNode)
-        : _id_names{id_names.definition_name, id_names.category_name}
+        : _id_names{id_names}
         , _signature_arity{signature_arity}
         , _number_of_inputs{number_of_inputs}
         , _chosen_any_type{isTemplateNode ? std::make_optional(PrimitiveType::Float) : std::nullopt}
@@ -46,10 +46,7 @@ public:
     auto imgui_chosen_any_type() -> bool;
 
 private:
-    // std::string                  _definition_name;
-    // std::string                  _category_name;
-
-    Cool::NodeDefinitionIdentifier _id_names; // name + category
+    Cool::NodeDefinitionIdentifier _id_names;
 
     std::vector<Cool::InputPin>  _input_pins;
     std::vector<Cool::OutputPin> _output_pins;

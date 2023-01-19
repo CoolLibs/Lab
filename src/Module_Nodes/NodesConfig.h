@@ -3,6 +3,7 @@
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Dependencies/Ui.h"
 #include "Node.h"
 #include "NodeDefinition.h"
@@ -31,9 +32,9 @@ public:
     using NodeDefinitionT = NodeDefinition;
 
     auto name(Node const&) const -> std::string;
-    auto cat_name(Node const&) const -> std::string;
+    auto category_name(Node const&) const -> std::string;
     void imgui_node_body(Node&, Cool::NodeId const&) const;
-    auto make_node(Cool::NodeCategoryIdentifier<NodeDefinition> cat_id) const -> Node;
+    auto make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const& cat_id) const -> Node;
 
 private:
     Cool::InputFactory_Ref                              _input_factory;

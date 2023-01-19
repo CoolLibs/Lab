@@ -2,6 +2,7 @@
 #include <Cool/Dependencies/requires_shader_code_generation.h>
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Module_Nodes/Node.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/PrimitiveType.h"
@@ -78,7 +79,7 @@ auto NodesConfig::name(Node const& node) const -> std::string
     return node.definition_name();
 }
 
-auto NodesConfig::cat_name(Node const& node) const -> std::string
+auto NodesConfig::category_name(Node const& node) const -> std::string
 {
     return node.category_name();
 }
@@ -127,10 +128,14 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     }
 }
 
-auto NodesConfig::make_node(Cool::NodeCategoryIdentifier<NodeDefinition> cat_id) const -> Node
+auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const& cat_id) const -> Node
 {
-    auto def_id = Cool::NodeDefinitionIdentifier{cat_id.def.name(), cat_id.category_name};
-    auto node   = Node{def_id, cat_id.def.signature().arity, cat_id.def.inputs().size(), cat_id.def.signature().is_template()};
+    auto node = Node{
+        {cat_id.def.name(), cat_id.category_name},
+        cat_id.def.signature().arity,
+        cat_id.def.inputs().size(),
+        cat_id.def.signature().is_template(),
+    };
 
     for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
         node.input_pins().push_back(Cool::InputPin{fmt::format("IN{}", i + 1)});
