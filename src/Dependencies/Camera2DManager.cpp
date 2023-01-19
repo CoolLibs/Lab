@@ -22,7 +22,7 @@ void hook_events(
 
 {
     events
-        // TO DO (LC) shift+scroll and explanation
+        // TO DO rotation when shift+scroll and explanation
         .scroll_event()
         .subscribe([&, on_change, get_height, get_aspect_ratio](Cool::MouseScrollEvent<Cool::ViewCoordinates> const& event) {
             float tmp_zoom;
@@ -30,28 +30,12 @@ void hook_events(
                 tmp_zoom = sensitivity;
             else
                 tmp_zoom = 1.f / sensitivity;
-
             auto const mouse_pos_in_view_space  = glm::vec2{event.position / get_height() * 2.f} - glm::vec2(get_aspect_ratio(), 1.f);
             glm::mat3  view_matrix              = camera.transform_matrix();
             auto const mouse_pos_in_world_space = glm::vec2{view_matrix * glm::vec3{mouse_pos_in_view_space, 1.f}};
-            Cool::Log::Debug::info("World", glm::to_string(mouse_pos_in_world_space));
-
-            float new_zoom = camera.zoom * tmp_zoom;
-
-            camera.translation = camera.translation * (1.f / tmp_zoom) + mouse_pos_in_world_space - (1.f / tmp_zoom) * mouse_pos_in_world_space;
-            camera.zoom        = new_zoom;
-
-            // glm::mat3 const scale                   = glm::scale(glm::mat3{1.f}, glm::vec2{tmp_zoom});
-            // auto const      mouse_pos_in_view_space = glm::vec2{event.position / get_height() * 2.f} - glm::vec2(get_aspect_ratio(), 1.f);
-            // Cool::Log::Debug::info("View", glm::to_string(mouse_pos_in_view_space));
-            // auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
-            // Cool::Log::Debug::info("World", glm::to_string(mouse_pos_in_world_space));
-            // glm::mat3 const translate = glm::translate(glm::mat3{1.f}, mouse_pos_in_world_space - camera.translation);
-            // glm::mat3 const inverse   = glm::inverse(translate);
-            // // auto const      new_transform            = camera.transform_matrix() * translate * scale;
-            // auto const new_transform = camera.transform_matrix() * translate * scale * inverse;
-
-            // camera.translation = glm::vec2(new_transform[2][0], new_transform[2][1]) / new_transform[2][2];
+            float      new_zoom                 = camera.zoom * tmp_zoom;
+            camera.translation                  = camera.translation * (1.f / tmp_zoom) + mouse_pos_in_world_space - (1.f / tmp_zoom) * mouse_pos_in_world_space;
+            camera.zoom                         = new_zoom;
             on_change();
         });
     events

@@ -7,7 +7,7 @@
 #include <Cool/Dependencies/VariableId.h>
 #include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/Input/MouseCoordinates.h>
-#include <Cool/Input/MouveEventDispatcher.h>
+#include <Cool/Input/MouseEventDispatcher.h>
 #include <reg/reg.hpp>
 
 namespace Lab {
@@ -25,7 +25,7 @@ public:
     CameraManager() = default;
 
     void hook_events(
-        Cool::MouveEventDispatcher<Cool::ViewCoordinates>&,
+        Cool::MouseEventDispatcher<Cool::ViewCoordinates>&,
         std::reference_wrapper<Cool::VariableRegistries>,
         CommandExecutor_TopLevel_Ref
     );
