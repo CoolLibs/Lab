@@ -6,6 +6,7 @@
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Input/MouseDragStartEvent.h"
 #include "Cool/StrongTypes/Camera2D.h"
+#include "Cool/UserSettings/UserSettings.h"
 #include "glm/gtx/string_cast.hpp"
 #include "imgui.h"
 
@@ -16,8 +17,7 @@ void hook_camera2D_events(
     Cool::Camera2D&                                    camera,
     std::function<void()>                              on_change,
     std::function<float()>                             get_height,
-    std::function<float()>                             get_aspect_ratio,
-    float&                                             sensitivity
+    std::function<float()>                             get_aspect_ratio
 )
 
 {
@@ -25,8 +25,9 @@ void hook_camera2D_events(
         // TO DO rotation when shift+scroll and explanation
         .scroll_event()
         .subscribe([&, on_change, get_height, get_aspect_ratio](Cool::MouseScrollEvent<Cool::ViewCoordinates> const& event) {
-            float tmp_zoom;
-            if (event.dy > 0)
+            float       tmp_zoom;
+            float const sensitivity = Cool::user_settings().camera2D_zoom_sensitivity;
+            if (event.dy > 0.f)
                 tmp_zoom = sensitivity;
             else
                 tmp_zoom = 1.f / sensitivity;

@@ -236,9 +236,6 @@ void App::imgui_commands_and_registries_debug_windows()
 
 void App::imgui_windows()
 {
-    ImGui::Begin("Sensitivity");
-    ImGui::SliderFloat("dsfs", &_sensitivity, 1.f, 1.1f);
-    ImGui::End();
     _nodes_view.imgui_window();
     // _custom_shader_view.imgui_window();
 
