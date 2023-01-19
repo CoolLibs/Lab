@@ -37,7 +37,7 @@ App::App(Cool::WindowManager& windows)
         _nodes_view.view.mouse_events(),
         _camera2D.value,
         [this]() { set_dirty_flag()(_nodes_module->dirty_flag()); },
-        [this]() { return _nodes_view.render_target.current_size().height(); },
+        [this]() { return static_cast<float>(_nodes_view.render_target.current_size().height()); },
         [this]() { return img::SizeU::aspect_ratio(_nodes_view.render_target.current_size()); }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
