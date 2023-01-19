@@ -9,7 +9,10 @@ void hook_events(
     Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
     Cool::Camera2D&                                    camera,
     std::function<void()>                              on_change,
-    float&                                             sensitivity
+    std::function<float()>                             get_height,
+    std::function<float()>                             get_aspect_ratio,
+
+    float& sensitivity
 );
 
 }
