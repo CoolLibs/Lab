@@ -218,10 +218,9 @@ vec2 default_curve/*coollabdef*/(float t)
             return *func;
     }
 
-    // TODO(JF) Should we do blending in Lab space?
     {
         auto const func = maybe_generate_default(
-            FunctionSignature{.from = PrimitiveType::sRGB_PremultipliedA, .to = PrimitiveType::sRGB_PremultipliedA, .arity = 2},
+            FunctionSignature{.from = PrimitiveType::CIELAB_PremultipliedA, .to = PrimitiveType::CIELAB_PremultipliedA, .arity = 2},
             "default_blend_mode", R"STR(
 vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
 {
