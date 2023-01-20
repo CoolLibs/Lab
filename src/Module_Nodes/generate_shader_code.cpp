@@ -63,11 +63,18 @@ auto generate_shader_code(
 uniform float _time;
 uniform float _height;
 uniform mat3  _camera2D;
+uniform mat3  _camera2D_inverse;
 out vec4      out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
+
+vec2 to_view_space(vec2 uv)
+{{
+    vec3 p = _camera2D_inverse * vec3(uv, 1.);
+    return p.xy / p.z;
+}}
 
 struct CoollabContext
 {{

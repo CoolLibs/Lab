@@ -180,6 +180,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.bind();
     shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
     shader.set_uniform("_camera2D", in.provider(Cool::Input_Camera2D{}));
+    shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
 
