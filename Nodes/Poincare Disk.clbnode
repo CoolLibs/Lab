@@ -1,0 +1,13 @@
+
+INPUT float `strength`;
+
+float delta(vec2 uv)
+{
+    return 2 * length_squared(uv) / (1 - length_squared(uv));
+}
+
+UV main(UV uv)
+{
+    vec2 direction_uv = normalize(uv) /`strength`;
+    return direction_uv * acosh(1 + delta(uv));
+}
