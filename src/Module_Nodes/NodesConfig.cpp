@@ -150,7 +150,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
         for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
             node.input_pins().emplace_back(cat_id.def.main_parameter_names()[i]);
     }
-    node.output_pins().emplace_back("OUT");
+    node.output_pins().emplace_back("");
 
     for (auto const& input : cat_id.def.inputs())
         node.input_pins().push_back(Cool::InputPin{input.name()});
