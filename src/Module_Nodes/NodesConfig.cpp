@@ -3,6 +3,7 @@
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
+#include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/Node.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/PrimitiveType.h"
@@ -128,18 +129,28 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     }
 }
 
+static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
+{
+    return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
+}
+
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const& cat_id) const -> Node
 {
+    bool const needs_main_pin = !doesnt_need_main_pin(cat_id.def.signature());
+
     auto node = Node{
         {cat_id.def.name(), cat_id.category_name},
-        cat_id.def.signature().arity,
+        needs_main_pin ? cat_id.def.signature().arity : 0,
         cat_id.def.inputs().size(),
         cat_id.def.signature().is_template(),
     };
 
-    for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
-        node.input_pins().push_back(Cool::InputPin{fmt::format("IN{}", i + 1)});
-    node.output_pins().push_back(Cool::OutputPin{"OUT"});
+    if (needs_main_pin)
+    {
+        for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
+            node.input_pins().emplace_back(fmt::format("IN{}", i + 1));
+    }
+    node.output_pins().emplace_back("OUT");
 
     for (auto const& input : cat_id.def.inputs())
         node.input_pins().push_back(Cool::InputPin{input.name()});
