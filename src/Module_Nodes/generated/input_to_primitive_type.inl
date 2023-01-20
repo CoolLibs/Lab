@@ -55,3 +55,12 @@ if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<
 
 if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_StraightA))
     return PrimitiveType::sRGB_StraightA;
+
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::HSLuv))
+    return PrimitiveType::HSLuv;
+
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::HSLuv_PremultipliedA))
+    return PrimitiveType::HSLuv_PremultipliedA;
+
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::HSLuv_StraightA))
+    return PrimitiveType::HSLuv_StraightA;

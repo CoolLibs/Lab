@@ -391,6 +391,151 @@ if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::sRGB_Pr
     });
 }
 
+if (from == PrimitiveType::CIELAB && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_CIELAB",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_CIELAB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_CIELAB",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_CIELAB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from);
+                        return vec4(to, coollab_global_alpha);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_CIELAB",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_CIELAB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from);
+                        return vec4(to, 1.) * coollab_global_alpha;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB_StraightA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_CIELAB_StraightA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_CIELAB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from.xyz);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB_StraightA && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_CIELAB_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_CIELAB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from.xyz);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB_StraightA && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_CIELAB_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_CIELAB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from.xyz);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_CIELAB_PremultipliedA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_CIELAB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from.xyz / from.a);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_CIELAB_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_CIELAB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_CIELAB(from.xyz / from.a);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::CIELAB_PremultipliedA && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_CIELAB_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_CIELAB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        // We need to unpremultiply for the color conversion, and re-premultiply afterwards
+                        vec3 to = Cool_HSLuv_from_CIELAB(from.xyz / from.a);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
 if (from == PrimitiveType::LinearRGB && to == PrimitiveType::CIELAB)
 {
     return context.push_function({
@@ -777,6 +922,151 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::sRGB
     });
 }
 
+if (from == PrimitiveType::LinearRGB && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_LinearRGB",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_LinearRGB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_LinearRGB",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_LinearRGB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from);
+                        return vec4(to, coollab_global_alpha);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_LinearRGB",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_LinearRGB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from);
+                        return vec4(to, 1.) * coollab_global_alpha;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_LinearRGB_StraightA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from.xyz);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_LinearRGB_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from.xyz);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_LinearRGB_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from.xyz);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_LinearRGB_PremultipliedA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from.xyz / from.a);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_LinearRGB_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from.xyz / from.a);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_LinearRGB_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        // We need to unpremultiply for the color conversion, and re-premultiply afterwards
+                        vec3 to = Cool_HSLuv_from_LinearRGB(from.xyz / from.a);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
 if (from == PrimitiveType::sRGB && to == PrimitiveType::CIELAB)
 {
     return context.push_function({
@@ -1153,6 +1443,682 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::sRGB_Stra
         .name           = "CoolLab_sRGB_StraightA_from_sRGB_PremultipliedA",
         .implementation = R"STR(
                             vec4 CoolLab_sRGB_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = (from.xyz / from.a);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_sRGB",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_sRGB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_sRGB",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_sRGB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from);
+                        return vec4(to, coollab_global_alpha);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_sRGB",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_sRGB/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from);
+                        return vec4(to, 1.) * coollab_global_alpha;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_sRGB_StraightA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from.xyz);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_sRGB_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from.xyz);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_sRGB_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from.xyz);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_sRGB_PremultipliedA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from.xyz / from.a);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_sRGB_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_HSLuv_from_sRGB(from.xyz / from.a);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_sRGB_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        // We need to unpremultiply for the color conversion, and re-premultiply afterwards
+                        vec3 to = Cool_HSLuv_from_sRGB(from.xyz / from.a);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::CIELAB)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_from_HSLuv",
+        .implementation = R"STR(
+                            vec3 CoolLab_CIELAB_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::CIELAB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_StraightA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_CIELAB_StraightA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from);
+                        return vec4(to, coollab_global_alpha);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::CIELAB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_PremultipliedA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_CIELAB_PremultipliedA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from);
+                        return vec4(to, 1.) * coollab_global_alpha;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::CIELAB)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec3 CoolLab_CIELAB_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from.xyz);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::CIELAB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_StraightA_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_CIELAB_StraightA_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from.xyz);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::CIELAB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_PremultipliedA_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_CIELAB_PremultipliedA_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from.xyz);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::CIELAB)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec3 CoolLab_CIELAB_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from.xyz / from.a);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::CIELAB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_StraightA_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_CIELAB_StraightA_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_CIELAB_from_HSLuv(from.xyz / from.a);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::CIELAB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_CIELAB_PremultipliedA_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_CIELAB_PremultipliedA_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        // We need to unpremultiply for the color conversion, and re-premultiply afterwards
+                        vec3 to = Cool_CIELAB_from_HSLuv(from.xyz / from.a);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::LinearRGB)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_from_HSLuv",
+        .implementation = R"STR(
+                            vec3 CoolLab_LinearRGB_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::LinearRGB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_StraightA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_LinearRGB_StraightA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from);
+                        return vec4(to, coollab_global_alpha);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::LinearRGB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_PremultipliedA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_LinearRGB_PremultipliedA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from);
+                        return vec4(to, 1.) * coollab_global_alpha;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::LinearRGB)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec3 CoolLab_LinearRGB_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from.xyz);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::LinearRGB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_StraightA_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_LinearRGB_StraightA_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from.xyz);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::LinearRGB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_PremultipliedA_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_LinearRGB_PremultipliedA_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from.xyz);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::LinearRGB)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec3 CoolLab_LinearRGB_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from.xyz / from.a);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::LinearRGB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_StraightA_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_LinearRGB_StraightA_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from.xyz / from.a);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::LinearRGB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_LinearRGB_PremultipliedA_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_LinearRGB_PremultipliedA_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        // We need to unpremultiply for the color conversion, and re-premultiply afterwards
+                        vec3 to = Cool_LinearRGB_from_HSLuv(from.xyz / from.a);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::sRGB)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_from_HSLuv",
+        .implementation = R"STR(
+                            vec3 CoolLab_sRGB_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::sRGB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_StraightA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_sRGB_StraightA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from);
+                        return vec4(to, coollab_global_alpha);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::sRGB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_PremultipliedA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_sRGB_PremultipliedA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from);
+                        return vec4(to, 1.) * coollab_global_alpha;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::sRGB)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec3 CoolLab_sRGB_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from.xyz);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::sRGB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_StraightA_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_sRGB_StraightA_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from.xyz);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::sRGB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_PremultipliedA_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_sRGB_PremultipliedA_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from.xyz);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::sRGB)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec3 CoolLab_sRGB_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from.xyz / from.a);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::sRGB_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_StraightA_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_sRGB_StraightA_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = Cool_sRGB_from_HSLuv(from.xyz / from.a);
+                        return vec4(to, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::sRGB_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_sRGB_PremultipliedA_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_sRGB_PremultipliedA_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        // We need to unpremultiply for the color conversion, and re-premultiply afterwards
+                        vec3 to = Cool_sRGB_from_HSLuv(from.xyz / from.a);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = (from);
+                        return vec4(to, coollab_global_alpha);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_HSLuv",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_HSLuv/*coollabdef*/(vec3 from)
+                            {
+                                
+                        vec3 to = (from);
+                        return vec4(to, 1.) * coollab_global_alpha;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = (from.xyz);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_StraightA && to == PrimitiveType::HSLuv_PremultipliedA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_PremultipliedA_from_HSLuv_StraightA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_PremultipliedA_from_HSLuv_StraightA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = (from.xyz);
+                        return vec4(to * from.a, from.a);
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::HSLuv)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec3 CoolLab_HSLuv_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
+                            {
+                                
+                        vec3 to = (from.xyz / from.a);
+                        return to;
+                    
+                            }
+                            )STR",
+    });
+}
+
+if (from == PrimitiveType::HSLuv_PremultipliedA && to == PrimitiveType::HSLuv_StraightA)
+{
+    return context.push_function({
+        .name           = "CoolLab_HSLuv_StraightA_from_HSLuv_PremultipliedA",
+        .implementation = R"STR(
+                            vec4 CoolLab_HSLuv_StraightA_from_HSLuv_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
                         vec3 to = (from.xyz / from.a);

@@ -22,4 +22,7 @@ R"STR(  - int
   - LinearRGB_StraightA
   - sRGB
   - sRGB_PremultipliedA
-  - sRGB_StraightA)STR"
+  - sRGB_StraightA
+  - HSLuv
+  - HSLuv_PremultipliedA
+  - HSLuv_StraightA)STR"
