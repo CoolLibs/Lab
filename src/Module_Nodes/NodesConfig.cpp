@@ -148,7 +148,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     if (needs_main_pin)
     {
         for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
-            node.input_pins().emplace_back(fmt::format("IN{}", i + 1));
+            node.input_pins().emplace_back(cat_id.def.main_parameter_names()[i]);
     }
     node.output_pins().emplace_back("OUT");
 
