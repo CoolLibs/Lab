@@ -24,7 +24,7 @@ public:
     {
         for (const auto& text : _texts)
         {
-            ImGui::Text("%s", text.c_str());
+            ImGui::TextUnformatted(text.c_str());
         }
         if (_should_scroll_down)
         {

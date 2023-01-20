@@ -17,7 +17,7 @@ auto NodeDefinition::make(NodeDefinition_Data const& data, std::filesystem::path
     auto def = NodeDefinition{data, presets_file_path};
     // TODO(JF) Refactor that code duplicated with NodeInputDefinition.cpp
     // Check that the property names are valid, and remove the backticks from them.
-    for (auto& prop : def._data.properties)
+    for (auto& prop : def._data.input_values)
     {
         auto const err = std::visit([](auto& prop) -> std::optional<std::string> {
             if (prop.name.size() < 2 /* Make sure indexing at `prop.name.size() - 1` is safe */

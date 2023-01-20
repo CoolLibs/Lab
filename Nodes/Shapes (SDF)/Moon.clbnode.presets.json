@@ -3,14 +3,14 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "f8bdd5f5-2e8e-48f5-922e-b53fcfc34c09",
+                    "first": "17af3d07-4c0e-4ba9-9f28-eb78bf51a088",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Height",
+                                    "Name": "Radius1",
                                     "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
@@ -38,8 +38,8 @@
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Length",
-                                    "Value": 2.0,
+                                    "Name": "Radius2",
+                                    "Value": 0.699999988079071,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -50,7 +50,7 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 2.0,
+                                    "Default Value": 0.699999988079071,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -66,19 +66,19 @@
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Blur",
-                                    "Value": 0.0010000000474974514,
+                                    "Name": "CircleDisplacement",
+                                    "Value": 0.33000001311302187,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0.0010000000474974514,
-                                            "Has max bound": true,
-                                            "Max": 9.789999961853028,
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0010000000474974514,
+                                    "Default Value": 0.33000001311302187,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -88,30 +88,6 @@
                                             "Drag speed": 0.009999999776482582,
                                             "Use slider": false
                                         }
-                                    }
-                                }
-                            },
-                            {
-                                "index": 3,
-                                "data": {
-                                    "Name": "Center",
-                                    "Value": {
-                                        "Point2D": {
-                                            "x": 0.0,
-                                            "y": 0.0
-                                        }
-                                    },
-                                    "Metadata": {
-                                        "Drag speed": 0.009999999776482582
-                                    },
-                                    "Default Value": {
-                                        "Point2D": {
-                                            "x": 0.0,
-                                            "y": 0.0
-                                        }
-                                    },
-                                    "Default Metadata": {
-                                        "Drag speed": 0.000029999999242136256
                                     }
                                 }
                             }

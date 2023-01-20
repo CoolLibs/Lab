@@ -3,7 +3,7 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "7eb12f04-348b-4842-80a6-bb8efbd9a424",
+                    "first": "b755dd19-d492-429a-92d7-71d0ce501fcf",
                     "second": {
                         "Name": "Default",
                         "Values": [
@@ -36,34 +36,6 @@
                                 }
                             },
                             {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Edge blur",
-                                    "Value": 0.0,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 0.0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
                                 "index": 3,
                                 "data": {
                                     "Name": "Center",
@@ -74,7 +46,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Drag speed": 0.000029999999242136256
+                                        "Drag speed": 0.0006000000284984708
                                     },
                                     "Default Value": {
                                         "Point2D": {

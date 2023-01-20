@@ -325,7 +325,7 @@ static auto parse_property(std::string const& type_as_string, std::string const&
 {
     try
     {
-        res.properties.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
+        res.input_values.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
             make_input_definition,
             type_as_string,
             Cool::AnyInputDefinition,
@@ -347,7 +347,7 @@ static auto parse_input(std::vector<std::string> const& type_words, std::string 
     if (!signature)
         return signature.error();
 
-    res.inputs.emplace_back(NodeInputDefinition_Data{
+    res.input_function.emplace_back(NodeInputDefinition_Data{
         .name      = name,
         .signature = *signature,
     });
@@ -400,7 +400,7 @@ static auto find_declaration(std::string const& text, std::string_view keyword, 
     return std::nullopt;
 }
 
-static auto find_inputs_and_properties(std::string const& text, NodeDefinition_Data& res)
+static auto find_inputs(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     return find_declaration(
@@ -431,6 +431,83 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
     );
 }
 
+template<typename T>
+static void maybe_set_input_description(std::string const& input_name, Cool::InputDefinition<T>& input, std::string const& description)
+{
+    if (input.name == input_name)
+        input.description = description;
+}
+
+static void set_input_description(NodeDefinition_Data& res, std::string const& input_name, std::string const& input_description)
+{
+    for (auto& input : res.input_values)
+    {
+        std::visit([&](auto&& input) { maybe_set_input_description(input_name, input, input_description); }, input);
+    }
+
+    for (auto& input : res.input_function)
+    {
+        if ("`" + input.name() + "`" == input_name)
+            input.set_description(input_description);
+    }
+}
+
+static void find_inputs_descriptions(std::string const& text, NodeDefinition_Data& res)
+{
+    size_t desc_offset = 0;
+    size_t name_offset = 0;
+
+    auto pos_of_the_input_name = std::make_optional<std::pair<size_t, size_t>>(); // Dummy value. We just need it to not be nullopt in order to enter the while loop, but it will be properly computed at the very beginning of that while loop.
+    while (pos_of_the_input_name)
+    {
+        // Update positions
+        pos_of_the_input_name = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = name_offset,
+            .opening = '`',
+            .closing = '`',
+        });
+        if (!pos_of_the_input_name)
+            break;
+
+        auto const pos_of_text_after_the_input_declaration = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = desc_offset,
+            .opening = ';',
+            .closing = '\n',
+        });
+        if (!pos_of_text_after_the_input_declaration)
+            break;
+
+        auto const move_to_next_description = [&]() {
+            name_offset = pos_of_the_input_name->second + 1;
+            desc_offset = pos_of_text_after_the_input_declaration->second + 1;
+        };
+
+        auto const text_after_the_input_declaration = Cool::String::substring(text, *pos_of_text_after_the_input_declaration);
+
+        auto const triple_slash_pos = text_after_the_input_declaration.find("///");
+        if (triple_slash_pos == std::string::npos)
+        {
+            move_to_next_description();
+            continue;
+        }
+
+        auto const input_description = Cool::String::substring(
+            text_after_the_input_declaration,
+            triple_slash_pos + 3,
+            text_after_the_input_declaration.size()
+        );
+
+        pos_of_the_input_name->second = pos_of_the_input_name->second + 1; // Increase by 1 to include the last backtick (`)
+        std::string const input_name  = Cool::String::substring(text, *pos_of_the_input_name);
+
+        set_input_description(res, input_name, input_description);
+
+        move_to_next_description();
+    }
+}
+
 auto parse_node_definition(std::filesystem::path filepath, std::string text)
     -> tl::expected<NodeDefinition, std::string>
 {
@@ -441,6 +518,8 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
 
     NodeDefinition_Data res{};
 
+    std::string const text_with_comments = text;
+
     text = Cool::String::remove_comments(text);
 
     {
@@ -449,7 +528,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
             return tl::make_unexpected(*err);
     }
     {
-        auto const err = find_inputs_and_properties(text, res);
+        auto const err = find_inputs(text, res);
         if (err)
             return tl::make_unexpected(*err);
     }
@@ -458,6 +537,8 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
         if (err)
             return tl::make_unexpected(*err);
     }
+
+    find_inputs_descriptions(text_with_comments, res);
 
     filepath += ".presets.json";
     return NodeDefinition::make(

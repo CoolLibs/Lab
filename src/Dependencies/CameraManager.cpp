@@ -9,7 +9,7 @@
 namespace Lab {
 
 void CameraManager::hook_events(
-    Cool::MouveEventDispatcher<Cool::ViewCoordinates>& events,
+    Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
     std::reference_wrapper<Cool::VariableRegistries>   registries,
     CommandExecutor_TopLevel_Ref                       executor
 )
