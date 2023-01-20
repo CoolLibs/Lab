@@ -2,6 +2,8 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Nodes/Pin.h>
 #include <optional>
+#include <string_view>
+#include "Cool/Nodes/NodeDefinitionIdentifier.h"
 #include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
@@ -9,14 +11,17 @@ namespace Lab {
 class Node {
 public:
     Node() = default;
-    Node(std::string_view definition_name, size_t signature_arity, size_t number_of_inputs, bool isTemplateNode)
-        : _definition_name{definition_name}
+    Node(Cool::NodeDefinitionIdentifier const& id_names, size_t signature_arity, size_t number_of_inputs, bool isTemplateNode)
+        : _id_names{id_names}
         , _signature_arity{signature_arity}
         , _number_of_inputs{number_of_inputs}
         , _chosen_any_type{isTemplateNode ? std::make_optional(PrimitiveType::Float) : std::nullopt}
     {}
 
-    auto definition_name() const -> std::string { return _definition_name; }
+    auto definition_name() const -> std::string { return _id_names.definition_name; }
+    auto category_name() const -> std::string { return _id_names.category_name; }
+
+    auto id_names() const -> Cool::NodeDefinitionIdentifier { return _id_names; }
 
     auto input_pins() const -> auto const& { return _input_pins; }
     auto input_pins() -> auto& { return _input_pins; }
@@ -41,7 +46,8 @@ public:
     auto imgui_chosen_any_type() -> bool;
 
 private:
-    std::string                  _definition_name;
+    Cool::NodeDefinitionIdentifier _id_names;
+
     std::vector<Cool::InputPin>  _input_pins;
     std::vector<Cool::OutputPin> _output_pins;
     std::vector<Cool::AnyInput>  _properties;
@@ -56,7 +62,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Definition", _definition_name),
+            cereal::make_nvp("Definition", _id_names),
             cereal::make_nvp("Input Pins", _input_pins),
             cereal::make_nvp("Output Pins", _output_pins),
             cereal::make_nvp("Properties", _properties),

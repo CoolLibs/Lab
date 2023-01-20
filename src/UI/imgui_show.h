@@ -8,13 +8,13 @@ namespace Lab {
 template<typename T>
 void imgui_show(const Cool::Variable<T>& variable)
 {
-    ImGui::Text("%s", Cool::stringify(variable.value).c_str());
+    ImGui::TextUnformatted(Cool::stringify(variable.value).c_str());
 }
 
 template<typename T>
 void imgui_show(const T& value)
 {
-    ImGui::Text("%s", Cool::stringify(value).c_str());
+    ImGui::TextUnformatted(Cool::stringify(value).c_str());
 }
 
 template<typename T>
