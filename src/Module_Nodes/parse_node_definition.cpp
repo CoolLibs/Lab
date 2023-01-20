@@ -432,22 +432,19 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
 }
 
 template<typename T>
-void set_node_definition_description(std::string const& name_property, Cool::InputDefinition<T>& input, std::string const& param_description)
+static void maybe_set_input_description(std::string const& input_name, Cool::InputDefinition<T>& input, std::string const& description)
 {
-    if (input.name == name_property)
-    {
-        input.description = param_description;
-    }
+    if (input.name == input_name)
+        input.description = description;
 }
 
 static void set_input_description(NodeDefinition_Data& res, std::string const& input_name, std::string const& input_description)
 {
     for (auto& input : res.input_values)
     {
-        std::visit([&](auto&& input) { set_node_definition_description(input_name, input, input_description); }, input);
+        std::visit([&](auto&& input) { maybe_set_input_description(input_name, input, input_description); }, input);
     }
 
-    // TODO(TD) Descriptions for the input functions
     for (auto& input : res.input_function)
     {
         if ("`" + input.name() + "`" == input_name)
@@ -455,33 +452,31 @@ static void set_input_description(NodeDefinition_Data& res, std::string const& i
     }
 }
 
-static auto find_properties_descriptions(std::string const& text, NodeDefinition_Data& res)
-    -> std::optional<std::string>
+static void find_inputs_descriptions(std::string const& text, NodeDefinition_Data& res)
 {
     size_t desc_offset = 0;
     size_t name_offset = 0;
 
-    std::optional<std::pair<size_t, size_t>> pos_of_the_input_name = std::pair<size_t, size_t>{};
-    // initialize the position to enter in the while loop but it is recalculate at each loop
-
+    auto pos_of_the_input_name = std::make_optional<std::pair<size_t, size_t>>(); // Dummy value. We just need it to not be nullopt in order to enter the while loop, but it will be properly computed at the very beginning of that while loop.
     while (pos_of_the_input_name)
     {
-        // reupdate positions
-        auto const pos_of_text_after_the_input_declaration = Cool::String::find_matching_pair({
-            .text    = text,
-            .offset  = desc_offset,
-            .opening = ';',
-            .closing = '\n',
-        });
-
+        // Update positions
         pos_of_the_input_name = Cool::String::find_matching_pair({
             .text    = text,
             .offset  = name_offset,
             .opening = '`',
             .closing = '`',
         });
+        if (!pos_of_the_input_name)
+            break;
 
-        if (!pos_of_text_after_the_input_declaration || !pos_of_the_input_name) // do we find any comments ? -> for the  end of the file
+        auto const pos_of_text_after_the_input_declaration = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = desc_offset,
+            .opening = ';',
+            .closing = '\n',
+        });
+        if (!pos_of_text_after_the_input_declaration)
             break;
 
         auto const move_to_next_description = [&]() {
@@ -498,22 +493,19 @@ static auto find_properties_descriptions(std::string const& text, NodeDefinition
             continue;
         }
 
-        auto const param_description = Cool::String::substring(
+        auto const input_description = Cool::String::substring(
             text_after_the_input_declaration,
             triple_slash_pos + 3,
             text_after_the_input_declaration.size()
         );
 
-        pos_of_the_input_name->second = pos_of_the_input_name->second + 1;
+        pos_of_the_input_name->second = pos_of_the_input_name->second + 1; // Increase by 1 to include the last backtick (`)
+        std::string const input_name  = Cool::String::substring(text, *pos_of_the_input_name);
 
-        std::string const param_name = Cool::String::substring(text, *pos_of_the_input_name);
-
-        set_input_description(res, param_name, param_description);
+        set_input_description(res, input_name, input_description);
 
         move_to_next_description();
     }
-
-    return std::nullopt;
 }
 
 auto parse_node_definition(std::filesystem::path filepath, std::string text)
@@ -526,7 +518,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
 
     NodeDefinition_Data res{};
 
-    const std::string text_with_comments = text;
+    std::string const text_with_comments = text;
 
     text = Cool::String::remove_comments(text);
 
@@ -546,7 +538,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
             return tl::make_unexpected(*err);
     }
 
-    auto a = find_properties_descriptions(text_with_comments, res);
+    find_inputs_descriptions(text_with_comments, res);
 
     filepath += ".presets.json";
     return NodeDefinition::make(

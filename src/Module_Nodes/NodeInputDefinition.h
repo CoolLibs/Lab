@@ -7,8 +7,7 @@ namespace Lab {
 struct NodeInputDefinition_Data {
     std::string       name{};
     FunctionSignature signature{};
-    std::string       description{};
-    // TODO desctipyion
+    std::string       description{}; // TODO(JF) Display description on the node pin
 };
 
 class NodeInputDefinition {
