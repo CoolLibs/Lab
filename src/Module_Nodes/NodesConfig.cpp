@@ -191,7 +191,7 @@ static auto inputs_have_the_same_type_and_name(Cool::AnyInput const& input1, Coo
 
 static auto iterator_to_same_input(Cool::AnyInput const& input, std::vector<Cool::AnyInput>& old_inputs)
 {
-    return std::ranges::find_if(old_inputs, [&](const Cool::AnyInput& other_input) {
+    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnyInput& other_input) {
         return inputs_have_the_same_type_and_name(other_input, input);
     });
 }
