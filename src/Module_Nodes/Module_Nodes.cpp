@@ -109,7 +109,7 @@ auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
     std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
     for (auto const& [_, node] : _nodes_editor.graph().nodes())
     {
-        for (auto const& input : node.properties())
+        for (auto const& input : node.value_inputs())
         {
             inputs.push_back(std::visit([](auto&& input) { return Cool::AnyInputRefToConst{input}; }, input));
         }
@@ -193,7 +193,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
         std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
         for (auto const& [_, node] : _nodes_editor.graph().nodes())
         {
-            for (auto const& prop : node.properties())
+            for (auto const& prop : node.value_inputs())
             {
                 std::visit([&](auto&& prop) {
                     send_uniform(prop, shader, in.provider);

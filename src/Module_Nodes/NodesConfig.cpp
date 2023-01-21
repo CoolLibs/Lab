@@ -103,7 +103,7 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     if (node.imgui_chosen_any_type())
         _ui.set_dirty(_regenerate_code_flag);
 
-    for (auto& property : node.properties())
+    for (auto& property : node.value_inputs())
         _ui.widget(property);
 
     auto* def = _get_node_definition(node.id_names());
@@ -113,16 +113,16 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
         ImGui::Separator();
         Cool::ImGuiExtras::warning_text("Node definition file not found");
     }
-    else if (!node.properties().empty())
+    else if (!node.value_inputs().empty())
     {
         ImGui::NewLine();
         ImGui::Separator();
         // Get the variables from the inputs
-        auto settings = settings_from_inputs(node.properties(), _ui.variable_registries());
+        auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
         // Apply
         bool const has_changed = def->imgui_presets(settings);
         // Apply back the variables to the inputs' default variables
-        apply_settings_to_inputs(settings, node.properties(), _ui.variable_registries());
+        apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
 
         if (has_changed)
             _ui.set_dirty(_regenerate_code_flag); // TODO(JF) We could simply rerender instead of regenerate if none of the properties require code generation
@@ -157,7 +157,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
 
     for (auto const& property_def : cat_id.def.properties())
     {
-        node.properties().push_back(_input_factory.make(
+        node.value_inputs().push_back(_input_factory.make(
             property_def,
             Cool::requires_shader_code_generation(property_def) ? _regenerate_code_flag : _rerender_flag
         ));
@@ -165,11 +165,11 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     }
 
     // Get the variables from the inputs
-    auto settings = settings_from_inputs(node.properties(), _ui.variable_registries());
+    auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
     // Apply
     cat_id.def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, node.properties(), _ui.variable_registries());
+    apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
 
     for (auto const& output_index_name : cat_id.def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
@@ -222,7 +222,7 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition
 {
     auto node = make_node({definition, out_node.category_name()});
 
-    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.properties(), node.properties());
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs());
 
     node.output_pins()[0].set_id(out_node.output_pins()[0].id());
 
