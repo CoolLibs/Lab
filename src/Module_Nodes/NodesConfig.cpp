@@ -1,5 +1,6 @@
 #include "NodesConfig.h"
 #include <Cool/Dependencies/requires_shader_code_generation.h>
+#include <algorithm>
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
@@ -226,13 +227,41 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition
 
     node.output_pins()[0].set_id(out_node.output_pins()[0].id());
 
-    for (size_t i = 0; i < out_node.input_pins().size(); ++i)
     {
-        auto const& pin = out_node.input_pins()[i];
-        if (i < node.input_pins().size())
-            node.input_pins()[i].set_id(pin.id());
-        else
-            graph.remove_link_going_into(pin.id());
+        // Collect indices of pins that don't match any old pins.
+        // Start with all the indices of the new input pins
+        std::vector<size_t> indices(node.input_pins().size());
+        std::iota(std::begin(indices), std::end(indices), 0u);
+        // Remove indices of pins that have the same name as an old pin.
+        std::erase_if(indices, [&](size_t idx) {
+            return std::any_of(out_node.input_pins().begin(), out_node.input_pins().end(), [&](auto&& pin) {
+                return pin.name() == node.input_pins()[idx].name();
+            });
+        });
+        // Make sure smallest indices are last because we read this vector from right to left.
+        std::sort(indices.begin(), indices.end(), std::greater{});
+
+        for (auto const& pin : out_node.input_pins())
+        {
+            // Try to find a pin with the same name
+            auto const it = std::find_if(node.input_pins().begin(), node.input_pins().end(), [&](auto&& other_pin) {
+                return other_pin.name() == pin.name();
+            });
+            if (it != node.input_pins().end())
+            {
+                it->set_id(pin.id());
+            }
+            // Otherwise default to one of the leftover indices
+            else if (!indices.empty())
+            {
+                node.input_pins()[indices.back()].set_id(pin.id());
+                indices.pop_back();
+            }
+            else
+            {
+                graph.remove_link_going_into(pin.id());
+            }
+        }
     }
 
     out_node = node;
