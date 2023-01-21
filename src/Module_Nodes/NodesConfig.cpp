@@ -177,9 +177,52 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     return node;
 }
 
+static auto name(Cool::AnyInput const& input)
+{
+    return std::visit(([](auto&& input) { return input.name(); }), input);
+}
+
+static auto inputs_have_the_same_type_and_name(Cool::AnyInput const& input1, Cool::AnyInput const& input2) -> bool
+{
+    return input1.index() == input2.index()
+           && name(input1) == name(input2);
+}
+
+static auto iterator_to_same_input(Cool::AnyInput const& input, std::vector<Cool::AnyInput>& old_inputs)
+{
+    return std::ranges::find_if(old_inputs, [&](const Cool::AnyInput& other_input) {
+        return inputs_have_the_same_type_and_name(other_input, input);
+    });
+}
+
+static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
+    std::vector<Cool::AnyInput>& old_inputs,
+    std::vector<Cool::AnyInput>& new_inputs
+    // Cool::InputDestructor_Ref    destroy
+)
+{
+    for (auto& input : old_inputs)
+    {
+        auto const it = iterator_to_same_input(input, new_inputs);
+        if (it != new_inputs.end())
+        {
+            auto description = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
+            // destroy(*it);
+            *it = std::move(input);
+            std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
+        }
+        else
+        {
+            // destroy(input);
+        }
+    }
+}
+
 void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition const& definition, Cool::Graph<Node>& graph) const
 {
     auto node = make_node({definition, out_node.category_name()});
+
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.properties(), node.properties());
 
     node.output_pins()[0].set_id(out_node.output_pins()[0].id());
 
