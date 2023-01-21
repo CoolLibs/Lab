@@ -84,14 +84,14 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
     if (_nodes_editor.imgui_window(NodesConfig{ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag}, _nodes_library))
         ui.set_dirty(_regenerate_code_flag);
 
-    ImGui::Begin("Nodes Code");
-    if (ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+#if DEBUG
+    if (DebugOptions::show_generated_shader_code())
     {
-        // _must_recompile = true;
-        // ui.set_dirty()
-        // _shader.compile(_shader_code, "is0 Ray Marcher", ); // TODO(JF) just set shader dirty
+        ImGui::Begin("Nodes Code");
+        ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
+        ImGui::End();
     }
-    ImGui::End();
+#endif
 }
 
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
