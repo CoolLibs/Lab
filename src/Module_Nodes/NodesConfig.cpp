@@ -207,10 +207,12 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         auto const it = iterator_to_same_input(input, new_inputs);
         if (it != new_inputs.end())
         {
-            auto description = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
+            auto       description         = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
+            auto const desired_color_space = std::visit([](auto&& input) { return input._desired_color_space; }, *it);    // Keep the new desired_color_space
             destroy(*it);
             *it = std::move(input);
             std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
+            std::visit([&](auto&& it) { it._desired_color_space = desired_color_space; }, *it);
         }
         else
         {
