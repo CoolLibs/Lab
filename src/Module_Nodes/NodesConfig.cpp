@@ -177,4 +177,8 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     return node;
 }
 
+void NodesConfig::update_node_with_new_definition(Node&, NodeDefinition const&) const
+{
+}
+
 } // namespace Lab

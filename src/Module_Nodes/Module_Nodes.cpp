@@ -9,7 +9,10 @@
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
+#include "Dependencies/Module.h"
+#include "Module_Nodes/Module_Nodes.h"
 #include "Module_Nodes/NodeDefinition.h"
+#include "Module_Nodes/NodesConfig.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
 #include "parse_node_definition.h"
@@ -25,7 +28,7 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 
 void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    auto updater = Cool::NodesDefinitionUpdater<NodeDefinition>{_nodes_library, &parse_node_definition};
+    auto updater = Cool::NodesDefinitionUpdater{nodes_config(ctx.ui()), _nodes_editor.graph(), _nodes_library, &parse_node_definition};
     if (_nodes_folder_watcher.update(updater))
         ctx.set_dirty(_regenerate_code_flag);
 }
@@ -79,9 +82,14 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 #endif
 }
 
+auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
+{
+    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag};
+}
+
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    if (_nodes_editor.imgui_window(NodesConfig{ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag}, _nodes_library))
+    if (_nodes_editor.imgui_window(nodes_config(ui), _nodes_library))
         ui.set_dirty(_regenerate_code_flag);
 
 #if DEBUG

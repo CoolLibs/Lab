@@ -34,7 +34,8 @@ public:
     auto name(Node const&) const -> std::string;
     auto category_name(Node const&) const -> std::string;
     void imgui_node_body(Node&, Cool::NodeId const&) const;
-    auto make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const& cat_id) const -> Node;
+    auto make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const&) const -> Node;
+    void update_node_with_new_definition(Node&, NodeDefinition const&) const;
 
 private:
     Cool::InputFactory_Ref                              _input_factory;

@@ -6,6 +6,7 @@
 #include "Cool/Nodes/NodesFolderWatcher.h"
 #include "Cool/Path/Path.h"
 #include "Dependencies/Module.h"
+#include "Module_Nodes/NodesConfig.h"
 #include "NodesConfig.h"
 #include "NodesLibrary.h"
 
@@ -28,6 +29,7 @@ protected:
 
 private:
     void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes);
+    auto nodes_config(Ui_Ref ui) const -> NodesConfig;
 
 private:
     mutable std::string                    _shader_code{};
