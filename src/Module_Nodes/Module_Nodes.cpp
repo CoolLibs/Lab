@@ -6,8 +6,10 @@
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
+#include "Cool/Nodes/NodesDefinitionUpdater.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
+#include "Module_Nodes/NodeDefinition.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
 #include "parse_node_definition.h"
@@ -23,7 +25,8 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 
 void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    if (_nodes_folder_watcher.update(_nodes_library, &parse_node_definition))
+    auto updater = Cool::NodesDefinitionUpdater<NodeDefinition>{_nodes_library, &parse_node_definition};
+    if (_nodes_folder_watcher.update(updater))
         ctx.set_dirty(_regenerate_code_flag);
 }
 
@@ -87,12 +90,6 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
         // _must_recompile = true;
         // ui.set_dirty()
         // _shader.compile(_shader_code, "is0 Ray Marcher", ); // TODO(JF) just set shader dirty
-    }
-    ImGui::End();
-    ImGui::Begin("Nodes Debug");
-    if (ImGui::Button("Refresh Definitions"))
-    {
-        _nodes_folder_watcher.force_refresh();
     }
     ImGui::End();
 }
