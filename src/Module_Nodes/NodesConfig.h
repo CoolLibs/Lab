@@ -3,6 +3,7 @@
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Nodes/Graph.h>
 #include <Cool/Nodes/NodeId.h>
+#include "Cool/Dependencies/Input.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Dependencies/Ui.h"
@@ -19,7 +20,8 @@ public:
         Ui_Ref                                      ui,
         Cool::NodeId&                               main_node_id,
         Cool::DirtyFlag const&                      rerender_flag,
-        Cool::DirtyFlag const&                      regenerate_code_flag
+        Cool::DirtyFlag const&                      regenerate_code_flag,
+        Cool::InputDestructor_Ref                   input_destructor
     )
         : _input_factory{input_factory}
         , _get_node_definition{get_node_definition}
@@ -27,6 +29,7 @@ public:
         , _main_node_id{main_node_id}
         , _rerender_flag{rerender_flag}
         , _regenerate_code_flag{regenerate_code_flag}
+        , _input_destructor{input_destructor}
     {}
 
     using NodeT           = Node;
@@ -45,6 +48,7 @@ private:
     Cool::NodeId&                                       _main_node_id;
     Cool::DirtyFlag                                     _rerender_flag;
     Cool::DirtyFlag                                     _regenerate_code_flag;
+    Cool::InputDestructor_Ref                           _input_destructor;
 };
 
 } // namespace Lab

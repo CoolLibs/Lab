@@ -78,7 +78,7 @@ private:
     auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_variable_registries, render_target_aspect_ratio, height, time, cam2D}; }
     auto input_destructor                           () { return Cool::InputDestructor_Ref{_variable_registries}; }
     auto input_factory                              () { return Cool::InputFactory_Ref{_variable_registries, _camera_manager.id()}; }
-    auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag(), input_factory()}; }
+    auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag(), input_factory(), input_destructor()}; }
     auto dirty_flag_factory                         () { return Cool::DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_dirty_registry}; }

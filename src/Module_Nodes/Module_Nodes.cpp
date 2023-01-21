@@ -84,7 +84,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 
 auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
 {
-    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag};
+    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag, ui.input_destructor()};
 }
 
 void Module_Nodes::imgui_windows(Ui_Ref ui) const

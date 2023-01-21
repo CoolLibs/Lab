@@ -197,8 +197,8 @@ static auto iterator_to_same_input(Cool::AnyInput const& input, std::vector<Cool
 
 static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<Cool::AnyInput>& old_inputs,
-    std::vector<Cool::AnyInput>& new_inputs
-    // Cool::InputDestructor_Ref    destroy
+    std::vector<Cool::AnyInput>& new_inputs,
+    Cool::InputDestructor_Ref    destroy
 )
 {
     for (auto& input : old_inputs)
@@ -207,13 +207,13 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         if (it != new_inputs.end())
         {
             auto description = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
-            // destroy(*it);
+            destroy(*it);
             *it = std::move(input);
             std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
         }
         else
         {
-            // destroy(input);
+            destroy(input);
         }
     }
 }
@@ -222,7 +222,7 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition
 {
     auto node = make_node({definition, out_node.category_name()});
 
-    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs());
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs(), _input_destructor);
 
     node.output_pins()[0].set_id(out_node.output_pins()[0].id());
 
