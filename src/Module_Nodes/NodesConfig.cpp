@@ -177,8 +177,22 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     return node;
 }
 
-void NodesConfig::update_node_with_new_definition(Node&, NodeDefinition const&) const
+void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition const& definition, Cool::Graph<Node>& graph) const
 {
+    auto node = make_node({definition, out_node.category_name()});
+
+    node.output_pins()[0].set_id(out_node.output_pins()[0].id());
+
+    for (size_t i = 0; i < out_node.input_pins().size(); ++i)
+    {
+        auto const& pin = out_node.input_pins()[i];
+        if (i < node.input_pins().size())
+            node.input_pins()[i].set_id(pin.id());
+        else
+            graph.remove_link_going_into(pin.id());
+    }
+
+    out_node = node;
 }
 
 } // namespace Lab
