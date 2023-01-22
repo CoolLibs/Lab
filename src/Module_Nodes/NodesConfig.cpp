@@ -78,7 +78,8 @@ static void apply_settings_to_inputs(
 
 auto NodesConfig::name(Node const& node) const -> std::string
 {
-    return node.definition_name();
+    auto const name = node.name();
+    return name.empty() ? node.definition_name() : name;
 }
 
 auto NodesConfig::category_name(Node const& node) const -> std::string
@@ -224,6 +225,7 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
 void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition const& definition, Cool::Graph<Node>& graph) const
 {
     auto node = make_node({definition, out_node.category_name()});
+    node.set_name(out_node.name());
 
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs(), _input_destructor);
 
@@ -267,6 +269,15 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition
     }
 
     out_node = node;
+}
+
+void NodesConfig::widget_to_rename_node(Node& node)
+{
+    auto name = node.name();
+    ImGui::SetKeyboardFocusHere();
+    if (ImGui::InputText("Display Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))
+        ImGui::CloseCurrentPopup();
+    node.set_name(name);
 }
 
 } // namespace Lab

@@ -18,6 +18,9 @@ public:
         , _chosen_any_type{is_template_node ? std::make_optional(PrimitiveType::Float) : std::nullopt}
     {}
 
+    auto name() const -> std::string { return _name; }
+    void set_name(std::string const& name) { _name = name; }
+
     auto definition_name() const -> std::string { return _id_names.definition_name; }
     auto category_name() const -> std::string { return _id_names.category_name; }
 
@@ -48,6 +51,7 @@ public:
 
 private:
     Cool::NodeDefinitionIdentifier _id_names;
+    std::string                    _name{};
 
     std::vector<Cool::InputPin>  _input_pins;
     std::vector<Cool::OutputPin> _output_pins;
@@ -63,6 +67,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
+            cereal::make_nvp("Name", _name),
             cereal::make_nvp("Definition", _id_names),
             cereal::make_nvp("Input Pins", _input_pins),
             cereal::make_nvp("Output Pins", _output_pins),

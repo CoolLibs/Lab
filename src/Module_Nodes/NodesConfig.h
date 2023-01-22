@@ -40,6 +40,7 @@ public:
     void imgui_node_body(Node&, Cool::NodeId const&) const;
     auto make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const&) const -> Node;
     void update_node_with_new_definition(Node&, NodeDefinition const&, Cool::Graph<Node>&) const;
+    static void widget_to_rename_node(Node&);
 
 private:
     Cool::InputFactory_Ref                              _input_factory;
