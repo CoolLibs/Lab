@@ -337,7 +337,7 @@ static auto gen_inputs(
     {
         auto const& input         = node_definition.inputs()[input_idx];
         auto        output_pin    = Cool::OutputPin{};
-        auto const  input_node_id = context.graph().input_node_id(node.pin_of_value_input(input_idx).id(), &output_pin);
+        auto const  input_node_id = context.graph().input_node_id(node.pin_of_function_input(input_idx).id(), &output_pin);
         auto const  input_node    = context.graph().nodes().get(input_node_id);
         if (!input_node || output_pin == input_node->main_output_pin()) // If we are plugged to the main output of a node (or to nothing, in which case we will generate a default function), then generate the corresponding function
         {
