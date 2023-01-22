@@ -222,6 +222,45 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     }
 }
 
+template<typename PinT>
+static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& old_pins, std::function<void(Cool::PinId const&)> remove_links)
+{
+    // Collect indices of pins that don't match any old pins.
+    // Start with all the indices of the new input pins
+    std::vector<size_t> indices(new_pins.size());
+    std::iota(std::begin(indices), std::end(indices), 0u);
+    // Remove indices of pins that have the same name as an old pin.
+    std::erase_if(indices, [&](size_t idx) {
+        return std::any_of(old_pins.begin(), old_pins.end(), [&](auto&& pin) {
+            return pin.name() == new_pins[idx].name();
+        });
+    });
+    // Make sure smallest indices are last because we read this vector from right to left.
+    std::sort(indices.begin(), indices.end(), std::greater{});
+
+    for (auto const& pin : old_pins)
+    {
+        // Try to find a pin with the same name
+        auto const it = std::find_if(new_pins.begin(), new_pins.end(), [&](auto&& other_pin) {
+            return other_pin.name() == pin.name();
+        });
+        if (it != new_pins.end())
+        {
+            it->set_id(pin.id());
+        }
+        // Otherwise default to one of the leftover indices
+        else if (!indices.empty())
+        {
+            new_pins[indices.back()].set_id(pin.id());
+            indices.pop_back();
+        }
+        else
+        {
+            remove_links(pin.id());
+        }
+    }
+}
+
 void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition const& definition, Cool::Graph<Node>& graph) const
 {
     auto node = make_node({definition, out_node.category_name()});
@@ -229,44 +268,8 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition
 
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs(), _input_destructor);
 
-    node.output_pins()[0].set_id(out_node.output_pins()[0].id());
-
-    {
-        // Collect indices of pins that don't match any old pins.
-        // Start with all the indices of the new input pins
-        std::vector<size_t> indices(node.input_pins().size());
-        std::iota(std::begin(indices), std::end(indices), 0u);
-        // Remove indices of pins that have the same name as an old pin.
-        std::erase_if(indices, [&](size_t idx) {
-            return std::any_of(out_node.input_pins().begin(), out_node.input_pins().end(), [&](auto&& pin) {
-                return pin.name() == node.input_pins()[idx].name();
-            });
-        });
-        // Make sure smallest indices are last because we read this vector from right to left.
-        std::sort(indices.begin(), indices.end(), std::greater{});
-
-        for (auto const& pin : out_node.input_pins())
-        {
-            // Try to find a pin with the same name
-            auto const it = std::find_if(node.input_pins().begin(), node.input_pins().end(), [&](auto&& other_pin) {
-                return other_pin.name() == pin.name();
-            });
-            if (it != node.input_pins().end())
-            {
-                it->set_id(pin.id());
-            }
-            // Otherwise default to one of the leftover indices
-            else if (!indices.empty())
-            {
-                node.input_pins()[indices.back()].set_id(pin.id());
-                indices.pop_back();
-            }
-            else
-            {
-                graph.remove_link_going_into(pin.id());
-            }
-        }
-    }
+    refresh_pins(node.input_pins(), out_node.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
+    refresh_pins(node.output_pins(), out_node.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
 
     out_node = node;
 }
