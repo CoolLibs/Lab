@@ -55,7 +55,7 @@ vec2 hex_uv(vec2 uv)
                : b;
 }
 
-vec2 main(UV uv)
+UV main(UV uv)
 {
     uv *= `Grid Size`;
 
