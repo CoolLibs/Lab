@@ -38,7 +38,7 @@
                             {
                                 "index": 1,
                                 "data": {
-                                    "Name": "Orientation",
+                                    "Name": "Mode",
                                     "Value": 0,
                                     "Metadata": {
                                         "Bounds": {
