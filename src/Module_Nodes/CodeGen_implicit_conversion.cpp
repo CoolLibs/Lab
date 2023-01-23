@@ -1,4 +1,5 @@
 #include "CodeGen_implicit_conversion.h"
+#include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
 
@@ -7,6 +8,11 @@ auto gen_implicit_conversion(PrimitiveType from, PrimitiveType to, CodeGenContex
 {
     if (from == to)
         return "";
+
+    if (from == PrimitiveType::Float && to == PrimitiveType::Angle)
+    {
+        return "";
+    }
 
     if (from == PrimitiveType::Float && to == PrimitiveType::Int)
     {
@@ -41,6 +47,18 @@ float CoolLab_int_to_float/*coollabdef*/(int x)
 vec2 CoolLab_angle_to_direction2D/*coollabdef*/(float angle)
 {
     return vec2(cos(angle), sin(angle));
+}
+)STR",
+        });
+    }
+    if (from == PrimitiveType::Float && to == PrimitiveType::Direction2D)
+    {
+        return context.push_function({
+            .name           = "CoolLab_float_to_direction2D",
+            .implementation = R"STR(
+vec2 CoolLab_float_to_direction2D/*coollabdef*/(float x)
+{
+    return vec2(cos(x),sin(x));
 }
 )STR",
         });
