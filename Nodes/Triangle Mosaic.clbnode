@@ -1,0 +1,43 @@
+INPUT int `nbTiles`;`
+INPUT int `Mode`;
+INPUT UV->LinearRGB `Image`;
+
+LinearRGB main(UV uv){
+    vec2 gv=fract(uv*`nbTiles`);
+    vec2 id = floor(uv*`nbTiles`);
+
+        //Up Left -> Down Right
+        if (`Mode`==0)
+        {
+            if(gv.y>1-gv.x){
+                return `Image`((round(uv*`nbTiles`)/`nbTiles`) - 1./(4.*`nbTiles`));
+            }
+            return `Image`((round(uv*`nbTiles`)/`nbTiles`) + 1./(4.*`nbTiles`));
+        }
+        //Up Right -> Down Left
+        else if (`Mode`==1)
+        {
+            if(gv.y>gv.x)
+            {
+                return `Image`((round(uv*`nbTiles`)/`nbTiles`) - 1./(4.*`nbTiles`));
+            }
+        }
+        else {
+            //Alternate
+            if(mod(id.x+id.y,2) == 0)
+            {
+                if(gv.y>1-gv.x){
+                    return `Image`((round(uv*`nbTiles`)/`nbTiles`) - 1./(4.*`nbTiles`));
+                }
+                return `Image`((round(uv*`nbTiles`)/`nbTiles`) + 1./(4.*`nbTiles`));
+            }
+            else {
+                if(gv.y>gv.x)
+                {
+                    return `Image`((round(uv*`nbTiles`)/`nbTiles`) - 1./(4.*`nbTiles`));
+                }
+            }
+        }        
+    return `Image`((round(uv*`nbTiles`)/`nbTiles`) + 1./(4.*`nbTiles`));
+
+}
