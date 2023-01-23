@@ -2,7 +2,7 @@ INPUT float `Time`;
 INPUT int `Splits`;
 
 //inspired by Gatkan's work https://www.shadertoy.com/view/XdtBWH
-vec2 main(UV uv){
+UV main(UV uv){
     float angle = atan(uv.x, uv.y);
     angle = ((angle/PI)+1.)*0.5;
     angle = angle + 0.25;
