@@ -102,13 +102,13 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     {
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::SignedDistance, PrimitiveType::Float},
-            "default_signed_to_float", fmt::format(R"STR(
-    float default_signed_to_float/*coollabdef*/(float sd)
+            "default_signed_distance_to_float", fmt::format(R"STR(
+    float default_signed_distance_to_float/*coollabdef*/(float sd)
     {{
         return {};
     }}
     )STR",
-                                                   signed_to_float),
+                                                            signed_to_float),
             signature, context
         );
         if (func)
@@ -118,13 +118,13 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     {
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::SignedDistance, PrimitiveType::sRGB},
-            "default_signed_to_sRGB", fmt::format(R"STR(
-    vec3 default_signed_to_sRGB/*coollabdef*/(float sd)
+            "default_signed_distance_to_sRGB", fmt::format(R"STR(
+    vec3 default_signed_distance_to_sRGB/*coollabdef*/(float sd)
     {{
         return vec3({});
     }}
     )STR",
-                                                  signed_to_float),
+                                                           signed_to_float),
             signature, context
         );
         if (func)
@@ -137,7 +137,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
             "default_image_srgb", R"STR(
 vec3 default_image_srgb/*coollabdef*/(vec2 uv)
 {
-    return vec3(uv, 0.);
+    return vec3(saturate(uv), 0.);
 }
 )STR",
             signature, context
@@ -163,7 +163,7 @@ vec3 default_image_srgb/*coollabdef*/(vec2 uv)
             "default_colorizer_cielab", R"STR(
 vec3 default_colorizer_cielab/*coollabdef*/(float x)
 {
-    return vec3(x, 0., 0.);
+    return vec3(saturate(x), 0., 0.);
 }
 )STR",
             signature, context
@@ -218,10 +218,9 @@ vec2 default_curve/*coollabdef*/(float t)
             return *func;
     }
 
-    // TODO(JF) Should we do blending in Lab space?
     {
         auto const func = maybe_generate_default(
-            FunctionSignature{.from = PrimitiveType::sRGB_PremultipliedA, .to = PrimitiveType::sRGB_PremultipliedA, .arity = 2},
+            FunctionSignature{.from = PrimitiveType::CIELAB_PremultipliedA, .to = PrimitiveType::CIELAB_PremultipliedA, .arity = 2},
             "default_blend_mode", R"STR(
 vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
 {
@@ -235,7 +234,7 @@ vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
             return *func;
     }
 
-    // No need to use MAYBE_GENERATE_DEFAULT here because we don't need to rely on default conversions (there is no default conversion with Void anyways)
+    // No need to use maybe_generate_default here because we don't need to rely on default conversions (there is no default conversion with Void anyways)
     if (signature.from == PrimitiveType::Void)
     {
         if (signature.to == PrimitiveType::UV) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().

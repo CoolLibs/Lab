@@ -23,4 +23,7 @@ case PrimitiveType::LinearRGB_PremultipliedA: return "vec4";
 case PrimitiveType::LinearRGB_StraightA: return "vec4";
 case PrimitiveType::sRGB: return "vec3";
 case PrimitiveType::sRGB_PremultipliedA: return "vec4";
-case PrimitiveType::sRGB_StraightA: return "vec4"; 
+case PrimitiveType::sRGB_StraightA: return "vec4";
+case PrimitiveType::HSLuv: return "vec3";
+case PrimitiveType::HSLuv_PremultipliedA: return "vec4";
+case PrimitiveType::HSLuv_StraightA: return "vec4"; 

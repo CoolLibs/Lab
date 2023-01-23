@@ -1,0 +1,37 @@
+INPUT UV->sRGB `Image`;
+INPUT Point2D `Center`;
+
+INPUT int `Sample Count`;
+INPUT float `Blur`;
+INPUT float `Falloff`;
+
+sRGB main(UV uv)
+{
+    float inverse_sample_count = 1.0 / `Sample Count`;
+
+    vec2 view_space_uv = to_view_space(uv) -`Center`;
+
+    vec2 direction = normalize(view_space_uv);
+
+    vec2 velocity = direction * `Blur` * pow(length(view_space_uv), `Falloff`);
+
+    mat3x2 increments = mat3x2(
+        velocity * 1.0 * inverse_sample_count,
+        velocity * 2.0 * inverse_sample_count,
+        velocity * 4.0 * inverse_sample_count
+    );
+
+    vec3   accumulator = vec3(0);
+    mat3x2 offsets     = mat3x2(0);
+
+    for (int i = 0; i < `Sample Count`; i++)
+    {
+        accumulator.g += `Image`(uv + offsets[1]).g;
+        accumulator.b += `Image`(uv + offsets[2]).b;
+        accumulator.r += `Image`(uv + offsets[0]).r;
+
+        offsets -= increments;
+    }
+
+    return accumulator * inverse_sample_count;
+}

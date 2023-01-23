@@ -202,7 +202,7 @@ auto gen_desired_function_implementation(
     for (size_t i = 0; i < current.arity; ++i)
     {
         auto const input_transformation_name = input_transformation(current, desired, implicit_conversions)
-                                                   .gen_func(node.main_input_pin(i), context);
+                                                   .gen_func(node.number_of_main_input_pins() > i ? node.main_input_pin(i) : Cool::InputPin{}, context);
         if (!input_transformation_name)
             return input_transformation_name;
 
@@ -210,7 +210,7 @@ auto gen_desired_function_implementation(
     }
 
     auto const output_transformation_name = output_transformation(current, desired, implicit_conversions)
-                                                .gen_func(current.arity > 0 ? node.main_input_pin(0) : Cool::InputPin{}, context);
+                                                .gen_func(node.number_of_main_input_pins() > 0 ? node.main_input_pin(0) : Cool::InputPin{}, context);
     if (!output_transformation_name)
         return output_transformation_name;
 

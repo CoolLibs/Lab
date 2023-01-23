@@ -38,6 +38,7 @@ public:
 
     auto name() const -> auto const& { return _data.main_function.name; }
     auto signature() const -> auto const& { return _data.main_function.signature.signature; }
+    auto main_parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
     auto parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
     auto function_body() const -> auto const& { return _data.main_function.body; }
     auto inputs() const -> auto const& { return _data.input_function; }

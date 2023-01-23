@@ -1,8 +1,10 @@
 #include "NodesConfig.h"
 #include <Cool/Dependencies/requires_shader_code_generation.h>
+#include <algorithm>
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
+#include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/Node.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/PrimitiveType.h"
@@ -76,7 +78,8 @@ static void apply_settings_to_inputs(
 
 auto NodesConfig::name(Node const& node) const -> std::string
 {
-    return node.definition_name();
+    auto const name = node.name();
+    return name.empty() ? node.definition_name() : name;
 }
 
 auto NodesConfig::category_name(Node const& node) const -> std::string
@@ -102,7 +105,7 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     if (node.imgui_chosen_any_type())
         _ui.set_dirty(_regenerate_code_flag);
 
-    for (auto& property : node.properties())
+    for (auto& property : node.value_inputs())
         _ui.widget(property);
 
     auto* def = _get_node_definition(node.id_names());
@@ -112,41 +115,51 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
         ImGui::Separator();
         Cool::ImGuiExtras::warning_text("Node definition file not found");
     }
-    else if (!node.properties().empty())
+    else if (!node.value_inputs().empty())
     {
         ImGui::NewLine();
         ImGui::Separator();
         // Get the variables from the inputs
-        auto settings = settings_from_inputs(node.properties(), _ui.variable_registries());
+        auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
         // Apply
         bool const has_changed = def->imgui_presets(settings);
         // Apply back the variables to the inputs' default variables
-        apply_settings_to_inputs(settings, node.properties(), _ui.variable_registries());
+        apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
 
         if (has_changed)
             _ui.set_dirty(_regenerate_code_flag); // TODO(JF) We could simply rerender instead of regenerate if none of the properties require code generation
     }
 }
 
+static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
+{
+    return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
+}
+
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const& cat_id) const -> Node
 {
+    bool const needs_main_pin = !doesnt_need_main_pin(cat_id.def.signature());
+
     auto node = Node{
         {cat_id.def.name(), cat_id.category_name},
-        cat_id.def.signature().arity,
+        needs_main_pin ? cat_id.def.signature().arity : 0,
         cat_id.def.inputs().size(),
         cat_id.def.signature().is_template(),
     };
 
-    for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
-        node.input_pins().push_back(Cool::InputPin{fmt::format("IN{}", i + 1)});
-    node.output_pins().push_back(Cool::OutputPin{"OUT"});
+    if (needs_main_pin)
+    {
+        for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
+            node.input_pins().emplace_back(cat_id.def.main_parameter_names()[i]);
+    }
+    node.output_pins().emplace_back("OUT");
 
     for (auto const& input : cat_id.def.inputs())
         node.input_pins().push_back(Cool::InputPin{input.name()});
 
     for (auto const& property_def : cat_id.def.properties())
     {
-        node.properties().push_back(_input_factory.make(
+        node.value_inputs().push_back(_input_factory.make(
             property_def,
             Cool::requires_shader_code_generation(property_def) ? _regenerate_code_flag : _rerender_flag
         ));
@@ -154,16 +167,120 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     }
 
     // Get the variables from the inputs
-    auto settings = settings_from_inputs(node.properties(), _ui.variable_registries());
+    auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
     // Apply
     cat_id.def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, node.properties(), _ui.variable_registries());
+    apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
 
     for (auto const& output_index_name : cat_id.def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
 
     return node;
+}
+
+static auto name(Cool::AnyInput const& input)
+{
+    return std::visit(([](auto&& input) { return input.name(); }), input);
+}
+
+static auto inputs_have_the_same_type_and_name(Cool::AnyInput const& input1, Cool::AnyInput const& input2) -> bool
+{
+    return input1.index() == input2.index()
+           && name(input1) == name(input2);
+}
+
+static auto iterator_to_same_input(Cool::AnyInput const& input, std::vector<Cool::AnyInput>& old_inputs)
+{
+    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnyInput& other_input) {
+        return inputs_have_the_same_type_and_name(other_input, input);
+    });
+}
+
+static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
+    std::vector<Cool::AnyInput>& old_inputs,
+    std::vector<Cool::AnyInput>& new_inputs,
+    Cool::InputDestructor_Ref    destroy
+)
+{
+    for (auto& input : old_inputs)
+    {
+        auto const it = iterator_to_same_input(input, new_inputs);
+        if (it != new_inputs.end())
+        {
+            auto       description         = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
+            auto const desired_color_space = std::visit([](auto&& input) { return input._desired_color_space; }, *it);    // Keep the new desired_color_space
+            destroy(*it);
+            *it = std::move(input);
+            std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
+            std::visit([&](auto&& it) { it._desired_color_space = desired_color_space; }, *it);
+        }
+        else
+        {
+            destroy(input);
+        }
+    }
+}
+
+template<typename PinT>
+static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& old_pins, std::function<void(Cool::PinId const&)> remove_links)
+{
+    // Collect indices of pins that don't match any old pins.
+    // Start with all the indices of the new input pins
+    std::vector<size_t> indices(new_pins.size());
+    std::iota(std::begin(indices), std::end(indices), 0u);
+    // Remove indices of pins that have the same name as an old pin.
+    std::erase_if(indices, [&](size_t idx) {
+        return std::any_of(old_pins.begin(), old_pins.end(), [&](auto&& pin) {
+            return pin.name() == new_pins[idx].name();
+        });
+    });
+    // Make sure smallest indices are last because we read this vector from right to left.
+    std::sort(indices.begin(), indices.end(), std::greater{});
+
+    for (auto const& pin : old_pins)
+    {
+        // Try to find a pin with the same name
+        auto const it = std::find_if(new_pins.begin(), new_pins.end(), [&](auto&& other_pin) {
+            return other_pin.name() == pin.name();
+        });
+        if (it != new_pins.end())
+        {
+            it->set_id(pin.id());
+        }
+        // Otherwise default to one of the leftover indices
+        else if (!indices.empty())
+        {
+            new_pins[indices.back()].set_id(pin.id());
+            indices.pop_back();
+        }
+        else
+        {
+            remove_links(pin.id());
+        }
+    }
+}
+
+void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition const& definition, Cool::Graph<Node>& graph) const
+{
+    auto node = make_node({definition, out_node.category_name()});
+    node.set_name(out_node.name());
+
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs(), _input_destructor);
+
+    refresh_pins(node.input_pins(), out_node.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
+    refresh_pins(node.output_pins(), out_node.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
+
+    out_node = node;
+}
+
+void NodesConfig::widget_to_rename_node(Node& node)
+{
+    auto name = node.name();
+    ImGui::SetKeyboardFocusHere();
+    if (ImGui::InputText("Display Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))
+        ImGui::CloseCurrentPopup();
+    node.set_name(name);
 }
 
 } // namespace Lab

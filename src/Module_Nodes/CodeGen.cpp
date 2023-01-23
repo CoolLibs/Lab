@@ -177,9 +177,9 @@ static auto gen_properties(
     Properties           res{};
 
     size_t property_index{0};
-    for (auto const& prop : node.properties())
+    for (auto const& prop : node.value_inputs())
     {
-        auto const input_pin     = node.pin_of_property(property_index); // NOLINT(performance-unnecessary-copy-initialization)
+        auto const input_pin     = node.pin_of_value_input(property_index); // NOLINT(performance-unnecessary-copy-initialization)
         auto       output_pin    = Cool::OutputPin{};
         auto const input_node_id = context.graph().input_node_id(input_pin.id(), &output_pin);
         auto const node          = context.graph().nodes().get(input_node_id);
@@ -337,7 +337,7 @@ static auto gen_inputs(
     {
         auto const& input         = node_definition.inputs()[input_idx];
         auto        output_pin    = Cool::OutputPin{};
-        auto const  input_node_id = context.graph().input_node_id(node.pin_of_input(input_idx).id(), &output_pin);
+        auto const  input_node_id = context.graph().input_node_id(node.pin_of_function_input(input_idx).id(), &output_pin);
         auto const  input_node    = context.graph().nodes().get(input_node_id);
         if (!input_node || output_pin == input_node->main_output_pin()) // If we are plugged to the main output of a node (or to nothing, in which case we will generate a default function), then generate the corresponding function
         {
@@ -434,14 +434,14 @@ static auto gen_base_function(
         .body = node_definition.function_body(),
     });
 
-    // Add a "namespace" to all the names that this function has defined globally (like its properties) so that names don't clash with another instance of the same node.
-    func_implementation = replace_property_names(func_implementation, node.properties(), properties_code->real_names);
+    // Add a "namespace" to all the names that this function has defined globally (like its value inputs) so that names don't clash with another instance of the same node.
+    func_implementation = replace_property_names(func_implementation, node.value_inputs(), properties_code->real_names);
     func_implementation = replace_input_names(func_implementation, inputs->real_names);
     func_implementation = replace_output_indices_names(func_implementation, node);
     func_implementation = replace_helper_functions(func_implementation, node_definition.helper_functions(), helper_functions.new_names);
 
     {
-        auto const error = check_there_are_no_backticks_left(func_implementation, list_all_property_and_input_and_output_names(node.properties(), node_definition.inputs(), node_definition.output_indices()));
+        auto const error = check_there_are_no_backticks_left(func_implementation, list_all_property_and_input_and_output_names(node.value_inputs(), node_definition.inputs(), node_definition.output_indices()));
         if (error)
             return tl::make_unexpected(*error);
     }

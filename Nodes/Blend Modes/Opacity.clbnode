@@ -1,7 +1,7 @@
 
 INPUT float `percent`;
 
-sRGB main(sRGB Over, sRGB Under)
+sRGB_PremultipliedA main(sRGB_PremultipliedA Over, sRGB_PremultipliedA Under)
 {
     return `percent`*Over + (1.0-`percent`)*Under;
 }

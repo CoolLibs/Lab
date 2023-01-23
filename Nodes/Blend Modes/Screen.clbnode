@@ -1,6 +1,4 @@
-
-
-sRGB main(sRGB Over, sRGB Under)
+sRGB_PremultipliedA  main(sRGB_PremultipliedA  Over, sRGB_PremultipliedA  Under)
 {
-    return Over + (1.-Over) * (1.-Under);
+    return 1.- (1.-Over) * (1.-Under);
 }

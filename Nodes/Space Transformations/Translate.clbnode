@@ -2,7 +2,7 @@
 
 INPUT vec2 `Translation`;
 
-UV main(UV uv)
+UV main(UV Input)
 {
-    return uv - `Translation`;
+    return Input - `Translation`;
 } 

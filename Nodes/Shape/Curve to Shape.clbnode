@@ -1,13 +1,14 @@
 INPUT float->UV `Curve`;
-/// Precision of the curve
-INPUT int `Number of segments`;
+
+INPUT int `Number of segments`; /// The higher the number the smoother the curve, but the slower it will be to render.
+INPUT float `Thickness`;
 
 // https://iquilezles.org/articles/distfunctions2d/
 float sdSegment(vec2 p, vec2 a, vec2 b)
 {
     vec2  pa = p - a, ba = b - a;
     float h = saturate(dot(pa, ba) / dot(ba, ba));
-    return length(pa - ba * h);
+    return length(pa - ba * h) - `Thickness`;
 }
 
 SignedDistance main(UV uv)

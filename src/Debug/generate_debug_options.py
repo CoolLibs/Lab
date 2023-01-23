@@ -42,6 +42,10 @@ def all_debug_options():
             name_in_ui="Log when parsing node definition",
         ),
         DebugOption(
+            name_in_code="show_generated_shader_code",
+            name_in_ui="Show generated shader code",
+        ),
+        DebugOption(
             name_in_code="test_all_variable_widgets__window",
             name_in_ui="Test all Variable Widgets",
             kind=Kind.WINDOW,
