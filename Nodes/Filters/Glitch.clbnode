@@ -29,9 +29,8 @@ sRGB main(UV uv)
 
     float lineNoise = pow(rng2(blockS,`time`), 8.0) * pow(rng2(blockL,`time`), 3.0) - pow(rng(7.2341,`time`), 17.0) * 2.;
 
-    float red           = `Image`(uv).r;
-    float green_shifted = `Image`(uv + `strength`* vec2(lineNoise * 0.05 * rng(5.0,`time`), 0)).y;
-    float blue_shifted  = `Image`(uv - `strength`* vec2(lineNoise * 0.05 * rng(31.0,`time`), 0)).z;
-
-    return vec3(red, green_shifted, blue_shifted);
+    return vec3(
+        `Image`(uv).r,
+        `Image`(uv + `strength`* vec2(lineNoise * 0.05 * rng(5.0,`time`), 0)).y,
+        `Image`(uv - `strength`* vec2(lineNoise * 0.05 * rng(31.0,`time`), 0)).z);
 }
