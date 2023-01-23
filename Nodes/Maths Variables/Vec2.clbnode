@@ -1,8 +1,9 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-INPUT vec2 `Vector2`;
+INPUT float `X`;
+INPUT float `Y`;
 
 vec2 main()
 {
-    return `Vector2`;
+    return vec2(`X`, `Y`);
 }
