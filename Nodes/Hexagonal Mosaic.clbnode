@@ -1,0 +1,56 @@
+// RESOURCES : https://www.youtube.com/watch?v=VmrIDyYiJBA&ab_channel=TheArtofCode
+// https://andrewhungblog.wordpress.com/2018/07/28/shader-art-tutorial-hexagonal-grids/
+
+INPUT float `Grid Size`;
+
+OUTPUT float `Index X`;
+OUTPUT float `Index Y`;
+INPUT UV->LinearRGB `Image`;
+
+// pixel -> id of the first grid
+vec2 pix_to_grid_ID1(vec2 uv)
+{
+    return floor((uv + vec2(0, 0.25)) / vec2(1., sqrt_3) - vec2(0, 0.25));
+}
+vec2 id1_to_center(vec2 id)
+{
+    return (id + 0.5) * vec2(1., sqrt_3);
+}
+
+// pixel -> id of the second grid
+vec2 id2_to_center(vec2 id)
+{
+    return (id + 1.) * vec2(1., sqrt_3);
+}
+vec2 pix_to_grid_id2(vec2 uv)
+{
+    return floor((uv - vec2(0.5) + vec2(0, 0.25)) / vec2(1., sqrt_3) - vec2(0, 0.25));
+}
+
+vec2 hex_id(vec2 uv)
+{
+    vec2 id1 = pix_to_grid_ID1(uv);
+    vec2 id2 = pix_to_grid_id2(uv);
+
+    vec2 center1 = id1_to_center(id1);
+    vec2 center2 = id2_to_center(id2);
+
+    vec2 id = length_squared(uv - center1) < length_squared(uv - center2)
+                  ? id1.x * vec2(1, 0) + id1.y * vec2(1, 2) + vec2(0, 1)
+                  : id2.x * vec2(1, 0) + id2.y * vec2(1, 2) + vec2(1, 2);
+    return id;
+}
+
+LinearRGB main(UV uv)
+{
+    uv *= `Grid Size`;
+
+    vec2 id = hex_id(uv);
+
+    `Index X` = id.x;
+    `Index Y` = id.y;
+
+    vec2 middle = (id.x*vec2(1,0) + id.y*vec2(-0.5,sqrt_3/2))/`Grid Size`;
+ 
+    return `Image`(middle);
+}

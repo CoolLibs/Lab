@@ -1,0 +1,20 @@
+INPUT int `nbTiles`;`
+INPUT int `Orientation`;
+INPUT UV->LinearRGB `Image`;
+
+LinearRGB main(UV uv){
+    vec2 gv=fract(uv*`nbTiles`);
+    if (mod(`Orientation`,2) == 1)
+    {
+        if(gv.y>1-gv.x){
+            return `Image`((round(uv*`nbTiles`)/`nbTiles`) - 1./(4.*`nbTiles`));
+        }
+        return `Image`((round(uv*`nbTiles`)/`nbTiles`) + 1./(4.*`nbTiles`));
+    }
+    if(gv.y>gv.x)
+    {
+        return `Image`((round(uv*`nbTiles`)/`nbTiles`) - 1./(4.*`nbTiles`));
+    }
+    return `Image`((round(uv*`nbTiles`)/`nbTiles`) + 1./(4.*`nbTiles`));
+
+}

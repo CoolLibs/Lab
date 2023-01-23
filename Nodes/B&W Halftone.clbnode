@@ -1,0 +1,16 @@
+//https://www.shadertoy.com/view/4sBBDK
+
+INPUT float `Scale`;
+INPUT UV->CIELAB `Image`;
+
+float dotScreen(vec2 uv) {
+    float s = sin(`Angle`), c = cos(`Angle`);
+	vec2 p = (uv - vec2(0.5));
+    vec2 q = p * `Scale`; 
+	return ( sin( q.x ) * sin( q.y ) ) * 4.0;
+}
+
+LinearRGB main(UV uv){
+    float grey = `Image`(uv).x;
+    return vec3(grey * 10.0 - 5.0 + dotScreen(uv));
+}
