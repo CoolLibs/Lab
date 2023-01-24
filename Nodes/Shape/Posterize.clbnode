@@ -1,0 +1,7 @@
+//https://www.shadertoy.com/view/wlBBRy
+INPUT float `Level`;
+INPUT UV->sRGB `Image`;
+
+sRGB main(UV uv){
+    return vec3(floor(`Image`(uv)*`Level`)/`Level`);
+}

@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-UV main(CIELAB color)
+UV main(sRGB color)
 {
     return color.xy;
 }

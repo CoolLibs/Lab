@@ -6,7 +6,7 @@ float delta(vec2 uv)
     return 2 * length_squared(uv) / (1 - length_squared(uv));
 }
 
-vec2 main(UV uv)
+UV main(UV uv)
 {
     if (length_squared(uv) >= 1)
         return vec2(acosh(0)); // we want to return the NaN but there is no such value in glsl

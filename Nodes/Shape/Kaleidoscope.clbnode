@@ -12,5 +12,5 @@ UV main(UV uv){
     angle = angle*0.1;
     float y = length(uv);
     angle = angle *(y*3.);
-    return vec2(angle+(_time*0.5),y+(_time*0.1));
+    return vec2(angle+(`Time`*0.5),y+(`Time`*0.1));
 }

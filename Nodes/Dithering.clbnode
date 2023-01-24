@@ -12,9 +12,7 @@ float main(UV uv){
     ); //for 128x128 tiles
 
     vec2 gv = uv * `Size`;
-    vec2 id;
-    id.x = floor(gv.x);
-    id.y = floor(gv.y);
+    vec2 id = floor(gv);
     int mod_x = int(mod(id.x, 4));
     int mod_y = int (mod(id.y, 4));
     float col = `Image`(uv).x +1.*bayer_matrix[mod_x][mod_y];
