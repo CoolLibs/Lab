@@ -1,0 +1,23 @@
+INPUT UV->sRGB `Height Map`;
+
+INPUT float `Normal Strength`;
+// INPUT float `Size`;
+INPUT vec2 `offset`;
+
+sRGB main(UV uv)
+{
+    float textureOffset = 10;
+    float p             = `Height Map`(uv).x;
+    float h1            = `Height Map`(uv + 0.001 * vec2(`offset`.x, 0)).x;
+    float v1            = `Height Map`(uv + 0.001 * vec2(0, `offset`.y)).x;
+
+    return vec3(p - vec2(h1, v1), 1.) *`Normal Strength`;
+    return vec3(`Height Map`(uv));
+
+    // vec2 view_space_uv = to_view_space(uv);
+
+    // float height = `Height Map`(uv).r;
+
+    // return vec3(dFdx(height), dFdy(height), 1.) *`Normal Strength`;
+    // return -vec3(dFdx(height), dFdy(height), 1.) * 1.;
+}
