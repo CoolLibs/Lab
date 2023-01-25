@@ -3,15 +3,15 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "1e3fb698-9273-43a1-9e60-2d6f8b10ccb9",
+                    "first": "d490786f-9836-4ec1-98a5-8342110bcf7a",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "X",
-                                    "Value": 0.0,
+                                    "Name": "Jittering",
+                                    "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -22,7 +22,7 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": 1.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -38,8 +38,8 @@
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Y",
-                                    "Value": 0.0,
+                                    "Name": "Metric",
+                                    "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -50,7 +50,35 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": 1.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Size",
+                                    "Value": 10.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 10.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
