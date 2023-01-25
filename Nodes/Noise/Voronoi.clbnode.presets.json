@@ -1,0 +1,100 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "93259987-97e3-4d7c-97d8-a46e7b7df51d",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Grid Size",
+                                    "Value": 5.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0010000000474974514,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 5.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Randomness",
+                                    "Value": 1.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.00279999990016222,
+                                            "Use slider": true
+                                        }
+                                    },
+                                    "Default Value": 1.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Time",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

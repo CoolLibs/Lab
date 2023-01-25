@@ -12,7 +12,7 @@ float vector_angle(vec2 vec){
 UV main(UV Input)
 {
     vec2 gv = Cool_hex_uv(Input, `Grid Size`);
-    vec2 id = Cool_hex_id(Input, `Grid Size`);
+    ivec2 id = Cool_hex_id(Input, `Grid Size`);
 
     float angle = vector_angle(gv);
     

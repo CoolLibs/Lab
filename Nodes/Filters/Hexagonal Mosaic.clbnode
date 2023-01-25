@@ -8,7 +8,7 @@ OUTPUT float `Index Y`;
 
 UV main(UV uv)
 {
-    vec2 id     = Cool_hex_id(uv, `Grid Size`);
+    ivec2 id  = Cool_hex_id(uv, `Grid Size`);
     `Index X` = id.x;
     `Index Y` = id.y;
 
