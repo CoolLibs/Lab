@@ -1,8 +1,10 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-INPUT vec3 `Vector3`;
+INPUT float `X`;
+INPUT float `Y`;
+INPUT float `Z`;
 
 vec3 main()
 {
-    return `Vector3`;
+    return vec3(x, y, z);
 }
