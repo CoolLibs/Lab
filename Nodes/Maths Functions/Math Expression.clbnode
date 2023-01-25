@@ -2,5 +2,5 @@ INPUT MathExpression `Expr`;
 
 float main(float x)
 {
-    return math_expression_result(x);
+    return `Expr`(x);
 }
