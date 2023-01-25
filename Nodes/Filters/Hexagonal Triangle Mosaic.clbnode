@@ -6,17 +6,13 @@ INPUT float `Grid Size`;
 OUTPUT float `Index X`;
 OUTPUT float `Index Y`;
 
-float vector_angle(vec2 vec){
-    return (vec.y>0) ? acos(dot(vec,vec2(1,0))/length(vec)) : 2*PI - acos(dot(vec,vec2(1,0))/length(vec));
-}
-
 UV main(UV uv)
 {
     vec2  gv = Cool_hex_uv(uv, `Grid Size`);
     ivec2 id = Cool_hex_id(uv, `Grid Size`);
 
-    float angle = vector_angle(gv);
-    
+    float angle = Cool_angle(gv);
+
     float id_triangle = (angle*360/(2*PI)>330.)? 0. : floor((angle*360/(2*PI)+30.)/60);
     
     `Index X` = id.x * 6 + id_triangle;

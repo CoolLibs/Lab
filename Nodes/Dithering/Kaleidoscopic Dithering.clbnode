@@ -5,17 +5,13 @@
 INPUT float `Grid Size`;
 INPUT float `Offset`;
 
-float vector_angle(vec2 vec){
-    return (vec.y>0) ? acos(dot(vec,vec2(1,0))/length(vec)) : 2*PI - acos(dot(vec,vec2(1,0))/length(vec));
-}
-
 UV main(UV Input)
 {
     vec2 gv = Cool_hex_uv(Input, `Grid Size`);
     ivec2 id = Cool_hex_id(Input, `Grid Size`);
 
-    float angle = vector_angle(gv);
-    
+    float angle = Cool_angle(gv);
+
     float id_triangle = (angle*360/(2*PI)>330.)? 0. : floor((angle*360/(2*PI)+30.)/60);
     float angle_middle = (id_triangle*60./360.)*2*PI;
     
