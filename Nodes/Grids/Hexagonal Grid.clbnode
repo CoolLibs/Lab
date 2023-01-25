@@ -57,7 +57,7 @@ vec2 hex_uv(vec2 uv)
 
 UV main(UV uv)
 {
-    uv *= `Grid Size`;
+    uv *= `Grid Size`/ 2;
 
     vec2 gv = hex_uv(uv);
     vec2 id = hex_id(uv);
