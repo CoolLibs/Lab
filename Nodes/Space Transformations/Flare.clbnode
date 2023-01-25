@@ -63,7 +63,7 @@ float sun(vec2 p, vec2 mouse)
 }
 
 sRGB main(UV uvr){
-    vec3 in_color = `Image`(to_view_space(uvr));
+    vec3 in_color = `Image`((uvr));
     vec2 uv = (uvr * `Scale`-`Center`);
     vec2 mm = `Direction`;
     vec3 circColor = vec3(0.9,0.2,0.1);

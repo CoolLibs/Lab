@@ -1,0 +1,27 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
+// #include "_COOL_RES_/shaders/hexagonal_grid.glsl"
+
+INPUT float `Grid Size`;
+INPUT float `Offset`;
+
+float vector_angle(vec2 vec){
+    return (vec.y>0) ? acos(dot(vec,vec2(1,0))/length(vec)) : 2*PI - acos(dot(vec,vec2(1,0))/length(vec));
+}
+
+UV main(UV Input)
+{
+    vec2 gv = Cool_hex_uv(Input, `Grid Size`);
+    vec2 id = Cool_hex_id(Input, `Grid Size`);
+
+    float angle = vector_angle(gv);
+    
+    float id_triangle = (angle*360/(2*PI)>330.)? 0. : floor((angle*360/(2*PI)+30.)/60);
+    float angle_middle = (id_triangle*60./360.)*2*PI;
+    
+    vec2 v = vec2((2./6.)*cos(angle_middle),(2./6.)*sin(angle_middle)) * `Offset`;
+
+    vec2 middle = Cool_hex_center_from_hex_id(id, `Grid Size`);
+
+    return middle+v;
+}

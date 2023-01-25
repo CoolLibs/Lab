@@ -8,13 +8,10 @@
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 4,
+                                "index": 2,
                                 "data": {
-                                    "Name": "Vector2",
-                                    "Value": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    },
+                                    "Name": "X",
+                                    "Value": 0.0,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -25,10 +22,35 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": {
-                                        "x": 0.0,
-                                        "y": 0.0
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Y",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
                                     },
+                                    "Default Value": 0.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,

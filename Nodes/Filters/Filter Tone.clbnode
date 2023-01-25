@@ -12,8 +12,8 @@ LinearRGB main(LinearRGB color)
 {
      // Calculate the three offseted colors up-front
     vec3 OffShadows  = color / `Shadows`;
-    vec3 OffMidtones = color /`Midtones`;
-    vec3 OffHighlights = color / `Highlights`;
+    vec3 OffMidtones = color * `Midtones`;
+    vec3 OffHighlights = color * `Highlights`;
 
     // Linearly interpolate between the 3 new colors, piece-wise
     return mix(

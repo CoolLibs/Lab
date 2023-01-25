@@ -3,18 +3,15 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "ae0971bd-d562-4a3c-9050-2aaa25c9e664",
+                    "first": "f9e9c04d-2a8a-488c-b818-7f07332a5641",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 4,
+                                "index": 2,
                                 "data": {
-                                    "Name": "Translation",
-                                    "Value": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    },
+                                    "Name": "Power",
+                                    "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
@@ -25,10 +22,7 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": {
-                                        "x": 0.5,
-                                        "y": 0.0
-                                    },
+                                    "Default Value": 1.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
