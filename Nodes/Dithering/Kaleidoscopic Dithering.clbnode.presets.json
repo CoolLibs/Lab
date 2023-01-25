@@ -39,14 +39,14 @@
                                 "index": 2,
                                 "data": {
                                     "Name": "Offset",
-                                    "Value": 0.07999999821186066,
+                                    "Value": 0.026667000725865365,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
-                                            "Drag speed": 0.00009999999747378752,
+                                            "Drag speed": 0.00003300000025774352,
                                             "Use slider": false
                                         }
                                     },
