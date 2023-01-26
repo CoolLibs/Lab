@@ -1,6 +1,6 @@
 # CoolLab
 
-A place to experiment with [Cool](https://coollibs.github.io/) and develop it. 
+<img alt="logo" src="./res/logo.png" width = 100px> A place to experiment with [Cool](https://coollibs.github.io/) and develop it. 
 
 Check out [this section](https://coollibs.github.io/cool/building) of our website to learn how to clone, build, and more!
 

@@ -1,52 +1,13 @@
-INPUT int `Grid Size`;
+
+// #include "_COOL_RES_/shaders/hexagonal_grid.glsl"
+
+INPUT float `Grid Size`;
+INPUT float `Randomness`;
 INPUT float `Time`;
-
-// RESOURCES : https://www.youtube.com/watch?v=VmrIDyYiJBA&ab_channel=TheArtofCode
-// https://andrewhungblog.wordpress.com/2018/07/28/shader-art-tutorial-hexagonal-grids/
-
-// pixel -> id of the first grid
-vec2 pix_to_grid_id1(vec2 uv)
-{
-    return floor((uv + vec2(0, 0.25)) / vec2(1., sqrt_3) - vec2(0, 0.25));
-}
-vec2 id1_to_center(vec2 id)
-{
-    return (id + 0.5) * vec2(1., sqrt_3);
-}
-
-// pixel -> id of the second grid
-vec2 id2_to_center(vec2 id)
-{
-    return (id + 1.) * vec2(1., sqrt_3);
-}
-vec2 pix_to_grid_id2(vec2 uv)
-{
-    return floor((uv - vec2(0.5) + vec2(0, 0.25)) / vec2(1., sqrt_3) - vec2(0, 0.25));
-}
-
-vec2 id_to_global_hex_center(vec2 id)
-{
-    return (vec2(id.x - id.y * .5, sqrt_3 / 2 * id.y) + vec2(0.5, 0.5 * sqrt_3)) /`Grid Size`;
-}
-
-// Returns the id of the pixel in the hexagonal grid
-vec2 hex_id(vec2 uv)
-{
-    vec2 id1 = pix_to_grid_id1(uv);
-    vec2 id2 = pix_to_grid_id2(uv);
-
-    vec2 center1 = id1_to_center(id1);
-    vec2 center2 = id2_to_center(id2);
-
-    vec2 id = dot(uv - center1, uv - center1) <= dot(uv - center2, uv - center2)
-                  ? id1.x * vec2(1, 0) + id1.y * vec2(1, 2)
-                  : id2.x * vec2(1, 0) + id2.y * vec2(1, 2) + vec2(1, 1);
-    return id;
-}
 
 float main(UV uv)
 {
-    vec2 id = hex_id(uv *`Grid Size`);
+    ivec2 id = Cool_hex_id(uv, `Grid Size`);
 
     float min_dist = 1000.;
 
@@ -60,12 +21,12 @@ float main(UV uv)
 
     for (int i = 0; i < 7; i++)
     {
-        vec2 offset_id          = neighbour_offsets[i];
-        vec2 offset_cell_center = id_to_global_hex_center(id + offset_id);
+        ivec2 offset_id         = neighbour_offsets[i];
+        vec2 offset_cell_center = Cool_hex_center_from_hex_id(id + offset_id, `Grid Size`);
 
         vec2 n         = hash_0_to_1_2D_to_2D(ivec2(id) + ivec2(offset_id));
         n              = mix(vec2(0.4), vec2(1), n);
-        n              = sin(n * (`Time`+ 4.) + 100) / 2;
+        n              = `Randomness` * sin(n * (`Time`+ 4.) + 100) / 2;
         int rand_0_1_2 = int(floor(hash_0_to_1_2D_to_1D(ivec2(id) + ivec2(offset_id)) * 3.));
 
         vec2 offset_position = offset_cell_center

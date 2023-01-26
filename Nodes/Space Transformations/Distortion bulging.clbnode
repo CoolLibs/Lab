@@ -6,8 +6,8 @@ INPUT Point2D `Center`;
 
 vec2 distort(vec2 uv, float power)
 {
-    vec2 polar_uv = polar_from_vec2(uv);
-    return vec2_from_polar(pow(polar_uv.x, power), polar_uv.y);
+    vec2 polar = Cool_polar_coordinates(uv);
+    return vec2_from_polar(pow(polar.x, power), polar.y);
 }
 
 UV main(UV uv)
