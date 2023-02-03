@@ -2,7 +2,7 @@
 
 INPUT UV->float `Height Map`;
 
-INPUT float `Offset`; /// offset used to calculate the gradient
+INPUT float `Offset`; /// Offset used to compute the gradient
 INPUT float `Amplitude`;
 
 vec2 main(UV uv)

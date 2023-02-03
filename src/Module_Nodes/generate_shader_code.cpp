@@ -71,6 +71,7 @@ out vec4      out_Color;
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 #include "_COOL_RES_/shaders/TextureWrapper.glsl"
 #include "_COOL_RES_/shaders/hexagonal_grid.glsl"
+#include "_COOL_RES_/shaders/simplex_noise_2D.glsl"
 
 vec2 to_view_space(vec2 uv)
 {{

@@ -1,0 +1,8 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
+// #include "_COOL_RES_/shaders/simplex_noise_2D.glsl"
+
+float main(UV uv)
+{
+    return simplex_noise_2D(uv) * 0.5 + 0.5;
+}
