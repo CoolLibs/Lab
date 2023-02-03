@@ -2,7 +2,7 @@
 
 INPUT Gradient `Gradient`;
 
-CIELAB_PremultipliedA main(float Percentage)
+CIELAB_PremultipliedA main(float Greyscale)
 {
-    return `Gradient`(Percentage);
+    return `Gradient`(Greyscale);
 }

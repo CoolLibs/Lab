@@ -1,7 +1,0 @@
-INPUT float `Amount`;
-
-// TODO(LC) Sources???
-SignedDistance main(SignedDistance d)
-{
-  return abs(d)-`Amount`;
-} 

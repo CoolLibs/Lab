@@ -10,8 +10,8 @@
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Amount",
-                                    "Value": 0.029999999329447748,
+                                    "Name": "Thickness",
+                                    "Value": 0.07400000095367432,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
