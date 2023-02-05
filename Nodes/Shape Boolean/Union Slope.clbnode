@@ -1,5 +1,7 @@
 // To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
+#include "_ROOT_FOLDER_/res/hg_sdf.glsl"
+
 INPUT float `Size`;
 
 SignedDistance main(SignedDistance Shape1, SignedDistance Shape2)
