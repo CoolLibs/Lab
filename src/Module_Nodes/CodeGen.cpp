@@ -400,6 +400,15 @@ static auto concrete_signature(NodeDefinition const& def, Node const& node)
     };
 }
 
+static auto gen_includes(NodeDefinition const& node_definition)
+    -> std::string
+{
+    auto res = std::string{};
+    for (auto const& path : node_definition.included_files())
+        res += fmt::format("#include \"{}\"\n", path.string());
+    return res;
+}
+
 static auto gen_base_function(
     Node const&           node,
     NodeDefinition const& node_definition,
@@ -429,7 +438,8 @@ static auto gen_base_function(
                   .parameter_names = node_definition.parameter_names(),
         }),
         .name            = func_name,
-        .before_function = properties_code->code + '\n'
+        .before_function = gen_includes(node_definition) + '\n'
+                           + properties_code->code + '\n'
                            + helper_functions.code,
         .body = node_definition.function_body(),
     });

@@ -23,8 +23,9 @@ struct MainFunctionPieces {
 };
 
 struct NodeDefinition_Data {
-    MainFunctionPieces          main_function{};
-    std::vector<FunctionPieces> helper_functions{};
+    MainFunctionPieces                 main_function{};
+    std::vector<FunctionPieces>        helper_functions{};
+    std::vector<std::filesystem::path> included_files{};
 
     std::vector<NodeInputDefinition>      input_function{}; // Things that can only come from a pin
     std::vector<Cool::AnyInputDefinition> input_values{};   // Things that will default to a widget on the node if nothing is plugged into the pin
@@ -36,17 +37,18 @@ public:
     static auto make(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
         -> tl::expected<NodeDefinition, std::string>;
 
-    auto name() const -> auto const& { return _data.main_function.name; }
-    auto signature() const -> auto const& { return _data.main_function.signature.signature; }
-    auto main_parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
-    auto parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
-    auto function_body() const -> auto const& { return _data.main_function.body; }
-    auto inputs() const -> auto const& { return _data.input_function; }
-    auto properties() const -> auto const& { return _data.input_values; }
-    auto output_indices() const -> auto const& { return _data.output_indices; }
-    auto helper_functions() const -> auto const& { return _data.helper_functions; }
+    [[nodiscard]] auto name() const -> auto const& { return _data.main_function.name; }
+    [[nodiscard]] auto signature() const -> auto const& { return _data.main_function.signature.signature; }
+    [[nodiscard]] auto main_parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
+    [[nodiscard]] auto parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
+    [[nodiscard]] auto function_body() const -> auto const& { return _data.main_function.body; }
+    [[nodiscard]] auto inputs() const -> auto const& { return _data.input_function; }
+    [[nodiscard]] auto properties() const -> auto const& { return _data.input_values; }
+    [[nodiscard]] auto output_indices() const -> auto const& { return _data.output_indices; }
+    [[nodiscard]] auto helper_functions() const -> auto const& { return _data.helper_functions; }
+    [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
 
-    auto presets_manager() const -> auto const& { return *_presets_manager; }
+    [[nodiscard]] auto presets_manager() const -> auto const& { return *_presets_manager; }
     auto imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
 
 private:

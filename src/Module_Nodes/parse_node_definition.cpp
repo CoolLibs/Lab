@@ -1,10 +1,12 @@
 #include "parse_node_definition.h"
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
+#include <Cool/RegExp/RegExp.h>
 #include <Cool/String/String.h>
 #include <algorithm>
 #include <exception>
 #include <iterator>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -508,7 +510,20 @@ static void find_inputs_descriptions(std::string const& text, NodeDefinition_Dat
     }
 }
 
-auto parse_node_definition(std::filesystem::path filepath, std::string text)
+static void find_includes(std::string const& text, NodeDefinition_Data& res)
+{
+    std::stringstream ss{text};
+    std::string       line;
+    while (getline(ss, line))
+    {
+        auto const path = Cool::RegExp::file_path_to_include(line);
+        if (!path.has_value())
+            continue;
+        res.included_files.push_back(*path);
+    }
+}
+
+auto parse_node_definition(std::filesystem::path filepath, std::string const& text)
     -> tl::expected<NodeDefinition, std::string>
 {
 #if DEBUG
@@ -518,27 +533,27 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
 
     NodeDefinition_Data res{};
 
-    std::string const text_with_comments = text;
+    auto const text_without_comments = Cool::String::remove_comments(text);
 
-    text = Cool::String::remove_comments(text);
+    find_includes(text_without_comments, res);
 
     {
-        auto const err = find_main_and_helper_functions(filepath, text, res);
+        auto const err = find_main_and_helper_functions(filepath, text_without_comments, res);
         if (err)
             return tl::make_unexpected(*err);
     }
     {
-        auto const err = find_inputs(text, res);
+        auto const err = find_inputs(text_without_comments, res);
         if (err)
             return tl::make_unexpected(*err);
     }
     {
-        auto const err = find_outputs(text, res);
+        auto const err = find_outputs(text_without_comments, res);
         if (err)
             return tl::make_unexpected(*err);
     }
 
-    find_inputs_descriptions(text_with_comments, res);
+    find_inputs_descriptions(text, res); // Must be done after finding the inputs. Must work on the text WITH comments because the descriptions are inside comments.
 
     filepath += ".presets.json";
     return NodeDefinition::make(
