@@ -26,4 +26,3 @@ test-presets-manager.json
 cache
 .cache
 src/Module_Nodes/__pycache__
-imgui.ini
