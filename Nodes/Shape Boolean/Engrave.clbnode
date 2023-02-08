@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
+
+#include "_ROOT_FOLDER_/res/hg_sdf.glsl"
+
+INPUT float `Depth`;
+
+SignedDistance main(SignedDistance Shape1, SignedDistance Shape2)
+{
+    return fOpEngrave(Shape1, Shape2, `Depth`);
+}

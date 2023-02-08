@@ -1,5 +1,6 @@
+// To learn how to write nodes, see https://coollibs.github.io/lab/Writing%20Nodes/Intro
 
-// #include "_COOL_RES_/shaders/hexagonal_grid.glsl"
+#include "_COOL_RES_/shaders/hexagonal_grid.glsl"
 
 INPUT float `Grid Size`;
 

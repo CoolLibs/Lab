@@ -1,0 +1,11 @@
+[SDF1 SDF2] (vec3 p) {
+    return IS0_FIX_ARTIFACTS(fOpPipe(${SDF1}(p), ${SDF2}(p), Thickness));
+}
+
+float {
+    "Name": "Thickness",
+    "Default": 0.07,
+    "Min": 0.0,
+    "Max": 1.0
+}
+
