@@ -5,12 +5,10 @@ INPUT float `Time`;
 INPUT float `Speed`;
 INPUT float `Intensity`;
 
-UV main(UV uv){
-    
-    vec2 time = vec2(`Time`);
-    float intensity = simplex_noise_2D(time*`Speed`) * (`Intensity`/10);
-    float angle = simplex_noise_2D(time)*2*PI;
-    vec2 shake = vec2_from_polar(intensity,angle);
-
-    return uv+shake;
+UV main(UV Image)
+{
+    float intensity = simplex_noise_2D(vec2(`Time` * `Speed`, 10.)) * `Intensity` / 10.;
+    float angle     = simplex_noise_2D(vec2(`Time`, -10.)) * TAU;
+    vec2  shake     = vec2_from_polar(intensity, angle);
+    return Image + shake;
 }
