@@ -24,10 +24,11 @@ env:
   # Hosted GitHub runners have 7 GB of memory available, let's use 6 GB
   NODE_OPTIONS: --max-old-space-size=6144
 
+defaults:
+  run:
+    working-directory: website
+    
 jobs:
-  defaults:
-    run:
-      working-directory: website
 
   deploy:
     environment:
