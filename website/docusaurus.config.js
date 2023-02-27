@@ -104,6 +104,50 @@ const config = {
       },
       footer: {
         style: 'dark',
+        links: [
+            {
+              title: "Find Us",
+              items: [
+                {
+                  label: "LinkTree",
+                  to: "https://linktr.ee/coollab_art",
+                },
+              ],
+            },
+            {
+              title: "Raise an issue!",
+              items: [
+                {
+                  label: "Report a bug",
+                  to: "https://github.com/CoolLibs/Lab/issues/new?assignees=&labels=bug%2Ctriage&template=bug-report.yaml&title=%5BBug%5D+",
+                },
+                {
+                  label: "Give us feedback",
+                  to: "https://github.com/CoolLibs/Lab/issues/new?assignees=&labels=enhancement%2Ctriage&template=feature-suggestion.yaml&title=%5BFeature%5D+",
+                },
+              ],
+            },
+            {
+              title: "Say thank you",
+              items: [
+                {
+                  label: "Send a nice message",
+                  to: "https://www.instagram.com/coollab_art/",
+                },
+                {
+                  label: "Leave a like",
+                  to: "https://www.instagram.com/coollab_art/",
+                },
+                {
+                  label: "Make a donation",
+                  to: "https://utip.io/coollab/",
+                },
+              ],
+            },
+          ],
+        copyright: `Copyright © ${new Date().getFullYear()}. Built with <a href="https://docusaurus.io/">Docusaurus</a>.
+                    <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.</div>
+                    `,
       },
       prism: {
         theme: lightCodeTheme,
