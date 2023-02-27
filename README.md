@@ -1,6 +1,6 @@
 # CoolLab
 
-<a href="(https://linktr.ee/coollab_art)"><img alt="logo" src="./res/logo.png" width = 100px></a> <iframe src="https://discord.com/widget?id=846087110758891540&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+<img alt="logo" src="./res/logo.png" width = 100px>
 
 Check out [CoolLab's LinkTree](https://linktr.ee/coollab_art).
 
