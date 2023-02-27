@@ -25,13 +25,15 @@ env:
   NODE_OPTIONS: --max-old-space-size=6144
 
 jobs:
-  # Single deploy job since we're just deploying
+  defaults:
+    run:
+      working-directory: website
+
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    working-directory: website
     steps:
       - name: Checkout
         uses: actions/checkout@v3
