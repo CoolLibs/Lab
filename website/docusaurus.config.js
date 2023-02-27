@@ -57,6 +57,8 @@ const config = {
       }),
     ],
   ],
+
+  plugins: [require.resolve('docusaurus-lunr-search')],
   
   stylesheets: [
     {
