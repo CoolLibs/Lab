@@ -24,10 +24,6 @@ env:
   # Hosted GitHub runners have 7 GB of memory available, let's use 6 GB
   NODE_OPTIONS: --max-old-space-size=6144
 
-defaults:
-  run:
-    working-directory: website
-    
 jobs:
 
   deploy:
@@ -43,17 +39,23 @@ jobs:
         with:
           node-version: 18.x
           cache: npm
+        working-directory: ./website
       - name: Install dependencies
         run: npm ci
+        working-directory: ./website
       - name: Build
         run: npm run build
+        working-directory: ./website
       - name: Setup Pages
         uses: actions/configure-pages@v1
+        working-directory: ./website
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
           path: build
+        working-directory: ./website
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+        working-directory: ./website
