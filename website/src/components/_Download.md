@@ -5,5 +5,5 @@
 
 🌱 **This is the _beta-0_ release** 🌱<br/>
 CoolLab is already usable and powerful, but many things are still to be improved.<br/>
-Please share us your feedback at https://github.com/CoolLibs/Lab/issues/new/choose.
+Please share us your feedback [on our Discord](https://discord.gg/QEjqnEy4aT) or at https://github.com/CoolLibs/Lab/issues/new/choose.
 :::

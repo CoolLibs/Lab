@@ -5,36 +5,28 @@ slug: /
 
 import LabGallery from "@site/src/components/LabGallery"
 import YoutubeVideo from "@site/src/components/YoutubeVideo"
-import SponsorUs from "@site/src/components/_SponsorUs.md"
 import Download from "@site/src/components/_Download.md"
+import SmallImage from "@site/src/components/SmallImage.js"
 
-_❝ CoolLab is a generative art software that gives you **powerful tools** and the power to **customize these tools** and **create new ones**.❞_
+## CoolLab
 
-<!-- _❝ Composition is at the heart of every good system.❞_
+> _❝ CoolLab is a generative art software that gives you **powerful tools** and the power to **customize these tools** and **create new ones**.❞_
 
-_❝ Resolution-independent.❞_
-
-_❝ Infinitely large and infinitely detailed images. Our images are maps from the entire plane ($\mathbb{R}^2$) to colors.❞_ -->
+## Download
 
 <Download/>
 
-<b><a href="https://www.instagram.com/coollab_art/"><img src="img/instagram.png" class="image-in-text"/></a><span style={{lineHeight:2}}> Follow us on Instagram <a href="https://www.instagram.com/coollab_art/">@coollab_art </a></span><a href="https://www.instagram.com/coollab_art/"><img src="img/instagram.png" class="image-in-text"/></a></b>
+## Social Networks
 
-<!-- <br/>
+:::tip Social Networks
+🌳 https://linktr.ee/coollab_art
+:::
 
-<b><a href="https://www.tiktok.com/@coollab_art"><img src="img/tiktok.png" class="image-in-text"/></a><span style={{lineHeight:2}}> Follow us on TikTok <a href="https://www.tiktok.com/@coollab_art">@coollab_art </a></span><a href="https://www.tiktok.com/@coollab_art"><img src="img/tiktok.png" class="image-in-text"/></a></b>
-
-<br/> -->
-
-<br/>
-
-<SponsorUs/>
+## Trailer
 
 ![nodes](./img/nodes.png)
 
 <LabGallery/>
-
-## Trailer
 
 <YoutubeVideo id="dutYmhGqhxM"/>
 
@@ -50,10 +42,6 @@ This project is still in the early phases of development, but you can already ob
 
 **_is0_, our node-based _Constructive Solid Geometry_ modeler:**
 ![is0, our node-based CSG modeler, rendered with Ray Marching.](./img/is0.png)
-
-## Who are we?
-
-A group of programers who love making art. Since we are stubborn and ambitious we decided to build the software of our dreams, from scratch.
 
 ## What's in the name?
 
