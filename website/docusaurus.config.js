@@ -92,6 +92,12 @@ const config = {
             position: 'left',
             label: 'Download',
           },
+          {
+            type: 'doc',
+            docId: 'About',
+            position: 'right',
+            label: 'About',
+          },
         ],
       },
       footer: {
