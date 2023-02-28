@@ -90,12 +90,9 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
     if (_nodes_editor.imgui_window(nodes_config(ui), _nodes_library))
         ui.set_dirty(_regenerate_code_flag);
 
-    if (DebugOptions::show_generated_shader_code())
-    {
-        ImGui::Begin("Nodes Code");
+    DebugOptions::show_generated_shader_code([&] {
         ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
-        ImGui::End();
-    }
+    });
 }
 
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst

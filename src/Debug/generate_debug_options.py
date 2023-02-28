@@ -51,6 +51,8 @@ def all_debug_options():
             name_in_code="show_generated_shader_code",
             name_in_ui="Show generated shader code",
             available_in_release=True,
+            window_name="Nodes Code",
+            kind=Kind.WINDOW,
         ),
         DebugOption(
             name_in_code="test_all_variable_widgets__window",

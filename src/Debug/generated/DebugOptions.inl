@@ -41,7 +41,15 @@ public:
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
     [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return instance().log_when_parsing_node_definition; }
-    [[nodiscard]] static auto show_generated_shader_code() -> bool& { return instance().show_generated_shader_code; }
+    static void               show_generated_shader_code(std::function<void()> callback)
+    {
+        if (instance().show_generated_shader_code)
+        {
+            ImGui::Begin("Nodes Code", &instance().show_generated_shader_code);
+            callback();
+            ImGui::End();
+        }
+    }
 #if DEBUG
     static void test_all_variable_widgets__window(std::function<void()> callback)
     {
