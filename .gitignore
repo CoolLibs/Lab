@@ -28,3 +28,4 @@ cache
 src/Module_Nodes/__pycache__
 website/.docusaurus
 website/node_modules
+info_dump.txt

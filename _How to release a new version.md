@@ -1,4 +1,4 @@
-- Change the version number in *menu_info.cpp*
+- Change the version number in *src/Dump/coollab_version.cpp*
 - Create a tag on the commit used for the release
 - Run the "Create release executables" workflow from the *Actions* tab of GitHub. For **Use workflow from** make sure to replace `Branch: main` with the tag you just created.
 - Put the executables to download on our website

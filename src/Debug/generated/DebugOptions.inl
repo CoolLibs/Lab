@@ -19,7 +19,9 @@ namespace Lab {
 
 class DebugOptions {
 public:
-    static void show_framerate_window(std::function<void()> callback)
+    [[nodiscard]] static auto generate_dump_file() -> bool& { return instance().generate_dump_file; }
+    [[nodiscard]] static auto copy_info_dump_to_clipboard() -> bool& { return instance().copy_info_dump_to_clipboard; }
+    static void               show_framerate_window(std::function<void()> callback)
     {
         if (instance().show_framerate_window)
         {
@@ -73,6 +75,8 @@ public:
 
 private:
     struct Instance {
+        bool generate_dump_file{false};
+        bool copy_info_dump_to_clipboard{false};
         bool show_framerate_window{false};
 #if DEBUG
         bool show_imgui_demo_window{false};
@@ -170,6 +174,30 @@ private:
 
     static void imgui_ui_for_all_options(std::string_view filter)
     {
+        if (wafl::similarity_match({filter, "Info Dump: Generate file"}) >= wafl::Matches::Strongly)
+        {
+            instance().generate_dump_file = ImGui::Button("##Info Dump: Generate file", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
+            ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
+            ImGui::Text("Info Dump: Generate file");
+            if (ImGui::IsItemClicked())
+                instance().generate_dump_file = true;
+
+            ImGui::SameLine();
+            Cool::ImGuiExtras::help_marker("Creates an info_dump.txt file next to your executable. It can be used when submitting a bug report, in order to give the devs more information.");
+        }
+
+        if (wafl::similarity_match({filter, "Info Dump: Copy to clipboard"}) >= wafl::Matches::Strongly)
+        {
+            instance().copy_info_dump_to_clipboard = ImGui::Button("##Info Dump: Copy to clipboard", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
+            ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
+            ImGui::Text("Info Dump: Copy to clipboard");
+            if (ImGui::IsItemClicked())
+                instance().copy_info_dump_to_clipboard = true;
+
+            ImGui::SameLine();
+            Cool::ImGuiExtras::help_marker("Copies an info dump to your clipboard. It can be used when submitting a bug report, in order to give the devs more information.");
+        }
+
         if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
         {
             ImGui::Checkbox("Framerate window", &instance().show_framerate_window);
@@ -226,6 +254,18 @@ private:
 
     static void toggle_first_option(std::string_view filter)
     {
+        if (wafl::similarity_match({filter, "Info Dump: Generate file"}) >= wafl::Matches::Strongly)
+        {
+            instance().generate_dump_file = !instance().generate_dump_file;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Info Dump: Copy to clipboard"}) >= wafl::Matches::Strongly)
+        {
+            instance().copy_info_dump_to_clipboard = !instance().copy_info_dump_to_clipboard;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
         if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
         {
             instance().show_framerate_window = !instance().show_framerate_window;

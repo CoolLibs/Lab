@@ -17,10 +17,12 @@
 #include "Debug/DebugOptions.h"
 #include "Debug/compile_all_custom_shaders.h"
 #include "Dependencies/Camera2DManager.h"
+#include "Dump/gen_dump_string.h"
 #include "Menus/menu_info.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
+#include "imgui.h"
 
 namespace Lab {
 
@@ -112,6 +114,20 @@ void App::update()
     // {
     // set_dirty_flag()(_custom_shader_module->dirty_flag());
     // }
+
+    if (DebugOptions::copy_info_dump_to_clipboard())
+    {
+        auto const string = gen_dump_string();
+        ImGui::SetClipboardText(string.c_str());
+        Cool::Log::ToUser::info("Info Dump", fmt::format("Has been successfully copied to clipboard:\n\n{}", string));
+    }
+    if (DebugOptions::generate_dump_file())
+    {
+        auto const path   = Cool::Path::root() / "info_dump.txt";
+        auto const string = gen_dump_string();
+        Cool::File::set_content(path, string);
+        Cool::Log::ToUser::info("Info Dump", fmt::format("Has been successfully generated in {}:\n\n{}", path, string));
+    }
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst

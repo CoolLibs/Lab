@@ -1,9 +1,6 @@
 #include "menu_info.h"
-#include <Cool/Gpu/gpu_info.h>
 #include <Cool/ImGui/ImGuiExtras.h>
-#include <Cool/Path/Path.h>
-#include <Cool/Utils/Version.h>
-#include <os_name/os_name.hpp>
+#include "Dump/coollab_version.h"
 
 namespace Lab {
 
@@ -24,13 +21,6 @@ void menu_info()
             func2();
         };
 
-        static constexpr auto show_version = [](const char* text, int version) {
-            line(
-                [text] { ImGui::TextDisabled("%s", text); },
-                [version] { ImGui::Text("%d.%d", Cool::major_version(version), Cool::minor_version(version)); }
-            );
-        };
-
         if (ImGui::BeginTable("table121", 2, flags))
         {
             line(
@@ -40,34 +30,7 @@ void menu_info()
 
             line(
                 [] { ImGui::TextDisabled("CoolLab version"); },
-                [] { ImGui::Text("beta-0"); }
-            );
-
-            line(
-                [] { ImGui::TextDisabled("OS"); },
-                [] { ImGui::TextUnformatted(Cool::os_name().c_str()); }
-            );
-
-            line(
-                [] { ImGui::TextDisabled("GPU"); },
-                [] { ImGui::TextUnformatted(Cool::gpu_name().c_str()); }
-            );
-
-#if COOL_OPENGL
-            show_version("OpenGL version", COOL_OPENGL_VERSION);
-#elif COOL_VULKAN
-            show_version("Vulkan version", COOL_VULKAN_VERSION);
-#else
-#error Unknown GPU API
-#endif
-            line(
-                [] { ImGui::TextDisabled("Working directory"); },
-                [] { ImGui::TextUnformatted(Cool::Path::root().string().c_str()); }
-            );
-
-            line(
-                [] { ImGui::TextDisabled("Cool directory"); },
-                [] { ImGui::TextUnformatted(Cool::Path::cool_res().string().c_str()); }
+                [] { ImGui::TextUnformatted(coollab_version().c_str()); }
             );
 
             ImGui::EndTable();

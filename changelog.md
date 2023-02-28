@@ -11,10 +11,8 @@
   - Improvements
   - Presets for all of them
   - Reorganized categories
-- Show debug options
-- Moved debug info from the Info menu to the Debug menu
-- More info in the Debug menu (OS and GPU version)
-- Added possibility to generate an info dump to help developers debug
+- Added the debug options menu to the released executables
+- Added debug option to get an info dump in order to help developers debug
 
 ## beta-0
 
