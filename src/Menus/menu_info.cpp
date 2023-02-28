@@ -38,7 +38,7 @@ void menu_info()
 
             line(
                 [] { ImGui::TextDisabled("CoolLab version"); },
-                [] { ImGui::Text("alpha-1"); }
+                [] { ImGui::Text("beta-0"); }
             );
 
 #if COOL_OPENGL
