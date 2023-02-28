@@ -18,7 +18,7 @@
 #include "Debug/compile_all_custom_shaders.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
-#include "Menus/menu_info.h"
+#include "Menus/about_menu.h"
 #include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
@@ -338,7 +338,7 @@ void App::imgui_windows()
     }
 }
 
-void App::menu_preview()
+void App::preview_menu()
 {
     if (ImGui::BeginMenu("Preview"))
     {
@@ -350,7 +350,7 @@ void App::menu_preview()
     }
 }
 
-void App::menu_windows()
+void App::windows_menu()
 {
     if (ImGui::BeginMenu("Windows"))
     {
@@ -362,7 +362,7 @@ void App::menu_windows()
     }
 }
 
-void App::menu_export()
+void App::export_menu()
 {
     if (ImGui::BeginMenu("Export"))
     {
@@ -374,7 +374,7 @@ void App::menu_export()
     }
 }
 
-void App::menu_settings()
+void App::settings_menu()
 {
     if (ImGui::BeginMenu("Settings"))
     {
@@ -397,7 +397,7 @@ void App::menu_settings()
     }
 }
 
-void App::menu_debug()
+void App::debug_menu()
 {
     static bool was_closed_last_frame{true}; // HACK(JF) I guess a `static` here is okay because no one is gonna want two distinct instances of the same debug menu O:) A better solution would be to make a small Menu class that would remember if it was open last frame or not.
     if (ImGui::BeginMenu("Debug"))
@@ -414,12 +414,12 @@ void App::menu_debug()
 
 void App::imgui_menus()
 {
-    menu_preview();
-    menu_windows();
-    menu_export();
-    menu_settings();
-    menu_info();
-    menu_debug();
+    preview_menu();
+    windows_menu();
+    export_menu();
+    settings_menu();
+    about_menu();
+    debug_menu();
 }
 
 void App::check_inputs()

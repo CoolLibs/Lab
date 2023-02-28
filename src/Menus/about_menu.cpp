@@ -1,12 +1,12 @@
-#include "menu_info.h"
+#include "about_menu.h"
 #include <Cool/ImGui/ImGuiExtras.h>
 #include "Dump/coollab_version.h"
 
 namespace Lab {
 
-void menu_info()
+void about_menu()
 {
-    if (ImGui::BeginMenu("Info"))
+    if (ImGui::BeginMenu("About"))
     {
         static constexpr ImGuiTableFlags flags = ImGuiTableFlags_BordersOuter
                                                  | ImGuiTableFlags_BordersV

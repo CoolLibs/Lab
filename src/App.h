@@ -86,11 +86,11 @@ private:
 
     Cool::Polaroid polaroid();
 
-    void menu_preview();
-    void menu_windows();
-    void menu_export();
-    void menu_settings();
-    void menu_debug();
+    void preview_menu();
+    void windows_menu();
+    void export_menu();
+    void settings_menu();
+    void debug_menu();
 
     void imgui_commands_and_registries_debug_windows();
 

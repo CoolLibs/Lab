@@ -2,6 +2,6 @@
 
 namespace Lab {
 
-void menu_info();
+void about_menu();
 
 } // namespace Lab
