@@ -1,7 +1,9 @@
 #include "menu_info.h"
+#include <Cool/Gpu/gpu_info.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Utils/Version.h>
+#include <os_name/os_name.hpp>
 
 namespace Lab {
 
@@ -39,6 +41,16 @@ void menu_info()
             line(
                 [] { ImGui::TextDisabled("CoolLab version"); },
                 [] { ImGui::Text("beta-0"); }
+            );
+
+            line(
+                [] { ImGui::TextDisabled("OS"); },
+                [] { ImGui::TextUnformatted(Cool::os_name().c_str()); }
+            );
+
+            line(
+                [] { ImGui::TextDisabled("GPU"); },
+                [] { ImGui::TextUnformatted(Cool::gpu_name().c_str()); }
             );
 
 #if COOL_OPENGL
