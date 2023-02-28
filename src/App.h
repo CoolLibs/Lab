@@ -30,11 +30,9 @@
 
 namespace Lab {
 
-#if DEBUG
 using DebugOptionsManager = Cool::DebugOptionsManager<
     Lab::DebugOptions,
     Cool::DebugOptions>;
-#endif
 
 class App : public Cool::IApp {
 public:
@@ -147,9 +145,7 @@ private:
             cereal::make_nvp("Exporter (Image and Video)", _exporter)
         );
     }
-#if DEBUG
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
-#endif
 };
 
 } // namespace Lab

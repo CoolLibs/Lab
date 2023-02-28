@@ -1,4 +1,3 @@
-#if DEBUG
 #include "compile_all_custom_shaders.h"
 #include <Cool/InputParser/InputParser.h>
 #include <Cool/Path/Path.h>
@@ -15,7 +14,7 @@ void compile_all_custom_shaders(
     UpdateContext_Ref         update_ctx
 )
 {
-    auto& console = Cool::Log::Debug::console();
+    auto& console = Cool::Log::ToUser::console();
 
     const auto test_all_shaders_in = [&](std::filesystem::path folder) {
         for (const auto& entry : std::filesystem::directory_iterator(folder))
@@ -28,7 +27,7 @@ void compile_all_custom_shaders(
             }
 
             const auto file_name = std::filesystem::canonical(file).string();
-            Cool::Log::Debug::info("Test Custom Shader", file_name);
+            Cool::Log::ToUser::info("Test Custom Shader", file_name);
             auto       shader      = FullscreenShader{};
             const auto source_code = *Cool::File::to_string(file.string()); // Don't need to check for the error potentially returned by File::to_string() because we know that `file` is an existing file. (+ we are in a debug function and it is not a big deal if it crashes)
             const auto inputs      = Cool::parse_all_inputs(source_code, Cool::DirtyFlag{}, input_factory);
@@ -62,5 +61,3 @@ void compile_all_custom_shaders(
 }
 
 } // namespace Lab
-
-#endif // DEBUG

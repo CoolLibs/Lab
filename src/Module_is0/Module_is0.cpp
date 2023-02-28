@@ -54,17 +54,17 @@
 //             return make_shader_compilation_error_message(name(), "Ray Marcher", msg);
 //         });
 //     }
-// #if DEBUG
+//
 //     else
 //     {
 //         maybe_err.send_error_if_any(
 //             [&](const std::string& msg) {
 //                 return make_shader_compilation_error_message("Test is0 Nodes", "Ray Marcher", msg);
 //             },
-//             Cool::Log::Debug::console()
+//             Cool::Log::ToUser::console()
 //         );
 //     }
-// #endif
+//
 // }
 
 // void Module_is0::imgui_windows(Ui_Ref) const

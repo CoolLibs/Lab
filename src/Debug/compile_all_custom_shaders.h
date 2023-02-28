@@ -1,5 +1,4 @@
 #pragma once
-#if DEBUG
 
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputFactory_Ref.h>
@@ -16,5 +15,3 @@ void compile_all_custom_shaders(
 );
 
 } // namespace Lab
-
-#endif // DEBUG

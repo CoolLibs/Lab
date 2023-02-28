@@ -526,10 +526,8 @@ static void find_includes(std::string const& text, NodeDefinition_Data& res)
 auto parse_node_definition(std::filesystem::path filepath, std::string const& text)
     -> tl::expected<NodeDefinition, std::string>
 {
-#if DEBUG
     if (DebugOptions::log_when_parsing_node_definition())
-        Cool::Log::Debug::info("Nodes", fmt::format("Parsing node definition from {}.", filepath));
-#endif
+        Cool::Log::ToUser::info("Nodes", fmt::format("Parsing node definition from {}.", filepath));
 
     NodeDefinition_Data res{};
 

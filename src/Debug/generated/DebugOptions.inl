@@ -5,8 +5,6 @@
  * -----------------------------------------------------------------------------
  */
 
-#if DEBUG
-
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/as_json.h>
@@ -30,13 +28,22 @@ public:
             ImGui::End();
         }
     }
-    [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
-    [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
+#if DEBUG
+    [[nodiscard]] static auto show_imgui_demo_window() -> bool&
+    {
+        return instance().show_imgui_demo_window;
+    }
+#endif
+    [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool&
+    {
+        return instance().show_commands_and_registries_debug_windows;
+    }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
     [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return instance().log_when_parsing_node_definition; }
     [[nodiscard]] static auto show_generated_shader_code() -> bool& { return instance().show_generated_shader_code; }
-    static void               test_all_variable_widgets__window(std::function<void()> callback)
+#if DEBUG
+    static void test_all_variable_widgets__window(std::function<void()> callback)
     {
         if (instance().test_all_variable_widgets__window)
         {
@@ -45,6 +52,7 @@ public:
             ImGui::End();
         }
     }
+#endif
     static void test_shaders_compilation__window(std::function<void()> callback)
     {
         if (instance().test_shaders_compilation__window)
@@ -57,14 +65,18 @@ public:
 
 private:
     struct Instance {
-        bool show_framerate_window{true};
+        bool show_framerate_window{false};
+#if DEBUG
         bool show_imgui_demo_window{false};
+#endif
         bool show_commands_and_registries_debug_windows{false};
         bool log_when_rendering{false};
         bool log_when_compiling_nodes{false};
         bool log_when_parsing_node_definition{false};
         bool show_generated_shader_code{false};
+#if DEBUG
         bool test_all_variable_widgets__window{false};
+#endif
         bool test_shaders_compilation__window{false};
 
     private:
@@ -74,6 +86,7 @@ private:
         void serialize(Archive& archive)
         {
             archive(
+#if DEBUG
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
@@ -83,21 +96,35 @@ private:
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
                 cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+#else
+                cereal::make_nvp("Framerate window", show_framerate_window),
+                cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
+                cereal::make_nvp("Log when rendering", log_when_rendering),
+                cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
+                cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
+                cereal::make_nvp("Show generated shader code", show_generated_shader_code),
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+#endif
+
             );
         }
     };
 
     static void reset_all()
     {
-        instance().show_framerate_window                      = true;
-        instance().show_imgui_demo_window                     = false;
+        instance().show_framerate_window = false;
+#if DEBUG
+        instance().show_imgui_demo_window = false;
+#endif
         instance().show_commands_and_registries_debug_windows = false;
         instance().log_when_rendering                         = false;
         instance().log_when_compiling_nodes                   = false;
         instance().log_when_parsing_node_definition           = false;
         instance().show_generated_shader_code                 = false;
-        instance().test_all_variable_widgets__window          = false;
-        instance().test_shaders_compilation__window           = false;
+#if DEBUG
+        instance().test_all_variable_widgets__window = false;
+#endif
+        instance().test_shaders_compilation__window = false;
     }
 
     static void save_to_file()
@@ -140,10 +167,14 @@ private:
             ImGui::Checkbox("Framerate window", &instance().show_framerate_window);
         }
 
+#if DEBUG
+
         if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
         {
             ImGui::Checkbox("ImGui Demo window", &instance().show_imgui_demo_window);
         }
+
+#endif
 
         if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
         {
@@ -170,10 +201,14 @@ private:
             ImGui::Checkbox("Show generated shader code", &instance().show_generated_shader_code);
         }
 
+#if DEBUG
+
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
             ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
         }
+
+#endif
 
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
@@ -189,11 +224,15 @@ private:
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
+#if DEBUG
+
         if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
         {
             instance().show_imgui_demo_window = !instance().show_imgui_demo_window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
+
+#endif
 
         if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
         {
@@ -225,11 +264,15 @@ private:
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
+#if DEBUG
+
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
             instance().test_all_variable_widgets__window = !instance().test_all_variable_widgets__window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
+
+#endif
 
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
@@ -240,5 +283,3 @@ private:
 };
 
 } // namespace Lab
-
-#endif

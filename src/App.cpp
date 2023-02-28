@@ -57,7 +57,7 @@ void App::compile_all_is0_nodes()
     // for (const auto& node_template : _nodes_module->nodes_templates())
     // {
     //     _nodes_module->remove_all_nodes();
-    //     Cool::Log::Debug::info("Test is0 Node", node_template.name);
+    //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
     //     _nodes_module->add_node(NodeFactoryU::node_from_template(node_template));
     //     _nodes_module->recompile(update_context(), true);
     // }
@@ -176,10 +176,8 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
             update_context()
         );
     });
-#if DEBUG
     if (DebugOptions::log_when_rendering())
-        Cool::Log::Debug::info(some_module.name() + " Rendering", "Rendered");
-#endif
+        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
 }
 
 void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
@@ -262,20 +260,22 @@ void App::imgui_windows()
             set_dirty_flag()(_nodes_module->dirty_flag());
         ImGui::End();
 
-#if DEBUG
         DebugOptions::show_framerate_window([&] {
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
             _main_window.imgui_cap_framerate();
         });
+#if DEBUG
         if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
-        {                                                                   // in ImGui::ShowDemoWindow()! You can browse its code
-            ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // to learn more about Dear ImGui!).
-        }
+            ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
+                                                                            // to learn more about Dear ImGui!).
+#endif
         if (DebugOptions::show_commands_and_registries_debug_windows())
         {
             imgui_commands_and_registries_debug_windows();
         }
+#if DEBUG
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
+#endif
         DebugOptions::test_shaders_compilation__window([&]() {
             const auto compile_custom_shaders = [&]() {
                 compile_all_custom_shaders(
@@ -287,35 +287,38 @@ void App::imgui_windows()
             };
             if (ImGui::Button("Compile everything"))
             {
-                Cool::Log::Debug::console().clear();
+                Cool::Log::ToUser::console().clear();
                 compile_custom_shaders();
                 compile_all_is0_nodes();
             }
             ImGui::Separator();
             if (ImGui::Button("Compile all Custom Shaders"))
             {
-                Cool::Log::Debug::console().clear();
+                Cool::Log::ToUser::console().clear();
                 compile_custom_shaders();
             }
             if (ImGui::Button("Compile all is0 Nodes"))
             {
-                Cool::Log::Debug::console().clear();
+                Cool::Log::ToUser::console().clear();
                 compile_all_is0_nodes();
             }
         });
 
+#if DEBUG
         Cool::DebugOptions::test_message_console__window([]() {
             static auto test_message_console = Cool::TestMessageConsole{};
             test_message_console.imgui(
                 Cool::Log::ToUser::console()
             );
         });
+#endif
 
+#if DEBUG
         Cool::DebugOptions::test_presets__window([]() {
             static auto test_presets = TestPresets{};
             test_presets.imgui();
         });
-#endif // DEBUG
+#endif
     }
 }
 
@@ -380,7 +383,6 @@ void App::menu_settings()
 
 void App::menu_debug()
 {
-#if DEBUG
     static bool was_closed_last_frame{true}; // HACK(JF) I guess a `static` here is okay because no one is gonna want two distinct instances of the same debug menu O:) A better solution would be to make a small Menu class that would remember if it was open last frame or not.
     if (ImGui::BeginMenu("Debug"))
     {
@@ -392,7 +394,6 @@ void App::menu_debug()
     {
         was_closed_last_frame = true;
     }
-#endif
 }
 
 void App::imgui_menus()

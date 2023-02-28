@@ -17,43 +17,52 @@ def all_debug_options():
         DebugOption(
             name_in_code="show_framerate_window",
             name_in_ui="Framerate window",
+            available_in_release=True,
             window_name="Framerate",
             kind=Kind.WINDOW,
-            default_value=True,
+            default_value=False,
         ),
         DebugOption(
             name_in_code="show_imgui_demo_window",
             name_in_ui="ImGui Demo window",
+            available_in_release=False,
         ),
         DebugOption(
             name_in_code="show_commands_and_registries_debug_windows",
             name_in_ui="Commands and Registries windows",
+            available_in_release=True,
         ),
         DebugOption(
             name_in_code="log_when_rendering",
             name_in_ui="Log when rendering",
+            available_in_release=True,
         ),
         DebugOption(
             name_in_code="log_when_compiling_nodes",
             name_in_ui="Log when compiling nodes",
+            available_in_release=True,
         ),
         DebugOption(
             name_in_code="log_when_parsing_node_definition",
             name_in_ui="Log when parsing node definition",
+            available_in_release=True,
         ),
         DebugOption(
             name_in_code="show_generated_shader_code",
             name_in_ui="Show generated shader code",
+            available_in_release=True,
         ),
         DebugOption(
             name_in_code="test_all_variable_widgets__window",
             name_in_ui="Test all Variable Widgets",
             kind=Kind.WINDOW,
+            available_in_release=False,
         ),
         DebugOption(
             name_in_code="test_shaders_compilation__window",
             name_in_ui="Test Shaders Compilation",
             kind=Kind.WINDOW,
+            available_in_release=True,
         ),
     ]
 
