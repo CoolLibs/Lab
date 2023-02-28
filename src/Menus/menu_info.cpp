@@ -33,7 +33,7 @@ void menu_info()
         {
             line(
                 [] { ImGui::TextDisabled("Website"); },
-                [] { Cool::ImGuiExtras::link("https://coollibs.github.io/lab"); }
+                [] { Cool::ImGuiExtras::link("https://coollab-art.com/"); }
             );
 
             line(
