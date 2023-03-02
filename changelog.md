@@ -5,6 +5,7 @@
 
 ## beta-1
 
+- Fix the huge visual glitches that appeared on some computers
 - Nodes:
   - New nodes
   - Fixes
