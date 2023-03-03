@@ -14,6 +14,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
+#include "Cool/Log/Message.h"
 #include "Debug/DebugOptions.h"
 #include "Debug/compile_all_custom_shaders.h"
 #include "Dependencies/Camera2DManager.h"
@@ -119,14 +120,27 @@ void App::update()
     {
         auto const string = gen_dump_string();
         ImGui::SetClipboardText(string.c_str());
-        Cool::Log::ToUser::info("Info Dump", fmt::format("Has been successfully copied to clipboard:\n\n{}", string));
+        Cool::Log::ToUser::info("Info Dump", fmt::format("Info dump has been successfully copied to clipboard:\n\n{}", string));
     }
     if (DebugOptions::generate_dump_file())
     {
         auto const path   = Cool::Path::root() / "info_dump.txt";
         auto const string = gen_dump_string();
         Cool::File::set_content(path, string);
-        Cool::Log::ToUser::info("Info Dump", fmt::format("Has been successfully generated in {}:\n\n{}", path, string));
+        Cool::Log::ToUser::info(
+            "Info Dump",
+            fmt::format("Info dump has been successfully generated in {}:\n\n{}", path, string),
+            std::vector{
+                Cool::ClipboardContent{
+                    .title   = "folder path",
+                    .content = path.parent_path().string(),
+                },
+                Cool::ClipboardContent{
+                    .title   = "file path",
+                    .content = path.string(),
+                },
+            }
+        );
     }
 }
 
