@@ -16,11 +16,9 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Log/Message.h"
 #include "Debug/DebugOptions.h"
-#include "Debug/compile_all_custom_shaders.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
-#include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
 #include "imgui.h"
@@ -28,7 +26,7 @@
 namespace Lab {
 
 App::App(Cool::WindowManager& windows)
-    : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create({})}
+    : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
     , _nodes_view{_views.make_view("View | Nodes")}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
@@ -198,7 +196,6 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
             {
                 input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _camera2D.value.transform_matrix()),
                 input_factory(),
-                input_destructor(),
                 is_dirty__functor(),
                 set_clean__functor(),
                 _variable_registries,
@@ -307,26 +304,12 @@ void App::imgui_windows()
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
 #endif
         DebugOptions::test_shaders_compilation__window([&]() {
-            const auto compile_custom_shaders = [&]() {
-                compile_all_custom_shaders(
-                    input_provider(2.f, 1.f, 0.f, glm::mat3{1.f}),
-                    input_factory(),
-                    input_destructor(),
-                    update_context()
-                );
-            };
             if (ImGui::Button("Compile everything"))
             {
                 Cool::Log::ToUser::console().clear();
-                compile_custom_shaders();
                 compile_all_is0_nodes();
             }
             ImGui::Separator();
-            if (ImGui::Button("Compile all Custom Shaders"))
-            {
-                Cool::Log::ToUser::console().clear();
-                compile_custom_shaders();
-            }
             if (ImGui::Button("Compile all is0 Nodes"))
             {
                 Cool::Log::ToUser::console().clear();

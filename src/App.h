@@ -23,9 +23,7 @@
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
-#include "Module_CustomShader/Module_CustomShader.h"
 #include "Module_Nodes/Module_Nodes.h"
-#include "Module_is0/Module_is0.h"
 #include "UI/ThemeManager.h"
 
 namespace Lab {
@@ -57,7 +55,6 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_one_module(Module&, Cool::RenderTarget&, float time);
     void render_nodes(Cool::RenderTarget& render_target, float time, img::Size size);
-    // void render_custom_shader(Cool::RenderTarget& render_target, float time);
 
     void check_inputs();
     void check_inputs__history();
@@ -74,9 +71,8 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context(), _command_logger}; }
     auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _history, make_reversible_commands_context()}; }
     auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_variable_registries, render_target_aspect_ratio, height, time, cam2D}; }
-    auto input_destructor                           () { return Cool::InputDestructor_Ref{_variable_registries}; }
     auto input_factory                              () { return Cool::InputFactory_Ref{_variable_registries, _camera_manager.id()}; }
-    auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag(), input_factory(), input_destructor()}; }
+    auto ui                                         () { return Ui_Ref{_variable_registries, command_executor(), set_dirty_flag(), input_factory()}; }
     auto dirty_flag_factory                         () { return Cool::DirtyFlagFactory_Ref{_dirty_registry}; }
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_dirty_registry}; }
@@ -115,14 +111,12 @@ private:
     Cool::ImageSizeConstraint      _preview_constraint;
     Cool::RenderableViewManager    _views; // Must be before the views because it is used to create them
     Cool::RenderableView&          _nodes_view;
-    // Cool::RenderableView&         _custom_shader_view;
     Cool::Exporter                _exporter;
     Cool::DirtyRegistry           _dirty_registry; // Before the modules because it is used to create them
     History                       _history{};
     ThemeManager                  _theme_manager{};
     float                         _last_time{0.f};
-    std::unique_ptr<Module_Nodes> _nodes_module;
-    // std::unique_ptr<Module_CustomShader> _custom_shader_module;
+    std::unique_ptr<Module_Nodes>  _nodes_module;
     CommandLogger _command_logger{};
     bool          _is_first_frame{true};
 
@@ -136,8 +130,6 @@ private:
             cereal::make_nvp("Variable Registries", _variable_registries),
             cereal::make_nvp("Dirty Registry", _dirty_registry),
             cereal::make_nvp("History", _history),
-            cereal::make_nvp("is0 Module", _nodes_module),
-            // cereal::make_nvp("Custom Shader Module", _custom_shader_module),
             cereal::make_nvp("Nodes Module", _nodes_module),
             cereal::make_nvp("Preview Constraint", _preview_constraint),
             cereal::make_nvp("Camera Manager", _camera_manager),

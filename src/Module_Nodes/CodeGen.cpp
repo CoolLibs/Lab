@@ -216,7 +216,7 @@ static auto gen_properties(
                         + '\n';
 
             res.real_names.push_back(std::visit(
-                [](auto&& prop) { return valid_property_name(prop.name(), prop._default_variable_id); }, prop
+                [](auto&& prop) { return valid_property_name(prop.name(), prop._default_variable_id.raw()); }, prop
             ));
         }
 

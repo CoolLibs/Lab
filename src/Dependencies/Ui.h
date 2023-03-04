@@ -18,14 +18,12 @@ public:
         Cool::VariableRegistries&    registries,
         CommandExecutor_TopLevel_Ref command_executor,
         Cool::SetDirty_Ref           set_dirty,
-        Cool::InputFactory_Ref       input_factory,
-        Cool::InputDestructor_Ref    input_destructor
+        Cool::InputFactory_Ref       input_factory
     )
         : _variable_registries{registries}
         , _command_executor{command_executor}
         , _set_dirty{set_dirty}
         , _input_factory{input_factory}
-        , _input_destructor{input_destructor}
     {
     }
 
@@ -49,10 +47,10 @@ public:
         // And show the UI of the current_variable if it is set
 
         // NB: We don't lock the registry here because it is already locked above (might be clunky though)
-        auto* default_variable = _variable_registries.get().of<Cool::Variable<T>>().get_mutable_ref(input._default_variable_id);
+        auto* default_variable = _variable_registries.get().of<Cool::Variable<T>>().get_mutable_ref(input._default_variable_id.raw());
         if (default_variable)
         {
-            widget<T>(input._default_variable_id, *default_variable);
+            widget<T>(input._default_variable_id.raw(), *default_variable);
 
             if (input._description)
             {
@@ -92,8 +90,6 @@ public:
 
     auto input_factory() const -> auto { return _input_factory; }
 
-    auto input_destructor() const { return _input_destructor; }
-
 private:
     template<typename T>
     void widget(const Cool::VariableId<T>& id, Cool::Variable<T>& variable)
@@ -132,7 +128,6 @@ private:
     CommandExecutor_TopLevel_Ref                     _command_executor;
     Cool::SetDirty_Ref                               _set_dirty;
     Cool::InputFactory_Ref                           _input_factory;
-    Cool::InputDestructor_Ref                        _input_destructor;
 };
 
 } // namespace Lab

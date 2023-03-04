@@ -9,6 +9,7 @@
 #include <Cool/Input/MouseCoordinates.h>
 #include <Cool/Input/MouseEventDispatcher.h>
 #include <reg/reg.hpp>
+#include <utility>
 
 namespace Lab {
 
@@ -17,8 +18,8 @@ class CommandExecutionContext_Ref;
 
 class CameraManager {
 public:
-    explicit CameraManager(const Cool::VariableId<Cool::Camera>& camera_id)
-        : _camera_id{camera_id}
+    explicit CameraManager(Cool::SharedVariableId<Cool::Camera> camera_id)
+        : _camera_id{std::move(camera_id)}
     {
     }
 
@@ -30,14 +31,14 @@ public:
         CommandExecutor_TopLevel_Ref
     );
 
-    auto id() const -> const Cool::VariableId<Cool::Camera>& { return _camera_id; }
+    [[nodiscard]] auto id() const -> Cool::SharedVariableId<Cool::Camera> { return _camera_id; }
 
     void imgui(
         std::reference_wrapper<Cool::VariableRegistries>,
         CommandExecutor_TopLevel_Ref
     );
 
-    auto get_zoom() const -> float { return _view_controller.get_distance_to_orbit_center(); }
+    [[nodiscard]] auto get_zoom() const -> float { return _view_controller.get_distance_to_orbit_center(); }
     void set_zoom(float zoom, CommandExecutionContext_Ref& ctx);
 
 private:
@@ -48,8 +49,8 @@ private:
     );
 
 private:
-    Cool::VariableId<Cool::Camera> _camera_id;
-    Cool::ViewController_Orbital   _view_controller;
+    Cool::SharedVariableId<Cool::Camera> _camera_id;
+    Cool::ViewController_Orbital         _view_controller;
 
 private:
     // Serialization

@@ -17,7 +17,7 @@ void CameraManager::hook_events(
     events
         .scroll_event()
         .subscribe([registries, this, executor](const auto& event) {
-            auto       camera   = registries.get().get(_camera_id)->value;
+            auto       camera   = registries.get().get(_camera_id.raw())->value;
             const auto old_zoom = _view_controller.get_distance_to_orbit_center();
             if (_view_controller.on_wheel_scroll(camera, event.dy))
             {
@@ -93,21 +93,21 @@ void CameraManager::maybe_update_camera(
     std::function<bool(Cool::Camera&)>               fun
 )
 {
-    auto camera = registries.get().get(_camera_id)->value;
+    auto camera = registries.get().get(_camera_id.raw())->value;
     if (fun(camera))
     {
-        executor.execute(Command_SetVariable<Cool::Camera>{_camera_id, camera});
+        executor.execute(Command_SetVariable<Cool::Camera>{_camera_id.raw(), camera});
     }
 }
 
 void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref& ctx)
 {
-    auto camera = ctx.registries().get(_camera_id)->value;
+    auto camera = ctx.registries().get(_camera_id.raw())->value;
     Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, camera, zoom);
-    ctx.registries().with_mutable_ref<Cool::Variable<Cool::Camera>>(_camera_id, [&](Cool::Variable<Cool::Camera>& variable) {
+    ctx.registries().with_mutable_ref<Cool::Variable<Cool::Camera>>(_camera_id.raw(), [&](Cool::Variable<Cool::Camera>& variable) {
         variable.value = camera;
     });
-    ctx.set_dirty(_camera_id);
+    ctx.set_dirty(_camera_id.raw());
 }
 
 } // namespace Lab

@@ -82,7 +82,7 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 
 auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
 {
-    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag, ui.input_destructor()};
+    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag};
 }
 
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
@@ -150,7 +150,7 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
 
     Cool::set_uniform(
         shader,
-        valid_property_name(input.name(), input._default_variable_id),
+        valid_property_name(input.name(), input._default_variable_id.raw()),
         value
     );
 }

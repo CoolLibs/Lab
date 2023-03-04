@@ -22,7 +22,6 @@ public:
     struct RenderParams {
         Cool::InputProvider_Ref                          provider;
         Cool::InputFactory_Ref                           input_factory;
-        Cool::InputDestructor_Ref                        input_destructor;
         Cool::IsDirty_Ref                                is_dirty;
         Cool::SetClean_Ref                               set_clean;
         std::reference_wrapper<Cool::VariableRegistries> variable_registries;

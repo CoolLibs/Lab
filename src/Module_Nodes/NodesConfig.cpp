@@ -23,7 +23,7 @@ static auto settings_from_inputs(
     for (const auto& input : inputs)
     {
         const auto maybe_variable = std::visit([&](auto&& input) -> std::optional<Cool::AnyVariable> {
-            const auto maybe_variable = registry.get(input._default_variable_id);
+            const auto maybe_variable = registry.get(input._default_variable_id.raw());
             if (maybe_variable)
             {
                 return Cool::AnyVariable{*maybe_variable};
@@ -62,7 +62,7 @@ static void apply_settings_to_inputs(
         {
             std::visit([&](auto&& input) {
                 registry.set(
-                    input._default_variable_id,
+                    input._default_variable_id.raw(),
                     get_concrete_variable(input, settings.at(i))
                 );
             },
@@ -199,8 +199,7 @@ static auto iterator_to_same_input(Cool::AnyInput const& input, std::vector<Cool
 
 static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
     std::vector<Cool::AnyInput>& old_inputs,
-    std::vector<Cool::AnyInput>& new_inputs,
-    Cool::InputDestructor_Ref    destroy
+    std::vector<Cool::AnyInput>& new_inputs
 )
 {
     for (auto& input : old_inputs)
@@ -210,14 +209,9 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         {
             auto       description         = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
             auto const desired_color_space = std::visit([](auto&& input) { return input._desired_color_space; }, *it);    // Keep the new desired_color_space
-            destroy(*it);
             *it = std::move(input);
             std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
             std::visit([&](auto&& it) { it._desired_color_space = desired_color_space; }, *it);
-        }
-        else
-        {
-            destroy(input);
         }
     }
 }
@@ -266,7 +260,7 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition
     auto node = make_node({definition, out_node.category_name()});
     node.set_name(out_node.name());
 
-    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs(), _input_destructor);
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs());
 
     refresh_pins(node.input_pins(), out_node.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
     refresh_pins(node.output_pins(), out_node.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
