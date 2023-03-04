@@ -69,7 +69,7 @@ out vec4      out_Color;
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
-#include "_COOL_RES_/shaders/TextureWrapper.glsl"
+#include "_COOL_RES_/shaders/TextureInfo.glsl"
 
 vec2 to_view_space(vec2 uv)
 {{
