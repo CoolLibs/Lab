@@ -41,4 +41,9 @@ auto Node::imgui_chosen_any_type() -> bool
     return false;
 }
 
+auto to_string(Node const& node) -> std::string
+{
+    return !node.name().empty() ? node.name() : node.definition_name();
+}
+
 } // namespace Lab

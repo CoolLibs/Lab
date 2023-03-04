@@ -300,6 +300,10 @@ void App::imgui_windows()
         {
             imgui_commands_and_registries_debug_windows();
         }
+        if (DebugOptions::show_nodes_and_links_registries())
+        {
+            _nodes_module->debug_show_nodes_and_links_registries_windows(ui());
+        }
 #if DEBUG
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
 #endif

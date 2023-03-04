@@ -2,23 +2,33 @@
 
 #include <reg/reg.hpp>
 #include <stringify/stringify.hpp>
+#include "Cool/ImGui/ImGuiExtras.h"
+#include "imgui.h"
 
 namespace Lab {
 
 template<typename T>
-void imgui_show(const Cool::Variable<T>& variable)
+void imgui_show(T const& value)
 {
-    ImGui::TextUnformatted(Cool::stringify(variable.value).c_str());
+    auto const text = Cool::stringify(value);
+    ImGui::TextUnformatted(text.c_str());
+    bool const clicked = ImGui::IsItemClicked();
+    if (ImGui::IsItemHovered())
+        ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+    Cool::ImGuiExtras::tooltip("Copy to clipboard");
+    if (clicked)
+        ImGui::SetClipboardText(text.c_str());
 }
 
 template<typename T>
-void imgui_show(const T& value)
+void imgui_show(Cool::Variable<T> const& variable)
 {
-    ImGui::TextUnformatted(Cool::stringify(value).c_str());
+    imgui_show(variable.value);
 }
 
-template<typename T>
-void imgui_show(const reg::Registry<T>& registry)
+struct IsARegistryISwear {};
+template<typename Registry>
+void imgui_show(Registry const& registry, IsARegistryISwear)
 {
     std::shared_lock                 lock{registry.mutex()};
     static constexpr ImGuiTableFlags flags = ImGuiTableFlags_SizingStretchSame
@@ -29,7 +39,7 @@ void imgui_show(const reg::Registry<T>& registry)
 
     if (ImGui::BeginTable("table1", 2, flags))
     {
-        for (const auto& [id, value] : registry)
+        for (auto const& [id, value] : registry)
         {
             ImGui::TableNextRow();
             ImGui::TableSetColumnIndex(0);
@@ -39,6 +49,27 @@ void imgui_show(const reg::Registry<T>& registry)
         }
         ImGui::EndTable();
     }
+}
+
+template<typename T>
+void imgui_show(reg::Registry<T> const& registry)
+{
+    imgui_show(registry, IsARegistryISwear{});
+}
+template<typename T>
+void imgui_show(reg::RawRegistry<T> const& registry)
+{
+    imgui_show(registry, IsARegistryISwear{});
+}
+template<typename T>
+void imgui_show(reg::OrderedRegistry<T> const& registry)
+{
+    imgui_show(registry, IsARegistryISwear{});
+}
+template<typename T>
+void imgui_show(reg::RawOrderedRegistry<T> const& registry)
+{
+    imgui_show(registry, IsARegistryISwear{});
 }
 
 } // namespace Lab

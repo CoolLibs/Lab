@@ -13,6 +13,7 @@
 #include "Module_Nodes/Module_Nodes.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/NodesConfig.h"
+#include "UI/imgui_show.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
 #include "parse_node_definition.h"
@@ -196,4 +197,15 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 
     pipeline.draw();
 }
+
+void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const
+{
+    ui.window({.name = "Nodes Registry"}, [&]() {
+        imgui_show(_nodes_editor.graph().nodes());
+    });
+    ui.window({.name = "Links Registry"}, [&]() {
+        imgui_show(_nodes_editor.graph().links());
+    });
+}
+
 } // namespace Lab

@@ -47,6 +47,11 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
+            name_in_code="show_nodes_and_links_registries",
+            name_in_ui="Show nodes and links registries",
+            available_in_release=True,
+        ),
+        DebugOption(
             name_in_code="log_when_rendering",
             name_in_ui="Log when rendering",
             available_in_release=True,

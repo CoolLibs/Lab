@@ -24,6 +24,8 @@ public:
 
     void compile(UpdateContext_Ref update_ctx, bool for_testing_nodes = false);
 
+    void debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
+
 protected:
     void render(RenderParams, UpdateContext_Ref) override;
 

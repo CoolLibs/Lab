@@ -40,6 +40,7 @@ public:
     {
         return instance().show_commands_and_registries_debug_windows;
     }
+    [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return instance().show_nodes_and_links_registries; }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
     [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return instance().log_when_parsing_node_definition; }
@@ -82,6 +83,7 @@ private:
         bool show_imgui_demo_window{false};
 #endif
         bool show_commands_and_registries_debug_windows{false};
+        bool show_nodes_and_links_registries{false};
         bool log_when_rendering{false};
         bool log_when_compiling_nodes{false};
         bool log_when_parsing_node_definition{false};
@@ -102,6 +104,7 @@ private:
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
+                cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
@@ -111,6 +114,7 @@ private:
 #else
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
+                cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
@@ -129,6 +133,7 @@ private:
         instance().show_imgui_demo_window = false;
 #endif
         instance().show_commands_and_registries_debug_windows = false;
+        instance().show_nodes_and_links_registries            = false;
         instance().log_when_rendering                         = false;
         instance().log_when_compiling_nodes                   = false;
         instance().log_when_parsing_node_definition           = false;
@@ -217,6 +222,11 @@ private:
             ImGui::Checkbox("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
         }
 
+        if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
+        {
+            ImGui::Checkbox("Show nodes and links registries", &instance().show_nodes_and_links_registries);
+        }
+
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
             ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
@@ -285,6 +295,12 @@ private:
         if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
         {
             instance().show_commands_and_registries_debug_windows = !instance().show_commands_and_registries_debug_windows;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
+        {
+            instance().show_nodes_and_links_registries = !instance().show_nodes_and_links_registries;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 

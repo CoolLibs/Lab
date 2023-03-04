@@ -79,4 +79,6 @@ private:
     }
 };
 
+auto to_string(Node const& node) -> std::string;
+
 } // namespace Lab
