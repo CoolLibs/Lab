@@ -38,6 +38,7 @@ public:
     ~App();
 
     void update() override;
+    void trigger_rerender() override;
     bool inputs_are_allowed() const override;
     bool wants_to_show_menu_bar() const override;
 

@@ -37,7 +37,7 @@ App::App(Cool::WindowManager& windows)
     hook_camera2D_events(
         _nodes_view.view.mouse_events(),
         _camera2D.value,
-        [this]() { set_dirty_flag()(_nodes_module->dirty_flag()); },
+        [this]() { trigger_rerender(); },
         [this]() { return static_cast<float>(_nodes_view.render_target.current_size().height()); },
         [this]() { return img::SizeU::aspect_ratio(_nodes_view.render_target.current_size()); }
     );
@@ -98,7 +98,7 @@ void App::update()
     }
     else
     {
-        set_dirty_flag()(_nodes_module->dirty_flag());
+        trigger_rerender();
         _exporter.update(polaroid());
     }
 
@@ -106,8 +106,7 @@ void App::update()
     {
         _last_time = _clock.time();
 
-        set_dirty_flag()(_nodes_module->dirty_flag());
-        // set_dirty_flag()(_custom_shader_module->dirty_flag());
+        trigger_rerender();
     }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {
@@ -140,6 +139,11 @@ void App::update()
             }
         );
     }
+}
+
+void App::trigger_rerender()
+{
+    set_dirty_flag()(_nodes_module->dirty_flag());
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
@@ -210,7 +214,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
 void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
 {
     if (render_target.needs_resizing())
-        set_dirty_flag()(_nodes_module->dirty_flag());
+        trigger_rerender();
 
     if (!_nodes_module->is_dirty(is_dirty__functor()))
         return;
@@ -284,7 +288,7 @@ void App::imgui_windows()
         // Camera 2D
         ImGui::Begin("Camera 2D");
         if (imgui_widget(_camera2D))
-            set_dirty_flag()(_nodes_module->dirty_flag());
+            trigger_rerender();
         ImGui::End();
 
         DebugOptions::show_framerate_window([&] {

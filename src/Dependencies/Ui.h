@@ -75,7 +75,7 @@ public:
                 std::filesystem::path path = input.file_watcher.path();
                 if (Cool::ImGuiExtras::file_and_folder("Path", &path, Cool::NfdFileFilter::FragmentShader)) // TODO(JF) Don't hardcode the file filters
                 {
-                    input.file_watcher.set_path(path);
+                    input.file_watcher.set_path(path, input.file_watcher_callbacks(_set_dirty));
                     _set_dirty(input._dirty_flag);
                 }
             }
