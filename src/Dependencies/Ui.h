@@ -66,22 +66,6 @@ public:
         std::visit([&](auto&& input) { widget(input); }, input);
     }
 
-    void widget(Cool::Input_File& input)
-    {
-        Cool::ImGuiExtras::bring_attention_if(
-            input.should_highlight(),
-            [&] {
-                input.update(_set_dirty); // TODO(JF) shouldn't be in the Ui, should be called all the frames even if we don't render the Ui
-                std::filesystem::path path = input.file_watcher.path();
-                if (Cool::ImGuiExtras::file_and_folder("Path", &path, Cool::NfdFileFilter::FragmentShader)) // TODO(JF) Don't hardcode the file filters
-                {
-                    input.file_watcher.set_path(path, input.file_watcher_callbacks(_set_dirty));
-                    _set_dirty(input._dirty_flag);
-                }
-            }
-        );
-    }
-
     void set_dirty(Cool::DirtyFlag const& flag) { _set_dirty(flag); }
     auto dirty_setter() const -> Cool::SetDirty_Ref { return _set_dirty; }
 
