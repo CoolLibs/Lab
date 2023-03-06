@@ -14,6 +14,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
+#include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Log/Message.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
@@ -308,6 +309,10 @@ void App::imgui_windows()
         {
             _nodes_module->debug_show_nodes_and_links_registries_windows(ui());
         }
+
+        Cool::DebugOptions::texture_library_debug_view([&] {
+            Cool::TextureLibrary::instance().imgui_debug_view();
+        });
 #if DEBUG
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
 #endif
