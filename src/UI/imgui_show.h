@@ -23,7 +23,7 @@ void imgui_show(T const& value)
 template<typename T>
 void imgui_show(Cool::Variable<T> const& variable)
 {
-    imgui_show(variable.value);
+    imgui_show(variable.value());
 }
 
 struct IsARegistryISwear {};

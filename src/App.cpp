@@ -37,7 +37,7 @@ App::App(Cool::WindowManager& windows)
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
     hook_camera2D_events(
         _nodes_view.view.mouse_events(),
-        _camera2D.value,
+        _camera2D.value(),
         [this]() { trigger_rerender(); },
         [this]() { return static_cast<float>(_nodes_view.render_target.current_size().height()); },
         [this]() { return img::SizeU::aspect_ratio(_nodes_view.render_target.current_size()); }
@@ -199,7 +199,7 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         some_module.do_rendering(
             {
-                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _camera2D.value.transform_matrix()),
+                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _camera2D.value().transform_matrix()),
                 input_factory(),
                 is_dirty__functor(),
                 set_clean__functor(),

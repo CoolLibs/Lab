@@ -94,23 +94,23 @@ private:
     template<typename T>
     void widget(const Cool::VariableId<T>& id, Cool::Variable<T>& variable)
     {
-        const auto prev_value    = variable.value;
-        const auto prev_metadata = variable.metadata;
+        const auto prev_value    = variable.value();
+        const auto prev_metadata = variable.metadata();
         Cool::imgui(
             variable,
             {
                 .on_value_changed =
                     [&]() {
-                        const auto new_value = variable.value;
-                        variable.value       = prev_value; // To make sure the reversible command that will be created sees the correct previous value.
+                        const auto new_value = variable.value();
+                        variable.value()       = prev_value; // To make sure the reversible command that will be created sees the correct previous value.
                         _command_executor.execute(
                                 Command_SetVariable<T>{.id = id, .value = new_value}
                             ); },
 
                 .on_metadata_changed =
                     [&]() {
-                        const auto new_metadata = variable.metadata;
-                        variable.metadata       = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
+                        const auto new_metadata = variable.metadata();
+                        variable.metadata()       = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
                         _command_executor.execute(
                                 Command_SetVariableMetadata<T>{.id = id, .metadata = new_metadata}
                             ); },

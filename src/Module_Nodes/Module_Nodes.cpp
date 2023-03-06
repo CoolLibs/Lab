@@ -5,6 +5,7 @@
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
 #include "Cool/Variables/Variable.h"
@@ -154,6 +155,29 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
         valid_property_name(input.name(), input._default_variable_id.raw()),
         value
     );
+
+    // HACK to send an error message whenever a Texture variable has an invalid path
+    if constexpr (std::is_same_v<T, Cool::TextureInfo>)
+    {
+        input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
+            auto const err = Cool::TextureLibrary::instance().error_from(value.absolute_path);
+            if (err)
+            {
+                Cool::Log::ToUser::console().send(
+                    variable.message_id,
+                    Cool::Message{
+                        .category = "Load Image",
+                        .message  = fmt::format("Failed to load {}:\n{}", value.absolute_path, *err),
+                        .severity = Cool::MessageSeverity::Error,
+                    }
+                );
+            }
+            else
+            {
+                Cool::Log::ToUser::console().remove(variable.message_id);
+            }
+        });
+    }
 }
 
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
