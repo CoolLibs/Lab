@@ -6,12 +6,13 @@
 ## beta-1
 
 - Fix the huge visual glitches that appeared on some computers
+- Image Node: fix the ghost error messages that it would create and that couldn't be removed
 - Nodes:
   - New nodes
   - Fixes
   - Improvements
-  - Presets for all of them
-  - Reorganized categories
+  - Added presets for some of them
+  - Reorganized categories a bit
 - Added the debug options menu to the released executables
 - Added debug option to get an info dump in order to help developers debug
 
