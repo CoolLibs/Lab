@@ -1,7 +1,12 @@
 # Changelog
 
+- [beta-2](#beta-2)
 - [beta-1](#beta-1)
 - [beta-0](#beta-0)
+
+## beta-2
+
+- Fix "Reserved built-in name" error on some GPUs
 
 ## beta-1
 
