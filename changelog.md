@@ -13,6 +13,7 @@
   - Improvements
   - Added presets for some of them
   - Reorganized categories a bit
+- All shapes are now nicely anti-aliased
 - Added the debug options menu to the released executables
 - Added debug option to get an info dump in order to help developers debug
 

@@ -38,5 +38,6 @@ vec2 unnormalize_uv(vec2 uv)
 /// Returns 1 when x is negative, 0 when x is positive, with a small transition around 0 to apply antialiasing.
 float antialised_step(float x)
 {
-    return smoothstep(0.0025, -0.0025, x);
+    float m = 0.75 * fwidth(x);
+    return smoothstep(m, -m, x);
 }
