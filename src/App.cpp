@@ -29,7 +29,7 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
-    , _nodes_view{_views.make_view("View | Nodes")}
+    , _nodes_view{_views.make_view(ICON_FA_IMAGE " View")}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
