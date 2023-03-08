@@ -7,6 +7,7 @@
 ## beta-2
 
 - Fix "Reserved built-in name" error on some GPUs
+- Added icons all over the place (window titles, buttons, menus, ...)
 
 ## beta-1
 
