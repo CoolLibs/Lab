@@ -4,6 +4,7 @@
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
+#include "Cool/String/String.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/Node.h"
 #include "Module_Nodes/NodeDefinition.h"
@@ -150,7 +151,11 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     if (needs_main_pin)
     {
         for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
-            node.input_pins().emplace_back(cat_id.def.main_parameter_names()[i]);
+        {
+            std::string pin_name = cat_id.def.main_parameter_names()[i];
+            Cool::String::replace_all(pin_name, "_", " ");
+            node.input_pins().emplace_back(pin_name);
+        }
     }
     node.output_pins().emplace_back("OUT");
 
