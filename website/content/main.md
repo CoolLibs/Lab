@@ -24,6 +24,8 @@ import SmallImage from "@site/src/components/SmallImage.js"
 
 ## Trailer
 
+**More artworks:** <a href="https://www.instagram.com/coollab_art/"><SmallImage src="img/instagram.png"/> https://www.instagram.com/coollab_art/</a>
+
 ![nodes](./img/nodes.png)
 
 <LabGallery/>
