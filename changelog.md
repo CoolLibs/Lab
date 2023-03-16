@@ -7,7 +7,9 @@
 ## beta-2
 
 - Fix "Reserved built-in name" error on some GPUs
+- Fix: properly display error messages when loading (parsing) a node failed (very useful for people creating new nodes)
 - Added icons all over the place (window titles, buttons, menus, ...)
+- Many more nodes, and improvements to existing nodes
 
 ## beta-1
 
