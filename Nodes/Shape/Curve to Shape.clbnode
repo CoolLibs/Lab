@@ -6,12 +6,14 @@ INPUT float `Thickness`;
 INPUT float `Curve Start`;
 INPUT float `Curve End`;
 
+INPUT bool `Trail`;
+
 // https://iquilezles.org/articles/distfunctions2d/
-float sdSegment(vec2 p, vec2 a, vec2 b)
+float sdSegment(vec2 p, vec2 a, vec2 b, float thickness)
 {
     vec2  pa = p - a, ba = b - a;
     float h = saturate(dot(pa, ba) / dot(ba, ba));
-    return length(pa - ba * h) - `Thickness`;
+    return length(pa - ba * h) - thickness;
 }
 
 SignedDistance main(UV uv)
@@ -21,13 +23,13 @@ SignedDistance main(UV uv)
 
     for (int i = 0; i <= `Number of segments`; i++)
     {
-        float t = i / float(`Number of segments`);    // 0 to 1
-        t       = mix(`Curve Start`, `Curve End`, t); // Start to End
+        float t = i / float(`Number of segments`); // 0 to 1
 
-        vec2 current_position = `Curve`(t);
+        vec2 current_position = `Curve`(mix(`Curve Start`, `Curve End`, t));
         if (i != 0) // During the first iteration we don't yet have two points to draw a segment between
         {
-            float segment = sdSegment(uv, previous_position, current_position);
+            float thickness = `Trail` ? `Thickness` * t : `Thickness`;
+            float segment   = sdSegment(uv, previous_position, current_position, thickness);
             dist_to_curve = min(dist_to_curve, segment);
         }
 
