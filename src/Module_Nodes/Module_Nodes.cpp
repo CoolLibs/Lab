@@ -42,7 +42,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 
     auto const shader_code = generate_shader_code(
         _main_node_id,
-        _nodes_editor.graph(),
+        static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()), // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
         Cool::GetNodeDefinition_Ref{_nodes_library},
         update_ctx.input_provider()
     );
@@ -101,14 +101,12 @@ auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 {
     Cool::AllInputRefsToConst inputs;
 
-    std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
-    for (auto const& [_, node] : _nodes_editor.graph().nodes())
-    {
+    static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()).for_each_node([&](Node const& node) { // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
         for (auto const& input : node.value_inputs())
         {
             inputs.push_back(std::visit([](auto&& input) { return Cool::AnyInputRefToConst{input}; }, input));
         }
-    }
+    });
 
     return inputs;
 }
@@ -206,17 +204,16 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
 
     {
-        std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
-        for (auto const& [_, node] : _nodes_editor.graph().nodes())
-        {
-            for (auto const& prop : node.value_inputs())
-            {
-                std::visit([&](auto&& prop) {
-                    send_uniform(prop, shader, in.provider);
-                },
-                           prop);
-            }
-        }
+        static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()) // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
+            .for_each_node([&](Node const& node) {
+                for (auto const& prop : node.value_inputs())
+                {
+                    std::visit([&](auto&& prop) {
+                        send_uniform(prop, shader, in.provider);
+                    },
+                               prop);
+                }
+            });
     }
 
     pipeline.draw();

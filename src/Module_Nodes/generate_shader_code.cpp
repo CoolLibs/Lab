@@ -11,10 +11,11 @@ static auto gen_all_output_indices_declarations(Graph const& graph)
 {
     std::stringstream res{};
 
-    std::shared_lock lock{graph.nodes().mutex()};
-    for (auto const& [_, node] : graph.nodes())
+    graph.for_each_node([&](Cool::BaseNode const& base_node) {
+        auto const& node = static_cast<Node const&>(base_node); // NOLINT(*-static-cast-downcast)
         for (size_t i = 1; i < node.output_pins().size(); ++i)
             res << fmt::format("float {};\n", make_valid_output_index_name(node.output_pins()[i]));
+    });
 
     return res.str();
 }
