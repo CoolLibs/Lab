@@ -182,10 +182,10 @@ static auto gen_properties(
         auto const input_pin     = node.pin_of_value_input(property_index); // NOLINT(performance-unnecessary-copy-initialization)
         auto       output_pin    = Cool::OutputPin{};
         auto const input_node_id = context.graph().input_node_id(input_pin.id(), &output_pin);
-        auto const node          = context.graph().nodes().get(input_node_id);
-        if (node)
+        auto const maybe_node    = context.graph().nodes().get(input_node_id);
+        if (maybe_node)
         {
-            if (node->main_output_pin() == output_pin)
+            if (maybe_node->main_output_pin() == output_pin)
             {
                 auto const property_type = input_to_primitive_type(prop);
                 if (!property_type)
@@ -193,7 +193,7 @@ static auto gen_properties(
 
                 auto const input_func_name = gen_desired_function(
                     {.from = PrimitiveType::Void, .to = *property_type, .arity = 0},
-                    *node,
+                    *maybe_node,
                     input_node_id,
                     context
                 );
@@ -429,8 +429,8 @@ static auto gen_base_function(
     // HACK to make sure we are aware that these functions have been generated, used when adding a parameter to all the functions during `inject_context_argument_in_all_functions()`.
     // We don't care about adding them through push_function() because their names will be unique anyways.
     // And we need them to be defined after properties_code->code
-    for (auto const& func_name : helper_functions.new_names)
-        context.push_function(Function{.name = func_name, .implementation = ""});
+    for (auto const& helper_func_name : helper_functions.new_names)
+        context.push_function(Function{.name = helper_func_name, .implementation = ""});
 
     auto func_implementation = gen_function_definition({
         .signature       = make_complete_function_signature(MainFunctionSignature{

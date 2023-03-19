@@ -14,9 +14,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 # Set warning level
 if(MSVC)
-    target_compile_options(CooLab-Properties INTERFACE /W3)
+    target_compile_options(CooLab-Properties INTERFACE /W4)
 else()
-    target_compile_options(CooLab-Properties INTERFACE -Wall -Wextra -Wpedantic -pedantic-errors)
+    target_compile_options(CooLab-Properties INTERFACE -Wall -Wextra -Wpedantic -pedantic-errors -Wconversion -Wsign-conversion)
 endif()
 
 # Maybe enable warnings as errors
