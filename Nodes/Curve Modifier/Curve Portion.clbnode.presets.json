@@ -3,70 +3,14 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "3f41e0fa-1135-4368-8ff2-7c21ff079f75",
+                    "first": "23302734-5877-40a1-9ec0-9a09e2afcfe1",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 1,
-                                "data": {
-                                    "Name": "Number of segments",
-                                    "Value": 100,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.09000000357627869,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 100,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Thickness",
-                                    "Value": 0.004000000189989805,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.00040099999750964344,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 0.0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Curve Start",
+                                    "Name": "Start",
                                     "Value": 0.0,
                                     "Metadata": {
                                         "Bounds": {
@@ -74,7 +18,7 @@
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
+                                            "Drag speed": 0.003000000026077032,
                                             "Use slider": false
                                         }
                                     },
@@ -94,15 +38,51 @@
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Curve End",
-                                    "Value": 1.0,
+                                    "Name": "Length",
+                                    "Value": 0.20000000298023225,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
+                                            "Drag speed": 0.003000000026077032,
+                                            "Use slider": true
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "first": "522b1af2-6574-4aa9-b863-e64504607e99",
+                    "second": {
+                        "Name": "Unbounded",
+                        "Values": [
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Start",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.003000000026077032,
                                             "Use slider": false
                                         }
                                     },
@@ -120,13 +100,31 @@
                                 }
                             },
                             {
-                                "index": 0,
+                                "index": 2,
                                 "data": {
-                                    "Name": "Trail",
-                                    "Value": false,
-                                    "Metadata": {},
-                                    "Default Value": false,
-                                    "Default Metadata": {}
+                                    "Name": "Length",
+                                    "Value": 2.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.003000000026077032,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 2.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
                                 }
                             }
                         ]
