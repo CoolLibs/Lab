@@ -100,6 +100,11 @@ const config = {
             label: 'Download',
           },
           {
+            to: 'Gallery',
+            position: 'left',
+            label: 'Gallery',
+          },
+          {
             type: 'doc',
             docId: 'About',
             position: 'right',
