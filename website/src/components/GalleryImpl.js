@@ -13,27 +13,27 @@ class docApi extends React.Component {
     const axios = require("axios")
 
     // Make a request for a user with a given ID
-    axios
-      .get("https://sore-lime-anemone-wear.cyclic.app/")
-      .then(function (response) {
-        // handle success
-        console.log(response)
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error)
-      })
-      .finally(function () {
-        // always executed
-      })
+    // axios
+    //   .get("https://sore-lime-anemone-wear.cyclic.app/")
+    //   .then(function (response) {
+    //     // handle success
+    //     console.log(response)
+    //   })
+    //   .catch(function (error) {
+    //     // handle error
+    //     console.log(error)
+    //   })
+    //   .finally(function () {
+    //     // always executed
+    //   })
 
     // console.log("sdf")
-    // const data = await fetch("https://sore-lime-anemone-wear.cyclic.app/")
-    // //   .then((response) => response.json())
-    // //   .then((data) => this.setState({ text: `${data[0].name}` }))
-    // //   .then((error) => {
-    // //     console.error(error)
-    // //   })
+    fetch("https://sore-lime-anemone-wear.cyclic.app/")
+      .then((response) => response.json())
+      .then((data) => this.setState({ text: `${data[0].name}` }))
+    //   .then((error) => {
+    //     console.error(error)
+    //   })
     // console.log(data)
     // const data = fetch("https://coollab-gallery.onrender.cm/")
     //   .then((response) => {
