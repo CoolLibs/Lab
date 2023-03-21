@@ -1,7 +1,8 @@
-- Change the version number in *src/Dump/coollab_version.cpp* and commit with the message "🔖 [beta-1] Release" (make sure to replace with the right version number)
+- Remove the "WIP" in the version number in *src/Dump/coollab_version.cpp* and commit with the message "🔖 [beta-1] Release" (make sure to replace with the right version number)
 - Create a tag on the commit used for the release
-- As a description, use whatever is in the changelog
+- As a description, use whatever is in the changelog for the new version
 - Run the "Create release executables" workflow from the *Actions* tab of GitHub. For **Use workflow from** make sure to replace `Branch: main` with the tag you just created.
-- Put the executables to download on our website
+- Increment the version number in *src/Dump/coollab_version.cpp* and add "WIP" to it. Also, create a new section in the changelog. (And then commit).
+- Put the executables to download on our website (download them from the GitHub page once the the GitHub workflow has finished creating them, and add them in this repo in *website/static* (keep the same zip names))
 - Make an announcement on our Discord
 - Make a story on our Instagram
