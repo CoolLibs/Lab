@@ -27,9 +27,9 @@ jobs:
 
     - name: Zip files
       uses: vimtor/action-zip@v1
-        with:
-          files: bin\Release\
-          dest: CoolLab-Windows.zip
+      with:
+        files: bin\Release\
+        dest: CoolLab-Windows.zip
 
     - name: Test2
       run: ls
