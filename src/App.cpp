@@ -3,7 +3,6 @@
 #include <Cool/DebugOptions/TestPresets.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
-#include <Cool/Parameter/ParametersHistory.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
@@ -451,7 +450,6 @@ void App::check_inputs__history()
     if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z))
     {
         _history.move_backward(exec);
-        Cool::ParametersHistory::get().move_backward();
     }
 
     // Redo
@@ -459,7 +457,6 @@ void App::check_inputs__history()
         || (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
     {
         _history.move_forward(exec);
-        Cool::ParametersHistory::get().move_forward();
     }
 }
 
