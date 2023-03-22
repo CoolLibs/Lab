@@ -1,7 +1,7 @@
 https://medium.com/the-bkpt/dithered-shading-tutorial-29f57d06ac39
 
-INPUT UV->CIELAB `Image`;
-INPUT float `Size`;
+INPUT UV->float `Image`;
+INPUT float `Scale`;
 
 float main(UV uv){
     mat4 bayer_matrix = mat4(
@@ -11,11 +11,11 @@ float main(UV uv){
       0.4375, -0.0625,  0.3125, -0.1875 
     ); //for 128x128 tiles
 
-    vec2 gv = uv * `Size`;
+    vec2 gv = uv * `Scale`;
     vec2 id = floor(gv);
     int mod_x = int(mod(id.x, 4));
     int mod_y = int (mod(id.y, 4));
-    float col = `Image`(uv).x +1.*bayer_matrix[mod_x][mod_y];
+    float col = `Image`(uv) + 1.* bayer_matrix[mod_x][mod_y];
     col = (col<0.5) ? 0. : 1.;
     return col;
 }

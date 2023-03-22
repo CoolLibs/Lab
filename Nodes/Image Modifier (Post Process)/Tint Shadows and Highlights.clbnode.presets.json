@@ -3,19 +3,19 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "f6a4d1af-2982-4052-8098-cf31243bc40e",
+                    "first": "323158e9-ea37-4ca1-83aa-42bc436d7d03",
                     "second": {
-                        "Name": "Red and Cyan",
+                        "Name": "Default",
                         "Values": [
                             {
                                 "index": 7,
                                 "data": {
-                                    "Name": "Color 1",
+                                    "Name": "Shadows",
                                     "Value": {
                                         "sRGB": {
-                                            "x": 1.0,
-                                            "y": 0.0,
-                                            "z": 0.0
+                                            "x": 0.0,
+                                            "y": 0.008998211473226548,
+                                            "z": 0.3425726890563965
                                         }
                                     },
                                     "Metadata": {
@@ -36,12 +36,12 @@
                             {
                                 "index": 7,
                                 "data": {
-                                    "Name": "Color 2",
+                                    "Name": "Midtones",
                                     "Value": {
                                         "sRGB": {
-                                            "x": 0.0,
-                                            "y": 1.0,
-                                            "z": 1.0
+                                            "x": 0.3105452060699463,
+                                            "y": 0.12896095216274262,
+                                            "z": 0.0
                                         }
                                     },
                                     "Metadata": {
@@ -49,9 +49,9 @@
                                     },
                                     "Default Value": {
                                         "sRGB": {
-                                            "x": 0.0,
+                                            "x": 0.004000000189989805,
                                             "y": 1.0,
-                                            "z": 1.0
+                                            "z": 0.0
                                         }
                                     },
                                     "Default Metadata": {
@@ -60,30 +60,28 @@
                                 }
                             },
                             {
-                                "index": 2,
+                                "index": 7,
                                 "data": {
-                                    "Name": "Mask",
-                                    "Value": 0.5,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
+                                    "Name": "Highlights",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.35891515016555788,
+                                            "y": 0.3588920831680298,
+                                            "z": 0.3588792383670807
                                         }
                                     },
-                                    "Default Value": 0.5,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 1.0
                                         }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
                                     }
                                 }
                             }
@@ -91,19 +89,19 @@
                     }
                 },
                 {
-                    "first": "f5bf2802-1609-40d0-9478-01de5ac5d5d0",
+                    "first": "304280c1-f972-4f42-be34-02d6e2e2efc8",
                     "second": {
-                        "Name": "Default",
+                        "Name": "Teal and Orange",
                         "Values": [
                             {
                                 "index": 7,
                                 "data": {
-                                    "Name": "Color 1",
+                                    "Name": "Shadows",
                                     "Value": {
                                         "sRGB": {
-                                            "x": 0.00009999999747378752,
-                                            "y": 0.00009998999303206801,
-                                            "z": 0.00009998999303206801
+                                            "x": 0.0,
+                                            "y": 0.005553983151912689,
+                                            "z": 0.23489588499069215
                                         }
                                     },
                                     "Metadata": {
@@ -111,9 +109,9 @@
                                     },
                                     "Default Value": {
                                         "sRGB": {
-                                            "x": 0.00009999999747378752,
-                                            "y": 0.00009998999303206801,
-                                            "z": 0.00009998999303206801
+                                            "x": 0.0,
+                                            "y": 0.005553983151912689,
+                                            "z": 0.23489588499069215
                                         }
                                     },
                                     "Default Metadata": {
@@ -124,12 +122,12 @@
                             {
                                 "index": 7,
                                 "data": {
-                                    "Name": "Color 2",
+                                    "Name": "Midtones",
                                     "Value": {
                                         "sRGB": {
-                                            "x": 0.9998999834060669,
-                                            "y": 1.0,
-                                            "z": 1.0
+                                            "x": 0.7420876622200012,
+                                            "y": 0.655882716178894,
+                                            "z": 0.597000002861023
                                         }
                                     },
                                     "Metadata": {
@@ -137,9 +135,9 @@
                                     },
                                     "Default Value": {
                                         "sRGB": {
-                                            "x": 0.9998999834060669,
-                                            "y": 1.0,
-                                            "z": 1.0
+                                            "x": 0.7420876622200012,
+                                            "y": 0.655882716178894,
+                                            "z": 0.597000002861023
                                         }
                                     },
                                     "Default Metadata": {
@@ -148,30 +146,28 @@
                                 }
                             },
                             {
-                                "index": 2,
+                                "index": 7,
                                 "data": {
-                                    "Name": "Mask",
-                                    "Value": 0.5,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
+                                    "Name": "Highlights",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.00009999999747378752,
+                                            "y": 0.0000999905532808043,
+                                            "z": 0.00009998999303206801
                                         }
                                     },
-                                    "Default Value": 0.5,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.00009999999747378752,
+                                            "y": 0.0000999905532808043,
+                                            "z": 0.00009998999303206801
                                         }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
                                     }
                                 }
                             }

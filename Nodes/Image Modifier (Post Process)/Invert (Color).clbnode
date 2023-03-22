@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-float main(CIELAB color)
+sRGB main(sRGB Color)
 {
-    return color.x;
+    return 1. - Color;
 }

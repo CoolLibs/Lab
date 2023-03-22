@@ -3,22 +3,22 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "3ad2e9a2-88a9-457e-82df-38a35a082149",
+                    "first": "dc7ba170-2f04-4487-894c-34035fcfb49e",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Size",
-                                    "Value": 500.0,
+                                    "Name": "Scale",
+                                    "Value": 150.0,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
+                                            "Drag speed": 0.10000000149011612,
                                             "Use slider": false
                                         }
                                     },

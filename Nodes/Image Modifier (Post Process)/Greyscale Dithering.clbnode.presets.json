@@ -3,33 +3,33 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "6c8dece0-150c-4d76-b279-3b2dfa9c2502",
+                    "first": "3ad2e9a2-88a9-457e-82df-38a35a082149",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 1,
+                                "index": 2,
                                 "data": {
-                                    "Name": "Count",
-                                    "Value": 16,
+                                    "Name": "Scale",
+                                    "Value": 150.0,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0,
+                                            "Has min bound": false,
+                                            "Min": 0.0,
                                             "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.30000001192092898,
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 16,
+                                    "Default Value": 500.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
-                                            "Min": 0,
+                                            "Min": 0.0,
                                             "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
                                             "Use slider": false
                                         }
                                     }
