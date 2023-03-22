@@ -64,15 +64,15 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
 
     - name: Zip files
-      run: |
-            cd ${{github.workspace}}/bin
-            mv Release CoolLab-Linux
-            tar -cvzf CoolLab-Linux.tar.gz ./CoolLab-Linux
+      uses: vimtor/action-zip@v1
+      with:
+        files: bin/Release/
+        dest: CoolLab-Linux.zip
             
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{github.workspace}}/bin/CoolLab-Linux.tar.gz
+        files: CoolLab-Linux.zip
 
 #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release:
@@ -90,13 +90,13 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
       
     - name: Zip files
-      run: |
-            cd ${{github.workspace}}/bin
-            mv Release CoolLab-MacOS
-            zip -r CoolLab-MacOS.zip ./CoolLab-MacOS
+      uses: vimtor/action-zip@v1
+      with:
+        files: bin/Release/
+        dest: CoolLab-MacOS.zip
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{github.workspace}}/bin/CoolLab-MacOS.zip
+        files: CoolLab-MacOS.zip
 
