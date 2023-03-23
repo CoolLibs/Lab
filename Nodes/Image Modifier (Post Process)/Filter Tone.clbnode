@@ -11,7 +11,7 @@ vec3 InvLerp( vec3 A, vec3 B, vec3 t)
 LinearRGB main(LinearRGB color)
 {
      // Calculate the three offseted colors up-front
-    vec3 OffShadows  = color / `Shadows`;
+    vec3 OffShadows  = color * `Shadows`;
     vec3 OffMidtones = color * `Midtones`;
     vec3 OffHighlights = color * `Highlights`;
 
