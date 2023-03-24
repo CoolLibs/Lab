@@ -344,6 +344,10 @@ void App::imgui_windows()
             test_presets.imgui();
         });
 #endif
+
+        Cool::DebugOptions::color_themes_advanced_config_window([&]() {
+            _color_themes.imgui_advanced_config();
+        });
     }
 }
 
@@ -390,6 +394,7 @@ void App::settings_menu()
         Cool::user_settings().imgui();
         ImGui::Separator();
 
+        ImGui::SeparatorText("History");
         _history.imgui_max_size();
         ImGui::Separator();
         ImGui::Separator();
@@ -400,7 +405,8 @@ void App::settings_menu()
         ImGui::Separator();
         ImGui::Separator();
 
-        _theme_manager.imgui();
+        ImGui::SeparatorText("Color Theme");
+        _color_themes.imgui();
 
         ImGui::EndMenu();
     }

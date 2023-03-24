@@ -1,0 +1,96 @@
+{
+    "Themes Manager": {
+        "Current Theme": {
+            "Name": "",
+            "Colors": [
+                {
+                    "key": "Main Color",
+                    "value": {
+                        "value0": 0.12625227868556977,
+                        "value1": 0.013456366956233979,
+                        "value2": 0.19607841968536378
+                    }
+                },
+                {
+                    "key": "Accent Color",
+                    "value": {
+                        "value0": 0.1762543022632599,
+                        "value1": 0.7990195751190186,
+                        "value2": 0.5792199969291687
+                    }
+                },
+                {
+                    "key": "Text",
+                    "value": {
+                        "value0": 1.0,
+                        "value1": 1.0,
+                        "value2": 1.0
+                    }
+                }
+            ],
+            "Is Dark Mode": true
+        },
+        "Themes": [
+            {
+                "Name": "Dark",
+                "Colors": [
+                    {
+                        "key": "Main Color",
+                        "value": {
+                            "value0": 0.15686273574829102,
+                            "value1": 0.15686273574829102,
+                            "value2": 0.15686273574829102
+                        }
+                    },
+                    {
+                        "key": "Accent Color",
+                        "value": {
+                            "value0": 1.0,
+                            "value1": 0.6176470518112183,
+                            "value2": 0.0
+                        }
+                    },
+                    {
+                        "key": "Text",
+                        "value": {
+                            "value0": 1.0,
+                            "value1": 1.0,
+                            "value2": 1.0
+                        }
+                    }
+                ],
+                "Is Dark Mode": true
+            },
+            {
+                "Name": "Lavande",
+                "Colors": [
+                    {
+                        "key": "Main Color",
+                        "value": {
+                            "value0": 0.12625227868556977,
+                            "value1": 0.013456366956233979,
+                            "value2": 0.19607841968536378
+                        }
+                    },
+                    {
+                        "key": "Accent Color",
+                        "value": {
+                            "value0": 0.1762543022632599,
+                            "value1": 0.7990195751190186,
+                            "value2": 0.5792199969291687
+                        }
+                    },
+                    {
+                        "key": "Text",
+                        "value": {
+                            "value0": 1.0,
+                            "value1": 1.0,
+                            "value2": 1.0
+                        }
+                    }
+                ],
+                "Is Dark Mode": true
+            }
+        ]
+    }
+}

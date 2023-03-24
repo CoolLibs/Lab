@@ -17,6 +17,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Cool/ImGui/ColorThemes.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
@@ -24,7 +25,6 @@
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Module_Nodes/Module_Nodes.h"
-#include "UI/ThemeManager.h"
 
 namespace Lab {
 
@@ -112,14 +112,14 @@ private:
     Cool::ImageSizeConstraint      _preview_constraint;
     Cool::RenderableViewManager    _views; // Must be before the views because it is used to create them
     Cool::RenderableView&          _nodes_view;
-    Cool::Exporter                _exporter;
-    Cool::DirtyRegistry           _dirty_registry; // Before the modules because it is used to create them
-    History                       _history{};
-    ThemeManager                  _theme_manager{};
-    float                         _last_time{0.f};
+    Cool::Exporter                 _exporter;
+    Cool::DirtyRegistry            _dirty_registry; // Before the modules because it is used to create them
+    History                        _history{};
+    Cool::ColorThemes              _color_themes{};
+    float                          _last_time{0.f};
     std::unique_ptr<Module_Nodes>  _nodes_module;
-    CommandLogger _command_logger{};
-    bool          _is_first_frame{true};
+    CommandLogger                  _command_logger{};
+    bool                           _is_first_frame{true};
 
 private:
     // Serialization
