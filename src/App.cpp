@@ -295,11 +295,9 @@ void App::imgui_windows()
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
             _main_window.imgui_cap_framerate();
         });
-#if DEBUG
         if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
             ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
                                                                             // to learn more about Dear ImGui!).
-#endif
         if (DebugOptions::show_commands_and_registries_debug_windows())
         {
             imgui_commands_and_registries_debug_windows();
@@ -312,9 +310,7 @@ void App::imgui_windows()
         Cool::DebugOptions::texture_library_debug_view([&] {
             Cool::TextureLibrary::instance().imgui_debug_view();
         });
-#if DEBUG
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
-#endif
         DebugOptions::test_shaders_compilation__window([&]() {
             if (ImGui::Button("Compile everything"))
             {
@@ -329,21 +325,17 @@ void App::imgui_windows()
             }
         });
 
-#if DEBUG
         Cool::DebugOptions::test_message_console__window([]() {
             static auto test_message_console = Cool::TestMessageConsole{};
             test_message_console.imgui(
                 Cool::Log::ToUser::console()
             );
         });
-#endif
 
-#if DEBUG
         Cool::DebugOptions::test_presets__window([]() {
             static auto test_presets = TestPresets{};
             test_presets.imgui();
         });
-#endif
 
         Cool::DebugOptions::color_themes_advanced_config_window([&]() {
             _color_themes.imgui_advanced_config();
