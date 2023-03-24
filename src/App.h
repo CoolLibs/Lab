@@ -84,7 +84,7 @@ private:
     Cool::Polaroid polaroid();
 
     void preview_menu();
-    void windows_menu();
+    // void windows_menu();
     void export_menu();
     void settings_menu();
     void debug_menu();

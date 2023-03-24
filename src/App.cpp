@@ -363,17 +363,17 @@ void App::preview_menu()
     }
 }
 
-void App::windows_menu()
-{
-    if (ImGui::BeginMenu("Windows"))
-    {
-        for (auto& view : _views)
-        {
-            view.view.imgui_open_close_checkbox();
-        }
-        ImGui::EndMenu();
-    }
-}
+// void App::windows_menu()
+// {
+//     if (ImGui::BeginMenu("Windows"))
+//     {
+//         for (auto& view : _views)
+//         {
+//             view.view.imgui_open_close_checkbox();
+//         }
+//         ImGui::EndMenu();
+//     }
+// }
 
 void App::export_menu()
 {
@@ -430,7 +430,7 @@ void App::debug_menu()
 void App::imgui_menus()
 {
     preview_menu();
-    windows_menu();
+    // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
     settings_menu();
     about_menu();
