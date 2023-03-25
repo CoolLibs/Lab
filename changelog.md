@@ -7,9 +7,10 @@
 
 ## 🐣beta-3 WIP
 
-- Improved color theme.
-- Added Settings to change your color theme or create your own.
+- 💄 Improved color theme.
+- 💄 Added Settings to change your color theme or create your own.
 - 💄 Moved "About" and "Debug" menus to the right of the menu bar.
+- 🐛 Fixed the camera controls when using a fixed aspect ratio or fixed number of pixels.
 
 ## 🐣beta-2
 
