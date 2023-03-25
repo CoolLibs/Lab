@@ -343,9 +343,7 @@ void App::imgui_windows()
         });
 
         DebugOptions::imnodes_color_theme_window([&]() {
-            ImGui::Begin("Nodes Style");
             _imnodes_style.widget();
-            ImGui::End();
         });
     }
 }
