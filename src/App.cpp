@@ -15,6 +15,7 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -339,6 +340,12 @@ void App::imgui_windows()
 
         Cool::DebugOptions::color_themes_advanced_config_window([&]() {
             _color_themes.imgui_advanced_config();
+        });
+
+        DebugOptions::imnodes_color_theme_window([]() {
+            ImGui::Begin("Nodes Style");
+            _imnodes_style.widget();
+            ImGui::End();
         });
     }
 }

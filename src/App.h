@@ -9,6 +9,7 @@
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
+#include <Cool/Nodes/ImNodes_StyleEditor.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderableViewManager.h>
@@ -120,6 +121,7 @@ private:
     std::unique_ptr<Module_Nodes>  _nodes_module;
     CommandLogger                  _command_logger{};
     bool                           _is_first_frame{true};
+    Cool::ImNodes_StyleEditor      _imnodes_style{};
 
 private:
     // Serialization
@@ -135,7 +137,8 @@ private:
             cereal::make_nvp("Preview Constraint", _preview_constraint),
             cereal::make_nvp("Camera Manager", _camera_manager),
             cereal::make_nvp("Camera 2D", _camera2D),
-            cereal::make_nvp("Exporter (Image and Video)", _exporter)
+            cereal::make_nvp("Exporter (Image and Video)", _exporter),
+            cereal::make_nvp("ImNodes style", _imnodes_style)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
