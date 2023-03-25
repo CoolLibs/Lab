@@ -425,6 +425,13 @@ void App::imgui_menus()
     // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
     settings_menu();
+
+    ImGui::SetCursorPosX( // HACK while waiting for ImGui to support right-to-left layout. See issue https://github.com/ocornut/imgui/issues/5875
+        ImGui::GetWindowSize().x
+        - ImGui::CalcTextSize("AboutDebug").x
+        - 3.f * ImGui::GetStyle().ItemSpacing.x
+        - ImGui::GetStyle().WindowPadding.x
+    );
     about_menu();
     debug_menu();
 }

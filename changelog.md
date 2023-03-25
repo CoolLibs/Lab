@@ -7,6 +7,10 @@
 
 ## 🐣beta-3 WIP
 
+- Improved color theme.
+- Added Settings to change your color theme or create your own.
+- 💄 Moved "About" and "Debug" menus to the right of the menu bar.
+
 ## 🐣beta-2
 
 - Fix "Reserved built-in name" error on some GPUs
