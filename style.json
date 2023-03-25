@@ -1,0 +1,89 @@
+{
+    "value0": {
+        "Alpha": 1.0,
+        "DisabledAlpha": 0.6000000238418579,
+        "WindowPadding": {
+            "x": 8.0,
+            "y": 8.0
+        },
+        "WindowRounding": 0.0,
+        "WindowBorderSize": 1.0,
+        "WindowMinSize": {
+            "x": 32.0,
+            "y": 32.0
+        },
+        "WindowTitleAlign": {
+            "x": 0.0,
+            "y": 0.5
+        },
+        "WindowMenuButtonPosition": 1,
+        "ChildRounding": 0.0,
+        "ChildBorderSize": 1.0,
+        "PopupRounding": 0.0,
+        "PopupBorderSize": 1.0,
+        "FramePadding": {
+            "x": 4.0,
+            "y": 3.0
+        },
+        "FrameRounding": 0.0,
+        "FrameBorderSize": 1.0,
+        "ItemSpacing": {
+            "x": 8.0,
+            "y": 4.0
+        },
+        "ItemInnerSpacing": {
+            "x": 4.0,
+            "y": 4.0
+        },
+        "CellPadding": {
+            "x": 4.0,
+            "y": 2.0
+        },
+        "TouchExtraPadding": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "IndentSpacing": 21.0,
+        "ColumnsMinSpacing": 6.0,
+        "ScrollbarSize": 14.0,
+        "ScrollbarRounding": 9.0,
+        "GrabMinSize": 12.0,
+        "GrabRounding": 0.0,
+        "LogSliderDeadzone": 4.0,
+        "TabRounding": 4.0,
+        "TabBorderSize": 0.0,
+        "TabMinWidthForCloseButton": 0.0,
+        "ColorButtonPosition": 1,
+        "ButtonTextAlign": {
+            "x": 0.5,
+            "y": 0.5
+        },
+        "SelectableTextAlign": {
+            "x": 0.0,
+            "y": 0.0
+        },
+        "SeparatorTextBorderSize": 3.0,
+        "SeparatorTextAlign": {
+            "x": 0.0,
+            "y": 0.5
+        },
+        "SeparatorTextPadding": {
+            "x": 20.0,
+            "y": 3.0
+        },
+        "DisplayWindowPadding": {
+            "x": 19.0,
+            "y": 19.0
+        },
+        "DisplaySafeAreaPadding": {
+            "x": 3.0,
+            "y": 3.0
+        },
+        "MouseCursorScale": 1.0,
+        "AntiAliasedLines": true,
+        "AntiAliasedLinesUseTex": true,
+        "AntiAliasedFill": true,
+        "CurveTessellationTol": 1.25,
+        "CircleTessellationMaxError": 0.30000001192092898
+    }
+}

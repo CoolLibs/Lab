@@ -19,6 +19,7 @@
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/ImGui/ColorThemes.h"
+#include "Cool/ImGui/StyleEditor.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
@@ -122,6 +123,7 @@ private:
     CommandLogger                  _command_logger{};
     bool                           _is_first_frame{true};
     Cool::ImNodes_StyleEditor      _imnodes_style{};
+    Cool::StyleEditor              _style{};
 
 private:
     // Serialization
