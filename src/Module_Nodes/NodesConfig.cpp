@@ -1,5 +1,6 @@
 #include "NodesConfig.h"
 #include <Cool/Dependencies/requires_shader_code_generation.h>
+#include <Cool/ImGui/ImGuiExtras.h>
 #include <algorithm>
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -93,7 +94,7 @@ void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
     { // Main node selector
         const bool was_main = id == _main_node_id;
         bool       is_main  = was_main;
-        if (ImGui::Checkbox("Main node", &is_main))
+        if (ImGuiExtras::toggle("Main node", &is_main))
         {
             if (is_main && !was_main)
             {
