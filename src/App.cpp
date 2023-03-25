@@ -342,7 +342,7 @@ void App::imgui_windows()
             _color_themes.imgui_advanced_config();
         });
 
-        DebugOptions::imnodes_color_theme_window([]() {
+        DebugOptions::imnodes_color_theme_window([&]() {
             ImGui::Begin("Nodes Style");
             _imnodes_style.widget();
             ImGui::End();
