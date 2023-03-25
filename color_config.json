@@ -11,15 +11,16 @@
                 "Brightness groups": [
                     {
                         "IDs": [
+                            5,
                             21,
                             24,
                             13,
                             30,
                             15,
+                            28,
                             35,
                             37,
-                            47,
-                            55
+                            47
                         ],
                         "Brightness change": 0.0,
                         "Opacity": 1.0
@@ -29,7 +30,6 @@
                             22,
                             25,
                             16,
-                            28,
                             34
                         ],
                         "Brightness change": 0.10499999672174454,
@@ -81,7 +81,6 @@
                 "Brightness groups": [
                     {
                         "IDs": [
-                            5,
                             3,
                             4,
                             46,
@@ -105,7 +104,7 @@
                         "IDs": [
                             54
                         ],
-                        "Brightness change": 0.0,
+                        "Brightness change": -0.6480000019073486,
                         "Opacity": 0.9089999794960022
                     }
                 ]
@@ -142,7 +141,8 @@
                         "IDs": [
                             43,
                             41,
-                            20
+                            20,
+                            55
                         ],
                         "Brightness change": 0.2809999883174896,
                         "Opacity": 1.0
@@ -168,8 +168,8 @@
                         "IDs": [
                             1
                         ],
-                        "Brightness change": 1.0,
-                        "Opacity": 0.40700000524520876
+                        "Brightness change": -0.6859999895095825,
+                        "Opacity": 1.0
                     }
                 ]
             }
