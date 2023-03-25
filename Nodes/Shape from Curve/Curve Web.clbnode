@@ -21,8 +21,8 @@ SignedDistance main(UV uv)
     {
         float t = float(i) / float(`Number of segments`); // 0 to 1
 
-        vec2  pos1    = `Curve`(t - `Segments offset` * 0.5);
-        vec2  pos2    = `Curve`(t + `Segments offset` * 0.5);
+        vec2  pos1    = `Curve`(t);
+        vec2  pos2    = `Curve`(t + `Segments offset`);
         float segment = sdSegment(uv, pos1, pos2, `Thickness`);
         dist_to_curve = min(dist_to_curve, segment);
     }
