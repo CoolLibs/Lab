@@ -38,8 +38,8 @@ App::App(Cool::WindowManager& windows)
         _nodes_view.view.mouse_events(),
         _camera2D.value(),
         [this]() { trigger_rerender(); },
-        [this]() { return static_cast<float>(_nodes_view.view.size()->height()); },
-        [this]() { return img::SizeU::aspect_ratio(*_nodes_view.view.size()); }
+        [this]() { auto const sz =_nodes_view.view.size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
+        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
