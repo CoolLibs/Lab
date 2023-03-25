@@ -15,9 +15,6 @@ jobs:
     - uses: actions/checkout@v3
       with:
           submodules: recursive
-          
-    - name: Test1
-      run: ls
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}\build -T ClangCL
@@ -31,17 +28,11 @@ jobs:
         files: bin\Release\
         dest: CoolLab-Windows.zip
 
-    - name: Test2
-      run: ls
-    - name: Test3
-      run: |
-            cd ${{github.workspace}}/bin
-            ls
-
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         files: CoolLab-Windows.zip
+        
 #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
     name: Linux Clang Release
