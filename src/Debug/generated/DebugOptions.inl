@@ -202,57 +202,57 @@ private:
 
         if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Framerate window", &instance().show_framerate_window);
+            Cool::ImGuiExtras::toggle("Framerate window", &instance().show_framerate_window);
         }
 
         if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("ImGui Demo window", &instance().show_imgui_demo_window);
+            Cool::ImGuiExtras::toggle("ImGui Demo window", &instance().show_imgui_demo_window);
         }
 
         if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
+            Cool::ImGuiExtras::toggle("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
         }
 
         if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Show nodes and links registries", &instance().show_nodes_and_links_registries);
+            Cool::ImGuiExtras::toggle("Show nodes and links registries", &instance().show_nodes_and_links_registries);
         }
 
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Log when rendering", &instance().log_when_rendering);
+            Cool::ImGuiExtras::toggle("Log when rendering", &instance().log_when_rendering);
         }
 
         if (wafl::similarity_match({filter, "Log when compiling nodes"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Log when compiling nodes", &instance().log_when_compiling_nodes);
+            Cool::ImGuiExtras::toggle("Log when compiling nodes", &instance().log_when_compiling_nodes);
         }
 
         if (wafl::similarity_match({filter, "Log when parsing node definition"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Log when parsing node definition", &instance().log_when_parsing_node_definition);
+            Cool::ImGuiExtras::toggle("Log when parsing node definition", &instance().log_when_parsing_node_definition);
         }
 
         if (wafl::similarity_match({filter, "Show generated shader code"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Show generated shader code", &instance().show_generated_shader_code);
+            Cool::ImGuiExtras::toggle("Show generated shader code", &instance().show_generated_shader_code);
         }
 
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
+            Cool::ImGuiExtras::toggle("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
         }
 
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window);
+            Cool::ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window);
         }
 
         if (wafl::similarity_match({filter, "Color Themes: Nodes"}) >= wafl::Matches::Strongly)
         {
-            ImGuiExtras::toggle("Color Themes: Nodes", &instance().imnodes_color_theme_window);
+            Cool::ImGuiExtras::toggle("Color Themes: Nodes", &instance().imnodes_color_theme_window);
         }
     }
 
