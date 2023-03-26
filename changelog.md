@@ -8,9 +8,10 @@
 ## 🐣beta-3 WIP
 
 - 💄 Improved color theme.
-- 💄 Added Settings to change your color theme or create your own.
+- 💄 Added Settings to change your color theme.
 - 💄 Moved "About" and "Debug" menus to the right of the menu bar.
 - 🐛 Fixed the camera controls when using a fixed aspect ratio or fixed number of pixels.
+- 👩‍💻 Node files now support the `#define` macro, just like any glsl file.
 
 ## 🐣beta-2
 

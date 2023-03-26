@@ -523,6 +523,29 @@ static void find_includes(std::string const& text, NodeDefinition_Data& res)
     }
 }
 
+static auto find_all_defines(std::string const& text) -> std::vector<Cool::HashDefine>
+{
+    std::vector<Cool::HashDefine> res{};
+
+    std::istringstream stream{text};
+    std::string        line;
+    while (std::getline(stream, line))
+    {
+        auto const maybe_define = Cool::RegExp::hash_define(line);
+        if (maybe_define)
+            res.push_back(*maybe_define);
+    }
+
+    return res;
+}
+
+static void replace_defines_with_their_values(std::string& text)
+{
+    auto const defines = find_all_defines(text);
+    for (Cool::HashDefine const& define : defines)
+        Cool::String::replace_all(text, define.name, fmt::format("{} /*{}*/", define.value, define.name));
+}
+
 auto parse_node_definition(std::filesystem::path filepath, std::string const& text)
     -> tl::expected<NodeDefinition, std::string>
 {
@@ -531,7 +554,8 @@ auto parse_node_definition(std::filesystem::path filepath, std::string const& te
 
     NodeDefinition_Data res{};
 
-    auto const text_without_comments = Cool::String::remove_comments(text);
+    auto text_without_comments = Cool::String::remove_comments(text);
+    replace_defines_with_their_values(text_without_comments);
 
     find_includes(text_without_comments, res);
 

@@ -1,17 +1,21 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
+#define MAX_STEPS 100
+#define MAX_DIST  100.
+#define SURF_DIST .001
+
 INPUT vec3->SignedDistance `Shape 3D`;
 
 float RayMarch(vec3 ro, vec3 rd)
 {
     float dO = 0.;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < MAX_STEPS; i++)
     {
         vec3  p  = ro + rd * dO;
         float dS = `Shape 3D`(p);
         dO += dS;
-        if (dO > 100. || abs(dS) < .001)
+        if (dO > MAX_DIST || abs(dS) < SURF_DIST)
             break;
     }
 
@@ -34,7 +38,7 @@ LinearRGB_StraightA main(UV uv)
     float d = RayMarch(ro, rd);
 
     vec3 col = vec3(0.);
-    if (d < 100.)
+    if (d < MAX_DIST)
     {
         vec3 p = ro + rd * d;
         col    = GetNormal(p) * 0.5 + 0.5;
