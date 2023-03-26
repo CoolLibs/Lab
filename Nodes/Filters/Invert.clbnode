@@ -1,4 +1,0 @@
-sRGB main(sRGB color)
-{
-    return 1 - color;
-}

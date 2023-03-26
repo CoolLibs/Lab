@@ -222,7 +222,7 @@
 //     bool has_changed = false;
 //     ImGui::TextUnformatted(render_effect.base.name.c_str());
 //     ImGui::PushID(&render_effect);
-//     has_changed |= ImGui::Checkbox("Enabled", &render_effect.is_active);
+//     has_changed |= ImGuiExtras::toggle("Enabled", &render_effect.is_active);
 //     ImGui::PopID();
 //     if (render_effect.is_active)
 //     {

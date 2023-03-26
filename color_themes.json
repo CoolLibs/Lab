@@ -1,0 +1,174 @@
+{
+    "Themes Manager": {
+        "Current Theme": {
+            "Name": "bob_v1",
+            "Colors": [
+                {
+                    "key": "Accent Color",
+                    "value": {
+                        "value0": 0.3019607961177826,
+                        "value1": 0.4470588266849518,
+                        "value2": 0.8901960849761963
+                    }
+                },
+                {
+                    "key": "Medium Color",
+                    "value": {
+                        "value0": 0.10980392247438431,
+                        "value1": 0.125490203499794,
+                        "value2": 0.14509804546833039
+                    }
+                },
+                {
+                    "key": "Bright Color",
+                    "value": {
+                        "value0": 0.19607843458652497,
+                        "value1": 0.2235294133424759,
+                        "value2": 0.26274511218070986
+                    }
+                },
+                {
+                    "key": "Background",
+                    "value": {
+                        "value0": 0.06305266916751862,
+                        "value1": 0.06988765299320221,
+                        "value2": 0.07843136787414551
+                    }
+                },
+                {
+                    "key": "Text",
+                    "value": {
+                        "value0": 0.8941176533699036,
+                        "value1": 0.9137254953384399,
+                        "value2": 0.9098039269447327
+                    }
+                }
+            ],
+            "Is Dark Mode": true
+        },
+        "Themes": [
+            {
+                "Name": "Lavande",
+                "Colors": [
+                    {
+                        "key": "Text",
+                        "value": {
+                            "value0": 1.0,
+                            "value1": 1.0,
+                            "value2": 1.0
+                        }
+                    },
+                    {
+                        "key": "Accent Color",
+                        "value": {
+                            "value0": 0.1762543022632599,
+                            "value1": 0.7990195751190186,
+                            "value2": 0.5792199969291687
+                        }
+                    },
+                    {
+                        "key": "Background",
+                        "value": {
+                            "value0": 0.07352942228317261,
+                            "value1": 0.07352942228317261,
+                            "value2": 0.07352942228317261
+                        }
+                    },
+                    {
+                        "key": "Main Color",
+                        "value": {
+                            "value0": 0.12625227868556977,
+                            "value1": 0.013456366956233979,
+                            "value2": 0.19607841968536378
+                        }
+                    }
+                ],
+                "Is Dark Mode": true
+            },
+            {
+                "Name": "Dark",
+                "Colors": [
+                    {
+                        "key": "Text",
+                        "value": {
+                            "value0": 1.0,
+                            "value1": 1.0,
+                            "value2": 1.0
+                        }
+                    },
+                    {
+                        "key": "Accent Color",
+                        "value": {
+                            "value0": 1.0,
+                            "value1": 0.6176470518112183,
+                            "value2": 0.0
+                        }
+                    },
+                    {
+                        "key": "Background",
+                        "value": {
+                            "value0": 0.003921568859368563,
+                            "value1": 0.003921568859368563,
+                            "value2": 0.003921568859368563
+                        }
+                    },
+                    {
+                        "key": "Main Color",
+                        "value": {
+                            "value0": 0.16176468133926392,
+                            "value1": 0.16176468133926392,
+                            "value2": 0.16176468133926392
+                        }
+                    }
+                ],
+                "Is Dark Mode": true
+            },
+            {
+                "Name": "bob_v1",
+                "Colors": [
+                    {
+                        "key": "Bright Color",
+                        "value": {
+                            "value0": 0.19607843458652497,
+                            "value1": 0.2235294133424759,
+                            "value2": 0.26274511218070986
+                        }
+                    },
+                    {
+                        "key": "Medium Color",
+                        "value": {
+                            "value0": 0.10980392247438431,
+                            "value1": 0.125490203499794,
+                            "value2": 0.14509804546833039
+                        }
+                    },
+                    {
+                        "key": "Accent Color",
+                        "value": {
+                            "value0": 0.3019607961177826,
+                            "value1": 0.4470588266849518,
+                            "value2": 0.8901960849761963
+                        }
+                    },
+                    {
+                        "key": "Background",
+                        "value": {
+                            "value0": 0.06305266916751862,
+                            "value1": 0.06988765299320221,
+                            "value2": 0.07843136787414551
+                        }
+                    },
+                    {
+                        "key": "Text",
+                        "value": {
+                            "value0": 0.8941176533699036,
+                            "value1": 0.9137254953384399,
+                            "value2": 0.9098039269447327
+                        }
+                    }
+                ],
+                "Is Dark Mode": true
+            }
+        ]
+    }
+}

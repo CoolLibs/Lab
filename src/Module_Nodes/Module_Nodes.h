@@ -15,7 +15,7 @@ namespace Lab {
 class Module_Nodes : public Module {
 public:
     Module_Nodes() = default;
-    explicit Module_Nodes(Cool::DirtyFlagFactory_Ref);
+    explicit Module_Nodes(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref) const override;
@@ -34,14 +34,15 @@ private:
     auto nodes_config(Ui_Ref ui) const -> NodesConfig;
 
 private:
-    mutable std::string                    _shader_code{};
-    FullscreenShader                       _shader{};
+    mutable std::string                                              _shader_code{};
+    FullscreenShader                                                 _shader{};
     mutable Cool::NodesEditor<NodesConfig>                           _nodes_editor{};
     mutable NodesLibrary                                             _nodes_library{};
     mutable /*TODO(JF) remove the mutable*/ Cool::NodesFolderWatcher _nodes_folder_watcher{Cool::Path::root() / "Nodes", ".clbnode"};
-    mutable Cool::NodeId                   _main_node_id{};
-    Cool::DirtyFlag                        _regenerate_code_flag;
-    Cool::MessageSender                    _shader_compilation_error{};
+    mutable Cool::NodeId                                             _main_node_id{};
+    Cool::DirtyFlag                                                  _regenerate_code_flag;
+    Cool::MessageSender                                              _shader_compilation_error{};
+    Cool::Input<Cool::Camera>                                        _camera_input;
 
 private:
     // Serialization
@@ -54,7 +55,8 @@ private:
             cereal::make_nvp("Node Editor", _nodes_editor),
             cereal::make_nvp("Main Node ID", _main_node_id),
             cereal::make_nvp("Dirty Flag: Regenerate Code", _regenerate_code_flag),
-            cereal::make_nvp("Shader", _shader)
+            cereal::make_nvp("Shader", _shader),
+            cereal::make_nvp("Camera Input", _camera_input)
         );
     }
 };

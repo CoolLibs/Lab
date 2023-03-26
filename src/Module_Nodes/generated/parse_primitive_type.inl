@@ -4,6 +4,10 @@
  * Instead, go to "generator.py" and edit the "parse_primitive_type" function there.
  * -----------------------------------------------------------------------------
  */
+if (str == "bool")
+{
+    return PrimitiveType::Bool;
+}
 if (str == "int")
 {
     return PrimitiveType::Int;
@@ -23,6 +27,18 @@ if (str == "vec3")
 if (str == "vec4")
 {
     return PrimitiveType::Vec4;
+}
+if (str == "mat2")
+{
+    return PrimitiveType::Mat2;
+}
+if (str == "mat3")
+{
+    return PrimitiveType::Mat3;
+}
+if (str == "mat4")
+{
+    return PrimitiveType::Mat4;
 }
 if (str == "UV")
 {

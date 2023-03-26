@@ -6,4 +6,4 @@ You can also create your own helper files and `#include` them in your nodes. Thi
 #include "_ROOT_FOLDER_/myfile.glsl"
 ```
 
-NB: \_ROOT\_FOLDER\_ is a special keyword that refers to the CoolLab folder (e.g. the folder containing the CoolLab executable).
+NB: `\_ROOT\_FOLDER\_` is a special keyword that refers to the CoolLab folder (e.g. the folder containing the CoolLab executable).

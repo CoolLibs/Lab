@@ -22,16 +22,17 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
 
-    - name: Zip file
-      run: |
-            cd ${{github.workspace}}\bin\
-            mv Release CoolLab-Windows
-            7z a CoolLab-Windows.zip CoolLab-Windows
+    - name: Zip files
+      uses: vimtor/action-zip@v1
+      with:
+        files: bin\Release\
+        dest: CoolLab-Windows.zip
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{github.workspace}}\bin\CoolLab-Windows.zip
+        files: CoolLab-Windows.zip
+        
 #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
     name: Linux Clang Release
@@ -53,7 +54,7 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
 
-    - name: Zip building directory
+    - name: Zip files
       run: |
             cd ${{github.workspace}}/bin
             mv Release CoolLab-Linux
@@ -79,7 +80,7 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
       
-    - name: Zip building directory
+    - name: Zip files
       run: |
             cd ${{github.workspace}}/bin
             mv Release CoolLab-MacOS

@@ -4,11 +4,15 @@
  * Instead, go to "generator.py" and edit the "glsl_type_as_string_cases" function there.
  * -----------------------------------------------------------------------------
  */
+case PrimitiveType::Bool: return "/*Bool*/ bool";
 case PrimitiveType::Int: return "/*Int*/ int";
 case PrimitiveType::Float: return "/*Float*/ float";
 case PrimitiveType::Vec2: return "/*Vec2*/ vec2";
 case PrimitiveType::Vec3: return "/*Vec3*/ vec3";
 case PrimitiveType::Vec4: return "/*Vec4*/ vec4";
+case PrimitiveType::Mat2: return "/*Mat2*/ mat2";
+case PrimitiveType::Mat3: return "/*Mat3*/ mat3";
+case PrimitiveType::Mat4: return "/*Mat4*/ mat4";
 case PrimitiveType::UV: return "/*UV*/ vec2";
 case PrimitiveType::SignedDistance: return "/*SignedDistance*/ float";
 case PrimitiveType::Angle: return "/*Angle*/ float";

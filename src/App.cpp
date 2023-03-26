@@ -3,19 +3,19 @@
 #include <Cool/DebugOptions/TestPresets.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
-#include <Cool/Parameter/ParametersHistory.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
 #include <cmd/imgui.hpp>
-#include <serv/serv.hpp>
+// #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -31,7 +31,7 @@ App::App(Cool::WindowManager& windows)
     , _main_window{windows.main_window()}
     , _nodes_view{_views.make_view(ICON_FA_IMAGE " View")}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
-    , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory())}
+    , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
@@ -39,8 +39,8 @@ App::App(Cool::WindowManager& windows)
         _nodes_view.view.mouse_events(),
         _camera2D.value(),
         [this]() { trigger_rerender(); },
-        [this]() { return static_cast<float>(_nodes_view.render_target.current_size().height()); },
-        [this]() { return img::SizeU::aspect_ratio(_nodes_view.render_target.current_size()); }
+        [this]() { auto const sz =_nodes_view.view.size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
+        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
@@ -296,11 +296,9 @@ void App::imgui_windows()
             ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
             _main_window.imgui_cap_framerate();
         });
-#if DEBUG
         if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
             ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
                                                                             // to learn more about Dear ImGui!).
-#endif
         if (DebugOptions::show_commands_and_registries_debug_windows())
         {
             imgui_commands_and_registries_debug_windows();
@@ -313,9 +311,7 @@ void App::imgui_windows()
         Cool::DebugOptions::texture_library_debug_view([&] {
             Cool::TextureLibrary::instance().imgui_debug_view();
         });
-#if DEBUG
         DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
-#endif
         DebugOptions::test_shaders_compilation__window([&]() {
             if (ImGui::Button("Compile everything"))
             {
@@ -330,21 +326,25 @@ void App::imgui_windows()
             }
         });
 
-#if DEBUG
         Cool::DebugOptions::test_message_console__window([]() {
             static auto test_message_console = Cool::TestMessageConsole{};
             test_message_console.imgui(
                 Cool::Log::ToUser::console()
             );
         });
-#endif
 
-#if DEBUG
         Cool::DebugOptions::test_presets__window([]() {
             static auto test_presets = TestPresets{};
             test_presets.imgui();
         });
-#endif
+
+        Cool::DebugOptions::color_themes_advanced_config_window([&]() {
+            _color_themes.imgui_advanced_config();
+        });
+
+        DebugOptions::imnodes_color_theme_window([&]() {
+            _imnodes_style.widget();
+        });
     }
 }
 
@@ -360,17 +360,17 @@ void App::preview_menu()
     }
 }
 
-void App::windows_menu()
-{
-    if (ImGui::BeginMenu("Windows"))
-    {
-        for (auto& view : _views)
-        {
-            view.view.imgui_open_close_checkbox();
-        }
-        ImGui::EndMenu();
-    }
-}
+// void App::windows_menu()
+// {
+//     if (ImGui::BeginMenu("Windows"))
+//     {
+//         for (auto& view : _views)
+//         {
+//             view.view.imgui_open_close_checkbox();
+//         }
+//         ImGui::EndMenu();
+//     }
+// }
 
 void App::export_menu()
 {
@@ -391,6 +391,7 @@ void App::settings_menu()
         Cool::user_settings().imgui();
         ImGui::Separator();
 
+        ImGui::SeparatorText("History");
         _history.imgui_max_size();
         ImGui::Separator();
         ImGui::Separator();
@@ -401,7 +402,8 @@ void App::settings_menu()
         ImGui::Separator();
         ImGui::Separator();
 
-        _theme_manager.imgui();
+        ImGui::SeparatorText("Color Theme");
+        _color_themes.imgui();
 
         ImGui::EndMenu();
     }
@@ -425,9 +427,16 @@ void App::debug_menu()
 void App::imgui_menus()
 {
     preview_menu();
-    windows_menu();
+    // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
     settings_menu();
+
+    ImGui::SetCursorPosX( // HACK while waiting for ImGui to support right-to-left layout. See issue https://github.com/ocornut/imgui/issues/5875
+        ImGui::GetWindowSize().x
+        - ImGui::CalcTextSize("AboutDebug").x
+        - 3.f * ImGui::GetStyle().ItemSpacing.x
+        - ImGui::GetStyle().WindowPadding.x
+    );
     about_menu();
     debug_menu();
 }
@@ -451,7 +460,6 @@ void App::check_inputs__history()
     if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z))
     {
         _history.move_backward(exec);
-        Cool::ParametersHistory::get().move_backward();
     }
 
     // Redo
@@ -459,7 +467,6 @@ void App::check_inputs__history()
         || (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
     {
         _history.move_forward(exec);
-        Cool::ParametersHistory::get().move_forward();
     }
 }
 

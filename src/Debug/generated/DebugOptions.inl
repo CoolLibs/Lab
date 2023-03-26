@@ -30,16 +30,8 @@ public:
             ImGui::End();
         }
     }
-#if DEBUG
-    [[nodiscard]] static auto show_imgui_demo_window() -> bool&
-    {
-        return instance().show_imgui_demo_window;
-    }
-#endif
-    [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool&
-    {
-        return instance().show_commands_and_registries_debug_windows;
-    }
+    [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
+    [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
     [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return instance().show_nodes_and_links_registries; }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
@@ -53,7 +45,6 @@ public:
             ImGui::End();
         }
     }
-#if DEBUG
     static void test_all_variable_widgets__window(std::function<void()> callback)
     {
         if (instance().test_all_variable_widgets__window)
@@ -63,12 +54,20 @@ public:
             ImGui::End();
         }
     }
-#endif
     static void test_shaders_compilation__window(std::function<void()> callback)
     {
         if (instance().test_shaders_compilation__window)
         {
             ImGui::Begin("Test Shaders Compilation", &instance().test_shaders_compilation__window);
+            callback();
+            ImGui::End();
+        }
+    }
+    static void imnodes_color_theme_window(std::function<void()> callback)
+    {
+        if (instance().imnodes_color_theme_window)
+        {
+            ImGui::Begin("Color Themes: Nodes", &instance().imnodes_color_theme_window);
             callback();
             ImGui::End();
         }
@@ -79,19 +78,16 @@ private:
         bool generate_dump_file{false};
         bool copy_info_dump_to_clipboard{false};
         bool show_framerate_window{false};
-#if DEBUG
         bool show_imgui_demo_window{false};
-#endif
         bool show_commands_and_registries_debug_windows{false};
         bool show_nodes_and_links_registries{false};
         bool log_when_rendering{false};
         bool log_when_compiling_nodes{false};
         bool log_when_parsing_node_definition{false};
         bool show_generated_shader_code{false};
-#if DEBUG
         bool test_all_variable_widgets__window{false};
-#endif
         bool test_shaders_compilation__window{false};
+        bool imnodes_color_theme_window{false};
 
     private:
         // Serialization
@@ -110,16 +106,20 @@ private:
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                cereal::make_nvp("Color Themes: Nodes", imnodes_color_theme_window)
 #else
                 cereal::make_nvp("Framerate window", show_framerate_window),
+                cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                cereal::make_nvp("Color Themes: Nodes", imnodes_color_theme_window)
 #endif
 
             );
@@ -128,20 +128,17 @@ private:
 
     static void reset_all()
     {
-        instance().show_framerate_window = false;
-#if DEBUG
-        instance().show_imgui_demo_window = false;
-#endif
+        instance().show_framerate_window                      = false;
+        instance().show_imgui_demo_window                     = false;
         instance().show_commands_and_registries_debug_windows = false;
         instance().show_nodes_and_links_registries            = false;
         instance().log_when_rendering                         = false;
         instance().log_when_compiling_nodes                   = false;
         instance().log_when_parsing_node_definition           = false;
         instance().show_generated_shader_code                 = false;
-#if DEBUG
-        instance().test_all_variable_widgets__window = false;
-#endif
-        instance().test_shaders_compilation__window = false;
+        instance().test_all_variable_widgets__window          = false;
+        instance().test_shaders_compilation__window           = false;
+        instance().imnodes_color_theme_window                 = false;
     }
 
     static void save_to_file()
@@ -205,60 +202,57 @@ private:
 
         if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Framerate window", &instance().show_framerate_window);
+            Cool::ImGuiExtras::toggle("Framerate window", &instance().show_framerate_window);
         }
-
-#if DEBUG
 
         if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("ImGui Demo window", &instance().show_imgui_demo_window);
+            Cool::ImGuiExtras::toggle("ImGui Demo window", &instance().show_imgui_demo_window);
         }
-
-#endif
 
         if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
+            Cool::ImGuiExtras::toggle("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
         }
 
         if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Show nodes and links registries", &instance().show_nodes_and_links_registries);
+            Cool::ImGuiExtras::toggle("Show nodes and links registries", &instance().show_nodes_and_links_registries);
         }
 
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Log when rendering", &instance().log_when_rendering);
+            Cool::ImGuiExtras::toggle("Log when rendering", &instance().log_when_rendering);
         }
 
         if (wafl::similarity_match({filter, "Log when compiling nodes"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Log when compiling nodes", &instance().log_when_compiling_nodes);
+            Cool::ImGuiExtras::toggle("Log when compiling nodes", &instance().log_when_compiling_nodes);
         }
 
         if (wafl::similarity_match({filter, "Log when parsing node definition"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Log when parsing node definition", &instance().log_when_parsing_node_definition);
+            Cool::ImGuiExtras::toggle("Log when parsing node definition", &instance().log_when_parsing_node_definition);
         }
 
         if (wafl::similarity_match({filter, "Show generated shader code"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Show generated shader code", &instance().show_generated_shader_code);
+            Cool::ImGuiExtras::toggle("Show generated shader code", &instance().show_generated_shader_code);
         }
-
-#if DEBUG
 
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
+            Cool::ImGuiExtras::toggle("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
         }
-
-#endif
 
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
-            ImGui::Checkbox("Test Shaders Compilation", &instance().test_shaders_compilation__window);
+            Cool::ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window);
+        }
+
+        if (wafl::similarity_match({filter, "Color Themes: Nodes"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Color Themes: Nodes", &instance().imnodes_color_theme_window);
         }
     }
 
@@ -282,15 +276,11 @@ private:
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
-#if DEBUG
-
         if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
         {
             instance().show_imgui_demo_window = !instance().show_imgui_demo_window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
-
-#endif
 
         if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
         {
@@ -328,19 +318,21 @@ private:
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
-#if DEBUG
-
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
             instance().test_all_variable_widgets__window = !instance().test_all_variable_widgets__window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
-#endif
-
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
             instance().test_shaders_compilation__window = !instance().test_shaders_compilation__window;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Color Themes: Nodes"}) >= wafl::Matches::Strongly)
+        {
+            instance().imnodes_color_theme_window = !instance().imnodes_color_theme_window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }

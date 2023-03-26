@@ -4,11 +4,15 @@
  * Instead, go to "generator.py" and edit the "string_listing_the_parsed_types" function there.
  * -----------------------------------------------------------------------------
  */
-R"STR(  - int
+R"STR(  - bool
+  - int
   - float
   - vec2
   - vec3
   - vec4
+  - mat2
+  - mat3
+  - mat4
   - UV
   - SignedDistance
   - Angle

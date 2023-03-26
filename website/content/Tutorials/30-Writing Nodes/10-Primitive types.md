@@ -10,10 +10,14 @@ Now that you know how to write a basic node, you might wonder what all the possi
 - Color and alpha. (`CIELAB_PremultipliedA`, `CIELAB_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `HSLuv_PremultipliedA` or `HSLuv_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
 
 And here are all the remaining types, that are seldom used:
+- `bool`
 - `int`
 - `vec2`
 - `vec3`
 - `vec4`
+- `mat2`
+- `mat3`
+- `mat4`
 - `Angle` (`float` under the hood).
 - `Direction2D` (`vec2` under the hood, guaranteed to be of length 1).
 

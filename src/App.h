@@ -9,6 +9,7 @@
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
+#include <Cool/Nodes/ImNodes_StyleEditor.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderableViewManager.h>
@@ -17,6 +18,8 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Cool/ImGui/ColorThemes.h"
+#include "Cool/ImGui/StyleEditor.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
@@ -24,7 +27,6 @@
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Module_Nodes/Module_Nodes.h"
-#include "UI/ThemeManager.h"
 
 namespace Lab {
 
@@ -84,7 +86,7 @@ private:
     Cool::Polaroid polaroid();
 
     void preview_menu();
-    void windows_menu();
+    // void windows_menu();
     void export_menu();
     void settings_menu();
     void debug_menu();
@@ -112,14 +114,16 @@ private:
     Cool::ImageSizeConstraint      _preview_constraint;
     Cool::RenderableViewManager    _views; // Must be before the views because it is used to create them
     Cool::RenderableView&          _nodes_view;
-    Cool::Exporter                _exporter;
-    Cool::DirtyRegistry           _dirty_registry; // Before the modules because it is used to create them
-    History                       _history{};
-    ThemeManager                  _theme_manager{};
-    float                         _last_time{0.f};
+    Cool::Exporter                 _exporter;
+    Cool::DirtyRegistry            _dirty_registry; // Before the modules because it is used to create them
+    History                        _history{};
+    Cool::ColorThemes              _color_themes{};
+    float                          _last_time{0.f};
     std::unique_ptr<Module_Nodes>  _nodes_module;
-    CommandLogger _command_logger{};
-    bool          _is_first_frame{true};
+    CommandLogger                  _command_logger{};
+    bool                           _is_first_frame{true};
+    Cool::ImNodes_StyleEditor      _imnodes_style{};
+    Cool::StyleEditor              _style{};
 
 private:
     // Serialization
@@ -135,7 +139,8 @@ private:
             cereal::make_nvp("Preview Constraint", _preview_constraint),
             cereal::make_nvp("Camera Manager", _camera_manager),
             cereal::make_nvp("Camera 2D", _camera2D),
-            cereal::make_nvp("Exporter (Image and Video)", _exporter)
+            cereal::make_nvp("Exporter (Image and Video)", _exporter),
+            cereal::make_nvp("ImNodes style", _imnodes_style)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};

@@ -4,4 +4,4 @@
  * Instead, go to "generator.py" and edit the "template_node_type_dropdown_string" function there.
  * -----------------------------------------------------------------------------
  */
-" Int\0 Float\0 Vec2\0 Vec3\0 Vec4\0"
+" Int\0 Float\0 2D Vector\0 3D Vector\0 4D Vector\0"

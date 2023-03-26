@@ -5,6 +5,9 @@
  * -----------------------------------------------------------------------------
  */
 
+if (std::holds_alternative<Cool::Input<bool>>(input))
+    return PrimitiveType::Bool;
+
 if (std::holds_alternative<Cool::Input<int>>(input))
     return PrimitiveType::Int;
 
@@ -19,6 +22,15 @@ if (std::holds_alternative<Cool::Input<glm::vec3>>(input))
 
 if (std::holds_alternative<Cool::Input<glm::vec4>>(input))
     return PrimitiveType::Vec4;
+
+if (std::holds_alternative<Cool::Input<glm::mat2>>(input))
+    return PrimitiveType::Mat2;
+
+if (std::holds_alternative<Cool::Input<glm::mat3>>(input))
+    return PrimitiveType::Mat3;
+
+if (std::holds_alternative<Cool::Input<glm::mat4>>(input))
+    return PrimitiveType::Mat4;
 
 if (std::holds_alternative<Cool::Input<Cool::Point2D>>(input))
     return PrimitiveType::UV;

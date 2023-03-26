@@ -1,0 +1,179 @@
+{
+    "Config": {
+        "Categories": [
+            {
+                "Name": "Bright Color",
+                "Color": {
+                    "value0": 0.19607843458652497,
+                    "value1": 0.2235294133424759,
+                    "value2": 0.26274511218070986
+                },
+                "Brightness groups": [
+                    {
+                        "IDs": [
+                            5,
+                            21,
+                            24,
+                            13,
+                            30,
+                            15,
+                            28,
+                            35,
+                            37,
+                            47
+                        ],
+                        "Brightness change": 0.0,
+                        "Opacity": 1.0
+                    },
+                    {
+                        "IDs": [
+                            22,
+                            25,
+                            16,
+                            34
+                        ],
+                        "Brightness change": 0.10499999672174454,
+                        "Opacity": 1.0
+                    }
+                ]
+            },
+            {
+                "Name": "Medium Color",
+                "Color": {
+                    "value0": 0.10980392247438431,
+                    "value1": 0.125490203499794,
+                    "value2": 0.14509804546833039
+                },
+                "Brightness groups": [
+                    {
+                        "IDs": [
+                            7,
+                            14,
+                            27,
+                            33,
+                            36,
+                            44,
+                            48,
+                            10,
+                            11,
+                            12
+                        ],
+                        "Brightness change": 0.0,
+                        "Opacity": 1.0
+                    },
+                    {
+                        "IDs": [
+                            9,
+                            8
+                        ],
+                        "Brightness change": -0.25,
+                        "Opacity": 1.0
+                    }
+                ]
+            },
+            {
+                "Name": "Background",
+                "Color": {
+                    "value0": 0.06305266916751862,
+                    "value1": 0.06988765299320221,
+                    "value2": 0.07843136787414551
+                },
+                "Brightness groups": [
+                    {
+                        "IDs": [
+                            3,
+                            4,
+                            46,
+                            45,
+                            2
+                        ],
+                        "Brightness change": 0.0,
+                        "Opacity": 1.0
+                    },
+                    {
+                        "IDs": [
+                            6,
+                            39,
+                            53,
+                            52
+                        ],
+                        "Brightness change": 0.0,
+                        "Opacity": 1.0
+                    },
+                    {
+                        "IDs": [
+                            54
+                        ],
+                        "Brightness change": -0.6480000019073486,
+                        "Opacity": 0.9089999794960022
+                    }
+                ]
+            },
+            {
+                "Name": "Accent Color",
+                "Color": {
+                    "value0": 0.3019607961177826,
+                    "value1": 0.4470588266849518,
+                    "value2": 0.8901960849761963
+                },
+                "Brightness groups": [
+                    {
+                        "IDs": [
+                            23,
+                            18,
+                            38,
+                            50,
+                            26,
+                            51,
+                            42,
+                            40,
+                            32,
+                            31,
+                            17,
+                            29,
+                            19,
+                            49
+                        ],
+                        "Brightness change": 0.0,
+                        "Opacity": 1.0
+                    },
+                    {
+                        "IDs": [
+                            43,
+                            41,
+                            20,
+                            55
+                        ],
+                        "Brightness change": 0.2809999883174896,
+                        "Opacity": 1.0
+                    }
+                ]
+            },
+            {
+                "Name": "Text",
+                "Color": {
+                    "value0": 0.8941176533699036,
+                    "value1": 0.9137254953384399,
+                    "value2": 0.9098039269447327
+                },
+                "Brightness groups": [
+                    {
+                        "IDs": [
+                            0
+                        ],
+                        "Brightness change": 0.0,
+                        "Opacity": 1.0
+                    },
+                    {
+                        "IDs": [
+                            1
+                        ],
+                        "Brightness change": -0.6859999895095825,
+                        "Opacity": 1.0
+                    }
+                ]
+            }
+        ],
+        "Is Dark Mode": true
+    }
+}

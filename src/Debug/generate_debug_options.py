@@ -39,7 +39,7 @@ def all_debug_options():
         DebugOption(
             name_in_code="show_imgui_demo_window",
             name_in_ui="ImGui Demo window",
-            available_in_release=False,
+            available_in_release=True,
         ),
         DebugOption(
             name_in_code="show_commands_and_registries_debug_windows",
@@ -77,11 +77,17 @@ def all_debug_options():
             name_in_code="test_all_variable_widgets__window",
             name_in_ui="Test all Variable Widgets",
             kind=Kind.WINDOW,
-            available_in_release=False,
+            available_in_release=True,
         ),
         DebugOption(
             name_in_code="test_shaders_compilation__window",
             name_in_ui="Test Shaders Compilation",
+            kind=Kind.WINDOW,
+            available_in_release=True,
+        ),
+        DebugOption(
+            name_in_code="imnodes_color_theme_window",
+            name_in_ui="Color Themes: Nodes",
             kind=Kind.WINDOW,
             available_in_release=True,
         ),

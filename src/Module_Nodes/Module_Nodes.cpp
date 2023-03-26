@@ -2,8 +2,11 @@
 #include <Cool/StrongTypes/set_uniform.h>
 #include <stdexcept>
 #include "Common/make_shader_compilation_error_message.h"
+#include "Cool/Camera/Camera.h"
+#include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
+#include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
@@ -21,10 +24,11 @@
 
 namespace Lab {
 
-Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
+Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"Nodes", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
     , _regenerate_code_flag{dirty_flag_factory.make()}
+    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, dirty_flag())}
 {
 }
 
@@ -100,6 +104,8 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 {
     Cool::AllInputRefsToConst inputs;
+
+    inputs.push_back(Cool::AnyInputRefToConst{_camera_input});
 
     static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()).for_each_node([&](Node const& node) { // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
         for (auto const& input : node.value_inputs())
@@ -202,6 +208,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+    Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     {
         static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()) // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.

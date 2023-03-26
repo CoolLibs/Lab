@@ -148,6 +148,21 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
 
     {
         auto const func = maybe_generate_default(
+            FunctionSignature{PrimitiveType::Vec3, PrimitiveType::SignedDistance},
+            "default_shape_3D", R"STR(
+    float default_shape_3D/*coollabdef*/(vec3 pos)
+    {{
+        return length(pos) - 5.;
+    }}
+    )STR",
+            signature, context
+        );
+        if (func)
+            return *func;
+    }
+
+    {
+        auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::UV, PrimitiveType::sRGB},
             "default_image_srgb", R"STR(
 vec3 default_image_srgb/*coollabdef*/(vec2 uv)

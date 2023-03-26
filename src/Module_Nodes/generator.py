@@ -18,6 +18,14 @@ def all_primitive_types():
     ###
     res = [
         PrimitiveType(
+            cpp="Bool",
+            user_facing_name="Bool",
+            corresponding_input_types=["bool"],
+            glsl="bool",
+            parsed_from="bool",
+            can_be_a_template_type=False,
+        ),
+        PrimitiveType(
             cpp="Int",
             user_facing_name="Int",
             corresponding_input_types=["int"],
@@ -35,7 +43,7 @@ def all_primitive_types():
         ),
         PrimitiveType(
             cpp="Vec2",
-            user_facing_name="Vec2",
+            user_facing_name="2D Vector",
             corresponding_input_types=["glm::vec2"],
             glsl="vec2",
             parsed_from="vec2",
@@ -43,7 +51,7 @@ def all_primitive_types():
         ),
         PrimitiveType(
             cpp="Vec3",
-            user_facing_name="Vec3",
+            user_facing_name="3D Vector",
             corresponding_input_types=["glm::vec3"],
             glsl="vec3",
             parsed_from="vec3",
@@ -51,11 +59,35 @@ def all_primitive_types():
         ),
         PrimitiveType(
             cpp="Vec4",
-            user_facing_name="Vec4",
+            user_facing_name="4D Vector",
             corresponding_input_types=["glm::vec4"],
             glsl="vec4",
             parsed_from="vec4",
             can_be_a_template_type=True,
+        ),
+        PrimitiveType(
+            cpp="Mat2",
+            user_facing_name="2D Matrix",
+            corresponding_input_types=["glm::mat2"],
+            glsl="mat2",
+            parsed_from="mat2",
+            can_be_a_template_type=False,
+        ),
+        PrimitiveType(
+            cpp="Mat3",
+            user_facing_name="3D Matrix",
+            corresponding_input_types=["glm::mat3"],
+            glsl="mat3",
+            parsed_from="mat3",
+            can_be_a_template_type=False,
+        ),
+        PrimitiveType(
+            cpp="Mat4",
+            user_facing_name="4D Matrix",
+            corresponding_input_types=["glm::mat4"],
+            glsl="mat4",
+            parsed_from="mat4",
+            can_be_a_template_type=False,
         ),
         PrimitiveType(
             cpp="UV",
