@@ -114,6 +114,7 @@ void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
     );
 #else
         (void)archive;
+        (void)command;
 #endif
 }
 

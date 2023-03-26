@@ -38,6 +38,7 @@ void serialize(Archive& archive, Lab::Command_SetVariableMetadata<T>& command)
     );
 #else
     (void)archive;
+    (void)command;
 #endif
 }
 

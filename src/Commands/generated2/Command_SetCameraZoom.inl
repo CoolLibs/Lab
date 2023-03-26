@@ -79,6 +79,7 @@ void serialize(Archive& archive, Lab::Command_SetCameraZoom& command)
     archive(cereal::make_nvp("camera zoom", command.value));
 #else
     (void)archive;
+    (void)command;
 #endif
 }
 
@@ -92,6 +93,7 @@ void serialize(Archive& archive, Lab::ReversibleCommand_SetCameraZoom& command)
     );
 #else
     (void)archive;
+    (void)command;
 #endif
 }
 

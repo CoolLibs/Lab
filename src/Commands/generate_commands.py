@@ -99,6 +99,7 @@ void serialize(Archive& archive, Lab::Command_{cmd.name}& command)
     archive(cereal::make_nvp("{cmd.user_facing_name}", command.value));
 #else
     (void)archive;
+    (void)command;
 #endif
 }}
 
@@ -112,6 +113,7 @@ void serialize(Archive& archive, Lab::ReversibleCommand_{cmd.name}& command)
     );
 #else
     (void)archive;
+    (void)command;
 #endif
 }}
 
