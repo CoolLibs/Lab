@@ -51,7 +51,11 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+#if COOL_SERIALIZATION
         archive(_concrete_reversible_command);
+#else
+        (void)archive;
+#endif
     }
 };
 

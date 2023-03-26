@@ -31,10 +31,14 @@ namespace cereal {
 template<class Archive, typename T>
 void serialize(Archive& archive, Lab::Command_SetVariableMetadata<T>& command)
 {
+#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("Id", command.id),
         cereal::make_nvp("Metadata", command.metadata)
     );
+#else
+    (void)archive;
+#endif
 }
 
 } // namespace cereal

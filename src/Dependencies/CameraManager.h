@@ -58,10 +58,14 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+#if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Camera ID", _camera_id),
             cereal::make_nvp("ViewController", _view_controller)
         );
+#else
+        (void)archive;
+#endif
     }
 };
 
