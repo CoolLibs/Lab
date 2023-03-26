@@ -4,11 +4,15 @@
  * Instead, go to "generator.py" and edit the "cpp_type_as_string_cases" function there.
  * -----------------------------------------------------------------------------
  */
+case PrimitiveType::Bool: return "Bool";
 case PrimitiveType::Int: return "Int";
 case PrimitiveType::Float: return "Float";
 case PrimitiveType::Vec2: return "Vec2";
 case PrimitiveType::Vec3: return "Vec3";
 case PrimitiveType::Vec4: return "Vec4";
+case PrimitiveType::Mat2: return "Mat2";
+case PrimitiveType::Mat3: return "Mat3";
+case PrimitiveType::Mat4: return "Mat4";
 case PrimitiveType::UV: return "UV";
 case PrimitiveType::SignedDistance: return "SignedDistance";
 case PrimitiveType::Angle: return "Angle";
