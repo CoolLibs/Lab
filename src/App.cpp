@@ -31,7 +31,7 @@ App::App(Cool::WindowManager& windows)
     , _main_window{windows.main_window()}
     , _nodes_view{_views.make_view(ICON_FA_IMAGE " View")}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
-    , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory())}
+    , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
