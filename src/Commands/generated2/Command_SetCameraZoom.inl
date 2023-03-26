@@ -75,16 +75,26 @@ namespace cereal {
 template<class Archive>
 void serialize(Archive& archive, Lab::Command_SetCameraZoom& command)
 {
+#if COOL_SERIALIZATION
     archive(cereal::make_nvp("camera zoom", command.value));
+#else
+    (void)archive;
+    (void)command;
+#endif
 }
 
 template<class Archive>
 void serialize(Archive& archive, Lab::ReversibleCommand_SetCameraZoom& command)
 {
+#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("camera zoom", command.forward_command.value),
         cereal::make_nvp("Old camera zoom", command.old_value)
     );
+#else
+    (void)archive;
+    (void)command;
+#endif
 }
 
 } // namespace cereal

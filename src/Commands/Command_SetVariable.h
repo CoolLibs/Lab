@@ -93,20 +93,30 @@ namespace cereal {
 template<class Archive, typename T>
 void serialize(Archive& archive, Lab::Command_SetVariable<T>& command)
 {
+#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("Id", command.id),
         cereal::make_nvp("Value", command.value)
     );
+#else
+    (void)archive;
+    (void)command;
+#endif
 }
 
 template<class Archive, typename T>
 void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
 {
+#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("Id", command.forward_command.id),
         cereal::make_nvp("Value", command.forward_command.value),
         cereal::make_nvp("Old value", command.old_value)
     );
+#else
+        (void)archive;
+        (void)command;
+#endif
 }
 
 } // namespace cereal

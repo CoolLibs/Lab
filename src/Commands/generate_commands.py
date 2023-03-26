@@ -95,16 +95,26 @@ namespace cereal {{
 template<class Archive>
 void serialize(Archive& archive, Lab::Command_{cmd.name}& command)
 {{
+#if COOL_SERIALIZATION
     archive(cereal::make_nvp("{cmd.user_facing_name}", command.value));
+#else
+    (void)archive;
+    (void)command;
+#endif
 }}
 
 template<class Archive>
 void serialize(Archive& archive, Lab::ReversibleCommand_{cmd.name}& command)
 {{
+#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("{cmd.user_facing_name}", command.forward_command.value),
         cereal::make_nvp("Old {cmd.user_facing_name}", command.old_value)
     );
+#else
+    (void)archive;
+    (void)command;
+#endif
 }}
 
 }} // namespace cereal

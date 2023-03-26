@@ -50,6 +50,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+#if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
             cereal::make_nvp("Node Editor", _nodes_editor),
@@ -58,6 +59,9 @@ private:
             cereal::make_nvp("Shader", _shader),
             cereal::make_nvp("Camera Input", _camera_input)
         );
+#else
+        (void)archive;
+#endif
     }
 };
 

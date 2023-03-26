@@ -131,6 +131,7 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+#if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Variable Registries", _variable_registries),
             cereal::make_nvp("Dirty Registry", _dirty_registry),
@@ -142,6 +143,9 @@ private:
             cereal::make_nvp("Exporter (Image and Video)", _exporter),
             cereal::make_nvp("ImNodes style", _imnodes_style)
         );
+#else
+        (void)archive;
+#endif
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 };
