@@ -7,6 +7,7 @@
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Dependencies/Ui.h"
+#include "Module_Nodes/NodeDefinition.h"
 #include "Node.h"
 #include "NodeDefinition.h"
 
@@ -30,14 +31,13 @@ public:
         , _regenerate_code_flag{regenerate_code_flag}
     {}
 
-    using NodeT           = Node;
-    using NodeDefinitionT = NodeDefinition;
+    using NodeT = Node;
 
     auto        name(Node const&) const -> std::string;
     auto        category_name(Node const&) const -> std::string;
     void        imgui_node_body(Node&, Cool::NodeId const&) const;
-    auto        make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const&) const -> Cool::NodeOwner;
-    void        update_node_with_new_definition(Cool::NodeOwner&, NodeDefinition const&, Cool::GraphImpl&) const;
+    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) const -> Cool::NodeOwner;
+    void        update_node_with_new_definition(Cool::NodeOwner&, Cool::NodeDefinition const&, Cool::GraphImpl&) const;
     static void widget_to_rename_node(Node&);
 
 private:

@@ -43,7 +43,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     auto const shader_code = generate_shader_code(
         _main_node_id,
         static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()), // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
-        Cool::GetNodeDefinition_Ref{_nodes_library},
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library},
         update_ctx.input_provider()
     );
 
