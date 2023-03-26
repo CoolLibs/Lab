@@ -28,7 +28,7 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
     : Module{"Nodes", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
     , _regenerate_code_flag{dirty_flag_factory.make()}
-    , _camera_input{input_factory.make(Cool::InputDefinition<Cool::Camera>("Camera"), dirty_flag())}
+    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, dirty_flag())}
 {
 }
 
