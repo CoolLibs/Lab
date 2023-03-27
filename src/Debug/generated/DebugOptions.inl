@@ -25,7 +25,7 @@ public:
     {
         if (instance().show_framerate_window)
         {
-            ImGui::Begin("Framerate", &instance().show_framerate_window);
+            ImGui::Begin("Framerate", &instance().show_framerate_window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -40,7 +40,7 @@ public:
     {
         if (instance().show_generated_shader_code)
         {
-            ImGui::Begin("Nodes Code", &instance().show_generated_shader_code);
+            ImGui::Begin("Nodes Code", &instance().show_generated_shader_code, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -49,7 +49,7 @@ public:
     {
         if (instance().test_all_variable_widgets__window)
         {
-            ImGui::Begin("Test all Variable Widgets", &instance().test_all_variable_widgets__window);
+            ImGui::Begin("Test all Variable Widgets", &instance().test_all_variable_widgets__window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -58,7 +58,7 @@ public:
     {
         if (instance().test_shaders_compilation__window)
         {
-            ImGui::Begin("Test Shaders Compilation", &instance().test_shaders_compilation__window);
+            ImGui::Begin("Test Shaders Compilation", &instance().test_shaders_compilation__window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -67,7 +67,7 @@ public:
     {
         if (instance().imnodes_color_theme_window)
         {
-            ImGui::Begin("Color Themes: Nodes", &instance().imnodes_color_theme_window);
+            ImGui::Begin("Color Themes: Nodes", &instance().imnodes_color_theme_window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
