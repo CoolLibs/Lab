@@ -81,6 +81,8 @@ void App::update()
         set_everybody_dirty();
     }
 
+    Cool::user_settings().color_themes.update();
+
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
         _nodes_module->update(update_context());
@@ -339,7 +341,11 @@ void App::imgui_windows()
         });
 
         Cool::DebugOptions::color_themes_advanced_config_window([&]() {
-            _color_themes.imgui_advanced_config();
+            Cool::user_settings().color_themes.imgui_advanced_config();
+        });
+
+        Cool::DebugOptions::color_themes_editor([&]() {
+            Cool::user_settings().color_themes.imgui_basic_theme_editor();
         });
 
         DebugOptions::imnodes_color_theme_window([&]() {
@@ -403,7 +409,7 @@ void App::settings_menu()
         ImGui::Separator();
 
         ImGui::SeparatorText("Color Theme");
-        _color_themes.imgui();
+        Cool::user_settings().color_themes.imgui_theme_picker();
 
         ImGui::EndMenu();
     }

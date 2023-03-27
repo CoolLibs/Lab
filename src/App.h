@@ -18,7 +18,6 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Cool/ImGui/ColorThemes.h"
 #include "Cool/ImGui/StyleEditor.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"
@@ -117,7 +116,6 @@ private:
     Cool::Exporter                 _exporter;
     Cool::DirtyRegistry            _dirty_registry; // Before the modules because it is used to create them
     History                        _history{};
-    Cool::ColorThemes              _color_themes{};
     float                          _last_time{0.f};
     std::unique_ptr<Module_Nodes>  _nodes_module;
     CommandLogger                  _command_logger{};
