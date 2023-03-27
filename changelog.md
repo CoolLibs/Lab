@@ -13,6 +13,7 @@
 - 💄 Added an option to use the color theme set by your OS (Dark or Light).
 - 💄 Moved "About" and "Debug" menus to the right of the menu bar.
 - 🐛 Fixed the camera controls when using a fixed aspect ratio or fixed number of pixels.
+- 🐛 Fix: the nodes categories were not sorted on MacOS.
 - 👩‍💻 Node files: now support the `#define` macro, just like any glsl file.
 - 👩‍💻 Node files: added boolean and matrices types for INPUTs, main function and helper functions (they can be used anywhere like any other type now).
 
