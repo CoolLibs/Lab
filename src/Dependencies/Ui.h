@@ -34,7 +34,7 @@ public:
     template<typename UiFunction>
     static void window(const WindowParams& params, UiFunction&& ui_function)
     {
-        ImGui::Begin(params.name.data());
+        ImGui::Begin(params.name.data(), nullptr, ImGuiWindowFlags_NoFocusOnAppearing);
         ui_function();
         ImGui::End();
     }
