@@ -2,9 +2,7 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Nodes/Pin.h>
 #include <Cool/Nodes/REGISTER_NODE_TYPE.h>
-#include <cereal/archives/json.hpp>
 #include <cereal/types/optional.hpp>
-#include <cereal/types/polymorphic.hpp>
 #include <optional>
 #include <string_view>
 #include "Cool/Nodes/NodeDefinitionIdentifier.h"
@@ -74,8 +72,8 @@ private:
         archive(
             cereal::make_nvp("Name", _name),
             cereal::make_nvp("Definition", _id_names),
-            cereal::make_nvp("Input pins", _input_pins),
-            cereal::make_nvp("Output pins", _output_pins),
+            cereal::make_nvp("Input Pins", _input_pins),
+            cereal::make_nvp("Output Pins", _output_pins),
             cereal::make_nvp("Value inputs", _value_inputs),
             cereal::make_nvp("Number of main input pins", _number_of_main_input_pins),
             cereal::make_nvp("Number of function inputs", _number_of_function_inputs),

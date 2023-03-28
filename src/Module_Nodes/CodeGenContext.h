@@ -2,7 +2,6 @@
 #include <Cool/Dependencies/InputProvider_Ref.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/Graph.h>
-#include "Cool/Nodes/Graph.h"
 #include "Function.h"
 #include "NodeDefinition.h"
 
