@@ -276,7 +276,7 @@ void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node,
     refresh_pins(node.input_pins(), out_node.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
     refresh_pins(node.output_pins(), out_node.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
 
-    abstract_out_node = std::move(abstract_node);
+    out_node = std::move(node);
 }
 
 void NodesConfig::widget_to_rename_node(Node& node)
