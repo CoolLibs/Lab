@@ -31,14 +31,12 @@ public:
         , _regenerate_code_flag{regenerate_code_flag}
     {}
 
-    using NodeT = Node;
-
-    auto        name(Node const&) const -> std::string;
-    auto        category_name(Node const&) const -> std::string;
-    void        imgui_node_body(Node&, Cool::NodeId const&) const;
-    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) const -> Cool::Node;
+    auto        name(Cool::Node const&) const -> std::string;
+    auto        category_name(Cool::Node const&) const -> std::string;
+    void        imgui_node_body(Cool::Node&, Cool::NodeId const&) const;
+    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) const -> Node;
     void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&) const;
-    static void widget_to_rename_node(Node&);
+    static void widget_to_rename_node(Cool::Node&);
 
 private:
     Cool::InputFactory_Ref                              _input_factory;

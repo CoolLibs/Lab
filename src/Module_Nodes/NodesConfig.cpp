@@ -78,19 +78,22 @@ static void apply_settings_to_inputs(
     }
 }
 
-auto NodesConfig::name(Node const& node) const -> std::string
+auto NodesConfig::name(Cool::Node const& abstract_node) const -> std::string
 {
+    auto const& node = abstract_node.downcast<Node>();
     auto const name = node.name();
     return name.empty() ? node.definition_name() : name;
 }
 
-auto NodesConfig::category_name(Node const& node) const -> std::string
+auto NodesConfig::category_name(Cool::Node const& abstract_node) const -> std::string
 {
+    auto const& node = abstract_node.downcast<Node>();
     return node.category_name();
 }
 
-void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
+void NodesConfig::imgui_node_body(Cool::Node& abstract_node, Cool::NodeId const& id) const
 {
+    auto& node = abstract_node.downcast<Node>();
     { // Main node selector
         const bool was_main = id == _main_node_id;
         bool       is_main  = was_main;
@@ -138,7 +141,7 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
     return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
 }
 
-auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) const -> Cool::Node
+auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) const -> Node
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
 
@@ -266,8 +269,7 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
 void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph) const
 {
     auto& out_node      = abstract_out_node.downcast<Node>();
-    auto  abstract_node = make_node({definition, out_node.category_name()});
-    auto& node          = abstract_node.downcast<Node>();
+    auto  node          = make_node({definition, out_node.category_name()});
 
     node.set_name(out_node.name());
 
@@ -279,8 +281,9 @@ void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node,
     out_node = std::move(node);
 }
 
-void NodesConfig::widget_to_rename_node(Node& node)
+void NodesConfig::widget_to_rename_node(Cool::Node& abstract_node)
 {
+    auto& node = abstract_node.downcast<Node>();
     auto name = node.name();
     ImGui::SetKeyboardFocusHere();
     if (ImGui::InputText("Display Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))

@@ -34,7 +34,14 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 
 void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    auto updater = Cool::NodesDefinitionUpdater{nodes_config(ctx.ui()), _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
+    auto const cfg     = nodes_config(ctx.ui());
+    auto       updater = Cool::NodesDefinitionUpdater{
+        cfg,
+        _nodes_editor.graph(),
+        _nodes_library,
+        &parse_node_definition,
+        _nodes_folder_watcher.errors_map(),
+    };
     if (_nodes_folder_watcher.update(updater))
         ctx.set_dirty(_regenerate_code_flag);
 }
