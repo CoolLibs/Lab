@@ -4,11 +4,11 @@
 #include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"
 #include "Cool/Nodes/NodesFolderWatcher.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Path/Path.h"
 #include "Dependencies/Module.h"
 #include "Module_Nodes/NodesConfig.h"
 #include "NodesConfig.h"
-#include "NodesLibrary.h"
 
 namespace Lab {
 
@@ -36,8 +36,8 @@ private:
 private:
     mutable std::string                                              _shader_code{};
     FullscreenShader                                                 _shader{};
-    mutable Cool::NodesEditor<NodesConfig>                           _nodes_editor{};
-    mutable NodesLibrary                                             _nodes_library{};
+    mutable Cool::NodesEditor                                        _nodes_editor{};
+    mutable Cool::NodesLibrary                                       _nodes_library{};
     mutable /*TODO(JF) remove the mutable*/ Cool::NodesFolderWatcher _nodes_folder_watcher{Cool::Path::root() / "Nodes", ".clbnode"};
     mutable Cool::NodeId                                             _main_node_id{};
     Cool::DirtyFlag                                                  _regenerate_code_flag;
