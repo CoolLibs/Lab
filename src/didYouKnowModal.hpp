@@ -7,11 +7,13 @@ public:
     DidYouKnowModal() = default;
 
     void open();
-    void prepareNextTip();
+    void prepare_next_tip();
 
     bool is_open() const;
 
-    void displayModalContent();
+    void display_modal_content();
+
+    void all_tips();
 
 private:
     std::vector<std::string> _all_tips = {

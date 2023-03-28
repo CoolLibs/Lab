@@ -11,7 +11,7 @@ void DidYouKnowModal::open()
     }
 }
 
-void DidYouKnowModal::prepareNextTip()
+void DidYouKnowModal::prepare_next_tip()
 {
     _current_tip_index++;
     if (_current_tip_index >= _all_tips.size())
@@ -24,7 +24,7 @@ bool DidYouKnowModal::is_open() const
     return ImGui::BeginPopupModal(_id.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize);
 }
 
-void DidYouKnowModal::displayModalContent()
+void DidYouKnowModal::display_modal_content()
 {
     ImGui::Text(_text.c_str());
     ImGui::Separator();
@@ -32,7 +32,7 @@ void DidYouKnowModal::displayModalContent()
     if (ImGui::Button("OK", ImVec2(120, 0)))
     {
         ImGui::CloseCurrentPopup();
-        prepareNextTip();
+        prepare_next_tip();
     }
 
     ImGui::SameLine();
@@ -40,11 +40,26 @@ void DidYouKnowModal::displayModalContent()
 
     if (ImGui::Button("Show all tips", ImVec2(120, 0)))
     {
-        ImGui::CloseCurrentPopup();
-
-        // TODO display all tips in a modal
+        ImGui::OpenPopup("All tips");
     }
+
+    all_tips();
     ImGui::EndPopup();
+}
+
+void DidYouKnowModal::all_tips()
+{
+    if (ImGui::BeginPopupModal("All tips", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        for (const auto& tip : _all_tips)
+        {
+            ImGui::Text(tip.c_str());
+            ImGui::Separator();
+        }
+        if (ImGui::Button("Got it !"))
+            ImGui::CloseCurrentPopup();
+        ImGui::EndPopup();
+    }
 }
 
 void test_did_you_know(DidYouKnowModal& _did_you_know_)
@@ -53,7 +68,7 @@ void test_did_you_know(DidYouKnowModal& _did_you_know_)
 
     if (_did_you_know_.is_open())
     {
-        _did_you_know_.displayModalContent();
+        _did_you_know_.display_modal_content();
     }
 }
 
