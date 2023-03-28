@@ -21,6 +21,8 @@ private:
     std::string _id              = "Did you know?";
     bool        _has_been_opened = false;
     std::string _text            = _all_tips[0];
+
+    friend void debug_did_you_know(DidYouKnowModal& _did_you_know_);
 };
 
 void test_did_you_know(DidYouKnowModal& _did_you_know_);

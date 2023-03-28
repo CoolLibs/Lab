@@ -53,3 +53,11 @@ void test_did_you_know(DidYouKnowModal& _did_you_know_)
         _did_you_know_.displayModalContent();
     }
 }
+
+void debug_did_you_know(DidYouKnowModal& _did_you_know_)
+{
+    ImGui::Begin("Debug did you know");
+    if (ImGui::Button("Test DidYouKnow"))
+        _did_you_know_._has_been_opened = false;
+    ImGui::End();
+}
