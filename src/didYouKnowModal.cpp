@@ -7,14 +7,16 @@ void DidYouKnowModal::open()
     {
         _has_been_opened = true;
         ImGui::OpenPopup(_id.c_str());
-
         return;
     }
 }
 
-void DidYouKnowModal::close()
+void DidYouKnowModal::prepareNextTip()
 {
-    ImGui::CloseCurrentPopup();
+    _current_tip_index++;
+    if (_current_tip_index >= _all_tips.size())
+        _current_tip_index = 0;
+    _text = _all_tips[_current_tip_index];
 }
 
 bool DidYouKnowModal::is_open() const
@@ -29,7 +31,8 @@ void DidYouKnowModal::displayModalContent()
 
     if (ImGui::Button("OK", ImVec2(120, 0)))
     {
-        close();
+        ImGui::CloseCurrentPopup();
+        prepareNextTip();
     }
 
     ImGui::SameLine();
@@ -37,7 +40,7 @@ void DidYouKnowModal::displayModalContent()
 
     if (ImGui::Button("Show all tips", ImVec2(120, 0)))
     {
-        close();
+        ImGui::CloseCurrentPopup();
 
         // TODO display all tips in a modal
     }
