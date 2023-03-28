@@ -26,6 +26,7 @@
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Module_Nodes/Module_Nodes.h"
+#include "didYouKnowModal.hpp"
 
 namespace Lab {
 
@@ -122,6 +123,8 @@ private:
     bool                           _is_first_frame{true};
     Cool::ImNodes_StyleEditor      _imnodes_style{};
     Cool::StyleEditor              _style{};
+
+    DidYouKnowModal _did_you_know_modal{};
 
 private:
     // Serialization
