@@ -36,8 +36,8 @@ public:
     auto        name(Node const&) const -> std::string;
     auto        category_name(Node const&) const -> std::string;
     void        imgui_node_body(Node&, Cool::NodeId const&) const;
-    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) const -> Cool::NodeOwner;
-    void        update_node_with_new_definition(Cool::NodeOwner&, Cool::NodeDefinition const&, Cool::GraphImpl&) const;
+    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) const -> Cool::Node;
+    void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&) const;
     static void widget_to_rename_node(Node&);
 
 private:

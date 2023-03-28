@@ -46,7 +46,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 
     auto const shader_code = generate_shader_code(
         _main_node_id,
-        static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()), // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
+        _nodes_editor.graph(),
         Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library},
         update_ctx.input_provider()
     );
@@ -107,7 +107,7 @@ auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 
     inputs.push_back(Cool::AnyInputRefToConst{_camera_input});
 
-    static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()).for_each_node([&](Node const& node) { // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
         for (auto const& input : node.value_inputs())
         {
             inputs.push_back(std::visit([](auto&& input) { return Cool::AnyInputRefToConst{input}; }, input));
@@ -210,18 +210,15 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
-    {
-        static_cast<Cool::Graph<Node> const&>(_nodes_editor.graph()) // TODO(JF) This is probably undefined behaviour since _nodes_editor.graph() was never created as a Graph, but as a GraphImpl.
-            .for_each_node([&](Node const& node) {
-                for (auto const& prop : node.value_inputs())
-                {
-                    std::visit([&](auto&& prop) {
-                        send_uniform(prop, shader, in.provider);
-                    },
-                               prop);
-                }
-            });
-    }
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
+        for (auto const& value_input : node.value_inputs())
+        {
+            std::visit([&](auto&& value_input) {
+                send_uniform(value_input, shader, in.provider);
+            },
+                       value_input);
+        }
+    });
 
     pipeline.draw();
 }

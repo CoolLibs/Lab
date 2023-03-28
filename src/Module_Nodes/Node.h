@@ -6,13 +6,12 @@
 #include <cereal/types/polymorphic.hpp>
 #include <optional>
 #include <string_view>
-#include "Cool/Nodes/BaseNode.h"
 #include "Cool/Nodes/NodeDefinitionIdentifier.h"
 #include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
 
-class Node : public Cool::BaseNode {
+class Node {
 public:
     Node() = default;
     Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs, bool is_template_node)
@@ -25,13 +24,17 @@ public:
     auto name() const -> std::string { return _name; }
     void set_name(std::string const& name) { _name = name; }
 
-    auto definition_name() const -> std::string override { return _id_names.definition_name; }
-    auto category_name() const -> std::string override { return _id_names.category_name; }
+    auto definition_name() const -> std::string { return _id_names.definition_name; }
+    auto category_name() const -> std::string { return _id_names.category_name; }
 
     auto id_names() const -> Cool::NodeDefinitionIdentifier { return _id_names; }
 
-    auto value_inputs() -> auto& { return _value_inputs; }
-    auto value_inputs() const -> auto const& { return _value_inputs; }
+    [[nodiscard]] auto input_pins() const -> auto const& { return _input_pins; }
+    [[nodiscard]] auto input_pins() -> auto& { return _input_pins; }
+    [[nodiscard]] auto output_pins() const -> auto const& { return _output_pins; }
+    [[nodiscard]] auto output_pins() -> auto& { return _output_pins; }
+    [[nodiscard]] auto value_inputs() -> auto& { return _value_inputs; }
+    [[nodiscard]] auto value_inputs() const -> auto const& { return _value_inputs; }
 
     auto number_of_main_input_pins() const -> size_t { return _number_of_main_input_pins; }
     auto main_input_pin(size_t main_input_index) const -> Cool::InputPin const&
@@ -53,6 +56,8 @@ private:
     Cool::NodeDefinitionIdentifier _id_names;
     std::string                    _name{};
 
+    std::vector<Cool::InputPin>  _input_pins{};
+    std::vector<Cool::OutputPin> _output_pins{};
     std::vector<Cool::AnyInput>  _value_inputs;
     size_t                       _number_of_main_input_pins{};
     size_t                       _number_of_function_inputs{};
@@ -66,9 +71,10 @@ private:
     {
 #if COOL_SERIALIZATION
         archive(
-            cereal::base_class<Cool::BaseNode>(this),
             cereal::make_nvp("Name", _name),
             cereal::make_nvp("Definition", _id_names),
+            cereal::make_nvp("Input pins", _input_pins),
+            cereal::make_nvp("Output pins", _output_pins),
             cereal::make_nvp("Value inputs", _value_inputs),
             cereal::make_nvp("Number of main input pins", _number_of_main_input_pins),
             cereal::make_nvp("Number of function inputs", _number_of_function_inputs),
@@ -83,5 +89,3 @@ private:
 auto to_string(Node const& node) -> std::string;
 
 } // namespace Lab
-
-CEREAL_REGISTER_TYPE(Lab::Node); // NOLINT

@@ -182,7 +182,7 @@ static auto gen_properties(
         auto const input_pin     = node.pin_of_value_input(property_index); // NOLINT(performance-unnecessary-copy-initialization)
         auto       output_pin    = Cool::OutputPin{};
         auto const input_node_id = context.graph().input_node_id(input_pin.id(), &output_pin);
-        auto const maybe_node    = context.graph().try_get_node(input_node_id);
+        auto const maybe_node    = context.graph().try_get_node<Node>(input_node_id);
         if (maybe_node)
         {
             if (maybe_node->main_output_pin() == output_pin)
@@ -338,7 +338,7 @@ static auto gen_inputs(
         auto const& input         = node_definition.inputs()[input_idx];
         auto        output_pin    = Cool::OutputPin{};
         auto const  input_node_id = context.graph().input_node_id(node.pin_of_function_input(input_idx).id(), &output_pin);
-        auto const  input_node    = context.graph().try_get_node(input_node_id);
+        auto const  input_node    = context.graph().try_get_node<Node>(input_node_id);
         if (!input_node || output_pin == input_node->main_output_pin()) // If we are plugged to the main output of a node (or to nothing, in which case we will generate a default function), then generate the corresponding function
         {
             auto const func_name = gen_desired_function(
@@ -501,7 +501,7 @@ auto gen_desired_function(
 {
     Cool::OutputPin output_pin;
     auto const      node_id = context.graph().input_node_id(pin.id(), &output_pin);
-    auto const      node    = context.graph().try_get_node(node_id);
+    auto const      node    = context.graph().try_get_node<Node>(node_id);
 
     if (node && output_pin != node->main_output_pin())
     // We are plugged to an ouput index, use that to generate a constant function.
@@ -525,7 +525,7 @@ auto gen_desired_function(
     bool                fallback_to_a_default_function
 ) -> ExpectedFunctionName
 {
-    auto const maybe_node = context.graph().try_get_node(id);
+    auto const maybe_node = context.graph().try_get_node<Node>(id);
 
     return gen_desired_function(
         desired_signature,

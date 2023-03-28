@@ -138,17 +138,18 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
     return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
 }
 
-auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) const -> Cool::NodeOwner
+auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) const -> Cool::Node
 {
-    auto const def            = cat_id.def.downcast<NodeDefinition>();
+    auto const def = cat_id.def.downcast<NodeDefinition>();
+
     bool const needs_main_pin = !doesnt_need_main_pin(def.signature());
 
-    auto node = std::make_shared<Node>(
-        Cool::NodeDefinitionIdentifier{def.name(), cat_id.category_name},
+    auto node = Node{
+        {def.name(), cat_id.category_name},
         needs_main_pin ? def.signature().arity : 0,
         def.inputs().size(),
-        def.signature().is_template()
-    );
+        def.signature().is_template(),
+    };
 
     if (needs_main_pin)
     {
@@ -156,32 +157,32 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) c
         {
             std::string pin_name = def.main_parameter_names()[i];
             Cool::String::replace_all(pin_name, "_", " ");
-            node->input_pins().emplace_back(pin_name);
+            node.input_pins().emplace_back(pin_name);
         }
     }
-    node->output_pins().emplace_back("OUT");
+    node.output_pins().emplace_back("OUT");
 
     for (auto const& input : def.inputs())
-        node->input_pins().push_back(Cool::InputPin{input.name()});
+        node.input_pins().push_back(Cool::InputPin{input.name()});
 
     for (auto const& property_def : def.properties())
     {
-        node->value_inputs().push_back(_input_factory.make(
+        node.value_inputs().push_back(_input_factory.make(
             property_def,
             Cool::requires_shader_code_generation(property_def) ? _regenerate_code_flag : _rerender_flag
         ));
-        node->input_pins().push_back(Cool::InputPin{std::visit([](auto&& property_def) { return property_def.name; }, property_def)});
+        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& property_def) { return property_def.name; }, property_def)});
     }
 
     // Get the variables from the inputs
-    auto settings = settings_from_inputs(node->value_inputs(), _ui.variable_registries());
+    auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
     // Apply
     def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, node->value_inputs(), _ui.variable_registries());
+    apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
 
     for (auto const& output_index_name : def.output_indices())
-        node->output_pins().push_back(Cool::OutputPin{output_index_name});
+        node.output_pins().push_back(Cool::OutputPin{output_index_name});
 
     return node;
 }
@@ -262,21 +263,20 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
     }
 }
 
-void NodesConfig::update_node_with_new_definition(Cool::NodeOwner& out_node, Cool::NodeDefinition const& abstract_definition, Cool::GraphImpl& graph) const
+void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph) const
 {
-    auto const definition = abstract_definition.downcast<NodeDefinition>();
-    // TODO(JF) There is a bug (probably) in here that makes us crash when switching between nodes of the same category.
-    auto& original  = static_cast<Node&>(*out_node);
-    auto  base_node = make_node({definition, original.category_name()});
-    auto& node      = static_cast<Node&>(*base_node);
-    node.set_name(original.name());
+    auto& out_node      = abstract_out_node.downcast<Node>();
+    auto  abstract_node = make_node({definition, out_node.category_name()});
+    auto& node          = abstract_node.downcast<Node>();
 
-    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(original.value_inputs(), node.value_inputs());
+    node.set_name(out_node.name());
 
-    refresh_pins(node.input_pins(), original.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
-    refresh_pins(node.output_pins(), original.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
+    keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs());
 
-    out_node = base_node;
+    refresh_pins(node.input_pins(), out_node.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
+    refresh_pins(node.output_pins(), out_node.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
+
+    abstract_out_node = std::move(abstract_node);
 }
 
 void NodesConfig::widget_to_rename_node(Node& node)
