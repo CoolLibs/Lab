@@ -14,6 +14,7 @@
 - 💄 Moved "About" and "Debug" menus to the right of the menu bar.
 - 🐛 Fixed the camera controls when using a fixed aspect ratio or fixed number of pixels.
 - 🐛 Fix: the nodes categories were not sorted on MacOS.
+- 🐛 Fix: could not place a node that had the same name as its category.
 - 👩‍💻 Node files: now support the `#define` macro, just like any glsl file.
 - 👩‍💻 Node files: added boolean and matrices types for INPUTs, main function and helper functions (they can be used anywhere like any other type now).
 
