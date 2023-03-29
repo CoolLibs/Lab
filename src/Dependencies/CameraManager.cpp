@@ -17,6 +17,9 @@ void CameraManager::hook_events(
     events
         .scroll_event()
         .subscribe([registries, this, executor](const auto& event) {
+            if (_is_locked_in_view)
+                return;
+
             auto       camera   = registries.get().get(_camera_id.raw())->value();
             const auto old_zoom = _view_controller.get_distance_to_orbit_center();
             if (_view_controller.on_wheel_scroll(camera, event.dy))
@@ -31,6 +34,9 @@ void CameraManager::hook_events(
         .drag()
         .start()
         .subscribe([registries, this, executor](const auto& event) {
+            if (_is_locked_in_view)
+                return;
+
             maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag_start(camera, event.mods);
             });
@@ -39,6 +45,9 @@ void CameraManager::hook_events(
         .drag()
         .update()
         .subscribe([registries, this, executor](const auto& event) {
+            if (_is_locked_in_view)
+                return;
+
             maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag(camera, event.delta);
             });
@@ -47,6 +56,9 @@ void CameraManager::hook_events(
         .drag()
         .stop()
         .subscribe([registries, this, executor](auto&&) {
+            if (_is_locked_in_view)
+                return;
+
             maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag_stop(camera);
             });

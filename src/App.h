@@ -90,6 +90,8 @@ private:
     void settings_menu();
     void debug_menu();
 
+    void cameras_window();
+
     void imgui_commands_and_registries_debug_windows();
 
     template<typename Event>
@@ -122,6 +124,7 @@ private:
     bool                           _is_first_frame{true};
     Cool::ImNodes_StyleEditor      _imnodes_style{};
     Cool::StyleEditor              _style{};
+    bool                           _is_camera_2D_locked_in_view{false};
 
 private:
     // Serialization
@@ -129,21 +132,21 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-#if COOL_SERIALIZATION
         archive(
+            cereal::make_nvp("Is camera 2D locked in view", _is_camera_2D_locked_in_view),
+            cereal::make_nvp("Camera Manager", _camera_manager)
+#if COOL_SERIALIZATION
+                ,
+            cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("Variable Registries", _variable_registries),
             cereal::make_nvp("Dirty Registry", _dirty_registry),
             cereal::make_nvp("History", _history),
             cereal::make_nvp("Nodes Module", _nodes_module),
             cereal::make_nvp("Preview Constraint", _preview_constraint),
-            cereal::make_nvp("Camera Manager", _camera_manager),
-            cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("Exporter (Image and Video)", _exporter),
             cereal::make_nvp("ImNodes style", _imnodes_style)
-        );
-#else
-        (void)archive;
 #endif
+        );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 };

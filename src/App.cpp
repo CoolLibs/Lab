@@ -15,6 +15,7 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
@@ -41,7 +42,8 @@ App::App(Cool::WindowManager& windows)
         _camera2D.value(),
         [this]() { trigger_rerender(); },
         [this]() { auto const sz =_nodes_view.view.size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
-        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; }
+        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; },
+        [this]() { return _is_camera_2D_locked_in_view; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
@@ -267,6 +269,30 @@ void App::imgui_commands_and_registries_debug_windows()
     });
 }
 
+void App::cameras_window()
+{
+    static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
+
+    ImGui::PushID("##2D");
+    ImGui::SeparatorText(ICON_FA_CAMERA " 2D Camera");
+    Cool::ImGuiExtras::toggle("Locked in view", &_is_camera_2D_locked_in_view);
+    ImGui::SameLine();
+    Cool::ImGuiExtras::help_marker(help_text);
+    if (imgui_widget(_camera2D))
+        trigger_rerender();
+    ImGui::PopID();
+
+    ImGui::NewLine();
+
+    ImGui::PushID("##3D");
+    ImGui::SeparatorText(ICON_FA_CAMERA_RETRO " 3D Camera");
+    Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
+    ImGui::SameLine();
+    Cool::ImGuiExtras::help_marker(help_text);
+    _camera_manager.imgui(_variable_registries, command_executor());
+    ImGui::PopID();
+}
+
 void App::imgui_windows()
 {
     _nodes_view.imgui_window();
@@ -287,12 +313,7 @@ void App::imgui_windows()
         ImGui::End();
         // Cameras
         ImGui::Begin("Cameras");
-        ImGui::SeparatorText(ICON_FA_CAMERA " 2D Camera");
-        if (imgui_widget(_camera2D))
-            trigger_rerender();
-        ImGui::NewLine();
-        ImGui::SeparatorText(ICON_FA_CAMERA_RETRO " 3D Camera");
-        _camera_manager.imgui(_variable_registries, command_executor());
+        cameras_window();
         ImGui::End();
 
         DebugOptions::show_framerate_window([&] {
