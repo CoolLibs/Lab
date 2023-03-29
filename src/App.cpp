@@ -7,6 +7,7 @@
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
+#include <IconFontCppHeaders/IconsFontAwesome6.h>
 #include <cmd/imgui.hpp>
 // #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
@@ -284,14 +285,14 @@ void App::imgui_windows()
         ImGui::Begin("Time");
         Cool::ClockU::imgui_timeline(_clock);
         ImGui::End();
-        // Camera
-        ImGui::Begin("Camera");
-        _camera_manager.imgui(_variable_registries, command_executor());
-        ImGui::End();
-        // Camera 2D
-        ImGui::Begin("Camera 2D");
+        // Cameras
+        ImGui::Begin("Cameras");
+        ImGui::SeparatorText(ICON_FA_CAMERA " 2D Camera");
         if (imgui_widget(_camera2D))
             trigger_rerender();
+        ImGui::NewLine();
+        ImGui::SeparatorText(ICON_FA_CAMERA_RETRO " 3D Camera");
+        _camera_manager.imgui(_variable_registries, command_executor());
         ImGui::End();
 
         DebugOptions::show_framerate_window([&] {
