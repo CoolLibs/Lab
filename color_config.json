@@ -36,7 +36,8 @@
                         "Brightness change": 0.10499999672174454,
                         "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             },
             {
                 "Name": "Medium Color",
@@ -74,7 +75,8 @@
                         "Brightness change": 0.03500000014901161,
                         "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             },
             {
                 "Name": "Background",
@@ -112,7 +114,8 @@
                         "Brightness change": -0.6480000019073486,
                         "Opacity": 0.9089999794960022
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             },
             {
                 "Name": "Accent Color",
@@ -152,7 +155,8 @@
                         "Brightness change": 0.2809999883174896,
                         "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": false
             },
             {
                 "Name": "Text",
@@ -176,7 +180,8 @@
                         "Brightness change": -0.6859999895095825,
                         "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             }
         ],
         "Is Dark Mode": false
