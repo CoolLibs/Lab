@@ -6,8 +6,6 @@
  */
 
 #include <Cool/ImGui/ImGuiExtras.h>
-#include <Cool/Path/Path.h>
-#include <Cool/Serialization/as_json.h>
 #include <wafl/wafl.hpp>
 
 namespace Cool {
@@ -145,29 +143,8 @@ private:
         instance().imnodes_color_theme_window                 = false;
     }
 
-    static void save_to_file()
-    {
-        Cool::Serialization::to_json(
-            instance(),
-            Cool::Path::root() / "cache/debug-options-lab.json",
-            "Debug Options"
-        );
-    }
-
-    static auto load_debug_options() -> Instance
-    {
-        auto the_instance = Instance{};
-        Cool::Serialization::from_json(the_instance, Cool::Path::root() / "cache/debug-options-lab.json")
-            .send_error_if_any([](const std::string& message) {
-                return Cool::Message{
-                    .category = "Loading Debug Options",
-                    .message  = message,
-                    .severity = Cool::MessageSeverity::Warning,
-                };
-            },
-                               Cool::Log::ToUser::console());
-        return the_instance;
-    }
+    static void save_to_file();
+    static auto load_debug_options() -> Instance;
 
     static auto instance() -> Instance&
     {

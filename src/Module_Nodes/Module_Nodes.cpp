@@ -235,3 +235,8 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
 }
 
 } // namespace Lab
+
+// #if COOL_SERIALIZATION
+#include <cereal/archives/json.hpp>
+CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT
+                                         // #endif

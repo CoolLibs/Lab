@@ -1,7 +1,6 @@
 #pragma once
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Nodes/Pin.h>
-#include <Cool/Nodes/REGISTER_NODE_TYPE.h>
 #include <cereal/types/optional.hpp>
 #include <optional>
 #include <string_view>
@@ -88,5 +87,3 @@ private:
 auto to_string(Node const& node) -> std::string;
 
 } // namespace Lab
-
-COOL_REGISTER_NODE_TYPE(Lab::Node);
