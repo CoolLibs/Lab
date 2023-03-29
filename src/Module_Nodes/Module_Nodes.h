@@ -53,13 +53,10 @@ private:
         archive(
             cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
             cereal::make_nvp("Dirty Flag: Regenerate Code", _regenerate_code_flag),
-            cereal::make_nvp("Shader", _shader)
-#if COOL_SERIALIZATION
-                ,
+            cereal::make_nvp("Shader", _shader),
             cereal::make_nvp("Node Editor", _nodes_editor),
             cereal::make_nvp("Main Node ID", _main_node_id),
             cereal::make_nvp("Camera Input", _camera_input)
-#endif
         );
     }
 };

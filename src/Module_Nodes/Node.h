@@ -67,7 +67,6 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-#if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Name", _name),
             cereal::make_nvp("Definition", _id_names),
@@ -78,9 +77,6 @@ private:
             cereal::make_nvp("Number of function inputs", _number_of_function_inputs),
             cereal::make_nvp("Chosen Any type", _chosen_any_type)
         );
-#else
-        (void)archive;
-#endif
     }
 };
 

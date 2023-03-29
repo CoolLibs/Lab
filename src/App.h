@@ -132,7 +132,6 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        // #if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Is camera 2D locked in view", _is_camera_2D_locked_in_view),
             cereal::make_nvp("Camera Manager", _camera_manager),
@@ -145,7 +144,6 @@ private:
             cereal::make_nvp("Nodes Module", _nodes_module),
             cereal::make_nvp("ImNodes style", _imnodes_style)
         );
-        // #endif
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 };

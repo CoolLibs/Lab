@@ -73,14 +73,10 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        // #if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Name", _name),
             cereal::make_nvp("Dirty Flag", _dirty_flag)
         );
-        // #else
-        //         (void)archive;
-        // #endif
     }
 };
 

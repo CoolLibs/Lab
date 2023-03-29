@@ -60,15 +60,11 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        // #if COOL_SERIALIZATION // This one is pretty useful to have all the time, don't disable it.
         archive(
             cereal::make_nvp("Camera ID", _camera_id),
             cereal::make_nvp("ViewController", _view_controller),
             cereal::make_nvp("Is locked in view", _is_locked_in_view)
         );
-        // #else
-        //         (void)archive;
-        // #endif
     }
 };
 

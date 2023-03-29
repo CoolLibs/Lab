@@ -93,7 +93,6 @@ private:
         template<class Archive>
         void serialize(Archive& archive)
         {
-            // #if COOL_SERIALIZATION // This one is pretty useful to have all the time, don't disable it.
             archive(
 #if DEBUG
                 cereal::make_nvp("Framerate window", show_framerate_window),
@@ -122,9 +121,6 @@ private:
 #endif
 
             );
-            // #else
-            //         (void)archive;
-            // #endif
         }
     };
 

@@ -7,8 +7,6 @@
 
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
-#include "CommandCore/LAB_REGISTER_COMMAND.h"
-#include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
 #include "CommandCore/MakeReversibleCommandContext_Ref.h"
 
 namespace Lab {
@@ -75,29 +73,16 @@ namespace cereal {
 template<class Archive>
 void serialize(Archive& archive, Lab::Command_SetCameraZoom& command)
 {
-#if COOL_SERIALIZATION
     archive(cereal::make_nvp("camera zoom", command.value));
-#else
-    (void)archive;
-    (void)command;
-#endif
 }
 
 template<class Archive>
 void serialize(Archive& archive, Lab::ReversibleCommand_SetCameraZoom& command)
 {
-#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("camera zoom", command.forward_command.value),
         cereal::make_nvp("Old camera zoom", command.old_value)
     );
-#else
-    (void)archive;
-    (void)command;
-#endif
 }
 
 } // namespace cereal
-
-LAB_REGISTER_COMMAND(Lab::Command_SetCameraZoom)
-LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetCameraZoom)
