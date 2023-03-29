@@ -96,6 +96,12 @@ export default ({}) => {
           link="https://github.com/tristetemps666"
           roles={["Programmer", "VFX Artist"]}
         />,
+        <Contributor
+          name="Amandine Kohlmuller"
+          github_name="akohlmul"
+          link="https://www.instagram.com/idnamaa/"
+          roles={["UI / UX Designer"]}
+        />,
       ]}
     />
   )
