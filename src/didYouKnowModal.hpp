@@ -26,6 +26,8 @@ private:
 
     size_t _current_tip_index = 0;
 
+    std::chrono::time_point<std::chrono::system_clock> _current_timestamp;
+
     friend void debug_did_you_know(DidYouKnowModal& _did_you_know_);
 };
 
