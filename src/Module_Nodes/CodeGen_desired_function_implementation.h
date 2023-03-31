@@ -1,6 +1,7 @@
 #pragma once
 #include "CodeGenContext.h"
 #include "FunctionSignature.h"
+#include "Node.h"
 
 namespace Lab {
 

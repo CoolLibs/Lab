@@ -9,3 +9,6 @@ void Command_OpenVideoExporter::execute(CommandExecutionContext_Ref& ctx) const
 }
 
 } // namespace Lab
+
+#include "CommandCore/LAB_REGISTER_COMMAND.h"
+LAB_REGISTER_COMMAND(Lab::Command_OpenVideoExporter)

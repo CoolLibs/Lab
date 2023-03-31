@@ -7,13 +7,15 @@
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
+#include <IconFontCppHeaders/IconsFontAwesome6.h>
 #include <cmd/imgui.hpp>
-// #include <serv/serv.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/ImGui/IcoMoonCodepoints.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
@@ -29,7 +31,7 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
-    , _nodes_view{_views.make_view(ICON_FA_IMAGE " View")}
+    , _nodes_view{_views.make_view(ICOMOON_IMAGE " View")}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
@@ -40,7 +42,8 @@ App::App(Cool::WindowManager& windows)
         _camera2D.value(),
         [this]() { trigger_rerender(); },
         [this]() { auto const sz =_nodes_view.view.size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
-        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; }
+        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; },
+        [this]() { return _is_camera_2D_locked_in_view; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
@@ -266,6 +269,30 @@ void App::imgui_commands_and_registries_debug_windows()
     });
 }
 
+void App::cameras_window()
+{
+    static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
+
+    ImGui::PushID("##2D");
+    ImGui::SeparatorText("2D Camera");
+    Cool::ImGuiExtras::toggle("Locked in view", &_is_camera_2D_locked_in_view);
+    ImGui::SameLine();
+    Cool::ImGuiExtras::help_marker(help_text);
+    if (imgui_widget(_camera2D))
+        trigger_rerender();
+    ImGui::PopID();
+
+    ImGui::NewLine();
+
+    ImGui::PushID("##3D");
+    ImGui::SeparatorText("3D Camera");
+    Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
+    ImGui::SameLine();
+    Cool::ImGuiExtras::help_marker(help_text);
+    _camera_manager.imgui(_variable_registries, command_executor());
+    ImGui::PopID();
+}
+
 void App::imgui_windows()
 {
     // Tests for DidYouKnow Modal
@@ -287,17 +314,12 @@ void App::imgui_windows()
         _nodes_module->imgui_windows(the_ui);
         // _custom_shader_module->imgui_windows(the_ui);
         // Time
-        ImGui::Begin("Time");
+        ImGui::Begin(ICOMOON_STOPWATCH " Time");
         Cool::ClockU::imgui_timeline(_clock);
         ImGui::End();
-        // Camera
-        ImGui::Begin("Camera");
-        _camera_manager.imgui(_variable_registries, command_executor());
-        ImGui::End();
-        // Camera 2D
-        ImGui::Begin("Camera 2D");
-        if (imgui_widget(_camera2D))
-            trigger_rerender();
+        // Cameras
+        ImGui::Begin(ICOMOON_CAMERA " Cameras");
+        cameras_window();
         ImGui::End();
 
         DebugOptions::show_framerate_window([&] {
@@ -386,7 +408,7 @@ void App::preview_menu()
 
 void App::export_menu()
 {
-    if (ImGui::BeginMenu("Export"))
+    if (ImGui::BeginMenu(ICOMOON_UPLOAD2 " Export"))
     {
         _exporter.imgui_menu_items({
             .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
@@ -398,7 +420,7 @@ void App::export_menu()
 
 void App::settings_menu()
 {
-    if (ImGui::BeginMenu("Settings"))
+    if (ImGui::BeginMenu(ICOMOON_COG " Settings"))
     {
         Cool::user_settings().imgui();
         ImGui::Separator();

@@ -34,7 +34,8 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 
 void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    auto updater = Cool::NodesDefinitionUpdater{nodes_config(ctx.ui()), _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
+    auto const cfg     = nodes_config(ctx.ui());
+    auto       updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
     if (_nodes_folder_watcher.update(updater))
         ctx.set_dirty(_regenerate_code_flag);
 }
@@ -47,7 +48,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     auto const shader_code = generate_shader_code(
         _main_node_id,
         _nodes_editor.graph(),
-        Cool::GetNodeDefinition_Ref{_nodes_library},
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library},
         update_ctx.input_provider()
     );
 
@@ -107,14 +108,12 @@ auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 
     inputs.push_back(Cool::AnyInputRefToConst{_camera_input});
 
-    std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
-    for (auto const& [_, node] : _nodes_editor.graph().nodes())
-    {
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
         for (auto const& input : node.value_inputs())
         {
             inputs.push_back(std::visit([](auto&& input) { return Cool::AnyInputRefToConst{input}; }, input));
         }
-    }
+    });
 
     return inputs;
 }
@@ -212,19 +211,15 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
-    {
-        std::shared_lock lock{_nodes_editor.graph().nodes().mutex()};
-        for (auto const& [_, node] : _nodes_editor.graph().nodes())
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
+        for (auto const& value_input : node.value_inputs())
         {
-            for (auto const& prop : node.value_inputs())
-            {
-                std::visit([&](auto&& prop) {
-                    send_uniform(prop, shader, in.provider);
-                },
-                           prop);
-            }
+            std::visit([&](auto&& value_input) {
+                send_uniform(value_input, shader, in.provider);
+            },
+                       value_input);
         }
-    }
+    });
 
     pipeline.draw();
 }
@@ -240,3 +235,7 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
 }
 
 } // namespace Lab
+
+#include <cereal/archives/json.hpp>
+#include <cereal/types/polymorphic.hpp>
+CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT

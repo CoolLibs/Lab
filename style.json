@@ -19,7 +19,7 @@
         "WindowMenuButtonPosition": 1,
         "ChildRounding": 2.0,
         "ChildBorderSize": 1.0,
-        "PopupRounding": 0.0,
+        "PopupRounding": 2.0,
         "PopupBorderSize": 1.0,
         "FramePadding": {
             "x": 9.0,

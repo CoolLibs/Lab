@@ -2,6 +2,7 @@
 #include <Cool/Nodes/NodeId.h>
 #include "CodeGenContext.h"
 #include "FunctionSignature.h"
+#include "Node.h"
 
 namespace Lab {
 
@@ -29,11 +30,11 @@ auto gen_desired_function(
 /// Creates a function with the `desired_signature` from the given `maybe_node`,
 /// or a default function if `maybe_node` is nullopt and `fallback_to_a_default_function` is true.
 auto gen_desired_function(
-    FunctionSignature          desired_signature,
-    std::optional<Node> const& maybe_node,
-    Cool::NodeId const&        id,
-    CodeGenContext&            context,
-    bool                       fallback_to_a_default_function = true
+    FunctionSignature   desired_signature,
+    Node const*         maybe_node,
+    Cool::NodeId const& id,
+    CodeGenContext&     context,
+    bool                fallback_to_a_default_function = true
 ) -> ExpectedFunctionName;
 
 /// Creates a function with the `desired_signature` from the given `node`.

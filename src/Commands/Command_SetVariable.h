@@ -3,8 +3,7 @@
 #include <Cool/Dependencies/VariableId.h>
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
-#include "CommandCore/LAB_REGISTER_COMMAND.h"
-#include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
+#include "CommandCore/MakeReversibleCommandContext_Ref.h"
 
 namespace Lab {
 
@@ -93,32 +92,20 @@ namespace cereal {
 template<class Archive, typename T>
 void serialize(Archive& archive, Lab::Command_SetVariable<T>& command)
 {
-#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("Id", command.id),
         cereal::make_nvp("Value", command.value)
     );
-#else
-    (void)archive;
-    (void)command;
-#endif
 }
 
 template<class Archive, typename T>
 void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
 {
-#if COOL_SERIALIZATION
     archive(
         cereal::make_nvp("Id", command.forward_command.id),
         cereal::make_nvp("Value", command.forward_command.value),
         cereal::make_nvp("Old value", command.old_value)
     );
-#else
-        (void)archive;
-        (void)command;
-#endif
 }
 
 } // namespace cereal
-
-#include "generated/register_set_variable_commands.inl"

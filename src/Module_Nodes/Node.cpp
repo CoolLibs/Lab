@@ -47,3 +47,6 @@ auto to_string(Node const& node) -> std::string
 }
 
 } // namespace Lab
+
+#include <Cool/Nodes/REGISTER_NODE_TYPE.h>
+COOL_REGISTER_NODE_TYPE(Lab::Node);

@@ -4,9 +4,9 @@
             {
                 "Name": "Bright Color",
                 "Color": {
-                    "value0": 0.19607843458652497,
-                    "value1": 0.2235294133424759,
-                    "value2": 0.26274511218070986
+                    "value0": 0.6691015362739563,
+                    "value1": 0.7019723653793335,
+                    "value2": 0.7567567825317383
                 },
                 "Brightness groups": [
                     {
@@ -17,7 +17,7 @@
                             13,
                             30,
                             15,
-                            28,
+                            27,
                             35,
                             37,
                             47
@@ -30,26 +30,27 @@
                             22,
                             25,
                             16,
+                            28,
                             34
                         ],
                         "Brightness change": 0.10499999672174454,
                         "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             },
             {
                 "Name": "Medium Color",
                 "Color": {
-                    "value0": 0.10980392247438431,
-                    "value1": 0.125490203499794,
-                    "value2": 0.14509804546833039
+                    "value0": 0.8044901490211487,
+                    "value1": 0.8264676928520203,
+                    "value2": 0.8610038757324219
                 },
                 "Brightness groups": [
                     {
                         "IDs": [
                             7,
                             14,
-                            27,
                             33,
                             36,
                             44,
@@ -68,15 +69,21 @@
                         ],
                         "Brightness change": -0.25,
                         "Opacity": 1.0
+                    },
+                    {
+                        "IDs": [],
+                        "Brightness change": 0.03500000014901161,
+                        "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             },
             {
                 "Name": "Background",
                 "Color": {
-                    "value0": 0.06305266916751862,
-                    "value1": 0.06988765299320221,
-                    "value2": 0.07843136787414551
+                    "value0": 0.8941176533699036,
+                    "value1": 0.9137254953384399,
+                    "value2": 0.9098039269447327
                 },
                 "Brightness groups": [
                     {
@@ -107,7 +114,8 @@
                         "Brightness change": -0.6480000019073486,
                         "Opacity": 0.9089999794960022
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             },
             {
                 "Name": "Accent Color",
@@ -147,14 +155,15 @@
                         "Brightness change": 0.2809999883174896,
                         "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": false
             },
             {
                 "Name": "Text",
                 "Color": {
-                    "value0": 0.8941176533699036,
-                    "value1": 0.9137254953384399,
-                    "value2": 0.9098039269447327
+                    "value0": 0.062745101749897,
+                    "value1": 0.07058823853731156,
+                    "value2": 0.0784313753247261
                 },
                 "Brightness groups": [
                     {
@@ -171,9 +180,10 @@
                         "Brightness change": -0.6859999895095825,
                         "Opacity": 1.0
                     }
-                ]
+                ],
+                "Behaves differently in light mode": true
             }
         ],
-        "Is Dark Mode": true
+        "Is Dark Mode": false
     }
 }

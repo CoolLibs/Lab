@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CommandCore/CommandExecutionContext_Ref.h"
-#include "CommandCore/LAB_REGISTER_COMMAND.h"
 
 namespace Lab {
 
@@ -26,5 +25,3 @@ void serialize(Archive&, Lab::Command_OpenVideoExporter&)
 }
 
 } // namespace cereal
-
-LAB_REGISTER_COMMAND(Lab::Command_OpenVideoExporter)

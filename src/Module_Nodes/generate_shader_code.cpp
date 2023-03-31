@@ -6,15 +6,15 @@
 
 namespace Lab {
 
-static auto gen_all_output_indices_declarations(Graph const& graph)
+static auto gen_all_output_indices_declarations(Cool::Graph const& graph)
     -> std::string
 {
     std::stringstream res{};
 
-    std::shared_lock lock{graph.nodes().mutex()};
-    for (auto const& [_, node] : graph.nodes())
+    graph.for_each_node<Node>([&](Node const& node) {
         for (size_t i = 1; i < node.output_pins().size(); ++i)
             res << fmt::format("float {};\n", make_valid_output_index_name(node.output_pins()[i]));
+    });
 
     return res.str();
 }
@@ -37,7 +37,7 @@ static auto inject_context_argument_in_all_functions(std::string code, std::vect
 
 auto generate_shader_code(
     Cool::NodeId const&                         main_node_id,
-    Graph const&                                graph,
+    Cool::Graph const&                          graph,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Cool::InputProvider_Ref                     input_provider
 )

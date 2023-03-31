@@ -78,19 +78,22 @@ static void apply_settings_to_inputs(
     }
 }
 
-auto NodesConfig::name(Node const& node) const -> std::string
+auto NodesConfig::name(Cool::Node const& abstract_node) const -> std::string
 {
+    auto const& node = abstract_node.downcast<Node>();
     auto const name = node.name();
     return name.empty() ? node.definition_name() : name;
 }
 
-auto NodesConfig::category_name(Node const& node) const -> std::string
+auto NodesConfig::category_name(Cool::Node const& abstract_node) const -> std::string
 {
+    auto const& node = abstract_node.downcast<Node>();
     return node.category_name();
 }
 
-void NodesConfig::imgui_node_body(Node& node, Cool::NodeId const& id) const
+void NodesConfig::imgui_node_body(Cool::Node& abstract_node, Cool::NodeId const& id) const
 {
+    auto& node = abstract_node.downcast<Node>();
     { // Main node selector
         const bool was_main = id == _main_node_id;
         bool       is_main  = was_main;
@@ -138,32 +141,34 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
     return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
 }
 
-auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> const& cat_id) const -> Node
+auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) const -> Node
 {
-    bool const needs_main_pin = !doesnt_need_main_pin(cat_id.def.signature());
+    auto const def = cat_id.def.downcast<NodeDefinition>();
+
+    bool const needs_main_pin = !doesnt_need_main_pin(def.signature());
 
     auto node = Node{
-        {cat_id.def.name(), cat_id.category_name},
-        needs_main_pin ? cat_id.def.signature().arity : 0,
-        cat_id.def.inputs().size(),
-        cat_id.def.signature().is_template(),
+        {def.name(), cat_id.category_name},
+        needs_main_pin ? def.signature().arity : 0,
+        def.inputs().size(),
+        def.signature().is_template(),
     };
 
     if (needs_main_pin)
     {
-        for (size_t i = 0; i < cat_id.def.signature().arity; ++i)
+        for (size_t i = 0; i < def.signature().arity; ++i)
         {
-            std::string pin_name = cat_id.def.main_parameter_names()[i];
+            std::string pin_name = def.main_parameter_names()[i];
             Cool::String::replace_all(pin_name, "_", " ");
             node.input_pins().emplace_back(pin_name);
         }
     }
     node.output_pins().emplace_back("OUT");
 
-    for (auto const& input : cat_id.def.inputs())
+    for (auto const& input : def.inputs())
         node.input_pins().push_back(Cool::InputPin{input.name()});
 
-    for (auto const& property_def : cat_id.def.properties())
+    for (auto const& property_def : def.properties())
     {
         node.value_inputs().push_back(_input_factory.make(
             property_def,
@@ -175,11 +180,11 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName<NodeDefinition> 
     // Get the variables from the inputs
     auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
     // Apply
-    cat_id.def.presets_manager().apply_first_preset_if_there_is_one(settings);
+    def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
     apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
 
-    for (auto const& output_index_name : cat_id.def.output_indices())
+    for (auto const& output_index_name : def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
 
     return node;
@@ -261,9 +266,11 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
     }
 }
 
-void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition const& definition, Cool::Graph<Node>& graph) const
+void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph) const
 {
-    auto node = make_node({definition, out_node.category_name()});
+    auto& out_node      = abstract_out_node.downcast<Node>();
+    auto  node          = make_node({definition, out_node.category_name()});
+
     node.set_name(out_node.name());
 
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs());
@@ -271,11 +278,12 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, NodeDefinition
     refresh_pins(node.input_pins(), out_node.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
     refresh_pins(node.output_pins(), out_node.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
 
-    out_node = node;
+    out_node = std::move(node);
 }
 
-void NodesConfig::widget_to_rename_node(Node& node)
+void NodesConfig::widget_to_rename_node(Cool::Node& abstract_node)
 {
+    auto& node = abstract_node.downcast<Node>();
     auto name = node.name();
     ImGui::SetKeyboardFocusHere();
     if (ImGui::InputText("Display Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))

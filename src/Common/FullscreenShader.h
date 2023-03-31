@@ -35,13 +35,9 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-#if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Shader Dirty Flag", _dirty_flag)
         );
-#else
-        (void)archive;
-#endif
     }
 };
 

@@ -1,7 +1,8 @@
-#include <Cool/Core/run.h>
 #include "App.h"
+//
+#include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation
 
-int main()
+auto main() -> int
 {
     Cool::run<Lab::App>({Cool::WindowConfig{
         .title                  = "CoolLab",

@@ -32,6 +32,7 @@ public:
     );
 
     [[nodiscard]] auto id() const -> Cool::SharedVariableId<Cool::Camera> { return _camera_id; }
+    [[nodiscard]] auto is_locked_in_view() -> bool& { return _is_locked_in_view; }
 
     void imgui(
         std::reference_wrapper<Cool::VariableRegistries>,
@@ -51,6 +52,7 @@ private:
 private:
     Cool::SharedVariableId<Cool::Camera> _camera_id;
     Cool::ViewController_Orbital         _view_controller;
+    bool                                 _is_locked_in_view{false};
 
 private:
     // Serialization
@@ -58,14 +60,11 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-#if COOL_SERIALIZATION
         archive(
             cereal::make_nvp("Camera ID", _camera_id),
-            cereal::make_nvp("ViewController", _view_controller)
+            cereal::make_nvp("ViewController", _view_controller),
+            cereal::make_nvp("Is locked in view", _is_locked_in_view)
         );
-#else
-        (void)archive;
-#endif
     }
 };
 
