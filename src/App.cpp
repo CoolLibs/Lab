@@ -17,7 +17,6 @@
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
-#include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -371,7 +370,6 @@ void App::imgui_windows()
         });
 
         DebugOptions::imnodes_color_theme_window([&]() {
-            _imnodes_style.widget();
         });
     }
 }
