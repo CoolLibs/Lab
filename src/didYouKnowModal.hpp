@@ -26,9 +26,20 @@ private:
 
     size_t _current_tip_index = 0;
 
-    std::chrono::time_point<std::chrono::system_clock> _current_timestamp;
+    __time64_t _current_timestamp;
 
     friend void debug_did_you_know(DidYouKnowModal& _did_you_know_);
+
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Last tip", _current_tip_index),
+            cereal::make_nvp("Last timestamp", _current_timestamp)
+        );
+    }
 };
 
 void test_did_you_know(DidYouKnowModal& _did_you_know_);

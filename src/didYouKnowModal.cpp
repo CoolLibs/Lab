@@ -5,7 +5,7 @@
 
 void DidYouKnowModal::open()
 {
-    auto difference = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - std::chrono::system_clock::to_time_t(_current_timestamp);
+    auto difference = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - _current_timestamp;
 
     size_t time_to_wait = 1 * 60 * 60; // 1 hour
 
@@ -13,7 +13,7 @@ void DidYouKnowModal::open()
     {
         _has_been_opened = true;
         ImGui::OpenPopup(_id.c_str());
-        _current_timestamp = std::chrono::system_clock::now();
+        _current_timestamp = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
         return;
     }
 }
@@ -86,7 +86,7 @@ void debug_did_you_know(DidYouKnowModal& _did_you_know_)
         _did_you_know_._has_been_opened = false;
 
     // imgui text with difference between current timestamp of did you know and current timestamp of now
-    ImGui::Text("Difference: %s", std::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - std::chrono::system_clock::to_time_t(_did_you_know_._current_timestamp)).c_str());
+    ImGui::Text("Difference: %s", std::to_string(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - _did_you_know_._current_timestamp).c_str());
 
     // imgui text to precise how much time is needed to wait before showing the did you know again
     ImGui::Text("Time to wait: %s", std::to_string(1 * 60 * 60).c_str());

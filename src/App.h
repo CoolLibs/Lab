@@ -145,7 +145,8 @@ private:
             cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("History", _history),
             cereal::make_nvp("Nodes Module", _nodes_module),
-            cereal::make_nvp("ImNodes style", _imnodes_style)
+            cereal::make_nvp("ImNodes style", _imnodes_style),
+            cereal::make_nvp("Did you know modal", _did_you_know_modal)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
