@@ -18,6 +18,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Cool/DidYouKnow/didYouKnowModal.hpp"
 #include "Cool/ImGui/StyleEditor.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"
@@ -26,7 +27,6 @@
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Module_Nodes/Module_Nodes.h"
-#include "didYouKnowModal.hpp"
 
 namespace Lab {
 
