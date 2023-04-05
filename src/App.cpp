@@ -13,6 +13,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
+#include "Cool/DidYouKnow/testDidYouKnowModal.hpp"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
