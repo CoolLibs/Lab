@@ -3,187 +3,681 @@
         "Categories": [
             {
                 "Name": "Bright Color",
-                "Color": {
-                    "value0": 0.6691015362739563,
-                    "value1": 0.7019723653793335,
-                    "value2": 0.7567567825317383
-                },
-                "Brightness groups": [
+                "Behaves differently in light mode": true,
+                "Groups": [
                     {
-                        "IDs": [
-                            5,
-                            21,
-                            24,
-                            13,
-                            30,
-                            15,
-                            27,
-                            35,
-                            37,
-                            47
-                        ],
-                        "Brightness change": 0.0,
+                        "Name": "Normal",
+                        "Brightness delta": 0.0,
                         "Opacity": 1.0
                     },
                     {
-                        "IDs": [
-                            22,
-                            25,
-                            16,
-                            28,
-                            34
-                        ],
-                        "Brightness change": 0.10499999672174454,
+                        "Name": "Brighter",
+                        "Brightness delta": 0.10499999672174454,
                         "Opacity": 1.0
                     }
-                ],
-                "Behaves differently in light mode": true
+                ]
             },
             {
                 "Name": "Medium Color",
-                "Color": {
-                    "value0": 0.8044901490211487,
-                    "value1": 0.8264676928520203,
-                    "value2": 0.8610038757324219
-                },
-                "Brightness groups": [
+                "Behaves differently in light mode": true,
+                "Groups": [
                     {
-                        "IDs": [
-                            7,
-                            14,
-                            33,
-                            36,
-                            44,
-                            48,
-                            10,
-                            11,
-                            12
-                        ],
-                        "Brightness change": 0.0,
+                        "Name": "Normal",
+                        "Brightness delta": 0.0,
                         "Opacity": 1.0
                     },
                     {
-                        "IDs": [
-                            9,
-                            8
-                        ],
-                        "Brightness change": -0.25,
+                        "Name": "Darker",
+                        "Brightness delta": -0.25,
                         "Opacity": 1.0
                     },
                     {
-                        "IDs": [],
-                        "Brightness change": 0.03500000014901161,
+                        "Name": "Brighter",
+                        "Brightness delta": 0.03500000014901161,
                         "Opacity": 1.0
                     }
-                ],
-                "Behaves differently in light mode": true
+                ]
             },
             {
                 "Name": "Background",
-                "Color": {
-                    "value0": 0.8941176533699036,
-                    "value1": 0.9137254953384399,
-                    "value2": 0.9098039269447327
-                },
-                "Brightness groups": [
+                "Behaves differently in light mode": true,
+                "Groups": [
                     {
-                        "IDs": [
-                            3,
-                            4,
-                            46,
-                            45,
-                            2
-                        ],
-                        "Brightness change": 0.0,
+                        "Name": "Normal",
+                        "Brightness delta": 0.0,
                         "Opacity": 1.0
                     },
                     {
-                        "IDs": [
-                            6,
-                            39,
-                            53,
-                            52
-                        ],
-                        "Brightness change": 0.0,
+                        "Name": "Normal2",
+                        "Brightness delta": 0.0,
                         "Opacity": 1.0
                     },
                     {
-                        "IDs": [
-                            54
-                        ],
-                        "Brightness change": -0.6480000019073486,
+                        "Name": "Modal",
+                        "Brightness delta": -0.6480000019073486,
                         "Opacity": 0.9089999794960022
                     }
-                ],
-                "Behaves differently in light mode": true
+                ]
             },
             {
                 "Name": "Accent Color",
-                "Color": {
-                    "value0": 0.3019607961177826,
-                    "value1": 0.4470588266849518,
-                    "value2": 0.8901960849761963
-                },
-                "Brightness groups": [
+                "Behaves differently in light mode": false,
+                "Groups": [
                     {
-                        "IDs": [
-                            23,
-                            18,
-                            38,
-                            50,
-                            26,
-                            51,
-                            42,
-                            40,
-                            32,
-                            31,
-                            17,
-                            29,
-                            19,
-                            49
-                        ],
-                        "Brightness change": 0.0,
+                        "Name": "Normal",
+                        "Brightness delta": 0.0,
                         "Opacity": 1.0
                     },
                     {
-                        "IDs": [
-                            43,
-                            41,
-                            20,
-                            55
-                        ],
-                        "Brightness change": 0.2809999883174896,
+                        "Name": "Brighter",
+                        "Brightness delta": 0.2809999883174896,
                         "Opacity": 1.0
                     }
-                ],
-                "Behaves differently in light mode": false
+                ]
             },
             {
                 "Name": "Text",
-                "Color": {
-                    "value0": 0.062745101749897,
-                    "value1": 0.07058823853731156,
-                    "value2": 0.0784313753247261
-                },
-                "Brightness groups": [
+                "Behaves differently in light mode": true,
+                "Groups": [
                     {
-                        "IDs": [
-                            0
-                        ],
-                        "Brightness change": 0.0,
+                        "Name": "Normal",
+                        "Brightness delta": 0.0,
                         "Opacity": 1.0
                     },
                     {
-                        "IDs": [
-                            1
-                        ],
-                        "Brightness change": -0.6859999895095825,
+                        "Name": "Darker",
+                        "Brightness delta": -0.6859999895095825,
                         "Opacity": 1.0
                     }
-                ],
-                "Behaves differently in light mode": true
+                ]
             }
         ],
-        "Is Dark Mode": false
+        "Elements": [
+            {
+                "first": {
+                    "Name": "Text"
+                },
+                "second": {
+                    "Category name": "Text",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TextDisabled"
+                },
+                "second": {
+                    "Category name": "Text",
+                    "Group name": "Darker"
+                }
+            },
+            {
+                "first": {
+                    "Name": "WindowBg"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ChildBg"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "PopupBg"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "Border"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "BorderShadow"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal2"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FrameBg"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FrameBgHovered"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Darker"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FrameBgActive"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Darker"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TitleBg"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TitleBgActive"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TitleBgCollapsed"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "MenuBarBg"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ScrollbarBg"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ScrollbarGrab"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ScrollbarGrabHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ScrollbarGrabActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "CheckMark"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "SliderGrab"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "SliderGrabActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "Button"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ButtonHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ButtonActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "Header"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "HeaderHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "HeaderActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "Separator"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "SeparatorHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "SeparatorActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ResizeGrip"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ResizeGripHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ResizeGripActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "Tab"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TabHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TabActive"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TabUnfocused"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TabUnfocusedActive"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "DockingPreview"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "DockingEmptyBg"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal2"
+                }
+            },
+            {
+                "first": {
+                    "Name": "PlotLines"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "PlotLinesHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "PlotHistogram"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "PlotHistogramHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TableHeaderBg"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TableBorderStrong"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TableBorderLight"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TableRowBg"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TableRowBgAlt"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "TextSelectedBg"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "DragDropTarget"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "NavHighlight"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "NavWindowingHighlight"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal2"
+                }
+            },
+            {
+                "first": {
+                    "Name": "NavWindowingDimBg"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Normal2"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ModalWindowDimBg"
+                },
+                "second": {
+                    "Category name": "Background",
+                    "Group name": "Modal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "SliderGrabHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "Toggle"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ToggleHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ToggleBg"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ToggleBgHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "HighlightItems"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMark"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMarkHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMarkSelected"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMarkSelectedHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            }
+        ]
     }
 }
