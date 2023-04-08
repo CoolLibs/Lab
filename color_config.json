@@ -596,6 +596,87 @@
                     "Category name": "Accent Color",
                     "Group name": "Brighter"
                 }
+            },
+            {
+                "first": {
+                    "Name": "Toggle"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ToggleHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ToggleBg"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "ToggleBgHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "HighlightItems"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMark"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMarkHovered"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMarkSelected"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "GradientMarkSelectedHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
             }
         ]
     }
