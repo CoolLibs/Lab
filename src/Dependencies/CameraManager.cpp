@@ -1,5 +1,6 @@
 #include "CameraManager.h"
 #include <Cool/Camera/ViewController_OrbitalU.h>
+#include <Cool/ImGui/IcoMoonCodepoints.h>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/CommandExecutor_TopLevel_Ref.h"
 #include "Commands/Command_FinishedEditingVariable.h"
@@ -74,7 +75,7 @@ void CameraManager::imgui(
     maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
         return _view_controller.ImGui(camera);
     });
-    if (ImGui::Button("Look at the origin"))
+    if (ImGui::Button(ICOMOON_RADIO_CHECKED "  Look at the origin"))
     {
         maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
             _view_controller.set_orbit_center({0, 0, 0}, camera);
@@ -82,7 +83,7 @@ void CameraManager::imgui(
         });
         executor.execute(Command_FinishedEditingVariable{});
     }
-    if (ImGui::Button("Reset transform"))
+    if (ImGui::Button(ICOMOON_TARGET "  Reset Camera"))
     {
         maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
             Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
