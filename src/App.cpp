@@ -1,6 +1,7 @@
 #include "App.h"
 #include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/DebugOptions/TestPresets.h>
+#include <Cool/ImGui/Fonts.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Path/Path.h>
@@ -274,7 +275,9 @@ void App::cameras_window()
     static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
 
     ImGui::PushID("##2D");
+    ImGui::PushFont(Cool::Font::bold());
     ImGui::SeparatorText("2D Camera");
+    ImGui::PopFont();
     Cool::ImGuiExtras::toggle("Locked in view", &_is_camera_2D_locked_in_view);
     ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
@@ -285,7 +288,9 @@ void App::cameras_window()
     ImGui::NewLine();
 
     ImGui::PushID("##3D");
+    ImGui::PushFont(Cool::Font::bold());
     ImGui::SeparatorText("3D Camera");
+    ImGui::PopFont();
     Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
     ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
