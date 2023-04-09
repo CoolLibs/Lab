@@ -32,7 +32,7 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
-    , _nodes_view{_views.make_view(ICOMOON_IMAGE " View")}
+    , _nodes_view{_views.make_view(ICOMOON_IMAGE "  View")}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
@@ -317,7 +317,7 @@ void App::imgui_windows()
         Cool::ClockU::imgui_timeline(_clock);
         ImGui::End();
         // Cameras
-        ImGui::Begin(ICOMOON_CAMERA " Cameras");
+        ImGui::Begin(ICOMOON_CAMERA "  Cameras");
         cameras_window();
         ImGui::End();
 
@@ -407,7 +407,7 @@ void App::preview_menu()
 
 void App::export_menu()
 {
-    if (ImGui::BeginMenu(ICOMOON_UPLOAD2 " Export"))
+    if (ImGui::BeginMenu("Export"))
     {
         _exporter.imgui_menu_items({
             .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
@@ -419,7 +419,7 @@ void App::export_menu()
 
 void App::settings_menu()
 {
-    if (ImGui::BeginMenu(ICOMOON_COG " Settings"))
+    if (ImGui::BeginMenu("Settings"))
     {
         Cool::user_settings().imgui();
         ImGui::Separator();
