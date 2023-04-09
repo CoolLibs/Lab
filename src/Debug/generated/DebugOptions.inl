@@ -23,7 +23,7 @@ public:
     {
         if (instance().show_framerate_window)
         {
-            ImGui::Begin("Framerate", &instance().show_framerate_window, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Framerate", ICOMOON_WRENCH).c_str(), &instance().show_framerate_window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -38,7 +38,7 @@ public:
     {
         if (instance().show_generated_shader_code)
         {
-            ImGui::Begin("Nodes Code", &instance().show_generated_shader_code, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Nodes Code", ICOMOON_WRENCH).c_str(), &instance().show_generated_shader_code, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -47,7 +47,7 @@ public:
     {
         if (instance().test_all_variable_widgets__window)
         {
-            ImGui::Begin("Test all Variable Widgets", &instance().test_all_variable_widgets__window, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Test all Variable Widgets", ICOMOON_WRENCH).c_str(), &instance().test_all_variable_widgets__window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -56,7 +56,7 @@ public:
     {
         if (instance().test_shaders_compilation__window)
         {
-            ImGui::Begin("Test Shaders Compilation", &instance().test_shaders_compilation__window, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Test Shaders Compilation", ICOMOON_WRENCH).c_str(), &instance().test_shaders_compilation__window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
@@ -65,7 +65,7 @@ public:
     {
         if (instance().imnodes_color_theme_window)
         {
-            ImGui::Begin("Color Themes: Nodes", &instance().imnodes_color_theme_window, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Color Themes: Nodes", ICOMOON_WRENCH).c_str(), &instance().imnodes_color_theme_window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
         }
