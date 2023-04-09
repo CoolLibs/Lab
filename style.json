@@ -23,7 +23,7 @@
         "PopupBorderSize": 1.0,
         "FramePadding": {
             "x": 9.0,
-            "y": 4.0
+            "y": 6.0
         },
         "FrameRounding": 12.0,
         "FrameBorderSize": 0.0,

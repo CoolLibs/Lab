@@ -635,6 +635,15 @@
             },
             {
                 "first": {
+                    "Name": "ButtonsSeparator"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
                     "Name": "HighlightItems"
                 },
                 "second": {

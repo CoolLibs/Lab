@@ -1,6 +1,8 @@
 #include "App.h"
 #include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/DebugOptions/TestPresets.h>
+#include <Cool/ImGui/Fonts.h>
+#include <Cool/ImGui/icon_fmt.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Path/Path.h>
@@ -15,7 +17,6 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
-#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
@@ -30,7 +31,7 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
-    , _nodes_view{_views.make_view(ICOMOON_IMAGE " View")}
+    , _nodes_view{_views.make_view(Cool::icon_fmt("View", ICOMOON_IMAGE))}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
@@ -273,7 +274,9 @@ void App::cameras_window()
     static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
 
     ImGui::PushID("##2D");
+    ImGui::PushFont(Cool::Font::bold());
     ImGui::SeparatorText("2D Camera");
+    ImGui::PopFont();
     Cool::ImGuiExtras::toggle("Locked in view", &_is_camera_2D_locked_in_view);
     ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
@@ -284,7 +287,9 @@ void App::cameras_window()
     ImGui::NewLine();
 
     ImGui::PushID("##3D");
+    ImGui::PushFont(Cool::Font::bold());
     ImGui::SeparatorText("3D Camera");
+    ImGui::PopFont();
     Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
     ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
@@ -307,11 +312,11 @@ void App::imgui_windows()
         _nodes_module->imgui_windows(the_ui);
         // _custom_shader_module->imgui_windows(the_ui);
         // Time
-        ImGui::Begin(ICOMOON_STOPWATCH " Time");
+        ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
         Cool::ClockU::imgui_timeline(_clock);
         ImGui::End();
         // Cameras
-        ImGui::Begin(ICOMOON_CAMERA " Cameras");
+        ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
         cameras_window();
         ImGui::End();
 
@@ -376,7 +381,7 @@ void App::imgui_windows()
 
 void App::preview_menu()
 {
-    if (ImGui::BeginMenu("Preview"))
+    if (ImGui::BeginMenu(Cool::icon_fmt("Preview", ICOMOON_IMAGE, true).c_str()))
     {
         if (_preview_constraint.imgui())
         {
@@ -400,7 +405,7 @@ void App::preview_menu()
 
 void App::export_menu()
 {
-    if (ImGui::BeginMenu(ICOMOON_UPLOAD2 " Export"))
+    if (ImGui::BeginMenu(Cool::icon_fmt("Export", ICOMOON_UPLOAD2, true).c_str()))
     {
         _exporter.imgui_menu_items({
             .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
@@ -412,7 +417,7 @@ void App::export_menu()
 
 void App::settings_menu()
 {
-    if (ImGui::BeginMenu(ICOMOON_COG " Settings"))
+    if (ImGui::BeginMenu(Cool::icon_fmt("Settings", ICOMOON_COG, true).c_str()))
     {
         Cool::user_settings().imgui();
         ImGui::Separator();
