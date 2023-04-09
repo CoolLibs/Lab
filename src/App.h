@@ -17,7 +17,6 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Cool/ImGui/StyleEditor.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
@@ -121,7 +120,6 @@ private:
     std::unique_ptr<Module_Nodes>  _nodes_module;
     CommandLogger                  _command_logger{};
     bool                           _is_first_frame{true};
-    Cool::StyleEditor              _style{};
     bool                           _is_camera_2D_locked_in_view{false};
 
 private:
