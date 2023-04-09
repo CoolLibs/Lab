@@ -93,10 +93,10 @@
             "z": 8.0,
             "w": 8.0
         },
-        "NodeRounding": 12.0,
-        "NodeBorderWidth": 1.5,
-        "HoveredNodeBorderWidth": 3.5,
-        "SelectedNodeBorderWidth": 3.5,
+        "NodeRounding": 2.0,
+        "NodeBorderWidth": 0.0,
+        "HoveredNodeBorderWidth": 3.0,
+        "SelectedNodeBorderWidth": 3.0,
         "PinRounding": 4.0,
         "PinBorderWidth": 0.0,
         "LinkStrength": 100.0,
@@ -128,7 +128,7 @@
         "PinRadius": 0.0,
         "PinArrowSize": 0.0,
         "PinArrowWidth": 0.0,
-        "GroupRounding": 6.0,
+        "GroupRounding": 2.0,
         "GroupBorderWidth": 1.0,
         "HighlightConnectedLinks": 0.0,
         "SnapLinkToPinDir": 0.0
