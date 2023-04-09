@@ -383,7 +383,7 @@ void App::imgui_windows()
 
 void App::preview_menu()
 {
-    if (ImGui::BeginMenu("Preview"))
+    if (ImGui::BeginMenu(Cool::icon_fmt("Preview", ICOMOON_IMAGE, true).c_str()))
     {
         if (_preview_constraint.imgui())
         {
