@@ -316,77 +316,80 @@ void App::imgui_windows()
     imgui_window_console();
 
     if (inputs_are_allowed())
+        imgui_windows_only_when_inputs_are_allowed();
+}
+
+void App::imgui_windows_only_when_inputs_are_allowed()
+{
+    const auto the_ui = ui();
+    _nodes_module->imgui_windows(the_ui);
+    // _custom_shader_module->imgui_windows(the_ui);
+    // Time
+    ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
+    Cool::ClockU::imgui_timeline(_clock);
+    ImGui::End();
+    // Cameras
+    ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
+    cameras_window();
+    ImGui::End();
+
+    DebugOptions::show_framerate_window([&] {
+        ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+        _main_window.imgui_cap_framerate();
+    });
+    if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
+        ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
+                                                                        // to learn more about Dear ImGui!).
+    if (DebugOptions::show_commands_and_registries_debug_windows())
     {
-        const auto the_ui = ui();
-        _nodes_module->imgui_windows(the_ui);
-        // _custom_shader_module->imgui_windows(the_ui);
-        // Time
-        ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-        Cool::ClockU::imgui_timeline(_clock);
-        ImGui::End();
-        // Cameras
-        ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
-        cameras_window();
-        ImGui::End();
-
-        DebugOptions::show_framerate_window([&] {
-            ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-            _main_window.imgui_cap_framerate();
-        });
-        if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
-            ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
-                                                                            // to learn more about Dear ImGui!).
-        if (DebugOptions::show_commands_and_registries_debug_windows())
-        {
-            imgui_commands_and_registries_debug_windows();
-        }
-        if (DebugOptions::show_nodes_and_links_registries())
-        {
-            _nodes_module->debug_show_nodes_and_links_registries_windows(ui());
-        }
-
-        Cool::DebugOptions::texture_library_debug_view([&] {
-            Cool::TextureLibrary::instance().imgui_debug_view();
-        });
-        DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
-        DebugOptions::test_shaders_compilation__window([&]() {
-            if (ImGui::Button("Compile everything"))
-            {
-                Cool::Log::ToUser::console().clear();
-                compile_all_is0_nodes();
-            }
-            ImGui::Separator();
-            if (ImGui::Button("Compile all is0 Nodes"))
-            {
-                Cool::Log::ToUser::console().clear();
-                compile_all_is0_nodes();
-            }
-        });
-
-        Cool::DebugOptions::test_message_console__window([]() {
-            static auto test_message_console = Cool::TestMessageConsole{};
-            test_message_console.imgui(
-                Cool::Log::ToUser::console()
-            );
-        });
-
-        Cool::DebugOptions::test_presets__window([]() {
-            static auto test_presets = TestPresets{};
-            test_presets.imgui();
-        });
-
-        Cool::DebugOptions::color_themes_advanced_config_window([&]() {
-            Cool::user_settings().color_themes.imgui_advanced_config();
-        });
-
-        Cool::DebugOptions::color_themes_editor([&]() {
-            Cool::user_settings().color_themes.imgui_basic_theme_editor();
-        });
-
-        DebugOptions::imnodes_color_theme_window([&]() {
-            _imnodes_style.widget();
-        });
+        imgui_commands_and_registries_debug_windows();
     }
+    if (DebugOptions::show_nodes_and_links_registries())
+    {
+        _nodes_module->debug_show_nodes_and_links_registries_windows(ui());
+    }
+
+    Cool::DebugOptions::texture_library_debug_view([&] {
+        Cool::TextureLibrary::instance().imgui_debug_view();
+    });
+    DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
+    DebugOptions::test_shaders_compilation__window([&]() {
+        if (ImGui::Button("Compile everything"))
+        {
+            Cool::Log::ToUser::console().clear();
+            compile_all_is0_nodes();
+        }
+        ImGui::Separator();
+        if (ImGui::Button("Compile all is0 Nodes"))
+        {
+            Cool::Log::ToUser::console().clear();
+            compile_all_is0_nodes();
+        }
+    });
+
+    Cool::DebugOptions::test_message_console__window([]() {
+        static auto test_message_console = Cool::TestMessageConsole{};
+        test_message_console.imgui(
+            Cool::Log::ToUser::console()
+        );
+    });
+
+    Cool::DebugOptions::test_presets__window([]() {
+        static auto test_presets = TestPresets{};
+        test_presets.imgui();
+    });
+
+    Cool::DebugOptions::color_themes_advanced_config_window([&]() {
+        Cool::user_settings().color_themes.imgui_advanced_config();
+    });
+
+    Cool::DebugOptions::color_themes_editor([&]() {
+        Cool::user_settings().color_themes.imgui_basic_theme_editor();
+    });
+
+    DebugOptions::imnodes_color_theme_window([&]() {
+        _imnodes_style.widget();
+    });
 }
 
 void App::view_menu()
