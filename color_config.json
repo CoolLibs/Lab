@@ -635,6 +635,33 @@
             },
             {
                 "first": {
+                    "Name": "CheckboxButton"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "CheckboxButtonHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "CheckboxButtonActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
                     "Name": "ButtonsSeparator"
                 },
                 "second": {
