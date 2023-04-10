@@ -300,8 +300,16 @@ void App::cameras_window()
 
 void App::imgui_windows()
 {
-    _nodes_view.imgui_window();
-    // _custom_shader_view.imgui_window();
+    bool const is_exporting = _exporter.is_exporting();
+    {
+        if (!_was_exporting_during_previous_frame && is_exporting)
+            save_windows_state(); // Save normal state before making the View fullscreen.
+        if (_was_exporting_during_previous_frame && !is_exporting)
+            restore_windows_state();
+        _was_exporting_during_previous_frame = is_exporting;
+    }
+
+    _nodes_view.imgui_window(is_exporting /* View in fullscreen while we are exporting */);
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 

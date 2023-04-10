@@ -125,6 +125,7 @@ private:
     Cool::ImNodes_StyleEditor      _imnodes_style{};
     Cool::StyleEditor              _style{};
     bool                           _is_camera_2D_locked_in_view{false};
+    bool                           _was_exporting_during_previous_frame{false};
 
 private:
     // Serialization
