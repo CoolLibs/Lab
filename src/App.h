@@ -84,7 +84,7 @@ private:
 
     Cool::Polaroid polaroid();
 
-    void preview_menu();
+    void view_menu();
     // void windows_menu();
     void export_menu();
     void settings_menu();
@@ -112,7 +112,7 @@ private:
     Cool::Variable<Cool::Camera2D> _camera2D;
     Cool::Window&                  _main_window;
     Cool::Clock_Realtime           _clock;
-    Cool::ImageSizeConstraint      _preview_constraint;
+    Cool::ImageSizeConstraint      _view_constraint;
     Cool::RenderableViewManager    _views; // Must be before the views because it is used to create them
     Cool::RenderableView&          _nodes_view;
     Cool::Exporter                 _exporter;
@@ -137,7 +137,7 @@ private:
             cereal::make_nvp("Camera Manager", _camera_manager),
             cereal::make_nvp("Dirty Registry", _dirty_registry),
             cereal::make_nvp("Variable Registries", _variable_registries),
-            cereal::make_nvp("Preview Constraint", _preview_constraint),
+            cereal::make_nvp("View Constraint", _view_constraint),
             cereal::make_nvp("Exporter (Image and Video)", _exporter),
             cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("History", _history),

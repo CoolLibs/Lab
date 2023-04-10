@@ -99,7 +99,7 @@ void App::update()
         _clock.update();
         for (auto& view : _views)
         {
-            view.update_size(_preview_constraint);
+            view.update_size(_view_constraint);
         }
         polaroid().render(_clock.time());
     }
@@ -381,11 +381,11 @@ void App::imgui_windows()
     }
 }
 
-void App::preview_menu()
+void App::view_menu()
 {
-    if (ImGui::BeginMenu(Cool::icon_fmt("Preview", ICOMOON_IMAGE, true).c_str()))
+    if (ImGui::BeginMenu(Cool::icon_fmt("View", ICOMOON_IMAGE, true).c_str()))
     {
-        if (_preview_constraint.imgui())
+        if (_view_constraint.imgui())
         {
             // render_impl(_view.render_target, *_current_module, _clock.time());
         }
@@ -459,7 +459,7 @@ void App::debug_menu()
 
 void App::imgui_menus()
 {
-    preview_menu();
+    view_menu();
     // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
     settings_menu();
@@ -547,13 +547,13 @@ void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& eve
 
 void App::open_image_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
+    _exporter.maybe_set_aspect_ratio(_view_constraint.aspect_ratio());
     _exporter.image_export_window().open();
 }
 
 void App::open_video_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
+    _exporter.maybe_set_aspect_ratio(_view_constraint.aspect_ratio());
     _exporter.video_export_window().open();
 }
 
