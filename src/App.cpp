@@ -316,13 +316,13 @@ void App::imgui_windows()
             if (_exporter.is_exporting())
                 return;
 
-            if (ImGui::Button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE))
+            if (Cool::ImGuiExtras::button_with_text_icon(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE))
             {
                 _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
                 _main_window.set_fullscreen(_wants_view_in_fullscreen);
             }
 
-            if (ImGui::Button(ICOMOON_TARGET))
+            if (Cool::ImGuiExtras::button_with_text_icon(ICOMOON_TARGET))
             {
                 reset_cameras();
             }
