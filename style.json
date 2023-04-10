@@ -7,7 +7,7 @@
             "y": 8.0
         },
         "WindowRounding": 2.0,
-        "WindowBorderSize": 0.0,
+        "WindowBorderSize": 1.0,
         "WindowMinSize": {
             "x": 32.0,
             "y": 32.0
