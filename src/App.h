@@ -84,6 +84,8 @@ private:
 
     Cool::Polaroid polaroid();
 
+    void reset_cameras();
+
     void view_menu();
     // void windows_menu();
     void export_menu();
@@ -126,7 +128,8 @@ private:
     Cool::ImNodes_StyleEditor      _imnodes_style{};
     Cool::StyleEditor              _style{};
     bool                           _is_camera_2D_locked_in_view{false};
-    bool                           _was_exporting_during_previous_frame{false};
+    bool                           _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
+    bool                           _view_was_in_fullscreen_last_frame{false};
 
 private:
     // Serialization

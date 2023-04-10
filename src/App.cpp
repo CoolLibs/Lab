@@ -17,6 +17,7 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
@@ -181,7 +182,7 @@ auto App::inputs_are_allowed() const -> bool
 
 auto App::wants_to_show_menu_bar() const -> bool
 {
-    return !_exporter.is_exporting();
+    return !_exporter.is_exporting() && !_wants_view_in_fullscreen;
 }
 
 static void imgui_window_console()
@@ -300,16 +301,34 @@ void App::cameras_window()
 
 void App::imgui_windows()
 {
-    bool const is_exporting = _exporter.is_exporting();
+    bool const view_in_fullscreen = _exporter.is_exporting() || _wants_view_in_fullscreen;
     {
-        if (!_was_exporting_during_previous_frame && is_exporting)
+        if (!_view_was_in_fullscreen_last_frame && view_in_fullscreen)
             save_windows_state(); // Save normal state before making the View fullscreen.
-        if (_was_exporting_during_previous_frame && !is_exporting)
-            restore_windows_state();
-        _was_exporting_during_previous_frame = is_exporting;
+        if (_view_was_in_fullscreen_last_frame && !view_in_fullscreen)
+            restore_windows_state(); // After fullscreen, restore the normal state.
+        _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _nodes_view.imgui_window(is_exporting /* View in fullscreen while we are exporting */);
+    _nodes_view.imgui_window({
+        .fullscreen    = view_in_fullscreen,
+        .extra_widgets = [&]() {
+            if (_exporter.is_exporting())
+                return;
+
+            if (ImGui::Button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE))
+            {
+                _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
+                _main_window.set_fullscreen(_wants_view_in_fullscreen);
+            }
+
+            if (ImGui::Button(ICOMOON_TARGET))
+            {
+                reset_cameras();
+            }
+            Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
+        },
+    });
 
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
 
@@ -485,13 +504,23 @@ void App::imgui_menus()
     debug_menu();
 }
 
+void App::reset_cameras()
+{
+    _camera2D.value() = {}; // TODO(JF) Store this command in history
+    _camera_manager.reset_camera(_variable_registries, command_executor());
+}
+
 void App::check_inputs()
 {
-    if (!ImGui::GetIO().WantTextInput)
+    if (ImGui::GetIO().WantTextInput)
+        return;
+
+    check_inputs__history();
+    check_inputs__export_windows();
+    check_inputs__timeline();
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
     {
-        check_inputs__history();
-        check_inputs__export_windows();
-        check_inputs__timeline();
+        _wants_view_in_fullscreen = false;
     }
 }
 
