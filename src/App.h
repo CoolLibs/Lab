@@ -127,7 +127,7 @@ private:
     Cool::StyleEditor              _style{};
     bool                           _is_camera_2D_locked_in_view{false};
 
-    Cool::DidYouKnowModal _did_you_know_modal{};
+    Cool::DidYouKnow _did_you_know_modal{};
 
 private:
     // Serialization

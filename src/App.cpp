@@ -21,6 +21,7 @@
 #include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
+#include "DidYouKnow/DidYouKnow.hpp"
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
@@ -145,6 +146,11 @@ void App::update()
                 },
             }
         );
+
+        auto all_tips = all_tips_lab();
+
+        // Tests for DidYouKnow Modal
+        Cool::update(_did_you_know_modal, all_tips);
     }
 }
 
@@ -296,9 +302,6 @@ void App::cameras_window()
 
 void App::imgui_windows()
 {
-    // Tests for DidYouKnow Modal
-    did_you_know(_did_you_know_modal);
-
     _nodes_view.imgui_window();
     // _custom_shader_view.imgui_window();
 
@@ -367,7 +370,8 @@ void App::imgui_windows()
         });
 
         Cool::DebugOptions::test_did_you_know([this]() {
-            test_did_you_know(_did_you_know_modal);
+            auto all_tips = all_tips_lab();
+            test_did_you_know(_did_you_know_modal, all_tips);
         });
 
         Cool::DebugOptions::color_themes_advanced_config_window([&]() {
