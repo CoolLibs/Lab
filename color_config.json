@@ -612,7 +612,7 @@
                 },
                 "second": {
                     "Category name": "Accent Color",
-                    "Group name": "Normal"
+                    "Group name": "Brighter"
                 }
             },
             {
@@ -629,8 +629,8 @@
                     "Name": "ToggleBgHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
-                    "Group name": "Normal"
+                    "Category name": "Medium Color",
+                    "Group name": "Darker"
                 }
             },
             {
