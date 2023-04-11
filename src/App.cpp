@@ -297,7 +297,7 @@ void App::cameras_window()
 void App::imgui_windows()
 {
     // Tests for DidYouKnow Modal
-    test_did_you_know(_did_you_know_modal);
+    did_you_know(_did_you_know_modal);
 
     _nodes_view.imgui_window();
     // _custom_shader_view.imgui_window();
@@ -366,8 +366,8 @@ void App::imgui_windows()
             test_presets.imgui();
         });
 
-        Cool::DebugOptions::debug_did_you_know([this]() {
-            debug_did_you_know(_did_you_know_modal);
+        Cool::DebugOptions::test_did_you_know([this]() {
+            test_did_you_know(_did_you_know_modal);
         });
 
         Cool::DebugOptions::color_themes_advanced_config_window([&]() {
