@@ -53,7 +53,7 @@
         "TabRounding": 4.0,
         "TabBorderSize": 0.0,
         "TabMinWidthForCloseButton": 0.0,
-        "ColorButtonPosition": 1,
+        "ColorButtonPosition": 0,
         "ButtonTextAlign": {
             "x": 0.5,
             "y": 0.5
