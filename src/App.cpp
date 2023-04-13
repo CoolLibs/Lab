@@ -316,7 +316,8 @@ void App::imgui_window_view()
             if (_exporter.is_exporting())
                 return;
 
-            bool const align_buttons_vertically = false; //_nodes_view.has_vertical_margins();
+            bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
+                                                  || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             // Reset cameras
             if (Cool::ImGuiExtras::floating_button(ICOMOON_TARGET, 0, align_buttons_vertically))
