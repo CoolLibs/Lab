@@ -271,7 +271,7 @@ void App::imgui_commands_and_registries_debug_windows()
     });
 }
 
-void App::cameras_window()
+void App::imgui_window_cameras()
 {
     static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
 
@@ -299,7 +299,7 @@ void App::cameras_window()
     ImGui::PopID();
 }
 
-void App::imgui_windows()
+void App::imgui_window_view()
 {
     bool const view_in_fullscreen = _exporter.is_exporting() || _wants_view_in_fullscreen;
     {
@@ -333,11 +333,13 @@ void App::imgui_windows()
             }
         },
     });
+}
 
+void App::imgui_windows()
+{
+    imgui_window_view();
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
-
     imgui_window_console();
-
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
@@ -353,7 +355,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
-    cameras_window();
+    imgui_window_cameras();
     ImGui::End();
 
     DebugOptions::show_framerate_window([&] {

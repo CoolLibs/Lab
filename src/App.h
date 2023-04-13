@@ -93,7 +93,8 @@ private:
     void debug_menu();
 
     void imgui_windows_only_when_inputs_are_allowed();
-    void cameras_window();
+    void imgui_window_cameras();
+    void imgui_window_view();
 
     void imgui_commands_and_registries_debug_windows();
 
