@@ -672,6 +672,33 @@
             },
             {
                 "first": {
+                    "Name": "FloatingButton"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Transparent"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FloatingButtonHovered"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Slightly Transparent"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FloatingButtonActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
                     "Name": "ButtonsSeparator"
                 },
                 "second": {
