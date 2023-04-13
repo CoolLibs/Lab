@@ -35,6 +35,16 @@
                         "Name": "Brighter",
                         "Brightness delta": 0.03500000014901161,
                         "Opacity": 1.0
+                    },
+                    {
+                        "Name": "Transparent",
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.5
+                    },
+                    {
+                        "Name": "Slightly Transparent",
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.75
                     }
                 ]
             },
@@ -48,14 +58,14 @@
                         "Opacity": 1.0
                     },
                     {
-                        "Name": "Normal2",
-                        "Brightness delta": 0.0,
-                        "Opacity": 1.0
-                    },
-                    {
                         "Name": "Modal",
                         "Brightness delta": -0.6480000019073486,
-                        "Opacity": 0.9089999794960022
+                        "Opacity": 0.75
+                    },
+                    {
+                        "Name": "Invisible",
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.0
                     }
                 ]
             },
@@ -153,7 +163,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Invisible"
                 }
             },
             {
@@ -450,7 +460,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Normal"
                 }
             },
             {
@@ -567,7 +577,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Invisible"
                 }
             },
             {
@@ -576,7 +586,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Modal"
                 }
             },
             {
