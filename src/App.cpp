@@ -316,17 +316,21 @@ void App::imgui_windows()
             if (_exporter.is_exporting())
                 return;
 
-            if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, 0, false))
-            {
-                _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
-                _main_window.set_fullscreen(_wants_view_in_fullscreen);
-            }
+            bool const align_buttons_vertically = false; //_nodes_view.has_vertical_margins();
 
-            if (Cool::ImGuiExtras::floating_button(ICOMOON_TARGET, 1, false))
+            // Reset cameras
+            if (Cool::ImGuiExtras::floating_button(ICOMOON_TARGET, 0, align_buttons_vertically))
             {
                 reset_cameras();
             }
             Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
+
+            // Toggle fullscreen
+            if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, 1, align_buttons_vertically))
+            {
+                _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
+                _main_window.set_fullscreen(_wants_view_in_fullscreen);
+            }
         },
     });
 
