@@ -9,7 +9,6 @@
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
-#include <Cool/Nodes/ImNodes_StyleEditor.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderableViewManager.h>
@@ -18,7 +17,6 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Cool/ImGui/StyleEditor.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
@@ -126,8 +124,6 @@ private:
     std::unique_ptr<Module_Nodes>  _nodes_module;
     CommandLogger                  _command_logger{};
     bool                           _is_first_frame{true};
-    Cool::ImNodes_StyleEditor      _imnodes_style{};
-    Cool::StyleEditor              _style{};
     bool                           _is_camera_2D_locked_in_view{false};
     bool                           _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
     bool                           _view_was_in_fullscreen_last_frame{false};
@@ -147,8 +143,7 @@ private:
             cereal::make_nvp("Exporter (Image and Video)", _exporter),
             cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("History", _history),
-            cereal::make_nvp("Nodes Module", _nodes_module),
-            cereal::make_nvp("ImNodes style", _imnodes_style)
+            cereal::make_nvp("Nodes Module", _nodes_module)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};

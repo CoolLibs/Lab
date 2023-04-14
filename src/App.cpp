@@ -19,7 +19,6 @@
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
-#include "Cool/Nodes/ImNodes_StyleEditor.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -403,10 +402,6 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::DebugOptions::test_presets__window([]() {
         static auto test_presets = TestPresets{};
         test_presets.imgui();
-    });
-
-    Cool::DebugOptions::style_editor([&]() {
-        Cool::StyleEditor
     });
 
     Cool::DebugOptions::color_themes_advanced_config_window([&]() {
