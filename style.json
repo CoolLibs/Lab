@@ -88,7 +88,7 @@
             "CircleTessellationMaxError": 0.30000001192092898
         },
         "ImGuiExtras Style": {
-            "Floating buttons spacing": 18.454999923706056
+            "Floating buttons spacing": 4.0
         }
     }
 }
