@@ -61,15 +61,6 @@ public:
             ImGui::End();
         }
     }
-    static void imnodes_color_theme_window(std::function<void()> callback)
-    {
-        if (instance().imnodes_color_theme_window)
-        {
-            ImGui::Begin(Cool::icon_fmt("Color Themes: Nodes", ICOMOON_WRENCH).c_str(), &instance().imnodes_color_theme_window, ImGuiWindowFlags_NoFocusOnAppearing);
-            callback();
-            ImGui::End();
-        }
-    }
 
 private:
     struct Instance {
@@ -85,7 +76,6 @@ private:
         bool show_generated_shader_code{false};
         bool test_all_variable_widgets__window{false};
         bool test_shaders_compilation__window{false};
-        bool imnodes_color_theme_window{false};
 
     private:
         // Serialization
@@ -104,8 +94,7 @@ private:
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
-                cereal::make_nvp("Color Themes: Nodes", imnodes_color_theme_window)
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
 #else
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
@@ -116,8 +105,7 @@ private:
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
-                cereal::make_nvp("Color Themes: Nodes", imnodes_color_theme_window)
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
 #endif
 
             );
@@ -136,7 +124,6 @@ private:
         instance().show_generated_shader_code                 = false;
         instance().test_all_variable_widgets__window          = false;
         instance().test_shaders_compilation__window           = false;
-        instance().imnodes_color_theme_window                 = false;
     }
 
     static void save_to_file();
@@ -226,11 +213,6 @@ private:
         {
             Cool::ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window);
         }
-
-        if (wafl::similarity_match({filter, "Color Themes: Nodes"}) >= wafl::Matches::Strongly)
-        {
-            Cool::ImGuiExtras::toggle("Color Themes: Nodes", &instance().imnodes_color_theme_window);
-        }
     }
 
     static void toggle_first_option(std::string_view filter)
@@ -304,12 +286,6 @@ private:
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
             instance().test_shaders_compilation__window = !instance().test_shaders_compilation__window;
-            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
-        }
-
-        if (wafl::similarity_match({filter, "Color Themes: Nodes"}) >= wafl::Matches::Strongly)
-        {
-            instance().imnodes_color_theme_window = !instance().imnodes_color_theme_window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }

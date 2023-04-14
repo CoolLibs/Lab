@@ -405,16 +405,16 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         test_presets.imgui();
     });
 
+    Cool::DebugOptions::style_editor([&]() {
+        Cool::StyleEditor
+    });
+
     Cool::DebugOptions::color_themes_advanced_config_window([&]() {
         Cool::user_settings().color_themes.imgui_advanced_config();
     });
 
     Cool::DebugOptions::color_themes_editor([&]() {
         Cool::user_settings().color_themes.imgui_basic_theme_editor();
-    });
-
-    DebugOptions::imnodes_color_theme_window([&]() {
-        _imnodes_style.widget();
     });
 }
 
