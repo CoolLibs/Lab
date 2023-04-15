@@ -88,7 +88,15 @@
             "CircleTessellationMaxError": 0.30000001192092898
         },
         "ImGuiExtras Style": {
-            "Floating buttons spacing": 4.0
+            "Floating buttons spacing": 4.0,
+            "Frame padding": {
+                "x": 9.0,
+                "y": 4.0
+            },
+            "Title bar padding": {
+                "x": 9.0,
+                "y": 6.0
+            }
         }
     }
 }
