@@ -30,7 +30,7 @@ class GalleryImpl extends React.Component {
   render() {
     const images = this.state.images.map((image) => {
       return (
-        <span>
+        <div>
           <img src={image.url} style={{ height: "50px", margin: "2px" }}></img>
           <caption>
             <div>title: {image.title}</div>
@@ -38,20 +38,12 @@ class GalleryImpl extends React.Component {
             <div>author_name: {image.author_name}</div>
             <div>author_link: {image.author_link}</div>
           </caption>
-        </span>
+        </div>
       )
     })
 
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "50vh",
-          fontSize: "20px",
-        }}
-      >
+      <div>
         <p>🚧 COMING SOON 🚧</p>
         <div>{images}</div>
       </div>
