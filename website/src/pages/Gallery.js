@@ -7,7 +7,10 @@ const Impl = loadable(() => import("../components/GalleryImpl"))
 
 export default function () {
   return (
-    <Layout title="Hello" description="Hello React Page">
+    <Layout
+      title="Gallery"
+      description="CoolLab's Gallery full of user-made artworks."
+    >
       <div
         style={{
           display: "flex",
@@ -17,7 +20,6 @@ export default function () {
           fontSize: "20px",
         }}
       >
-        <p>🚧 COMING SOON 🚧</p>
         <BrowserOnly>{() => <Impl />}</BrowserOnly>
       </div>
     </Layout>

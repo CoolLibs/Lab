@@ -1,58 +1,30 @@
 import React from "react"
-import Layout from "@theme/Layout"
 
-class docApi extends React.Component {
+class GalleryImpl extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      text: "yoo",
+      images_urls: [],
     }
   }
 
   componentDidMount() {
-    const axios = require("axios")
-
-    // Make a request for a user with a given ID
-    // axios
-    //   .get("https://sore-lime-anemone-wear.cyclic.app/")
-    //   .then(function (response) {
-    //     // handle success
-    //     console.log(response)
-    //   })
-    //   .catch(function (error) {
-    //     // handle error
-    //     console.log(error)
-    //   })
-    //   .finally(function () {
-    //     // always executed
-    //   })
-
-    // console.log("sdf")
-    fetch("https://sore-lime-anemone-wear.cyclic.app/")
+    fetch("https://res.cloudinary.com/coollab/image/list/gallery.json")
       .then((response) => response.json())
-      .then((data) => this.setState({ text: `${data[0].name}` }))
-    //   .then((error) => {
-    //     console.error(error)
-    //   })
-    // console.log(data)
-    // const data = fetch("https://coollab-gallery.onrender.cm/")
-    //   .then((response) => {
-    //     console.log(this.text)
-    //     this.text = response
-    //     console.log(this.text)
-    //     this.render()
-    //   })
-    //   .catch((error) => {
-    //     console.error(error)
-    //   })
+      .then((data) => {
+        const images_urls = data.resources.map(
+          (info) =>
+            `https://res.cloudinary.com/coollab/image/upload/v${info.version}/${info.public_id}.${info.format}`
+        )
+        this.setState({ ...this.state, images_urls })
+      })
   }
-  componentWillUnmount() {
-    if (typeof window !== "undefined") {
-      window.location.reload()
-    }
-  }
+
   render() {
-    const { text } = this.state
+    const images = this.state.images_urls.map((url) => {
+      return <img src={url} style={{ height: "50px", margin: "2px" }}></img>
+    })
+
     return (
       <div
         style={{
@@ -64,10 +36,10 @@ class docApi extends React.Component {
         }}
       >
         <p>🚧 COMING SOON 🚧</p>
-        <p>{text}</p>
+        <div>{images}</div>
       </div>
     )
   }
 }
 
-export default docApi
+export default GalleryImpl
