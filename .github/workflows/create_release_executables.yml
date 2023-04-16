@@ -47,6 +47,9 @@ jobs:
 
     - name: Install glfw dependencies
       run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev    
+   
+    - name: Install OpenSSL
+      run: sudo apt-get install libssl    
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
@@ -73,6 +76,9 @@ jobs:
     - uses: actions/checkout@v3
       with:
         submodules: recursive
+
+    - name: Install OpenSSL
+      run: brew install openssl@1.1
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++
