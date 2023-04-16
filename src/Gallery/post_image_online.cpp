@@ -1,3 +1,6 @@
+#include "post_image_online.h"
+#if COOLLAB_HAS_OPENSSL
+
 #include "Cool/File/File.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Log/ToUser.h"
@@ -63,3 +66,12 @@ void post_image_online()
 }
 
 } // namespace Lab
+
+#else
+namespace Lab {
+void post_image_online()
+{
+    assert(false && "CoolLab was not built with the OpenSSL library because it was not found. You cannot use this function.");
+}
+} // namespace Lab
+#endif

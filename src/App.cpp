@@ -446,10 +446,20 @@ void App::export_menu()
             .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
             .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
         });
-        if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
-        {
-            post_image_online();
-        }
+        Cool::ImGuiExtras::maybe_disabled(
+#if COOLLAB_HAS_OPENSSL
+            false
+#else
+            true
+#endif
+            ,
+            "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling CoolLab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.", [&]() {
+                if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
+                {
+                    post_image_online();
+                }
+            }
+        );
         ImGui::EndMenu();
     }
 }
