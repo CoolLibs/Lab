@@ -56,8 +56,8 @@ set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, lik
 # Link OpenSSL if we find it. It will be used
 # to send images to the CoolLab gallery.
 # If OpenSSL is not found this feature will be disabled.
-# cpp-httplib can only work with OpenSSL versions 3.0 or 1.1.1
-find_package(OpenSSL 3.0 EXACT QUIET)
+# cpp-httplib can only work with OpenSSL versions 3 or 1.1.1
+find_package(OpenSSL 3 EXACT QUIET)
 
 if(NOT OpenSSL_FOUND)
     if(COOLLAB_REQUIRE_ALL_FEATURES)
