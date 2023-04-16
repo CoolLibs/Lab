@@ -79,9 +79,7 @@ jobs:
 
     - name: Install OpenSSL
       run: |
-            brew upgrade openssl
-            brew link --force openssl
-            pkg-config --modversion openssl
+            brew install openssl
 
 
     - name: Configure CMake
