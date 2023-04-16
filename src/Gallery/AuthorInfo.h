@@ -2,9 +2,9 @@
 
 namespace Lab {
 
-struct ArtworkInfo {
-    std::string title{};
-    std::string description{};
+struct AuthorInfo {
+    std::string name{};
+    std::string link{};
 
     auto imgui() -> bool;
 
@@ -15,8 +15,8 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Title", title),
-            cereal::make_nvp("Description", description)
+            cereal::make_nvp("Name", name),
+            cereal::make_nvp("Link", link)
         );
     }
 };

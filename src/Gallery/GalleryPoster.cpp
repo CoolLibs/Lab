@@ -1,4 +1,5 @@
 #include "GalleryPoster.h"
+#include <imgui.h>
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/icon_fmt.h"
@@ -35,14 +36,16 @@ void GalleryPoster::imgui_open_sharing_form()
 void GalleryPoster::imgui_window()
 {
     _window.show([&]() {
+        ImGui::SeparatorText("Artwork");
         _artwork_info.imgui();
+        ImGui::SeparatorText("Author");
+        _author_info.imgui();
+        ImGui::SeparatorText("");
         if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))
         {
             post_image_online();
             _window.close();
-            // Clear info that is related to one specific artwork
-            _artwork_info.title       = "";
-            _artwork_info.description = "";
+            _artwork_info = {}; // Clear info that is related to one specific artwork
         }
     });
 }
