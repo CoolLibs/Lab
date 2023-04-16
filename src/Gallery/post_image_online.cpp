@@ -1,4 +1,5 @@
 #include "Cool/File/File.h"
+#include "Cool/Log/Message.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Path/Path.h"
 
@@ -41,7 +42,16 @@ void post_image_online()
     // std::cout << res->body;
     if (res && res->status == 200)
     {
-        Cool::Log::ToUser::info("Gallery", fmt::format("Posted successfully.\n{}", res->body));
+        Cool::Log::ToUser::info(
+            "Gallery",
+            "Posted successfully.\nYou can now see your image online at https://coollab-art.com/Gallery",
+            std::vector{
+                Cool::ClipboardContent{
+                    .title   = "link",
+                    .content = "https://coollab-art.com/Gallery",
+                },
+            }
+        );
     }
     else
     {
