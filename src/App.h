@@ -23,6 +23,7 @@
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
+#include "Gallery/GalleryPoster.h"
 #include "Module_Nodes/Module_Nodes.h"
 
 namespace Lab {
@@ -127,6 +128,7 @@ private:
     bool                           _is_camera_2D_locked_in_view{false};
     bool                           _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
     bool                           _view_was_in_fullscreen_last_frame{false};
+    GalleryPoster                  _gallery_poster{};
 
 private:
     // Serialization
@@ -143,7 +145,8 @@ private:
             cereal::make_nvp("Exporter (Image and Video)", _exporter),
             cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("History", _history),
-            cereal::make_nvp("Nodes Module", _nodes_module)
+            cereal::make_nvp("Nodes Module", _nodes_module),
+            cereal::make_nvp("Gallery Poster", _gallery_poster)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};

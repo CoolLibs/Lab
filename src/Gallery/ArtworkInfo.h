@@ -1,0 +1,28 @@
+#pragma once
+
+namespace Lab {
+
+struct ArtworkInfo {
+    std::string title{};
+    std::string description{};
+    std::string author_name{};
+    std::string author_link{};
+
+    auto imgui() -> bool;
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Title", title),
+            cereal::make_nvp("Description", description),
+            cereal::make_nvp("Author name", author_name),
+            cereal::make_nvp("Author link", author_link)
+        );
+    }
+};
+
+} // namespace Lab

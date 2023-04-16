@@ -1,0 +1,50 @@
+#include "GalleryPoster.h"
+#include "Cool/ImGui/IcoMoonCodepoints.h"
+#include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/ImGui/icon_fmt.h"
+#include "Gallery/GalleryPoster.h"
+#include "Gallery/post_image_online.h"
+
+namespace Lab {
+
+GalleryPoster::GalleryPoster()
+    : _window{Cool::icon_fmt("Share online", ICOMOON_EARTH), false}
+{
+}
+
+static constexpr bool has_openssl =
+#if COOLLAB_HAS_OPENSSL
+    true;
+#else
+    false;
+#endif
+
+void GalleryPoster::imgui_open_sharing_form()
+{
+    Cool::ImGuiExtras::maybe_disabled(
+        !has_openssl,
+        "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling CoolLab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.", [&]() {
+            if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
+            {
+                _window.open();
+            }
+        }
+    );
+}
+
+void GalleryPoster::imgui_window()
+{
+    _window.show([&]() {
+        _artwork_info.imgui();
+        if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))
+        {
+            post_image_online();
+            _window.close();
+            // Clear info that is related to one specific artwork
+            _artwork_info.title       = "";
+            _artwork_info.description = "";
+        }
+    });
+}
+
+} // namespace Lab

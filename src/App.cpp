@@ -22,7 +22,6 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
-#include "Gallery/post_image_online.h"
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
@@ -358,6 +357,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
     imgui_window_cameras();
     ImGui::End();
+    // Share online
+    _gallery_poster.imgui_window();
 
     DebugOptions::show_framerate_window([&] {
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
@@ -446,20 +447,7 @@ void App::export_menu()
             .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
             .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
         });
-        Cool::ImGuiExtras::maybe_disabled(
-#if COOLLAB_HAS_OPENSSL
-            false
-#else
-            true
-#endif
-            ,
-            "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling CoolLab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.", [&]() {
-                if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
-                {
-                    post_image_online();
-                }
-            }
-        );
+        _gallery_poster.imgui_open_sharing_form();
         ImGui::EndMenu();
     }
 }
