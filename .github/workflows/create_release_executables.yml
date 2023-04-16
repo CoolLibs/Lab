@@ -79,12 +79,9 @@ jobs:
 
     - name: Install OpenSSL
       run: |
-            brew update
-            brew install openssl
-    - name: Set DYLD_FALLBACK_LIBRARY_PATH
-      run: |
-        echo "/usr/local/opt/openssl/lib" >> $GITHUB_PATH
-        export DYLD_FALLBACK_LIBRARY_PATH="/usr/local/opt/openssl/lib:$DYLD_FALLBACK_LIBRARY_PATH"
+            brew upgrade openssl
+            brew link --force openssl
+            pkg-config --modversion openssl
 
 
     - name: Configure CMake
