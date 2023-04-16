@@ -77,13 +77,15 @@ jobs:
       with:
         submodules: recursive
 
-    # https://medium.com/@timmykko/using-openssl-library-with-macos-sierra-7807cfd47892
     - name: Install OpenSSL
-      run: | 
-            brew install openssl@3.0
-            ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
-            ln -s /usr/local/Cellar/openssl/3.1.0/include/openssl /usr/bin/openssl
-            ln -s /usr/local/opt/openssl/lib/libssl.1.0.0.dylib /usr/local/lib/
+      run: |
+            brew update
+            brew install openssl
+    - name: Set DYLD_FALLBACK_LIBRARY_PATH
+      run: |
+        echo "/usr/local/opt/openssl/lib" >> $GITHUB_PATH
+        export DYLD_FALLBACK_LIBRARY_PATH="/usr/local/opt/openssl/lib:$DYLD_FALLBACK_LIBRARY_PATH"
+
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
