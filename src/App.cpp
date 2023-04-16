@@ -25,6 +25,7 @@
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
+#include "img/img.hpp"
 #include "imgui.h"
 
 namespace Lab {
@@ -359,7 +360,10 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::End();
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
-        return *Cool::File::to_string(Cool::Path::root() / "res/logo.png", std::ios::binary);
+        auto the_polaroid = polaroid();
+        the_polaroid.render(_clock.time(), size);
+        auto const image = the_polaroid.render_target.download_pixels();
+        return img::save_png_to_string(image);
     });
 
     DebugOptions::show_framerate_window([&] {
