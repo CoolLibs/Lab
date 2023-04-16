@@ -50,12 +50,16 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
             .content_type = "image/png",
         },
         httplib::MultipartFormData{
-            .name    = "upload_preset",
-            .content = "gallery",
+            .name         = "upload_preset",
+            .content      = "gallery",
+            .filename     = {},
+            .content_type = {},
         },
         httplib::MultipartFormData{
-            .name    = "tags",
-            .content = "gallery",
+            .name         = "tags",
+            .content      = "gallery",
+            .filename     = {},
+            .content_type = {},
         },
         httplib::MultipartFormData{
             .name    = "context",
@@ -66,6 +70,8 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
                 escape(author_info.name),
                 escape(author_info.link)
             ),
+            .filename     = {},
+            .content_type = {},
         },
     };
 
