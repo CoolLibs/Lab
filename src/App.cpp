@@ -449,11 +449,16 @@ void App::export_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("Export", ICOMOON_UPLOAD2, true).c_str()))
     {
-        _exporter.imgui_menu_items({
-            .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
-            .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
-        });
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2{0.f, 0.5f});
+        _exporter.imgui_menu_items(
+            {
+                .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
+                .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
+            },
+            Cool::icon_fmt("Share online", ICOMOON_EARTH, true)
+        );
         _gallery_poster.imgui_open_sharing_form(_view_constraint.aspect_ratio());
+        ImGui::PopStyleVar();
         ImGui::EndMenu();
     }
 }
