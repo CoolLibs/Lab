@@ -48,6 +48,15 @@ target_link_libraries(CooLab-Properties INTERFACE cmd::cmd)
 # Include range-v3
 target_include_directories(CooLab-Properties INTERFACE lib/range-v3/include)
 
+# ----------------
+# ---OpenSSL---
+# ----------------
+# Link OpenSSL if we find it. It will be used
+# to send images to the CoolLab gallery.
+# If OpenSSL is not found this feature will be disabled.
+find_package(OpenSSL 1.1.1 EXACT REQUIRED)
+target_link_libraries(CooLab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
+
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
 target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})

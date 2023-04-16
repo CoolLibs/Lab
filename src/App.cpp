@@ -22,6 +22,7 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
+#include "Gallery/post_image_online.h"
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
@@ -445,6 +446,10 @@ void App::export_menu()
             .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
             .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
         });
+        if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
+        {
+            post_image_online();
+        }
         ImGui::EndMenu();
     }
 }
