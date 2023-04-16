@@ -453,7 +453,7 @@ void App::export_menu()
             .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
             .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
         });
-        _gallery_poster.imgui_open_sharing_form();
+        _gallery_poster.imgui_open_sharing_form(_view_constraint.aspect_ratio());
         ImGui::EndMenu();
     }
 }
