@@ -77,13 +77,8 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Install OpenSSL
-      run: |
-            brew install openssl
-
-
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
+      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D OPENSSL_ROOT_DIR "/usr/local/opt/openssl" -D OPENSSL_INCLUDE_DIR "/usr/local/opt/openssl/include"
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
