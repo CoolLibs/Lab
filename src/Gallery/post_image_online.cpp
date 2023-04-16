@@ -38,10 +38,10 @@ namespace Lab {
 
 void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, std::string const& image_png_data)
 {
-    httplib::SSLClient cli("api.cloudinary.com");
+    auto cli = httplib::SSLClient{"api.cloudinary.com"};
 
     // Create the multipart/form-data request
-    auto items = httplib::MultipartFormDataItems{
+    auto const items = httplib::MultipartFormDataItems{
         // Add the image file as a binary data item
         httplib::MultipartFormData{
             .name         = "file",
@@ -71,12 +71,11 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 
     // Send the POST request with the multipart/form-data
     auto const res = cli.Post("/v1_1/coollab/image/upload", items);
-    // std::cout << res->body;
     if (res && res->status == 200)
     {
         Cool::Log::ToUser::info(
             "Gallery",
-            "Posted successfully.\nYou can now see your image online at https://coollab-art.com/Gallery",
+            "Posted successfully.\nYou can now see your image online at https://coollab-art.com/Gallery.",
             std::vector{
                 Cool::ClipboardContent{
                     .title   = "link",
@@ -100,7 +99,7 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 namespace Lab {
 void post_image_online(ArtworkInfo const&, AuthorInfo const&, std::string const&)
 {
-    assert(false && "CoolLab was not built with the OpenSSL library because it was not found. You cannot use this function.");
+    assert(false && "CoolLab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
 }
 } // namespace Lab
 #endif
