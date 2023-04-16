@@ -358,7 +358,9 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     imgui_window_cameras();
     ImGui::End();
     // Share online
-    _gallery_poster.imgui_window();
+    _gallery_poster.imgui_window([&](img::Size size) {
+        return *Cool::File::to_string(Cool::Path::root() / "res/logo.png", std::ios::binary);
+    });
 
     DebugOptions::show_framerate_window([&] {
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);

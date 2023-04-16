@@ -36,19 +36,16 @@ TEST_CASE("escape()")
 
 namespace Lab {
 
-void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info)
+void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, std::string const& image_png_data)
 {
     httplib::SSLClient cli("api.cloudinary.com");
-
-    // Read the image file contents
-    std::string str = *Cool::File::to_string(Cool::Path::root() / "res/logo.png", std::ios::binary);
 
     // Create the multipart/form-data request
     auto items = httplib::MultipartFormDataItems{
         // Add the image file as a binary data item
         httplib::MultipartFormData{
             .name         = "file",
-            .content      = str,
+            .content      = image_png_data,
             .filename     = "image.png",
             .content_type = "image/png",
         },
@@ -101,7 +98,7 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 
 #else
 namespace Lab {
-void post_image_online(ArtworkInfo const&, AuthorInfo const&);
+void post_image_online(ArtworkInfo const&, AuthorInfo const&, std::string const&);
 {
     assert(false && "CoolLab was not built with the OpenSSL library because it was not found. You cannot use this function.");
 }

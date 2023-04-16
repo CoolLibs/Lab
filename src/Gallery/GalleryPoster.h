@@ -10,7 +10,8 @@ public:
     GalleryPoster();
 
     void imgui_open_sharing_form();
-    void imgui_window();
+    /// `render` is a function that renders an image to a .png and returns it in a string.
+    void imgui_window(std::function<std::string(img::Size)> const& render_png);
 
 private:
     Cool::ImGuiWindow _window;
