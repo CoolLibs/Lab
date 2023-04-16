@@ -1,7 +1,9 @@
 #pragma once
+#include "ArtworkInfo.h"
+#include "AuthorInfo.h"
 
 namespace Lab {
 
-void post_image_online();
+void post_image_online(ArtworkInfo const&, AuthorInfo const&);
 
-}
+} // namespace Lab

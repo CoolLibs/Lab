@@ -1,4 +1,6 @@
 #include "post_image_online.h"
+#include <string>
+#include "Cool/String/String.h"
 #if COOLLAB_HAS_OPENSSL
 
 #include "Cool/File/File.h"
@@ -8,9 +10,33 @@
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "cpp-httplib/httplib.h"
+
+static auto escape(std::string str) -> std::string
+{
+    // First, escape the backslashes so that we don't later escape backslashes that are actually meant to escape something.
+    Cool::String::replace_all(str, "\\", "\\\\");
+    Cool::String::replace_all(str, "=", "\\=");
+    Cool::String::replace_all(str, "|", "\\|");
+
+    return str;
+}
+
+#if LAB_ENABLE_TESTS
+#include <doctest/doctest.h>
+TEST_CASE("escape()")
+{
+    CHECK(escape("Hello") == "Hello");
+    CHECK(escape("=") == "\\=");
+    CHECK(escape("|") == "\\|");
+    CHECK(escape("\\") == "\\\\");
+    CHECK(escape("\\=") == "\\\\\\=");
+    CHECK(escape("Hello\\=Hello") == "Hello\\\\\\=Hello");
+}
+#endif
+
 namespace Lab {
 
-void post_image_online()
+void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info)
 {
     httplib::SSLClient cli("api.cloudinary.com");
 
@@ -36,7 +62,13 @@ void post_image_online()
         },
         httplib::MultipartFormData{
             .name    = "context",
-            .content = "author_name=Jules Fouchy", // TODO(JF) escape | and = and \ characters with a \.
+            .content = fmt::format(
+                "title={}|description={}|author_name={}|author_link={}",
+                escape(artwork_info.title),
+                escape(artwork_info.description),
+                escape(author_info.name),
+                escape(author_info.link)
+            ),
         },
     };
 
@@ -69,7 +101,7 @@ void post_image_online()
 
 #else
 namespace Lab {
-void post_image_online()
+void post_image_online(ArtworkInfo const&, AuthorInfo const&);
 {
     assert(false && "CoolLab was not built with the OpenSSL library because it was not found. You cannot use this function.");
 }

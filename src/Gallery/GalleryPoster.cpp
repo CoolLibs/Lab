@@ -43,7 +43,7 @@ void GalleryPoster::imgui_window()
         ImGui::SeparatorText("");
         if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))
         {
-            post_image_online();
+            post_image_online(_artwork_info, _author_info);
             _window.close();
             _artwork_info = {}; // Clear info that is related to one specific artwork
         }
