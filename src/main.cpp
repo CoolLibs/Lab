@@ -5,9 +5,13 @@
 
 auto main() -> int
 {
-    Cool::run<Lab::App>({Cool::WindowConfig{
-                            .title                  = "CoolLab",
-                            .maximize_on_startup_if = true,
-                        }},
-                        Cool::InitConfig{.set_paths = });
+    Cool::run<Lab::App>(
+        {Cool::WindowConfig{
+            .title                  = "CoolLab",
+            .maximize_on_startup_if = true,
+        }},
+        Cool::InitConfig{
+            .default_texture_path = Cool::compute_root_path() / "res/images/logo mask.png",
+        }
+    );
 }
