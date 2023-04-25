@@ -72,6 +72,9 @@ out vec4      out_Color;
 #include "_COOL_RES_/shaders/TextureInfo.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 
+uniform sampler2D mixbox_lut; // bind the "mixbox_lut.png" texture here
+#include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
+
 vec2 to_view_space(vec2 uv)
 {{
     vec3 p = _camera2D_inverse * vec3(uv, 1.);

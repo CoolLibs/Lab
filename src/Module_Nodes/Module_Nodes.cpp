@@ -8,6 +8,7 @@
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Cool/Gpu/TextureInfo.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
@@ -34,8 +35,8 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 
 void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    auto       cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
-    auto       updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
+    auto cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
+    auto updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
     if (_nodes_folder_watcher.update(updater))
         ctx.set_dirty(_regenerate_code_flag);
 }
@@ -209,6 +210,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+    shader.set_uniform("mixbox_lut", Cool::TextureInfo{Cool::Path::root() / "res/mixbox/mixbox_lut.png"});
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
