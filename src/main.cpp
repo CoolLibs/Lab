@@ -1,7 +1,7 @@
 #include "App.h"
 #include "Cool/Core/InitConfig.h"
 //
-#include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation
+#include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <cereal/archives/json.hpp>
 
 auto main() -> int
 {
