@@ -543,7 +543,7 @@ static void replace_defines_with_their_values(std::string& text)
 {
     auto const defines = find_all_defines(text);
     for (Cool::HashDefine const& define : defines)
-        Cool::String::replace_all(text, define.name, fmt::format("{} /*{}*/", define.value, define.name));
+        text = Cool::String::replace_all_words(text, define.name, fmt::format("{} /*{}*/", define.value, define.name));
 }
 
 auto parse_node_definition(std::filesystem::path filepath, std::string const& text)
