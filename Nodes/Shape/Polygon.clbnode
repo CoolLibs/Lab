@@ -1,32 +1,28 @@
 // https://iquilezles.org/articles/distfunctions2d/
 
-INPUT float `Size`; 
-INPUT int `Nb of Sides`; 
+INPUT float `Radius`;
+INPUT Point2D `Center`;
+INPUT int `Sides`;
 INPUT float `Roundness`;
 
 SignedDistance main(UV uv)
 {
-    float original_inner_radius = mix(0.0, `Size`, `Roundness`);
+    uv -= `Center`;
+    float original_inner_radius = mix(0.0, `Radius`, `Roundness`);
 
-    float size = (`Size`- original_inner_radius)/cos(PI/float(`Nb of Sides`));
+    float radius = (`Radius` - original_inner_radius) / cos(PI / float(`Sides`));
 
-    float an = PI/float(`Nb of Sides`);
+    float an = PI / float(`Sides`);
 
-
-    vec2 acs = vec2 (cos(an), sin(an));
-    vec2 ecs = vec2 (0.,1.);
-
+    vec2 acs = vec2(cos(an), sin(an));
+    vec2 ecs = vec2(0., 1.);
 
     // Symmetry
-    float bn = mod(atan(uv.x, uv.y), 2.0*an) - an;
-    uv = length(uv)*vec2(cos(bn), abs(sin(bn)));
+    float bn = mod(atan(uv.x, uv.y), 2. * an) - an;
+    uv       = length(uv) * vec2(cos(bn), abs(sin(bn)));
 
-    uv-= size*acs;
-    uv += ecs*clamp(-dot(uv,ecs), 0.0, size*acs.y/ecs.y);
+    uv -= radius * acs;
+    uv += ecs * clamp(-dot(uv, ecs), 0., radius * acs.y / ecs.y);
 
-    return length(uv)*sign(uv.x) - original_inner_radius;
-
-
+    return length(uv) * sign(uv.x) - original_inner_radius;
 }
-
-
