@@ -808,15 +808,6 @@
             },
             {
                 "first": {
-                    "Name": "Nodes_SelNodeBorder"
-                },
-                "second": {
-                    "Category name": "",
-                    "Group name": ""
-                }
-            },
-            {
-                "first": {
                     "Name": "Nodes_NodeSelRect"
                 },
                 "second": {
