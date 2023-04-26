@@ -48,6 +48,30 @@ target_link_libraries(CooLab-Properties INTERFACE cmd::cmd)
 # Include range-v3
 target_include_directories(CooLab-Properties INTERFACE lib/range-v3/include)
 
+set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, like making HTTPS requests to post images to the CoolLab gallery. If you don't have the necessary dependencies these features will be disabled. If you want to make sure you have all the features of CoolLab enabled, set this option to ON.")
+
+# ----------------
+# ---OpenSSL---
+# ----------------
+# Link OpenSSL if we find it. It will be used
+# to send images to the CoolLab gallery.
+# If OpenSSL is not found this feature will be disabled.
+# Note: cpp-httplib can only work with OpenSSL versions 3 or 1.1.1
+# Set the path to OpenSSL library directory
+if(COOLLAB_REQUIRE_ALL_FEATURES)
+    find_package(OpenSSL REQUIRED)
+else()
+    find_package(OpenSSL)
+endif()
+
+if(OpenSSL_FOUND)
+    message("[CoolLab] Found OpenSSL.")
+    target_link_libraries(CooLab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
+    target_compile_definitions(CooLab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
+else()
+    message("[CoolLab] Did not find OpenSSL. Posting images to the CoolLab gallery will be disabled.")
+endif()
+
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
 target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})

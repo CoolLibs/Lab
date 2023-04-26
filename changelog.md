@@ -7,6 +7,7 @@
 
 ## 🐣beta-3 WIP
 
+- ✨ In the "Export" menu, added a button to share your image online in [CoolLab's Gallery](https://coollab-art.com/Gallery).
 - 💄 Added Settings to change your color theme.
 - 💄 Improved the Dark color theme.
 - 💄 Added a Light color theme.

@@ -17,6 +17,7 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
@@ -24,6 +25,7 @@
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
 #include "UI/imgui_show.h"
+#include "img/img.hpp"
 #include "imgui.h"
 
 namespace Lab {
@@ -98,7 +100,7 @@ void App::update()
         _clock.update();
         for (auto& view : _views)
         {
-            view.update_size(_preview_constraint);
+            view.update_size(_view_constraint);
         }
         polaroid().render(_clock.time());
     }
@@ -180,7 +182,7 @@ auto App::inputs_are_allowed() const -> bool
 
 auto App::wants_to_show_menu_bar() const -> bool
 {
-    return !_exporter.is_exporting();
+    return !_exporter.is_exporting() && !_wants_view_in_fullscreen;
 }
 
 static void imgui_window_console()
@@ -269,7 +271,7 @@ void App::imgui_commands_and_registries_debug_windows()
     });
 }
 
-void App::cameras_window()
+void App::imgui_window_cameras()
 {
     static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
 
@@ -297,93 +299,133 @@ void App::cameras_window()
     ImGui::PopID();
 }
 
-void App::imgui_windows()
+void App::imgui_window_view()
 {
-    _nodes_view.imgui_window();
-    // _custom_shader_view.imgui_window();
-
-    imgui_window_exporter(_exporter, polaroid(), _clock.time());
-
-    imgui_window_console();
-
-    if (inputs_are_allowed())
+    bool const view_in_fullscreen = _exporter.is_exporting() || _wants_view_in_fullscreen;
     {
-        const auto the_ui = ui();
-        _nodes_module->imgui_windows(the_ui);
-        // _custom_shader_module->imgui_windows(the_ui);
-        // Time
-        ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-        Cool::ClockU::imgui_timeline(_clock);
-        ImGui::End();
-        // Cameras
-        ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
-        cameras_window();
-        ImGui::End();
-
-        DebugOptions::show_framerate_window([&] {
-            ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-            _main_window.imgui_cap_framerate();
-        });
-        if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
-            ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
-                                                                            // to learn more about Dear ImGui!).
-        if (DebugOptions::show_commands_and_registries_debug_windows())
-        {
-            imgui_commands_and_registries_debug_windows();
-        }
-        if (DebugOptions::show_nodes_and_links_registries())
-        {
-            _nodes_module->debug_show_nodes_and_links_registries_windows(ui());
-        }
-
-        Cool::DebugOptions::texture_library_debug_view([&] {
-            Cool::TextureLibrary::instance().imgui_debug_view();
-        });
-        DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
-        DebugOptions::test_shaders_compilation__window([&]() {
-            if (ImGui::Button("Compile everything"))
-            {
-                Cool::Log::ToUser::console().clear();
-                compile_all_is0_nodes();
-            }
-            ImGui::Separator();
-            if (ImGui::Button("Compile all is0 Nodes"))
-            {
-                Cool::Log::ToUser::console().clear();
-                compile_all_is0_nodes();
-            }
-        });
-
-        Cool::DebugOptions::test_message_console__window([]() {
-            static auto test_message_console = Cool::TestMessageConsole{};
-            test_message_console.imgui(
-                Cool::Log::ToUser::console()
-            );
-        });
-
-        Cool::DebugOptions::test_presets__window([]() {
-            static auto test_presets = TestPresets{};
-            test_presets.imgui();
-        });
-
-        Cool::DebugOptions::color_themes_advanced_config_window([&]() {
-            Cool::user_settings().color_themes.imgui_advanced_config();
-        });
-
-        Cool::DebugOptions::color_themes_editor([&]() {
-            Cool::user_settings().color_themes.imgui_basic_theme_editor();
-        });
-
-        DebugOptions::imnodes_color_theme_window([&]() {
-        });
+        if (!_view_was_in_fullscreen_last_frame && view_in_fullscreen)
+            save_windows_state(); // Save normal state before making the View fullscreen.
+        if (_view_was_in_fullscreen_last_frame && !view_in_fullscreen)
+            restore_windows_state(); // After fullscreen, restore the normal state.
+        _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
+
+    _nodes_view.imgui_window({
+        .fullscreen    = view_in_fullscreen,
+        .extra_widgets = [&]() {
+            if (_exporter.is_exporting())
+                return;
+
+            bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
+                                                  || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
+
+            // Reset cameras
+            if (Cool::ImGuiExtras::floating_button(ICOMOON_TARGET, 0, align_buttons_vertically))
+            {
+                reset_cameras();
+            }
+            Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
+
+            // Toggle fullscreen
+            if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, 1, align_buttons_vertically))
+            {
+                _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
+                _main_window.set_fullscreen(_wants_view_in_fullscreen);
+            }
+        },
+    });
 }
 
-void App::preview_menu()
+void App::imgui_windows()
 {
-    if (ImGui::BeginMenu(Cool::icon_fmt("Preview", ICOMOON_IMAGE, true).c_str()))
+    imgui_window_view();
+    imgui_window_exporter(_exporter, polaroid(), _clock.time());
+    imgui_window_console();
+    if (inputs_are_allowed())
+        imgui_windows_only_when_inputs_are_allowed();
+}
+
+void App::imgui_windows_only_when_inputs_are_allowed()
+{
+    const auto the_ui = ui();
+    _nodes_module->imgui_windows(the_ui);
+    // _custom_shader_module->imgui_windows(the_ui);
+    // Time
+    ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
+    Cool::ClockU::imgui_timeline(_clock);
+    ImGui::End();
+    // Cameras
+    ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
+    imgui_window_cameras();
+    ImGui::End();
+    // Share online
+    _gallery_poster.imgui_window([&](img::Size size) {
+        auto the_polaroid = polaroid();
+        the_polaroid.render(_clock.time(), size);
+        auto const image = the_polaroid.render_target.download_pixels();
+        return img::save_png_to_string(image);
+    });
+
+    DebugOptions::show_framerate_window([&] {
+        ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+        _main_window.imgui_cap_framerate();
+    });
+    if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
+        ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
+                                                                        // to learn more about Dear ImGui!).
+    if (DebugOptions::show_commands_and_registries_debug_windows())
     {
-        if (_preview_constraint.imgui())
+        imgui_commands_and_registries_debug_windows();
+    }
+    if (DebugOptions::show_nodes_and_links_registries())
+    {
+        _nodes_module->debug_show_nodes_and_links_registries_windows(ui());
+    }
+
+    Cool::DebugOptions::texture_library_debug_view([&] {
+        Cool::TextureLibrary::instance().imgui_debug_view();
+    });
+    DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
+    DebugOptions::test_shaders_compilation__window([&]() {
+        if (ImGui::Button("Compile everything"))
+        {
+            Cool::Log::ToUser::console().clear();
+            compile_all_is0_nodes();
+        }
+        ImGui::Separator();
+        if (ImGui::Button("Compile all is0 Nodes"))
+        {
+            Cool::Log::ToUser::console().clear();
+            compile_all_is0_nodes();
+        }
+    });
+
+    Cool::DebugOptions::test_message_console__window([]() {
+        static auto test_message_console = Cool::TestMessageConsole{};
+        test_message_console.imgui(
+            Cool::Log::ToUser::console()
+        );
+    });
+
+    Cool::DebugOptions::test_presets__window([]() {
+        static auto test_presets = TestPresets{};
+        test_presets.imgui();
+    });
+
+    Cool::DebugOptions::color_themes_advanced_config_window([&]() {
+        Cool::user_settings().color_themes.imgui_advanced_config();
+    });
+
+    Cool::DebugOptions::color_themes_editor([&]() {
+        Cool::user_settings().color_themes.imgui_basic_theme_editor();
+    });
+}
+
+void App::view_menu()
+{
+    if (ImGui::BeginMenu(Cool::icon_fmt("View", ICOMOON_IMAGE, true).c_str()))
+    {
+        if (_view_constraint.imgui())
         {
             // render_impl(_view.render_target, *_current_module, _clock.time());
         }
@@ -407,10 +449,16 @@ void App::export_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("Export", ICOMOON_UPLOAD2, true).c_str()))
     {
-        _exporter.imgui_menu_items({
-            .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
-            .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
-        });
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2{0.f, 0.5f});
+        _exporter.imgui_menu_items(
+            {
+                .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
+                .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
+            },
+            Cool::icon_fmt("Share online", ICOMOON_EARTH, true)
+        );
+        _gallery_poster.imgui_open_sharing_form(_view_constraint.aspect_ratio());
+        ImGui::PopStyleVar();
         ImGui::EndMenu();
     }
 }
@@ -457,7 +505,7 @@ void App::debug_menu()
 
 void App::imgui_menus()
 {
-    preview_menu();
+    view_menu();
     // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
     settings_menu();
@@ -472,13 +520,23 @@ void App::imgui_menus()
     debug_menu();
 }
 
+void App::reset_cameras()
+{
+    _camera2D.value() = {}; // TODO(JF) Store this command in history
+    _camera_manager.reset_camera(_variable_registries, command_executor());
+}
+
 void App::check_inputs()
 {
-    if (!ImGui::GetIO().WantTextInput)
+    if (ImGui::GetIO().WantTextInput)
+        return;
+
+    check_inputs__history();
+    check_inputs__export_windows();
+    check_inputs__timeline();
+    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
     {
-        check_inputs__history();
-        check_inputs__export_windows();
-        check_inputs__timeline();
+        _wants_view_in_fullscreen = false;
     }
 }
 
@@ -545,13 +603,13 @@ void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& eve
 
 void App::open_image_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
+    _exporter.maybe_set_aspect_ratio(_view_constraint.aspect_ratio());
     _exporter.image_export_window().open();
 }
 
 void App::open_video_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_preview_constraint.aspect_ratio());
+    _exporter.maybe_set_aspect_ratio(_view_constraint.aspect_ratio());
     _exporter.video_export_window().open();
 }
 

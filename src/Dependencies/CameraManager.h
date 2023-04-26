@@ -42,6 +42,11 @@ public:
     [[nodiscard]] auto get_zoom() const -> float { return _view_controller.get_distance_to_orbit_center(); }
     void set_zoom(float zoom, CommandExecutionContext_Ref& ctx);
 
+    void reset_camera(
+        std::reference_wrapper<Cool::VariableRegistries>,
+        CommandExecutor_TopLevel_Ref
+    );
+
 private:
     void maybe_update_camera(
         std::reference_wrapper<Cool::VariableRegistries>,

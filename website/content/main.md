@@ -10,7 +10,9 @@ import SmallImage from "@site/src/components/SmallImage.js"
 
 ## CoolLab
 
-> _❝ CoolLab is a generative art software that gives you **powerful tools** and the power to **customize these tools** and **create new ones**.❞_
+> _❝ Generative art made easy.❞_
+
+> _❝ CoolLab gives you **powerful tools** and the power to **customize these tools** and **create new ones**.❞_
 
 ## Download
 

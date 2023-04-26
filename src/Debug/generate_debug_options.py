@@ -85,12 +85,6 @@ def all_debug_options():
             kind=Kind.WINDOW,
             available_in_release=True,
         ),
-        DebugOption(
-            name_in_code="imnodes_color_theme_window",
-            name_in_ui="Color Themes: Nodes",
-            kind=Kind.WINDOW,
-            available_in_release=True,
-        ),
     ]
 
 

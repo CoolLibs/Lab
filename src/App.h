@@ -23,6 +23,7 @@
 #include "Dependencies/History.h"
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
+#include "Gallery/GalleryPoster.h"
 #include "Module_Nodes/Module_Nodes.h"
 
 namespace Lab {
@@ -82,13 +83,17 @@ private:
 
     Cool::Polaroid polaroid();
 
-    void preview_menu();
+    void reset_cameras();
+
+    void view_menu();
     // void windows_menu();
     void export_menu();
     void settings_menu();
     void debug_menu();
 
-    void cameras_window();
+    void imgui_windows_only_when_inputs_are_allowed();
+    void imgui_window_cameras();
+    void imgui_window_view();
 
     void imgui_commands_and_registries_debug_windows();
 
@@ -110,7 +115,7 @@ private:
     Cool::Variable<Cool::Camera2D> _camera2D;
     Cool::Window&                  _main_window;
     Cool::Clock_Realtime           _clock;
-    Cool::ImageSizeConstraint      _preview_constraint;
+    Cool::ImageSizeConstraint      _view_constraint;
     Cool::RenderableViewManager    _views; // Must be before the views because it is used to create them
     Cool::RenderableView&          _nodes_view;
     Cool::Exporter                 _exporter;
@@ -121,6 +126,9 @@ private:
     CommandLogger                  _command_logger{};
     bool                           _is_first_frame{true};
     bool                           _is_camera_2D_locked_in_view{false};
+    bool                           _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
+    bool                           _view_was_in_fullscreen_last_frame{false};
+    GalleryPoster                  _gallery_poster{};
 
 private:
     // Serialization
@@ -133,11 +141,12 @@ private:
             cereal::make_nvp("Camera Manager", _camera_manager),
             cereal::make_nvp("Dirty Registry", _dirty_registry),
             cereal::make_nvp("Variable Registries", _variable_registries),
-            cereal::make_nvp("Preview Constraint", _preview_constraint),
+            cereal::make_nvp("View Constraint", _view_constraint),
             cereal::make_nvp("Exporter (Image and Video)", _exporter),
             cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("History", _history),
-            cereal::make_nvp("Nodes Module", _nodes_module)
+            cereal::make_nvp("Nodes Module", _nodes_module),
+            cereal::make_nvp("Gallery Poster", _gallery_poster)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};

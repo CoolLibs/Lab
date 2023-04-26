@@ -86,11 +86,7 @@ void CameraManager::imgui(
     }
     if (ImGui::Button(Cool::icon_fmt("Reset Camera", ICOMOON_TARGET).c_str()))
     {
-        maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
-            Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
-            return true;
-        });
-        executor.execute(Command_FinishedEditingVariable{});
+        reset_camera(registries, executor);
     }
     maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
         return Cool::imgui(camera.projection());
@@ -122,6 +118,18 @@ void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref& ctx)
         variable.value() = camera;
     });
     ctx.set_dirty(_camera_id.raw());
+}
+
+void CameraManager::reset_camera(
+    std::reference_wrapper<Cool::VariableRegistries> registries,
+    CommandExecutor_TopLevel_Ref                     executor
+)
+{
+    maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
+        Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
+        return true;
+    });
+    executor.execute(Command_FinishedEditingVariable{});
 }
 
 } // namespace Lab

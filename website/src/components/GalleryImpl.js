@@ -1,73 +1,54 @@
 import React from "react"
-import Layout from "@theme/Layout"
 
-class docApi extends React.Component {
+class GalleryImpl extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      text: "yoo",
+      images: [],
     }
   }
 
   componentDidMount() {
-    const axios = require("axios")
-
-    // Make a request for a user with a given ID
-    // axios
-    //   .get("https://sore-lime-anemone-wear.cyclic.app/")
-    //   .then(function (response) {
-    //     // handle success
-    //     console.log(response)
-    //   })
-    //   .catch(function (error) {
-    //     // handle error
-    //     console.log(error)
-    //   })
-    //   .finally(function () {
-    //     // always executed
-    //   })
-
-    // console.log("sdf")
-    fetch("https://sore-lime-anemone-wear.cyclic.app/")
+    fetch("https://res.cloudinary.com/coollab/image/list/gallery.json")
       .then((response) => response.json())
-      .then((data) => this.setState({ text: `${data[0].name}` }))
-    //   .then((error) => {
-    //     console.error(error)
-    //   })
-    // console.log(data)
-    // const data = fetch("https://coollab-gallery.onrender.cm/")
-    //   .then((response) => {
-    //     console.log(this.text)
-    //     this.text = response
-    //     console.log(this.text)
-    //     this.render()
-    //   })
-    //   .catch((error) => {
-    //     console.error(error)
-    //   })
+      .then((data) => {
+          const images = data.resources.map((info) => {
+            const metadata =
+              info.context !== undefined ? info.context.custom : {}
+            return {
+              url: `https://res.cloudinary.com/coollab/image/upload/v${info.version}/${info.public_id}.${info.format}`,
+              title: metadata.title || "",
+              description: metadata.description || "",
+              author_name: metadata.author_name || "",
+              author_link: metadata.author_link || "",
+            }
+          })
+          this.setState({ ...this.state, images })
+      })
   }
-  componentWillUnmount() {
-    if (typeof window !== "undefined") {
-      window.location.reload()
-    }
-  }
+
   render() {
-    const { text } = this.state
+    const images = this.state.images.map((image) => {
+      return (
+        <div>
+          <img src={image.url} style={{ height: "50px", margin: "2px" }}></img>
+          <caption>
+            <div>title: {image.title}</div>
+            <div>description: {image.description}</div>
+            <div>author_name: {image.author_name}</div>
+            <div>author_link: {image.author_link}</div>
+          </caption>
+        </div>
+      )
+    })
+
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "50vh",
-          fontSize: "20px",
-        }}
-      >
+      <div>
         <p>🚧 COMING SOON 🚧</p>
-        <p>{text}</p>
+        <div>{images}</div>
       </div>
     )
   }
 }
 
-export default docApi
+export default GalleryImpl

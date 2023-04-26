@@ -35,6 +35,16 @@
                         "Name": "Brighter",
                         "Brightness delta": 0.03500000014901161,
                         "Opacity": 1.0
+                    },
+                    {
+                        "Name": "Transparent",
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.5
+                    },
+                    {
+                        "Name": "Slightly Transparent",
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.75
                     }
                 ]
             },
@@ -48,19 +58,14 @@
                         "Opacity": 1.0
                     },
                     {
+                        "Name": "Modal",
+                        "Brightness delta": -0.6480000019073486,
+                        "Opacity": 0.75
+                    },
+                    {
                         "Name": "Invisible",
                         "Brightness delta": 0.0,
                         "Opacity": 0.0
-                    },
-                    {
-                        "Name": "Normal2",
-                        "Brightness delta": 0.0,
-                        "Opacity": 1.0
-                    },
-                    {
-                        "Name": "Modal",
-                        "Brightness delta": -0.6480000019073486,
-                        "Opacity": 0.9089999794960022
                     }
                 ]
             },
@@ -77,16 +82,6 @@
                         "Name": "Brighter",
                         "Brightness delta": 0.2809999883174896,
                         "Opacity": 1.0
-                    },
-                    {
-                        "Name": "Unnamed Group",
-                        "Brightness delta": 0.0,
-                        "Opacity": 0.21699999272823335
-                    },
-                    {
-                        "Name": "Unnamed Group(1)",
-                        "Brightness delta": 0.0,
-                        "Opacity": 0.7459999918937683
                     }
                 ]
             },
@@ -168,7 +163,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Invisible"
                 }
             },
             {
@@ -465,7 +460,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Normal"
                 }
             },
             {
@@ -582,7 +577,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Normal"
                 }
             },
             {
@@ -591,7 +586,7 @@
                 },
                 "second": {
                     "Category name": "Background",
-                    "Group name": "Normal2"
+                    "Group name": "Modal"
                 }
             },
             {
@@ -627,7 +622,7 @@
                 },
                 "second": {
                     "Category name": "Accent Color",
-                    "Group name": "Normal"
+                    "Group name": "Brighter"
                 }
             },
             {
@@ -644,7 +639,61 @@
                     "Name": "ToggleBgHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Medium Color",
+                    "Group name": "Darker"
+                }
+            },
+            {
+                "first": {
+                    "Name": "CheckboxButton"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "CheckboxButtonHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "CheckboxButtonActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FloatingButton"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Transparent"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FloatingButtonHovered"
+                },
+                "second": {
+                    "Category name": "Medium Color",
+                    "Group name": "Slightly Transparent"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FloatingButtonActive"
+                },
+                "second": {
+                    "Category name": "Accent Color",
                     "Group name": "Normal"
                 }
             },
@@ -700,177 +749,6 @@
                 "second": {
                     "Category name": "Accent Color",
                     "Group name": "Brighter"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_Bg"
-                },
-                "second": {
-                    "Category name": "Medium Color",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_Grid"
-                },
-                "second": {
-                    "Category name": "Bright Color",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_NodeBg"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_NodeBorder"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_HovNodeBorder"
-                },
-                "second": {
-                    "Category name": "Bright Color",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_SelNodeBorder"
-                },
-                "second": {
-                    "Category name": "",
-                    "Group name": ""
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_NodeSelRect"
-                },
-                "second": {
-                    "Category name": "Accent Color",
-                    "Group name": "Unnamed Group"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_NodeSelRectBorder"
-                },
-                "second": {
-                    "Category name": "Accent Color",
-                    "Group name": "Unnamed Group(1)"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_HovLinkBorder"
-                },
-                "second": {
-                    "Category name": "Accent Color",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_SelLinkBorder"
-                },
-                "second": {
-                    "Category name": "Accent Color",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_HighlightLinkBorder"
-                },
-                "second": {
-                    "Category name": "Accent Color",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_LinkSelRect"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_LinkSelRectBorder"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_PinRect"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_PinRectBorder"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_Flow"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_FlowMarker"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_GroupBg"
-                },
-                "second": {
-                    "Category name": "Medium Color",
-                    "Group name": "Normal"
-                }
-            },
-            {
-                "first": {
-                    "Name": "Nodes_GroupBorder"
-                },
-                "second": {
-                    "Category name": "Background",
-                    "Group name": "Invisible"
                 }
             }
         ]

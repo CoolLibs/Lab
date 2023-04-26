@@ -24,7 +24,7 @@ jobs:
           submodules: recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl 
+      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl -D COOLLAB_REQUIRE_ALL_FEATURES=ON
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.EXE-TARGET}}
@@ -45,7 +45,7 @@ jobs:
           submodules: recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl
+      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl -D COOLLAB_REQUIRE_ALL_FEATURES=ON
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.EXE-TARGET}}
@@ -54,7 +54,8 @@ jobs:
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
     - name: Run tests
-      run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}} 
+      run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}}
+
 #-----------------------------------------------------------------------------------------------
   Windows_Clang_Debug:
     name: Windows Clang Debug
@@ -65,7 +66,7 @@ jobs:
           submodules: recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL
+      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL -D COOLLAB_REQUIRE_ALL_FEATURES=ON
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.EXE-TARGET}}
@@ -86,7 +87,7 @@ jobs:
           submodules: recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL
+      run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL -D COOLLAB_REQUIRE_ALL_FEATURES=ON
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.EXE-TARGET}}
@@ -95,7 +96,8 @@ jobs:
       run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
     - name: Run tests
-      run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}} 
+      run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}}
+
 #-----------------------------------------------------------------------------------------------
   Linux_GCC_Debug: 
     name: Linux GCC Debug
@@ -110,9 +112,12 @@ jobs:
 
     - name: Install glfw dependencies
       run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev    
+   
+    - name: Install OpenSSL
+      run: sudo apt-get install libssl-dev
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11 -D COOLLAB_REQUIRE_ALL_FEATURES=ON
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
@@ -137,9 +142,12 @@ jobs:
 
     - name: Install glfw dependencies
       run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev    
-
+   
+    - name: Install OpenSSL
+      run: sudo apt-get install libssl-dev
+      
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11
+      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc-11 -D CMAKE_CXX_COMPILER=g++-11 -D COOLLAB_REQUIRE_ALL_FEATURES=ON
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
@@ -164,9 +172,12 @@ jobs:
 
     - name: Install glfw dependencies
       run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev    
+   
+    - name: Install OpenSSL
+      run: sudo apt-get install libssl-dev
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
     
     - name: Build exe
       run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
@@ -191,9 +202,12 @@ jobs:
 
     - name: Install glfw dependencies
       run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev    
+   
+    - name: Install OpenSSL
+      run: sudo apt-get install libssl-dev
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++
+      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
@@ -214,7 +228,7 @@ jobs:
         submodules: recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++
+      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
@@ -235,7 +249,7 @@ jobs:
         submodules: recursive
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++
+      run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include
 
     - name: Build exe
       run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
