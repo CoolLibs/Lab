@@ -30,23 +30,33 @@ class GalleryImpl extends React.Component {
   render() {
     const images = this.state.images.map((image) => {
       return (
-        <div>
-          <img src={image.url} style={{ height: "50px", margin: "2px" }}></img>
-          <caption>
-            <div>title: {image.title}</div>
-            <div>description: {image.description}</div>
-            <div>author_name: {image.author_name}</div>
-            <div>author_link: {image.author_link}</div>
-          </caption>
+        <div class ="gallery-frame">
+
+          <img src={image.url} class="gallery-img"></img>
+
+           <div class="gallery-infos">
+            
+              <h2>Title {image.title} </h2> 
+              <h3> by <a href={image.author_link} target="_blank" alt="author_link" class="site-button" >{image.author_name}</a></h3>
+              Description : {image.description} <br></br>
+
+          </div> 
+
         </div>
       )
     })
 
     return (
-      <div>
-        <p>🚧 COMING SOON 🚧</p>
-        <div>{images}</div>
+    <div> 
+
+      <div class="gallery-header"> 
+        <h2>Discover all of the community's incredible art!</h2>
+        <h3><i>Hover to know more 🖱️</i></h3>
       </div>
+
+      <div class="gallery-impl">{images}</div>
+
+    </div>
     )
   }
 }
