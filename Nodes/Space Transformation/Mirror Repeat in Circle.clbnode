@@ -1,0 +1,8 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+UV main(UV _2D_Thing)
+{
+    vec2 polar = Cool_polar_coordinates(_2D_Thing);
+    polar.x    = 1. - 2. * (abs(mod(polar.x * 0.5 + 0.5, 2.) - 1.));
+    return vec2_from_polar(polar.x, polar.y);
+}
