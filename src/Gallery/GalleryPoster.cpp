@@ -3,6 +3,7 @@
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/icon_fmt.h"
+#include "Cool/ImGui/markdown.h"
 #include "Cool/Image/compute_image_size.h"
 #include "Gallery/GalleryPoster.h"
 #include "Gallery/post_image_online.h"
@@ -40,6 +41,8 @@ void GalleryPoster::imgui_open_sharing_form(std::optional<Cool::AspectRatio> con
 void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& render_png)
 {
     _window.show([&]() {
+        Cool::ImGuiExtras::markdown("Your image will be visible on [CoolLab's gallery](https://coollab-art.com/Gallery).");
+        Cool::ImGuiExtras::markdown("If you want to edit or remove it, send an email at [coollab.lib@gmail.com](mailto:coollab.lib@gmail.com) from the email address that you will provide below.");
         ImGui::SeparatorText("Artwork");
         _artwork_info.imgui();
         _aspect_ratio.imgui(0.f, "Aspect Ratio");
@@ -57,13 +60,18 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
         }
         ImGui::SeparatorText("Author");
         _author_info.imgui();
+        ImGui::SeparatorText("Legal");
+        _legal_info.imgui();
         ImGui::SeparatorText("");
-        if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))
-        {
-            post_image_online(_artwork_info, _author_info, render_png(export_size()));
-            _window.close();
-            _artwork_info = {}; // Clear info that is related to one specific artwork
-        }
+        auto const missing_info_message = std::optional<std::string>{_legal_info.missing_information_message()};
+        Cool::ImGuiExtras::maybe_disabled(missing_info_message.has_value(), missing_info_message.value_or("").c_str(), [&]() {
+            if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))
+            {
+                post_image_online(_artwork_info, _author_info, render_png(export_size()));
+                _window.close();
+                _artwork_info = {}; // Clear info that is related to one specific artwork
+            }
+        });
     });
 }
 
