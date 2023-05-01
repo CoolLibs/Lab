@@ -5,6 +5,7 @@
 #include "Cool/Log/Message.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Path/Path.h"
+#include "Cool/String/String.h"
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "cpp-httplib/httplib.h"
@@ -62,12 +63,13 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
         httplib::MultipartFormData{
             .name    = "context",
             .content = fmt::format(
-                "title={}|description={}|author_name={}|author_link={}|email={}",
+                "title={}|description={}|author_name={}|author_link={}|email={}|agreed_to_have_it_shared_on_our_instagram={}",
                 escape(artwork_info.title),
                 escape(artwork_info.description),
                 escape(author_info.name),
                 escape(author_info.link),
-                escape(legal_info.email)
+                escape(legal_info.email),
+                escape(legal_info.has_agreed_to_share_on_instagram ? "true" : "false")
             ),
             .filename     = {},
             .content_type = {},

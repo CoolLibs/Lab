@@ -5,7 +5,8 @@ namespace Lab {
 
 struct LegalInfo {
     std::string email{};
-    bool        has_agreed{false};
+    bool        has_agreed_to_share_on_gallery{false};
+    bool        has_agreed_to_share_on_instagram{false};
 
     void               imgui();
     [[nodiscard]] auto missing_information_message() const -> std::optional<std::string>;
