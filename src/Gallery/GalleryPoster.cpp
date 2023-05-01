@@ -67,7 +67,7 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
         Cool::ImGuiExtras::maybe_disabled(missing_info_message.has_value(), missing_info_message.value_or("").c_str(), [&]() {
             if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))
             {
-                post_image_online(_artwork_info, _author_info, render_png(export_size()));
+                post_image_online(_artwork_info, _author_info, _legal_info, render_png(export_size()));
                 _window.close();
                 _artwork_info = {}; // Clear info that is related to one specific artwork
             }
