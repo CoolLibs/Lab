@@ -1,4 +1,5 @@
 import React from "react"
+import {Carousel} from '3d-react-carousal';
 
 class GalleryImpl extends React.Component {
   constructor(props) {
@@ -27,6 +28,14 @@ class GalleryImpl extends React.Component {
       })
   }
 
+  // Possible evolution: if we had a type "favorite" in metadata, we could easily display the best pictures!
+    generateCarouselImagesTag() {
+        const images = this.state.images.slice(0, 5);
+        return images.map((image, index) => (
+            <img key={index} src={image.url} alt="" />
+        ));
+    }
+
   render() {
     const images = this.state.images.map((image, i) => {
       return (
@@ -53,6 +62,12 @@ class GalleryImpl extends React.Component {
         <h2>Discover all of the community's incredible art!</h2>
         <h3><i>Hover to know more 🖱️</i></h3>
       </div>
+
+      <Carousel
+          slides={this.generateCarouselImagesTag()}
+          autoplay={false}
+          interval={10000}
+      />
 
       <div className="gallery-impl">{images}</div>
 

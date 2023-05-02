@@ -18,6 +18,7 @@
     "@docusaurus/preset-classic": "2.3.1",
     "@loadable/component": "^5.15.3",
     "@mdx-js/react": "^1.6.22",
+    "3d-react-carousal": "^5.0.0",
     "clsx": "^1.2.1",
     "docusaurus-lunr-search": "^2.3.2",
     "hast-util-is-element": "^1.1.0",
