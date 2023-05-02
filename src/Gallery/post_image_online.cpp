@@ -1,5 +1,5 @@
-#if COOLLAB_HAS_OPENSSL
 #include "post_image_online.h"
+#if COOLLAB_HAS_OPENSSL
 #include <string>
 #include "Cool/File/File.h"
 #include "Cool/Log/Message.h"
@@ -104,7 +104,7 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 
 #else
 namespace Lab {
-void post_image_online(ArtworkInfo const&, AuthorInfo const&, std::string const&)
+void post_image_online(ArtworkInfo const&, AuthorInfo const&, LegalInfo const&, std::string const&)
 {
     assert(false && "CoolLab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
 }
