@@ -25,7 +25,7 @@ void about_menu()
         {
             line(
                 [] { ImGui::TextDisabled("Website"); },
-                [] { Cool::ImGuiExtras::link("https://coollab-art.com/"); }
+                [] { Cool::ImGuiExtras::link("https://linktr.ee/coollab_art"); }
             );
 
             line(
