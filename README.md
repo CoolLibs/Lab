@@ -1,8 +1,8 @@
-# CoolLab
+# Coollab
 
 <img alt="logo" src="./res/logo.png" width = 100px>
 
-Check out [CoolLab's LinkTree](https://linktr.ee/coollab_art).
+Check out [Coollab's LinkTree](https://linktr.ee/coollab_art).
 
 ## Dev
 
@@ -12,4 +12,4 @@ Check out [this section](https://coollibs.github.io/cool/building) of our websit
 
 ### Running the tests
 
-Simply use the `Tests-CoolLab` target defined in "CMakeLists.txt".
+Simply use the `Tests-Coollab` target defined in "CMakeLists.txt".

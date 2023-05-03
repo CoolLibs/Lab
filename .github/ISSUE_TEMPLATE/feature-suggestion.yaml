@@ -1,5 +1,5 @@
 name: Feature Suggestion
-description: Tell us how we could improve CoolLab
+description: Tell us how we could improve Coollab
 title: "[Feature] "
 labels: ["enhancement", "triage"]
 body:
@@ -19,7 +19,7 @@ body:
     id: what-is-your-suggestion
     attributes:
       label: What is your suggestion?
-      description: Tell us how we could improve CoolLab
+      description: Tell us how we could improve Coollab
       placeholder: It would be nice if ...
       value: "It would be nice if ..."
     validations:
