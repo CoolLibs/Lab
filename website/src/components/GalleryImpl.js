@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useCallback } from "react";
 import {Carousel} from '3d-react-carousal';
 
 class GalleryImpl extends React.Component {
@@ -6,7 +6,13 @@ class GalleryImpl extends React.Component {
     super(props)
     this.state = {
       images: [],
-    }
+
+      currentImage: [],
+      setCurrentImage: [],
+
+      Opened: false,
+      fullImageSrc: null,
+    };
   }
 
   componentDidMount() {
@@ -32,22 +38,31 @@ class GalleryImpl extends React.Component {
     generateCarouselImagesTag() {
         const images = this.state.images.slice(0, 5);
         return images.map((image, index) => (
-            <img key={index} src={image.url} alt="" />
+            <img key={index} src={image.url} alt={image.title} />
         ));
     }
+
+    openImg = (imageSrc) => {
+      this.setState({ Opened: true, fullImageSrc: imageSrc });
+    };
+  
+    closeImg = () => {
+      this.setState({ Opened: false, fullImageSrc: null });
+    };
 
   render() {
     const images = this.state.images.map((image, i) => {
       return (
         <div className="gallery-frame" key={i}>
 
-          <img src={image.url} className="gallery-img" alt=""></img>
+          <img src={image.url} className="gallery-img" alt="" onClick={() => this.openImg(image.url)}></img>
 
            <div className="gallery-infos">
 
               <h2>Title {image.title} </h2>
-              <h3> by <a href={image.author_link} target="_blank" className="site-button" >{image.author_name}</a></h3>
+              <h3> by <a href={image.author_link} target="_blank">{image.author_name}</a></h3>
               Description : {image.description} <br></br>
+              <i>Click to display fullscreen! 🖱️</i>
 
           </div>
 
@@ -69,11 +84,25 @@ class GalleryImpl extends React.Component {
           interval={10000}
       />
 
-      <div className="gallery-impl">{images}</div>
+        <div className="gallery-impl" 
+        style={{pointerEvents: this.state.Opened ? "none" : "auto"}}> 
+        {/* So as we cannot click on other images behind when one full screen */}
+        {images}
+        </div>
 
-    </div>
-    )
+        {this.state.Opened && (
+          <div className="img-overlay" onClick={this.closeImg}>
+            <img
+              src={this.state.fullImageSrc}
+              className="full-image"
+              alt="Fullscreen image"
+            />
+          </div>
+        )}
+
+      </div>
+    );
   }
 }
 
-export default GalleryImpl
+export default GalleryImpl;

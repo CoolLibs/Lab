@@ -90,8 +90,8 @@
 }
 
 .gallery-frame {
-    height: 40vh;
-    padding: 5px;
+    height: 45vh;
+    padding: 3px;
     flex-grow: 1;
     display: flex;
     position: relative;
@@ -119,14 +119,23 @@
     transition-duration: 0.3s;
 }
 
+.gallery-infos a:hover {
+    text-decoration: none;
+}
+
 .gallery-frame:hover .gallery-infos {
     display: block;
     align-items: center;
     transition-duration: 0.3s;
+    pointer-events: none; 
+}
+
+.gallery-frame:hover a {
+    pointer-events: all; /*Still can click on link in infos*/
 }
 
 .gallery-frame:hover .gallery-img {
-    filter: opacity(15%);
+    filter: opacity(15%) brightness(1.75);
     transition-duration: 0.3s;
 }
 
@@ -134,12 +143,29 @@
     padding: 10px;
 }
 
-.site-button {
-    text-decoration: none;
-    transition-duration: 1s;
-}
+.full-container {
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 1; /*To display it over the gallery and not under */
+    display: flex;
+  }
+  
 
-.site-button:hover {
-    text-decoration: none;
-    transition-duration: 1s;
-}
+.full-image {
+    height: 100vh;
+  }
+
+  
+  .img-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: #000000b8;
+    z-index: 500; /*To display over the navbar*/
+  }
+
