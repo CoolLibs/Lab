@@ -763,6 +763,24 @@
             },
             {
                 "first": {
+                    "Name": "Link"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "LinkHovered"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Brighter"
+                }
+            },
+            {
+                "first": {
                     "Name": "Nodes_Bg"
                 },
                 "second": {

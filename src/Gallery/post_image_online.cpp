@@ -1,12 +1,11 @@
 #include "post_image_online.h"
-#include <string>
-#include "Cool/String/String.h"
 #if COOLLAB_HAS_OPENSSL
-
+#include <string>
 #include "Cool/File/File.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Path/Path.h"
+#include "Cool/String/String.h"
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "cpp-httplib/httplib.h"
@@ -36,7 +35,7 @@ TEST_CASE("escape()")
 
 namespace Lab {
 
-void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, std::string const& image_png_data)
+void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, LegalInfo const& legal_info, std::string const& image_png_data)
 {
     auto cli = httplib::SSLClient{"api.cloudinary.com"};
 
@@ -64,11 +63,13 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
         httplib::MultipartFormData{
             .name    = "context",
             .content = fmt::format(
-                "title={}|description={}|author_name={}|author_link={}",
+                "title={}|description={}|author_name={}|author_link={}|email={}|agreed_to_have_it_shared_on_our_instagram={}",
                 escape(artwork_info.title),
                 escape(artwork_info.description),
                 escape(author_info.name),
-                escape(author_info.link)
+                escape(author_info.link),
+                escape(legal_info.email),
+                escape(legal_info.has_agreed_to_share_on_instagram ? "true" : "false")
             ),
             .filename     = {},
             .content_type = {},
@@ -103,7 +104,7 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 
 #else
 namespace Lab {
-void post_image_online(ArtworkInfo const&, AuthorInfo const&, std::string const&)
+void post_image_online(ArtworkInfo const&, AuthorInfo const&, LegalInfo const&, std::string const&)
 {
     assert(false && "CoolLab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
 }

@@ -3,6 +3,7 @@
 #include "AuthorInfo.h"
 #include "Cool/ImGui/ImGuiWindow.h"
 #include "Cool/Image/AspectRatio.h"
+#include "LegalInfo.h"
 
 namespace Lab {
 
@@ -21,6 +22,7 @@ private:
     Cool::ImGuiWindow _window;
     ArtworkInfo       _artwork_info{};
     AuthorInfo        _author_info{};
+    LegalInfo         _legal_info{};
     Cool::AspectRatio _aspect_ratio{};
 
 private:
@@ -32,6 +34,7 @@ private:
         archive(
             cereal::make_nvp("Artwork info", _artwork_info),
             cereal::make_nvp("Author info", _author_info),
+            cereal::make_nvp("Legal info", _legal_info),
             cereal::make_nvp("Aspect Ratio", _aspect_ratio)
         );
     }

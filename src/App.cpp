@@ -3,6 +3,7 @@
 #include <Cool/DebugOptions/TestPresets.h>
 #include <Cool/ImGui/Fonts.h>
 #include <Cool/ImGui/icon_fmt.h>
+#include <Cool/ImGui/test_markdown_formatting.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Path/Path.h>
@@ -410,6 +411,10 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::DebugOptions::test_presets__window([]() {
         static auto test_presets = TestPresets{};
         test_presets.imgui();
+    });
+
+    Cool::DebugOptions::test_markdown_formatting_window([]() {
+        Cool::test_markdown_formatting();
     });
 
     Cool::DebugOptions::color_themes_advanced_config_window([&]() {
