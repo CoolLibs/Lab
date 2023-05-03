@@ -106,7 +106,7 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 namespace Lab {
 void post_image_online(ArtworkInfo const&, AuthorInfo const&, LegalInfo const&, std::string const&)
 {
-    assert(false && "CoolLab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
+    assert(false && "Coollab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
 }
 } // namespace Lab
 #endif
