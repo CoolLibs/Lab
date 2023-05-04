@@ -1,6 +1,6 @@
 # Coollab
 
-<img alt="logo" src="./res/logo.png" width = 100px>
+<img alt="logo" src="./logo.png" width = 100px>
 
 Check out [Coollab's LinkTree](https://linktr.ee/coollab_art).
 
