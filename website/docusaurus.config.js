@@ -14,7 +14,7 @@ const projectName = "Lab"
 const config = {
   title: "Coollab",
   tagline: "A free generative-art software",
-  favicon: "img/favicon2.ico",
+  favicon: "img/favicon.ico",
 
   // Set the production url of your site here
   url: `https://coollab-art.com/`,
