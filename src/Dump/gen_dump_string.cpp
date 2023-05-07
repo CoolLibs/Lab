@@ -9,7 +9,7 @@ auto gen_dump_string() -> std::string
 {
     return fmt::format(
         R"STR(---INFO---
-CoolLab version   : {}
+Coollab version   : {}
 {}
 )STR",
         coollab_version(),

@@ -29,7 +29,7 @@ void about_menu()
             );
 
             line(
-                [] { ImGui::TextDisabled("CoolLab version"); },
+                [] { ImGui::TextDisabled("Coollab version"); },
                 [] { ImGui::TextUnformatted(coollab_version().c_str()); }
             );
 

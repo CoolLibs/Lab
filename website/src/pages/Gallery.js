@@ -9,7 +9,7 @@ export default function () {
   return (
     <Layout
       title="Gallery"
-      description="CoolLab's Gallery full of user-made artworks."
+      description="Coollab's Gallery full of user-made artworks."
     >
       <BrowserOnly>{() => <Impl />}</BrowserOnly>
     </Layout>

@@ -27,7 +27,7 @@ void GalleryPoster::imgui_open_sharing_form(std::optional<Cool::AspectRatio> con
 {
     Cool::ImGuiExtras::maybe_disabled(
         !has_openssl,
-        "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling CoolLab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.", [&]() {
+        "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling Coollab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.", [&]() {
             if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
             {
                 _window.open();
@@ -41,7 +41,7 @@ void GalleryPoster::imgui_open_sharing_form(std::optional<Cool::AspectRatio> con
 void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& render_png)
 {
     _window.show([&]() {
-        Cool::ImGuiExtras::markdown("Your image will be visible on [CoolLab's gallery](https://coollab-art.com/Gallery).");
+        Cool::ImGuiExtras::markdown("Your image will be visible on [Coollab's gallery](https://coollab-art.com/Gallery).");
         Cool::ImGuiExtras::markdown("If you want to edit or remove it, send an email at [coollab.lib@gmail.com](mailto:coollab.lib@gmail.com) from the email address that you will provide below.");
         ImGui::SeparatorText("Artwork");
         _artwork_info.imgui();

@@ -4,7 +4,7 @@
 #
 # Then add your function to the call to `generate()` at the end of the file.
 #
-# You can use `all_variable_types()` to get all the variable types we use in CoolLab.
+# You can use `all_variable_types()` to get all the variable types we use in Coollab.
 # ------------
 
 from dataclasses import dataclass

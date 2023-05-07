@@ -215,9 +215,9 @@ def implicit_color_conversions():
                 if (from == PrimitiveType::{type1} && to == PrimitiveType::{type2})
                 {{
                     return context.push_function({{
-                        .name           = "CoolLab_{type2}_from_{type1}",
+                        .name           = "Coollab_{type2}_from_{type1}",
                         .implementation = R"STR(
-                            {out_vec} CoolLab_{type2}_from_{type1}/*coollabdef*/({in_vec} from)
+                            {out_vec} Coollab_{type2}_from_{type1}/*coollabdef*/({in_vec} from)
                             {{
                                 {implementation}
                             }}
@@ -334,6 +334,7 @@ def check_color_space(type):
         return f"&& std::get<Cool::Input<{type[0]}>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::{type[1]})"
     else:
         return ""
+
 
 def input_to_primitive_type():
     from pipe import map, chain
