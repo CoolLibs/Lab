@@ -60,8 +60,24 @@ class GalleryImpl extends React.Component {
            <div className="gallery-infos">
 
               <h2>Title {image.title} </h2>
-              <h3> by <a href={image.author_link} target="_blank">{image.author_name}</a></h3>
-              Description : {image.description} <br></br>
+              <h3>
+              {image.author_link ? (
+                <>
+                  by <a href={image.author_link} target="_blank">{image.author_name}</a>
+                </>
+              ) : (
+                ""
+              )}
+            </h3>
+
+            {image.description ? (
+                <>
+                  Description :  {image.description}
+                </>
+              ) : (
+                ""
+              )}
+              <br></br>
               <i>Click to display fullscreen! 🖱️</i>
 
           </div>
@@ -73,17 +89,15 @@ class GalleryImpl extends React.Component {
     return (
     <div>
 
-      <div className="gallery-header">
-        <h2>Discover all of the community's incredible art!</h2>
-        <h3><i>Hover to know more 🖱️</i></h3>
-      </div>
-
       <Carousel
           slides={this.generateCarouselImagesTag()}
           autoplay={false}
           interval={10000}
       />
-
+      <div className="gallery-header">
+        <h2>Discover all of the community's incredible art!</h2>
+        <h3><i>Hover to know more 🖱️</i></h3>
+      </div>
         <div className="gallery-impl" 
         style={{pointerEvents: this.state.Opened ? "none" : "auto"}}> 
         {/* So as we cannot click on other images behind when one full screen */}

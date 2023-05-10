@@ -43,7 +43,8 @@
 .react-3d-carousel {
     --slider-height: 500px;
     min-height: var(--slider-height);
-    margin: 30px 0;
+    margin: 10px 0;
+    transform: scale(0.75);
 }
 
 .fa {
@@ -68,11 +69,11 @@
     left: 105% !important;
 }
 
-
 .slider-left > div, .slider-right > div {
     background: var(--ifm-color-content);
     border: 0 !important;
     color: var(--ifm-color-content-inverse) !important;
+    border-radius: 20px;
 }
 
 .slider-single img {
@@ -95,6 +96,8 @@
     flex-grow: 1;
     display: flex;
     position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .gallery-frame:last-child {
@@ -113,7 +116,7 @@
     display: none;
     position: absolute;
     width: 100%;
-    height: 100%;
+
     justify-content: center;
     align-items: center;
     transition-duration: 0.3s;
@@ -127,37 +130,30 @@
     display: block;
     align-items: center;
     transition-duration: 0.3s;
-    pointer-events: none; 
+    pointer-events: none;  
 }
 
 .gallery-frame:hover a {
     pointer-events: all; /*Still can click on link in infos*/
 }
 
+
 .gallery-frame:hover .gallery-img {
     filter: opacity(15%) brightness(1.75);
     transition-duration: 0.3s;
+    pointer-events: all;
 }
 
 .gallery-header {
     padding: 10px;
 }
 
-.full-container {
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(5px);
-    z-index: 1; /*To display it over the gallery and not under */
-    display: flex;
-  }
-  
 
 .full-image {
     height: 100vh;
-  }
+}
 
-  
-  .img-overlay {
+.img-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -167,5 +163,9 @@
     justify-content: center;
     background-color: #000000b8;
     z-index: 500; /*To display over the navbar*/
+  }
+
+  .img-overlay > img {
+    max-width: none; /*So as images are not stretch in overlay*/
   }
 
