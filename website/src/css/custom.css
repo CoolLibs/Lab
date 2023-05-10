@@ -47,17 +47,7 @@
 }
 
 .fa {
-    font-size: 20px;
-    font-family: "Georgia", sans-serif;
-    font-weight: bold;
-}
-
-.fa-arrow-right::before {
-    content: "→";
-}
-
-.fa-arrow-left::before {
-    content: "←";
+    font-size: 15px;
 }
 
 .slider-left {
