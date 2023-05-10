@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import {Carousel} from '3d-react-carousal';
+import Link from '@docusaurus/Link';
 
 class GalleryImpl extends React.Component {
   constructor(props) {
@@ -87,15 +88,15 @@ class GalleryImpl extends React.Component {
     })
 
     return (
-    <div>
-
+    <div className="gallery">
+      <h2>Discover all of the community's incredible art!</h2>
+      <h3><i>Submit your own artwork on <Link to="/Download">Coollab️</Link> 🎨</i></h3>
       <Carousel
           slides={this.generateCarouselImagesTag()}
           autoplay={false}
           interval={10000}
       />
       <div className="gallery-header">
-        <h2>Discover all of the community's incredible art!</h2>
         <h3><i>Hover to know more 🖱️</i></h3>
       </div>
         <div className="gallery-impl" 
