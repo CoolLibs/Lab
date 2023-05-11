@@ -37,4 +37,127 @@
     width: 20px;
     vertical-align: middle;
 }
-  
+
+/* Slider */
+
+.react-3d-carousel {
+    --slider-height: 60vh;
+    min-height: var(--slider-height);
+    margin: 30px 0;
+}
+
+.fa {
+    font-size: 15px;
+}
+
+.slider-left {
+    right: 105% !important;
+}
+
+.slider-right {
+    left: 105% !important;
+}
+
+.slider-left > div, .slider-right > div {
+    background: var(--ifm-color-content);
+    border: 0 !important;
+    color: var(--ifm-color-content-inverse) !important;
+    border-radius: 20px;
+}
+
+.slider-single img {
+    background: black; /* Because some images are transparent and we don't want any transparency inside the slider */
+    height: var(--slider-height);
+    min-width: 100%;
+    object-fit: cover;
+}
+
+/* Gallery Impl */
+
+.gallery {
+    padding: 20px;
+}
+
+.gallery-impl {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.gallery-frame {
+    height: 45vh;
+    padding: 3px;
+    flex-grow: 1;
+    display: flex;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.gallery-frame:last-child {
+    flex-grow: 10;
+}
+
+.gallery-img {
+    max-height: 100%;
+    min-width: 100%;
+    object-fit: cover;
+    transition-duration: 0.3s;
+}
+
+.gallery-infos {
+    padding: 10px;
+    display: none;
+    position: absolute;
+    width: 100%;
+
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.3s;
+}
+
+.gallery-infos a:hover {
+    text-decoration: none;
+}
+
+.gallery-frame:hover .gallery-infos {
+    display: block;
+    align-items: center;
+    transition-duration: 0.3s;
+    pointer-events: none;
+}
+
+.gallery-frame:hover a {
+    pointer-events: all; /*Still can click on link in infos*/
+}
+
+
+.gallery-frame:hover .gallery-img {
+    filter: opacity(15%) brightness(1.75);
+    transition-duration: 0.3s;
+    pointer-events: all;
+}
+
+.gallery-header {
+    padding: 10px;
+}
+
+.full-image {
+    height: 100vh;
+}
+
+.img-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: #000000b8;
+    z-index: 500; /*To display over the navbar*/
+}
+
+.img-overlay > img {
+    max-width: none; /*So as images are not stretch in overlay*/
+}
+

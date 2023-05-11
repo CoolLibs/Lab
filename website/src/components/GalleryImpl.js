@@ -1,11 +1,19 @@
-import React from "react"
+import React, { useState, useCallback } from "react";
+import {Carousel} from '3d-react-carousal';
+import Link from '@docusaurus/Link';
 
 class GalleryImpl extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       images: [],
-    }
+
+      currentImage: [],
+      setCurrentImage: [],
+
+      Opened: false,
+      fullImageSrc: null,
+    };
   }
 
   componentDidMount() {
@@ -27,28 +35,89 @@ class GalleryImpl extends React.Component {
       })
   }
 
+  // Possible evolution: if we had a type "favorite" in metadata, we could easily display the best pictures!
+    generateCarouselImagesTag() {
+        const images = this.state.images.slice(0, 5);
+        return images.map((image, index) => (
+            <img key={index} src={image.url} alt={image.title} />
+        ));
+    }
+
+    openImg = (imageSrc) => {
+      this.setState({ Opened: true, fullImageSrc: imageSrc });
+    };
+  
+    closeImg = () => {
+      this.setState({ Opened: false, fullImageSrc: null });
+    };
+
   render() {
-    const images = this.state.images.map((image) => {
+    const images = this.state.images.map((image, i) => {
       return (
-        <div>
-          <img src={image.url} style={{ height: "50px", margin: "2px" }}></img>
-          <caption>
-            <div>title: {image.title}</div>
-            <div>description: {image.description}</div>
-            <div>author_name: {image.author_name}</div>
-            <div>author_link: {image.author_link}</div>
-          </caption>
+        <div className="gallery-frame" key={i}>
+
+          <img src={image.url} className="gallery-img" alt="" onClick={() => this.openImg(image.url)}></img>
+
+           <div className="gallery-infos">
+
+              <h2>Title {image.title} </h2>
+              <h3>
+              {image.author_link ? (
+                <>
+                  by <a href={image.author_link} target="_blank">{image.author_name}</a>
+                </>
+              ) : (
+                ""
+              )}
+            </h3>
+
+            {image.description ? (
+                <>
+                  Description :  {image.description}
+                </>
+              ) : (
+                ""
+              )}
+              <br></br>
+              <i>Click to display fullscreen! 🖱️</i>
+
+          </div>
+
         </div>
       )
     })
 
     return (
-      <div>
-        <p>🚧 COMING SOON 🚧</p>
-        <div>{images}</div>
+    <div className="gallery">
+      <h2>Discover all of the community's incredible art!</h2>
+      <h3><i>Submit your own artwork on <Link to="/Download">Coollab️</Link> 🎨</i></h3>
+      <Carousel
+          slides={this.generateCarouselImagesTag()}
+          autoplay={false}
+          interval={10000}
+      />
+      <div className="gallery-header">
+        <h3><i>Hover to know more 🖱️</i></h3>
       </div>
-    )
+        <div className="gallery-impl" 
+        style={{pointerEvents: this.state.Opened ? "none" : "auto"}}> 
+        {/* So as we cannot click on other images behind when one full screen */}
+        {images}
+        </div>
+
+        {this.state.Opened && (
+          <div className="img-overlay" onClick={this.closeImg}>
+            <img
+              src={this.state.fullImageSrc}
+              className="full-image"
+              alt="Fullscreen image"
+            />
+          </div>
+        )}
+
+      </div>
+    );
   }
 }
 
-export default GalleryImpl
+export default GalleryImpl;
