@@ -125,7 +125,6 @@
     align-items: center;
     transition-duration: 0.3s;
     pointer-events: none;
-    cursor: text;
 }
 
 .gallery-frame:hover a {
