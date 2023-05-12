@@ -162,12 +162,25 @@
     max-width: none; /*So as images are not stretch in overlay*/
 }
 
-.img-overlay > .close-button {
+.img-overlay > i {
     position: absolute;
-    top: 0;
-    right: 2vw;
     color: white;
     font-size: 2rem;
     cursor: pointer;
+}
+
+.img-overlay > .close-button {
+    top: 0;
+    right: 2vw;
+}
+
+.img-overlay > .prev-button {
+    top: 50%;
+    left: 2vw;
+}
+
+.img-overlay > .next-button {
+    top: 50%;
+    right: 2vw;
 }
 
