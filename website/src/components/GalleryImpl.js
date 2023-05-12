@@ -105,8 +105,8 @@ class GalleryImpl extends React.Component {
                 <h3><i>Submit your own artwork on <Link to="/Download">Coollab️</Link> 🎨</i></h3>
                 <Carousel
                     slides={this.generateCarouselImagesTag()}
-                    autoplay={false}
-                    interval={10000}
+                    autoplay={true}
+                    interval={3000}
                 />
                 <div className="gallery-header">
                     <h3><i>Hover to know more 🖱️</i></h3>
