@@ -102,6 +102,7 @@
     min-width: 100%;
     object-fit: cover;
     transition-duration: 0.3s;
+    cursor: pointer;
 }
 
 .gallery-infos {
@@ -124,6 +125,7 @@
     align-items: center;
     transition-duration: 0.3s;
     pointer-events: none;
+    cursor: text;
 }
 
 .gallery-frame:hover a {
@@ -159,5 +161,14 @@
 
 .img-overlay > img {
     max-width: none; /*So as images are not stretch in overlay*/
+}
+
+.img-overlay > .close-button {
+    position: absolute;
+    top: 0;
+    right: 2vw;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
 }
 
