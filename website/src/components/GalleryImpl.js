@@ -8,11 +8,11 @@ class GalleryImpl extends React.Component {
         this.state = {
             images: [],
 
-            currentImage: [],
-            setCurrentImage: [],
-
             Opened: false,
-            fullImageSrc: null,
+            currentImageIndex: null,
+            previousImageIndex: [],
+            nextImageIndex: [],
+            index: 0,
         };
     }
 
@@ -49,17 +49,40 @@ class GalleryImpl extends React.Component {
         ));
     }
 
-    openImg = (imageSrc) => {
-        this.setState({Opened: true, fullImageSrc: imageSrc});
+    openImg = (index) => {
+        this.setSurroundingsFullScreenImages(index);
+        this.setState({Opened: true});
     };
+
+    setSurroundingsFullScreenImages = (index) => {
+        this.setState({
+            previousImageIndex: index - 1 < 0 ? this.state.images.length - 1 : index - 1,
+            currentImageIndex: index,
+            nextImageIndex: index + 1 > this.state.images.length-1 ? 0 : index + 1
+        });
+    }
+
+    setPrevFullScreenImage = () => {
+        this.setSurroundingsFullScreenImages(this.state.previousImageIndex)
+    }
+
+    setNextFullScreenImage = () => {
+        this.setSurroundingsFullScreenImages(this.state.nextImageIndex)
+    }
+
+    getCurrentFullScreenImage = () => {
+        return this.state.images[this.state.currentImageIndex].url
+    }
 
     closeImg = () => {
         this.setState({Opened: false, fullImageSrc: null});
     };
 
     handleKeyDown = (event) => {
-        if (event.key === 'Escape' && this.state.Opened) {
-            this.closeImg();
+        if (this.state.Opened) {
+            if (event.key === 'Escape') this.closeImg();
+            if (event.key === 'ArrowLeft') this.setPrevFullScreenImage()
+            if (event.key === 'ArrowRight') this.setNextFullScreenImage()
         }
     };
 
@@ -68,7 +91,7 @@ class GalleryImpl extends React.Component {
             return (
                 <div className="gallery-frame" key={i}>
 
-                    <img src={image.url} className="gallery-img" alt="" onClick={() => this.openImg(image.url)}></img>
+                    <img src={image.url} className="gallery-img" alt="" onClick={() => this.openImg(i)}></img>
 
                     <div className="gallery-infos">
 
@@ -118,14 +141,16 @@ class GalleryImpl extends React.Component {
                 </div>
 
                 {this.state.Opened && (
-                    <div className="img-overlay" onClick={this.closeImg}>
+                    <div className="img-overlay">
                         <img
-                            src={this.state.fullImageSrc}
+                            src={this.getCurrentFullScreenImage()}
                             className="full-image"
                             alt="Fullscreen image"
                         />
-                        <i className="close-button fa fa-times"
-                           onClick={this.closeImg}></i>
+
+                        <i className="close-button fa fa-times" onClick={this.closeImg}></i>
+                        <i className="prev-button fa fa-arrow-left" onClick={this.setPrevFullScreenImage}></i>
+                        <i className="next-button fa fa-arrow-right" onClick={this.setNextFullScreenImage}></i>
                     </div>
                 )}
 
