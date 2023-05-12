@@ -25,7 +25,7 @@ class GalleryImpl extends React.Component {
                         info.context !== undefined ? info.context.custom : {}
                     return {
                         url: `https://res.cloudinary.com/coollab/image/upload/v${info.version}/${info.public_id}.${info.format}`,
-                        title: metadata.title || "",
+                        title: metadata.title || "Untitled",
                         description: metadata.description || "",
                         author_name: metadata.author_name || "",
                         author_link: metadata.author_link || "",
@@ -72,7 +72,7 @@ class GalleryImpl extends React.Component {
 
                     <div className="gallery-infos">
 
-                        <h2>Title {image.title} </h2>
+                        <h2>{image.title}</h2>
                         <h3>
                             {image.author_link ? (
                                 <>
@@ -85,7 +85,7 @@ class GalleryImpl extends React.Component {
 
                         {image.description ? (
                             <>
-                                Description : {image.description}
+                                Description: {image.description}
                             </>
                         ) : (
                             ""
