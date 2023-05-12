@@ -33,6 +33,12 @@ class GalleryImpl extends React.Component {
                 })
                 this.setState({...this.state, images})
             })
+
+        document.addEventListener('keydown', this.handleKeyDown);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.handleKeyDown);
     }
 
     // Possible evolution: if we had a type "favorite" in metadata, we could easily display the best pictures!
@@ -49,6 +55,12 @@ class GalleryImpl extends React.Component {
 
     closeImg = () => {
         this.setState({Opened: false, fullImageSrc: null});
+    };
+
+    handleKeyDown = (event) => {
+        if (event.key === 'Escape' && this.state.Opened) {
+            this.closeImg();
+        }
     };
 
     render() {
