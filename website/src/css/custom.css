@@ -118,6 +118,7 @@
 
 .gallery-infos a:hover {
     text-decoration: none;
+    color: #79ffe2;
 }
 
 .gallery-frame:hover .gallery-infos {
@@ -130,7 +131,6 @@
 .gallery-frame:hover a {
     pointer-events: all; /*Still can click on link in infos*/
 }
-
 
 .gallery-frame:hover .gallery-img {
     filter: opacity(15%) brightness(1.75);
