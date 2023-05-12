@@ -1,5 +1,5 @@
 import React from "react";
-import {Carousel} from '3d-react-carousal';
+// import {Carousel} from '3d-react-carousal';
 import Link from '@docusaurus/Link';
 
 class GalleryImpl extends React.Component {
@@ -42,12 +42,12 @@ class GalleryImpl extends React.Component {
     }
 
     // Possible evolution: if we had a type "favorite" in metadata, we could easily display the best pictures!
-    generateCarouselImagesTag() {
-        const images = this.state.images.slice(0, 5);
-        return images.map((image, index) => (
-            <img key={index} src={image.url} alt={image.title}/>
-        ));
-    }
+    // generateCarouselImagesTag() {
+    //     const images = this.state.images.slice(0, 5);
+    //     return images.map((image, index) => (
+    //         <img key={index} src={image.url} alt={image.title}/>
+    //     ));
+    // }
 
     openImg = (index) => {
         this.setSurroundingsFullScreenImages(index);
@@ -126,14 +126,14 @@ class GalleryImpl extends React.Component {
             <div className="gallery">
                 <h2>Discover all of the community's incredible art!</h2>
                 <h3><i>Submit your own artwork on <Link to="/Download">Coollab️</Link> 🎨</i></h3>
-                <Carousel
-                    slides={this.generateCarouselImagesTag()}
-                    autoplay={true}
-                    interval={3000}
-                />
-                <div className="gallery-header">
-                    <h3><i>Hover to know more 🖱️</i></h3>
-                </div>
+                {/*<Carousel*/}
+                {/*    slides={this.generateCarouselImagesTag()}*/}
+                {/*    autoplay={true}*/}
+                {/*    interval={3000}*/}
+                {/*/>*/}
+                {/*<div className="gallery-header">*/}
+                {/*    <h3><i>Hover to know more 🖱️</i></h3>*/}
+                {/*</div>*/}
                 <div className="gallery-impl"
                      style={{pointerEvents: this.state.Opened ? "none" : "auto"}}>
                     {/* So as we cannot click on other images behind when one full screen */}
