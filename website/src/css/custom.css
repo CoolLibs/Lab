@@ -193,7 +193,7 @@
   z-index: 10;
 
   height: 98vh;
-  background-color: #000000;
+  background-image: url("../../content/img/transparent.png");
 
   animation-name: scale-up; /* Name of the animation keyframes */
   animation-duration: 0.5s; /* Duration of the animation */
