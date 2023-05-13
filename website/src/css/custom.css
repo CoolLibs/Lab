@@ -104,6 +104,7 @@
   object-fit: cover;
   transition-duration: 0.3s;
   cursor: pointer;
+  background-image: url("../../content/img/transparent.png");
 }
 
 .gallery-infos {
