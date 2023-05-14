@@ -10,6 +10,7 @@
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
+#include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
@@ -94,7 +95,8 @@ auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
 
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    if (_nodes_editor.imgui_windows(nodes_config(ui), _nodes_library))
+    auto cfg = Cool::NodesConfig{nodes_config(ui)};
+    if (_nodes_editor.imgui_windows(cfg, _nodes_library))
         ui.set_dirty(_regenerate_code_flag);
 
     DebugOptions::show_generated_shader_code([&] {

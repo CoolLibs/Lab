@@ -33,18 +33,23 @@ public:
 
     auto        name(Cool::Node const&) const -> std::string;
     auto        category_name(Cool::Node const&) const -> std::string;
-    void        imgui_node_body(Cool::Node&, Cool::NodeId const&) const;
-    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) const -> Node;
-    void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&) const;
+    void        imgui_node_above_pins(Cool::Node&, Cool::NodeId const&);
+    void        imgui_node_below_pins(Cool::Node&, Cool::NodeId const&);
+    void        imgui_node_in_inspector(Cool::Node&, Cool::NodeId const&);
+    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
+    void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&);
     static void widget_to_rename_node(Cool::Node&);
 
 private:
-    Cool::InputFactory_Ref                              _input_factory;
-    mutable Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
-    mutable Ui_Ref                                      _ui;
-    Cool::NodeId&                                       _main_node_id;
-    Cool::DirtyFlag                                     _rerender_flag;
-    Cool::DirtyFlag                                     _regenerate_code_flag;
+    void main_node_selector(Cool::NodeId const&);
+
+private:
+    Cool::InputFactory_Ref                      _input_factory;
+    Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
+    Ui_Ref                                      _ui;
+    Cool::NodeId&                               _main_node_id;
+    Cool::DirtyFlag                             _rerender_flag;
+    Cool::DirtyFlag                             _regenerate_code_flag;
 };
 
 } // namespace Lab

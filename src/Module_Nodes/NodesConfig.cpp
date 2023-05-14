@@ -91,21 +91,34 @@ auto NodesConfig::category_name(Cool::Node const& abstract_node) const -> std::s
     return node.category_name();
 }
 
-void NodesConfig::imgui_node_body(Cool::Node& abstract_node, Cool::NodeId const& id) const
+void NodesConfig::main_node_selector(Cool::NodeId const& node_id)
 {
-    auto& node = abstract_node.downcast<Node>();
-    { // Main node selector
-        const bool was_main = id == _main_node_id;
-        bool       is_main  = was_main;
-        if (Cool::ImGuiExtras::toggle("Main node", &is_main))
+    bool const was_main = node_id == _main_node_id;
+    bool       is_main  = was_main;
+    if (Cool::ImGuiExtras::toggle("Main node", &is_main))
+    {
+        if (is_main && !was_main)
         {
-            if (is_main && !was_main)
-            {
-                _main_node_id = id;
-                _ui.set_dirty(_regenerate_code_flag);
-            }
+            _main_node_id = node_id;
+            _ui.set_dirty(_regenerate_code_flag);
         }
     }
+}
+
+void NodesConfig::imgui_node_above_pins(Cool::Node& abstract_node, Cool::NodeId const& id)
+{
+    main_node_selector(id);
+}
+
+void NodesConfig::imgui_node_below_pins(Cool::Node& abstract_node, Cool::NodeId const& id)
+{
+}
+
+void NodesConfig::imgui_node_in_inspector(Cool::Node& abstract_node, Cool::NodeId const& id)
+{
+    auto& node = abstract_node.downcast<Node>();
+
+    main_node_selector(id);
 
     if (node.imgui_chosen_any_type())
         _ui.set_dirty(_regenerate_code_flag);
@@ -140,7 +153,7 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
     return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
 }
 
-auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) const -> Node
+auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
 
@@ -265,7 +278,7 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
     }
 }
 
-void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph) const
+void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph)
 {
     auto& out_node = abstract_out_node.downcast<Node>();
     auto  node     = make_node({definition, out_node.category_name()});
