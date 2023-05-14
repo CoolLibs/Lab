@@ -76,7 +76,7 @@
 /* Gallery Impl */
 
 .gallery {
-  padding: 20px;
+  padding: 40px;
 }
 
 .gallery-impl {
@@ -104,6 +104,7 @@
   object-fit: cover;
   transition-duration: 0.3s;
   cursor: pointer;
+  background-image: url("../../static/img/transparent.png");
 }
 
 .gallery-infos {
@@ -177,31 +178,27 @@
 }
 
 .animate-scale-down {
-  max-width: none; /*So as images are not stretch in overlay*/
   z-index: 10;
 
-  height: 98vh;
-  background-color: #000000;
+  max-height: 95vh;
+  max-width: 90vw;
 
-  animation-name: scale-down; /* Name of the animation keyframes */
-  animation-duration: 0.5s; /* Duration of the animation */
-  animation-iteration-count: 1; /* Number of times to repeat the animation */
+  background-image: url("../../static/img/transparent.png");
+
+  animation-name: scale-down; 
+  animation-duration: 0.5s; 
+  animation-iteration-count: 1; 
 }
 
 .full-image {
-  max-width: none; /*So as images are not stretch in overlay*/
   z-index: 10;
+  max-height: 95vh;
+  max-width: 90vw;
+  background-image: url("../../static/img/transparent.png");
 
-  height: 98vh;
-  background-color: #000000;
-
-  animation-name: scale-up; /* Name of the animation keyframes */
-  animation-duration: 0.5s; /* Duration of the animation */
-  animation-iteration-count: 1; /* Number of times to repeat the animation */
-}
-
-html.overlay-open {
-  scroll-behavior: smooth;
+  animation-name: scale-up; 
+  animation-duration: 0.5s; 
+  animation-iteration-count: 1;
 }
 
 .img-overlay > i {
@@ -212,19 +209,22 @@ html.overlay-open {
 }
 
 .img-overlay > .close-button {
+  margin: 1.5vh;
   top: 0;
   right: 2vw;
-  z-index: 100;
+  z-index: 600;
 }
 
 .img-overlay > .prev-button {
+  margin: 1.5vh;
   top: 50%;
   left: 2vw;
-  z-index: 100;
+  z-index: 600;
 }
 
 .img-overlay > .next-button {
+  margin: 1.5vh;
   top: 50%;
   right: 2vw;
-  z-index: 100;
+  z-index: 600;
 }

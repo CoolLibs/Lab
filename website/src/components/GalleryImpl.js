@@ -37,6 +37,7 @@ class GalleryImpl extends React.Component {
       });
 
     document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("click", this.handleClick);
   }
 
   componentWillUnmount() {
@@ -90,6 +91,25 @@ class GalleryImpl extends React.Component {
       if (event.key === "Escape") this.closeImg();
       if (event.key === "ArrowLeft") this.setPrevFullScreenImage();
       if (event.key === "ArrowRight") this.setNextFullScreenImage();
+    }
+  };
+
+  handleClick = (event) => {
+    if (this.state.Opened) {
+      const openingImg = [...document.querySelectorAll(".gallery-img")];
+      const leftButton = document.querySelector(".prev-button");
+      const rightButton = document.querySelector(".next-button");
+      const closeButton = document.querySelector(".close-button");
+
+      if (
+        openingImg.includes(event.target) ||
+        event.target === leftButton ||
+        event.target === rightButton ||
+        event.target === closeButton
+      ) {
+        return;
+      }
+      this.closeImg();
     }
   };
 
