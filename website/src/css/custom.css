@@ -185,9 +185,9 @@
 
   background-image: url("../../content/img/transparent.png");
 
-  animation-name: scale-down; /* Name of the animation keyframes */
-  animation-duration: 0.5s; /* Duration of the animation */
-  animation-iteration-count: 1; /* Number of times to repeat the animation */
+  animation-name: scale-down; 
+  animation-duration: 0.5s; 
+  animation-iteration-count: 1; 
 }
 
 .full-image {
@@ -196,9 +196,9 @@
   max-width: 90vw;
   background-image: url("../../content/img/transparent.png");
 
-  animation-name: scale-up; /* Name of the animation keyframes */
-  animation-duration: 0.5s; /* Duration of the animation */
-  animation-iteration-count: 1; /* Number of times to repeat the animation */
+  animation-name: scale-up; 
+  animation-duration: 0.5s; 
+  animation-iteration-count: 1;
 }
 
 .img-overlay > i {

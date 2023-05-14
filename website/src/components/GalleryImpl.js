@@ -96,16 +96,20 @@ class GalleryImpl extends React.Component {
 
   handleClick = (event) => {
     if (this.state.Opened) {
-      const openingImg = [...document.querySelectorAll('.gallery-img')]
-      const leftButton = document.querySelector('.prev-button')
-      const rightButton = document.querySelector('.next-button')
-      const closeButton = document.querySelector('.close-button')
+      const openingImg = [...document.querySelectorAll(".gallery-img")];
+      const leftButton = document.querySelector(".prev-button");
+      const rightButton = document.querySelector(".next-button");
+      const closeButton = document.querySelector(".close-button");
 
-      if (openingImg.includes(event.target) || event.target === leftButton || event.target === rightButton || event.target === closeButton) {
+      if (
+        openingImg.includes(event.target) ||
+        event.target === leftButton ||
+        event.target === rightButton ||
+        event.target === closeButton
+      ) {
         return;
-
       }
-      this.closeImg()
+      this.closeImg();
     }
   };
 
