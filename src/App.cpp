@@ -349,7 +349,6 @@ void App::imgui_windows()
 void App::imgui_windows_only_when_inputs_are_allowed()
 {
     const auto the_ui = ui();
-    _nodes_module->imgui_windows(the_ui);
     // _custom_shader_module->imgui_windows(the_ui);
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
@@ -359,6 +358,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
     imgui_window_cameras();
     ImGui::End();
+    // Nodes
+    _nodes_module->imgui_windows(the_ui); // Must be after cameras so that Equalizer window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
