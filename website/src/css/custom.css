@@ -209,19 +209,21 @@
 }
 
 .img-overlay > .close-button {
-  margin: 2.5vh;
+  margin: 1.5vh;
   top: 0;
   right: 2vw;
   z-index: 600;
 }
 
 .img-overlay > .prev-button {
+  margin: 1.5vh;
   top: 50%;
   left: 2vw;
   z-index: 600;
 }
 
 .img-overlay > .next-button {
+  margin: 1.5vh;
   top: 50%;
   right: 2vw;
   z-index: 600;
