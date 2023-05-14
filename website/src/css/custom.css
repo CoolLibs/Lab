@@ -209,6 +209,7 @@
 }
 
 .img-overlay > .close-button {
+  margin: 2.5vh;
   top: 0;
   right: 2vw;
   z-index: 600;
