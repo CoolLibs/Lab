@@ -105,12 +105,12 @@ void NodesConfig::main_node_selector(Cool::NodeId const& node_id)
     }
 }
 
-void NodesConfig::imgui_node_above_pins(Cool::Node& abstract_node, Cool::NodeId const& id)
+void NodesConfig::imgui_node_above_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
 {
     main_node_selector(id);
 }
 
-void NodesConfig::imgui_node_below_pins(Cool::Node& abstract_node, Cool::NodeId const& id)
+void NodesConfig::imgui_node_below_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& /* id */)
 {
 }
 
