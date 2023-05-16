@@ -546,13 +546,20 @@ static void replace_defines_with_their_values(std::string& text)
         text = Cool::String::replace_all_words(text, define.name, fmt::format("{} /*{}*/", define.value, define.name));
 }
 
-auto parse_node_definition(std::filesystem::path filepath, std::string const& text)
+auto parse_node_definition(std::filesystem::path filepath, std::string text)
     -> tl::expected<NodeDefinition, std::string>
 {
     if (DebugOptions::log_when_parsing_node_definition())
         Cool::Log::ToUser::info("Nodes", fmt::format("Parsing node definition from {}.", filepath));
 
     NodeDefinition_Data res{};
+
+    bool fix_artifacts = false;
+    if (text.find("IS0_FIX_ARTIFACTS") != std::string::npos)
+    {
+        fix_artifacts = true;
+        Cool::String::replace_all(text, "IS0_FIX_ARTIFACTS", "(1. - `Fix Artifacts`) * ");
+    }
 
     auto text_without_comments = Cool::String::remove_comments(text);
     replace_defines_with_their_values(text_without_comments);
@@ -568,6 +575,24 @@ auto parse_node_definition(std::filesystem::path filepath, std::string const& te
         auto const err = find_inputs(text_without_comments, res);
         if (err)
             return tl::make_unexpected(*err);
+        if (fix_artifacts)
+        {
+            res.input_values.emplace_back(Cool::InputDefinition<float>{
+                .name          = "`Fix Artifacts`",
+                .description   = "Increase the value to fix glitches and holes in the shape. But note that higher values are slower to render.",
+                .default_value = 0.f,
+                .metadata      = Cool::VariableMetadata<float>{
+                         .bounds = {
+                             .min           = 0.f,
+                             .max           = 0.999f,
+                             .has_min_bound = true,
+                             .has_max_bound = true,
+                             .drag_speed    = 0.01f,
+                             .use_slider    = true,
+                    },
+                },
+            });
+        }
     }
     {
         auto const err = find_outputs(text_without_comments, res);
