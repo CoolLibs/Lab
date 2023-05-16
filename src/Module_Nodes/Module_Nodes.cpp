@@ -95,9 +95,11 @@ auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
 
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    auto cfg = Cool::NodesConfig{nodes_config(ui)};
-    if (_nodes_editor.imgui_windows(cfg, _nodes_library))
-        ui.set_dirty(_regenerate_code_flag);
+    {
+        auto cfg = Cool::NodesConfig{nodes_config(ui)};
+        if (_nodes_editor.imgui_windows(cfg, _nodes_library))
+            ui.set_dirty(_regenerate_code_flag);
+    }
 
     DebugOptions::show_generated_shader_code([&] {
         ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
