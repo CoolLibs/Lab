@@ -555,10 +555,10 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
     NodeDefinition_Data res{};
 
     bool fix_artifacts = false;
-    if (text.find("IS0_FIX_ARTIFACTS") != std::string::npos)
+    if (text.find("CLB_FIX_ARTIFACTS") != std::string::npos)
     {
         fix_artifacts = true;
-        Cool::String::replace_all(text, "IS0_FIX_ARTIFACTS", "(1. - `Fix Artifacts`) * ");
+        Cool::String::replace_all(text, "CLB_FIX_ARTIFACTS", "(1. - `Fix Artifacts`) * ");
     }
 
     auto text_without_comments = Cool::String::remove_comments(text);
