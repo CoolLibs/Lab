@@ -1,5 +1,6 @@
 #include "GalleryPoster.h"
 #include <imgui.h>
+#include "Cool/DebugOptions/DebugOptions.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/icon_fmt.h"
@@ -70,6 +71,11 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
                 post_image_online(_artwork_info, _author_info, _legal_info, render_png(export_size()));
                 _window.close();
                 _artwork_info = {}; // Clear info that is related to one specific artwork
+                if (Cool::DebugOptions::public_exhibition_mode())
+                {
+                    _author_info = {}; // Clear info that is related to the author,
+                    _legal_info  = {}; // because the next post will be made by another visitor.
+                }
             }
         });
     });

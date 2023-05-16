@@ -3,7 +3,7 @@ name: Create release executables
 on: workflow_dispatch
 
 env:
-  TARGET: CoolLab
+  TARGET: Coollab
 
 
 jobs:
@@ -26,12 +26,12 @@ jobs:
       uses: vimtor/action-zip@v1
       with:
         files: bin\Release\
-        dest: CoolLab-Windows.zip
+        dest: Coollab-Windows.zip
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: CoolLab-Windows.zip
+        files: Coollab-Windows.zip
         
 #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
@@ -60,13 +60,13 @@ jobs:
     - name: Zip files
       run: |
             cd ${{github.workspace}}/bin
-            mv Release CoolLab-Linux
-            tar -cvzf CoolLab-Linux.tar.gz ./CoolLab-Linux
+            mv Release Coollab-Linux
+            tar -cvzf Coollab-Linux.tar.gz ./Coollab-Linux
             
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{github.workspace}}/bin/CoolLab-Linux.tar.gz
+        files: ${{github.workspace}}/bin/Coollab-Linux.tar.gz
 
 #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release:
@@ -86,11 +86,11 @@ jobs:
     - name: Zip files
       run: |
             cd ${{github.workspace}}/bin
-            mv Release CoolLab-MacOS
-            zip -r CoolLab-MacOS.zip ./CoolLab-MacOS
+            mv Release Coollab-MacOS
+            zip -r Coollab-MacOS.zip ./Coollab-MacOS
 
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
-        files: ${{github.workspace}}/bin/CoolLab-MacOS.zip
+        files: ${{github.workspace}}/bin/Coollab-MacOS.zip
 

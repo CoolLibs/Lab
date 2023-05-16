@@ -6,35 +6,225 @@
 
 /* You can override the default Infima variables here. */
 :root {
-    --ifm-color-primary: #2e8555;
-    --ifm-color-primary-dark: #29784c;
-    --ifm-color-primary-darker: #277148;
-    --ifm-color-primary-darkest: #205d3b;
-    --ifm-color-primary-light: #33925d;
-    --ifm-color-primary-lighter: #359962;
-    --ifm-color-primary-lightest: #3cad6e;
-    --ifm-code-font-size: 95%;
-    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-color-primary: #2e8555;
+  --ifm-color-primary-dark: #29784c;
+  --ifm-color-primary-darker: #277148;
+  --ifm-color-primary-darkest: #205d3b;
+  --ifm-color-primary-light: #33925d;
+  --ifm-color-primary-lighter: #359962;
+  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-    --ifm-color-primary: #25c2a0;
-    --ifm-color-primary-dark: #21af90;
-    --ifm-color-primary-darker: #1fa588;
-    --ifm-color-primary-darkest: #1a8870;
-    --ifm-color-primary-light: #29d5b0;
-    --ifm-color-primary-lighter: #32d8b4;
-    --ifm-color-primary-lightest: #4fddbf;
-    --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+[data-theme="dark"] {
+  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
 .footer__col {
-    text-align: center;
+  text-align: center;
 }
 
 .image-in-text {
-    width: 20px;
-    vertical-align: middle;
+  width: 20px;
+  vertical-align: middle;
 }
-  
+
+/* Slider */
+
+.react-3d-carousel {
+  --slider-height: 60vh;
+  min-height: var(--slider-height);
+  margin: 30px 0;
+}
+
+.fa {
+  font-size: 15px;
+}
+
+.slider-left {
+  right: 105% !important;
+}
+
+.slider-right {
+  left: 105% !important;
+}
+
+.slider-left > div,
+.slider-right > div {
+  background: var(--ifm-color-content);
+  border: 0 !important;
+  color: var(--ifm-color-content-inverse) !important;
+  border-radius: 20px;
+}
+
+.slider-single img {
+  background: black; /* Because some images are transparent and we don't want any transparency inside the slider */
+  height: var(--slider-height);
+  min-width: 100%;
+  object-fit: cover;
+}
+
+/* Gallery Impl */
+
+.gallery {
+  padding: 40px;
+}
+
+.gallery-impl {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.gallery-frame {
+  height: 45vh;
+  padding: 5px;
+  flex-grow: 1;
+  display: flex;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.gallery-frame:last-child {
+  flex-grow: 10;
+}
+
+.gallery-img {
+  max-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  transition-duration: 0.3s;
+  cursor: pointer;
+  background-image: url("../../static/img/transparent.png");
+}
+
+.gallery-infos {
+  padding: 10px;
+  display: none;
+  position: absolute;
+  width: 100%;
+
+  justify-content: center;
+  align-items: center;
+  transition-duration: 0.3s;
+}
+
+.gallery-infos a:hover {
+  color: #79ffe2;
+}
+
+.gallery-frame:hover .gallery-infos {
+  display: block;
+  align-items: center;
+  transition-duration: 0.3s;
+  pointer-events: none;
+}
+
+.gallery-frame:hover a {
+  pointer-events: all; /*Still can click on link in infos*/
+}
+
+.gallery-frame:hover .gallery-img {
+  filter: opacity(15%) brightness(1.75);
+  transition-duration: 0.3s;
+  pointer-events: all;
+}
+
+.gallery-header {
+  padding: 10px;
+}
+
+.img-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000b8;
+
+  z-index: 500; /*To display over the navbar*/
+}
+
+@keyframes scale-up {
+  0% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes scale-down {
+  0% {
+    transform: scale(1);
+    filter: opacity(100%);
+  }
+  100% {
+    transform: scale(0.5);
+    filter: opacity(0%);
+  }
+}
+
+.animate-scale-down {
+  z-index: 10;
+
+  max-height: 95vh;
+  max-width: 90vw;
+
+  background-image: url("../../static/img/transparent.png");
+
+  animation-name: scale-down; 
+  animation-duration: 0.5s; 
+  animation-iteration-count: 1; 
+}
+
+.full-image {
+  z-index: 10;
+  max-height: 95vh;
+  max-width: 90vw;
+  background-image: url("../../static/img/transparent.png");
+
+  animation-name: scale-up; 
+  animation-duration: 0.5s; 
+  animation-iteration-count: 1;
+}
+
+.img-overlay > i {
+  position: absolute;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.img-overlay > .close-button {
+  margin: 1.5vh;
+  top: 0;
+  right: 2vw;
+  z-index: 600;
+}
+
+.img-overlay > .prev-button {
+  margin: 1.5vh;
+  top: 50%;
+  left: 2vw;
+  z-index: 600;
+}
+
+.img-overlay > .next-button {
+  margin: 1.5vh;
+  top: 50%;
+  right: 2vw;
+  z-index: 600;
+}
