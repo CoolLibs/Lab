@@ -108,7 +108,7 @@
             "NodeRounding": 2.0,
             "NodeBorderWidth": 0.0,
             "HoveredNodeBorderWidth": 3.0,
-            "SelectedNodeBorderWidth": 3.0,
+            "SelectedNodeBorderWidth": 6.0,
             "PinRounding": 4.0,
             "PinBorderWidth": 0.0,
             "LinkStrength": 100.0,
