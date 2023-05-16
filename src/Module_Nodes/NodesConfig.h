@@ -33,15 +33,15 @@ public:
 
     auto        name(Cool::Node const&) const -> std::string;
     auto        category_name(Cool::Node const&) const -> std::string;
-    void        imgui_node_above_pins(Cool::Node&, Cool::NodeId const&);
-    void        imgui_node_below_pins(Cool::Node&, Cool::NodeId const&);
+    void        imgui_above_node_pins(Cool::Node&, Cool::NodeId const&);
+    void        imgui_below_node_pins(Cool::Node&, Cool::NodeId const&);
     void        imgui_node_in_inspector(Cool::Node&, Cool::NodeId const&);
     auto        make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
     void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&);
     static void widget_to_rename_node(Cool::Node&);
 
 private:
-    void main_node_selector(Cool::NodeId const&);
+    void main_node_toggle(Cool::NodeId const&);
 
 private:
     Cool::InputFactory_Ref                      _input_factory;

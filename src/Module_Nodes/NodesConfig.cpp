@@ -91,7 +91,7 @@ auto NodesConfig::category_name(Cool::Node const& abstract_node) const -> std::s
     return node.category_name();
 }
 
-void NodesConfig::main_node_selector(Cool::NodeId const& node_id)
+void NodesConfig::main_node_toggle(Cool::NodeId const& node_id)
 {
     bool const was_main = node_id == _main_node_id;
     bool       is_main  = was_main;
@@ -105,12 +105,12 @@ void NodesConfig::main_node_selector(Cool::NodeId const& node_id)
     }
 }
 
-void NodesConfig::imgui_node_above_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
+void NodesConfig::imgui_above_node_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
 {
-    main_node_selector(id);
+    main_node_toggle(id);
 }
 
-void NodesConfig::imgui_node_below_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& /* id */)
+void NodesConfig::imgui_below_node_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& /* id */)
 {
 }
 
@@ -118,7 +118,7 @@ void NodesConfig::imgui_node_in_inspector(Cool::Node& abstract_node, Cool::NodeI
 {
     auto& node = abstract_node.downcast<Node>();
 
-    main_node_selector(id);
+    main_node_toggle(id);
 
     if (node.imgui_chosen_any_type())
         _ui.set_dirty(_regenerate_code_flag);
