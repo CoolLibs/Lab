@@ -14,7 +14,6 @@ public:
     Node() = default;
     Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs, bool is_template_node)
         : _id_names{id_names}
-        , _name{id_names.definition_name}
         , _number_of_main_input_pins{number_of_main_input_pins}
         , _number_of_function_inputs{number_of_function_inputs}
         , _chosen_any_type{is_template_node ? std::make_optional(PrimitiveType::Float) : std::nullopt}
