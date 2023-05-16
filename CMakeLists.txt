@@ -79,7 +79,7 @@ file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
 target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
 
 # Set include directories
-target_include_directories(Coollab-Properties INTERFACE src lib)
+target_include_directories(Coollab-Properties SYSTEM INTERFACE src lib)
 
 # Copy resources to the output folder (where the executable is created) after each build
 include("Cool/CMakeUtils/files_and_folders.cmake")

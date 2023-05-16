@@ -81,7 +81,7 @@ static void apply_settings_to_inputs(
 auto NodesConfig::name(Cool::Node const& abstract_node) const -> std::string
 {
     auto const& node = abstract_node.downcast<Node>();
-    auto const name = node.name();
+    auto const  name = node.name();
     return name.empty() ? node.definition_name() : name;
 }
 
@@ -91,21 +91,34 @@ auto NodesConfig::category_name(Cool::Node const& abstract_node) const -> std::s
     return node.category_name();
 }
 
-void NodesConfig::imgui_node_body(Cool::Node& abstract_node, Cool::NodeId const& id) const
+void NodesConfig::main_node_toggle(Cool::NodeId const& node_id)
 {
-    auto& node = abstract_node.downcast<Node>();
-    { // Main node selector
-        const bool was_main = id == _main_node_id;
-        bool       is_main  = was_main;
-        if (Cool::ImGuiExtras::toggle("Main node", &is_main))
+    bool const was_main = node_id == _main_node_id;
+    bool       is_main  = was_main;
+    if (Cool::ImGuiExtras::toggle("Main node", &is_main))
+    {
+        if (is_main && !was_main)
         {
-            if (is_main && !was_main)
-            {
-                _main_node_id = id;
-                _ui.set_dirty(_regenerate_code_flag);
-            }
+            _main_node_id = node_id;
+            _ui.set_dirty(_regenerate_code_flag);
         }
     }
+}
+
+void NodesConfig::imgui_above_node_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
+{
+    main_node_toggle(id);
+}
+
+void NodesConfig::imgui_below_node_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& /* id */)
+{
+}
+
+void NodesConfig::imgui_node_in_inspector(Cool::Node& abstract_node, Cool::NodeId const& id)
+{
+    auto& node = abstract_node.downcast<Node>();
+
+    main_node_toggle(id);
 
     if (node.imgui_chosen_any_type())
         _ui.set_dirty(_regenerate_code_flag);
@@ -123,7 +136,6 @@ void NodesConfig::imgui_node_body(Cool::Node& abstract_node, Cool::NodeId const&
     else if (!node.value_inputs().empty())
     {
         ImGui::NewLine();
-        ImGui::Separator();
         // Get the variables from the inputs
         auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
         // Apply
@@ -141,7 +153,7 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
     return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
 }
 
-auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) const -> Node
+auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
 
@@ -220,7 +232,7 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         {
             auto       description         = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
             auto const desired_color_space = std::visit([](auto&& input) { return input._desired_color_space; }, *it);    // Keep the new desired_color_space
-            *it = std::move(input);
+            *it                            = std::move(input);
             std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
             std::visit([&](auto&& it) { it._desired_color_space = desired_color_space; }, *it);
         }
@@ -266,10 +278,10 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
     }
 }
 
-void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph) const
+void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph)
 {
-    auto& out_node      = abstract_out_node.downcast<Node>();
-    auto  node          = make_node({definition, out_node.category_name()});
+    auto& out_node = abstract_out_node.downcast<Node>();
+    auto  node     = make_node({definition, out_node.category_name()});
 
     node.set_name(out_node.name());
 
@@ -284,7 +296,7 @@ void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node,
 void NodesConfig::widget_to_rename_node(Cool::Node& abstract_node)
 {
     auto& node = abstract_node.downcast<Node>();
-    auto name = node.name();
+    auto  name = node.name();
     ImGui::SetKeyboardFocusHere();
     if (ImGui::InputText("Display Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))
         ImGui::CloseCurrentPopup();

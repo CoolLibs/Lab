@@ -97,6 +97,53 @@
                 "x": 9.0,
                 "y": 6.0
             }
+        },
+        "ImNodes Style": {
+            "NodePadding": {
+                "x": 8.0,
+                "y": 8.0,
+                "z": 8.0,
+                "w": 8.0
+            },
+            "NodeRounding": 2.0,
+            "NodeBorderWidth": 0.0,
+            "HoveredNodeBorderWidth": 3.0,
+            "SelectedNodeBorderWidth": 3.0,
+            "PinRounding": 4.0,
+            "PinBorderWidth": 0.0,
+            "LinkStrength": 100.0,
+            "SourceDirection": {
+                "x": 1.0,
+                "y": 0.0
+            },
+            "TargetDirection": {
+                "x": -1.0,
+                "y": 0.0
+            },
+            "ScrollDuration": 0.3499999940395355,
+            "FlowMarkerDistance": 30.0,
+            "FlowSpeed": 150.0,
+            "FlowDuration": 2.0,
+            "PivotAlignment": {
+                "x": 0.5,
+                "y": 0.5
+            },
+            "PivotSize": {
+                "x": 0.0,
+                "y": 0.0
+            },
+            "PivotScale": {
+                "x": 1.0,
+                "y": 1.0
+            },
+            "PinCorners": 240.0,
+            "PinRadius": 0.0,
+            "PinArrowSize": 0.0,
+            "PinArrowWidth": 0.0,
+            "GroupRounding": 2.0,
+            "GroupBorderWidth": 1.0,
+            "HighlightConnectedLinks": 0.0,
+            "SnapLinkToPinDir": 0.0
         }
     }
 }

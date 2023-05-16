@@ -10,6 +10,7 @@
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
+#include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
@@ -34,8 +35,8 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 
 void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    auto       cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
-    auto       updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
+    auto cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
+    auto updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
     if (_nodes_folder_watcher.update(updater))
         ctx.set_dirty(_regenerate_code_flag);
 }
@@ -94,8 +95,11 @@ auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
 
 void Module_Nodes::imgui_windows(Ui_Ref ui) const
 {
-    if (_nodes_editor.imgui_window(nodes_config(ui), _nodes_library))
-        ui.set_dirty(_regenerate_code_flag);
+    {
+        auto cfg = Cool::NodesConfig{nodes_config(ui)};
+        if (_nodes_editor.imgui_windows(cfg, _nodes_library))
+            ui.set_dirty(_regenerate_code_flag);
+    }
 
     DebugOptions::show_generated_shader_code([&] {
         ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
