@@ -81,8 +81,7 @@ static void apply_settings_to_inputs(
 auto NodesConfig::name(Cool::Node const& abstract_node) const -> std::string
 {
     auto const& node = abstract_node.downcast<Node>();
-    auto const  name = node.name();
-    return name.empty() ? node.definition_name() : name;
+    return node.name();
 }
 
 auto NodesConfig::category_name(Cool::Node const& abstract_node) const -> std::string
@@ -297,9 +296,9 @@ void NodesConfig::widget_to_rename_node(Cool::Node& abstract_node)
 {
     auto& node = abstract_node.downcast<Node>();
     auto  name = node.name();
-    ImGui::SetKeyboardFocusHere();
-    if (ImGui::InputText("Display Name", &name, ImGuiInputTextFlags_EnterReturnsTrue))
-        ImGui::CloseCurrentPopup();
+    ImGui::PushID(21654);
+    ImGui::InputText("Name", &name);
+    ImGui::PopID();
     node.set_name(name);
 }
 
