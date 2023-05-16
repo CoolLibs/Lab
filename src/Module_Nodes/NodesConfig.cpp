@@ -297,7 +297,7 @@ void NodesConfig::widget_to_rename_node(Cool::Node& abstract_node)
     auto& node = abstract_node.downcast<Node>();
     auto  name = node.name();
     ImGui::PushID(21654);
-    ImGui::InputText("Name", &name);
+    ImGui::InputText("Title", &name);
     ImGui::PopID();
     node.set_name(name);
 }
