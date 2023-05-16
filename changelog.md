@@ -7,6 +7,7 @@
 
 ## 🐣beta-3 WIP
 
+- ✨ Added a Frame (Comment) node.
 - ✨ In the "Export" menu, added a button to share your image online in [Coollab's Gallery](https://coollab-art.com/Gallery).
 - 💄 New logo.
 - 💄 Added Settings to change your color theme.
