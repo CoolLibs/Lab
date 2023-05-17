@@ -26,7 +26,7 @@ static constexpr bool has_openssl =
 
 void GalleryPoster::imgui_open_sharing_form(std::optional<Cool::AspectRatio> const& aspect_ratio)
 {
-    Cool::ImGuiExtras::maybe_disabled(
+    Cool::ImGuiExtras::disabled_if(
         !has_openssl,
         "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling Coollab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.", [&]() {
             if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
@@ -65,7 +65,7 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
         _legal_info.imgui();
         ImGui::SeparatorText("");
         auto const missing_info_message = std::optional<std::string>{_legal_info.missing_information_message()};
-        Cool::ImGuiExtras::maybe_disabled(missing_info_message.has_value(), missing_info_message.value_or("").c_str(), [&]() {
+        Cool::ImGuiExtras::disabled_if(missing_info_message.has_value(), missing_info_message.value_or("").c_str(), [&]() {
             if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))
             {
                 post_image_online(_artwork_info, _author_info, _legal_info, render_png(export_size()));
