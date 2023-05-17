@@ -3,26 +3,34 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "591fa433-c7b0-4272-bf1b-eaf073a5eadd",
+                    "first": "a0114a6a-b135-4dd2-9fed-da5d0dfedc1d",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 2,
+                                "index": 5,
                                 "data": {
-                                    "Name": "Strength",
-                                    "Value": 0.20000000298023225,
+                                    "Name": "Elongation",
+                                    "Value": {
+                                        "x": 1.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
-                                            "Drag speed": 0.0010000000474974514,
+                                            "Drag speed": 0.009999999776482582,
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.20000000298023225,
+                                    "Default Value": {
+                                        "x": 1.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
