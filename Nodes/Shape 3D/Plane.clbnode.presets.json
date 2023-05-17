@@ -3,26 +3,26 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "ebec81c9-aeb8-49b9-bb39-11ed97f665c9",
+                    "first": "cb1c2f42-8449-449f-bf97-18a5c1207083",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Radius",
-                                    "Value": 1.0,
+                                    "Name": "Thickness",
+                                    "Value": 0.0010000000474974514,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
-                                            "Min": 0.0,
+                                            "Min": 0.0010000000474974514,
                                             "Has max bound": false,
                                             "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
+                                            "Drag speed": 0.0010000000474974514,
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": 0.0010000000474974514,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,

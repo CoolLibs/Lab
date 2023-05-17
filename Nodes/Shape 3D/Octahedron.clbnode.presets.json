@@ -3,14 +3,14 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "ebec81c9-aeb8-49b9-bb39-11ed97f665c9",
+                    "first": "c74bc4ea-4d9e-4587-b5d7-8ba47ef7a0e2",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Radius",
+                                    "Name": "Size",
                                     "Value": 1.0,
                                     "Metadata": {
                                         "Bounds": {
@@ -22,7 +22,7 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": 1.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,

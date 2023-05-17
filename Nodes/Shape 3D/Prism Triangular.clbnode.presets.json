@@ -3,7 +3,7 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "ebec81c9-aeb8-49b9-bb39-11ed97f665c9",
+                    "first": "291ca64e-e288-40cc-9d23-4d9ba5e9c522",
                     "second": {
                         "Name": "Default",
                         "Values": [
@@ -22,7 +22,35 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": 1.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Height",
+                                    "Value": 2.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 2.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,

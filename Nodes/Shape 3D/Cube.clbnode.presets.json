@@ -3,7 +3,7 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "ebec81c9-aeb8-49b9-bb39-11ed97f665c9",
+                    "first": "9a471caf-4fd4-463a-a3ba-963b1885eb59",
                     "second": {
                         "Name": "Default",
                         "Values": [
@@ -22,7 +22,7 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": 1.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,

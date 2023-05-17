@@ -3,33 +3,33 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "ebec81c9-aeb8-49b9-bb39-11ed97f665c9",
+                    "first": "129e37d0-ba3f-48e7-b130-ddf5c1034b11",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
-                                "index": 2,
+                                "index": 1,
                                 "data": {
-                                    "Name": "Radius",
-                                    "Value": 1.0,
+                                    "Name": "Detail",
+                                    "Value": 5,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
+                                            "Min": 1,
+                                            "Has max bound": true,
+                                            "Max": 8,
+                                            "Drag speed": 0.03999999910593033,
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.0,
+                                    "Default Value": 0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
-                                            "Min": 0.0,
+                                            "Min": 0,
                                             "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
+                                            "Max": 12,
+                                            "Drag speed": 0.03999999910593033,
                                             "Use slider": false
                                         }
                                     }
