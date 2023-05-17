@@ -113,6 +113,14 @@ void NodesConfig::imgui_below_node_pins(Cool::Node& /* abstract_node */, Cool::N
 {
 }
 
+static auto value_input_is_connected_to_a_node(size_t value_input_index, Node const& node, Cool::Graph const& graph) -> bool
+{
+    auto const  input_pin     = node.pin_of_value_input(value_input_index); // NOLINT(performance-unnecessary-copy-initialization)
+    auto const  input_node_id = graph.input_node_id(input_pin.id());
+    auto const* input_node    = graph.try_get_node<Node>(input_node_id);
+    return input_node != nullptr;
+}
+
 void NodesConfig::imgui_node_in_inspector(Cool::Node& abstract_node, Cool::NodeId const& id)
 {
     auto& node = abstract_node.downcast<Node>();
@@ -122,8 +130,15 @@ void NodesConfig::imgui_node_in_inspector(Cool::Node& abstract_node, Cool::NodeI
     if (node.imgui_chosen_any_type())
         _ui.set_dirty(_regenerate_code_flag);
 
-    for (auto& property : node.value_inputs())
-        _ui.widget(property);
+    for (size_t i = 0; i < node.value_inputs().size(); ++i)
+    {
+        Cool::ImGuiExtras::disabled_if(
+            value_input_is_connected_to_a_node(i, node, _graph),
+            "This value is connected to a node in the graph, you cannot edit it here.", [&]() {
+                _ui.widget(node.value_inputs()[i]);
+            }
+        );
+    }
 
     auto* def = _get_node_definition(node.id_names());
     if (!def)

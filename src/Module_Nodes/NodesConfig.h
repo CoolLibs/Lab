@@ -21,7 +21,8 @@ public:
         Ui_Ref                                      ui,
         Cool::NodeId&                               main_node_id,
         Cool::DirtyFlag const&                      rerender_flag,
-        Cool::DirtyFlag const&                      regenerate_code_flag
+        Cool::DirtyFlag const&                      regenerate_code_flag,
+        Cool::Graph const&                          graph
     )
         : _input_factory{input_factory}
         , _get_node_definition{get_node_definition}
@@ -29,6 +30,7 @@ public:
         , _main_node_id{main_node_id}
         , _rerender_flag{rerender_flag}
         , _regenerate_code_flag{regenerate_code_flag}
+        , _graph{graph}
     {}
 
     auto        name(Cool::Node const&) const -> std::string;
@@ -50,6 +52,7 @@ private:
     Cool::NodeId&                               _main_node_id;
     Cool::DirtyFlag                             _rerender_flag;
     Cool::DirtyFlag                             _regenerate_code_flag;
+    Cool::Graph const&                          _graph;
 };
 
 } // namespace Lab
