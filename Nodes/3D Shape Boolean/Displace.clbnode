@@ -1,29 +1,13 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT vec3->SignedDistance `3D Shape`;
-INPUT vec3->SignedDistance `Displacement`;
+INPUT vec3->SignedDistance `Noise`;
 INPUT float `Frequency`;
 INPUT float `Strength`;
 
 SignedDistance main(vec3 pos)
 {
     return CLB_FIX_ARTIFACTS(
-        `3D Shape`(pos) + `Displacement`(pos * `Frequency`) * `Strength`
+        `3D Shape`(pos) + `Noise`(pos * `Frequency`) * `Strength`
     );
 }
-
-// float
-// {
-//     "Name" : "Frequency"
-//         , "Default" : 0.35
-//         , "Min" : 0.0
-//         , "Max" : 1.0
-// }
-
-// float
-// {
-//     "Name" : "Strength"
-//         , "Default" : 0.1
-//         , "Min" : 0.0
-//         , "Max" : 1.0
-// }

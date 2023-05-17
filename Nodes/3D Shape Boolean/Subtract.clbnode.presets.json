@@ -1,0 +1,44 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "3e554b3b-bbfe-4b5b-9dee-4b6c351ebd34",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Smoothing",
+                                    "Value": 0.20000000298023225,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0010000000474974514,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.0010000000474974514,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.20000000298023225,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
