@@ -164,7 +164,13 @@ void NodesConfig::imgui_node_in_inspector(Cool::Node& abstract_node, Cool::NodeI
 
 static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
 {
-    return signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV;
+    return
+        // Image-like and shape 2D
+        (signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV)
+        // Curve
+        || (signature.from == PrimitiveType::Float && signature.to == PrimitiveType::UV && signature.arity == 1)
+        // Shape 3D
+        || (signature.from == PrimitiveType::Vec3 && signature.to == PrimitiveType::SignedDistance && signature.arity == 1);
 }
 
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
