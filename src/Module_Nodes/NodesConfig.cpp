@@ -169,6 +169,12 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     }
 }
 
+void NodesConfig::on_node_added(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
+{
+    _main_node_id = id;
+    _ui.set_dirty(_regenerate_code_flag);
+}
+
 static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
 {
     return
