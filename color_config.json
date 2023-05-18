@@ -766,7 +766,7 @@
                     "Name": "Link"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Text",
                     "Group name": "Normal"
                 }
             },
@@ -776,7 +776,7 @@
                 },
                 "second": {
                     "Category name": "Accent Color",
-                    "Group name": "Brighter"
+                    "Group name": "Normal"
                 }
             },
             {
