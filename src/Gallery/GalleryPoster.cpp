@@ -44,7 +44,7 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
     _window.show([&]() {
         Cool::ImGuiExtras::markdown("Your image will be visible on [Coollab's gallery](https://coollab-art.com/Gallery).");
         Cool::ImGuiExtras::markdown("If you want to edit or remove it, send an email at [coollab.lib@gmail.com](mailto:coollab.lib@gmail.com) from the email address that you will provide below.");
-        ImGui::SeparatorText("Artwork");
+        Cool::ImGuiExtras::separator_text("Artwork");
         _artwork_info.imgui();
         _aspect_ratio.imgui(0.f, "Aspect Ratio");
         {
@@ -59,11 +59,11 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
             ImGui::SameLine();
             Cool::ImGuiExtras::help_marker("You cannot choose the size of your image because we don't want to be storing too big images.\nYou can only control the Aspect Ratio above.");
         }
-        ImGui::SeparatorText("Author");
+        Cool::ImGuiExtras::separator_text("Author");
         _author_info.imgui();
-        ImGui::SeparatorText("Legal");
+        Cool::ImGuiExtras::separator_text("Legal");
         _legal_info.imgui();
-        ImGui::SeparatorText("");
+        Cool::ImGuiExtras::separator_text("");
         auto const missing_info_message = std::optional<std::string>{_legal_info.missing_information_message()};
         Cool::ImGuiExtras::disabled_if(missing_info_message.has_value(), missing_info_message.value_or("").c_str(), [&]() {
             if (ImGui::Button(Cool::icon_fmt("Send", ICOMOON_EARTH).c_str()))

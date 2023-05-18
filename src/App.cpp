@@ -277,9 +277,7 @@ void App::imgui_window_cameras()
     static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
 
     ImGui::PushID("##2D");
-    ImGui::PushFont(Cool::Font::bold());
-    ImGui::SeparatorText("2D Camera");
-    ImGui::PopFont();
+    Cool::ImGuiExtras::separator_text("2D Camera");
     Cool::ImGuiExtras::toggle("Locked in view", &_is_camera_2D_locked_in_view);
     ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
@@ -290,9 +288,7 @@ void App::imgui_window_cameras()
     ImGui::NewLine();
 
     ImGui::PushID("##3D");
-    ImGui::PushFont(Cool::Font::bold());
-    ImGui::SeparatorText("3D Camera");
-    ImGui::PopFont();
+    Cool::ImGuiExtras::separator_text("3D Camera");
     Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
     ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
@@ -474,20 +470,13 @@ void App::settings_menu()
     if (ImGui::BeginMenu(Cool::icon_fmt("Settings", ICOMOON_COG, true).c_str()))
     {
         Cool::user_settings().imgui();
-        ImGui::Separator();
 
-        ImGui::SeparatorText("History");
+        Cool::ImGuiExtras::separator_text("History");
         _history.imgui_max_size();
-        ImGui::Separator();
-        ImGui::Separator();
-        ImGui::Separator();
 
         _history.imgui_max_saved_size();
-        ImGui::Separator();
-        ImGui::Separator();
-        ImGui::Separator();
 
-        ImGui::SeparatorText("Color Theme");
+        Cool::ImGuiExtras::separator_text("Color Theme");
         Cool::user_settings().color_themes.imgui_theme_picker();
 
         ImGui::EndMenu();
