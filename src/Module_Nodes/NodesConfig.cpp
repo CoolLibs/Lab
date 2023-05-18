@@ -121,11 +121,18 @@ static auto value_input_is_connected_to_a_node(size_t value_input_index, Node co
     return input_node != nullptr;
 }
 
-void NodesConfig::imgui_node_in_inspector(Cool::Node& abstract_node, Cool::NodeId const& id)
+void NodesConfig::imgui_in_inspector_above_node_info(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
+{
+    // auto& node = abstract_node.downcast<Node>();
+
+    main_node_toggle(id);
+}
+
+void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, Cool::NodeId const& /* id */)
 {
     auto& node = abstract_node.downcast<Node>();
 
-    main_node_toggle(id);
+    ImGui::NewLine();
 
     if (node.imgui_chosen_any_type())
         _ui.set_dirty(_regenerate_code_flag);
