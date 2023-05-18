@@ -781,6 +781,15 @@
             },
             {
                 "first": {
+                    "Name": "Frame node"
+                },
+                "second": {
+                    "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
                     "Name": "Nodes_Bg"
                 },
                 "second": {
@@ -821,6 +830,15 @@
                 },
                 "second": {
                     "Category name": "Bright Color",
+                    "Group name": "Normal"
+                }
+            },
+            {
+                "first": {
+                    "Name": "Nodes_SelNodeBorder"
+                },
+                "second": {
+                    "Category name": "Accent Color",
                     "Group name": "Normal"
                 }
             },
