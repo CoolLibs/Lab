@@ -1,6 +1,0 @@
-https://forum.unity.com/threads/sepia-tone-shader-with-adjustable-tone-alpha.483030/
-sRGB main(float greyscale){
-    vec3 sepiaConvert = vec3(0.191, -0.054, -0.221); //222
-    
-    return vec3(greyscale)+sepiaConvert;
-}

@@ -1,7 +1,0 @@
-INPUT int `nbTiles`;
-INPUT UV->CIELAB `Image`;
-
-CIELAB main(UV uv){
-    uv=floor(uv*`nbTiles`)/`nbTiles` + 1./(2.*`nbTiles`);
-    return `Image`(uv);
-}

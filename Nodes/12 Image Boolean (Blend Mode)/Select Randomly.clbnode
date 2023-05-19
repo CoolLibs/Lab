@@ -2,10 +2,12 @@
 
 INPUT float `Value 1`;
 INPUT float `Value 2`;
+
 INPUT float `Random value`;
-INPUT float `Probabilty of picking 2`;
+
+INPUT float `Probabilty of picking 1`;
 
 float main()
 {
-    return `Random value` < `Probabilty of picking 2` ? `Value 2` : `Value 1`;
+    return `Random value` < `Probabilty of picking 1` ? `Value 1` : `Value 2`;
 }

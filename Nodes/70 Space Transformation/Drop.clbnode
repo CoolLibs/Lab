@@ -1,7 +1,6 @@
 // // https://www.shadertoy.com/view/WdKXWt
 
 INPUT float `Time`;
-INPUT UV->sRGB `Image`;
 INPUT float   `Drops_size`;
 INPUT float   `Distortion_intensity`;
 INPUT float   `Scale`;
@@ -46,7 +45,7 @@ vec3 kifs(vec3 p, float t)
     {
         float t1 = tick(t + float(i), 0.4 + float(i) * 0.1) + t * 0.3;
         p.xz *= rotation_2D(t1);
-        p.yz *= rotation_2D(t1*0.7);
+        p.yz *= rotation_2D(t1 * 0.7);
 
         //  symmetry on all axis with a smooth transition
         p = sminv(p, -p, -1.0);
@@ -80,10 +79,11 @@ float map(vec3 p)
     return d;
 }
 
-sRGB main(UV uv){
-    vec3 s = vec3(0.,0.,-17.);
-    vec3 r = normalize(vec3(-uv - `Center`, `Scale`));
-    vec3 p = s;
+UV main(UV uv)
+{
+    vec3 s      = vec3(0., 0., -17.);
+    vec3 r      = normalize(vec3(-uv - `Center`, `Scale`));
+    vec3 p      = s;
     bool inside = false;
     // main raymarching loop
     for (int i = 0; i < 100; ++i)
@@ -106,15 +106,13 @@ sRGB main(UV uv){
         vec2 off = vec2(0.01, 0);
         vec3 n   = normalize(map(p) - vec3(map(p - off.xyy), map(p - off.yxy), map(p - off.yyx)));
         // refract the ray direction
-        r = refract(r, n, (-`Distortion_intensity`+1.));
+        r = refract(r, n, (-`Distortion_intensity`+ 1.));
     }
 
     float depth = length(p - s);
 
     vec2 uv2 = p.xy * `Scale` / (depth * r.z) + vec2(0.5, .5);
 
-    vec2 Distorsion_drop = mix(uv, uv2 - 0.5+`Center`, 1.);
-    vec3 color = `Image`(Distorsion_drop);
-    return color;
-
+    vec2 Distorsion_drop = mix(uv, uv2 - 0.5 +`Center`, 1.);
+    return Distorsion_drop;
 }

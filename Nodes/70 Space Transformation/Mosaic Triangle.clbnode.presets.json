@@ -10,7 +10,7 @@
                             {
                                 "index": 1,
                                 "data": {
-                                    "Name": "nbTiles",
+                                    "Name": "Number of Tiles",
                                     "Value": 30,
                                     "Metadata": {
                                         "Bounds": {

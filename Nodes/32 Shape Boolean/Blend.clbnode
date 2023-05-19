@@ -1,8 +1,8 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float `Progression`; /// When set to 0 you get Shape1; when set to 1 you get Shape2.
+INPUT float `Progression`; /// When set to 0 you get Shape 1; when set to 1 you get Shape 2.
 
-SignedDistance main(SignedDistance Shape1, SignedDistance Shape2)
+SignedDistance main(SignedDistance Shape_1, SignedDistance Shape_2)
 {
-    return mix(Shape1, Shape2, `Progression`);
+    return mix(Shape_1, Shape_2, `Progression`);
 }

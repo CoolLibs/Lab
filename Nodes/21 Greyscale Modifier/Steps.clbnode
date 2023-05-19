@@ -2,8 +2,8 @@
 
 INPUT int `Count`;
 
-float main(float Gradient)
+float main(float Greyscale)
 {
     float n = float(`Count`);
-    return floor(Gradient * n) / n;
+    return floor(Greyscale * n) / n;
 }
