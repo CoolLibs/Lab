@@ -1,24 +1,23 @@
 # Changelog
 
-- [🐣beta-3 WIP](#beta-3-wip)
+- [🐣beta-3](#beta-3)
 - [🐣beta-2](#beta-2)
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-3 WIP
+## 🐣beta-3
 
 - ✨ Added many 3D nodes.
 - ✨ Added a Frame (Comment) node.
 - ✨ In the "Export" menu, added a button to share your image online in [Coollab's Gallery](https://coollab-art.com/Gallery).
+- 💄 Completely overhauled UI.
 - 💄 New logo.
 - 💄 Added Settings to change your color theme.
 - 💄 Improved the Dark color theme.
 - 💄 Added a Light color theme.
 - 💄 Added an option to use the color theme set by your OS (Dark or Light).
-- 💄 Moved "About" and "Debug" menus to the right of the menu bar.
 - 💄 The View now uses a fixed aspect ratio by default (you can change this in the Preview menu).
-- 💄 Added a toggle widget that replaces the checkboxes.
-- 💄 Improved Cameras window + option to lock one of the two cameras (2D or 3D) when using both 2D and 3D nodes.
+- 💄 Improved Cameras window + added an option to lock one of the two cameras (2D or 3D) when using both 2D and 3D nodes.
 - 🐛 Fixed the camera controls when using a fixed aspect ratio or fixed number of pixels.
 - 🐛 Fix: the nodes categories were not sorted on MacOS.
 - 🐛 Fix: could not place a node that had the same name as its category.
