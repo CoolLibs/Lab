@@ -111,26 +111,28 @@ void serialize(Archive& archive, Lab::ReversibleCommand_{cmd.name}& command)
 
 
 def Command_SetCameraZoom():
-    return command_set(SetterCommand(
-        name="SetCameraZoom",
-        user_facing_name="camera zoom",
-        data_type="float",
-        get_value="ctx.camera_manager().get_zoom()",
-        set_value=lambda value: f"ctx.camera_manager().set_zoom({value}, ctx);",
-        before_command_declaration="",
-        extra_data="",
-    ))
+    return command_set(
+        SetterCommand(
+            name="SetCameraZoom",
+            user_facing_name="camera zoom",
+            data_type="float",
+            get_value="ctx.camera_manager().get_zoom()",
+            set_value=lambda value: f"ctx.camera_manager().set_zoom({value}, ctx);",
+            before_command_declaration="",
+            extra_data="",
+        )
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
     # So we need to add the path manually to sys.path
     import os
     import sys
     from pathlib import Path
-    sys.path.append(os.path.join(
-        Path(os.path.abspath(__file__)).parent.parent.parent,
-        "tooling")
+
+    sys.path.append(
+        os.path.join(Path(os.path.abspath(__file__)).parent.parent.parent, "tooling")
     )
     # End of HACK
     import generate_files
