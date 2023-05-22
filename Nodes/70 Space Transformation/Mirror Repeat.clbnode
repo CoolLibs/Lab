@@ -2,7 +2,7 @@
 
 INPUT vec2 `Cell Size`;
 
-UV main(UV _2D_Thing)
+UV main(UV _2D_Object)
 {
-    return (1. - 2. * (abs(mod(_2D_Thing / `Cell Size` * 0.5 + 0.5, 2.) - 1.))) * `Cell Size`;
+    return (1. - 2. * (abs(mod(_2D_Object / `Cell Size` * 0.5 + 0.5, 2.) - 1.))) * `Cell Size`;
 }
