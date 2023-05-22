@@ -102,6 +102,12 @@ export default ({}) => {
           link="https://www.instagram.com/idnamaa/"
           roles={["UI / UX Designer"]}
         />,
+        <Contributor
+          name="Aurore Lafaurie"
+          github_name="Just-Kiel"
+          link="https://github.com/Just-Kiel"
+          roles={["Programmer"]}
+        />,
       ]}
     />
   )
