@@ -14,15 +14,127 @@
                                     "Value": 150.0,
                                     "Metadata": {
                                         "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.10000000149011612,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
                                             "Has min bound": false,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,
-                                            "Drag speed": 0.30000001192092898,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 1,
+                                "data": {
+                                    "Name": "Pattern X",
+                                    "Value": 4,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.019999999552965165,
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 500.0,
+                                    "Default Value": 0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.019999999552965165,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 1,
+                                "data": {
+                                    "Name": "Pattern Y",
+                                    "Value": 4,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.019999999552965165,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.019999999552965165,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Threshold",
+                                    "Value": 0.5,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.003000000026077032,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Spread",
+                                    "Value": 1.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.003000000026077032,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
