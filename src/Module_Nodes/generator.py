@@ -266,7 +266,7 @@ def implicit_color_conversions():
                         in_vec="vec4",
                         out_vec="vec3",
                         implementation=f"""
-                        vec3 to = {color_conversion}(from.xyz / from.a);
+                        vec3 to = {color_conversion}(from.xyz / saturate(from.a));
                         return to;
                     """,
                     )
@@ -303,8 +303,8 @@ def implicit_color_conversions():
                         out_vec="vec4",
                         implementation=f"""
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = {color_conversion}(from.xyz / from.a);
-                        return vec4(to * from.a, from.a);
+                        vec3 to = {color_conversion}(from.xyz / saturate(from.a));
+                        return vec4(to * saturate(from.a), from.a);
                     """,
                     )
                 case "_PremultipliedA", "_StraightA":
@@ -312,7 +312,7 @@ def implicit_color_conversions():
                         in_vec="vec4",
                         out_vec="vec4",
                         implementation=f"""
-                        vec3 to = {color_conversion}(from.xyz / from.a);
+                        vec3 to = {color_conversion}(from.xyz / saturate(from.a));
                         return vec4(to, from.a);
                     """,
                     )
@@ -322,7 +322,7 @@ def implicit_color_conversions():
                         out_vec="vec4",
                         implementation=f"""
                         vec3 to = {color_conversion}(from.xyz);
-                        return vec4(to * from.a, from.a);
+                        return vec4(to * saturate(from.a), from.a);
                     """,
                     )
     return res
