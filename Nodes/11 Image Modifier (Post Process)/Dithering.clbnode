@@ -1,4 +1,5 @@
-// https://medium.com/the-bkpt/dithered-shading-tutorial-29f57d06ac39
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Effect inspired by https://medium.com/the-bkpt/dithered-shading-tutorial-29f57d06ac39
 
 INPUT UV->float `Image`;
 INPUT float `Scale`;

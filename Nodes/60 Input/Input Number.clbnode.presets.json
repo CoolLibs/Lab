@@ -11,7 +11,7 @@
                                 "index": 2,
                                 "data": {
                                     "Name": "Float",
-                                    "Value": 0.0,
+                                    "Value": 0.5,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
