@@ -1,9 +1,9 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT UV->sRGB_PremultipliedA `Image`;
-INPUT UV->float `Mask`;
+INPUT float `Mask`;
 
-sRGB_PremultipliedA main(UV uv)
+CIELAB_StraightA main(CIELAB_StraightA Image)
 {
-    return `Mask`(uv) * `Image`(uv);
+    Image.a *= `Mask`;
+    return Image;
 }
