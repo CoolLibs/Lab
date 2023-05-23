@@ -29,7 +29,7 @@ vec3 permute(vec3 x)
 
 // Cellular noise, returning F1 and F2 in a vec2.
 // Standard 3x3 search window for good F1 and F2 values
-float main(vec2 P)
+float main(UV P)
 {
     const float K      = 0.142857142857; // 1/7
     const float Ko     = 0.428571428571; // 3/7
