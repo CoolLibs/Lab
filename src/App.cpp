@@ -355,7 +355,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     imgui_window_cameras();
     ImGui::End();
     // Nodes
-    _nodes_module->imgui_windows(the_ui); // Must be after cameras so that Equalizer window is always preferred over Cameras in tabs.
+    _nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Equalizer window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();

@@ -71,7 +71,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     handle_error(maybe_err, for_testing_nodes);
 }
 
-void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes)
+void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
 {
     if (!for_testing_nodes)
     {
@@ -95,7 +95,7 @@ auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
     return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag, _nodes_editor.graph()};
 }
 
-void Module_Nodes::imgui_windows(Ui_Ref ui) const
+void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui)};
@@ -104,7 +104,16 @@ void Module_Nodes::imgui_windows(Ui_Ref ui) const
     }
 
     DebugOptions::show_generated_shader_code([&] {
-        ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
+        if (ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+        {
+            const auto maybe_err = _shader.compile(
+                _shader_code,
+                update_ctx
+            );
+            handle_error(maybe_err, false);
+
+            ui.dirty_setter()(dirty_flag()); // Trigger rerender
+        }
     });
 }
 
