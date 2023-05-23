@@ -39,7 +39,7 @@
                                 "index": 2,
                                 "data": {
                                     "Name": "Amplitude",
-                                    "Value": 0.800000011920929,
+                                    "Value": 0.5,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
