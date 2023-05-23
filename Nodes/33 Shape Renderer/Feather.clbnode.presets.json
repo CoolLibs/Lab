@@ -15,7 +15,7 @@
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
-                                            "Min": 0.0,
+                                            "Min": 0.0010000000474974514,
                                             "Has max bound": false,
                                             "Max": 1.0,
                                             "Drag speed": 0.0010000000474974514,

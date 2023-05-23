@@ -1,8 +1,8 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float `Spread`;
+INPUT float `Stretch`;
 
 float main(UV uv)
 {
-    return atan(length(uv) * `Spread`) / (PI / 2.);
+    return length(uv) * `Stretch`;
 }
