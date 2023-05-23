@@ -43,8 +43,10 @@ void Module_Nodes::update(UpdateContext_Ref ctx)
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
-    if (_nodes_editor.graph().nodes().is_empty())
-        return;
+    _shader.pipeline().reset(); // Make sure the shader will be empty if the compilation fails.
+
+    if (!_nodes_editor.graph().try_get_node<Node>(_main_node_id))
+        return; // Otherwise we will get a default UV image instead of a transparent image.
 
     auto const shader_code = generate_shader_code(
         _main_node_id,
