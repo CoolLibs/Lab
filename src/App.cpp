@@ -472,9 +472,8 @@ void App::settings_menu()
         Cool::user_settings().imgui();
 
         Cool::ImGuiExtras::separator_text("History");
-        _history.imgui_max_size();
-
-        _history.imgui_max_saved_size();
+        _history.imgui_max_size(&Cool::ImGuiExtras::help_marker);
+        _history.imgui_max_saved_size(&Cool::ImGuiExtras::help_marker);
 
         Cool::ImGuiExtras::separator_text("Color Theme");
         Cool::user_settings().color_themes.imgui_theme_picker();
