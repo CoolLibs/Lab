@@ -1,14 +1,10 @@
-https://inspirnathan.com/posts/65-glow-shader-in-shadertoy/
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Inspired by https://inspirnathan.com/posts/65-glow-shader-in-shadertoy/
 
-INPUT UV->SignedDistance `Shape`;
-INPUT float `Factor`;
-INPUT float `Amount`;
-INPUT float `Radius`;
+INPUT float `Strength`;
 
-float main(UV uv){
-  float val = step(0., -1*`Shape`(uv)); //White if in the shape, else black
-  float fac = `Factor`;
-  val += clamp((`Radius`/`Shape`(uv))*fac, 0., 1.) * `Amount`; // add glow in the black part 
-
-  return val;
+float main(SignedDistance Shape)
+{
+    return antialised_step(Shape)               // White if in the shape, else black
+           + `Strength` / max(Shape, 0.000001); // Add glow in the black part
 }
