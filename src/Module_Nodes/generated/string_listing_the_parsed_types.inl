@@ -16,6 +16,7 @@ R"STR(  - bool
   - UV
   - SignedDistance
   - Angle
+  - Hue
   - Direction2D
   - Any
   - CIELAB

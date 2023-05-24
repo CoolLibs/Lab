@@ -10,9 +10,10 @@ auto gen_implicit_conversion(PrimitiveType from, PrimitiveType to, CodeGenContex
         return "";
 
     if (from == PrimitiveType::Float && to == PrimitiveType::Angle)
-    {
         return "";
-    }
+
+    if (from == PrimitiveType::Float && to == PrimitiveType::Hue)
+        return "";
 
     if (from == PrimitiveType::Float && to == PrimitiveType::Int)
     {

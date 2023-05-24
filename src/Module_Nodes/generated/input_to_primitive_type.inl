@@ -38,6 +38,9 @@ if (std::holds_alternative<Cool::Input<Cool::Point2D>>(input))
 if (std::holds_alternative<Cool::Input<Cool::Angle>>(input))
     return PrimitiveType::Angle;
 
+if (std::holds_alternative<Cool::Input<Cool::Hue>>(input))
+    return PrimitiveType::Hue;
+
 if (std::holds_alternative<Cool::Input<Cool::Direction2D>>(input))
     return PrimitiveType::Direction2D;
 

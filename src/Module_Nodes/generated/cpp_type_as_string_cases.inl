@@ -16,6 +16,7 @@ case PrimitiveType::Mat4: return "Mat4";
 case PrimitiveType::UV: return "UV";
 case PrimitiveType::SignedDistance: return "SignedDistance";
 case PrimitiveType::Angle: return "Angle";
+case PrimitiveType::Hue: return "Hue";
 case PrimitiveType::Direction2D: return "Direction2D";
 case PrimitiveType::Void: return "Void";
 case PrimitiveType::Any: return "Any";

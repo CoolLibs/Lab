@@ -114,6 +114,14 @@ def all_primitive_types():
             can_be_a_template_type=False,
         ),
         PrimitiveType(
+            cpp="Hue",
+            user_facing_name="Hue",
+            corresponding_input_types=["Cool::Hue"],
+            glsl="float",
+            parsed_from="Hue",
+            can_be_a_template_type=False,
+        ),
+        PrimitiveType(
             cpp="Direction2D",
             user_facing_name="Direction 2D",
             corresponding_input_types=["Cool::Direction2D"],

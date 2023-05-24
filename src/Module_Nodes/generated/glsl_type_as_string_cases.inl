@@ -16,6 +16,7 @@ case PrimitiveType::Mat4: return "/*Mat4*/ mat4";
 case PrimitiveType::UV: return "/*UV*/ vec2";
 case PrimitiveType::SignedDistance: return "/*SignedDistance*/ float";
 case PrimitiveType::Angle: return "/*Angle*/ float";
+case PrimitiveType::Hue: return "/*Hue*/ float";
 case PrimitiveType::Direction2D: return "/*Direction2D*/ vec2";
 case PrimitiveType::Void: return "/*Void*/ void";
 case PrimitiveType::Any: return "/*Any*/ ERROR the Any type should have been converted earlier in the compilation process.";

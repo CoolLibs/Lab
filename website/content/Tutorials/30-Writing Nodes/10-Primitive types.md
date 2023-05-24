@@ -19,6 +19,7 @@ And here are all the remaining types, that are seldom used:
 - `mat3`
 - `mat4`
 - `Angle` (`float` under the hood).
+- `Hue` (`float` under the hood).
 - `Direction2D` (`vec2` under the hood, guaranteed to be of length 1).
 
 :::info
