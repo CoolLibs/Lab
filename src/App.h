@@ -146,7 +146,8 @@ private:
             cereal::make_nvp("Camera 2D", _camera2D),
             cereal::make_nvp("History", _history),
             cereal::make_nvp("Nodes Module", _nodes_module),
-            cereal::make_nvp("Gallery Poster", _gallery_poster)
+            cereal::make_nvp("Gallery Poster", _gallery_poster),
+            cereal::make_nvp("Time", _clock)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
