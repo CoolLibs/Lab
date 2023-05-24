@@ -56,7 +56,6 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
             ImGui::BeginDisabled();
             ImGui::DragInt2("Size", glm::value_ptr(sz));
             ImGui::EndDisabled();
-            ImGui::SameLine();
             Cool::ImGuiExtras::help_marker("You cannot choose the size of your image because we don't want to be storing too big images.\nYou can only control the Aspect Ratio above.");
         }
         Cool::ImGuiExtras::separator_text("Author");

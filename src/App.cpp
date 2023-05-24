@@ -279,7 +279,6 @@ void App::imgui_window_cameras()
     ImGui::PushID("##2D");
     Cool::ImGuiExtras::separator_text("2D Camera");
     Cool::ImGuiExtras::toggle("Locked in view", &_is_camera_2D_locked_in_view);
-    ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
     if (imgui_widget(_camera2D))
         trigger_rerender();
@@ -290,7 +289,6 @@ void App::imgui_window_cameras()
     ImGui::PushID("##3D");
     Cool::ImGuiExtras::separator_text("3D Camera");
     Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
-    ImGui::SameLine();
     Cool::ImGuiExtras::help_marker(help_text);
     _camera_manager.imgui(_variable_registries, command_executor());
     ImGui::PopID();

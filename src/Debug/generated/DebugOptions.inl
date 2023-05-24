@@ -148,7 +148,6 @@ private:
             if (ImGui::IsItemClicked())
                 instance().generate_dump_file = true;
 
-            ImGui::SameLine();
             Cool::ImGuiExtras::help_marker("Creates an info_dump.txt file next to your executable. It can be used when submitting a bug report, in order to give the devs more information.");
         }
 
@@ -160,7 +159,6 @@ private:
             if (ImGui::IsItemClicked())
                 instance().copy_info_dump_to_clipboard = true;
 
-            ImGui::SameLine();
             Cool::ImGuiExtras::help_marker("Copies an info dump to your clipboard. It can be used when submitting a bug report, in order to give the devs more information.");
         }
 

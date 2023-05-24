@@ -54,7 +54,6 @@ public:
 
             if (input._description)
             {
-                ImGui::SameLine();
                 Cool::ImGuiExtras::help_marker(input._description->c_str());
             }
         }
