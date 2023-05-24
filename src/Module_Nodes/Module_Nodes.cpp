@@ -9,6 +9,7 @@
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
@@ -104,7 +105,7 @@ void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     }
 
     DebugOptions::show_generated_shader_code([&] {
-        if (ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+        if (Cool::ImGuiExtras::input_text_multiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
         {
             const auto maybe_err = _shader.compile(
                 _shader_code,
