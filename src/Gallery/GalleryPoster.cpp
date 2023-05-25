@@ -13,7 +13,7 @@
 namespace Lab {
 
 GalleryPoster::GalleryPoster()
-    : _window{Cool::icon_fmt("Share online", ICOMOON_EARTH), false}
+    : _window{Cool::icon_fmt("Share online", ICOMOON_EARTH), Cool::ImGuiWindowConfig{.is_modal = true}}
 {
 }
 
