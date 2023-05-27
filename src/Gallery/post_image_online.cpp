@@ -20,6 +20,13 @@ static auto escape(std::string str) -> std::string
     return str;
 }
 
+static auto process_link(std::string const& str) -> std::string
+{
+    if (str.empty() || str[0] != '@')
+        return str;
+    return fmt::format("https://www.instagram.com/{}", str.c_str() + 1); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+}
+
 #if LAB_ENABLE_TESTS
 #include <doctest/doctest.h>
 TEST_CASE("escape()")
@@ -30,6 +37,14 @@ TEST_CASE("escape()")
     CHECK(escape("\\") == "\\\\");
     CHECK(escape("\\=") == "\\\\\\=");
     CHECK(escape("Hello\\=Hello") == "Hello\\\\\\=Hello");
+}
+TEST_CASE("process_link()")
+{
+    CHECK(process_link("Hello") == "Hello");
+    CHECK(process_link("@julesfouchy") == "https://www.instagram.com/julesfouchy");
+    CHECK(process_link("Hel@lo") == "Hel@lo");
+    CHECK(process_link("@") == "https://www.instagram.com/");
+    CHECK(process_link("@@") == "https://www.instagram.com/@");
 }
 #endif
 
@@ -67,7 +82,7 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
                 escape(artwork_info.title),
                 escape(artwork_info.description),
                 escape(author_info.name),
-                escape(author_info.link),
+                escape(process_link(author_info.link)),
                 escape(legal_info.email),
                 escape(legal_info.has_agreed_to_share_on_instagram ? "true" : "false")
             ),
