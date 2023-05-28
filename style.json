@@ -100,7 +100,8 @@
             "Menu bar spacing": {
                 "x": 5.0,
                 "y": 4.0
-            }
+            },
+            "Node title vertical alignment": 0.3089999854564667
         },
         "ImNodes Style": {
             "NodePadding": {
