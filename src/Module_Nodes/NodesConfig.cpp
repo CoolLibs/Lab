@@ -55,7 +55,8 @@ auto get_concrete_variable(const Cool::Input<T>&, const Cool::AnyVariable& var) 
 static void apply_settings_to_inputs(
     const std::vector<Cool::AnyVariable>& settings,
     std::vector<Cool::AnyInput>&          inputs,
-    Cool::VariableRegistries&             registry
+    Cool::VariableRegistries&             registry,
+    std::string_view                      node_name
 )
 {
     try
@@ -74,7 +75,13 @@ static void apply_settings_to_inputs(
     catch (...)
     {
         // TODO(JF) Remove this try-catch once we update presets properly
-        Cool::Log::ToUser::warning("Presets", "This preset does not match the INPUTs of the shader anymore, it has not been applied fully.");
+        Cool::Log::ToUser::warning(
+            "Presets",
+            fmt::format(
+                "Current preset for node \"{}\" does not match the INPUTs of the shader anymore, it has not been applied fully.",
+                node_name
+            )
+        );
     }
 }
 
@@ -162,7 +169,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         // Apply
         bool const has_changed = def->imgui_presets(settings);
         // Apply back the variables to the inputs' default variables
-        apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
+        apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
 
         if (has_changed)
             _ui.set_dirty(_regenerate_code_flag); // TODO(JF) We could simply rerender instead of regenerate if none of the properties require code generation
@@ -227,7 +234,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     // Apply
     def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries());
+    apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
 
     for (auto const& output_index_name : def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
