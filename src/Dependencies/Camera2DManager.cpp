@@ -7,6 +7,7 @@
 #include "Cool/Input/MouseDragStartEvent.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/UserSettings/UserSettings.h"
+#include "glm/gtx/rotate_vector.hpp"
 #include "glm/gtx/string_cast.hpp"
 #include "imgui.h"
 
@@ -32,8 +33,9 @@ void hook_camera2D_events(
 
             auto const mouse_pos_in_view_space  = event.position / get_height() * 2.f - glm::vec2{get_aspect_ratio(), 1.f};
             auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
+            auto const rotated_mouse_in_ws      = glm::rotate(mouse_pos_in_world_space, -camera.rotation.as_radians());
 
-            camera.translation = camera.translation / zoom_variation + mouse_pos_in_world_space * (1.f - 1.f / zoom_variation);
+            camera.translation = camera.translation / zoom_variation + rotated_mouse_in_ws * (1.f - 1.f / zoom_variation);
             camera.zoom *= zoom_variation;
 
             on_change();
