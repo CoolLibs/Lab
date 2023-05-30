@@ -1,4 +1,5 @@
 #include "CodeGen_desired_function_implementation.h"
+#include <Module_Nodes/CodeGen.h>
 #include <string>
 #include "CodeGen.h"
 #include "CodeGen_default_function.h"
@@ -185,15 +186,54 @@ static auto has_an_alpha_channel(PrimitiveType type) -> bool
 }
 
 auto gen_desired_function_implementation(
-    FunctionSignature current,
-    FunctionSignature desired,
-    std::string_view  base_function_name,
-    Node const&       node,
-    CodeGenContext&   context
+    FunctionSignature   current,
+    FunctionSignature   desired,
+    std::string_view    base_function_name,
+    Node const&         node,
+    Cool::NodeId const& node_id,
+    CodeGenContext&     context
 
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
+
+    if (is_curve(current) && !is_curve(desired))
+    {
+        auto const curve_func_name = gen_desired_function(curve_signature(), node, node_id, context);
+        if (!curve_func_name)
+            return tl::make_unexpected(curve_func_name.error());
+        auto const shape_func_name = "esderf";
+        context.push_function(Function{
+            .name           = shape_func_name,
+            .implementation = fmt::format(R"STR(
+float {}/*coollabdef*/(vec2 uv)
+{{
+    const int NB_SEGMENTS = 200;
+    const float THICKNESS = 0.01;
+    float dist_to_curve = FLT_MAX;
+    vec2  previous_position; // Will be filled during the first iteration of the loop
+
+    for (int i = 0; i <= NB_SEGMENTS; i++)
+    {{
+        float t = i / float(NB_SEGMENTS); // 0 to 1
+
+        vec2 current_position = {}(t);
+        if (i != 0) // During the first iteration we don't yet have two points to draw a segment between
+        {{
+            float segment = sdSegmentPOUETPOUET(uv, previous_position, current_position, THICKNESS);
+            dist_to_curve = min(dist_to_curve, segment);
+        }}
+
+        previous_position = current_position;
+    }}
+
+    return dist_to_curve;
+}}
+)STR",
+                                          shape_func_name, *curve_func_name),
+        });
+        return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context);
+    }
 
     auto const implicit_conversions = gen_implicit_conversions(current, desired, context);
 

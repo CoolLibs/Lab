@@ -174,7 +174,7 @@ static auto gen_properties(
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties           res{};
+    Properties res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
@@ -586,6 +586,7 @@ auto gen_desired_function(
         desired_signature,
         *base_function_name,
         node,
+        id,
         context
     );
     if (!func_body)
