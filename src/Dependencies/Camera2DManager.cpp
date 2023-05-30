@@ -5,6 +5,7 @@
 #include "Cool/Image/AspectRatio.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Input/MouseDragStartEvent.h"
+#include "Cool/StrongTypes/Angle.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/UserSettings/UserSettings.h"
 #include "glm/gtx/rotate_vector.hpp"
@@ -28,15 +29,34 @@ void hook_camera2D_events(
             if (is_locked_in_view())
                 return;
 
-            float const sensitivity    = Cool::user_settings().camera2D_zoom_sensitivity;
-            float const zoom_variation = std::pow(sensitivity, event.dy);
+            if (ImGui::GetIO().KeyShift)
+            {
+                float const sensitivity        = Cool::user_settings().camera2D_zoom_sensitivity;
+                float const rotation_variation = (sensitivity - 1.f) * event.dy;
 
-            auto const mouse_pos_in_view_space  = event.position / get_height() * 2.f - glm::vec2{get_aspect_ratio(), 1.f};
-            auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
-            auto const rotated_mouse_in_ws      = glm::rotate(mouse_pos_in_world_space, -camera.rotation.as_radians());
+                auto const mouse_pos_in_view_space  = event.position / get_height() * 2.f - glm::vec2{get_aspect_ratio(), 1.f};
+                auto const mouse_pos_in_world_space = glm::vec2{/* glm::inverse */(camera.transform_matrix()) * glm::vec3{mouse_pos_in_view_space, 1.f}};
+                auto const rotated_mouse_in_ws      = glm::rotate(mouse_pos_in_world_space, -camera.rotation.as_radians());
 
-            camera.translation = camera.translation / zoom_variation + rotated_mouse_in_ws * (1.f - 1.f / zoom_variation);
-            camera.zoom *= zoom_variation;
+                // camera.translation = camera.translation / zoom_variation + rotated_mouse_in_ws * (1.f - 1.f / zoom_variation);
+                // camera.translation = glm::rotate(camera.translation, -rotation_variation)
+                //                      - glm::rotate(rotated_mouse_in_ws, -rotation_variation)
+                //                      + rotated_mouse_in_ws;
+                camera.translation = mouse_pos_in_world_space + glm::rotate(camera.translation - mouse_pos_in_world_space, -rotation_variation);
+                camera.rotation    = Cool::Radians{camera.rotation.as_radians() + rotation_variation};
+            }
+            else
+            {
+                float const sensitivity    = Cool::user_settings().camera2D_zoom_sensitivity;
+                float const zoom_variation = std::pow(sensitivity, event.dy);
+
+                auto const mouse_pos_in_view_space  = event.position / get_height() * 2.f - glm::vec2{get_aspect_ratio(), 1.f};
+                auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
+                auto const rotated_mouse_in_ws      = glm::rotate(mouse_pos_in_world_space, -camera.rotation.as_radians());
+
+                camera.translation = rotated_mouse_in_ws + (camera.translation - rotated_mouse_in_ws) / zoom_variation;
+                camera.zoom *= zoom_variation;
+            }
 
             on_change();
         });
