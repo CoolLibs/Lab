@@ -79,7 +79,7 @@ vec2 to_view_space(vec2 uv)
 }}
 
 // https://iquilezles.org/articles/distfunctions2d/
-float sdSegmentPOUETPOUET(vec2 p, vec2 a, vec2 b, float thickness)
+float Coollab_sdSegment(vec2 p, vec2 a, vec2 b, float thickness)
 {{
     vec2  pa = p - a, ba = b - a;
     float h = saturate(dot(pa, ba) / dot(ba, ba));

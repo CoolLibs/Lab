@@ -208,8 +208,9 @@ auto gen_desired_function_implementation(
             .implementation = fmt::format(R"STR(
 float {}/*coollabdef*/(vec2 uv)
 {{
-    const int NB_SEGMENTS = 200;
+    const int NB_SEGMENTS = 300;
     const float THICKNESS = 0.01;
+
     float dist_to_curve = FLT_MAX;
     vec2  previous_position; // Will be filled during the first iteration of the loop
 
@@ -220,7 +221,7 @@ float {}/*coollabdef*/(vec2 uv)
         vec2 current_position = {}(t);
         if (i != 0) // During the first iteration we don't yet have two points to draw a segment between
         {{
-            float segment = sdSegmentPOUETPOUET(uv, previous_position, current_position, THICKNESS);
+            float segment = Coollab_sdSegment(uv, previous_position, current_position, THICKNESS);
             dist_to_curve = min(dist_to_curve, segment);
         }}
 
