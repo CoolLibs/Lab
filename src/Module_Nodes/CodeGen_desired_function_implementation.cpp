@@ -185,27 +185,21 @@ static auto has_an_alpha_channel(PrimitiveType type) -> bool
     }
 }
 
-auto gen_desired_function_implementation(
-    FunctionSignature   current,
+static auto gen_implicit_curve_renderer(
     FunctionSignature   desired,
     std::string_view    base_function_name,
     Node const&         node,
     Cool::NodeId const& node_id,
     CodeGenContext&     context
-
 ) -> tl::expected<std::string, std::string>
 {
-    using fmt::literals::operator""_a;
-
-    if (is_curve(current) && !is_curve(desired))
-    {
-        auto const curve_func_name = gen_desired_function(curve_signature(), node, node_id, context);
-        if (!curve_func_name)
-            return tl::make_unexpected(curve_func_name.error());
-        auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
-        context.push_function(Function{
-            .name           = shape_func_name,
-            .implementation = fmt::format(R"STR(
+    auto const curve_func_name = gen_desired_function(curve_signature(), node, node_id, context);
+    if (!curve_func_name)
+        return tl::make_unexpected(curve_func_name.error());
+    auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
+    context.push_function(Function{
+        .name           = shape_func_name,
+        .implementation = fmt::format(R"STR(
 float {}/*coollabdef*/(vec2 uv)
 {{
     const int NB_SEGMENTS = 300;
@@ -231,10 +225,24 @@ float {}/*coollabdef*/(vec2 uv)
     return dist_to_curve;
 }}
 )STR",
-                                          shape_func_name, *curve_func_name),
-        });
-        return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context);
-    }
+                                      shape_func_name, *curve_func_name),
+    });
+    return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context);
+}
+
+auto gen_desired_function_implementation(
+    FunctionSignature   current,
+    FunctionSignature   desired,
+    std::string_view    base_function_name,
+    Node const&         node,
+    Cool::NodeId const& node_id,
+    CodeGenContext&     context
+) -> tl::expected<std::string, std::string>
+{
+    using fmt::literals::operator""_a;
+
+    if (is_curve(current) && !is_curve(desired))
+        return gen_implicit_curve_renderer(desired, base_function_name, node, node_id, context);
 
     auto const implicit_conversions = gen_implicit_conversions(current, desired, context);
 
