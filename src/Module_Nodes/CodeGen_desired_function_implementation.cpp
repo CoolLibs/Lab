@@ -1,4 +1,6 @@
 #include "CodeGen_desired_function_implementation.h"
+#include <Module_Nodes/CodeGen.h>
+#include <Module_Nodes/FunctionSignature.h>
 #include <string>
 #include "CodeGen.h"
 #include "CodeGen_default_function.h"
@@ -184,16 +186,124 @@ static auto has_an_alpha_channel(PrimitiveType type) -> bool
     }
 }
 
-auto gen_desired_function_implementation(
-    FunctionSignature current,
-    FunctionSignature desired,
-    std::string_view  base_function_name,
-    Node const&       node,
-    CodeGenContext&   context
+static auto gen_implicit_curve_renderer(
+    FunctionSignature   desired,
+    std::string_view    base_function_name,
+    Node const&         node,
+    Cool::NodeId const& node_id,
+    CodeGenContext&     context
+) -> tl::expected<std::string, std::string>
+{
+    auto const curve_func_name = gen_desired_function(curve_signature(), node, node_id, context);
+    if (!curve_func_name)
+        return tl::make_unexpected(curve_func_name.error());
+    auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
+    context.push_function(Function{
+        .name           = shape_func_name,
+        .implementation = fmt::format(R"STR(
+float {}/*coollabdef*/(vec2 uv)
+{{
+    const int NB_SEGMENTS = 300;
+    const float THICKNESS = 0.01;
 
+    float dist_to_curve = FLT_MAX;
+    vec2  previous_position; // Will be filled during the first iteration of the loop
+
+    for (int i = 0; i <= NB_SEGMENTS; i++)
+    {{
+        float t = i / float(NB_SEGMENTS); // 0 to 1
+
+        vec2 current_position = {}(t);
+        if (i != 0) // During the first iteration we don't yet have two points to draw a segment between
+        {{
+            float segment = Coollab_sdSegment(uv, previous_position, current_position, THICKNESS);
+            dist_to_curve = min(dist_to_curve, segment);
+        }}
+
+        previous_position = current_position;
+    }}
+
+    return dist_to_curve;
+}}
+)STR",
+                                      shape_func_name, *curve_func_name),
+    });
+    return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context);
+}
+
+static auto gen_implicit_shape_3D_renderer(
+    FunctionSignature   desired,
+    std::string_view    base_function_name,
+    Node const&         node,
+    Cool::NodeId const& node_id,
+    CodeGenContext&     context
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
+
+    auto const shape_3D_func_name = gen_desired_function(shape_3D_signature(), node, node_id, context);
+    if (!shape_3D_func_name)
+        return tl::make_unexpected(shape_3D_func_name.error());
+    auto const image_func_name = fmt::format("shape3DRenderer{}", valid_glsl(std::string{base_function_name}));
+    context.push_function(Function{
+        .name           = image_func_name,
+        .implementation = fmt::format(
+            FMT_COMPILE(R"STR(
+vec4 {image_name}/*coollabdef*/(vec2 uv)
+{{
+    const int MAX_STEPS = 100;
+    const float MAX_DIST = 100.;
+    const float SURF_DIST = .001;
+
+    vec3 ro = cool_ray_origin(uv);
+    vec3 rd = cool_ray_direction(uv);
+
+    // Ray march
+    float d = 0.;
+    for (int i = 0; i < MAX_STEPS; i++)
+    {{
+        vec3  p  = ro + rd * d;
+        float dS = {shape_3D}(p);
+        d += dS;
+        if (d > MAX_DIST || abs(dS) < SURF_DIST)
+            break;
+    }}
+
+    // Background
+    if (d >= MAX_DIST)
+        return vec4(0.);
+        
+    // Return the normal as a color 
+    vec3 p = ro + rd * d;
+    const vec2 e = vec2(.001, 0);
+    vec3 normal = {shape_3D}(p)-vec3({shape_3D}(p - e.xyy), {shape_3D}(p - e.yxy), {shape_3D}(p - e.yyx));
+    normal = normalize(normal) * 0.5 + 0.5;
+    return vec4(normal, 1.);
+}}
+)STR"),
+            "image_name"_a = image_func_name,
+            "shape_3D"_a   = *shape_3D_func_name
+        ),
+    });
+    auto const image_signature = FunctionSignature{.from = PrimitiveType::UV, .to = PrimitiveType::LinearRGB_StraightA, .arity = 1};
+    return gen_desired_function_implementation(image_signature, desired, image_func_name, node, node_id, context);
+}
+
+auto gen_desired_function_implementation(
+    FunctionSignature   current,
+    FunctionSignature   desired,
+    std::string_view    base_function_name,
+    Node const&         node,
+    Cool::NodeId const& node_id,
+    CodeGenContext&     context
+) -> tl::expected<std::string, std::string>
+{
+    using fmt::literals::operator""_a;
+
+    if (is_curve(current) && !is_curve(desired))
+        return gen_implicit_curve_renderer(desired, base_function_name, node, node_id, context);
+    if (is_shape_3D(current) && !is_shape_3D(desired))
+        return gen_implicit_shape_3D_renderer(desired, base_function_name, node, node_id, context);
 
     auto const implicit_conversions = gen_implicit_conversions(current, desired, context);
 

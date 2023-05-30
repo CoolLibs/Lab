@@ -94,9 +94,7 @@ static auto is_not_alphanumeric(char c) -> bool
     );
 }
 
-/// Returns a string with only letters and numbers, no underscores.
-/// This string does not start with a number.
-static auto valid_glsl(std::string s)
+auto valid_glsl(std::string s)
     -> std::string
 {
     // For glsl variable name rules, see https://www.informit.com/articles/article.aspx?p=2731929&seqNum=3, section "Declaring Variables".
@@ -174,7 +172,7 @@ static auto gen_properties(
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties           res{};
+    Properties res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
@@ -586,6 +584,7 @@ auto gen_desired_function(
         desired_signature,
         *base_function_name,
         node,
+        id,
         context
     );
     if (!func_body)
