@@ -94,9 +94,7 @@ static auto is_not_alphanumeric(char c) -> bool
     );
 }
 
-/// Returns a string with only letters and numbers, no underscores.
-/// This string does not start with a number.
-static auto valid_glsl(std::string s)
+auto valid_glsl(std::string s)
     -> std::string
 {
     // For glsl variable name rules, see https://www.informit.com/articles/article.aspx?p=2731929&seqNum=3, section "Declaring Variables".
