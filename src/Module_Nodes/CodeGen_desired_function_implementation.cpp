@@ -198,6 +198,20 @@ static auto gen_implicit_curve_renderer(
     if (!curve_func_name)
         return tl::make_unexpected(curve_func_name.error());
     auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
+    // Push helper function
+    context.push_function(Function{
+        .name           = "Coollab_sdSegment",
+        .implementation = R"STR(
+// https://iquilezles.org/articles/distfunctions2d/
+float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
+{{
+    vec2  pa = p - a, ba = b - a;
+    float h = saturate(dot(pa, ba) / dot(ba, ba));
+    return length(pa - ba * h) - thickness;
+}}
+        )STR",
+    });
+    // Push actual renderer
     context.push_function(Function{
         .name           = shape_func_name,
         .implementation = fmt::format(R"STR(

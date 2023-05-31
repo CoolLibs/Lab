@@ -78,14 +78,6 @@ vec2 to_view_space(vec2 uv)
     return p.xy / p.z;
 }}
 
-// https://iquilezles.org/articles/distfunctions2d/
-float Coollab_sdSegment(vec2 p, vec2 a, vec2 b, float thickness) // This function is needed by the implicit curve renderer.
-{{
-    vec2  pa = p - a, ba = b - a;
-    float h = saturate(dot(pa, ba) / dot(ba, ba));
-    return length(pa - ba * h) - thickness;
-}}
-
 struct CoollabContext
 {{
     vec2 uv;
