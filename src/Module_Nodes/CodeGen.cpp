@@ -428,7 +428,7 @@ static auto gen_base_function(
     // We don't care about adding them through push_function() because their names will be unique anyways.
     // And we need them to be defined after properties_code->code
     for (auto const& helper_func_name : helper_functions.new_names)
-        context.push_function(Function{.name = helper_func_name, .implementation = ""});
+        context.push_function(Function{.name = helper_func_name, .definition = ""});
 
     auto func_implementation = gen_function_definition({
         .signature       = make_complete_function_signature(MainFunctionSignature{
@@ -454,7 +454,7 @@ static auto gen_base_function(
             return tl::make_unexpected(*error);
     }
 
-    context.push_function({.name = func_name, .implementation = func_implementation});
+    context.push_function({.name = func_name, .definition = func_implementation});
 
     return func_name;
 }
@@ -477,8 +477,8 @@ static auto gen_output_function(Cool::OutputPin const& pin, CodeGenContext& cont
     auto const func_name   = fmt::format("get{}", output_name);
 
     return context.push_function({
-        .name           = func_name,
-        .implementation = fmt::format(
+        .name       = func_name,
+        .definition = fmt::format(
             R"STR(
 float {}/*coollabdef*/()
 {{
@@ -604,7 +604,7 @@ auto gen_desired_function(
         .body            = *func_body,
     });
 
-    context.push_function({.name = func_name, .implementation = func_definition});
+    context.push_function({.name = func_name, .definition = func_definition});
 
     return func_name;
 }

@@ -235,7 +235,7 @@ def implicit_color_conversions():
                 {{
                     return context.push_function({{
                         .name           = "Coollab_{type2}_from_{type1}",
-                        .implementation = R"STR(
+                        .definition = R"STR(
                             {out_vec} Coollab_{type2}_from_{type1}/*coollabdef*/({in_vec} from)
                             {{
                                 {implementation}

@@ -18,8 +18,8 @@ auto gen_implicit_conversion(PrimitiveType from, PrimitiveType to, CodeGenContex
     if (from == PrimitiveType::Float && to == PrimitiveType::Int)
     {
         return context.push_function({
-            .name           = "Coollab_float_to_int",
-            .implementation = R"STR(
+            .name       = "Coollab_float_to_int",
+            .definition = R"STR(
 int Coollab_float_to_int/*coollabdef*/(float x)
 {
     return int(floor(x));
@@ -30,8 +30,8 @@ int Coollab_float_to_int/*coollabdef*/(float x)
     if (from == PrimitiveType::Int && to == PrimitiveType::Float)
     {
         return context.push_function({
-            .name           = "Coollab_int_to_float",
-            .implementation = R"STR(
+            .name       = "Coollab_int_to_float",
+            .definition = R"STR(
 float Coollab_int_to_float/*coollabdef*/(int x)
 {
     return float(x);
@@ -43,8 +43,8 @@ float Coollab_int_to_float/*coollabdef*/(int x)
     if (from == PrimitiveType::Angle && to == PrimitiveType::Direction2D)
     {
         return context.push_function({
-            .name           = "Coollab_angle_to_direction2D",
-            .implementation = R"STR(
+            .name       = "Coollab_angle_to_direction2D",
+            .definition = R"STR(
 vec2 Coollab_angle_to_direction2D/*coollabdef*/(float angle)
 {
     return vec2(cos(angle), sin(angle));
@@ -55,8 +55,8 @@ vec2 Coollab_angle_to_direction2D/*coollabdef*/(float angle)
     if (from == PrimitiveType::Float && to == PrimitiveType::Direction2D)
     {
         return context.push_function({
-            .name           = "Coollab_float_to_direction2D",
-            .implementation = R"STR(
+            .name       = "Coollab_float_to_direction2D",
+            .definition = R"STR(
 vec2 Coollab_float_to_direction2D/*coollabdef*/(float x)
 {
     return vec2(cos(x),sin(x));
@@ -67,8 +67,8 @@ vec2 Coollab_float_to_direction2D/*coollabdef*/(float x)
     if (from == PrimitiveType::Direction2D && to == PrimitiveType::Angle)
     {
         return context.push_function({
-            .name           = "Coollab_direction2D_to_angle",
-            .implementation = R"STR(
+            .name       = "Coollab_direction2D_to_angle",
+            .definition = R"STR(
 float Coollab_direction2D_to_angle/*coollabdef*/(vec2 dir)
 {
     return dir.x != 0.f

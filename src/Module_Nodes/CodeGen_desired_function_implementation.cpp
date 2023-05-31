@@ -200,8 +200,8 @@ static auto gen_implicit_curve_renderer(
     auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
     // Push helper function
     context.push_function(Function{
-        .name           = "Coollab_sdSegment",
-        .implementation = R"STR(
+        .name       = "Coollab_sdSegment",
+        .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions2d/
 float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
 {{
@@ -213,8 +213,8 @@ float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
     });
     // Push actual renderer
     context.push_function(Function{
-        .name           = shape_func_name,
-        .implementation = fmt::format(R"STR(
+        .name       = shape_func_name,
+        .definition = fmt::format(R"STR(
 float {}/*coollabdef*/(vec2 uv)
 {{
     const int NB_SEGMENTS = 300;
@@ -240,7 +240,7 @@ float {}/*coollabdef*/(vec2 uv)
     return dist_to_curve;
 }}
 )STR",
-                                      shape_func_name, *curve_func_name),
+                                  shape_func_name, *curve_func_name),
     });
     return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context);
 }
@@ -260,8 +260,8 @@ static auto gen_implicit_shape_3D_renderer(
         return tl::make_unexpected(shape_3D_func_name.error());
     auto const image_func_name = fmt::format("shape3DRenderer{}", valid_glsl(std::string{base_function_name}));
     context.push_function(Function{
-        .name           = image_func_name,
-        .implementation = fmt::format(
+        .name       = image_func_name,
+        .definition = fmt::format(
             FMT_COMPILE(R"STR(
 vec4 {image_name}/*coollabdef*/(vec2 uv)
 {{
