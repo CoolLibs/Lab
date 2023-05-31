@@ -20,7 +20,7 @@ void CameraManager::hook_events(
     events
         .scroll_event()
         .subscribe([registries, this, executor, on_change](const auto& event) {
-            if (_is_locked_in_view)
+            if (!_is_editable_in_view)
                 return;
 
             auto       camera   = registries.get().get(_camera_id.raw())->value();
@@ -38,7 +38,7 @@ void CameraManager::hook_events(
         .drag()
         .start()
         .subscribe([registries, this, executor, on_change](const auto& event) {
-            if (_is_locked_in_view)
+            if (!_is_editable_in_view)
                 return;
 
             maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
@@ -49,7 +49,7 @@ void CameraManager::hook_events(
         .drag()
         .update()
         .subscribe([registries, this, executor, on_change](const auto& event) {
-            if (_is_locked_in_view)
+            if (!_is_editable_in_view)
                 return;
 
             maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
@@ -60,7 +60,7 @@ void CameraManager::hook_events(
         .drag()
         .stop()
         .subscribe([registries, this, executor, on_change](auto&&) {
-            if (_is_locked_in_view)
+            if (!_is_editable_in_view)
                 return;
 
             maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {

@@ -46,7 +46,7 @@ App::App(Cool::WindowManager& windows)
         [this]() { trigger_rerender(); },
         [this]() { auto const sz =_nodes_view.view.size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
         [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; },
-        [this]() { return _is_camera_2D_locked_in_view; }
+        [this]() { return !_is_camera_2D_editable_in_view; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
@@ -274,11 +274,11 @@ void App::imgui_commands_and_registries_debug_windows()
 
 void App::imgui_window_cameras()
 {
-    static constexpr auto help_text = "When enabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
+    static constexpr auto help_text = "When disabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
 
     ImGui::PushID("##2D");
     Cool::ImGuiExtras::separator_text("2D Camera");
-    Cool::ImGuiExtras::toggle("Locked in view", &_is_camera_2D_locked_in_view);
+    Cool::ImGuiExtras::toggle("Editable in view", &_is_camera_2D_editable_in_view);
     Cool::ImGuiExtras::help_marker(help_text);
     if (imgui_widget(_camera2D))
         trigger_rerender();
@@ -288,7 +288,7 @@ void App::imgui_window_cameras()
 
     ImGui::PushID("##3D");
     Cool::ImGuiExtras::separator_text("3D Camera");
-    Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
+    Cool::ImGuiExtras::toggle("Editable in view", &_camera_manager.is_editable_in_view());
     Cool::ImGuiExtras::help_marker(help_text);
     _camera_manager.imgui(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
     ImGui::PopID();

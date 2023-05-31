@@ -125,7 +125,7 @@ private:
     std::unique_ptr<Module_Nodes>  _nodes_module;
     CommandLogger                  _command_logger{};
     bool                           _is_first_frame{true};
-    bool                           _is_camera_2D_locked_in_view{false};
+    bool                           _is_camera_2D_editable_in_view{true};
     bool                           _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
     bool                           _view_was_in_fullscreen_last_frame{false};
     GalleryPoster                  _gallery_poster{};
@@ -137,7 +137,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Is camera 2D locked in view", _is_camera_2D_locked_in_view),
+            cereal::make_nvp("Is camera 2D editable in view", _is_camera_2D_editable_in_view),
             cereal::make_nvp("Camera Manager", _camera_manager),
             cereal::make_nvp("Dirty Registry", _dirty_registry),
             cereal::make_nvp("Variable Registries", _variable_registries),

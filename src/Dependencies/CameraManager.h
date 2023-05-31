@@ -33,7 +33,7 @@ public:
     );
 
     [[nodiscard]] auto id() const -> Cool::SharedVariableId<Cool::Camera> { return _camera_id; }
-    [[nodiscard]] auto is_locked_in_view() -> bool& { return _is_locked_in_view; }
+    [[nodiscard]] auto is_editable_in_view() -> bool& { return _is_editable_in_view; }
 
     void imgui(
         std::reference_wrapper<Cool::VariableRegistries>,
@@ -61,7 +61,7 @@ private:
 private:
     Cool::SharedVariableId<Cool::Camera> _camera_id;
     Cool::ViewController_Orbital         _view_controller;
-    bool                                 _is_locked_in_view{false};
+    bool                                 _is_editable_in_view{true};
 
 private:
     // Serialization
@@ -72,7 +72,7 @@ private:
         archive(
             cereal::make_nvp("Camera ID", _camera_id),
             cereal::make_nvp("ViewController", _view_controller),
-            cereal::make_nvp("Is locked in view", _is_locked_in_view)
+            cereal::make_nvp("Is editable in view", _is_editable_in_view)
         );
     }
 };
