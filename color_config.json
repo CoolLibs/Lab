@@ -91,7 +91,7 @@
                     {
                         "Name": "Slightly Transparent & Brighter",
                         "Brightness delta": 0.2809999883174896,
-                        "Opacity": 1.0
+                        "Opacity": 0.7459999918937683
                     },
                     {
                         "Name": "Very Transparent",
@@ -709,7 +709,7 @@
                 },
                 "second": {
                     "Category name": "Accent Color",
-                    "Group name": "Brighter"
+                    "Group name": "Slightly Transparent & Brighter"
                 }
             },
             {
