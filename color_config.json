@@ -709,6 +709,15 @@
             },
             {
                 "first": {
+                    "Name": "FloatingButtonEnabled"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Slightly Transparent"
+                }
+            },
+            {
+                "first": {
                     "Name": "ButtonsSeparator"
                 },
                 "second": {
