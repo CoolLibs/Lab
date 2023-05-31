@@ -314,19 +314,35 @@ void App::imgui_window_view()
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
                                                   || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
+            int buttons_order{0};
             // Reset cameras
-            if (Cool::ImGuiExtras::floating_button(ICOMOON_TARGET, 0, align_buttons_vertically))
+            if (Cool::ImGuiExtras::floating_button(ICOMOON_TARGET, buttons_order++, align_buttons_vertically))
             {
                 reset_cameras();
             }
             Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
 
             // Toggle fullscreen
-            if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, 1, align_buttons_vertically))
+            if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, buttons_order++, align_buttons_vertically))
             {
                 _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
                 _main_window.set_fullscreen(_wants_view_in_fullscreen);
             }
+            Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
+
+            // Enable 2D camera
+            if (Cool::ImGuiExtras::floating_button(ICOMOON_CAMERA, buttons_order++, align_buttons_vertically, _is_camera_2D_editable_in_view))
+            {
+                _is_camera_2D_editable_in_view = !_is_camera_2D_editable_in_view;
+            }
+            Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is editable" : "2D camera is frozen");
+
+            // Enable 3D camera
+            if (Cool::ImGuiExtras::floating_button(ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically, _camera_manager.is_editable_in_view()))
+            {
+                _camera_manager.is_editable_in_view() = !_camera_manager.is_editable_in_view();
+            }
+            Cool::ImGuiExtras::tooltip(_camera_manager.is_editable_in_view() ? "3D camera is editable" : "3D camera is frozen");
         },
     });
 }
