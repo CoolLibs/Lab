@@ -28,7 +28,8 @@ public:
     void hook_events(
         Cool::MouseEventDispatcher<Cool::ViewCoordinates>&,
         std::reference_wrapper<Cool::VariableRegistries>,
-        CommandExecutor_TopLevel_Ref
+        CommandExecutor_TopLevel_Ref,
+        std::function<void()> on_change
     );
 
     [[nodiscard]] auto id() const -> Cool::SharedVariableId<Cool::Camera> { return _camera_id; }
@@ -36,21 +37,24 @@ public:
 
     void imgui(
         std::reference_wrapper<Cool::VariableRegistries>,
-        CommandExecutor_TopLevel_Ref
+        CommandExecutor_TopLevel_Ref,
+        std::function<void()> on_change
     );
 
     [[nodiscard]] auto get_zoom() const -> float { return _view_controller.get_distance_to_orbit_center(); }
-    void set_zoom(float zoom, CommandExecutionContext_Ref& ctx);
+    void               set_zoom(float zoom, CommandExecutionContext_Ref& ctx);
 
     void reset_camera(
         std::reference_wrapper<Cool::VariableRegistries>,
-        CommandExecutor_TopLevel_Ref
+        CommandExecutor_TopLevel_Ref,
+        std::function<void()> on_change
     );
 
 private:
     void maybe_update_camera(
         std::reference_wrapper<Cool::VariableRegistries>,
         CommandExecutor_TopLevel_Ref,
+        std::function<void()> on_change,
         std::function<bool(Cool::Camera&)>
     );
 

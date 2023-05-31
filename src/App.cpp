@@ -39,7 +39,7 @@ App::App(Cool::WindowManager& windows)
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
-    _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor());
+    _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
         _nodes_view.view.mouse_events(),
         _camera2D.value(),
@@ -290,7 +290,7 @@ void App::imgui_window_cameras()
     Cool::ImGuiExtras::separator_text("3D Camera");
     Cool::ImGuiExtras::toggle("Locked in view", &_camera_manager.is_locked_in_view());
     Cool::ImGuiExtras::help_marker(help_text);
-    _camera_manager.imgui(_variable_registries, command_executor());
+    _camera_manager.imgui(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
     ImGui::PopID();
 }
 
@@ -515,7 +515,7 @@ void App::imgui_menus()
 void App::reset_cameras()
 {
     _camera2D.value() = {}; // TODO(JF) Store this command in history
-    _camera_manager.reset_camera(_variable_registries, command_executor());
+    _camera_manager.reset_camera(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
 }
 
 void App::check_inputs()
