@@ -89,6 +89,11 @@
                         "Opacity": 0.7459999918937683
                     },
                     {
+                        "Name": "Slightly Transparent & Brighter",
+                        "Brightness delta": 0.2809999883174896,
+                        "Opacity": 1.0
+                    },
+                    {
                         "Name": "Very Transparent",
                         "Brightness delta": 0.0,
                         "Opacity": 0.21699999272823335
@@ -704,7 +709,7 @@
                 },
                 "second": {
                     "Category name": "Accent Color",
-                    "Group name": "Normal"
+                    "Group name": "Brighter"
                 }
             },
             {
@@ -714,6 +719,24 @@
                 "second": {
                     "Category name": "Accent Color",
                     "Group name": "Slightly Transparent"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FloatingButtonHoveredEnabled"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Slightly Transparent & Brighter"
+                }
+            },
+            {
+                "first": {
+                    "Name": "FloatingButtonActiveEnabled"
+                },
+                "second": {
+                    "Category name": "Accent Color",
+                    "Group name": "Slightly Transparent & Brighter"
                 }
             },
             {
