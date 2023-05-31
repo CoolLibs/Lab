@@ -32,8 +32,8 @@ vec3 GetNormal(vec3 p)
 
 LinearRGB_StraightA main(UV uv)
 {
-    vec3 ro = cool_ray_origin(uv);
-    vec3 rd = cool_ray_direction(uv);
+    vec3 ro = cool_ray_origin(unnormalize_uv(uv));
+    vec3 rd = cool_ray_direction(unnormalize_uv(uv));
 
     float d = RayMarch(ro, rd);
 

@@ -269,8 +269,8 @@ vec4 {image_name}/*coollabdef*/(vec2 uv)
     const float MAX_DIST = 100.;
     const float SURF_DIST = .001;
 
-    vec3 ro = cool_ray_origin(uv);
-    vec3 rd = cool_ray_direction(uv);
+    vec3 ro = cool_ray_origin(unnormalize_uv(uv));
+    vec3 rd = cool_ray_direction(unnormalize_uv(uv));
 
     // Ray march
     float d = 0.;
