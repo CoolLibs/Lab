@@ -5,6 +5,7 @@
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
+#include "Cool/Nodes/Pin.h"
 #include "Cool/String/String.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/Node.h"
@@ -176,10 +177,15 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     }
 }
 
-void NodesConfig::on_node_added(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
+void NodesConfig::on_node_added(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
-    _main_node_id = id;
     _ui.set_dirty(_regenerate_code_flag);
+
+    // Don't change main node if we are dragging a link backward.
+    if (pin_linked_to_new_node && pin_linked_to_new_node->kind() == Cool::PinKind::Input)
+        return;
+
+    _main_node_id = node_id;
 }
 
 static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool

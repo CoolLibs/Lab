@@ -39,7 +39,7 @@ public:
     void        imgui_below_node_pins(Cool::Node&, Cool::NodeId const&);
     void        imgui_in_inspector_above_node_info(Cool::Node&, Cool::NodeId const&);
     void        imgui_in_inspector_below_node_info(Cool::Node&, Cool::NodeId const&);
-    void        on_node_added(Cool::Node&, Cool::NodeId const&);
+    void        on_node_added(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     auto        make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
     void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&);
     static void widget_to_rename_node(Cool::Node&);
