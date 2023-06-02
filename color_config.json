@@ -97,6 +97,11 @@
                         "Name": "Very Transparent",
                         "Brightness delta": 0.0,
                         "Opacity": 0.21699999272823335
+                    },
+                    {
+                        "Name": "Floating Buttons Enabled",
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.3019999861717224
                     }
                 ]
             },
@@ -718,7 +723,7 @@
                 },
                 "second": {
                     "Category name": "Accent Color",
-                    "Group name": "Slightly Transparent"
+                    "Group name": "Floating Buttons Enabled"
                 }
             },
             {
