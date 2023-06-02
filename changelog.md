@@ -10,7 +10,7 @@
 
 - ✨ Improved quite a few existing nodes.
 - ✨ Smarter automatic main node selection.
-- ✨ All nodes can now be viewed by themselves, without requiring a "renderer" node (which was the case for Curves and 3D Shapes).
+- ✨ All nodes can now be viewed by themselves, without requiring a "renderer" node (which used to be the case for Curves and 3D Shapes).
 - ✨ Added buttons on the view to freeze / enable the 2D and 3D cameras.
 - 🐛 Fixed some effects (Space Transformations) not being applied on top of 3D shapes.
 
