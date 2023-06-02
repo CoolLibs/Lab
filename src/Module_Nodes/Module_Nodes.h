@@ -40,6 +40,7 @@ private:
     mutable Cool::NodesLibrary                                       _nodes_library{};
     mutable /*TODO(JF) remove the mutable*/ Cool::NodesFolderWatcher _nodes_folder_watcher{Cool::Path::root() / "Nodes", ".clbnode"};
     mutable Cool::NodeId                                             _main_node_id{};
+    mutable Cool::NodeId                                             _previous_main_node_id{};
     Cool::DirtyFlag                                                  _regenerate_code_flag;
     mutable Cool::MessageSender                                      _shader_compilation_error{};
     Cool::Input<Cool::Camera>                                        _camera_input;

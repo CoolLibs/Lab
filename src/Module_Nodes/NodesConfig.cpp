@@ -106,8 +106,7 @@ void NodesConfig::main_node_toggle(Cool::NodeId const& node_id)
     {
         if (is_main && !was_main)
         {
-            _main_node_id = node_id;
-            _ui.set_dirty(_regenerate_code_flag);
+            set_main_node_id(node_id);
         }
     }
 }
@@ -180,19 +179,40 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
     _ui.set_dirty(_regenerate_code_flag);
+    _node_we_might_want_to_restore_as_main_node = {};
 
     // Don't change main node if we are dragging a link backward.
     if (pin_linked_to_new_node && pin_linked_to_new_node->kind() == Cool::PinKind::Input)
         return;
 
-    _main_node_id = node_id;
+    if (!pin_linked_to_new_node)
+        _node_we_might_want_to_restore_as_main_node = _main_node_id; // Keep track, so that if someone has a main node, creates a separate node, and then plugs that node back into the old main node, we will restore it as the main node, even if it itself is plugged into a node.
+    set_main_node_id(node_id, true /*keep_node_we_might_want_to_restore_as_main_node*/);
+}
+
+void NodesConfig::set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node)
+{
+    if (!keep_node_we_might_want_to_restore_as_main_node)
+        _node_we_might_want_to_restore_as_main_node = {};
+    _main_node_id = id;
+    _ui.set_dirty(_regenerate_code_flag);
 }
 
 void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link, Cool::LinkId const&)
 {
+    // Traverse the graph until:
+    // - We reach the end and set this as the main node
+    // - We reach the main node and do nothing
+    // - We reach the previous main_node and set this as the main node
+
     auto next_id = _graph.find_node_containing_pin(link.to_pin_id);
     if (next_id == _main_node_id)
         return;
+    if (next_id == _node_we_might_want_to_restore_as_main_node && !_node_we_might_want_to_restore_as_main_node.underlying_uuid().is_nil())
+    {
+        set_main_node_id(next_id);
+        return;
+    }
     auto const* next_node        = _graph.try_get_node<Node>(next_id);
     auto        new_main_node_id = Cool::NodeId{};
     while (next_node)
@@ -201,10 +221,15 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
         next_id          = _graph.find_node_connected_to_output_pin(next_node->output_pins()[0].id());
         if (next_id == _main_node_id)
             return;
+        if (next_id == _node_we_might_want_to_restore_as_main_node && !_node_we_might_want_to_restore_as_main_node.underlying_uuid().is_nil())
+        {
+            set_main_node_id(next_id);
+            return;
+        }
         next_node = _graph.try_get_node<Node>(next_id);
     }
     if (!new_main_node_id.underlying_uuid().is_nil())
-        _main_node_id = new_main_node_id;
+        set_main_node_id(new_main_node_id);
 }
 
 static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
