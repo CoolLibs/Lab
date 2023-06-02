@@ -124,7 +124,7 @@ void NodesConfig::imgui_below_node_pins(Cool::Node& /* abstract_node */, Cool::N
 static auto value_input_is_connected_to_a_node(size_t value_input_index, Node const& node, Cool::Graph const& graph) -> bool
 {
     auto const  input_pin     = node.pin_of_value_input(value_input_index); // NOLINT(performance-unnecessary-copy-initialization)
-    auto const  input_node_id = graph.input_node_id(input_pin.id());
+    auto const  input_node_id = graph.find_node_connected_to_input_pin(input_pin.id());
     auto const* input_node    = graph.try_get_node<Node>(input_node_id);
     return input_node != nullptr;
 }
@@ -177,7 +177,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     }
 }
 
-void NodesConfig::on_node_added(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
+void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
     _ui.set_dirty(_regenerate_code_flag);
 
@@ -186,6 +186,25 @@ void NodesConfig::on_node_added(Cool::Node& /* abstract_node */, Cool::NodeId co
         return;
 
     _main_node_id = node_id;
+}
+
+void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link, Cool::LinkId const&)
+{
+    auto next_id = _graph.find_node_containing_pin(link.to_pin_id);
+    if (next_id == _main_node_id)
+        return;
+    auto const* next_node        = _graph.try_get_node<Node>(next_id);
+    auto        new_main_node_id = Cool::NodeId{};
+    while (next_node)
+    {
+        new_main_node_id = next_id;
+        next_id          = _graph.find_node_connected_to_output_pin(next_node->output_pins()[0].id());
+        if (next_id == _main_node_id)
+            return;
+        next_node = _graph.try_get_node<Node>(next_id);
+    }
+    if (!new_main_node_id.underlying_uuid().is_nil())
+        _main_node_id = new_main_node_id;
 }
 
 static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
