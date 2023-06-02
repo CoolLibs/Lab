@@ -20,7 +20,7 @@ public:
         Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
         Ui_Ref                                      ui,
         Cool::NodeId&                               main_node_id,
-        Cool::NodeId&                               previous_main_node_id,
+        Cool::NodeId&                               node_we_might_want_to_restore_as_main_node_id,
         Cool::DirtyFlag const&                      rerender_flag,
         Cool::DirtyFlag const&                      regenerate_code_flag,
         Cool::Graph const&                          graph
@@ -29,7 +29,7 @@ public:
         , _get_node_definition{get_node_definition}
         , _ui{ui}
         , _main_node_id{main_node_id}
-        , _previous_main_node_id{previous_main_node_id}
+        , _node_we_might_want_to_restore_as_main_node_id{node_we_might_want_to_restore_as_main_node_id}
         , _rerender_flag{rerender_flag}
         , _regenerate_code_flag{regenerate_code_flag}
         , _graph{graph}
@@ -49,14 +49,14 @@ public:
 
 private:
     void main_node_toggle(Cool::NodeId const&);
-    void set_main_node_id(Cool::NodeId const& id, bool keep_previous_main_node_id = false);
+    void set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node_id = false);
 
 private:
     Cool::InputFactory_Ref                      _input_factory;
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
     Ui_Ref                                      _ui;
     Cool::NodeId&                               _main_node_id;
-    Cool::NodeId&                               _previous_main_node_id;
+    Cool::NodeId&                               _node_we_might_want_to_restore_as_main_node_id;
     Cool::DirtyFlag                             _rerender_flag;
     Cool::DirtyFlag                             _regenerate_code_flag;
     Cool::Graph const&                          _graph;

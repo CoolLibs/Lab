@@ -179,21 +179,21 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
     _ui.set_dirty(_regenerate_code_flag);
-    _node_we_might_want_to_restore_as_main_node = {};
+    _node_we_might_want_to_restore_as_main_node_id = {};
 
     // Don't change main node if we are dragging a link backward.
     if (pin_linked_to_new_node && pin_linked_to_new_node->kind() == Cool::PinKind::Input)
         return;
 
     if (!pin_linked_to_new_node)
-        _node_we_might_want_to_restore_as_main_node = _main_node_id; // Keep track, so that if someone has a main node, creates a separate node, and then plugs that node back into the old main node, we will restore it as the main node, even if it itself is plugged into a node.
+        _node_we_might_want_to_restore_as_main_node_id = _main_node_id; // Keep track, so that if someone has a main node, creates a separate node, and then plugs that node back into the old main node, we will restore it as the main node, even if it itself is plugged into a node.
     set_main_node_id(node_id, true /*keep_node_we_might_want_to_restore_as_main_node*/);
 }
 
 void NodesConfig::set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node)
 {
     if (!keep_node_we_might_want_to_restore_as_main_node)
-        _node_we_might_want_to_restore_as_main_node = {};
+        _node_we_might_want_to_restore_as_main_node_id = {};
     _main_node_id = id;
     _ui.set_dirty(_regenerate_code_flag);
 }
@@ -208,7 +208,7 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
     auto next_id = _graph.find_node_containing_pin(link.to_pin_id);
     if (next_id == _main_node_id)
         return;
-    if (next_id == _node_we_might_want_to_restore_as_main_node && !_node_we_might_want_to_restore_as_main_node.underlying_uuid().is_nil())
+    if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
     {
         set_main_node_id(next_id);
         return;
@@ -221,7 +221,7 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
         next_id          = _graph.find_node_connected_to_output_pin(next_node->output_pins()[0].id());
         if (next_id == _main_node_id)
             return;
-        if (next_id == _node_we_might_want_to_restore_as_main_node && !_node_we_might_want_to_restore_as_main_node.underlying_uuid().is_nil())
+        if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
         {
             set_main_node_id(next_id);
             return;
@@ -238,9 +238,9 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
         // Image-like and shape 2D
         (signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV)
         // Curve
-        || (signature.from == PrimitiveType::Float && signature.to == PrimitiveType::UV && signature.arity == 1)
+        || is_curve(signature)
         // Shape 3D
-        || (signature.from == PrimitiveType::Vec3 && signature.to == PrimitiveType::SignedDistance && signature.arity == 1);
+        || is_shape_3D(signature);
 }
 
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
