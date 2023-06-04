@@ -38,6 +38,11 @@ def all_node_kinds():
             color_srgb="0.49803921580314639f, 0.49803921580314639f, 0.49803921580314639f",
         ),
         NodeKind(
+            name_in_code="space_transformation",
+            user_facing_name="Space transformation",
+            color_srgb="1.f, 1.f, 1.f",
+        ),
+        NodeKind(
             name_in_code="miscellaneous",
             user_facing_name="Miscellaneous",
             color_srgb="0.8666666746139526f, 0.3176470696926117f, 0.19607843458652497f",

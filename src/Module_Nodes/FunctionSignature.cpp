@@ -74,4 +74,17 @@ auto is_greyscale(FunctionSignature signature) -> bool
     return signature.to == PrimitiveType::Float;
 }
 
+auto space_transformation_signature() -> FunctionSignature
+{
+    return FunctionSignature{
+        .from  = PrimitiveType::UV,
+        .to    = PrimitiveType::UV,
+        .arity = 1,
+    };
+}
+auto is_space_transformation(FunctionSignature signature) -> bool
+{
+    return signature == space_transformation_signature();
+}
+
 } // namespace Lab

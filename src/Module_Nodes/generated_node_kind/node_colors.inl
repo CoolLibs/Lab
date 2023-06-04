@@ -30,6 +30,11 @@ auto greyscale() -> Cool::Color
     return Cool::Color::from_srgb({0.49803921580314639f, 0.49803921580314639f, 0.49803921580314639f});
 }
 
+auto space_transformation() -> Cool::Color
+{
+    return Cool::Color::from_srgb({1.f, 1.f, 1.f});
+}
+
 auto miscellaneous() -> Cool::Color
 {
     return Cool::Color::from_srgb({0.8666666746139526f, 0.3176470696926117f, 0.19607843458652497f});
