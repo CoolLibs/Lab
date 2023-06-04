@@ -13,10 +13,11 @@ namespace NodeColor {
 
 auto compute_function_color(FunctionSignature signature) -> Cool::Color
 {
+    {
 #include "generated_node_kind/compute_function_color.inl"
-
+    }
     // Default color if everything else failed:
-    return NodeColor::miscellaneous(); // NOLINT(*-misleading-indentation)
+    return NodeColor::miscellaneous();
 }
 
 auto compute_value_input_color(Cool::AnyInputDefinition const& input_def) -> Cool::Color
