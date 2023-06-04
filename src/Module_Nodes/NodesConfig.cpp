@@ -1,5 +1,6 @@
 #include "NodesConfig.h"
 #include <Cool/Dependencies/requires_shader_code_generation.h>
+#include <Module_Nodes/NodeColor.h>
 #include <algorithm>
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -198,13 +199,18 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
         return NodeColor::greyscale();
     }
 
-    // auto const& node = abstract_node.downcast<Node>();
-    return Cool::Color::from_srgb({1, 1, 0});
-    // auto const* def  = _get_node_definition(node.id_names());
-    // if (!def)
-    //     return Cool::Color::from_srgb(glm::vec3{0.f});
+    auto const& node = abstract_node.downcast<Node>();
+    auto const* def  = _get_node_definition(node.id_names());
+    if (!def)
+        return Cool::Color::from_srgb(glm::vec3{0.f});
 
-    // return compute_node_color(def->signature());
+    // For function inputs, use the color of the function's signature.
+    if (node.function_input_pin_idx_begin() <= pin_index && pin_index < node.function_input_pin_idx_end())
+    {
+        return compute_node_color(def->inputs()[pin_index - node.function_input_pin_idx_begin()].signature());
+    }
+
+    return NodeColor::miscellaneous();
 }
 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
