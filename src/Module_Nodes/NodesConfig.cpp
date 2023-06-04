@@ -187,6 +187,20 @@ auto NodesConfig::node_color(Cool::Node const& abstract_node, Cool::NodeId const
     return compute_node_color(def->signature());
 }
 
+auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node const& abstract_node, Cool::NodeId const& node_id) const -> Cool::Color
+{
+    if (pin.kind() == Cool::PinKind::Output)
+        return node_color(abstract_node, node_id);
+
+    // auto const& node = abstract_node.downcast<Node>();
+    return Cool::Color::from_srgb({1, 1, 0});
+    // auto const* def  = _get_node_definition(node.id_names());
+    // if (!def)
+    //     return Cool::Color::from_srgb(glm::vec3{0.f});
+
+    // return compute_node_color(def->signature());
+}
+
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
     _ui.set_dirty(_regenerate_code_flag);

@@ -36,18 +36,19 @@ public:
         , _graph{graph}
     {}
 
-    auto        name(Cool::Node const&) const -> std::string;
-    auto        category_name(Cool::Node const&) const -> std::string;
-    void        imgui_above_node_pins(Cool::Node&, Cool::NodeId const&);
-    void        imgui_below_node_pins(Cool::Node&, Cool::NodeId const&);
-    void        imgui_in_inspector_above_node_info(Cool::Node&, Cool::NodeId const&);
-    void        imgui_in_inspector_below_node_info(Cool::Node&, Cool::NodeId const&);
-    auto        node_color(Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
-    void        on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
-    void        on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
-    auto        make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
-    void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&);
-    static void widget_to_rename_node(Cool::Node&);
+    auto               name(Cool::Node const&) const -> std::string;
+    auto               category_name(Cool::Node const&) const -> std::string;
+    void               imgui_above_node_pins(Cool::Node&, Cool::NodeId const&);
+    void               imgui_below_node_pins(Cool::Node&, Cool::NodeId const&);
+    void               imgui_in_inspector_above_node_info(Cool::Node&, Cool::NodeId const&);
+    void               imgui_in_inspector_below_node_info(Cool::Node&, Cool::NodeId const&);
+    [[nodiscard]] auto node_color(Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
+    [[nodiscard]] auto pin_color(Cool::Pin const&, size_t pin_index, Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
+    void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
+    void               on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
+    auto               make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
+    void               update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&);
+    static void        widget_to_rename_node(Cool::Node&);
 
 private:
     void main_node_toggle(Cool::NodeId const&);
