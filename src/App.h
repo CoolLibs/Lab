@@ -18,7 +18,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Cool/DidYouKnow/didYouKnowModal.hpp"
+#include "Cool/DidYouKnow/DidYouKnow.hpp"
 #include "Cool/ImGui/StyleEditor.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Debug/DebugOptions.h"

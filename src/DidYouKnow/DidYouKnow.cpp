@@ -2,7 +2,7 @@
 
 auto all_tips_lab() -> std::span<const char* const>
 {
-    return std::array{
+    static constexpr auto tips = std::array{
         "You can change the color theme in the Settings, or make it match your OS's color theme.",
         "Right-click on a node to replace it with a new node of the same category.",
         "Use F to focus on the nodes",
@@ -23,4 +23,6 @@ auto all_tips_lab() -> std::span<const char* const>
         "Right-click on a widget to edit its metadata (range of a slider, etc.)",
         "You can save your own presets on each nodes if you like the parameters you found.",
     };
+
+    return tips;
 }

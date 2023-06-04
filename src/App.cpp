@@ -13,7 +13,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
-#include "Cool/DidYouKnow/testDidYouKnowModal.hpp"
+#include "Cool/DidYouKnow/testDidYouKnow.hpp"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -146,11 +146,6 @@ void App::update()
                 },
             }
         );
-
-        auto all_tips = all_tips_lab();
-
-        // Tests for DidYouKnow Modal
-        Cool::update(_did_you_know_modal, all_tips);
     }
 }
 
@@ -302,6 +297,10 @@ void App::cameras_window()
 
 void App::imgui_windows()
 {
+    // Tests for DidYouKnow Modal
+    auto all_tips = all_tips_lab();
+    Cool::update(_did_you_know_modal, all_tips);
+
     _nodes_view.imgui_window();
     // _custom_shader_view.imgui_window();
 
