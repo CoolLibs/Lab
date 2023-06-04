@@ -207,7 +207,12 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
     // For function inputs, use the color of the function's signature.
     if (node.function_input_pin_idx_begin() <= pin_index && pin_index < node.function_input_pin_idx_end())
     {
-        return compute_node_color(def->inputs()[pin_index - node.function_input_pin_idx_begin()].signature());
+        return compute_node_color(def->function_inputs()[pin_index - node.function_input_pin_idx_begin()].signature());
+    }
+    // For function inputs, use the color of the function's signature.
+    if (node.value_input_pin_idx_begin() <= pin_index && pin_index < node.value_input_pin_idx_end())
+    {
+        // return compute_node_color(def->value_inputs()[pin_index - node.value_input_pin_idx_begin()].signature());
     }
 
     return NodeColor::miscellaneous();
@@ -289,7 +294,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     auto node = Node{
         {def.name(), cat_id.category_name},
         needs_main_pin ? def.signature().arity : 0,
-        def.inputs().size(),
+        def.function_inputs().size(),
         def.signature().is_template(),
     };
 
@@ -304,16 +309,16 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     }
     node.output_pins().emplace_back("OUT");
 
-    for (auto const& input : def.inputs())
-        node.input_pins().push_back(Cool::InputPin{input.name()});
+    for (auto const& function_input : def.function_inputs())
+        node.input_pins().push_back(Cool::InputPin{function_input.name()});
 
-    for (auto const& property_def : def.properties())
+    for (auto const& value_input_def : def.value_inputs())
     {
         node.value_inputs().push_back(_input_factory.make(
-            property_def,
-            Cool::requires_shader_code_generation(property_def) ? _regenerate_code_flag : _rerender_flag
+            value_input_def,
+            Cool::requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag
         ));
-        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& property_def) { return property_def.name; }, property_def)});
+        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
     }
 
     // Get the variables from the inputs
