@@ -209,10 +209,10 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
     {
         return compute_node_color(def->function_inputs()[pin_index - node.function_input_pin_idx_begin()].signature());
     }
-    // For function inputs, use the color of the function's signature.
+    // For value inputs, use the color corresponding to the Input type.
     if (node.value_input_pin_idx_begin() <= pin_index && pin_index < node.value_input_pin_idx_end())
     {
-        // return compute_node_color(def->value_inputs()[pin_index - node.value_input_pin_idx_begin()].signature());
+        return compute_value_input_color(def->value_inputs()[pin_index - node.value_input_pin_idx_begin()]);
     }
 
     return NodeColor::miscellaneous();
