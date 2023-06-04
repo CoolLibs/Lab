@@ -46,7 +46,9 @@ public:
     auto pin_of_value_input(size_t value_input_index) const -> Cool::InputPin const& { return input_pins()[value_input_pin_idx_begin() + value_input_index]; }
     auto pin_of_output_index(size_t output_index_index) const -> Cool::OutputPin const& { return output_pins()[1 + output_index_index]; }
 
-    auto function_input_pin_idx_begin() const -> size_t { return _number_of_main_input_pins; }
+    auto main_input_pin_idx_begin() const -> size_t { return 0; }
+    auto main_input_pin_idx_end() const -> size_t { return _number_of_main_input_pins; }
+    auto function_input_pin_idx_begin() const -> size_t { return main_input_pin_idx_end(); }
     auto function_input_pin_idx_end() const -> size_t { return function_input_pin_idx_begin() + _number_of_function_inputs; }
     auto value_input_pin_idx_begin() const -> size_t { return function_input_pin_idx_end(); }
     auto value_input_pin_idx_end() const -> size_t { return _input_pins.size(); }

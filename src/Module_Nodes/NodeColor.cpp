@@ -1,4 +1,5 @@
 #include "NodeColor.h"
+#include <Module_Nodes/PrimitiveType.h>
 #include <variant>
 #include "Cool/StrongTypes/Angle.h"
 #include "Cool/StrongTypes/ColorAndAlpha.h"
@@ -10,9 +11,9 @@ namespace NodeColor {
 #include "generated_node_kind/node_colors_definition.inl"
 } // namespace NodeColor
 
-auto compute_node_color(FunctionSignature signature) -> Cool::Color
+auto compute_function_color(FunctionSignature signature) -> Cool::Color
 {
-#include "generated_node_kind/compute_node_color.inl"
+#include "generated_node_kind/compute_function_color.inl"
 
     // Default color if everything else failed:
     return NodeColor::miscellaneous(); // NOLINT(*-misleading-indentation)
@@ -32,6 +33,28 @@ auto compute_value_input_color(Cool::AnyInputDefinition const& input_def) -> Coo
         return NodeColor::greyscale();
 
     return NodeColor::miscellaneous();
+}
+
+auto compute_primitive_type_color(PrimitiveType type) -> Cool::Color
+{
+    if (is_color_type(type))
+        return NodeColor::image();
+
+    switch (type)
+    {
+    case PrimitiveType::SignedDistance:
+        return NodeColor::shape_2D();
+    case PrimitiveType::Float:
+    case PrimitiveType::Int:
+    case PrimitiveType::Hue:
+    case PrimitiveType::Angle:
+    case PrimitiveType::Direction2D:
+        return NodeColor::greyscale();
+    case PrimitiveType::UV:
+        return NodeColor::space_transformation();
+    default:
+        return NodeColor::miscellaneous();
+    }
 }
 
 } // namespace Lab

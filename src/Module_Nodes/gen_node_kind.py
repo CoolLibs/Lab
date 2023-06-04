@@ -70,7 +70,7 @@ def node_colors_definition():
     return "\n".join(map(code, all_node_kinds()))
 
 
-def compute_node_color():
+def compute_function_color():
     def code(kind: NodeKind):
         if not kind.generate_compute_color_check:
             return ""
@@ -100,6 +100,6 @@ if __name__ == "__main__":
         files=[
             node_colors_declaration,
             node_colors_definition,
-            compute_node_color,
+            compute_function_color,
         ],
     )

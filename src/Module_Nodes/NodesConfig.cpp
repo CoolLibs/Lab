@@ -185,7 +185,7 @@ auto NodesConfig::node_color(Cool::Node const& abstract_node, Cool::NodeId const
     if (!def)
         return Cool::Color::from_srgb(glm::vec3{0.f});
 
-    return compute_node_color(def->signature());
+    return compute_function_color(def->signature());
 }
 
 auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node const& abstract_node, Cool::NodeId const& node_id) const -> Cool::Color
@@ -207,12 +207,17 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
     // For function inputs, use the color of the function's signature.
     if (node.function_input_pin_idx_begin() <= pin_index && pin_index < node.function_input_pin_idx_end())
     {
-        return compute_node_color(def->function_inputs()[pin_index - node.function_input_pin_idx_begin()].signature());
+        return compute_function_color(def->function_inputs()[pin_index - node.function_input_pin_idx_begin()].signature());
     }
     // For value inputs, use the color corresponding to the Input type.
     if (node.value_input_pin_idx_begin() <= pin_index && pin_index < node.value_input_pin_idx_end())
     {
         return compute_value_input_color(def->value_inputs()[pin_index - node.value_input_pin_idx_begin()]);
+    }
+    // For main input pins, use the color corresponding to the `from` Primitive type.
+    if (node.main_input_pin_idx_begin() <= pin_index && pin_index < node.main_input_pin_idx_end())
+    {
+        return compute_primitive_type_color(def->signature().from);
     }
 
     return NodeColor::miscellaneous();
