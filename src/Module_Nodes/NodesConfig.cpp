@@ -1,16 +1,17 @@
 #include "NodesConfig.h"
 #include <Cool/Dependencies/requires_shader_code_generation.h>
-#include <Cool/ImGui/ImGuiExtras.h>
 #include <algorithm>
 #include <string>
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
 #include "Cool/String/String.h"
+#include "Cool/StrongTypes/Color.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/Node.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/PrimitiveType.h"
+#include "NodeColor.h"
 #include "imgui.h"
 
 namespace Lab {
@@ -174,6 +175,16 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         if (has_changed)
             _ui.set_dirty(_regenerate_code_flag); // TODO(JF) We could simply rerender instead of regenerate if none of the properties require code generation
     }
+}
+
+auto NodesConfig::node_color(Cool::Node const& abstract_node, Cool::NodeId const&) const -> Cool::Color
+{
+    auto const& node = abstract_node.downcast<Node>();
+    auto const* def  = _get_node_definition(node.id_names());
+    if (!def)
+        return Cool::Color::from_srgb(glm::vec3{0.f});
+
+    return compute_node_color(def->signature());
 }
 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)

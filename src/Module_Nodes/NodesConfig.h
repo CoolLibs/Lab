@@ -6,6 +6,7 @@
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesLibrary.h"
+#include "Cool/StrongTypes/Color.h"
 #include "Dependencies/Ui.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Node.h"
@@ -41,6 +42,7 @@ public:
     void        imgui_below_node_pins(Cool::Node&, Cool::NodeId const&);
     void        imgui_in_inspector_above_node_info(Cool::Node&, Cool::NodeId const&);
     void        imgui_in_inspector_below_node_info(Cool::Node&, Cool::NodeId const&);
+    auto        node_color(Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
     void        on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     void        on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
     auto        make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
