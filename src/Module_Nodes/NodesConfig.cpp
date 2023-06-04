@@ -190,7 +190,13 @@ auto NodesConfig::node_color(Cool::Node const& abstract_node, Cool::NodeId const
 auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node const& abstract_node, Cool::NodeId const& node_id) const -> Cool::Color
 {
     if (pin.kind() == Cool::PinKind::Output)
-        return node_color(abstract_node, node_id);
+    {
+        // Main output pin
+        if (pin_index == 0)
+            return node_color(abstract_node, node_id);
+        // Float output
+        return NodeColor::greyscale();
+    }
 
     // auto const& node = abstract_node.downcast<Node>();
     return Cool::Color::from_srgb({1, 1, 0});

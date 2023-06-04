@@ -3,7 +3,7 @@
 namespace Lab {
 
 namespace NodeColor {
-#include "generated_node_kind/node_colors.inl"
+#include "generated_node_kind/node_colors_definition.inl"
 } // namespace NodeColor
 
 auto compute_node_color(FunctionSignature signature) -> Cool::Color

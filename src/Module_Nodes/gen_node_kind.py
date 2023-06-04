@@ -51,7 +51,14 @@ def all_node_kinds():
     ]
 
 
-def node_colors():
+def node_colors_declaration():
+    def code(kind: NodeKind):
+        return f"auto {kind.name_in_code}() -> Cool::Color;"
+
+    return "\n".join(map(code, all_node_kinds()))
+
+
+def node_colors_definition():
     def code(kind: NodeKind):
         return f"""
             auto {kind.name_in_code}() -> Cool::Color
@@ -91,7 +98,8 @@ if __name__ == "__main__":
     generate_files.generate(
         folder="generated_node_kind",
         files=[
-            node_colors,
+            node_colors_declaration,
+            node_colors_definition,
             compute_node_color,
         ],
     )
