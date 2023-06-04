@@ -297,9 +297,7 @@ void App::cameras_window()
 
 void App::imgui_windows()
 {
-    // Tests for DidYouKnow Modal
-    auto all_tips = all_tips_lab();
-    Cool::update(_did_you_know_modal, all_tips);
+    _did_you_know_modal.imgui_windows(all_tips_lab());
 
     _nodes_view.imgui_window();
     // _custom_shader_view.imgui_window();
