@@ -1,5 +1,6 @@
 #include "FunctionSignature.h"
 #include <Module_Nodes/FunctionSignature.h>
+#include <Module_Nodes/PrimitiveType.h>
 
 namespace Lab {
 
@@ -61,6 +62,16 @@ auto shape_3D_signature() -> FunctionSignature
 auto is_shape_3D(FunctionSignature signature) -> bool
 {
     return signature == shape_3D_signature();
+}
+
+auto is_image(FunctionSignature signature) -> bool
+{
+    return is_color_type(signature.to);
+}
+
+auto is_greyscale(FunctionSignature signature) -> bool
+{
+    return signature.to == PrimitiveType::Float;
 }
 
 } // namespace Lab

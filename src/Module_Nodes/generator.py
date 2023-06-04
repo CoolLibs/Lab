@@ -346,6 +346,17 @@ def has_an_alpha_channel():
     return res
 
 
+def is_color_type():
+    from itertools import product
+
+    def code(color_space, alpha_space):
+        return f"type == PrimitiveType::{color_space.name_in_code}{alpha_space}"
+
+    return "\n ||".join(
+        map(lambda x: code(x[0], x[1]), product(color_spaces(), alpha_spaces()))
+    )
+
+
 def primitive_types_enum_members():
     from pipe import map
 
@@ -520,5 +531,6 @@ if __name__ == "__main__":
             string_listing_the_parsed_types,
             implicit_color_conversions,
             has_an_alpha_channel,
+            is_color_type,
         ],
     )
