@@ -1,0 +1,72 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "2312c6b2-13e8-4776-b206-28e0125cfd6e",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Base Radius",
+                                    "Value": 1.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 1.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Height",
+                                    "Value": 2.5,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 2.5,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

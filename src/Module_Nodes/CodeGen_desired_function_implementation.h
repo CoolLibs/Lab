@@ -11,6 +11,7 @@ auto gen_desired_function_implementation(
     FunctionSignature desired,
     std::string_view  base_function_name,
     Node const&,
+    Cool::NodeId const&,
     CodeGenContext&
 ) -> tl::expected<std::string, std::string>;
 

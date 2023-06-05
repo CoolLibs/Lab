@@ -40,4 +40,20 @@ inline auto to_string(FunctionSignature signature) -> std::string
 auto make_complete_function_signature(MainFunctionSignature const& signature)
     -> CompleteFunctionSignature;
 
+auto curve_signature() -> FunctionSignature;
+auto is_curve(FunctionSignature) -> bool;
+
+auto shape_2D_signature() -> FunctionSignature;
+auto is_shape_2D(FunctionSignature) -> bool;
+
+auto shape_3D_signature() -> FunctionSignature;
+auto is_shape_3D(FunctionSignature) -> bool;
+
+auto is_image(FunctionSignature) -> bool;
+
+auto is_greyscale(FunctionSignature) -> bool;
+
+auto space_transformation_signature() -> FunctionSignature;
+auto is_space_transformation(FunctionSignature) -> bool;
+
 } // namespace Lab

@@ -9,7 +9,9 @@
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
+#include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
@@ -34,16 +36,18 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 
 void Module_Nodes::update(UpdateContext_Ref ctx)
 {
-    auto       cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
-    auto       updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
+    auto cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
+    auto updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
     if (_nodes_folder_watcher.update(updater))
         ctx.set_dirty(_regenerate_code_flag);
 }
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
-    if (_nodes_editor.graph().nodes().is_empty())
-        return;
+    _shader.pipeline().reset(); // Make sure the shader will be empty if the compilation fails.
+
+    if (!_nodes_editor.graph().try_get_node<Node>(_main_node_id))
+        return; // Otherwise we will get a default UV image instead of a transparent image.
 
     auto const shader_code = generate_shader_code(
         _main_node_id,
@@ -68,7 +72,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     handle_error(maybe_err, for_testing_nodes);
 }
 
-void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes)
+void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
 {
     if (!for_testing_nodes)
     {
@@ -89,16 +93,28 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 
 auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
 {
-    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag};
+    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _node_we_might_want_to_restore_as_main_node_id, _shader.dirty_flag(), _regenerate_code_flag, _nodes_editor.graph()};
 }
 
-void Module_Nodes::imgui_windows(Ui_Ref ui) const
+void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
-    if (_nodes_editor.imgui_window(nodes_config(ui), _nodes_library))
-        ui.set_dirty(_regenerate_code_flag);
+    {
+        auto cfg = Cool::NodesConfig{nodes_config(ui)};
+        if (_nodes_editor.imgui_windows(cfg, _nodes_library))
+            ui.set_dirty(_regenerate_code_flag);
+    }
 
     DebugOptions::show_generated_shader_code([&] {
-        ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
+        if (Cool::ImGuiExtras::input_text_multiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+        {
+            const auto maybe_err = _shader.compile(
+                _shader_code,
+                update_ctx
+            );
+            handle_error(maybe_err, false);
+
+            ui.dirty_setter()(dirty_flag()); // Trigger rerender
+        }
     });
 }
 

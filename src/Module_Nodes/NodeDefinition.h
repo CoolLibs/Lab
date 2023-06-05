@@ -42,14 +42,14 @@ public:
     [[nodiscard]] auto main_parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
     [[nodiscard]] auto parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
     [[nodiscard]] auto function_body() const -> auto const& { return _data.main_function.body; }
-    [[nodiscard]] auto inputs() const -> auto const& { return _data.input_function; }
-    [[nodiscard]] auto properties() const -> auto const& { return _data.input_values; }
+    [[nodiscard]] auto function_inputs() const -> auto const& { return _data.input_function; }
+    [[nodiscard]] auto value_inputs() const -> auto const& { return _data.input_values; }
     [[nodiscard]] auto output_indices() const -> auto const& { return _data.output_indices; }
     [[nodiscard]] auto helper_functions() const -> auto const& { return _data.helper_functions; }
     [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
 
     [[nodiscard]] auto presets_manager() const -> auto const& { return *_presets_manager; }
-    auto imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
+    auto               imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
 
 private:
     NodeDefinition(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path); // Use NodeDefinition::make() to create a NodeDefinition

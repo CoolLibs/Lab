@@ -42,9 +42,16 @@ public:
     }
     auto main_output_pin() const -> Cool::OutputPin const& { return output_pins()[0]; }
     /// This corresponds to a subset of all the input_pints(); the ones that correspond to an INPUT of the node.
-    auto pin_of_function_input(size_t input_index) const -> Cool::InputPin const& { return input_pins()[_number_of_main_input_pins + input_index]; }
-    auto pin_of_value_input(size_t property_index) const -> Cool::InputPin const& { return input_pins()[_number_of_main_input_pins + _number_of_function_inputs + property_index]; }
-    auto pin_of_output_index(size_t output_index_index) const -> Cool::OutputPin const& { return output_pins()[_number_of_main_input_pins + output_index_index]; }
+    auto pin_of_function_input(size_t function_input_index) const -> Cool::InputPin const& { return input_pins()[function_input_pin_idx_begin() + function_input_index]; }
+    auto pin_of_value_input(size_t value_input_index) const -> Cool::InputPin const& { return input_pins()[value_input_pin_idx_begin() + value_input_index]; }
+    auto pin_of_output_index(size_t output_index_index) const -> Cool::OutputPin const& { return output_pins()[1 + output_index_index]; }
+
+    auto main_input_pin_idx_begin() const -> size_t { return 0; }
+    auto main_input_pin_idx_end() const -> size_t { return _number_of_main_input_pins; }
+    auto function_input_pin_idx_begin() const -> size_t { return main_input_pin_idx_end(); }
+    auto function_input_pin_idx_end() const -> size_t { return function_input_pin_idx_begin() + _number_of_function_inputs; }
+    auto value_input_pin_idx_begin() const -> size_t { return function_input_pin_idx_end(); }
+    auto value_input_pin_idx_end() const -> size_t { return _input_pins.size(); }
 
     /// Only call this if this node is a template node
     auto chosen_any_type() const -> PrimitiveType { return _chosen_any_type.value(); }

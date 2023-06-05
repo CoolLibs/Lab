@@ -5,14 +5,23 @@
 import os
 from pathlib import Path
 from importlib.machinery import SourceFileLoader
+
 generate_files = SourceFileLoader(
     "generate_files",
-    os.path.join(Path(os.path.abspath(__file__)
-                      ).parent.parent.parent, "Cool", "src", "Cool", "DebugOptions", "debug_options_generator.py")).load_module()
+    os.path.join(
+        Path(os.path.abspath(__file__)).parent.parent.parent,
+        "Cool",
+        "src",
+        "Cool",
+        "DebugOptions",
+        "debug_options_generator.py",
+    ),
+).load_module()
 
 
 def all_debug_options():
     from generate_files import DebugOption, Kind
+
     return [
         DebugOption(
             name_in_code="generate_dump_file",
@@ -85,17 +94,12 @@ def all_debug_options():
             kind=Kind.WINDOW,
             available_in_release=True,
         ),
-        DebugOption(
-            name_in_code="imnodes_color_theme_window",
-            name_in_ui="Color Themes: Nodes",
-            kind=Kind.WINDOW,
-            available_in_release=True,
-        ),
     ]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from generate_files import generate_debug_options
+
     generate_debug_options(
         output_folder="generated",
         namespace="Lab",

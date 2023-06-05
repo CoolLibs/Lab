@@ -10,16 +10,17 @@ auto gen_implicit_conversion(PrimitiveType from, PrimitiveType to, CodeGenContex
         return "";
 
     if (from == PrimitiveType::Float && to == PrimitiveType::Angle)
-    {
         return "";
-    }
+
+    if (from == PrimitiveType::Float && to == PrimitiveType::Hue)
+        return "";
 
     if (from == PrimitiveType::Float && to == PrimitiveType::Int)
     {
         return context.push_function({
-            .name           = "CoolLab_float_to_int",
-            .implementation = R"STR(
-int CoolLab_float_to_int/*coollabdef*/(float x)
+            .name       = "Coollab_float_to_int",
+            .definition = R"STR(
+int Coollab_float_to_int/*coollabdef*/(float x)
 {
     return int(floor(x));
 }
@@ -29,11 +30,36 @@ int CoolLab_float_to_int/*coollabdef*/(float x)
     if (from == PrimitiveType::Int && to == PrimitiveType::Float)
     {
         return context.push_function({
-            .name           = "CoolLab_int_to_float",
-            .implementation = R"STR(
-float CoolLab_int_to_float/*coollabdef*/(int x)
+            .name       = "Coollab_int_to_float",
+            .definition = R"STR(
+float Coollab_int_to_float/*coollabdef*/(int x)
 {
     return float(x);
+}
+)STR",
+        });
+    }
+
+    if (from == PrimitiveType::Float && to == PrimitiveType::Bool)
+    {
+        return context.push_function({
+            .name       = "Coollab_float_to_bool",
+            .definition = R"STR(
+bool Coollab_float_to_bool/*coollabdef*/(float x)
+{
+    return x > 0.5;
+}
+)STR",
+        });
+    }
+    if (from == PrimitiveType::Bool && to == PrimitiveType::Float)
+    {
+        return context.push_function({
+            .name       = "Coollab_bool_to_float",
+            .definition = R"STR(
+float Coollab_bool_to_float/*coollabdef*/(bool b)
+{
+    return b ? 1. : 0.;
 }
 )STR",
         });
@@ -42,9 +68,9 @@ float CoolLab_int_to_float/*coollabdef*/(int x)
     if (from == PrimitiveType::Angle && to == PrimitiveType::Direction2D)
     {
         return context.push_function({
-            .name           = "CoolLab_angle_to_direction2D",
-            .implementation = R"STR(
-vec2 CoolLab_angle_to_direction2D/*coollabdef*/(float angle)
+            .name       = "Coollab_angle_to_direction2D",
+            .definition = R"STR(
+vec2 Coollab_angle_to_direction2D/*coollabdef*/(float angle)
 {
     return vec2(cos(angle), sin(angle));
 }
@@ -54,9 +80,9 @@ vec2 CoolLab_angle_to_direction2D/*coollabdef*/(float angle)
     if (from == PrimitiveType::Float && to == PrimitiveType::Direction2D)
     {
         return context.push_function({
-            .name           = "CoolLab_float_to_direction2D",
-            .implementation = R"STR(
-vec2 CoolLab_float_to_direction2D/*coollabdef*/(float x)
+            .name       = "Coollab_float_to_direction2D",
+            .definition = R"STR(
+vec2 Coollab_float_to_direction2D/*coollabdef*/(float x)
 {
     return vec2(cos(x),sin(x));
 }
@@ -66,9 +92,9 @@ vec2 CoolLab_float_to_direction2D/*coollabdef*/(float x)
     if (from == PrimitiveType::Direction2D && to == PrimitiveType::Angle)
     {
         return context.push_function({
-            .name           = "CoolLab_direction2D_to_angle",
-            .implementation = R"STR(
-float CoolLab_direction2D_to_angle/*coollabdef*/(vec2 dir)
+            .name       = "Coollab_direction2D_to_angle",
+            .definition = R"STR(
+float Coollab_direction2D_to_angle/*coollabdef*/(vec2 dir)
 {
     return dir.x != 0.f
                 ? atan(dir.y, dir.x)

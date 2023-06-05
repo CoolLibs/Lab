@@ -25,11 +25,11 @@ void about_menu()
         {
             line(
                 [] { ImGui::TextDisabled("Website"); },
-                [] { Cool::ImGuiExtras::link("https://coollab-art.com/"); }
+                [] { Cool::ImGuiExtras::link("https://linktr.ee/coollab_art"); }
             );
 
             line(
-                [] { ImGui::TextDisabled("CoolLab version"); },
+                [] { ImGui::TextDisabled("Coollab version"); },
                 [] { ImGui::TextUnformatted(coollab_version().c_str()); }
             );
 

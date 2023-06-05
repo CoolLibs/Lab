@@ -1,8 +1,0 @@
-// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
-
-INPUT Gradient `Color Gradient`;
-
-CIELAB_PremultipliedA main(float Black_and_white_gradient)
-{
-    return `Color Gradient`(Black_and_white_gradient);
-}

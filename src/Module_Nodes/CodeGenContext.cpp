@@ -17,7 +17,7 @@ auto CodeGenContext::push_function(Function const& function) -> std::string
     if (!_already_generated_functions.has_already_been_generated(function.name))
     {
         _already_generated_functions.push(function.name);
-        _code += function.implementation;
+        _code += function.definition;
     }
     else
     {

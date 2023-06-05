@@ -52,6 +52,10 @@ if (str == "Angle")
 {
     return PrimitiveType::Angle;
 }
+if (str == "Hue")
+{
+    return PrimitiveType::Hue;
+}
 if (str == "Direction2D")
 {
     return PrimitiveType::Direction2D;

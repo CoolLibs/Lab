@@ -1,5 +1,6 @@
 
 A category is defined by simply creating a folder with the desired name in the "Nodes" folder. All nodes belonging to that category will have to be put in that folder.
+The number at the beginning of the folder name won't be displayed but is used to order the categories.
 
 ## Consistency between nodes of the same category
 

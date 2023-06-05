@@ -1,0 +1,138 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "4122d189-c21d-4804-b479-3f8444fc2275",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 1,
+                                "data": {
+                                    "Name": "Detail",
+                                    "Value": 4,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 1,
+                                            "Has max bound": true,
+                                            "Max": 8,
+                                            "Drag speed": 0.019999999552965165,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 4,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.019999999552965165,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Smoothing",
+                                    "Value": 0.30000001192092898,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0010000000474974514,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.0010000000474974514,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.30000001192092898,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Thickness",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.0010000000474974514,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Carve",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fix Artifacts",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": true,
+                                            "Max": 0.9990000128746033,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": true
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": true,
+                                            "Max": 0.9990000128746033,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": true
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

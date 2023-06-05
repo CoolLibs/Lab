@@ -1,3 +1,0 @@
-[SDF](vec3 p) {
-    return ${SDF}(p);
-}

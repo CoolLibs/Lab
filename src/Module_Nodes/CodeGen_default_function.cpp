@@ -62,8 +62,8 @@ static auto gen_function_with_implicit_conversions(
 
     auto const name = fmt::format("{}implicitly{}", base_name, to_string(desired_signature));
     return context.push_function({
-        .name           = name,
-        .implementation = fmt::format(
+        .name       = name,
+        .definition = fmt::format(
             FMT_COMPILE(R"STR(
 {output} {name}/*coollabdef*/({inputs_declaration})
 {{
@@ -88,8 +88,8 @@ static auto maybe_generate_default(FunctionSignature current_signature, std::str
         return std::nullopt;
 
     auto const base_name = context.push_function({
-        .name           = name,
-        .implementation = implementation,
+        .name       = name,
+        .definition = implementation,
     });
     return gen_function_with_implicit_conversions(base_name, desired_signature, implicit_conversions, context);
 }
@@ -97,7 +97,7 @@ static auto maybe_generate_default(FunctionSignature current_signature, std::str
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
-    using fmt::literals::             operator""_a;
+    using fmt::literals::operator""_a;
     static constexpr std::string_view signed_to_float = "antialised_step(sd)";
     {
         auto const func = maybe_generate_default(
@@ -270,8 +270,8 @@ vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
         if (signature.to == PrimitiveType::UV) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
         {
             return context.push_function({
-                .name           = "default_uv",
-                .implementation = R"STR(
+                .name       = "default_uv",
+                .definition = R"STR(
 vec2 default_uv/*coollabdef*/()
 {
     return coollab_context.uv;
@@ -282,8 +282,8 @@ vec2 default_uv/*coollabdef*/()
         auto const glsl_type = raw_glsl_type_as_string(signature.to);
         auto const name      = fmt::format("default_constant_{}", glsl_type);
         return context.push_function({
-            .name           = name,
-            .implementation = fmt::format(
+            .name       = name,
+            .definition = fmt::format(
                 FMT_COMPILE(R"STR(
 {type} {name}/*coollabdef*/()
 {{

@@ -1,9 +1,0 @@
-// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
-
-INPUT UV->sRGB_PremultipliedA `Image`;
-INPUT UV->float `Mask`;
-
-sRGB_PremultipliedA main(UV uv)
-{
-    return `Mask`(uv) * `Image`(uv);
-}

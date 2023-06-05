@@ -18,7 +18,7 @@ public:
     explicit Module_Nodes(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
     void update(UpdateContext_Ref) override;
-    void imgui_windows(Ui_Ref) const override;
+    void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     auto all_inputs() const -> Cool::AllInputRefsToConst override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
 
@@ -30,18 +30,19 @@ protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
 private:
-    void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes);
+    void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes) const;
     auto nodes_config(Ui_Ref ui) const -> NodesConfig;
 
 private:
     mutable std::string                                              _shader_code{};
-    FullscreenShader                                                 _shader{};
+    mutable FullscreenShader                                         _shader{};
     mutable Cool::NodesEditor                                        _nodes_editor{};
     mutable Cool::NodesLibrary                                       _nodes_library{};
     mutable /*TODO(JF) remove the mutable*/ Cool::NodesFolderWatcher _nodes_folder_watcher{Cool::Path::root() / "Nodes", ".clbnode"};
     mutable Cool::NodeId                                             _main_node_id{};
+    mutable Cool::NodeId                                             _node_we_might_want_to_restore_as_main_node_id{};
     Cool::DirtyFlag                                                  _regenerate_code_flag;
-    Cool::MessageSender                                              _shader_compilation_error{};
+    mutable Cool::MessageSender                                      _shader_compilation_error{};
     Cool::Input<Cool::Camera>                                        _camera_input;
 
 private:

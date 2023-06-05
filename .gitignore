@@ -30,3 +30,4 @@ website/.docusaurus
 website/node_modules
 info_dump.txt
 buildvs
+current_color_theme.json

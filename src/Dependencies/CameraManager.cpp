@@ -1,5 +1,7 @@
 #include "CameraManager.h"
 #include <Cool/Camera/ViewController_OrbitalU.h>
+#include <Cool/ImGui/IcoMoonCodepoints.h>
+#include <Cool/ImGui/icon_fmt.h>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/CommandExecutor_TopLevel_Ref.h"
 #include "Commands/Command_FinishedEditingVariable.h"
@@ -11,13 +13,14 @@ namespace Lab {
 void CameraManager::hook_events(
     Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
     std::reference_wrapper<Cool::VariableRegistries>   registries,
-    CommandExecutor_TopLevel_Ref                       executor
+    CommandExecutor_TopLevel_Ref                       executor,
+    std::function<void()>                              on_change
 )
 {
     events
         .scroll_event()
-        .subscribe([registries, this, executor](const auto& event) {
-            if (_is_locked_in_view)
+        .subscribe([registries, this, executor, on_change](const auto& event) {
+            if (!_is_editable_in_view)
                 return;
 
             auto       camera   = registries.get().get(_camera_id.raw())->value();
@@ -28,38 +31,39 @@ void CameraManager::hook_events(
                 _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
                 executor.execute(Command_SetCameraZoom{zoom});
                 executor.execute(Command_FinishedEditingVariable{});
+                on_change();
             }
         });
     events
         .drag()
         .start()
-        .subscribe([registries, this, executor](const auto& event) {
-            if (_is_locked_in_view)
+        .subscribe([registries, this, executor, on_change](const auto& event) {
+            if (!_is_editable_in_view)
                 return;
 
-            maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
+            maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag_start(camera, event.mods);
             });
         });
     events
         .drag()
         .update()
-        .subscribe([registries, this, executor](const auto& event) {
-            if (_is_locked_in_view)
+        .subscribe([registries, this, executor, on_change](const auto& event) {
+            if (!_is_editable_in_view)
                 return;
 
-            maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
+            maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag(camera, event.delta);
             });
         });
     events
         .drag()
         .stop()
-        .subscribe([registries, this, executor](auto&&) {
-            if (_is_locked_in_view)
+        .subscribe([registries, this, executor, on_change](auto&&) {
+            if (!_is_editable_in_view)
                 return;
 
-            maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
+            maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
                 return _view_controller.on_drag_stop(camera);
             });
             executor.execute(Command_FinishedEditingVariable{});
@@ -68,29 +72,26 @@ void CameraManager::hook_events(
 
 void CameraManager::imgui(
     std::reference_wrapper<Cool::VariableRegistries> registries,
-    CommandExecutor_TopLevel_Ref                     executor
+    CommandExecutor_TopLevel_Ref                     executor,
+    std::function<void()>                            on_change
 )
 {
-    maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
+    maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
         return _view_controller.ImGui(camera);
     });
-    if (ImGui::Button("Look at the origin"))
+    if (ImGui::Button(Cool::icon_fmt("Look at the origin", ICOMOON_RADIO_CHECKED).c_str()))
     {
-        maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
+        maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
             _view_controller.set_orbit_center({0, 0, 0}, camera);
             return true;
         });
         executor.execute(Command_FinishedEditingVariable{});
     }
-    if (ImGui::Button("Reset transform"))
+    if (ImGui::Button(Cool::icon_fmt("Reset Camera", ICOMOON_TARGET).c_str()))
     {
-        maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
-            Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
-            return true;
-        });
-        executor.execute(Command_FinishedEditingVariable{});
+        reset_camera(registries, executor, on_change);
     }
-    maybe_update_camera(registries, executor, [&](Cool::Camera& camera) {
+    maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
         return Cool::imgui(camera.projection());
     });
     if (ImGui::IsItemDeactivatedAfterEdit())
@@ -102,6 +103,7 @@ void CameraManager::imgui(
 void CameraManager::maybe_update_camera(
     std::reference_wrapper<Cool::VariableRegistries> registries,
     CommandExecutor_TopLevel_Ref                     executor,
+    std::function<void()>                            on_change,
     std::function<bool(Cool::Camera&)>               fun
 )
 {
@@ -109,6 +111,7 @@ void CameraManager::maybe_update_camera(
     if (fun(camera))
     {
         executor.execute(Command_SetVariable<Cool::Camera>{_camera_id.raw(), camera});
+        on_change();
     }
 }
 
@@ -120,6 +123,19 @@ void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref& ctx)
         variable.value() = camera;
     });
     ctx.set_dirty(_camera_id.raw());
+}
+
+void CameraManager::reset_camera(
+    std::reference_wrapper<Cool::VariableRegistries> registries,
+    CommandExecutor_TopLevel_Ref                     executor,
+    std::function<void()>                            on_change
+)
+{
+    maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
+        Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
+        return true;
+    });
+    executor.execute(Command_FinishedEditingVariable{});
 }
 
 } // namespace Lab
