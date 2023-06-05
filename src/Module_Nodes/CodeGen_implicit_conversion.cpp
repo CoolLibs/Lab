@@ -40,6 +40,31 @@ float Coollab_int_to_float/*coollabdef*/(int x)
         });
     }
 
+    if (from == PrimitiveType::Float && to == PrimitiveType::Bool)
+    {
+        return context.push_function({
+            .name       = "Coollab_float_to_bool",
+            .definition = R"STR(
+bool Coollab_float_to_bool/*coollabdef*/(float x)
+{
+    return x > 0.5;
+}
+)STR",
+        });
+    }
+    if (from == PrimitiveType::Bool && to == PrimitiveType::Float)
+    {
+        return context.push_function({
+            .name       = "Coollab_bool_to_float",
+            .definition = R"STR(
+float Coollab_bool_to_float/*coollabdef*/(bool b)
+{
+    return b ? 1. : 0.;
+}
+)STR",
+        });
+    }
+
     if (from == PrimitiveType::Angle && to == PrimitiveType::Direction2D)
     {
         return context.push_function({
