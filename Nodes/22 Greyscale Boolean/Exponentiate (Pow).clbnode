@@ -5,5 +5,5 @@ INPUT float `Greyscale 2`;
 
 float main()
 {
-    return `Greyscale 1` - `Greyscale 2`;
+    return pow(`Greyscale 1`, `Greyscale 2`);
 }
