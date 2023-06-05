@@ -28,6 +28,7 @@ auto compute_value_input_color(Cool::AnyInputDefinition const& input_def) -> Coo
 
     if (std::holds_alternative<Cool::InputDefinition<float>>(input_def)
         || std::holds_alternative<Cool::InputDefinition<int>>(input_def)
+        || std::holds_alternative<Cool::InputDefinition<bool>>(input_def)
         || std::holds_alternative<Cool::InputDefinition<Cool::Hue>>(input_def)
         || std::holds_alternative<Cool::InputDefinition<Cool::Angle>>(input_def)
         || std::holds_alternative<Cool::InputDefinition<Cool::Direction2D>>(input_def))
@@ -47,6 +48,7 @@ auto compute_primitive_type_color(PrimitiveType type) -> Cool::Color
         return NodeColor::shape_2D();
     case PrimitiveType::Float:
     case PrimitiveType::Int:
+    case PrimitiveType::Bool:
     case PrimitiveType::Hue:
     case PrimitiveType::Angle:
     case PrimitiveType::Direction2D:
