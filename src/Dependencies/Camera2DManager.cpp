@@ -31,7 +31,7 @@ void hook_camera2D_events(
             float const sensitivity    = Cool::user_settings().camera2D_zoom_sensitivity;
             float const zoom_variation = std::pow(sensitivity, event.dy);
 
-            if (!ImGui::GetIO().KeyShift) // Use SHIFT to zoom relative to the center of the view
+            if (!ImGui::GetIO().KeyAlt) // Use ALT to zoom relative to the center of the view
             {
                 auto const mouse_pos_in_view_space  = event.position / get_height() * 2.f - glm::vec2{get_aspect_ratio(), 1.f};
                 auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
