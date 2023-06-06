@@ -1,12 +1,12 @@
 # Changelog
 
-- [🐣beta-4 WIP](#beta-4-wip)
+- [🐣beta-4](#beta-4)
 - [🐣beta-3](#beta-3)
 - [🐣beta-2](#beta-2)
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-4 WIP
+## 🐣beta-4
 
 - ✨ Improved quite a few existing nodes.
 - ✨ Added new nodes. Check out our "Cloud" renderer for 3D Shapes!
