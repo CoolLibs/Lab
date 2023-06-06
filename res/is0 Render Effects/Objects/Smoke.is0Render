@@ -1,0 +1,115 @@
+`
+#include "_ROOT_FOLDER_/res/is0 shaders/smoke.glsl"
+
+// See https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html
+// And https://www.shadertoy.com/view/tsScDG
+
+float GetLightVisiblity(in vec3 rayOrigin, in vec3 rayDirection, in float maxT, in int maxSteps, in float marchSize, in float Absorption_Coefficient) 
+{
+    float t               = 0.0f;
+    float lightVisibility = 1.0f;
+    float signedDistance  = 0.0;
+    for (int i = 0; i < maxSteps; i++) {
+        t += max(marchSize, signedDistance);
+        if (t > maxT || lightVisibility < ABSORPTION_CUTOFF)
+            break;
+            
+        vec3 position = rayOrigin + t * rayDirection;
+        
+        signedDistance = is0_main_sdf(position);
+        if (signedDistance < 0.0) {
+            lightVisibility *= BeerLambert(Absorption_Coefficient * GetFogDensity(position, signedDistance), marchSize);
+        }
+    };
+    return lightVisibility;
+}
+
+float IntersectVolumetric(in vec3 rayOrigin, in vec3 rayDirection, float maxT)
+{
+    float precis = 0.5f;
+    float t      = 0.0f;
+    for (int i = 0; i < MAX_SDF_SPHERE_STEPS; i++) {
+        float result = is0_main_sdf(rayOrigin + rayDirection * t);
+        if (result < (precis) || t > maxT)
+            break;
+        t += result;
+    }
+    return (t >= maxT) ? -1.0 : t;
+}
+
+`
+
+(RayMarchRes res) {
+    
+    float depth       = LARGE_NUMBER;
+    vec3  opaqueColor = apply_background(res);
+    float opaqueVisibility = 1.0f;
+    
+    float volumeDepth     = IntersectVolumetric(res.ray_origin, res.ray_direction, depth);
+    vec3  volumetricColor = vec3(0.0f);
+    if (volumeDepth > 0.0) {
+        const vec3  volumeAlbedo     = vec3(0.8);
+        const float marchSize        = 0.6f * March_Multiplier;
+        float       distanceInVolume = 0.0f;
+        float       signedDistance   = 0.0;
+        for (int i = 0; i < Max_Volume_March_Steps; i++) {
+            volumeDepth += max(marchSize, signedDistance);
+            if (volumeDepth > depth || opaqueVisibility < ABSORPTION_CUTOFF)
+                break;
+
+            vec3 position = res.ray_origin + volumeDepth * res.ray_direction;
+
+            signedDistance = is0_main_sdf(position);
+            if (signedDistance < 0.0f) {
+                distanceInVolume += marchSize;
+                float previousopaqueVisibility = opaqueVisibility;
+                opaqueVisibility *= BeerLambert(Absorption_Coefficient * GetFogDensity(position, signedDistance), marchSize);
+                float absorptionFromMarch = previousopaqueVisibility - opaqueVisibility;
+
+
+    /// LIGHT PART (WIP)
+
+                for (int lightIndex = 0; lightIndex < NUM_LIGHTS; lightIndex++) {
+                    float lightVolumeDepth = 0.0f;
+                    vec3  lightDirection   = (GetLight(lightIndex).Position - position);
+                    float lightDistance    = length(lightDirection);
+                    lightDirection /= lightDistance;
+
+                    vec3 lightColor = GetLight(lightIndex).LightColor * GetLightAttenuation(lightDistance);
+                    if (IsColorInsignificant(lightColor))
+                        continue;
+
+                    const float lightMarchSize = 0.65f;
+                    float       lightVisiblity = GetLightVisiblity(position, lightDirection, lightDistance, MAX_VOLUME_LIGHT_MARCH_STEPS, lightMarchSize, Absorption_Coefficient);
+                    volumetricColor += absorptionFromMarch * lightVisiblity * volumeAlbedo * lightColor;
+                }
+
+    /// END LIGHT PART
+
+                volumetricColor += absorptionFromMarch * volumeAlbedo * GetAmbientLight();
+            }
+        }
+    }
+    material_color += min(volumetricColor, 1.0f) + opaqueVisibility * opaqueColor;
+}
+
+float {
+    "Name": "Absorption Coefficient",
+    "Default": 2.5,
+    "Min": 0.0,
+    "Max": 5.0
+}
+
+float {
+    "Name": "March Multiplier",
+    "Default": 0.18,
+    "Min": 0.0,
+    "Max": 0.5
+}
+
+float {
+    "Name": "Max Volume March Steps",
+    "Default": 50.0,
+    "Min": 10.0,
+    "Max": 75.0
+}

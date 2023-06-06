@@ -2,19 +2,18 @@
 
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
-#include "CommandCore/LAB_REGISTER_COMMAND.h"
 
 namespace Lab {
 
 template<typename T>
 struct Command_SetVariableMetadata {
-    VariableId<T>             id{};
+    Cool::VariableId<T>       id{};
     Cool::VariableMetadata<T> metadata{};
 
     void execute(CommandExecutionContext_Ref& ctx) const
     {
         ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
-            variable.metadata = metadata;
+            variable.metadata() = metadata;
         });
     }
 
@@ -38,5 +37,3 @@ void serialize(Archive& archive, Lab::Command_SetVariableMetadata<T>& command)
 }
 
 } // namespace cereal
-
-#include "generated_variables/register_set_variable_metadata_commands.inl"

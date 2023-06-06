@@ -1,0 +1,29 @@
+INPUT float->float `Function`;
+INPUT float `Thickness`;
+
+// https://iquilezles.org/articles/distfunctions2d/
+float sdSegment(vec2 p, vec2 a, vec2 b)
+{
+    vec2  pa = p - a, ba = b - a;
+    float h = saturate(dot(pa, ba) / dot(ba, ba));
+    return length(pa - ba * h) - `Thickness`;
+}
+
+SignedDistance main(UV uv)
+{
+    float distance       = FLT_MAX;
+    int   vicinity       = 1;
+    vec2  previous_point = vec2(uv.x - vicinity, `Function`(-vicinity));
+
+    for (float i = -vicinity; i < vicinity; i += 0.1)
+    {
+        float current_iteration = uv.x + i;
+        vec2  current_point     = vec2(current_iteration, `Function`(current_iteration));
+        float segment           = sdSegment(uv, previous_point, current_point);
+
+        distance       = min(distance, segment);
+        previous_point = current_point;
+    }
+
+    return distance;
+}

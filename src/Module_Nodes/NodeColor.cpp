@@ -1,0 +1,63 @@
+#include "NodeColor.h"
+#include <Module_Nodes/PrimitiveType.h>
+#include <variant>
+#include "Cool/StrongTypes/Angle.h"
+#include "Cool/StrongTypes/ColorAndAlpha.h"
+#include "Cool/StrongTypes/Direction2D.h"
+
+namespace Lab {
+
+namespace NodeColor {
+#include "generated_node_kind/node_colors_definition.inl"
+} // namespace NodeColor
+
+auto compute_function_color(FunctionSignature signature) -> Cool::Color
+{
+    {
+#include "generated_node_kind/compute_function_color.inl"
+    }
+    // Default color if everything else failed:
+    return NodeColor::miscellaneous();
+}
+
+auto compute_value_input_color(Cool::AnyInputDefinition const& input_def) -> Cool::Color
+{
+    if (std::holds_alternative<Cool::InputDefinition<Cool::Color>>(input_def)
+        || std::holds_alternative<Cool::InputDefinition<Cool::ColorAndAlpha>>(input_def))
+        return NodeColor::image();
+
+    if (std::holds_alternative<Cool::InputDefinition<float>>(input_def)
+        || std::holds_alternative<Cool::InputDefinition<int>>(input_def)
+        || std::holds_alternative<Cool::InputDefinition<bool>>(input_def)
+        || std::holds_alternative<Cool::InputDefinition<Cool::Hue>>(input_def)
+        || std::holds_alternative<Cool::InputDefinition<Cool::Angle>>(input_def)
+        || std::holds_alternative<Cool::InputDefinition<Cool::Direction2D>>(input_def))
+        return NodeColor::greyscale();
+
+    return NodeColor::miscellaneous();
+}
+
+auto compute_primitive_type_color(PrimitiveType type) -> Cool::Color
+{
+    if (is_color_type(type))
+        return NodeColor::image();
+
+    switch (type)
+    {
+    case PrimitiveType::SignedDistance:
+        return NodeColor::shape_2D();
+    case PrimitiveType::Float:
+    case PrimitiveType::Int:
+    case PrimitiveType::Bool:
+    case PrimitiveType::Hue:
+    case PrimitiveType::Angle:
+    case PrimitiveType::Direction2D:
+        return NodeColor::greyscale();
+    case PrimitiveType::UV:
+        return NodeColor::space_transformation();
+    default:
+        return NodeColor::miscellaneous();
+    }
+}
+
+} // namespace Lab

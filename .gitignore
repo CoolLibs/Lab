@@ -11,7 +11,6 @@ exports/
 
 myShaders/
 
-last-session-cache.json
 NodeEditor.json
 
 is0_node_editor.ini
@@ -20,7 +19,15 @@ vs
 
 videos
 
-cache--last-session.json
-cache--debug-options.json
-
 .DS_Store
+
+test-presets-manager.json
+
+cache
+.cache
+src/Module_Nodes/__pycache__
+website/.docusaurus
+website/node_modules
+info_dump.txt
+buildvs
+current_color_theme.json

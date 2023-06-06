@@ -1,0 +1,180 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "323158e9-ea37-4ca1-83aa-42bc436d7d03",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Shadows",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.008998211473226548,
+                                            "z": 0.3425726890563965
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 1.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Midtones",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.3105452060699463,
+                                            "y": 0.12896095216274262,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.004000000189989805,
+                                            "y": 1.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Highlights",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.35891515016555788,
+                                            "y": 0.3588920831680298,
+                                            "z": 0.3588792383670807
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 1.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "first": "304280c1-f972-4f42-be34-02d6e2e2efc8",
+                    "second": {
+                        "Name": "Teal and Orange",
+                        "Values": [
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Shadows",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.005553983151912689,
+                                            "z": 0.23489588499069215
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.005553983151912689,
+                                            "z": 0.23489588499069215
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Midtones",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.7420876622200012,
+                                            "y": 0.655882716178894,
+                                            "z": 0.597000002861023
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.7420876622200012,
+                                            "y": 0.655882716178894,
+                                            "z": 0.597000002861023
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Highlights",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.00009999999747378752,
+                                            "y": 0.0000999905532808043,
+                                            "z": 0.00009998999303206801
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.00009999999747378752,
+                                            "y": 0.0000999905532808043,
+                                            "z": 0.00009998999303206801
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

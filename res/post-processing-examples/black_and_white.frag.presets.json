@@ -1,0 +1,74 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "b5ecea19-5ff2-4341-b736-f18b80105448"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 5,
+                                    "data": {
+                                        "Name": "Channels_contribution",
+                                        "Value": {
+                                            "x": 0.2125999927520752,
+                                            "y": 0.7152000069618225,
+                                            "z": 0.0722000002861023
+                                        },
+                                        "Metadata": {
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": {
+                                            "x": 0.2125999927520752,
+                                            "y": 0.7152000069618225,
+                                            "z": 0.0722000002861023
+                                        },
+                                        "Default Metadata": {
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 0,
+                                    "data": {
+                                        "Name": "Normalize",
+                                        "Value": false,
+                                        "Metadata": {},
+                                        "Default Value": false,
+                                        "Default Metadata": {}
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Mask",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+INPUT float `Levels`;
+INPUT UV->sRGB `Image`;
+
+sRGB main(UV uv)
+{
+    if (`Levels` == 1.f)
+        return vec3(0.f);
+
+    return vec3(floor(`Image`(uv) * `Levels`) / (`Levels` - 1.));
+}

@@ -1,0 +1,96 @@
+name: Create release executables
+
+on: workflow_dispatch
+
+env:
+  TARGET: Coollab
+
+
+jobs:
+#-----------------------------------------------------------------------------------------------
+  Windows_Clang_Release:
+    name: Windows Clang Release
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v3
+      with:
+          submodules: recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}\build -T ClangCL -D COOLLAB_REQUIRE_ALL_FEATURES=ON
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TARGET}}
+
+    - name: Zip files
+      uses: vimtor/action-zip@v1
+      with:
+        files: bin\Release\
+        dest: Coollab-Windows.zip
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: Coollab-Windows.zip
+        
+#-----------------------------------------------------------------------------------------------
+  Linux_Clang_Release:
+    name: Linux Clang Release
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Update apt-get
+      run: sudo apt-get update -y
+
+    - name: Install glfw dependencies
+      run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev    
+   
+    - name: Install OpenSSL
+      run: sudo apt-get install libssl-dev    
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+
+    - name: Zip files
+      run: |
+            cd ${{github.workspace}}/bin
+            mv Release Coollab-Linux
+            tar -cvzf Coollab-Linux.tar.gz ./Coollab-Linux
+            
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{github.workspace}}/bin/Coollab-Linux.tar.gz
+
+#-----------------------------------------------------------------------------------------------
+  MacOS_Clang_Release:
+    name: MacOS Clang Release
+    runs-on: macos-11
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
+      
+    - name: Zip files
+      run: |
+            cd ${{github.workspace}}/bin
+            mv Release Coollab-MacOS
+            zip -r Coollab-MacOS.zip ./Coollab-MacOS
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{github.workspace}}/bin/Coollab-MacOS.zip
+

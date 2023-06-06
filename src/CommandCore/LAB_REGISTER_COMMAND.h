@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cereal/archives/json.hpp>
+#include <cereal/types/polymorphic.hpp>
 #include "CommandCore/PolymorphicCommand.h"
 
 #define LAB_REGISTER_COMMAND(CommandType)                      \

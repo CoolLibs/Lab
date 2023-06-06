@@ -1,5 +1,5 @@
-#pragma once
+// #pragma once
 
-#include "NodeTemplate.h"
+// #include "NodeTemplate.h"
 
-void parse_node_template(NodeTemplate& node_template, std::string_view source);
+// void parse_node_template(NodeTemplate& node_template, std::string_view source);

@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float `Min value`;
+INPUT float `Max value`;
+INPUT float `Frequency`; // Number of cycles per second
+
+float main(float x)
+{
+    return (sin(x * `Frequency` * TAU) * 0.5 + 0.5) * (`Max value` - `Min value`) + `Min value`;
+}

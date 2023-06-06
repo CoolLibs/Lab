@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->UV `Distortion Map`;
+INPUT float `Strength`;
+
+UV main(UV uv)
+{
+    return uv + `Distortion Map`(uv) *`Strength`;
+}

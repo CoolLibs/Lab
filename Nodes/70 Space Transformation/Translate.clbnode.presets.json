@@ -1,0 +1,50 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "ae0971bd-d562-4a3c-9050-2aaa25c9e664",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 4,
+                                "data": {
+                                    "Name": "Translation",
+                                    "Value": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    },
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": {
+                                        "x": 0.5,
+                                        "y": 0.0
+                                    },
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

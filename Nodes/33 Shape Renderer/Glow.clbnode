@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Inspired by https://inspirnathan.com/posts/65-glow-shader-in-shadertoy/
+
+INPUT float `Strength`;
+
+float main(SignedDistance Shape)
+{
+    return antialised_step(Shape)               // White if in the shape, else black
+           + `Strength` / max(Shape, 0.000001); // Add glow in the black part
+}

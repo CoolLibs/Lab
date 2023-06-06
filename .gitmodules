@@ -1,9 +1,6 @@
 [submodule "Cool"]
 	path = Cool
 	url = https://github.com/CoolLibs/Cool
-[submodule "lib/imnodes"]
-	path = lib/imnodes
-	url = https://github.com/CoolLibs/imnodes
 [submodule "lib/cmd"]
 	path = lib/cmd
 	url = https://github.com/CoolLibs/cmd
@@ -13,3 +10,6 @@
 [submodule "tooling"]
 	path = tooling
 	url = https://github.com/CoolLibs/tooling/
+[submodule "lib/cpp-httplib"]
+	path = lib/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib

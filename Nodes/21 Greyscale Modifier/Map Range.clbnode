@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float `Min`;
+INPUT float `Max`;
+
+float main(float x)
+{
+    return x * (`Max` - `Min`) + `Min`; 
+}

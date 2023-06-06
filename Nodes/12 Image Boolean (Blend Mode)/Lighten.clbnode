@@ -1,0 +1,6 @@
+
+
+sRGB_PremultipliedA main(sRGB_PremultipliedA Over, sRGB_PremultipliedA Under)
+{
+    return max(Over, Under);
+}

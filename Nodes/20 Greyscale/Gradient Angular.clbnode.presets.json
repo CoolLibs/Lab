@@ -1,0 +1,52 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "7ff0a909-11cb-494c-9e9c-a062064ed982",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 11,
+                                "data": {
+                                    "Name": "Orientation",
+                                    "Value": {
+                                        "Radians": {
+                                            "Radians": 1.5707963705062867
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Number of snaps": 24,
+                                        "Snaps offset (in radians)": 0.0,
+                                        "Always snap": false
+                                    },
+                                    "Default Value": {
+                                        "Radians": {
+                                            "Radians": 1.5707963705062867
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Number of snaps": 24,
+                                        "Snaps offset (in radians)": 0.0,
+                                        "Always snap": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Flip direction",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

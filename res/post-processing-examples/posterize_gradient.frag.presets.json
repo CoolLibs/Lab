@@ -1,0 +1,150 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "value0": {
+                "value0": [
+                    {
+                        "first": {
+                            "value0": {
+                                "value0": "7ec66eeb-62ac-4f88-8dd9-0dce890b3b8c"
+                            }
+                        },
+                        "second": {
+                            "Name": "Default",
+                            "Values": [
+                                {
+                                    "index": 1,
+                                    "data": {
+                                        "Name": "Number_of_colors",
+                                        "Value": 10,
+                                        "Metadata": {
+                                            "Min Value": 2,
+                                            "Max Value": 25
+                                        },
+                                        "Default Value": 10,
+                                        "Default Metadata": {
+                                            "Min Value": 0,
+                                            "Max Value": 10
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 13,
+                                    "data": {
+                                        "Name": "gradient",
+                                        "Value": {
+                                            "Gradient": [
+                                                {
+                                                    "Mark position": {
+                                                        "Relative position": 0.0
+                                                    },
+                                                    "Mark color": {
+                                                        "x": 0.18612736463546754,
+                                                        "y": 0.17377930879592896,
+                                                        "z": 0.31372547149658205,
+                                                        "w": 1.0
+                                                    }
+                                                },
+                                                {
+                                                    "Mark position": {
+                                                        "Relative position": 0.4480000138282776
+                                                    },
+                                                    "Mark color": {
+                                                        "x": 0.8725489974021912,
+                                                        "y": 0.6166717410087586,
+                                                        "z": 0.3892252743244171,
+                                                        "w": 1.0
+                                                    }
+                                                },
+                                                {
+                                                    "Mark position": {
+                                                        "Relative position": 1.0
+                                                    },
+                                                    "Mark color": {
+                                                        "x": 0.6421568393707275,
+                                                        "y": 0.04721742123365402,
+                                                        "z": 0.04721742123365402,
+                                                        "w": 1.0
+                                                    }
+                                                }
+                                            ],
+                                            "Wrap Mode": 2,
+                                            "Interpolation Mode": 0
+                                        },
+                                        "Metadata": {
+                                            "Is HDR": true,
+                                            "Randomize new marks' colors": true
+                                        },
+                                        "Default Value": {
+                                            "Gradient": [
+                                                {
+                                                    "Mark position": {
+                                                        "Relative position": 0.0
+                                                    },
+                                                    "Mark color": {
+                                                        "x": 0.18612736463546754,
+                                                        "y": 0.17377930879592896,
+                                                        "z": 0.31372547149658205,
+                                                        "w": 1.0
+                                                    }
+                                                },
+                                                {
+                                                    "Mark position": {
+                                                        "Relative position": 0.4480000138282776
+                                                    },
+                                                    "Mark color": {
+                                                        "x": 0.8725489974021912,
+                                                        "y": 0.6166717410087586,
+                                                        "z": 0.3892252743244171,
+                                                        "w": 1.0
+                                                    }
+                                                },
+                                                {
+                                                    "Mark position": {
+                                                        "Relative position": 1.0
+                                                    },
+                                                    "Mark color": {
+                                                        "x": 0.6421568393707275,
+                                                        "y": 0.04721742123365402,
+                                                        "z": 0.04721742123365402,
+                                                        "w": 1.0
+                                                    }
+                                                }
+                                            ],
+                                            "Wrap Mode": 2,
+                                            "Interpolation Mode": 0
+                                        },
+                                        "Default Metadata": {
+                                            "Is HDR": true,
+                                            "Randomize new marks' colors": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "index": 2,
+                                    "data": {
+                                        "Name": "Mask",
+                                        "Value": 1.0,
+                                        "Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        },
+                                        "Default Value": 1.0,
+                                        "Default Metadata": {
+                                            "Min Value": 0.0,
+                                            "Max Value": 1.0,
+                                            "Bounded": true,
+                                            "Drag speed": 0.009999999776482582
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,94 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "334c1006-0d00-4b7b-b92b-8e5915fc4d97",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Shape Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.6499999761581421,
+                                            "y": 0.8500000238418579,
+                                            "z": 1.0
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.6499999761581421,
+                                            "y": 0.8500000238418579,
+                                            "z": 1.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Background Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.8999999761581421,
+                                            "y": 0.6000000238418579,
+                                            "z": 0.30000001192092898
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.8999999761581421,
+                                            "y": 0.6000000238418579,
+                                            "z": 0.30000001192092898
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Border Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 1.0,
+                                            "y": 1.0,
+                                            "z": 1.0
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

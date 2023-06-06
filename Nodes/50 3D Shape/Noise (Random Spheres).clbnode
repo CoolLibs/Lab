@@ -1,0 +1,35 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+float sphere_sdf(vec3 i, vec3 f, vec3 c)
+{
+    float rad = 0.5 * hash_0_to_1_3D_to_1D(i + c);
+    return length(f - vec3(c)) - rad;
+}
+
+SignedDistance main(vec3 pos)
+{
+    vec3 i = floor(pos);
+    vec3 f = fract(pos);
+    return min(
+        min(
+            min(
+                sphere_sdf(i, f, vec3(0, 0, 0)),
+                sphere_sdf(i, f, vec3(0, 0, 1))
+            ),
+            min(
+                sphere_sdf(i, f, vec3(0, 1, 0)),
+                sphere_sdf(i, f, vec3(0, 1, 1))
+            )
+        ),
+        min(
+            min(
+                sphere_sdf(i, f, vec3(1, 0, 0)),
+                sphere_sdf(i, f, vec3(1, 0, 1))
+            ),
+            min(
+                sphere_sdf(i, f, vec3(1, 1, 0)),
+                sphere_sdf(i, f, vec3(1, 1, 1))
+            )
+        )
+    );
+}
