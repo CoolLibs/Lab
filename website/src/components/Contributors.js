@@ -108,6 +108,12 @@ export default ({}) => {
           link="https://github.com/Just-Kiel"
           roles={["Programmer"]}
         />,
+        <Contributor
+          name="Théo Couard"
+          github_name="TheoCrd"
+          link="https://frankoo.artstation.com/"
+          roles={["Video tutorials maker"]}
+        />,
       ]}
     />
   )
