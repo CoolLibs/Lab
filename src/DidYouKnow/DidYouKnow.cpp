@@ -3,6 +3,7 @@
 auto all_tips_lab() -> std::span<const char* const>
 {
     static constexpr auto tips = std::array{
+        "In the Nodes window, right-click or press A to create your first node!",
         "You can change the color theme in the Settings, or make it match your OS's color theme.",
         "Right-click on a node to replace it with a new node of the same category.",
         "Use F to focus on the nodes",
@@ -20,6 +21,7 @@ auto all_tips_lab() -> std::span<const char* const>
         "CTRL+Tab to select a window. ImGui::BulletText('While inputing text:\n'); ImGui::Indent(); ImGui::BulletText('CTRL+Left/Right to word jump.'); ImGui::BulletText('CTRL+A or double-click to select all.'); ImGui::BulletText('CTRL+X/C/V to use clipboard cut/copy/paste.'); ImGui::BulletText('CTRL+Z,CTRL+Y to undo/redo.'); ImGui::BulletText('ESCAPE to revert.'); ImGui::Unindent(); ImGui::BulletText('With keyboard navigation enabled:'); ImGui::Indent(); ImGui::BulletText('Arrow keys to navigate.'); ImGui::BulletText('Space or enter to activate a widget.'); ImGui::BulletText('Return to input text into a widget.'); ImGui::BulletText('Escape to deactivate a widget, close popup, exit child window.'); ImGui::BulletText('Alt to jump to the menu layer of a window.');",
         "In an angle or direction widget, hold SHIFT to snap to precise angles.",
         "You can rotate the 2D camera by holding SHIFT and scrolling the mouse wheel over the View.",
+        "Use ALT to zoom relative to the center of the view instead of relative to the position of the mouse.",
         "Right-click on a widget to edit its metadata (range of a slider, etc.)",
         "You can save your own presets on each nodes if you like the parameters you found.",
     };
