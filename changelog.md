@@ -9,6 +9,8 @@
 
 ## 🐣beta-5 WIP
 
+- ✨ Main input pins now have a different icon to distinguish them from the other pins.
+
 ## 🐣beta-4
 
 - ✨ Improved quite a few existing nodes.
