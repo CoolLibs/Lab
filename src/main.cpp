@@ -10,7 +10,7 @@ auto main() -> int
             .maximize_on_startup_if = true,
         }},
         Cool::InitConfig{
-            .default_texture_path = Cool::compute_root_path() / "res/images/logo mask.png",
+            .default_texture_path = Cool::compute_root_path() / "res/images/logo.png",
         }
     );
 }

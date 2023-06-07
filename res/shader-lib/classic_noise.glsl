@@ -173,17 +173,13 @@ float classic_noise(
 }
 
 vec2 classic_noise_uv(
-    vec2 uv, float mask,
-    float frequency, float fractalness, float scale
+    float Effect_intensity, vec2 uv,
+    float frequency, float a, float scale
 )
 {
-    return mix(uv, vec2(classic_noise(uv, frequency, fractalness, scale)), mask);
-}
-
-vec3 classic_noise_color(
-    vec2  uv,
-    float frequency, float fractalness, float scale
-)
-{
-    return vec3(classic_noise(uv, frequency, fractalness, scale));
+    vec2 uv_noise = vec2(classic_noise(
+        uv,
+        frequency, a, scale
+    ));
+    return mix(uv, uv_noise, Effect_intensity);
 }

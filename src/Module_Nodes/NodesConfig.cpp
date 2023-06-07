@@ -6,6 +6,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
+#include "Cool/Nodes/utilities/drawing.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/Color.h"
 #include "Module_Nodes/FunctionSignature.h"
@@ -290,6 +291,13 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
         || is_shape_3D(signature);
 }
 
+static void add_input_pin(Node& node, std::optional<Cool::NodesCategoryConfig> category_config, Cool::InputPin pin)
+{
+    if (category_config && node.input_pins().size() < category_config->number_of_main_input_pins())
+        pin.set_icon(ax::Drawing::IconType::Flow);
+    node.input_pins().push_back(pin);
+}
+
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
@@ -302,6 +310,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
         def.function_inputs().size(),
         def.signature().is_template(),
     };
+    auto const node_category_config = _get_node_category_config(cat_id.category_name);
 
     if (needs_main_pin)
     {
@@ -309,13 +318,13 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
         {
             std::string pin_name = def.main_parameter_names()[i];
             Cool::String::replace_all(pin_name, "_", " ");
-            node.input_pins().emplace_back(pin_name);
+            add_input_pin(node, node_category_config, Cool::InputPin{pin_name});
         }
     }
-    node.output_pins().emplace_back("OUT");
+    node.output_pins().emplace_back("OUT", ax::Drawing::IconType::Flow);
 
     for (auto const& function_input : def.function_inputs())
-        node.input_pins().push_back(Cool::InputPin{function_input.name()});
+        add_input_pin(node, node_category_config, Cool::InputPin{function_input.name()});
 
     for (auto const& value_input_def : def.value_inputs())
     {
@@ -323,7 +332,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
             value_input_def,
             Cool::requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag
         ));
-        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
+        add_input_pin(node, node_category_config, Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
     }
 
     // Get the variables from the inputs
@@ -334,7 +343,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
 
     for (auto const& output_index_name : def.output_indices())
-        node.output_pins().push_back(Cool::OutputPin{output_index_name});
+        node.output_pins().push_back(Cool::OutputPin{output_index_name, ax::Drawing::IconType::Circle});
 
     return node;
 }

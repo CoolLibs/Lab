@@ -1,14 +1,20 @@
 # Changelog
 
-- [🐣beta-4 WIP](#beta-4-wip)
+- [🐣beta-5 WIP](#beta-5-wip)
+- [🐣beta-4](#beta-4)
 - [🐣beta-3](#beta-3)
 - [🐣beta-2](#beta-2)
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-4 WIP
+## 🐣beta-5 WIP
+
+- ✨ Main input pins now have a different icon to distinguish them from the other pins.
+
+## 🐣beta-4
 
 - ✨ Improved quite a few existing nodes.
+- ✨ Added new nodes. Check out our "Cloud" renderer for 3D Shapes!
 - ✨ Node pins now have a color that reflects the kind of node that you can plug into them. (e.g. a pin that wants a Shape 3D will be yellow, just like the Shape 3D nodes.)
 - ✨ Smarter automatic main node selection.
 - ✨ All nodes can now be viewed by themselves, without requiring a "renderer" node (which used to be the case for Curves and 3D Shapes).

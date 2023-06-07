@@ -82,6 +82,40 @@ def compute_function_color():
     return "\n".join(map(code, all_node_kinds()))
 
 
+def snake_to_pascal(snake_case: str):
+    words = snake_case.split("_")
+    return "".join(f"{word[0].capitalize()}{word[1:]}" for word in words)
+
+
+def node_kind_enum():
+    def code(kind: NodeKind):
+        return f"{snake_to_pascal(kind.name_in_code)},"
+
+    return "\n".join(map(code, all_node_kinds()))
+
+
+def imgui_node_kind_dropdown():
+    def code(kind: NodeKind):
+        return f"{kind.user_facing_name}"
+
+    string = "\\0".join(map(code, all_node_kinds())) + "\\0\\0"
+
+    return f"""
+    int tmp = static_cast<int>(*node_kind);
+    bool b = ImGui::Combo(label, &tmp, "{string}");
+    if (b)
+        *node_kind = static_cast<NodeKind>(tmp);
+    return b;
+    """
+
+
+def node_kind_color():
+    def code(kind: NodeKind):
+        return f"case NodeKind::{snake_to_pascal(kind.name_in_code)}: return NodeColor::{kind.name_in_code}();"
+
+    return "\n".join(map(code, all_node_kinds()))
+
+
 if __name__ == "__main__":
     # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
     # So we need to add the path manually to sys.path
@@ -101,5 +135,8 @@ if __name__ == "__main__":
             node_colors_declaration,
             node_colors_definition,
             compute_function_color,
+            node_kind_enum,
+            imgui_node_kind_dropdown,
+            node_kind_color,
         ],
     )

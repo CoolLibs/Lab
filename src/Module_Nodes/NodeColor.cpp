@@ -60,4 +60,18 @@ auto compute_primitive_type_color(PrimitiveType type) -> Cool::Color
     }
 }
 
+auto node_kind_color(NodeKind kind) -> Cool::Color
+{
+    switch (kind)
+    {
+#include "generated_node_kind/node_kind_color.inl"
+    }
+    return NodeColor::miscellaneous();
+}
+
+auto imgui_node_kind_dropdown(const char* label, NodeKind* node_kind) -> bool
+{
+#include "generated_node_kind/imgui_node_kind_dropdown.inl"
+}
+
 } // namespace Lab
