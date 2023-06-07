@@ -10,6 +10,7 @@
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
@@ -93,7 +94,16 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
 
 auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
 {
-    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _node_we_might_want_to_restore_as_main_node_id, _shader.dirty_flag(), _regenerate_code_flag, _nodes_editor.graph()};
+    return {
+        ui.input_factory(),
+        _nodes_library,
+        Cool::GetNodeCategoryConfig_Ref{_nodes_library},
+        ui,
+        _main_node_id,
+        _node_we_might_want_to_restore_as_main_node_id,
+        _shader.dirty_flag(),
+        _regenerate_code_flag,
+        _nodes_editor.graph()};
 }
 
 void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const

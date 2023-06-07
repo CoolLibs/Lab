@@ -4,6 +4,7 @@
 #include <Cool/Nodes/Graph.h>
 #include <Cool/Nodes/NodeId.h>
 #include "Cool/Dependencies/Input.h"
+#include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Color.h"
@@ -19,6 +20,7 @@ public:
     NodesConfig(
         Cool::InputFactory_Ref                      input_factory,
         Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+        Cool::GetNodeCategoryConfig_Ref             get_node_category_config,
         Ui_Ref                                      ui,
         Cool::NodeId&                               main_node_id,
         Cool::NodeId&                               node_we_might_want_to_restore_as_main_node_id,
@@ -28,6 +30,7 @@ public:
     )
         : _input_factory{input_factory}
         , _get_node_definition{get_node_definition}
+        , _get_node_category_config{get_node_category_config}
         , _ui{ui}
         , _main_node_id{main_node_id}
         , _node_we_might_want_to_restore_as_main_node_id{node_we_might_want_to_restore_as_main_node_id}
@@ -57,6 +60,7 @@ private:
 private:
     Cool::InputFactory_Ref                      _input_factory;
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
+    Cool::GetNodeCategoryConfig_Ref             _get_node_category_config;
     Ui_Ref                                      _ui;
     Cool::NodeId&                               _main_node_id;
     Cool::NodeId&                               _node_we_might_want_to_restore_as_main_node_id;
