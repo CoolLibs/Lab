@@ -6,7 +6,6 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
-#include "Cool/Nodes/utilities/drawing.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/Color.h"
 #include "Module_Nodes/FunctionSignature.h"
@@ -213,7 +212,7 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
     // For value inputs, use the color corresponding to the Input type.
     if (node.value_input_pin_idx_begin() <= pin_index && pin_index < node.value_input_pin_idx_end())
     {
-        return compute_value_input_color(def->value_inputs()[pin_index - node.value_input_pin_idx_begin()].input_def());
+        return compute_value_input_color(def->value_inputs()[pin_index - node.value_input_pin_idx_begin()]);
     }
     // For main input pins, use the color corresponding to the `from` Primitive type.
     if (node.main_input_pin_idx_begin() <= pin_index && pin_index < node.main_input_pin_idx_end())
@@ -291,13 +290,6 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
         || is_shape_3D(signature);
 }
 
-static auto pin_icon(bool is_main_input) -> ax::Drawing::IconType
-{
-    return is_main_input
-               ? ax::Drawing::IconType::Flow
-               : ax::Drawing::IconType::Circle;
-}
-
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
@@ -317,23 +309,21 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
         {
             std::string pin_name = def.main_parameter_names()[i];
             Cool::String::replace_all(pin_name, "_", " ");
-            node.input_pins().emplace_back(pin_name, ax::Drawing::IconType::Flow);
+            node.input_pins().emplace_back(pin_name);
         }
     }
-    node.output_pins().emplace_back("OUT", ax::Drawing::IconType::Flow);
+    node.output_pins().emplace_back("OUT");
 
     for (auto const& function_input : def.function_inputs())
-        node.input_pins().push_back(Cool::InputPin{function_input.name(), pin_icon(function_input.is_main_input())});
+        node.input_pins().push_back(Cool::InputPin{function_input.name()});
 
     for (auto const& value_input_def : def.value_inputs())
     {
         node.value_inputs().push_back(_input_factory.make(
-            value_input_def.input_def(),
-            Cool::requires_shader_code_generation(value_input_def.input_def()) ? _regenerate_code_flag : _rerender_flag
+            value_input_def,
+            Cool::requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag
         ));
-        node.input_pins().push_back(Cool::InputPin{
-            std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def.input_def()),
-            pin_icon(value_input_def.is_main_input())});
+        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
     }
 
     // Get the variables from the inputs
@@ -344,7 +334,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
 
     for (auto const& output_index_name : def.output_indices())
-        node.output_pins().push_back(Cool::OutputPin{output_index_name, ax::Drawing::IconType::Circle});
+        node.output_pins().push_back(Cool::OutputPin{output_index_name});
 
     return node;
 }

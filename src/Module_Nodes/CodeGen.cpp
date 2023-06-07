@@ -225,9 +225,9 @@ static auto gen_value_inputs(
 }
 
 static auto list_all_property_and_input_and_output_names(
-    std::vector<Cool::AnyInput> const&           properties,
-    std::vector<FunctionInput_Definition> const& inputs,
-    std::vector<std::string> const&              output_indices_names
+    std::vector<Cool::AnyInput> const&      properties,
+    std::vector<NodeInputDefinition> const& inputs,
+    std::vector<std::string> const&         output_indices_names
 )
     -> std::string
 {

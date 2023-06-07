@@ -2,7 +2,6 @@
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
 #include <Cool/RegExp/RegExp.h>
 #include <Cool/String/String.h>
-#include <Module_Nodes/ValueInput_Definition.h>
 #include <algorithm>
 #include <exception>
 #include <iterator>
@@ -323,20 +322,17 @@ static auto make_input_definition(std::string const& name, std::string const& ty
     return def;
 }
 
-static auto parse_value_input(std::string const& type_as_string, std::string const& name, bool is_main_input, NodeDefinition_Data& res)
+static auto parse_property(std::string const& type_as_string, std::string const& name, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     try
     {
-        res.value_inputs.push_back(ValueInput_DefinitionData{
-            .input_def     = COOL_TFS_EVALUATE_FUNCTION_TEMPLATE( // NOLINT
-                make_input_definition,
-                type_as_string,
-                Cool::AnyInputDefinition,
-                (name, type_as_string)
-            ),
-            .is_main_input = is_main_input,
-        });
+        res.input_values.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
+            make_input_definition,
+            type_as_string,
+            Cool::AnyInputDefinition,
+            (name, type_as_string)
+        ));
     }
     catch (std::exception const& e)
     {
@@ -346,17 +342,16 @@ static auto parse_value_input(std::string const& type_as_string, std::string con
     return std::nullopt;
 }
 
-static auto parse_function_input(std::vector<std::string> const& type_words, std::string const& name, bool is_main_input, NodeDefinition_Data& res)
+static auto parse_input(std::vector<std::string> const& type_words, std::string const& name, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     auto const signature = parse_signature(type_words);
     if (!signature)
         return signature.error();
 
-    res.function_inputs.emplace_back(FunctionInput_DefinitionData{
-        .name          = name,
-        .signature     = *signature,
-        .is_main_input = is_main_input,
+    res.input_function.emplace_back(NodeInputDefinition_Data{
+        .name      = name,
+        .signature = *signature,
     });
 
     return std::nullopt;
@@ -369,45 +364,39 @@ static auto find_declaration(std::string const& text, std::string_view keyword, 
     size_t offset = text.find(keyword);
     while (offset != std::string::npos)
     {
-        bool const is_beginning_of_keyword = offset == 0 || std::isspace(text[offset - 1]); // Make sure we have found the keyword and not just a part of another word (e.g. we will find INPUT in MAIN_INPUT but we want to skip it.)
         offset += keyword.length();
-        if (is_beginning_of_keyword)
+        auto const end_of_line = text.find(';', offset);
+
+        auto const error_message = [&](std::string_view str) {
+            return fmt::format("Invalid {} declaration: {}. While reading:\n{}", keyword, str, Cool::String::substring(text, offset - keyword.length(), end_of_line != std::string::npos ? end_of_line + 1 : text.length()));
+        };
+
+        if (end_of_line == std::string::npos)
+            return error_message("missing semicolon (;)");
+
+        auto const name_pos = Cool::String::find_matching_pair({
+            .text    = text,
+            .offset  = offset,
+            .opening = '`',
+            .closing = '`',
+        });
+        if (!name_pos || name_pos->second > end_of_line)
+            return error_message("missing name. A name must start and end with backticks (`)");
+
+        auto const type_words = Cool::String::all_words(Cool::String::substring(text, offset, name_pos->first));
+
+        if (type_words.empty())
+            return error_message("missing type");
+
         {
-            auto const end_of_line = text.find(';', offset);
+            auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
 
-            auto const error_message = [&](std::string_view str) {
-                return fmt::format("Invalid {} declaration: {}. While reading:\n{}", keyword, str, Cool::String::substring(text, offset - keyword.length(), end_of_line != std::string::npos ? end_of_line + 1 : text.length()));
-            };
-
-            if (end_of_line == std::string::npos)
-                return error_message("missing semicolon (;)");
-
-            auto const name_pos = Cool::String::find_matching_pair({
-                .text    = text,
-                .offset  = offset,
-                .opening = '`',
-                .closing = '`',
-            });
-            if (!name_pos || name_pos->second > end_of_line)
-                return error_message("missing name. A name must start and end with backticks (`)");
-
-            auto const type_words = Cool::String::all_words(Cool::String::substring(text, offset, name_pos->first));
-
-            if (type_words.empty())
-                return error_message("missing type");
-
-            {
-                auto const name = Cool::String::substring(text, name_pos->first, name_pos->second + 1);
-
-                auto const err = handle_type_words(type_words, name);
-                if (err)
-                    return error_message(fmt::format("{}\n", *err));
-            }
-
-            offset = end_of_line + 1;
+            auto const err = handle_type_words(type_words, name);
+            if (err)
+                return error_message(fmt::format("{}\n", *err));
         }
 
-        offset = text.find(keyword, offset);
+        offset = text.find(keyword, end_of_line + 1);
     }
 
     return std::nullopt;
@@ -416,25 +405,13 @@ static auto find_declaration(std::string const& text, std::string_view keyword, 
 static auto find_inputs(std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
-    auto const maybe_err = find_declaration(
-        text,
-        "MAIN_INPUT",
-        [&](std::vector<std::string> const& type_words, std::string const& name) -> std::optional<std::string> {
-            return type_words.size() == 1
-                       ? parse_value_input(type_words[0], name, true /*is_main_input*/, res)
-                       : parse_function_input(type_words, name, true /*is_main_input*/, res);
-        }
-    );
-    if (maybe_err)
-        return maybe_err;
-
     return find_declaration(
         text,
         "INPUT",
         [&](std::vector<std::string> const& type_words, std::string const& name) -> std::optional<std::string> {
             return type_words.size() == 1
-                       ? parse_value_input(type_words[0], name, false /*is_main_input*/, res)
-                       : parse_function_input(type_words, name, false /*is_main_input*/, res);
+                       ? parse_property(type_words[0], name, res)
+                       : parse_input(type_words, name, res);
         }
     );
 }
@@ -465,12 +442,12 @@ static void maybe_set_input_description(std::string const& input_name, Cool::Inp
 
 static void set_input_description(NodeDefinition_Data& res, std::string const& input_name, std::string const& input_description)
 {
-    for (auto& input : res.value_inputs)
+    for (auto& input : res.input_values)
     {
-        std::visit([&](auto&& cool_input) { maybe_set_input_description(input_name, cool_input, input_description); }, input.input_def());
+        std::visit([&](auto&& input) { maybe_set_input_description(input_name, input, input_description); }, input);
     }
 
-    for (auto& input : res.function_inputs)
+    for (auto& input : res.input_function)
     {
         if ("`" + input.name() + "`" == input_name)
             input.set_description(input_description);
@@ -600,23 +577,20 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
             return tl::make_unexpected(*err);
         if (fix_artifacts)
         {
-            res.value_inputs.emplace_back(ValueInput_DefinitionData{
-                .input_def = Cool::InputDefinition<float>{
-                    .name          = "`Fix Artifacts`",
-                    .description   = "Increase the value to fix glitches and holes in the shape. But note that higher values are slower to render.",
-                    .default_value = 0.f,
-                    .metadata      = Cool::VariableMetadata<float>{
-                             .bounds = {
-                                 .min           = 0.f,
-                                 .max           = 0.999f,
-                                 .has_min_bound = true,
-                                 .has_max_bound = true,
-                                 .drag_speed    = 0.01f,
-                                 .use_slider    = true,
-                        },
+            res.input_values.emplace_back(Cool::InputDefinition<float>{
+                .name          = "`Fix Artifacts`",
+                .description   = "Increase the value to fix glitches and holes in the shape. But note that higher values are slower to render.",
+                .default_value = 0.f,
+                .metadata      = Cool::VariableMetadata<float>{
+                         .bounds = {
+                             .min           = 0.f,
+                             .max           = 0.999f,
+                             .has_min_bound = true,
+                             .has_max_bound = true,
+                             .drag_speed    = 0.01f,
+                             .use_slider    = true,
                     },
                 },
-                .is_main_input = false,
             });
         }
     }
