@@ -1,7 +1,7 @@
 #pragma once
+#include <Module_Nodes/NodeColor.h>
 #include <filesystem>
 #include "Cool/StrongTypes/Color.h"
-// #include "Cool/Nodes/
 
 namespace Lab {
 
@@ -13,7 +13,7 @@ public:
         load_from_json();
     }
 
-    [[nodiscard]] auto color() const -> Cool::Color { return _color; }
+    [[nodiscard]] auto color() const -> Cool::Color { return node_kind_color(_nodes_kind); }
     [[nodiscard]] auto number_of_main_input_pins() const -> size_t { return static_cast<size_t>(_number_of_main_input_pins); }
 
     auto imgui_popup() -> bool;
@@ -23,7 +23,7 @@ private:
     void load_from_json();
 
 private:
-    Cool::Color           _color{};
+    NodeKind              _nodes_kind{NodeKind::Miscellaneous};
     int                   _number_of_main_input_pins{};
     std::filesystem::path _path_to_json{};
 
@@ -34,7 +34,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Color", _color),
+            cereal::make_nvp("Color", _nodes_kind),
             cereal::make_nvp("Number of main input pins", _number_of_main_input_pins)
         );
     }
