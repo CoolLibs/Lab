@@ -37,6 +37,7 @@ class App : public Cool::IApp {
 public:
     explicit App(Cool::WindowManager& windows);
     ~App();
+    void on_shutdown() override;
 
     void update() override;
     void trigger_rerender() override;

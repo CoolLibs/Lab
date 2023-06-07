@@ -62,6 +62,11 @@ App::~App()
     // serv::shut_down();
 }
 
+void App::on_shutdown()
+{
+    _tips_manager.on_app_shutdown();
+}
+
 void App::compile_all_is0_nodes()
 {
     // for (const auto& node_template : _nodes_module->nodes_templates())
