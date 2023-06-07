@@ -1,4 +1,8 @@
 #pragma once
+#include "Cool/DidYouKnow/DidYouKnow.h"
 
-#include <span>
-auto all_tips_lab() -> std::span<const char* const>;
+namespace Lab {
+
+auto all_tips() -> Cool::Tips;
+
+}

@@ -1,6 +1,8 @@
 #include "DidYouKnow.hpp"
 
-auto all_tips_lab() -> std::span<const char* const>
+namespace Lab {
+
+auto all_tips() -> Cool::Tips
 {
     static constexpr auto tips = std::array{
         "In the Nodes window, right-click or press A to create your first node!",
@@ -28,3 +30,5 @@ auto all_tips_lab() -> std::span<const char* const>
 
     return tips;
 }
+
+} // namespace Lab

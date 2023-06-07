@@ -16,7 +16,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
-#include "Cool/DidYouKnow/testDidYouKnow.h"
+#include "Cool/DidYouKnow/test_did_you_know.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -354,7 +354,7 @@ void App::imgui_windows()
     imgui_window_view();
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     imgui_window_console();
-    _did_you_know_modal.imgui_windows(all_tips_lab());
+    _did_you_know_modal.imgui_windows(all_tips());
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
@@ -432,7 +432,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     });
 
     Cool::DebugOptions::test_did_you_know([this]() {
-        test_did_you_know(_did_you_know_modal, all_tips_lab());
+        test_did_you_know(_did_you_know_modal);
     });
 
     Cool::DebugOptions::color_themes_advanced_config_window([&]() {

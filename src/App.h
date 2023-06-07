@@ -130,8 +130,7 @@ private:
     bool                           _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
     bool                           _view_was_in_fullscreen_last_frame{false};
     GalleryPoster                  _gallery_poster{};
-
-    Cool::DidYouKnow _did_you_know_modal{};
+    Cool::DidYouKnow               _did_you_know_modal{};
 
 private:
     // Serialization
@@ -151,7 +150,7 @@ private:
             cereal::make_nvp("Nodes Module", _nodes_module),
             cereal::make_nvp("Gallery Poster", _gallery_poster),
             cereal::make_nvp("Time", _clock),
-            cereal::make_nvp("Did you know modal", _did_you_know_modal)
+            cereal::make_nvp("Did you know", _did_you_know_modal)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
