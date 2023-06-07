@@ -503,6 +503,16 @@ void App::settings_menu()
     }
 }
 
+void App::commands_menu()
+{
+    if (ImGui::BeginMenu(Cool::icon_fmt("Commands", ICOMOON_ROCKET, true).c_str()))
+    {
+        if (ImGui::Selectable("Show all the tips"))
+            _tips_manager.open_all_tips_window();
+        ImGui::EndMenu();
+    }
+}
+
 void App::debug_menu()
 {
     static bool was_closed_last_frame{true}; // HACK(JF) I guess a `static` here is okay because no one is gonna want two distinct instances of the same debug menu O:) A better solution would be to make a small Menu class that would remember if it was open last frame or not.
@@ -524,6 +534,7 @@ void App::imgui_menus()
     // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
     settings_menu();
+    commands_menu();
 
     ImGui::SetCursorPosX( // HACK while waiting for ImGui to support right-to-left layout. See issue https://github.com/ocornut/imgui/issues/5875
         ImGui::GetWindowSize().x
