@@ -20,6 +20,7 @@
 #include "Module_Nodes/Module_Nodes.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/NodesConfig.h"
+#include "NodesCategoryConfig.h"
 #include "UI/imgui_show.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
@@ -39,7 +40,7 @@ void Module_Nodes::update(UpdateContext_Ref ctx)
 {
     auto cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
     auto updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
-    if (_nodes_folder_watcher.update(updater))
+    if (_nodes_folder_watcher.update(updater, [](std::filesystem::path const& path) { return NodesCategoryConfig{path}; }))
         ctx.set_dirty(_regenerate_code_flag);
 }
 
