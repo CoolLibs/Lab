@@ -1,5 +1,5 @@
 #pragma once
-#include "Cool/DidYouKnow/DidYouKnow.h"
+#include "Cool/Tips/TipsManager.h"
 
 namespace Lab {
 

@@ -1,4 +1,4 @@
-#include "DidYouKnow.hpp"
+#include "Tips.h"
 
 namespace Lab {
 

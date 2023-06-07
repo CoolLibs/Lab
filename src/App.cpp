@@ -16,17 +16,17 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
-#include "Cool/DidYouKnow/test_did_you_know.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Tips/test_tips.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
-#include "DidYouKnow/DidYouKnow.hpp"
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
+#include "Tips/Tips.h"
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
 #include "imgui.h"
@@ -354,7 +354,7 @@ void App::imgui_windows()
     imgui_window_view();
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     imgui_window_console();
-    _did_you_know_modal.imgui_windows(all_tips());
+    _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
@@ -431,8 +431,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         Cool::test_markdown_formatting();
     });
 
-    Cool::DebugOptions::test_did_you_know([this]() {
-        test_did_you_know(_did_you_know_modal);
+    Cool::DebugOptions::test_tips([this]() {
+        test_tips(_tips_manager);
     });
 
     Cool::DebugOptions::color_themes_advanced_config_window([&]() {
