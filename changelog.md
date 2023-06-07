@@ -9,6 +9,7 @@
 
 ## 🐣beta-5 WIP
 
+- ✨ Added tips that will show up from time to time and teach you about the subtleties and shortcuts of Coollab.
 - ✨ Main input pins now have a different icon to distinguish them from the other pins.
 
 ## 🐣beta-4
