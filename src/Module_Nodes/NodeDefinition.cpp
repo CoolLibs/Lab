@@ -17,21 +17,21 @@ auto NodeDefinition::make(NodeDefinition_Data const& data, std::filesystem::path
     auto def = NodeDefinition{data, presets_file_path};
     // TODO(JF) Refactor that code duplicated with NodeInputDefinition.cpp
     // Check that the property names are valid, and remove the backticks from them.
-    for (auto& prop : def._data.input_values)
+    for (auto& value_input : def._data.value_inputs)
     {
-        auto const err = std::visit([](auto& prop) -> std::optional<std::string> {
-            if (prop.name.size() < 2 /* Make sure indexing at `prop.name.size() - 1` is safe */
-                || prop.name[0] != '`' || prop.name[prop.name.size() - 1] != '`')
+        auto const err = std::visit([](auto& cool_input) -> std::optional<std::string> {
+            if (cool_input.name.size() < 2 /* Make sure indexing at `cool_input.name.size() - 1` is safe */
+                || cool_input.name[0] != '`' || cool_input.name[cool_input.name.size() - 1] != '`')
             {
                 return fmt::format(
-                    "All the PROPERTY names must start and end with backticks (`).\nName \"{}\" is invalid.", prop.name
+                    "All the PROPERTY names must start and end with backticks (`).\nName \"{}\" is invalid.", cool_input.name
                 );
             }
 
-            prop.name = prop.name.substr(1, prop.name.size() - 2);
+            cool_input.name = cool_input.name.substr(1, cool_input.name.size() - 2);
             return std::nullopt;
         },
-                                    prop);
+                                    value_input.input_def());
 
         if (err)
             return tl::make_unexpected(*err);

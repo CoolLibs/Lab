@@ -4,22 +4,24 @@
 
 namespace Lab {
 
-struct NodeInputDefinition_Data {
+struct FunctionInput_DefinitionData {
     std::string       name{};
     FunctionSignature signature{};
     std::string       description{}; // TODO(JF) Display description on the node pin
+    bool              is_main_input{};
 };
 
-class NodeInputDefinition {
+class FunctionInput_Definition {
 public:
-    NodeInputDefinition(NodeInputDefinition_Data const&);
+    FunctionInput_Definition(FunctionInput_DefinitionData const&);
 
     auto name() const -> auto const& { return _data.name; }
     auto signature() const -> auto const& { return _data.signature; }
+    auto is_main_input() const -> bool { return _data.is_main_input; }
     void set_description(std::string const& description) { _data.description = description; }
 
 private:
-    NodeInputDefinition_Data _data;
+    FunctionInput_DefinitionData _data;
 };
 
 } // namespace Lab
