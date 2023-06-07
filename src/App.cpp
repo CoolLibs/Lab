@@ -20,11 +20,13 @@
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Tips/test_tips.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
+#include "Tips/Tips.h"
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
 #include "imgui.h"
@@ -58,6 +60,11 @@ App::App(Cool::WindowManager& windows)
 App::~App()
 {
     // serv::shut_down();
+}
+
+void App::on_shutdown()
+{
+    _tips_manager.on_app_shutdown();
 }
 
 void App::compile_all_is0_nodes()
@@ -352,6 +359,7 @@ void App::imgui_windows()
     imgui_window_view();
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     imgui_window_console();
+    _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
@@ -428,6 +436,10 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         Cool::test_markdown_formatting();
     });
 
+    Cool::DebugOptions::test_tips([this]() {
+        test_tips(_tips_manager);
+    });
+
     Cool::DebugOptions::color_themes_advanced_config_window([&]() {
         Cool::user_settings().color_themes.imgui_advanced_config();
     });
@@ -496,6 +508,16 @@ void App::settings_menu()
     }
 }
 
+void App::commands_menu()
+{
+    if (ImGui::BeginMenu(Cool::icon_fmt("Commands", ICOMOON_ROCKET, true).c_str()))
+    {
+        if (ImGui::Selectable("Show all the tips"))
+            _tips_manager.open_all_tips_window();
+        ImGui::EndMenu();
+    }
+}
+
 void App::debug_menu()
 {
     static bool was_closed_last_frame{true}; // HACK(JF) I guess a `static` here is okay because no one is gonna want two distinct instances of the same debug menu O:) A better solution would be to make a small Menu class that would remember if it was open last frame or not.
@@ -517,6 +539,7 @@ void App::imgui_menus()
     // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
     settings_menu();
+    commands_menu();
 
     ImGui::SetCursorPosX( // HACK while waiting for ImGui to support right-to-left layout. See issue https://github.com/ocornut/imgui/issues/5875
         ImGui::GetWindowSize().x
