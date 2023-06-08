@@ -1,31 +1,48 @@
 #include "Tips.h"
+#include "Cool/ImGui/IcoMoonCodepoints.h"
 
 namespace Lab {
 
 auto all_tips() -> Cool::Tips
 {
-    static constexpr auto tips = std::array{
-        "In the Nodes window, right-click or press A to create your first node!",
-        "You can change the color theme in the Settings, or make it match your OS's color theme.",
-        "Right-click on a node to replace it with a new node of the same category.",
-        "Use F to focus on the nodes",
-        "You can hold SHIFT to disable docking. Useful when you try to move a window around and docking gets in your way.",
-        "The undo-history (CTRL+Z) of your modifications is preserved even when you close and re-open CoolLab! You can control its size in 'Settings > History Size'",
-        "Talk about TDR to avoid crashes (https://www.artstation.com/blogs/sebastianbracht/ovQg/workaround-for-the-windows-tdr-crash-issue-while-using-substance-painter, https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwiV6LmO27_9AhXmcaQEHYw5AdUQFnoECBMQAQ&url=https%3A%2F%2Fsubstance3d.adobe.com%2Fdocumentation%2Fspdoc%2Fgpu-drivers-crash-with-long-computations-tdr-crash-128745489.html&usg=AOvVaw3NUHI7sPGmV__7gxQR4w4U)",
-        "Drag from window menu button (upper-left button) to undock an entire node (all windows).",
-        "Ctrl+click on a slider to input a value manually (and it also allows you to bypass the bounds of the slider !)",
-        "Double-click on title bar to collapse window.",
-        "Double-click on lower right corner to auto fit window to its contents.",
-        "TAB/SHIFT+TAB to cycle through keyboard editable fields.",
-        "Text editor: \n Hold SHIFT or use mouse to select text.\nCTRL+Left/Right to word jump.\nCTRL+Shift+Left/Right to select words.\nCTRL+A or Double-Click to select all.\nCTRL+X,CTRL+C,CTRL+V to use OS clipboard/\nCTRL+Z,CTRL+Y to undo/redo.",
-        "ESCAPE to revert text to its original value.",
-        "Double-click on title bar to collapse window.",
-        "CTRL+Tab to select a window. ImGui::BulletText('While inputing text:\n'); ImGui::Indent(); ImGui::BulletText('CTRL+Left/Right to word jump.'); ImGui::BulletText('CTRL+A or double-click to select all.'); ImGui::BulletText('CTRL+X/C/V to use clipboard cut/copy/paste.'); ImGui::BulletText('CTRL+Z,CTRL+Y to undo/redo.'); ImGui::BulletText('ESCAPE to revert.'); ImGui::Unindent(); ImGui::BulletText('With keyboard navigation enabled:'); ImGui::Indent(); ImGui::BulletText('Arrow keys to navigate.'); ImGui::BulletText('Space or enter to activate a widget.'); ImGui::BulletText('Return to input text into a widget.'); ImGui::BulletText('Escape to deactivate a widget, close popup, exit child window.'); ImGui::BulletText('Alt to jump to the menu layer of a window.');",
-        "In an angle or direction widget, hold SHIFT to snap to precise angles.",
-        "You can rotate the 2D camera by holding SHIFT and scrolling the mouse wheel over the View.",
-        "Use ALT to zoom relative to the center of the view instead of relative to the position of the mouse.",
-        "Right-click on a widget to edit its metadata (range of a slider, etc.)",
-        "You can save your own presets on each nodes if you like the parameters you found.",
+    static constexpr auto tips = std::array
+    {
+        "In the \" " ICOMOON_TREE "Nodes\" window, right-click (or press A) to create your first node!", // NOLINT(bugprone-suspicious-missing-comma)
+#if defined(_WIN32)
+            R"STR(If your image takes more than 2 seconds to render, Windows will automatically kill Coollab because it thinks it has frozen. You can increase this value to something like 60 seconds to make sure Coollab won't crash during an export at a high resolution, or when you artwork starts to become too heavy.
+We **highly recommend** that you do change that, which is as simple as [following the steps in this great article](https://helpx.adobe.com/substance-3d-painter/technical-support/technical-issues/gpu-issues/gpu-drivers-crash-with-long-computations-tdr-crash.html).)STR",
+#endif
+            "You can change the color theme in the \" " ICOMOON_COG "Settings\" menu.",
+            "Right-click on a node to replace it with a new node of the same category.",
+            "Use F in the \" " ICOMOON_TREE "Nodes\" window to focus the view on the nodes.",
+            "CTRL+click on a slider to input a value manually. (It also allows you to bypass the bounds of the slider!).",
+            "In an angle or direction widget, hold SHIFT to snap to precise angles.",
+            "Press ALT while scrolling in the \" " ICOMOON_IMAGE "View\" to zoom relative to the center of the view, instead of relative to the position of the mouse.",
+            "You can rotate the 2D camera by holding SHIFT and scrolling the mouse wheel over the \" " ICOMOON_IMAGE "View\".",
+            "Right-click on a widget to edit its metadata (range of a slider, etc.).",
+            "You can save your own presets for a node if you like the parameters (and metadata) you found. You will find this option at the bottom of the the \" " ICOMOON_EQUALIZER "Inspector\" when a node is selected.",
+            "The undo-history (CTRL+Z / CTRL+Y) is preserved even when you close and re-open Coollab! You can control its size in the \" " ICOMOON_COG "Settings\" menu.",
+            R"(You can create your own color themes by going in the "Debug" menu (on the right of the menu bar) and selecting "Color Themes: Editor".)",
+
+            // Bonus ImGui tips
+            "Drag from the window menu button (the arrow button in the upper-right corner) to move all tabs at once.",
+            "You can hold SHIFT to disable docking. Useful when you try to move a window around and docking gets in your way.",
+            "Double-click on the lower-right corner of a floating window to fit its size to its content.",
+            "Use TAB and SHIFT+TAB to cycle through the keyboard-editable fields of a window.",
+            R"STR(Here are a few useful shortcuts:
+  * While inputting text:
+    * CTRL+Left/Right to word jump.
+    * CTRL+A or double-click to select all. 
+    * CTRL+X/C/V to use clipboard cut/copy/paste. 
+    * CTRL+Z,CTRL+Y to undo/redo. 
+    * ESCAPE to revert.
+  * To navigate with the keyboard:
+    * CTRL+TAB to select a window.
+    * Arrow keys to navigate inside a window.
+    * ENTER to activate a widget.
+    * ESCAPE to deactivate a widget, close popup, exit child window.
+    * ALT to jump to the menu of a window.
+)STR",
     };
 
     return tips;
