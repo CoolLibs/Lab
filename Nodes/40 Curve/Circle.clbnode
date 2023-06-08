@@ -5,5 +5,5 @@ INPUT Point2D `Center`;
 
 UV main(float t)
 {
-    return vec2_from_polar(`Radius`, t * TAU) - `Center`;
+    return vec2_from_polar(`Radius`, t * TAU) + `Center`;
 }
