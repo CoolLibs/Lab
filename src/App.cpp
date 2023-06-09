@@ -447,6 +447,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::DebugOptions::color_themes_editor([&]() {
         Cool::user_settings().color_themes.imgui_basic_theme_editor();
     });
+    DebugOptions::empty_window([] {});
 }
 
 void App::view_menu()
