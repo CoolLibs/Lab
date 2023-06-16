@@ -21,6 +21,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
+#include "Cool/View/GizmoManager.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -312,11 +313,16 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
+    static Cool::GizmoManager gizmos{};
+    gizmos.push(Cool::Gizmo_Point2D{.position = {0.f, 0.f}});
+
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
             if (_exporter.is_exporting())
                 return;
+
+            gizmos.render();
 
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
                                                   || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
@@ -352,6 +358,8 @@ void App::imgui_window_view()
             Cool::ImGuiExtras::tooltip(_camera_manager.is_editable_in_view() ? "3D camera is editable" : "3D camera is frozen");
         },
     });
+
+    gizmos.on_frame_end();
 }
 
 void App::imgui_windows()
