@@ -49,6 +49,12 @@ target_link_libraries(Coollab-Properties INTERFACE cmd::cmd)
 # Include range-v3
 target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
 
+# Include OpenCV
+# include("${CMAKE_SOURCE_DIR}/lib/easy_opencv/target_link_opencv.cmake")
+add_subdirectory(lib/easy_opencv)
+target_link_opencv(Coollab PRIVATE)
+# target_link_libraries(Coollab-Properties INTERFACE easy_opencv::easy_opencv)
+
 set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, like making HTTPS requests to post images to the Coollab gallery. If you don't have the necessary dependencies these features will be disabled. If you want to make sure you have all the features of Coollab enabled, set this option to ON.")
 
 # ----------------
@@ -98,3 +104,4 @@ add_executable(Tests-Coollab tests/tests.cpp ${COOL_LAB_SOURCES})
 target_compile_definitions(Tests-Coollab PRIVATE LAB_ENABLE_TESTS)
 target_link_libraries(Tests-Coollab PRIVATE Coollab-Properties)
 target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
+target_link_opencv(Tests-Coollab PRIVATE)
