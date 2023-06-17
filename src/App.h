@@ -11,7 +11,7 @@
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
-#include <Cool/View/RenderableView.h>
+#include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <reg/cereal.hpp>
@@ -121,7 +121,7 @@ private:
     Cool::Clock_Realtime           _clock;
     Cool::ImageSizeConstraint      _view_constraint;
     Cool::ViewsManager             _views; // Must be before the views because it is used to create them
-    Cool::RenderableView&          _nodes_view;
+    Cool::RenderView&              _nodes_view;
     Cool::Exporter                 _exporter;
     Cool::DirtyRegistry            _dirty_registry; // Before the modules because it is used to create them
     History                        _history{};
