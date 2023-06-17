@@ -8,6 +8,7 @@
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Cool/Gpu/Texture.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
@@ -230,12 +231,15 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     auto const& pipeline = _shader.pipeline();
     auto const& shader   = *pipeline.shader();
 
+    _webcam->attach_to_slot(0);
+
     shader.bind();
     shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
     shader.set_uniform("_camera2D", in.provider(Cool::Input_Camera2D{}));
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+    shader.set_uniform("_webcam", 0);
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {

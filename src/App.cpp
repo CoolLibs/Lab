@@ -28,6 +28,7 @@
 #include "Module_is0/Module_is0.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
+#include "Webcam/get_webcam_texture.h"
 #include "img/img.hpp"
 #include "imgui.h"
 
@@ -93,6 +94,10 @@ void App::update()
         _is_first_frame = false;
         set_everybody_dirty();
     }
+
+    static Cool::Texture webcam;
+    webcam = get_webcam_texture();
+    _nodes_module->set_webcam(webcam);
 
     Cool::user_settings().color_themes.update();
 
