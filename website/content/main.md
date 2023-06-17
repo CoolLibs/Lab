@@ -32,7 +32,7 @@ import SmallImage from "@site/src/components/SmallImage.js"
 
 <LabGallery/>
 
-<YoutubeVideo id="dutYmhGqhxM"/>
+<YoutubeVideo id="jsjkjCQCPno"/>
 
 ## What is _Coollab_?
 
