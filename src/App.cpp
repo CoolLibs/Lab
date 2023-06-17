@@ -37,18 +37,18 @@ namespace Lab {
 App::App(Cool::WindowManager& windows)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
-    , _nodes_view{_views.make_view(Cool::icon_fmt("View", ICOMOON_IMAGE))}
+    , _nodes_view{_views.make_view<Cool::RenderableView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
     // , _custom_shader_view{_views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
-    _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
-        _nodes_view.view.mouse_events(),
+        _nodes_view.mouse_events(),
         _camera2D.value(),
         [this]() { trigger_rerender(); },
-        [this]() { auto const sz =_nodes_view.view.size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
-        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; },
+        [this]() { auto const sz =_nodes_view.window_size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
+        [this]() { auto const sz =_nodes_view.window_size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; },
         [this]() { return !_is_camera_2D_editable_in_view; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
@@ -107,10 +107,7 @@ void App::update()
     if (!_exporter.is_exporting())
     {
         _clock.update();
-        for (auto& view : _views)
-        {
-            view.update_size(_view_constraint);
-        }
+        _nodes_view.update_size(_view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderableView ? But that's maybe too much coupling
         polaroid().render(_clock.time());
     }
     else
@@ -178,7 +175,7 @@ auto App::all_inputs() -> Cool::AllInputRefsToConst
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _nodes_view.render_target,
+        .render_target = _nodes_view.render_target(),
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }};
@@ -242,13 +239,13 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
 // {
-// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target.get().texture_id());
+// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target().get().texture_id());
 // render_one_module(*_custom_shader_module, render_target, time);
 // }
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_nodes(_nodes_view.render_target, time, render_target.desired_size());
+    render_nodes(_nodes_view.render_target(), time, render_target.desired_size());
     // render_custom_shader(render_target, time);
 }
 
@@ -619,26 +616,26 @@ void App::check_inputs__timeline()
 
 void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
 {
-    for (auto& view : _views)
-    {
-        view.view.dispatch_mouse_button_event(view_event(event, view));
-    }
+    // for (auto& view : _views)
+    // {
+    //     view->dispatch_mouse_button_event(view_event(event, *view));
+    // }
 }
 
 void App::on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event)
 {
-    for (auto& view : _views)
-    {
-        view.view.dispatch_mouse_scroll_event(view_event(event, view));
-    }
+    // for (auto& view : _views)
+    // {
+    //     view->dispatch_mouse_scroll_event(view_event(event, *view));
+    // }
 }
 
 void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event)
 {
-    for (auto& view : _views)
-    {
-        view.view.dispatch_mouse_move_event(view_event(event, view));
-    }
+    // for (auto& view : _views)
+    // {
+    //     view->dispatch_mouse_move_event(view_event(event, *view));
+    // }
 }
 
 void App::open_image_exporter()

@@ -11,7 +11,8 @@
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
-#include <Cool/View/RenderableViewManager.h>
+#include <Cool/View/RenderableView.h>
+#include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
@@ -101,12 +102,12 @@ private:
     void imgui_commands_and_registries_debug_windows();
 
     template<typename Event>
-    Cool::ViewEvent<Event> view_event(const Event& event, const Cool::RenderableView& view)
+    Cool::ViewEvent<Event> view_event(const Event& event, Cool::View const& view)
     {
         return {
             event,
             _main_window.glfw(),
-            {view.render_target.current_size()}};
+            {view.get_image_size_inside_view()}};
     }
 
     void compile_all_is0_nodes();
@@ -119,7 +120,7 @@ private:
     Cool::Window&                  _main_window;
     Cool::Clock_Realtime           _clock;
     Cool::ImageSizeConstraint      _view_constraint;
-    Cool::RenderableViewManager    _views; // Must be before the views because it is used to create them
+    Cool::ViewsManager             _views; // Must be before the views because it is used to create them
     Cool::RenderableView&          _nodes_view;
     Cool::Exporter                 _exporter;
     Cool::DirtyRegistry            _dirty_registry; // Before the modules because it is used to create them
