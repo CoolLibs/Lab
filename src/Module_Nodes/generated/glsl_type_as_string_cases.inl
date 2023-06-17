@@ -20,6 +20,7 @@ case PrimitiveType::Hue: return "/*Hue*/ float";
 case PrimitiveType::Direction2D: return "/*Direction2D*/ vec2";
 case PrimitiveType::Void: return "/*Void*/ void";
 case PrimitiveType::Any: return "/*Any*/ ERROR the Any type should have been converted earlier in the compilation process.";
+case PrimitiveType::RayMarchRes: return "/*RayMarchRes*/ RayMarchRes";
 case PrimitiveType::CIELAB: return "/*CIELAB*/ vec3";
 case PrimitiveType::CIELAB_PremultipliedA: return "/*CIELAB_PremultipliedA*/ vec4";
 case PrimitiveType::CIELAB_StraightA: return "/*CIELAB_StraightA*/ vec4";

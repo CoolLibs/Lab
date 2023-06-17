@@ -145,6 +145,14 @@ def all_primitive_types():
             parsed_from="Any",
             can_be_a_template_type=False,
         ),
+        PrimitiveType(  # TODO(JF) Remove this once helper functions can use whatever type they want.
+            cpp="RayMarchRes",
+            user_facing_name="RayMarchRes",
+            corresponding_input_types=[],
+            glsl="RayMarchRes",
+            parsed_from="RayMarchRes",
+            can_be_a_template_type=False,
+        ),
     ]
 
     res.extend(primitive_types_for_color_spaces())

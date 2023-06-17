@@ -1,0 +1,451 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance `Shape 3D`;
+
+// #include "_COOL_RES_/shaders/camera.glsl"
+// #include "_COOL_RES_/shaders/iqnoise_3D.glsl"
+// #include "_COOL_RES_/shaders/math.glsl"
+// #include "_ROOT_FOLDER_/res/is0 shaders/hg_sdf.glsl"
+#include "_ROOT_FOLDER_/res/is0 shaders/light.glsl"
+
+// float MAX_DIST = cool_camera_far_plane;
+#define MAX_DIST 1000
+
+vec3 get_normal(vec3 p)
+{
+    const float Blur_normals_at_edges = 0.001000;
+    {
+        const float h = Blur_normals_at_edges;
+        const vec2  k = vec2(1., -1.);
+        return normalize(k.xyy * `Shape 3D`(p + k.xyy * h) + k.yyx * `Shape 3D`(p + k.yyx * h) + k.yxy * `Shape 3D`(p + k.yxy * h) + k.xxx * `Shape 3D`(p + k.xxx * h));
+    }
+}
+
+#include "_COOL_RES_/shaders/pbr_calc.glsl"
+// PBR RENDERING thx to : https://www.shadertoy.com/view/4tXXzM
+
+float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberation, int channel)
+{
+    vec3 refraction_out = refract(refraction_in, norm_exit, IOR - Abberation);
+    if (dot(refraction_out, refraction_out) == 0.)
+    {
+        refraction_out = reflect(refraction_in, norm_exit);
+    }
+    return refraction_out[channel];
+}
+
+float soft_shadow(vec3 ro, vec3 rd, float k)
+{
+    float res = 1.0;
+    float ph  = 1e20;
+    for (float t = 0.01; t < MAX_DIST;)
+    {
+        float h = `Shape 3D`(ro + rd * t);
+        if (h < 0.0001)
+            return 0.0;
+        float y = h * h / (2.0 * ph);
+        float d = sqrt(h * h - y * y);
+        res     = min(res, k * d / max(0.0, t - y));
+        ph      = h;
+        t += h;
+    }
+    return res;
+}
+
+#include "_ROOT_FOLDER_/res/is0 shaders/smoke.glsl"
+
+// See https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html
+// And https://www.shadertoy.com/view/tsScDG
+
+float GetLightVisiblity(vec3 rayOrigin, vec3 rayDirection, float maxT, int maxSteps, float marchSize, float Absorption_Coefficient)
+{
+    float t               = 0.0f;
+    float lightVisibility = 1.0f;
+    float signedDistance  = 0.0;
+    for (int i = 0; i < maxSteps; i++)
+    {
+        t += max(marchSize, signedDistance);
+        if (t > maxT || lightVisibility < ABSORPTION_CUTOFF)
+            break;
+
+        vec3 position = rayOrigin + t * rayDirection;
+
+        signedDistance = `Shape 3D`(position);
+        if (signedDistance < 0.0)
+        {
+            lightVisibility *= BeerLambert(Absorption_Coefficient * GetFogDensity(position, signedDistance), marchSize);
+        }
+    };
+    return lightVisibility;
+}
+
+float IntersectVolumetric(vec3 rayOrigin, vec3 rayDirection, float maxT)
+{
+    float precis = 0.5f;
+    float t      = 0.0f;
+    for (int i = 0; i < MAX_SDF_SPHERE_STEPS; i++)
+    {
+        float result = `Shape 3D`(rayOrigin + rayDirection * t);
+        if (result < (precis) || t > maxT)
+            break;
+        t += result;
+    }
+    return (t >= maxT) ? -1.0 : t;
+}
+
+vec3 ssao_rotate_points(vec3 p, vec3 pts)
+{
+    vec3  normalSphere = vec3(0.0, 0.0, 1.0);
+    vec3  normal       = get_normal(p);
+    vec3  axeRot       = cross(normal, normalSphere);
+    float angle        = acos(dot(normal, normalize(normalSphere)));
+    pts                = rotation_around_axis(pts, normalize(axeRot), -angle);
+    return pts;
+}
+
+float ssao(vec3 p, float SSAO_Size)
+{
+    float bl = 0.0;
+    for (int i = 0; i < 32; i++)
+    {
+        if (`Shape 3D`(p + (ssao_rotate_points(p, SSAO_Size * (ssao_big_rand[i] - vec3(0.5, 0.5, 0.0))))) > 0.0)
+        {
+            bl += 1.0;
+        }
+    }
+    return bl / 32.0;
+}
+
+float calc_occlusion(vec3 pos, vec3 nor, float ra)
+{
+    float occ = 0.0;
+    for (int i = 0; i < 64; i++)
+    {
+        float h   = 0.01 + 2.0 * pow(float(i) / 63.0, 2.0);
+        vec2  an  = hash_0_to_1_1D_to_2D(ra + float(i) * 13.1) * vec2(3.14159, 6.2831);
+        vec3  dir = vec3(sin(an.x) * sin(an.y), sin(an.x) * cos(an.y), cos(an.x));
+        dir *= sign(dot(dir, nor));
+        occ += clamp(5.0 * `Shape 3D`(pos + h * dir) / h, -1.0, 1.0);
+    }
+    return clamp(occ / 64.0, 0.0, 1.0);
+}
+
+#define SURF_DIST       0.0001
+#define DONT_INVERT_SDF 1.
+#define INVERT_SDF      -1.
+
+RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out)
+{
+    const float MAX_STEPS = 800.000000;
+    {
+        float t                                    = 0.;
+        int   i                                    = 0;
+        float closest_grazed_object                = MAX_DIST;
+        float distance_when_grazing_closest_object = 0.;
+        float lastd                                = `Shape 3D`(ro);
+        for (i; i < MAX_STEPS; i++)
+        {
+            vec3  pos = ro + rd * t;
+            float d   = `Shape 3D`(pos)*in_or_out;
+            t += d;
+            if (t > MAX_DIST || abs(d) < SURF_DIST * 0.99)
+                break;
+            if (d > lastd + 0.001)
+            {
+                if (lastd < closest_grazed_object)
+                {
+                    closest_grazed_object                = lastd;
+                    distance_when_grazing_closest_object = t;
+                }
+            }
+            lastd = d;
+        }
+        vec3 final_pos = ro + rd * t;
+        return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos), closest_grazed_object, distance_when_grazing_closest_object, vec3(0.));
+    }
+}
+
+vec3 apply_background(RayMarchRes res)
+{
+    const vec3 Color = vec3(0.034000, 0.116000, 0.431000);
+    {
+        return Color;
+    }
+}
+
+vec3 apply_material(RayMarchRes res)
+{
+    vec3 material_color = vec3(0., 0., 0.);
+    {
+        const float Strength = 0.900000;
+        const vec3  Color    = vec3(1.000000, 1.000000, 1.000000);
+        {
+            float fresnel = pow(clamp(1. - dot(res.normal, -res.ray_direction), 0., 1.), Strength);
+            material_color += fresnel * Color;
+        }
+    }
+    {
+        const float Strength = 1.000000;
+        {
+            material_color += (res.normal * 0.5 + 0.5) * Strength;
+        }
+    }
+    {
+        const float Roughtness    = 0.500000;
+        const float Metalicness   = 0.500000;
+        const vec3  Light_Color   = vec3(1.000000, 1.000000, 1.000000);
+        const vec3  Ambiant_Color = vec3(1.000000, 1.000000, 1.000000);
+        {
+            vec3 ligthDir = vec3(-1.0, -3.0, -1.0);
+            vec3 normal   = res.normal;
+
+            float F = fresnel(normal, Metalicness);
+            float D = dot(normal, ligthDir);
+            float S = specular(normal, ligthDir, Roughtness, Metalicness);
+
+            vec3        SpecCol     = S * Light_Color;
+            vec3        DiffCol     = D * Light_Color * (1.0 - F);
+            const float cAmbiantMin = 0.04;
+            vec3        reflectCol  = res.reflection_color + Ambiant_Color;
+
+            vec3 AmbiantColor = reflectCol * cAmbiantMin;
+            vec3 lights       = max((DiffCol + SpecCol) * (1.0 - cAmbiantMin), vec3(0.0, 0.0, 0.0));
+            material_color *= lights + AmbiantColor + (F * reflectCol);
+        }
+    }
+    {
+        const float IOR        = 0.700000;
+        const float Abberation = 0.010000;
+        const float Density    = 0.100000;
+        {
+            vec3 reflet_out    = reflect(res.ray_direction, res.normal);
+            vec3 refraction_in = refract(res.ray_direction, res.normal, 1. / IOR);
+
+            vec3        p_enter = res.hit_position - res.normal * SURF_DIST * 3.;
+            RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERT_SDF); // Inside
+            float       d2      = d_in.distance;
+
+            vec3 p_exit       = p_enter + refraction_in * d2;
+            vec3 norm_exit    = -get_normal(p_exit);
+            vec3 reflect_text = vec3(0);
+
+            // Red
+            reflect_text.r = render_color(refraction_in, norm_exit, IOR, Abberation, 0);
+            // Green
+            reflect_text.g = render_color(refraction_in, norm_exit, IOR, 0., 1);
+            // Blue
+            reflect_text.b = render_color(refraction_in, norm_exit, IOR, -Abberation, 2);
+
+            float optical_distance   = exp(-d2 * Density);
+            reflect_text             = reflect_text * optical_distance;
+            float fresnel_reflection = pow(1. + dot(res.ray_direction, res.normal), 5.);
+
+            material_color += mix(reflect_text, reflet_out, fresnel_reflection);
+        }
+    }
+    {
+        const float Softness       = 9.000000;
+        const float Strength       = 0.900000;
+        const float Sun_Position_x = 100.000000;
+        const float Sun_Position_y = 200.000000;
+        const float Sun_Position_z = 300.000000;
+        {
+            const vec3 sun = vec3(Sun_Position_x, Sun_Position_y, Sun_Position_z);
+            material_color *= (1.0 - Strength) + Strength * soft_shadow(res.hit_position, normalize(sun - res.hit_position), Softness);
+        }
+    }
+    {
+        const float Absorption_Coefficient = 2.500000;
+        const float March_Multiplier       = 0.180000;
+        const float Max_Volume_March_Steps = 50.000000;
+        {
+            float depth            = LARGE_NUMBER;
+            vec3  opaqueColor      = apply_background(res);
+            float opaqueVisibility = 1.0f;
+
+            float volumeDepth     = IntersectVolumetric(res.ray_origin, res.ray_direction, depth);
+            vec3  volumetricColor = vec3(0.0f);
+            if (volumeDepth > 0.0)
+            {
+                const vec3  volumeAlbedo     = vec3(0.8);
+                const float marchSize        = 0.6f * March_Multiplier;
+                float       distanceInVolume = 0.0f;
+                float       signedDistance   = 0.0;
+                for (int i = 0; i < Max_Volume_March_Steps; i++)
+                {
+                    volumeDepth += max(marchSize, signedDistance);
+                    if (volumeDepth > depth || opaqueVisibility < ABSORPTION_CUTOFF)
+                        break;
+
+                    vec3 position = res.ray_origin + volumeDepth * res.ray_direction;
+
+                    signedDistance = `Shape 3D`(position);
+                    if (signedDistance < 0.0f)
+                    {
+                        distanceInVolume += marchSize;
+                        float previousopaqueVisibility = opaqueVisibility;
+                        opaqueVisibility *= BeerLambert(Absorption_Coefficient * GetFogDensity(position, signedDistance), marchSize);
+                        float absorptionFromMarch = previousopaqueVisibility - opaqueVisibility;
+
+                        /// LIGHT PART (WIP)
+
+                        for (int lightIndex = 0; lightIndex < NUM_LIGHTS; lightIndex++)
+                        {
+                            float lightVolumeDepth = 0.0f;
+                            vec3  lightDirection   = (GetLight(lightIndex).Position - position);
+                            float lightDistance    = length(lightDirection);
+                            lightDirection /= lightDistance;
+
+                            vec3 lightColor = GetLight(lightIndex).LightColor * GetLightAttenuation(lightDistance);
+                            if (IsColorInsignificant(lightColor))
+                                continue;
+
+                            const float lightMarchSize = 0.65f;
+                            float       lightVisiblity = GetLightVisiblity(position, lightDirection, lightDistance, MAX_VOLUME_LIGHT_MARCH_STEPS, lightMarchSize, Absorption_Coefficient);
+                            volumetricColor += absorptionFromMarch * lightVisiblity * volumeAlbedo * lightColor;
+                        }
+
+                        /// END LIGHT PART
+
+                        volumetricColor += absorptionFromMarch * volumeAlbedo * GetAmbientLight();
+                    }
+                }
+            }
+            material_color += min(volumetricColor, 1.0f) + opaqueVisibility * opaqueColor;
+        }
+    }
+    {
+        const float SSAO_Size = 0.100000;
+        {
+            material_color *= ssao(res.hit_position, SSAO_Size);
+        }
+    }
+    {
+        const float AO_Size = 0.100000;
+        {
+            material_color *= calc_occlusion(res.hit_position, get_normal(res.hit_position), AO_Size);
+        }
+    }
+
+    return material_color;
+}
+
+vec3 post_process(RayMarchRes res, vec3 color)
+{
+    {
+        const float Absorption = 0.070000;
+        const float Emission   = 0.056000;
+        const vec3  Color      = vec3(0.632000, 0.784000, 1.000000);
+        {
+            float fog_extinction   = 1.0 - exp(-res.distance * Absorption);
+            float fog_inscattering = 1.0 - exp(-res.distance * Emission);
+            color                  = color * (1. - fog_extinction) + Color * fog_inscattering;
+        }
+    }
+    {
+        const float Density        = 0.036000;
+        const float Falloff        = 0.233000;
+        const float Max_Absorption = 1.000000;
+        const float Ground_Height  = -10.000000;
+        const vec3  Color          = vec3(1.000000, 0.944000, 0.684000);
+        {
+            float fog_amount = (Density / Falloff) * exp(-(res.ray_origin.z - Ground_Height) * Falloff) * (1.0 - exp(-res.distance * res.ray_direction.z * Falloff)) / res.ray_direction.z;
+            color            = mix(color, Color, min(fog_amount, Max_Absorption));
+        }
+    }
+    {
+        const float Strength = 0.005000;
+        const float Power    = 2.000000;
+        const vec3  Color    = vec3(1.000000, 1.000000, 1.000000);
+        {
+            float glow = pow(float(res.iterations_count) * Strength, Power);
+            color += glow * Color;
+        }
+    }
+    {
+        const float Strength = 9.189000;
+        const float Falloff  = 2.129000;
+        const vec3  Color    = vec3(0.000000, 0.118000, 1.000000);
+        {
+            float glow = Strength * exp(-res.closest_grazed_object * Falloff);
+            color += glow * Color;
+        }
+    }
+    {
+        const vec3  Color       = vec3(0.010000, 0.000000, 0.353000);
+        const float Size        = 0.043000;
+        const float Size_Growth = 0.040000;
+        const float Size_Power  = 1.293000;
+        {
+            color = res.closest_grazed_object < Size + Size_Growth * pow(res.distance_when_grazing_closest_object, Size_Power) * Size
+                        ? Color
+                        : color;
+        }
+    }
+
+    return color;
+}
+
+vec3 compute_color3(vec3 ro, vec3 rd)
+{
+    return vec3(0.);
+}
+
+vec3 compute_color2(vec3 ro, vec3 rd)
+{
+    RayMarchRes res   = rayMarching(ro, rd, DONT_INVERT_SDF);
+    vec3        color = vec3(0.);
+    if (res.distance < MAX_DIST)
+    {
+        res.reflection_color = compute_color3(res.hit_position + res.normal * SURF_DIST, reflect(rd, res.normal));
+        color += apply_material(res);
+    }
+    else
+    {
+        res.distance = MAX_DIST;
+        color += apply_background(res);
+    }
+    return post_process(res, color);
+}
+
+vec3 compute_color1(vec3 ro, vec3 rd)
+{
+    RayMarchRes res   = rayMarching(ro, rd, DONT_INVERT_SDF);
+    vec3        color = vec3(0.);
+    if (res.distance < MAX_DIST)
+    {
+        res.reflection_color = compute_color2(res.hit_position + res.normal * SURF_DIST, reflect(rd, res.normal));
+        color += apply_material(res);
+    }
+    else
+    {
+        res.distance = MAX_DIST;
+        color += apply_background(res);
+    }
+    return post_process(res, color);
+}
+
+vec3 compute_color(vec3 ro, vec3 rd)
+{
+    RayMarchRes res   = rayMarching(ro, rd, DONT_INVERT_SDF);
+    vec3        color = vec3(0.);
+    if (res.distance < MAX_DIST)
+    {
+        res.reflection_color = compute_color1(res.hit_position + res.normal * SURF_DIST, reflect(rd, res.normal));
+        color += apply_material(res);
+    }
+    else
+    {
+        res.distance = MAX_DIST;
+        color += apply_background(res);
+    }
+    return post_process(res, color);
+}
+
+LinearRGB_StraightA main(UV uv)
+{
+    vec3 ro = cool_ray_origin(unnormalize_uv(uv));
+    vec3 rd = cool_ray_direction(unnormalize_uv(uv));
+
+    return vec4(compute_color(ro, rd), 1.);
+}

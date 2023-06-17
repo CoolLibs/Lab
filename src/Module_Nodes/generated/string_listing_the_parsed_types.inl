@@ -19,6 +19,7 @@ R"STR(  - bool
   - Hue
   - Direction2D
   - Any
+  - RayMarchRes
   - CIELAB
   - CIELAB_PremultipliedA
   - CIELAB_StraightA
