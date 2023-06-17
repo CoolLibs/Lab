@@ -1,0 +1,146 @@
+{
+    "PresetManager": {
+        "Presets": {
+            "Underlying container": [
+                {
+                    "first": "bce6b310-c6a5-44e1-9a4b-17adc06fa9b0",
+                    "second": {
+                        "Name": "Default",
+                        "Values": [
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Fresnel",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Normals",
+                                    "Value": true,
+                                    "Metadata": {},
+                                    "Default Value": true,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "PBR",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Refraction",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Shadows",
+                                    "Value": true,
+                                    "Metadata": {},
+                                    "Default Value": true,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Smoke",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "SSAO",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Ambient Occlusion",
+                                    "Value": true,
+                                    "Metadata": {},
+                                    "Default Value": true,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Fog (Constant)",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Fog (Gradient)",
+                                    "Value": true,
+                                    "Metadata": {},
+                                    "Default Value": true,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Glow",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Glow2",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Cartoon Edges",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -1,6 +1,21 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT vec3->SignedDistance `Shape 3D`;
+INPUT bool `Fresnel`;
+INPUT bool `Normals`;
+INPUT bool `PBR`;
+INPUT bool `Refraction`;
+INPUT bool `Shadows`;
+INPUT bool `Smoke`;
+INPUT bool `SSAO`;
+INPUT bool `Ambient Occlusion`;
+// clang-format off
+INPUT bool `Fog (Constant)`;
+INPUT bool `Fog (Gradient)`;
+// clang-format on
+INPUT bool `Glow`;
+INPUT bool `Glow2`;
+INPUT bool `Cartoon Edges`;
 
 // #include "_COOL_RES_/shaders/camera.glsl"
 // #include "_COOL_RES_/shaders/iqnoise_3D.glsl"
@@ -176,6 +191,7 @@ vec3 apply_background(RayMarchRes res)
 vec3 apply_material(RayMarchRes res)
 {
     vec3 material_color = vec3(0., 0., 0.);
+    if (`Fresnel`)
     {
         const float Strength = 0.900000;
         const vec3  Color    = vec3(1.000000, 1.000000, 1.000000);
@@ -184,12 +200,14 @@ vec3 apply_material(RayMarchRes res)
             material_color += fresnel * Color;
         }
     }
+    if (`Normals`)
     {
         const float Strength = 1.000000;
         {
             material_color += (res.normal * 0.5 + 0.5) * Strength;
         }
     }
+    if (`PBR`)
     {
         const float Roughtness    = 0.500000;
         const float Metalicness   = 0.500000;
@@ -213,6 +231,7 @@ vec3 apply_material(RayMarchRes res)
             material_color *= lights + AmbiantColor + (F * reflectCol);
         }
     }
+    if (`Refraction`)
     {
         const float IOR        = 0.700000;
         const float Abberation = 0.010000;
@@ -243,6 +262,7 @@ vec3 apply_material(RayMarchRes res)
             material_color += mix(reflect_text, reflet_out, fresnel_reflection);
         }
     }
+    if (`Shadows`)
     {
         const float Softness       = 9.000000;
         const float Strength       = 0.900000;
@@ -254,6 +274,7 @@ vec3 apply_material(RayMarchRes res)
             material_color *= (1.0 - Strength) + Strength * soft_shadow(res.hit_position, normalize(sun - res.hit_position), Softness);
         }
     }
+    if (`Smoke`)
     {
         const float Absorption_Coefficient = 2.500000;
         const float March_Multiplier       = 0.180000;
@@ -314,12 +335,14 @@ vec3 apply_material(RayMarchRes res)
             material_color += min(volumetricColor, 1.0f) + opaqueVisibility * opaqueColor;
         }
     }
+    if (`SSAO`)
     {
         const float SSAO_Size = 0.100000;
         {
             material_color *= ssao(res.hit_position, SSAO_Size);
         }
     }
+    if (`Ambient Occlusion`)
     {
         const float AO_Size = 0.100000;
         {
@@ -332,6 +355,9 @@ vec3 apply_material(RayMarchRes res)
 
 vec3 post_process(RayMarchRes res, vec3 color)
 {
+    // clang-format off
+    if (`Fog (Constant)`)
+    // clang-format on
     {
         const float Absorption = 0.070000;
         const float Emission   = 0.056000;
@@ -342,6 +368,9 @@ vec3 post_process(RayMarchRes res, vec3 color)
             color                  = color * (1. - fog_extinction) + Color * fog_inscattering;
         }
     }
+    // clang-format off
+    if (`Fog (Gradient)`)
+    // clang-format on
     {
         const float Density        = 0.036000;
         const float Falloff        = 0.233000;
@@ -353,6 +382,7 @@ vec3 post_process(RayMarchRes res, vec3 color)
             color            = mix(color, Color, min(fog_amount, Max_Absorption));
         }
     }
+    if (`Glow`)
     {
         const float Strength = 0.005000;
         const float Power    = 2.000000;
@@ -362,6 +392,7 @@ vec3 post_process(RayMarchRes res, vec3 color)
             color += glow * Color;
         }
     }
+    if (`Glow2`)
     {
         const float Strength = 9.189000;
         const float Falloff  = 2.129000;
@@ -371,6 +402,7 @@ vec3 post_process(RayMarchRes res, vec3 color)
             color += glow * Color;
         }
     }
+    if (`Cartoon Edges`)
     {
         const vec3  Color       = vec3(0.010000, 0.000000, 0.353000);
         const float Size        = 0.043000;
