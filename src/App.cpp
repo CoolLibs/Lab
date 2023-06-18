@@ -22,6 +22,7 @@
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/GizmoManager.h"
+#include "Cool/View/ViewsManager.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -34,11 +35,11 @@
 
 namespace Lab {
 
-App::App(Cool::WindowManager& windows)
+App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
-    , _nodes_view{_views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
-    // , _custom_shader_view{_views.make_view("View | Custom Shader")}
+    , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
+    // , _custom_shader_view{views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 // , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
@@ -304,9 +305,9 @@ void App::imgui_window_view()
     bool const view_in_fullscreen = _exporter.is_exporting() || _wants_view_in_fullscreen;
     {
         if (!_view_was_in_fullscreen_last_frame && view_in_fullscreen)
-            save_windows_state(); // Save normal state before making the View fullscreen.
+            save_imgui_windows_state(); // Save normal state before making the View fullscreen.
         if (_view_was_in_fullscreen_last_frame && !view_in_fullscreen)
-            restore_windows_state(); // After fullscreen, restore the normal state.
+            restore_imgui_windows_state(); // After fullscreen, restore the normal state.
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 

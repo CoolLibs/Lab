@@ -36,7 +36,7 @@ using DebugOptionsManager = Cool::DebugOptionsManager<
 
 class App : public Cool::IApp {
 public:
-    explicit App(Cool::WindowManager& windows);
+    explicit App(Cool::WindowManager& windows, Cool::ViewsManager& views);
     ~App();
     void on_shutdown() override;
 
@@ -120,7 +120,6 @@ private:
     Cool::Window&                  _main_window;
     Cool::Clock_Realtime           _clock;
     Cool::ImageSizeConstraint      _view_constraint;
-    Cool::ViewsManager             _views; // Must be before the views because it is used to create them
     Cool::RenderView&              _nodes_view;
     Cool::Exporter                 _exporter;
     Cool::DirtyRegistry            _dirty_registry; // Before the modules because it is used to create them
