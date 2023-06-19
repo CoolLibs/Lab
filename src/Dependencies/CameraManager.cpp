@@ -19,7 +19,7 @@ void CameraManager::hook_events(
 {
     events
         .scroll_event()
-        .subscribe([registries, this, executor, on_change](const auto& event) {
+        .subscribe([registries, this, executor, on_change](auto const& event) {
             if (!_is_editable_in_view)
                 return;
 
@@ -37,7 +37,7 @@ void CameraManager::hook_events(
     events
         .drag()
         .start()
-        .subscribe([registries, this, executor, on_change](const auto&) {
+        .subscribe([registries, this, executor, on_change](auto const&) {
             if (!_is_editable_in_view)
                 return;
 
@@ -48,12 +48,12 @@ void CameraManager::hook_events(
     events
         .drag()
         .update()
-        .subscribe([registries, this, executor, on_change](const auto& event) {
+        .subscribe([registries, this, executor, on_change](auto const&) {
             if (!_is_editable_in_view)
                 return;
 
             maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
-                return _view_controller.on_drag(camera, event.delta);
+                return _view_controller.on_drag(camera, Cool::ImGuiCoordinates{ImGui::GetIO().MouseDelta}); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
             });
         });
     events
