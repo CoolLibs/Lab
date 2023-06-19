@@ -316,7 +316,8 @@ void App::imgui_window_view()
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
             if (_exporter.is_exporting())
-                return;
+                return false;
+            bool b = false;
 
             gizmos.render();
 
@@ -329,6 +330,7 @@ void App::imgui_window_view()
             {
                 reset_cameras();
             }
+            b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
 
             // Toggle fullscreen
@@ -337,6 +339,7 @@ void App::imgui_window_view()
                 _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
                 _main_window.set_fullscreen(_wants_view_in_fullscreen);
             }
+            b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Enable 2D camera
@@ -344,6 +347,7 @@ void App::imgui_window_view()
             {
                 _is_camera_2D_editable_in_view = !_is_camera_2D_editable_in_view;
             }
+            b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is editable" : "2D camera is frozen");
 
             // Enable 3D camera
@@ -351,7 +355,10 @@ void App::imgui_window_view()
             {
                 _camera_manager.is_editable_in_view() = !_camera_manager.is_editable_in_view();
             }
+            b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_camera_manager.is_editable_in_view() ? "3D camera is editable" : "3D camera is frozen");
+
+            return b;
         },
     });
 
