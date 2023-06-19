@@ -37,12 +37,12 @@ void CameraManager::hook_events(
     events
         .drag()
         .start()
-        .subscribe([registries, this, executor, on_change](const auto& event) {
+        .subscribe([registries, this, executor, on_change](const auto&) {
             if (!_is_editable_in_view)
                 return;
 
             maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
-                return _view_controller.on_drag_start(camera, event.mods);
+                return _view_controller.on_drag_start(camera);
             });
         });
     events
