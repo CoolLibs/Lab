@@ -615,30 +615,6 @@ void App::check_inputs__timeline()
     }
 }
 
-void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
-{
-    // for (auto& view : _views)
-    // {
-    //     view->dispatch_mouse_button_event(view_event(event, *view));
-    // }
-}
-
-void App::on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event)
-{
-    // for (auto& view : _views)
-    // {
-    //     view->dispatch_mouse_scroll_event(view_event(event, *view));
-    // }
-}
-
-void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event)
-{
-    // for (auto& view : _views)
-    // {
-    //     view->dispatch_mouse_move_event(view_event(event, *view));
-    // }
-}
-
 void App::open_image_exporter()
 {
     _exporter.maybe_set_aspect_ratio(_view_constraint.aspect_ratio());

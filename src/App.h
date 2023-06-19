@@ -48,10 +48,6 @@ public:
     void imgui_windows() override;
     void imgui_menus() override;
 
-    void on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event) override;
-    void on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event) override;
-    void on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event) override;
-
     void open_image_exporter();
     void open_video_exporter();
 
@@ -100,15 +96,6 @@ private:
     void imgui_window_view();
 
     void imgui_commands_and_registries_debug_windows();
-
-    template<typename Event>
-    Cool::ViewEvent<Event> view_event(const Event& event, Cool::View const& view)
-    {
-        return {
-            event,
-            _main_window.glfw(),
-            {view.get_image_size_inside_view()}};
-    }
 
     void compile_all_is0_nodes();
     void set_everybody_dirty();
