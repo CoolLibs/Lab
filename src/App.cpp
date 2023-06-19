@@ -48,8 +48,6 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
         _nodes_view.mouse_events(),
         _camera2D.value(),
         [this]() { trigger_rerender(); },
-        [this]() { auto const sz =_nodes_view.window_size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
-        [this]() { auto const sz =_nodes_view.window_size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; },
         [this]() { return !_is_camera_2D_editable_in_view; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());

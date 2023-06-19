@@ -17,14 +17,12 @@ void hook_camera2D_events(
     Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
     Cool::Camera2D&                                    camera,
     std::function<void()>                              on_change,
-    std::function<float()>                             get_height,
-    std::function<float()>                             get_aspect_ratio,
     std::function<bool()>                              is_locked_in_view
 )
 {
     events
         .scroll_event()
-        .subscribe([&, on_change, get_height, get_aspect_ratio, is_locked_in_view](Cool::MouseScrollEvent<Cool::ViewCoordinates> const& event) {
+        .subscribe([&, on_change, is_locked_in_view](Cool::MouseScrollEvent<Cool::ViewCoordinates> const& event) {
             if (is_locked_in_view())
                 return;
 
@@ -33,7 +31,7 @@ void hook_camera2D_events(
 
             if (!ImGui::GetIO().KeyAlt) // Use ALT to zoom relative to the center of the view
             {
-                auto const mouse_pos_in_view_space  = event.position / get_height() * 2.f - glm::vec2{get_aspect_ratio(), 1.f};
+                auto const mouse_pos_in_view_space  = event.position;
                 auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
                 auto const rotated_mouse_in_ws      = glm::rotate(mouse_pos_in_world_space, -camera.rotation.as_radians());
 
@@ -47,11 +45,11 @@ void hook_camera2D_events(
     events
         .drag()
         .update()
-        .subscribe([&, on_change, get_height, is_locked_in_view](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
+        .subscribe([&, on_change, is_locked_in_view](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
             if (is_locked_in_view())
                 return;
 
-            camera.translation -= event.delta / get_height() * 2.f / camera.zoom;
+            camera.translation -= event.delta / camera.zoom;
             on_change();
         });
 
