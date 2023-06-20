@@ -36,7 +36,7 @@
                                                 }
                                             }
                                         ],
-                                        "Wrap Mode": 2,
+                                        "Wrap Mode": 0,
                                         "Interpolation Mode": 0
                                     },
                                     "Metadata": {
@@ -147,7 +147,7 @@
                                                 }
                                             }
                                         ],
-                                        "Wrap Mode": 2,
+                                        "Wrap Mode": 0,
                                         "Interpolation Mode": 0
                                     },
                                     "Metadata": {
