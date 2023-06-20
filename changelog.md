@@ -9,6 +9,7 @@
 
 ## 🐣beta-5 WIP
 
+- 🐛 Fix: don't pan the nodes while you are already panning the camera.
 - 🐛 Fixed the camera controls not working when the View window was on another screen.
 - ✨ Added tips that will show up from time to time and teach you about the subtleties and shortcuts of Coollab.
 - ✨ Main input pins now have a different icon to distinguish them from the other pins.
