@@ -1,44 +1,86 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT vec3->SignedDistance `Shape 3D`;
+
+INPUT int `Max number of steps`;
+
+INPUT LinearRGB `Background Color`;
+
+INPUT float `Blur normals at edges`;
+
 INPUT bool `Fresnel`;
 INPUT float `Fresnel Strength`;
 INPUT LinearRGB `Fresnel Color`;
+
 INPUT bool `Normals`;
 INPUT float `Normals Strength`;
+
 INPUT bool `PBR`;
+INPUT LinearRGB `PBR Light Color`;
+INPUT LinearRGB `PBR Ambient Color`;
+
 INPUT float `PBR Roughness`;
 INPUT float `PBR Metalness`;
+
 INPUT bool `Refraction`;
+INPUT float `Index of Refraction`;
+
+INPUT float `Refraction Aberration`;
+INPUT float `Refraction Density`;
+
 INPUT bool `Shadows`;
-INPUT bool `Smoke`;
+INPUT float `Shadow Softness`;
+INPUT float `Shadow Strength`;
+INPUT vec3 `Shadow Sun Position`;
+
 INPUT bool `SSAO`;
+INPUT float `SSAO Size`;
+
 INPUT bool `Ambient Occlusion`;
+
+INPUT float `Ambient Occlusion Size`;
+
 // clang-format off
-INPUT bool `Fog (Constant)`;
+INPUT bool  `Fog (Constant)`;
+INPUT float `Fog (Constant) Absorption`;
+INPUT float `Fog (Constant) Emission`;
+INPUT LinearRGB `Fog (Constant) Color`;
+
 INPUT bool `Fog (Gradient)`;
+INPUT float `Fog (Gradient) Density`;
+INPUT float `Fog (Gradient) Falloff`;
+INPUT float `Fog (Gradient) Max Absorption`;
+INPUT float `Fog (Gradient) Ground Height`;
+INPUT LinearRGB  `Fog (Gradient) Color`;
 // clang-format on
 INPUT bool `Glow`;
+INPUT float `Glow Strength`;
+INPUT float `Glow Power`;
+INPUT LinearRGB  `Glow Color`;
+
 INPUT bool `Glow2`;
+INPUT float `Glow2 Strength`;
+INPUT float `Glow2 Falloff`;
+INPUT LinearRGB  `Glow2 Color`;
+
 INPUT bool `Cartoon Edges`;
 
-// #include "_COOL_RES_/shaders/camera.glsl"
-// #include "_COOL_RES_/shaders/iqnoise_3D.glsl"
-// #include "_COOL_RES_/shaders/math.glsl"
-// #include "_ROOT_FOLDER_/res/is0 shaders/hg_sdf.glsl"
+INPUT float `Cartoon Edges Size`;
+
+INPUT float `Cartoon Edges Size Growth`;
+INPUT float `Cartoon Edges Size Power`;
+INPUT vec3  `Cartoon Edges Color`;
+
 #include "_ROOT_FOLDER_/res/is0 shaders/light.glsl"
 
-// float MAX_DIST = cool_camera_far_plane;
-#define MAX_DIST 1000
+#define MAX_DIST cool_camera_far_plane
 
 vec3 get_normal(vec3 p)
 {
-    const float Blur_normals_at_edges = 0.001000;
-    {
-        const float h = Blur_normals_at_edges;
-        const vec2  k = vec2(1., -1.);
-        return normalize(k.xyy * `Shape 3D`(p + k.xyy * h) + k.yyx * `Shape 3D`(p + k.yyx * h) + k.yxy * `Shape 3D`(p + k.yxy * h) + k.xxx * `Shape 3D`(p + k.xxx * h));
-    }
+    float h = `Blur normals at edges`;
+
+    const vec2 k = vec2(1., -1.);
+    return normalize(k.xyy * `Shape 3D`(p + k.xyy * h) + k.yyx * `Shape 3D`(p + k.yyx * h) + k.yxy * `Shape 3D`(p + k.yxy * h) + k.xxx * `Shape 3D`(p + k.xxx * h));
 }
 
 #include "_COOL_RES_/shaders/pbr_calc.glsl"
@@ -70,47 +112,6 @@ float soft_shadow(vec3 ro, vec3 rd, float k)
         t += h;
     }
     return res;
-}
-
-#include "_ROOT_FOLDER_/res/is0 shaders/smoke.glsl"
-
-// See https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html
-// And https://www.shadertoy.com/view/tsScDG
-
-float GetLightVisiblity(vec3 rayOrigin, vec3 rayDirection, float maxT, int maxSteps, float marchSize, float Absorption_Coefficient)
-{
-    float t               = 0.0f;
-    float lightVisibility = 1.0f;
-    float signedDistance  = 0.0;
-    for (int i = 0; i < maxSteps; i++)
-    {
-        t += max(marchSize, signedDistance);
-        if (t > maxT || lightVisibility < ABSORPTION_CUTOFF)
-            break;
-
-        vec3 position = rayOrigin + t * rayDirection;
-
-        signedDistance = `Shape 3D`(position);
-        if (signedDistance < 0.0)
-        {
-            lightVisibility *= BeerLambert(Absorption_Coefficient * GetFogDensity(position, signedDistance), marchSize);
-        }
-    };
-    return lightVisibility;
-}
-
-float IntersectVolumetric(vec3 rayOrigin, vec3 rayDirection, float maxT)
-{
-    float precis = 0.5f;
-    float t      = 0.0f;
-    for (int i = 0; i < MAX_SDF_SPHERE_STEPS; i++)
-    {
-        float result = `Shape 3D`(rayOrigin + rayDirection * t);
-        if (result < (precis) || t > maxT)
-            break;
-        t += result;
-    }
-    return (t >= maxT) ? -1.0 : t;
 }
 
 vec3 ssao_rotate_points(vec3 p, vec3 pts)
@@ -156,41 +157,35 @@ float calc_occlusion(vec3 pos, vec3 nor, float ra)
 
 RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out)
 {
-    const float MAX_STEPS = 800.000000;
+    float t                                    = 0.;
+    float closest_grazed_object                = MAX_DIST;
+    float distance_when_grazing_closest_object = 0.;
+    float lastd                                = `Shape 3D`(ro);
+    int   i                                    = 0;
+    for (; i < `Max number of steps`; i++)
     {
-        float t                                    = 0.;
-        int   i                                    = 0;
-        float closest_grazed_object                = MAX_DIST;
-        float distance_when_grazing_closest_object = 0.;
-        float lastd                                = `Shape 3D`(ro);
-        for (i; i < MAX_STEPS; i++)
+        vec3  pos = ro + rd * t;
+        float d   = `Shape 3D`(pos)*in_or_out;
+        t += d;
+        if (t > MAX_DIST || abs(d) < SURF_DIST * 0.99)
+            break;
+        if (d > lastd + 0.001)
         {
-            vec3  pos = ro + rd * t;
-            float d   = `Shape 3D`(pos)*in_or_out;
-            t += d;
-            if (t > MAX_DIST || abs(d) < SURF_DIST * 0.99)
-                break;
-            if (d > lastd + 0.001)
+            if (lastd < closest_grazed_object)
             {
-                if (lastd < closest_grazed_object)
-                {
-                    closest_grazed_object                = lastd;
-                    distance_when_grazing_closest_object = t;
-                }
+                closest_grazed_object                = lastd;
+                distance_when_grazing_closest_object = t;
             }
-            lastd = d;
         }
-        vec3 final_pos = ro + rd * t;
-        return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos), closest_grazed_object, distance_when_grazing_closest_object, vec3(0.));
+        lastd = d;
     }
+    vec3 final_pos = ro + rd * t;
+    return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos), closest_grazed_object, distance_when_grazing_closest_object, vec3(0.));
 }
 
 vec3 apply_background(RayMarchRes res)
 {
-    const vec3 Color = vec3(0.034000, 0.116000, 0.431000);
-    {
-        return Color;
-    }
+    return `Background Color`;
 }
 
 vec3 apply_material(RayMarchRes res)
@@ -208,143 +203,60 @@ vec3 apply_material(RayMarchRes res)
     }
     if (`PBR`)
     {
-        const vec3 Light_Color   = vec3(1.000000, 1.000000, 1.000000);
-        const vec3 Ambiant_Color = vec3(1.000000, 1.000000, 1.000000);
-        {
-            vec3 ligthDir = vec3(-1.0, -3.0, -1.0);
-            vec3 normal   = res.normal;
+        vec3 ligthDir = vec3(-1.0, -3.0, -1.0);
+        vec3 normal   = res.normal;
 
-            float F = fresnel(normal, `PBR Metalness`);
-            float D = dot(normal, ligthDir);
-            float S = specular(normal, ligthDir, `PBR Roughness`, `PBR Metalness`);
+        float F = fresnel(normal, `PBR Metalness`);
+        float D = dot(normal, ligthDir);
+        float S = specular(normal, ligthDir, `PBR Roughness`, `PBR Metalness`);
 
-            vec3        SpecCol     = S * Light_Color;
-            vec3        DiffCol     = D * Light_Color * (1.0 - F);
-            const float cAmbiantMin = 0.04;
-            vec3        reflectCol  = res.reflection_color + Ambiant_Color;
+        vec3 SpecCol = S * `PBR Light Color`;
+        vec3 DiffCol = D * `PBR Light Color` * (1.0 - F);
 
-            vec3 AmbiantColor = reflectCol * cAmbiantMin;
-            vec3 lights       = max((DiffCol + SpecCol) * (1.0 - cAmbiantMin), vec3(0.0, 0.0, 0.0));
-            material_color *= lights + AmbiantColor + (F * reflectCol);
-        }
+        const float cAmbiantMin = 0.04;
+        vec3 reflectCol         = res.reflection_color + `PBR Ambient Color`;
+
+        vec3 AmbiantColor = reflectCol * cAmbiantMin;
+        vec3 lights       = max((DiffCol + SpecCol) * (1.0 - cAmbiantMin), vec3(0.0, 0.0, 0.0));
+        material_color *= lights + AmbiantColor + (F * reflectCol);
     }
     if (`Refraction`)
     {
-        const float IOR        = 0.700000;
-        const float Abberation = 0.010000;
-        const float Density    = 0.100000;
-        {
-            vec3 reflet_out    = reflect(res.ray_direction, res.normal);
-            vec3 refraction_in = refract(res.ray_direction, res.normal, 1. / IOR);
+        vec3 reflet_out    = reflect(res.ray_direction, res.normal);
+        vec3 refraction_in = refract(res.ray_direction, res.normal, 1. / `Index of Refraction`);
 
-            vec3        p_enter = res.hit_position - res.normal * SURF_DIST * 3.;
-            RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERT_SDF); // Inside
-            float       d2      = d_in.distance;
+        vec3        p_enter = res.hit_position - res.normal * SURF_DIST * 3.;
+        RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERT_SDF); // Inside
+        float       d2      = d_in.distance;
 
-            vec3 p_exit       = p_enter + refraction_in * d2;
-            vec3 norm_exit    = -get_normal(p_exit);
-            vec3 reflect_text = vec3(0);
+        vec3 p_exit       = p_enter + refraction_in * d2;
+        vec3 norm_exit    = -get_normal(p_exit);
+        vec3 reflect_text = vec3(0);
 
-            // Red
-            reflect_text.r = render_color(refraction_in, norm_exit, IOR, Abberation, 0);
-            // Green
-            reflect_text.g = render_color(refraction_in, norm_exit, IOR, 0., 1);
-            // Blue
-            reflect_text.b = render_color(refraction_in, norm_exit, IOR, -Abberation, 2);
+        // Red
+        reflect_text.r = render_color(refraction_in, norm_exit, `Index of Refraction`, `Refraction Aberration`, 0);
+        // Green
+        reflect_text.g = render_color(refraction_in, norm_exit, `Index of Refraction`, 0., 1);
+        // Blue
+        reflect_text.b = render_color(refraction_in, norm_exit, `Index of Refraction`, -`Refraction Aberration`, 2);
 
-            float optical_distance   = exp(-d2 * Density);
-            reflect_text             = reflect_text * optical_distance;
-            float fresnel_reflection = pow(1. + dot(res.ray_direction, res.normal), 5.);
+        float optical_distance   = exp(-d2 * `Refraction Density`);
+        reflect_text             = reflect_text * optical_distance;
+        float fresnel_reflection = pow(1. + dot(res.ray_direction, res.normal), 5.);
 
-            material_color += mix(reflect_text, reflet_out, fresnel_reflection);
-        }
+        material_color += mix(reflect_text, reflet_out, fresnel_reflection);
     }
     if (`Shadows`)
     {
-        const float Softness       = 9.000000;
-        const float Strength       = 0.900000;
-        const float Sun_Position_x = 100.000000;
-        const float Sun_Position_y = 200.000000;
-        const float Sun_Position_z = 300.000000;
-        {
-            const vec3 sun = vec3(Sun_Position_x, Sun_Position_y, Sun_Position_z);
-            material_color *= (1.0 - Strength) + Strength * soft_shadow(res.hit_position, normalize(sun - res.hit_position), Softness);
-        }
-    }
-    if (`Smoke`)
-    {
-        const float Absorption_Coefficient = 2.500000;
-        const float March_Multiplier       = 0.180000;
-        const float Max_Volume_March_Steps = 50.000000;
-        {
-            float depth            = LARGE_NUMBER;
-            vec3  opaqueColor      = apply_background(res);
-            float opaqueVisibility = 1.0f;
-
-            float volumeDepth     = IntersectVolumetric(res.ray_origin, res.ray_direction, depth);
-            vec3  volumetricColor = vec3(0.0f);
-            if (volumeDepth > 0.0)
-            {
-                const vec3  volumeAlbedo     = vec3(0.8);
-                const float marchSize        = 0.6f * March_Multiplier;
-                float       distanceInVolume = 0.0f;
-                float       signedDistance   = 0.0;
-                for (int i = 0; i < Max_Volume_March_Steps; i++)
-                {
-                    volumeDepth += max(marchSize, signedDistance);
-                    if (volumeDepth > depth || opaqueVisibility < ABSORPTION_CUTOFF)
-                        break;
-
-                    vec3 position = res.ray_origin + volumeDepth * res.ray_direction;
-
-                    signedDistance = `Shape 3D`(position);
-                    if (signedDistance < 0.0f)
-                    {
-                        distanceInVolume += marchSize;
-                        float previousopaqueVisibility = opaqueVisibility;
-                        opaqueVisibility *= BeerLambert(Absorption_Coefficient * GetFogDensity(position, signedDistance), marchSize);
-                        float absorptionFromMarch = previousopaqueVisibility - opaqueVisibility;
-
-                        /// LIGHT PART (WIP)
-
-                        for (int lightIndex = 0; lightIndex < NUM_LIGHTS; lightIndex++)
-                        {
-                            float lightVolumeDepth = 0.0f;
-                            vec3  lightDirection   = (GetLight(lightIndex).Position - position);
-                            float lightDistance    = length(lightDirection);
-                            lightDirection /= lightDistance;
-
-                            vec3 lightColor = GetLight(lightIndex).LightColor * GetLightAttenuation(lightDistance);
-                            if (IsColorInsignificant(lightColor))
-                                continue;
-
-                            const float lightMarchSize = 0.65f;
-                            float       lightVisiblity = GetLightVisiblity(position, lightDirection, lightDistance, MAX_VOLUME_LIGHT_MARCH_STEPS, lightMarchSize, Absorption_Coefficient);
-                            volumetricColor += absorptionFromMarch * lightVisiblity * volumeAlbedo * lightColor;
-                        }
-
-                        /// END LIGHT PART
-
-                        volumetricColor += absorptionFromMarch * volumeAlbedo * GetAmbientLight();
-                    }
-                }
-            }
-            material_color += min(volumetricColor, 1.0f) + opaqueVisibility * opaqueColor;
-        }
+        material_color *= (1.0 - `Shadow Strength`) + `Shadow Strength` * soft_shadow(res.hit_position, normalize(`Shadow Sun Position` - res.hit_position), `Shadow Softness`);
     }
     if (`SSAO`)
     {
-        const float SSAO_Size = 0.100000;
-        {
-            material_color *= ssao(res.hit_position, SSAO_Size);
-        }
+        material_color *= ssao(res.hit_position, `SSAO Size`);
     }
     if (`Ambient Occlusion`)
     {
-        const float AO_Size = 0.100000;
-        {
-            material_color *= calc_occlusion(res.hit_position, get_normal(res.hit_position), AO_Size);
-        }
+        material_color *= calc_occlusion(res.hit_position, get_normal(res.hit_position), `Ambient Occlusion Size`);
     }
 
     return material_color;
@@ -354,62 +266,35 @@ vec3 post_process(RayMarchRes res, vec3 color)
 {
     // clang-format off
     if (`Fog (Constant)`)
-    // clang-format on
     {
-        const float Absorption = 0.070000;
-        const float Emission   = 0.056000;
-        const vec3  Color      = vec3(0.632000, 0.784000, 1.000000);
-        {
-            float fog_extinction   = 1.0 - exp(-res.distance * Absorption);
-            float fog_inscattering = 1.0 - exp(-res.distance * Emission);
-            color                  = color * (1. - fog_extinction) + Color * fog_inscattering;
-        }
+        float fog_extinction   = 1.0 - exp(-res.distance * `Fog (Constant) Absorption`);
+        float fog_inscattering = 1.0 - exp(-res.distance * `Fog (Constant) Emission`);
+        color                  = color * (1. - fog_extinction) + `Fog (Constant) Color` * fog_inscattering;
     }
-    // clang-format off
     if (`Fog (Gradient)`)
-    // clang-format on
     {
-        const float Density        = 0.036000;
-        const float Falloff        = 0.233000;
-        const float Max_Absorption = 1.000000;
-        const float Ground_Height  = -10.000000;
-        const vec3  Color          = vec3(1.000000, 0.944000, 0.684000);
-        {
-            float fog_amount = (Density / Falloff) * exp(-(res.ray_origin.z - Ground_Height) * Falloff) * (1.0 - exp(-res.distance * res.ray_direction.z * Falloff)) / res.ray_direction.z;
-            color            = mix(color, Color, min(fog_amount, Max_Absorption));
-        }
+        float fog_amount = (`Fog (Gradient) Density` / `Fog (Gradient) Falloff`) * exp(-(res.ray_origin.z - `Fog (Gradient) Ground Height`) * `Fog (Gradient) Falloff`) * (1.0 - exp(-res.distance * res.ray_direction.z * `Fog (Gradient) Falloff`)) / res.ray_direction.z;
+        color            = mix(color, `Fog (Gradient) Color`, min(fog_amount, `Fog (Gradient) Max Absorption`));
     }
+    // clang-format on
     if (`Glow`)
     {
-        const float Strength = 0.005000;
-        const float Power    = 2.000000;
-        const vec3  Color    = vec3(1.000000, 1.000000, 1.000000);
-        {
-            float glow = pow(float(res.iterations_count) * Strength, Power);
-            color += glow * Color;
-        }
+        float glow = pow(float(res.iterations_count) * `Glow Strength`, `Glow Power`);
+
+        color += glow * `Glow Color`;
     }
     if (`Glow2`)
     {
-        const float Strength = 9.189000;
-        const float Falloff  = 2.129000;
-        const vec3  Color    = vec3(0.000000, 0.118000, 1.000000);
-        {
-            float glow = Strength * exp(-res.closest_grazed_object * Falloff);
-            color += glow * Color;
-        }
+        float glow = `Glow2 Strength` * exp(-res.closest_grazed_object * `Glow2 Falloff`);
+
+        color += glow * `Glow2 Color`;
     }
     if (`Cartoon Edges`)
     {
-        const vec3  Color       = vec3(0.010000, 0.000000, 0.353000);
-        const float Size        = 0.043000;
-        const float Size_Growth = 0.040000;
-        const float Size_Power  = 1.293000;
-        {
-            color = res.closest_grazed_object < Size + Size_Growth * pow(res.distance_when_grazing_closest_object, Size_Power) * Size
-                        ? Color
-                        : color;
-        }
+        color = res.closest_grazed_object < `Cartoon Edges Size` + `Cartoon Edges Size Growth` * pow(res.distance_when_grazing_closest_object, `Cartoon Edges Size Power`) * `Cartoon Edges Size`
+
+                    ? `Cartoon Edges Color`
+                    : color;
     }
 
     return color;
