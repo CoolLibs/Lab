@@ -19,6 +19,7 @@
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/GizmoManager.h"
@@ -310,7 +311,7 @@ void App::imgui_window_view()
     }
 
     static Cool::GizmoManager gizmos{};
-    gizmos.push(Cool::Gizmo_Point2D{.position = {0.f, 0.f}});
+    gizmos.push(Cool::Gizmo_Point2D{.position = Cool::ViewCoordinates{1.f, 1.f}});
 
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
@@ -319,7 +320,7 @@ void App::imgui_window_view()
                 return false;
             bool b = false;
 
-            gizmos.render();
+            gizmos.render(_nodes_view);
 
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
                                                   || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
