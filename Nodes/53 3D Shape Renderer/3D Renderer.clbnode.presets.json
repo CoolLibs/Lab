@@ -8,6 +8,88 @@
                         "Name": "Default",
                         "Values": [
                             {
+                                "index": 1,
+                                "data": {
+                                    "Name": "Max number of steps",
+                                    "Value": 800,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 1,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 1.0,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0,
+                                            "Has max bound": false,
+                                            "Max": 12,
+                                            "Drag speed": 0.019999999552965165,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Background Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.38085177540779116,
+                                            "y": 0.5064322352409363,
+                                            "z": 0.8537263870239258
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Blur normals at edges",
+                                    "Value": 0.000009999999747378752,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.000009999999747378752,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
                                 "index": 0,
                                 "data": {
                                     "Name": "Fresnel",
@@ -18,23 +100,213 @@
                                 }
                             },
                             {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fresnel Strength",
+                                    "Value": 3.930000066757202,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Fresnel Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 1.0,
+                                            "y": 0.9998999834060669,
+                                            "z": 0.9998999834060669
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
                                 "index": 0,
                                 "data": {
                                     "Name": "Normals",
                                     "Value": true,
                                     "Metadata": {},
-                                    "Default Value": true,
+                                    "Default Value": false,
                                     "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Normals Strength",
+                                    "Value": 1.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.003000000026077032,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
                                 }
                             },
                             {
                                 "index": 0,
                                 "data": {
                                     "Name": "PBR",
-                                    "Value": false,
+                                    "Value": true,
                                     "Metadata": {},
                                     "Default Value": false,
                                     "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "PBR Light Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 1.0,
+                                            "y": 0.9998999834060669,
+                                            "z": 0.9998999834060669
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "PBR Ambient Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 1.0,
+                                            "y": 0.9998999834060669,
+                                            "z": 0.9998999834060669
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "PBR Roughness",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": true,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": true
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "PBR Metalness",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": true,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": true
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
                                 }
                             },
                             {
@@ -48,23 +320,189 @@
                                 }
                             },
                             {
-                                "index": 0,
+                                "index": 2,
                                 "data": {
-                                    "Name": "Shadows",
-                                    "Value": true,
-                                    "Metadata": {},
-                                    "Default Value": true,
-                                    "Default Metadata": {}
+                                    "Name": "Index of Refraction",
+                                    "Value": 0.699999988079071,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Refraction Aberration",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Refraction Density",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
                                 }
                             },
                             {
                                 "index": 0,
                                 "data": {
-                                    "Name": "Smoke",
-                                    "Value": false,
+                                    "Name": "Shadows",
+                                    "Value": true,
                                     "Metadata": {},
                                     "Default Value": false,
                                     "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Shadow Softness",
+                                    "Value": 6.579999923706055,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Shadow Strength",
+                                    "Value": 0.8999999761581421,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 5,
+                                "data": {
+                                    "Name": "Shadow Sun Position",
+                                    "Value": {
+                                        "x": 100.0,
+                                        "y": 200.0,
+                                        "z": 300.0
+                                    },
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    },
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
                                 }
                             },
                             {
@@ -78,13 +516,69 @@
                                 }
                             },
                             {
+                                "index": 2,
+                                "data": {
+                                    "Name": "SSAO Size",
+                                    "Value": 0.6000000238418579,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
                                 "index": 0,
                                 "data": {
                                     "Name": "Ambient Occlusion",
                                     "Value": true,
                                     "Metadata": {},
-                                    "Default Value": true,
+                                    "Default Value": false,
                                     "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Ambient Occlusion Size",
+                                    "Value": 0.10000000149011612,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.0010000000474974514,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
                                 }
                             },
                             {
@@ -98,23 +592,325 @@
                                 }
                             },
                             {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fog (Constant) Absorption",
+                                    "Value": 0.03999999910593033,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fog (Constant) Emission",
+                                    "Value": 0.03999999910593033,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Fog (Constant) Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 1.0,
+                                            "y": 0.651208221912384,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
                                 "index": 0,
                                 "data": {
                                     "Name": "Fog (Gradient)",
-                                    "Value": true,
+                                    "Value": false,
                                     "Metadata": {},
-                                    "Default Value": true,
+                                    "Default Value": false,
                                     "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fog (Gradient) Density",
+                                    "Value": 2.009999990463257,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fog (Gradient) Falloff",
+                                    "Value": 0.3700000047683716,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fog (Gradient) Max Absorption",
+                                    "Value": 0.38999998569488528,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Fog (Gradient) Ground Height",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Fog (Gradient) Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.8929854035377502,
+                                            "y": 0.9205096364021301,
+                                            "z": 0.08732905238866806
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
                                 }
                             },
                             {
                                 "index": 0,
                                 "data": {
                                     "Name": "Glow",
-                                    "Value": false,
+                                    "Value": true,
                                     "Metadata": {},
                                     "Default Value": false,
                                     "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Glow Strength",
+                                    "Value": 0.020999999716877939,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 9.999999974752428e-7,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.00009999999747378752,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Glow Power",
+                                    "Value": 2.8499999046325685,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Glow Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.9984995722770691,
+                                            "y": 0.5487328171730042,
+                                            "z": 1.0
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
                                 }
                             },
                             {
@@ -128,6 +924,88 @@
                                 }
                             },
                             {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Glow2 Strength",
+                                    "Value": 4.260000228881836,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Glow2 Falloff",
+                                    "Value": 1.6100000143051148,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Glow2 Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.4842061996459961,
+                                            "y": 0.0,
+                                            "z": 1.0
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
+                                }
+                            },
+                            {
                                 "index": 0,
                                 "data": {
                                     "Name": "Cartoon Edges",
@@ -135,6 +1013,116 @@
                                     "Metadata": {},
                                     "Default Value": false,
                                     "Default Metadata": {}
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Cartoon Edges Size",
+                                    "Value": 0.12999999523162843,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Cartoon Edges Size Growth",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 2,
+                                "data": {
+                                    "Name": "Cartoon Edges Size Power",
+                                    "Value": 0.0,
+                                    "Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": true,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    },
+                                    "Default Value": 0.0,
+                                    "Default Metadata": {
+                                        "Bounds": {
+                                            "Has min bound": false,
+                                            "Min": 0.0,
+                                            "Has max bound": false,
+                                            "Max": 1.0,
+                                            "Drag speed": 0.009999999776482582,
+                                            "Use slider": false
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "index": 7,
+                                "data": {
+                                    "Name": "Cartoon Edges Color",
+                                    "Value": {
+                                        "sRGB": {
+                                            "x": 0.1930486261844635,
+                                            "y": 0.24194416403770448,
+                                            "z": 0.8746920824050903
+                                        }
+                                    },
+                                    "Metadata": {
+                                        "Is HDR": false
+                                    },
+                                    "Default Value": {
+                                        "sRGB": {
+                                            "x": 0.0,
+                                            "y": 0.0,
+                                            "z": 0.0
+                                        }
+                                    },
+                                    "Default Metadata": {
+                                        "Is HDR": false
+                                    }
                                 }
                             }
                         ]
