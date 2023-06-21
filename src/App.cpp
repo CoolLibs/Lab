@@ -40,9 +40,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
-    // , _custom_shader_view{views.make_view("View | Custom Shader")}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
-// , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
     _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
@@ -107,7 +105,7 @@ void App::update()
     if (!_exporter.is_exporting())
     {
         _clock.update();
-        _nodes_view.update_size(_view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderableView ? But that's maybe too much coupling
+        _nodes_view.update_size(_view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_clock.time());
     }
     else
