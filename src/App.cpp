@@ -22,6 +22,7 @@
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
+#include "Cool/View/GizmoManager.h"
 #include "Cool/View/ViewsManager.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
@@ -307,12 +308,17 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
+    static Cool::GizmoManager gizmos{};
+    gizmos.push(Cool::Gizmo_Point2D{.position = Cool::ViewCoordinates{1.f, 1.f}});
+
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
             if (_exporter.is_exporting())
                 return false;
             bool b = false;
+
+            gizmos.render(_nodes_view);
 
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
                                                   || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
@@ -354,6 +360,8 @@ void App::imgui_window_view()
             return b;
         },
     });
+
+    gizmos.on_frame_end();
 }
 
 void App::imgui_windows()
