@@ -2,7 +2,6 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Dependencies/InputProvider_Ref.h>
-#include <Cool/Input/KeyboardEvent.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
