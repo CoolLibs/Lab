@@ -8,6 +8,11 @@
 #define MAX_SDF_SPHERE_STEPS 15
 #define ABSORPTION_CUTOFF    0.25
 
+vec3 hash_minus_1_to_1(vec3 p)
+{
+    return hash_0_to_1_3D_to_3D(p) * 2. - 1.;
+}
+
 float noise(vec3 x)
 {
     // grid

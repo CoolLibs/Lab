@@ -64,6 +64,10 @@ if (str == "Any")
 {
     return PrimitiveType::Any;
 }
+if (str == "RayMarchRes")
+{
+    return PrimitiveType::RayMarchRes;
+}
 if (str == "CIELAB")
 {
     return PrimitiveType::CIELAB;

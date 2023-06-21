@@ -20,6 +20,7 @@ case PrimitiveType::Hue: return "Hue";
 case PrimitiveType::Direction2D: return "Direction2D";
 case PrimitiveType::Void: return "Void";
 case PrimitiveType::Any: return "Any";
+case PrimitiveType::RayMarchRes: return "RayMarchRes";
 case PrimitiveType::CIELAB: return "CIELAB";
 case PrimitiveType::CIELAB_PremultipliedA: return "CIELAB_PremultipliedA";
 case PrimitiveType::CIELAB_StraightA: return "CIELAB_StraightA";

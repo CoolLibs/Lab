@@ -1,15 +1,15 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Inspired by https://youtube.com/shorts/mQp_Klk2gJs?feature=share
 
-INPUT UV->LinearRGB `Image`;
-INPUT float `Density`;
-INPUT float `Black / White`;
+INPUT UV->CIELAB `Image`;
+INPUT float `Intensity`;
 
-LinearRGB main(UV uv){
-    vec2 unnormalized_uv=uv*_height / 1000.;
-    
-    vec2 rand = hash_0_to_1_2D_to_2D(unnormalized_uv);
-    float noise = rand.x < `Density`
-                    ? rand.y * `Black / White` 
-                    : 0.;
-    return `Image`(uv) + noise;
+CIELAB main(UV uv)
+{
+    vec2 noise_uv = to_view_space(uv);
+
+    float rand  = hash_0_to_1_2D_to_1D(noise_uv);
+    vec3  color = `Image`(uv);
+    color.x *= 1. + `Intensity` * (rand * 2. - 1.);
+    return color;
 }
