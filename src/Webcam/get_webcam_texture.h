@@ -3,6 +3,6 @@
 
 namespace Lab {
 
-auto get_webcam_texture() -> Cool::Texture;
+auto get_webcam_texture(int index) -> Cool::Texture;
 
 }

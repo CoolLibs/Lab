@@ -96,7 +96,7 @@ void App::update()
     }
 
     static Cool::Texture webcam;
-    webcam = get_webcam_texture();
+    webcam = get_webcam_texture(0);
     _nodes_module->set_webcam(webcam);
 
     Cool::user_settings().color_themes.update();

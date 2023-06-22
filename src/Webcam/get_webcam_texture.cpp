@@ -17,11 +17,11 @@ namespace Lab {
 //     for(unsigned int i=0; i<mat.r)
 // }
 
-auto get_webcam_texture() -> Cool::Texture
+auto get_webcam_texture(const int index) -> Cool::Texture
 {
     // return Cool::Texture{{10, 10}};
 
-    static cv::VideoCapture cap{0};
+    static cv::VideoCapture cap{index};
 
     if (!cap.isOpened())
     {
