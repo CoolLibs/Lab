@@ -11,6 +11,7 @@
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <Webcam/webcam_manager.h>
 #include <cmd/imgui.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
@@ -95,9 +96,10 @@ void App::update()
         set_everybody_dirty();
     }
 
-    static Cool::Texture webcam;
-    webcam = get_webcam_texture(0);
-    _nodes_module->set_webcam(webcam);
+    // static Cool::Texture webcam;
+    // webcam = get_webcam_texture(0);
+    _webcam_manager.update();
+    _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(0));
 
     Cool::user_settings().color_themes.update();
 

@@ -1,5 +1,7 @@
 #pragma once
 #include <Webcam/webcam_manager.h>
+#include <algorithm>
+#include <memory>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
@@ -48,9 +50,15 @@ void WebcamManager::add_webcam()
     const auto height = static_cast<unsigned int>(image.rows);
 
     m_list_webcam.push_back(Webcam{
-        .m_texture = Cool::Texture{{width, height}, 3, reinterpret_cast<uint8_t*>(image.ptr()), {.interpolation_mode = glpp::Interpolation::NearestNeighbour}},
+        .m_texture = std::make_shared<Cool::Texture>(Cool::Texture{{width, height}, 3, reinterpret_cast<uint8_t*>(image.ptr()), {.interpolation_mode = glpp::Interpolation::NearestNeighbour}}),
         .m_capture = cam,
         .m_mat     = cv::Mat{}});
+}
+
+void WebcamManager::update_webcams()
+{
+    for (Webcam& webcam : m_list_webcam)
+        update_webcam(webcam);
 }
 
 void update_webcam(Webcam& webcam)
@@ -60,11 +68,11 @@ void update_webcam(Webcam& webcam)
     const auto width  = static_cast<unsigned int>(webcam.m_mat.cols);
     const auto height = static_cast<unsigned int>(webcam.m_mat.rows);
 
-    webcam.m_texture.set_image({
-                                   width,
-                                   height,
-                               },
-                               3, reinterpret_cast<uint8_t*>(webcam.m_mat.ptr()));
+    webcam.m_texture->set_image({
+                                    width,
+                                    height,
+                                },
+                                3, reinterpret_cast<uint8_t*>(webcam.m_mat.ptr()));
 }
 
 } // namespace Lab
