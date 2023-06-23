@@ -17,6 +17,7 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
+#include "Cool/Gpu/Texture.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -97,9 +98,14 @@ void App::update()
     }
 
     // static Cool::Texture webcam;
-    // webcam = get_webcam_texture(0);
-    _webcam_manager.update();
-    _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(0));
+    // // webcam = get_webcam_texture(0);
+    std::cout << "update cam";
+    if (_nodes_module->uses_webcam())
+    {
+        _webcam_manager.update();
+        _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(0));
+    }
+    // _nodes_module->set_webcam(Cool::Texture{{1, 1}});
 
     Cool::user_settings().color_themes.update();
 

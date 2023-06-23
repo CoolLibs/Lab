@@ -1,5 +1,6 @@
 #include "Module_Nodes.h"
 #include <Cool/StrongTypes/set_uniform.h>
+#include <Module_Nodes/Module_Nodes.h>
 #include <stdexcept>
 #include "Common/make_shader_compilation_error_message.h"
 #include "Cool/Camera/Camera.h"
@@ -231,7 +232,10 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     auto const& pipeline = _shader.pipeline();
     auto const& shader   = *pipeline.shader();
 
-    _webcam->attach_to_slot(0);
+    if (uses_webcam())
+    {
+        _webcam->attach_to_slot(0);
+    }
 
     shader.bind();
     shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
@@ -265,6 +269,17 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
     });
 }
 
+auto Module_Nodes::uses_webcam() const -> bool
+{
+    bool res = false;
+
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
+        if (node.definition_name() == "Webcam")
+            res = true;
+    });
+    std::cout << res;
+    return res;
+}
 } // namespace Lab
 
 #include <cereal/archives/json.hpp>

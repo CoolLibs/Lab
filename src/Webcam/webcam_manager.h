@@ -3,6 +3,7 @@
 #include <memory>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/videoio.hpp>
+#include <string>
 #include <vector>
 #include "Cool/Gpu/Texture.h"
 #include "get_webcam_texture.h"
@@ -13,6 +14,7 @@ struct Webcam {
     std::shared_ptr<Cool::Texture> m_texture{};
     cv::VideoCapture               m_capture{};
     cv::Mat                        m_mat{};
+    std::string                    m_name{};
 };
 
 void update_webcam(Webcam& webcam);
@@ -24,6 +26,8 @@ public:
 
     auto get_webcam_texture(size_t index)
     {
+        if (index >= m_list_webcam.size())
+            return m_list_webcam[0].m_texture;
         return m_list_webcam[index].m_texture;
         // return list_webcam_textures[m_active_cam_id];
         // return Cool::Texture{{1, 1}}; // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)

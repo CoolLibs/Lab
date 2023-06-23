@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <memory>
 #include <opencv2/core/mat.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/videoio.hpp>
@@ -21,7 +23,7 @@ auto WebcamManager::get_number_of_camera() -> int // code from se0kjun : https:/
         cv::VideoCapture temp_camera(i);
         bool             res = (!temp_camera.isOpened());
         temp_camera.release();
-        if (res)
+        if (!res)
         {
             return i;
         }
@@ -32,18 +34,26 @@ auto WebcamManager::get_number_of_camera() -> int // code from se0kjun : https:/
 
 void WebcamManager::update()
 {
-    m_number_of_webcam = get_number_of_camera();
-    for (int i = 0; i < m_number_of_webcam; i++)
+    // std::cout << "number of cams : " << get_number_of_camera() << "\n\n\n";
+    // m_number_of_webcam = 1;
+    if (m_number_of_webcam < 2)
     {
+        add_webcam();
+        m_number_of_webcam++;
     }
+
+    const int diff = m_number_of_webcam - m_list_webcam.size(); // check if there is closed or open cameras
+
+    update_webcams();
 }
 
 void WebcamManager::add_webcam()
 {
-    cv::VideoCapture cam{m_number_of_webcam};
+    std::cout << "ADD \n\n\n";
+    cv::VideoCapture cam{std::max(m_number_of_webcam - 1, 0)};
     cv::Mat          image;
+    cam >> image;
 
-    cv::cvtColor(image, image, cv::COLOR_BGR2RGB); // TODO(TD) in shader
     // image = cv::Mat::conver
 
     const auto width  = static_cast<unsigned int>(image.cols);
@@ -52,7 +62,8 @@ void WebcamManager::add_webcam()
     m_list_webcam.push_back(Webcam{
         .m_texture = std::make_shared<Cool::Texture>(Cool::Texture{{width, height}, 3, reinterpret_cast<uint8_t*>(image.ptr()), {.interpolation_mode = glpp::Interpolation::NearestNeighbour}}),
         .m_capture = cam,
-        .m_mat     = cv::Mat{}});
+        .m_mat     = cv::Mat{},
+        .m_name    = cam.getBackendName()});
 }
 
 void WebcamManager::update_webcams()
@@ -64,6 +75,9 @@ void WebcamManager::update_webcams()
 void update_webcam(Webcam& webcam)
 {
     webcam.m_capture >> webcam.m_mat;
+    // cv::waitKey(1);
+    std::cout << "UPDATE ! \n\n\n";
+    // cv::cvtColor(webcam.m_mat, webcam.m_mat, cv::COLOR_BGR2RGB); // TODO(TD) in shader
 
     const auto width  = static_cast<unsigned int>(webcam.m_mat.cols);
     const auto height = static_cast<unsigned int>(webcam.m_mat.rows);

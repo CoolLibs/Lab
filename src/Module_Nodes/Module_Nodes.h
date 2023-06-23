@@ -28,6 +28,7 @@ public:
     void debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
 
     void set_webcam(Cool::Texture const& webcam) { _webcam = &webcam; }
+    auto uses_webcam() const -> bool;
 
 protected:
     void render(RenderParams, UpdateContext_Ref) override;
