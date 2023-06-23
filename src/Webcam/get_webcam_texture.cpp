@@ -31,7 +31,6 @@ auto get_webcam_texture(const int index) -> Cool::Texture
     cv::Mat image;
     cap >> image;
     // cv::waitKey(25);
-    cv::cvtColor(image, image, cv::COLOR_BGR2RGB); // TODO(TD) in shader
     // image = cv::Mat::conver
 
     const auto width  = static_cast<unsigned int>(image.cols);
