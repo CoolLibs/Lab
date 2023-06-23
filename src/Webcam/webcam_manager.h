@@ -13,8 +13,8 @@ namespace Lab {
 struct Webcam {
     std::shared_ptr<Cool::Texture> m_texture{};
     cv::VideoCapture               m_capture{};
-    cv::Mat                        m_mat{};
-    std::string                    m_name{};
+    // cv::Mat                        m_mat{};
+    std::string m_name{};
 };
 
 void update_webcam(Webcam& webcam);
