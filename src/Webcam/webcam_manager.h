@@ -13,13 +13,12 @@ namespace Lab {
 struct Webcam {
     std::shared_ptr<Cool::Texture> m_texture{};
     cv::VideoCapture               m_capture{};
-    // cv::Mat                        m_mat{};
-    std::string m_name{};
+    std::string                    m_name{};
 };
 
 void update_webcam(Webcam& webcam);
 
-class WebcamManager {
+class WebcamManager { // Question : le Webcam Manager existe qu'une seule fois dans le projet ?
 public:
     WebcamManager()  = default;
     ~WebcamManager() = default;
@@ -29,8 +28,6 @@ public:
         if (index >= m_list_webcam.size())
             return m_list_webcam[0].m_texture;
         return m_list_webcam[index].m_texture;
-        // return list_webcam_textures[m_active_cam_id];
-        // return Cool::Texture{{1, 1}}; // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
     }
 
     void update();
@@ -46,7 +43,6 @@ public:
     bool m_is_webcam_used;
 
 private:
-    // int                 m_active_cam_id{}; // DEPENDS ON THE MODE SO NO NEED IN THE MANAGER
     int                 m_number_of_webcam{};
     std::vector<Webcam> m_list_webcam{};
 };

@@ -34,8 +34,6 @@ auto WebcamManager::get_number_of_camera() -> int // code from se0kjun : https:/
 
 void WebcamManager::update()
 {
-    // std::cout << "number of cams : " << get_number_of_camera() << "\n\n\n";
-    // m_number_of_webcam = 1;
     if (m_number_of_webcam < 1)
     {
         m_number_of_webcam++;
@@ -61,8 +59,7 @@ void WebcamManager::add_webcam()
     m_list_webcam.push_back(Webcam{
         .m_texture = std::make_shared<Cool::Texture>(Cool::Texture{{width, height}, 3, reinterpret_cast<uint8_t*>(image.ptr()), {.interpolation_mode = glpp::Interpolation::NearestNeighbour}}),
         .m_capture = cam,
-        // .m_mat     = cv::Mat{},
-        .m_name = cam.getBackendName()});
+        .m_name    = cam.getBackendName()});
 }
 
 void WebcamManager::update_webcams()

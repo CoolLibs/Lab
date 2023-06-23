@@ -97,15 +97,12 @@ void App::update()
         set_everybody_dirty();
     }
 
-    // static Cool::Texture webcam;
-    // // webcam = get_webcam_texture(0);
     std::cout << "update cam";
     if (_nodes_module->uses_webcam())
     {
         _webcam_manager.update();
         _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(0));
     }
-    // _nodes_module->set_webcam(Cool::Texture{{1, 1}});
 
     Cool::user_settings().color_themes.update();
 
