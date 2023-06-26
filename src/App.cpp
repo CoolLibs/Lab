@@ -345,7 +345,7 @@ void App::imgui_window_view()
             // Enable 2D camera
             if (Cool::ImGuiExtras::floating_button(ICOMOON_CAMERA, buttons_order++, align_buttons_vertically, _is_camera_2D_editable_in_view))
             {
-                _is_camera_2D_editable_in_view        = !_is_camera_2D_editable_in_view;
+                _is_camera_2D_editable_in_view        = true;
                 _camera_manager.is_editable_in_view() = !_is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
@@ -354,7 +354,7 @@ void App::imgui_window_view()
             // Enable 3D camera
             if (Cool::ImGuiExtras::floating_button(ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically, _camera_manager.is_editable_in_view()))
             {
-                _camera_manager.is_editable_in_view() = !_camera_manager.is_editable_in_view();
+                _camera_manager.is_editable_in_view() = true;
                 _is_camera_2D_editable_in_view        = !_camera_manager.is_editable_in_view(); // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
