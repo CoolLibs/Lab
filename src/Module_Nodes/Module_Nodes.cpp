@@ -129,6 +129,18 @@ void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     });
 }
 
+void Module_Nodes::submit_gizmos(Cool::GizmoManager& gizmos)
+{
+    static auto gizmo_pos = Cool::ViewCoordinates{0.f, 0.f};
+    static auto gizmo_id  = reg::internal::generate_uuid();
+
+    gizmos.push(Cool::Gizmo_Point2D{
+        .get_position = [&]() { return gizmo_pos; },
+        .set_position = [&](Cool::ViewCoordinates pos) { gizmo_pos = pos; },
+        ._id          = gizmo_id,
+    });
+}
+
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
 {
     Cool::AllInputRefsToConst inputs;

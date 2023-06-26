@@ -309,11 +309,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    static auto gizmo_id = reg::internal::generate_uuid();
-    _nodes_view.push_gizmo(Cool::Gizmo_Point2D{
-        .position = Cool::ViewCoordinates{0.f, 0.f},
-        ._id      = gizmo_id,
-    });
+    _nodes_module->submit_gizmos(_nodes_view.gizmos_manager());
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
