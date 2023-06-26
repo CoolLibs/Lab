@@ -42,6 +42,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 {
+    _camera_manager.is_editable_in_view() = false;
     _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
         _nodes_view.mouse_events(),
@@ -344,7 +345,8 @@ void App::imgui_window_view()
             // Enable 2D camera
             if (Cool::ImGuiExtras::floating_button(ICOMOON_CAMERA, buttons_order++, align_buttons_vertically, _is_camera_2D_editable_in_view))
             {
-                _is_camera_2D_editable_in_view = !_is_camera_2D_editable_in_view;
+                _is_camera_2D_editable_in_view        = !_is_camera_2D_editable_in_view;
+                _camera_manager.is_editable_in_view() = !_is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is editable" : "2D camera is frozen");
@@ -353,6 +355,7 @@ void App::imgui_window_view()
             if (Cool::ImGuiExtras::floating_button(ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically, _camera_manager.is_editable_in_view()))
             {
                 _camera_manager.is_editable_in_view() = !_camera_manager.is_editable_in_view();
+                _is_camera_2D_editable_in_view        = !_camera_manager.is_editable_in_view(); // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_camera_manager.is_editable_in_view() ? "3D camera is editable" : "3D camera is frozen");
