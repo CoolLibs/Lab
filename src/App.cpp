@@ -309,7 +309,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _nodes_module->submit_gizmos(_nodes_view.gizmos_manager());
+    _nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {

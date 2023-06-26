@@ -49,8 +49,8 @@ public:
         render(params, update_ctx);
         params.set_clean(_dirty_flag);
     }
-    virtual void imgui_windows(Ui_Ref, UpdateContext_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
-    virtual void submit_gizmos(Cool::GizmoManager&)             = 0;
+    virtual void imgui_windows(Ui_Ref, UpdateContext_Ref) const        = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
+    virtual void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref) = 0;
     virtual void update(UpdateContext_Ref){};
 
     [[nodiscard]] virtual auto all_inputs() const -> Cool::AllInputRefsToConst = 0;

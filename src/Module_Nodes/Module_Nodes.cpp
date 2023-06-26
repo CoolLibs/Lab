@@ -129,16 +129,29 @@ void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     });
 }
 
-void Module_Nodes::submit_gizmos(Cool::GizmoManager& gizmos)
+void Module_Nodes::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx)
 {
-    static auto gizmo_pos = Cool::ViewCoordinates{0.f, 0.f};
-    static auto gizmo_id  = reg::internal::generate_uuid();
-
-    gizmos.push(Cool::Gizmo_Point2D{
-        .get_position = [&]() { return gizmo_pos; },
-        .set_position = [&](Cool::ViewCoordinates pos) { gizmo_pos = pos; },
-        ._id          = gizmo_id,
-    });
+    for (auto const& [_, node] : _nodes_editor.graph().nodes())
+    {
+        for (auto const& input : node.downcast<Node>().value_inputs())
+        {
+            if (auto const* point_2D_input = std::get_if<Cool::Input<Cool::Point2D>>(&input))
+            {
+                auto const id = point_2D_input->_default_variable_id.raw();
+                gizmos.push(Cool::Gizmo_Point2D{
+                    .get_position = [=]() {
+                        auto const var = ctx.input_provider().variable_registries().get(id);
+                        if (!var)
+                            return Cool::ViewCoordinates{0.f};
+                        return Cool::ViewCoordinates{var->value().value};
+                        //
+                    },
+                    .set_position = [=](Cool::ViewCoordinates pos) { ctx.input_provider().variable_registries().with_mutable_ref<Cool::Variable<Cool::Point2D>>(id, [&](Cool::Variable<Cool::Point2D>& var) { var.value() = Cool::Point2D{pos}; }); },
+                    ._id          = id,
+                });
+            }
+        }
+    }
 }
 
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
