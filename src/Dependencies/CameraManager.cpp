@@ -36,37 +36,25 @@ void CameraManager::hook_events(
         });
     events
         .drag()
-        .start()
-        .subscribe([registries, this, executor, on_change](auto const&) {
-            if (!_is_editable_in_view)
-                return;
+        .subscribe({
+            .on_start  = [registries, this, executor, on_change](auto const&) {
+                if (!_is_editable_in_view)
+                    return false;
 
-            maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
-                return _view_controller.on_drag_start(camera);
-            });
-        });
-    events
-        .drag()
-        .update()
-        .subscribe([registries, this, executor, on_change](auto const&) {
-            if (!_is_editable_in_view)
-                return;
-
-            maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
-                return _view_controller.on_drag(camera, Cool::ImGuiCoordinates{ImGui::GetIO().MouseDelta}); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
-            });
-        });
-    events
-        .drag()
-        .stop()
-        .subscribe([registries, this, executor, on_change](auto&&) {
-            if (!_is_editable_in_view)
-                return;
-
-            maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
-                return _view_controller.on_drag_stop(camera);
-            });
-            executor.execute(Command_FinishedEditingVariable{});
+                maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
+                    return _view_controller.on_drag_start(camera);
+                });
+                return true; },
+            .on_update = [registries, this, executor, on_change](auto const&) { 
+                //
+                maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
+                    return _view_controller.on_drag(camera, Cool::ImGuiCoordinates{ImGui::GetIO().MouseDelta}); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
+                }); },
+            .on_stop   = [registries, this, executor, on_change](auto&&) {
+                maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
+                    return _view_controller.on_drag_stop(camera);
+                });
+                executor.execute(Command_FinishedEditingVariable{}); },
         });
 }
 
