@@ -10,8 +10,8 @@
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
+#include <Cool/Webcam/webcam_manager.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
-#include <Webcam/webcam_manager.h>
 #include <cmd/imgui.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
@@ -23,6 +23,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
+#include "Cool/Webcam/get_webcam_texture.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -30,7 +31,6 @@
 #include "Module_is0/Module_is0.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
-#include "Webcam/get_webcam_texture.h"
 #include "img/img.hpp"
 #include "imgui.h"
 

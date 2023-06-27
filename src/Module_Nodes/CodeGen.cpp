@@ -4,6 +4,7 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
+#include <Module_Nodes/NodeDefinition.h>
 #include <optional>
 #include <string>
 #include "CodeGenContext.h"
@@ -172,7 +173,7 @@ static auto gen_value_inputs(
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties res{};
+    Properties           res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
@@ -562,7 +563,8 @@ auto gen_desired_function(
     FunctionSignature   desired_signature,
     Node const&         node,
     Cool::NodeId const& id,
-    CodeGenContext&     context
+    CodeGenContext&     context,
+    std::function<void(NodeDefinition const&)>
 ) -> ExpectedFunctionName
 {
     auto const node_definition = context.get_node_definition(node.id_names()); // NOLINT(readability-qualified-auto)
@@ -578,6 +580,10 @@ auto gen_desired_function(
             "Failed to generate code for node \"{}\":\n{}",
             node_definition->name(), base_function_name.error()
         ));
+
+    // callback(*node_definition); TODO(TD) checker si on passe par la webcam
+
+    // node_definition->value_inputs()
 
     auto const func_body = gen_desired_function_implementation(
         concrete_signature(*node_definition, node),
