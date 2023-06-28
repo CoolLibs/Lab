@@ -1,4 +1,5 @@
 #include "Module_Nodes.h"
+#include <Commands/Command_FinishedEditingVariable.h>
 #include <Cool/StrongTypes/set_uniform.h>
 #include <stdexcept>
 #include "Common/make_shader_compilation_error_message.h"
@@ -142,13 +143,16 @@ static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Re
         },
         .set_position = [=](Cool::ViewCoordinates pos) {
             //
-            ctx
-                .input_provider()
-                .variable_registries()
-                .with_mutable_ref<Cool::Variable<Cool::Point2D>>(
-                    id,
-                    [&](Cool::Variable<Cool::Point2D>& var) { var.value() = Cool::Point2D{pos}; }
-                );
+            ctx.ui().command_executor().execute(
+                Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{pos}}
+            );
+            //
+        },
+        .on_drag_stop = [=]() {
+            //
+            ctx.ui().command_executor().execute(
+                Command_FinishedEditingVariable{}
+            );
             //
         },
         ._id = id,
