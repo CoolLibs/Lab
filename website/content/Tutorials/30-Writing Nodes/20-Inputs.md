@@ -19,13 +19,13 @@ Here are all the types you can have as a value input:
 - `bool`
 - `int`
 - `float`
-- `UV` (Unlike `vec2`, this will create a point on the screen that you can move around)
+- `Point2D` (`vec2` under the hood. Unlike `vec2`, this will create a point on the screen that you can move around)
 - `vec2`
 - `vec3`
 - `vec4`
 - `Angle` (`float` under the hood)
 - `Direction2D` (`vec2` under the hood, guaranteed to be of length 1)
-- `Hue` (`float` under the hood, between 0 and 1).
+- `Hue` (`float` under the hood, guaranteed to be between 0 and 1).
 - Color (`CIELAB`, `sRGB`, `LinearRGB` or `HSLuv`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec3` under the hood).
 - Color and alpha (`CIELAB_PremultipliedA`, `CIELAB_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `HSLuv_PremultipliedA` or `HSLuv_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
 
