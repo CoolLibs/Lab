@@ -164,8 +164,7 @@ static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Re
 
 void Module_Nodes::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx)
 {
-    for (auto const& [_, node] : _nodes_editor.graph().nodes())
-    {
+    _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
         for (auto const& input : node.downcast<Node>().value_inputs())
         {
             if (auto const* point_2D_input = std::get_if<Cool::Input<Cool::Point2D>>(&input))
@@ -173,7 +172,7 @@ void Module_Nodes::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref c
                 gizmos.push(make_gizmo(*point_2D_input, ctx));
             }
         }
-    }
+    });
 }
 
 auto Module_Nodes::all_inputs() const -> Cool::AllInputRefsToConst
