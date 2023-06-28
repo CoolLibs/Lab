@@ -48,7 +48,7 @@ void CameraManager::hook_events(
             .on_update = [registries, this, executor, on_change](auto const&) { 
                 //
                 maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
-                    return _view_controller.on_drag(camera, Cool::ImGuiCoordinates{ImGui::GetIO().MouseDelta}); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
+                    return _view_controller.on_drag(camera, ImGui::GetIO().MouseDelta); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
                 }); },
             .on_stop   = [registries, this, executor, on_change](auto&&) {
                 maybe_update_camera(registries, executor, on_change, [&](Cool::Camera& camera) {
