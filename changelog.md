@@ -9,6 +9,7 @@
 
 ## 🐣beta-5 WIP
 
+TODO Add gifs to illustrate changes (especially for Gizmos)
 - ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
 - ✨ Added Bezier Curve node.
 - ✨ Added a full 3D renderer node.
