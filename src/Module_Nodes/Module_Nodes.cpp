@@ -7,6 +7,7 @@
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
+#include "Cool/Dependencies/Input.h"
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/TextureLibrary.h"
@@ -132,19 +133,21 @@ void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 
 static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
 {
-    auto const id = input._default_variable_id.raw();
+    auto const& cam_transform = ctx.input_provider()(Cool::Input_Camera2D{});
+    auto const  id            = input._default_variable_id.raw();
     return Cool::Gizmo_Point2D{
         .get_position = [=]() {
             auto const var = ctx.input_provider().variable_registries().get(id);
             if (!var)
                 return Cool::ViewCoordinates{0.f};
-            return Cool::ViewCoordinates{var->value().value};
+            return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{var->value().value, 1.f}}};
             //
         },
         .set_position = [=](Cool::ViewCoordinates pos) {
             //
+            auto const world_pos = glm::vec2{cam_transform * glm::vec3{pos, 1.f}};
             ctx.ui().command_executor().execute(
-                Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{pos}}
+                Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{world_pos}}
             );
             //
         },
