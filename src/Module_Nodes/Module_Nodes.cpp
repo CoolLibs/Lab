@@ -232,7 +232,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     auto const& pipeline = _shader.pipeline();
     auto const& shader   = *pipeline.shader();
 
-    if (uses_webcam())
+    if (_is_using_webcam)
     {
         _webcam->attach_to_slot(0);
     }
@@ -246,6 +246,8 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_webcam", 0);
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
+    bool tmp_has_webcam = false;
+
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
         for (auto const& value_input : node.value_inputs())
         {
@@ -254,7 +256,11 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
             },
                        value_input);
         }
+
+        tmp_has_webcam = (node.definition_name() == "Webcam") || tmp_has_webcam;
     });
+
+    _is_using_webcam = tmp_has_webcam;
 
     pipeline.draw();
 }
@@ -271,14 +277,7 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
 
 auto Module_Nodes::uses_webcam() const -> bool
 {
-    bool res = false;
-
-    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
-        if (node.definition_name() == "Webcam")
-            res = true;
-    });
-    std::cout << res;
-    return res;
+    return _is_using_webcam;
 }
 } // namespace Lab
 

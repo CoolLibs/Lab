@@ -49,6 +49,7 @@ private:
     mutable Cool::MessageSender                                      _shader_compilation_error{};
     Cool::Input<Cool::Camera>                                        _camera_input;
 
+    bool                 _is_using_webcam{};
     Cool::Texture const* _webcam{};
 
 private:
