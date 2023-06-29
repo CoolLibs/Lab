@@ -101,7 +101,7 @@ void App::update()
     {
         std::cout << "update cam";
         _webcam_manager.update();
-        _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(0));
+        _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(1));
     }
 
     Cool::user_settings().color_themes.update();
