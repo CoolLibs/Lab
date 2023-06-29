@@ -1,13 +1,13 @@
 # Changelog
 
-- [🐣beta-5 WIP](#beta-5-wip)
+- [🐣beta-5](#beta-5)
 - [🐣beta-4](#beta-4)
 - [🐣beta-3](#beta-3)
 - [🐣beta-2](#beta-2)
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-5 WIP
+## 🐣beta-5
 
 - ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
 ![Animation](https://github.com/CoolLibs/Lab/assets/45451201/b2a5ad91-e9bf-42d6-ab7a-c60e86e97c40)
