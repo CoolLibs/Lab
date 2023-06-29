@@ -47,7 +47,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -139,7 +139,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -213,7 +213,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -239,7 +239,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -659,7 +659,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -807,7 +807,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -899,7 +899,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -991,7 +991,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
@@ -1111,7 +1111,7 @@
                                         }
                                     },
                                     "Metadata": {
-                                        "Is HDR": false
+                                        "Is HDR": true
                                     },
                                     "Default Value": {
                                         "sRGB": {
