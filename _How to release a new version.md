@@ -1,4 +1,4 @@
-- Remove the "WIP" in the version number in *src/Dump/coollab_version.cpp* and in the changelog, and commit with the message "🔖 [beta-1] Release" (make sure to replace with the right version number)
+- Remove the "WIP" in the version number in *src/Dump/coollab_version.cpp* and in *changelog.md*, and commit with the message "🔖 [beta-1] Release" (make sure to replace with the right version number)
 - Create a tag on the commit used for the release
 - As a description, use whatever is in the changelog for the new version
 - Run the "Create release executables" workflow from the *Actions* tab of GitHub. For **Use workflow from** make sure to replace `Branch: main` with the tag you just created.

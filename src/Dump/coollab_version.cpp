@@ -4,7 +4,7 @@ namespace Lab {
 
 auto coollab_version() -> std::string
 {
-    return "beta-5";
+    return "beta-6 WIP";
 }
 
 } // namespace Lab
