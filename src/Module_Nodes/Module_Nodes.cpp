@@ -133,8 +133,8 @@ void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 
 static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
 {
-    auto const& cam_transform = ctx.input_provider()(Cool::Input_Camera2D{});
-    auto const  id            = input._default_variable_id.raw();
+    auto const cam_transform = ctx.input_provider()(Cool::Input_Camera2D{});
+    auto const id            = input._default_variable_id.raw();
     return Cool::Gizmo_Point2D{
         .get_position = [=]() {
             auto const var = ctx.input_provider().variable_registries().get(id);
@@ -158,7 +158,7 @@ static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Re
             );
             //
         },
-        ._id = id,
+        .id = id,
     };
 }
 

@@ -15,7 +15,7 @@ TODO Add gifs to illustrate changes (especially for Gizmos)
 - ✨ Added a full 3D renderer node.
 - ✨ Added tips that will show up from time to time and teach you about the subtleties and shortcuts of Coollab.
 - ✨ Main input pins now have a different icon to distinguish them from the other pins.
-- 🐛 Fix: prevent panning the nodes if you are already panning the camera.
+- 🐛 Fix: prevent panning the nodes while you are panning the camera.
 - 🐛 Fixed the camera controls not working when the View window was on another screen.
 
 ## 🐣beta-4
