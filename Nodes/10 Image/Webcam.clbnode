@@ -2,7 +2,7 @@
 sRGB main(UV uv) // TODO(TD) Check with color space OpenCV uses
 {
     uv /= 2.;
-    uv.x /= 4.f / 3.f; // TODO(TD) Pass the actual aspect ratio of the webcam
+    uv.x /= _webcam_aspect_ratio;
     uv.y *= -1.f;
     uv += 0.5;
     return texture(_webcam, uv).bgr; // conversion BGR -> RGB because OpenCV gets Webcam texture in BRG
