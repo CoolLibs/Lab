@@ -4,7 +4,7 @@
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Image/AspectRatio.h"
 #include "Cool/Input/MouseCoordinates.h"
-#include "Cool/Input/MouseDragStartEvent.h"
+#include "Cool/Input/MouseDragEvents.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/UserSettings/UserSettings.h"
 #include "glm/gtx/rotate_vector.hpp"
@@ -44,13 +44,12 @@ void hook_camera2D_events(
 
     events
         .drag()
-        .update()
-        .subscribe([&, on_change, is_locked_in_view](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
-            if (is_locked_in_view())
-                return;
-
-            camera.translation -= event.delta / camera.zoom;
-            on_change();
+        .subscribe({
+            .on_start  = [is_locked_in_view](auto&&) { return !is_locked_in_view(); },
+            .on_update = [&, on_change, is_locked_in_view](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
+                camera.translation -= event.delta / camera.zoom;
+                on_change(); },
+            .on_stop   = [&](auto&&) {},
         });
 
     // TODO rotation when shift+scroll and explanation

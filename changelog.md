@@ -9,10 +9,13 @@
 
 ## 🐣beta-5 WIP
 
+TODO Add gifs to illustrate changes (especially for Gizmos)
+- ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
+- ✨ Added Bezier Curve node.
 - ✨ Added a full 3D renderer node.
 - ✨ Added tips that will show up from time to time and teach you about the subtleties and shortcuts of Coollab.
 - ✨ Main input pins now have a different icon to distinguish them from the other pins.
-- 🐛 Fix: don't pan the nodes while you are already panning the camera.
+- 🐛 Fix: prevent panning the nodes while you are panning the camera.
 - 🐛 Fixed the camera controls not working when the View window was on another screen.
 
 ## 🐣beta-4

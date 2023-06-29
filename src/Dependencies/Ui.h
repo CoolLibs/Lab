@@ -70,6 +70,7 @@ public:
 
     auto variable_registries() const -> const Cool::VariableRegistries& { return _variable_registries; }
     auto variable_registries() -> Cool::VariableRegistries& { return _variable_registries; }
+    auto command_executor() -> auto& { return _command_executor; }
 
     auto input_factory() const -> auto { return _input_factory; }
 
