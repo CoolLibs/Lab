@@ -9,12 +9,19 @@
 
 ## 🐣beta-5 WIP
 
-TODO Add gifs to illustrate changes (especially for Gizmos)
 - ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
+![Animation](https://github.com/CoolLibs/Lab/assets/45451201/b2a5ad91-e9bf-42d6-ab7a-c60e86e97c40)
+
 - ✨ Added Bezier Curve node.
 - ✨ Added a full 3D renderer node.
+![Animation-min](https://github.com/CoolLibs/Lab/assets/45451201/5996fb72-258b-46ff-b87d-4195bda21215)
+
 - ✨ Added tips that will show up from time to time and teach you about the subtleties and shortcuts of Coollab.
+![image](https://github.com/CoolLibs/Lab/assets/45451201/112c4431-5e68-4617-9bcb-6591755aae05)
+
 - ✨ Main input pins now have a different icon to distinguish them from the other pins.
+![image](https://github.com/CoolLibs/Lab/assets/45451201/73191129-3c1a-4fb0-afa8-6651100399aa)
+
 - 🐛 Fix: prevent panning the nodes while you are panning the camera.
 - 🐛 Fixed the camera controls not working when the View window was on another screen.
 
