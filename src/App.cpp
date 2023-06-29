@@ -97,9 +97,9 @@ void App::update()
         set_everybody_dirty();
     }
 
-    std::cout << "update cam";
     if (_nodes_module->uses_webcam())
     {
+        std::cout << "update cam";
         _webcam_manager.update();
         _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(0));
     }

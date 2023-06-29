@@ -246,7 +246,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_webcam", 0);
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
-    bool tmp_has_webcam = false;
+    bool tmp_has_webcam = false; // TODO(TD) issue, is updated only when rendering, if the cam was the main node, after deleting it, there is no new render, the cams still continues to get datas
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
         for (auto const& value_input : node.value_inputs())
