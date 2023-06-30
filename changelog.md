@@ -10,6 +10,8 @@
 
 ## 🐣beta-6 WIP
 
+- ⚡️ Big performance improvements. If you experienced lag spikes before, they should be gone now!
+
 ## 🐣beta-5
 
 - ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
