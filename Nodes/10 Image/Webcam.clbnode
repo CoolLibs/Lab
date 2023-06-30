@@ -1,5 +1,6 @@
 
-sRGB main(UV uv) // TODO(TD) Check with color space OpenCV uses
+INPUT Webcam `webcam`;
+sRGB  main(UV uv) // TODO(TD) Check with color space OpenCV uses
 {
     uv /= 2.;
     uv.x /= _webcam_aspect_ratio;
