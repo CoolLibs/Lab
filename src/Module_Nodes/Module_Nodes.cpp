@@ -232,24 +232,13 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     auto const& pipeline = _shader.pipeline();
     auto const& shader   = *pipeline.shader();
 
-    if (_is_using_webcam)
-    {
-        _webcam->attach_to_slot(0);
-    }
-
-    float webcam_aspect_ratio = _webcam == nullptr ? 1. : _webcam->aspect_ratio();
-
     shader.bind();
     shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
     shader.set_uniform("_camera2D", in.provider(Cool::Input_Camera2D{}));
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
-    shader.set_uniform("_webcam", 0);
-    shader.set_uniform("_webcam_aspect_ratio", webcam_aspect_ratio);
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
-
-    bool tmp_has_webcam = false; // TODO(TD) issue, is updated only when rendering, if the cam was the main node, after deleting it, there is no new render, the cams still continues to get datas
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
         for (auto const& value_input : node.value_inputs())
@@ -259,11 +248,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
             },
                        value_input);
         }
-
-        tmp_has_webcam = (node.definition_name() == "Webcam") || tmp_has_webcam;
     });
-
-    _is_using_webcam = tmp_has_webcam;
 
     pipeline.draw();
 }
@@ -278,10 +263,6 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
     });
 }
 
-auto Module_Nodes::uses_webcam() const -> bool
-{
-    return _is_using_webcam;
-}
 } // namespace Lab
 
 #include <cereal/archives/json.hpp>

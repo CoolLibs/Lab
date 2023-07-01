@@ -18,7 +18,6 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
-#include "Cool/Gpu/TextureLibrary_FromWebcam.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
@@ -94,12 +93,6 @@ void App::update()
     {
         _is_first_frame = false;
         set_everybody_dirty();
-    }
-
-    if (_nodes_module->uses_webcam())
-    {
-        std::cout << "update cam";
-        _nodes_module->set_webcam(*Cool::TextureLibrary_FromWebcam::instance().get_webcam_texture(0));
     }
 
     Cool::user_settings().color_themes.update();

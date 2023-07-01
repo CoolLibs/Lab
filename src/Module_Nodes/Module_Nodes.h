@@ -27,9 +27,6 @@ public:
 
     void debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
 
-    void set_webcam(Cool::Texture const& webcam) { _webcam = &webcam; }
-    auto uses_webcam() const -> bool;
-
 protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
@@ -48,9 +45,6 @@ private:
     Cool::DirtyFlag                                                  _regenerate_code_flag;
     mutable Cool::MessageSender                                      _shader_compilation_error{};
     Cool::Input<Cool::Camera>                                        _camera_input;
-
-    bool                 _is_using_webcam{};
-    Cool::Texture const* _webcam{};
 
 private:
     // Serialization
