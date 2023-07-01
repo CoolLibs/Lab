@@ -10,7 +10,6 @@
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
-#include <Cool/Webcam/webcam_manager.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
 #include <cmd/imgui.hpp>
 #include <stringify/stringify.hpp>
@@ -18,12 +17,12 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/Gpu/Texture.h"
-#include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Gpu/TextureLibrary_FromWebcam.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
-#include "Cool/Webcam/get_webcam_texture.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -100,8 +99,7 @@ void App::update()
     if (_nodes_module->uses_webcam())
     {
         std::cout << "update cam";
-        _webcam_manager.update();
-        _nodes_module->set_webcam(*_webcam_manager.get_webcam_texture(0));
+        _nodes_module->set_webcam(*Cool::TextureLibrary_FromWebcam::instance().get_webcam_texture(0));
     }
 
     Cool::user_settings().color_themes.update();
@@ -413,7 +411,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {
-        Cool::TextureLibrary::instance().imgui_debug_view();
+        Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
     });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {

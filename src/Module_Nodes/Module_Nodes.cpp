@@ -10,7 +10,7 @@
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/Texture.h"
-#include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
@@ -191,10 +191,10 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     );
 
     // HACK to send an error message whenever a Texture variable has an invalid path
-    if constexpr (std::is_same_v<T, Cool::TextureInfo>)
+    if constexpr (std::is_same_v<T, Cool::TextureDescriptor>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            auto const err = Cool::TextureLibrary::instance().error_from(value.absolute_path);
+            auto const err = Cool::TextureLibrary_FromFile::instance().error_from(value.absolute_path);
             if (err)
             {
                 Cool::Log::ToUser::console().send(

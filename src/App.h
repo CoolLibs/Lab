@@ -12,7 +12,6 @@
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderableViewManager.h>
-#include <Cool/Webcam/webcam_manager.h>
 #include <Cool/Window/WindowManager.h>
 #include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
@@ -20,7 +19,6 @@
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
-#include "Cool/Webcam/webcam_manager.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
@@ -135,7 +133,6 @@ private:
     bool                           _view_was_in_fullscreen_last_frame{false};
     GalleryPoster                  _gallery_poster{};
     Cool::TipsManager              _tips_manager{};
-    Cool::WebcamManager            _webcam_manager{};
 
 private:
     // Serialization
