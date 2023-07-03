@@ -1,5 +1,6 @@
 # Changelog
 
+- [🐣beta-7 WIP](#beta-7-wip)
 - [🐣beta-6](#beta-6)
 - [🐣beta-5](#beta-5)
 - [🐣beta-4](#beta-4)
@@ -7,6 +8,8 @@
 - [🐣beta-2](#beta-2)
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
+
+## 🐣beta-7 WIP
 
 ## 🐣beta-6
 
