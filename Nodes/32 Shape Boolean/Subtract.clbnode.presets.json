@@ -3,26 +3,26 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "e539380c-9a98-4c9d-844f-08b2327cb766",
+                    "first": "54dad344-0ae4-486c-8d90-859998833aa5",
                     "second": {
                         "Name": "Default",
                         "Values": [
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Progression",
-                                    "Value": 0.5,
+                                    "Name": "Smoothing",
+                                    "Value": 9.999999974752428e-7,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": -3.0,
+                                            "Has min bound": true,
+                                            "Min": 9.999999974752428e-7,
                                             "Has max bound": false,
-                                            "Max": 4.0,
+                                            "Max": 1.0,
                                             "Drag speed": 0.009999999776482582,
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.4000000059604645,
+                                    "Default Value": 9.999999974752428e-7,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,

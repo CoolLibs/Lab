@@ -2,11 +2,11 @@
 
 INPUT UV->SignedDistance `Shape 1`;
 INPUT UV->SignedDistance `Shape 2`;
-INPUT float `Size`;
+INPUT float `Thickness`;
 
 #include "_ROOT_FOLDER_/res/hg_sdf.glsl"
 
 SignedDistance main(UV pos)
 {
-    return fOpUnionChamfer(`Shape 1`(pos), `Shape 2`(pos), `Size`);
+    return fOpPipe(`Shape 1`(pos), `Shape 2`(pos), `Thickness`);
 }

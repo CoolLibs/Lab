@@ -8,10 +8,3 @@ SignedDistance main(vec3 pos)
 {
     return CLB_FIX_ARTIFACTS(smooth_max_polynomial(`3D Shape 1`(pos), `3D Shape 2`(pos), `Smoothing`));
 }
-
-// float {
-//     "Name": "Smoothing",
-//     "Default": 0.07,
-//     "Min": 0.0,
-//     "Max": 0.2
-// }

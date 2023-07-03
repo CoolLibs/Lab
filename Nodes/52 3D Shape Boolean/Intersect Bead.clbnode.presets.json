@@ -10,7 +10,7 @@
                             {
                                 "index": 2,
                                 "data": {
-                                    "Name": "Step Size",
+                                    "Name": "Size",
                                     "Value": 0.20000000298023225,
                                     "Metadata": {
                                         "Bounds": {

@@ -3,7 +3,7 @@
         "Presets": {
             "Underlying container": [
                 {
-                    "first": "451f5175-2c16-41b7-9447-5a4fe93681a5",
+                    "first": "63bc4bb4-c1ea-420d-a532-1fd68da63ffd",
                     "second": {
                         "Name": "Default",
                         "Values": [
@@ -11,7 +11,7 @@
                                 "index": 2,
                                 "data": {
                                     "Name": "Size",
-                                    "Value": 0.20000000298023225,
+                                    "Value": 0.11999999731779099,
                                     "Metadata": {
                                         "Bounds": {
                                             "Has min bound": true,
@@ -22,7 +22,7 @@
                                             "Use slider": false
                                         }
                                     },
-                                    "Default Value": 0.20000000298023225,
+                                    "Default Value": 0.11999999731779099,
                                     "Default Metadata": {
                                         "Bounds": {
                                             "Has min bound": false,
