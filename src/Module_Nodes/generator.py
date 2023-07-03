@@ -3,6 +3,13 @@ from typing import Optional, List, Any
 
 
 @dataclass
+class Conversion:
+    from_: str
+    to: str
+    implementation: str  # An empty string means that the conversion doesn't need any code (e.g. between UV and Vec2)
+
+
+@dataclass
 class PrimitiveType:
     cpp: str
     user_facing_name: str
@@ -158,6 +165,115 @@ def all_primitive_types():
     res.extend(primitive_types_for_color_spaces())
 
     return res
+
+
+def all_conversions():
+    return [
+        Conversion(
+            from_="Float",
+            to="Angle",
+            implementation="",
+        ),
+        Conversion(
+            from_="Angle",
+            to="Float",
+            implementation="",
+        ),
+        Conversion(
+            from_="Float",
+            to="Hue",
+            implementation="",
+        ),
+        Conversion(
+            from_="Hue",
+            to="Float",
+            implementation="",
+        ),
+        Conversion(
+            from_="Float",
+            to="Int",
+            implementation="""
+                int FUNCTION_NAME(float x)
+                {
+                    return int(floor(x));
+                }
+            """,
+        ),
+        Conversion(
+            from_="Int",
+            to="Float",
+            implementation="""
+                float FUNCTION_NAME(int x)
+                {
+                    return float(x);
+                }
+            """,
+        ),
+        Conversion(
+            from_="Float",
+            to="Bool",
+            implementation="""
+                bool FUNCTION_NAME(float x)
+                {
+                    return x > 0.5;
+                }
+            """,
+        ),
+        Conversion(
+            from_="Bool",
+            to="Float",
+            implementation="""
+                float FUNCTION_NAME(bool b)
+                {
+                    return b ? 1. : 0.;
+                }
+            """,
+        ),
+        Conversion(
+            from_="Angle",
+            to="Direction2D",
+            implementation="""
+                vec2 FUNCTION_NAME(float angle)
+                {
+                    return vec2(cos(angle), sin(angle));
+                }
+            """,
+        ),
+        Conversion(
+            from_="Float",
+            to="Direction2D",
+            implementation="""
+                vec2 FUNCTION_NAME(float x)
+                {
+                    return vec2(cos(x), sin(x));
+                }
+            """,
+        ),
+        Conversion(
+            from_="Direction2D",
+            to="Angle",
+            implementation="""
+                float FUNCTION_NAME(vec2 dir)
+                {
+                    return dir.x != 0.f
+                                ? atan(dir.y, dir.x)
+                                : dir.y > 0.
+                                    ? PI / 2.
+                                    : -PI / 2.;
+                }
+            """,
+        ),
+        Conversion(
+            from_="UV",
+            to="Vec2",
+            implementation="",
+        ),
+        Conversion(
+            from_="Vec2",
+            to="UV",
+            implementation="",
+        ),
+    ]
 
 
 def color_spaces():
@@ -511,6 +627,45 @@ def string_listing_the_parsed_types():
     )
 
 
+def implicit_conversions():
+    def replace_function_name(code: str, name: str):
+        return code.replace("FUNCTION_NAME", name)
+
+    def gen_conversion(conversion: Conversion):
+        if conversion.implementation == "":
+            return f"""
+                if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
+                    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+            """
+
+        function_name = f"Coollab_{conversion.from_}_to_{conversion.to}"
+        return f"""
+            if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
+            {{
+                return context.push_function({{
+                    .name       = "{function_name}",
+                    .definition = R"STR({replace_function_name(conversion.implementation, function_name+"/*coollabdef*/")})STR",
+                }});
+            }}
+        """
+
+    from pipe import map
+
+    return "\n".join(all_conversions() | map(gen_conversion))
+
+
+def can_convert():
+    def code(conversion: Conversion):
+        return f"""
+            if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
+                return true;
+        """
+
+    from pipe import map
+
+    return "\n".join(all_conversions() | map(code))
+
+
 if __name__ == "__main__":
     # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
     # So we need to add the path manually to sys.path
@@ -540,5 +695,7 @@ if __name__ == "__main__":
             implicit_color_conversions,
             has_an_alpha_channel,
             is_color_type,
+            implicit_conversions,
+            can_convert,
         ],
     )
