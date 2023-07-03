@@ -654,6 +654,18 @@ def implicit_conversions():
     return "\n".join(all_conversions() | map(gen_conversion))
 
 
+def can_convert():
+    def code(conversion: Conversion):
+        return f"""
+            if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
+                return true;
+        """
+
+    from pipe import map
+
+    return "\n".join(all_conversions() | map(code))
+
+
 if __name__ == "__main__":
     # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
     # So we need to add the path manually to sys.path
@@ -684,5 +696,6 @@ if __name__ == "__main__":
             has_an_alpha_channel,
             is_color_type,
             implicit_conversions,
+            can_convert,
         ],
     )
