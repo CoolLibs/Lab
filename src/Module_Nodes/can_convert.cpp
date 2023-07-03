@@ -7,8 +7,10 @@ auto can_convert(PrimitiveType from, PrimitiveType to) -> bool // NOLINT(readabi
     if (from == to)
         return true;
 
+    {
 #include "generated/can_convert.inl"
-    return false; // NOLINT(*misleading-indentation)
+    }
+    return false;
 }
 
 } // namespace Lab
