@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-6 WIP](#beta-6-wip)
+- [🐣beta-6](#beta-6)
 - [🐣beta-5](#beta-5)
 - [🐣beta-4](#beta-4)
 - [🐣beta-3](#beta-3)
@@ -8,7 +8,7 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-6 WIP
+## 🐣beta-6
 
 - ✨ Added many Shape Booleans.
 - ⚡️ Big performance improvements. If you experienced lag spikes before, they should be gone now!
