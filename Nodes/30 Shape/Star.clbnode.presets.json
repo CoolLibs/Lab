@@ -47,7 +47,7 @@
                                             "Has max bound": false,
                                             "Max": 20,
                                             "Drag speed": 0.03999999910593033,
-                                            "Use slider": true
+                                            "Use slider": false
                                         }
                                     },
                                     "Default Value": 5,
