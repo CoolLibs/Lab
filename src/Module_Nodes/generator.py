@@ -3,12 +3,19 @@ from typing import Optional, List, Any
 
 
 @dataclass
+class Conversion:
+    to: str
+    implementation: str
+
+
+@dataclass
 class PrimitiveType:
     cpp: str
     user_facing_name: str
     corresponding_input_types: List[str]
     glsl: str
     parsed_from: Optional[str]
+    conversions: List[Conversion]
     can_be_a_template_type: bool
 
 
@@ -23,6 +30,17 @@ def all_primitive_types():
             corresponding_input_types=["bool"],
             glsl="bool",
             parsed_from="bool",
+            conversions=[
+                Conversion(
+                    to="Float",
+                    implementation="""
+                        float FUNCTION_NAME(bool b)
+                        {
+                            return b ? 1. : 0.;
+                        }
+                    """,
+                ),
+            ],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -31,6 +49,7 @@ def all_primitive_types():
             corresponding_input_types=["int"],
             glsl="int",
             parsed_from="int",
+            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -39,6 +58,7 @@ def all_primitive_types():
             corresponding_input_types=["float"],
             glsl="float",
             parsed_from="float",
+            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -47,6 +67,7 @@ def all_primitive_types():
             corresponding_input_types=["glm::vec2"],
             glsl="vec2",
             parsed_from="vec2",
+            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -55,6 +76,7 @@ def all_primitive_types():
             corresponding_input_types=["glm::vec3"],
             glsl="vec3",
             parsed_from="vec3",
+            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -63,6 +85,7 @@ def all_primitive_types():
             corresponding_input_types=["glm::vec4"],
             glsl="vec4",
             parsed_from="vec4",
+            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -71,6 +94,7 @@ def all_primitive_types():
             corresponding_input_types=["glm::mat2"],
             glsl="mat2",
             parsed_from="mat2",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -79,6 +103,7 @@ def all_primitive_types():
             corresponding_input_types=["glm::mat3"],
             glsl="mat3",
             parsed_from="mat3",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -87,6 +112,7 @@ def all_primitive_types():
             corresponding_input_types=["glm::mat4"],
             glsl="mat4",
             parsed_from="mat4",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -95,6 +121,7 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Point2D"],
             glsl="vec2",
             parsed_from="UV",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -103,6 +130,7 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="float",
             parsed_from="SignedDistance",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -111,6 +139,7 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Angle"],
             glsl="float",
             parsed_from="Angle",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -119,6 +148,7 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Hue"],
             glsl="float",
             parsed_from="Hue",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -127,6 +157,7 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Direction2D"],
             glsl="vec2",
             parsed_from="Direction2D",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -135,6 +166,7 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="void",
             parsed_from=None,
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -143,6 +175,7 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="ERROR the Any type should have been converted earlier in the compilation process.",
             parsed_from="Any",
+            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(  # TODO(JF) Remove this once helper functions can use whatever type they want.
@@ -151,6 +184,7 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="RayMarchRes",
             parsed_from="RayMarchRes",
+            conversions=[],
             can_be_a_template_type=False,
         ),
     ]
@@ -192,6 +226,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
                 corresponding_input_types=["Cool::Color"],
                 glsl="vec3",
                 parsed_from=color_space.name_in_code,
+                conversions=[],
                 can_be_a_template_type=False,
             )
         )
@@ -203,6 +238,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
                 corresponding_input_types=["Cool::ColorAndAlpha"],
                 glsl="vec4",
                 parsed_from=color_space.name_in_code + "_PremultipliedA",
+                conversions=[],
                 can_be_a_template_type=False,
             )
         )
@@ -214,6 +250,7 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
                 corresponding_input_types=["Cool::ColorAndAlpha"],
                 glsl="vec4",
                 parsed_from=color_space.name_in_code + "_StraightA",
+                conversions=[],
                 can_be_a_template_type=False,
             )
         )
@@ -511,6 +548,29 @@ def string_listing_the_parsed_types():
     )
 
 
+def implicit_conversions():
+    def replace_function_name(code: str, name: str):
+        return code.replace("FUNCTION_NAME", name)
+
+    def gen_conversion(type_name: str, conversion: Conversion):
+        function_name = f"Coollab_{type_name}_to_{conversion.to}"
+        return f"""
+            if (from == PrimitiveType::{type_name} && to == PrimitiveType::{conversion.to})
+            {{
+                return context.push_function({{
+                    .name       = "{function_name}",
+                    .definition = R"STR({replace_function_name(conversion.implementation, function_name+"/*coollabdef*/")})STR",
+                }});
+            }}
+        """
+
+    res = ""
+    for type in all_primitive_types():
+        for conversion in type.conversions:
+            res += gen_conversion(type.cpp, conversion)
+    return res
+
+
 if __name__ == "__main__":
     # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
     # So we need to add the path manually to sys.path
@@ -540,5 +600,6 @@ if __name__ == "__main__":
             implicit_color_conversions,
             has_an_alpha_channel,
             is_color_type,
+            implicit_conversions,
         ],
     )

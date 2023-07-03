@@ -71,7 +71,7 @@ auto is_image(FunctionSignature signature) -> bool
 
 auto is_greyscale(FunctionSignature signature) -> bool
 {
-    return signature.to == PrimitiveType::Float;
+    return can_convert(signature.to, PrimitiveType::Float);
 }
 
 auto space_transformation_signature() -> FunctionSignature
