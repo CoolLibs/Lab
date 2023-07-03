@@ -4,8 +4,9 @@ from typing import Optional, List, Any
 
 @dataclass
 class Conversion:
+    from_: str
     to: str
-    implementation: str
+    implementation: str  # An empty string means that the conversion doesn't need any code (e.g. between UV and Vec2)
 
 
 @dataclass
@@ -15,7 +16,6 @@ class PrimitiveType:
     corresponding_input_types: List[str]
     glsl: str
     parsed_from: Optional[str]
-    conversions: List[Conversion]
     can_be_a_template_type: bool
 
 
@@ -30,17 +30,6 @@ def all_primitive_types():
             corresponding_input_types=["bool"],
             glsl="bool",
             parsed_from="bool",
-            conversions=[
-                Conversion(
-                    to="Float",
-                    implementation="""
-                        float FUNCTION_NAME(bool b)
-                        {
-                            return b ? 1. : 0.;
-                        }
-                    """,
-                ),
-            ],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -49,7 +38,6 @@ def all_primitive_types():
             corresponding_input_types=["int"],
             glsl="int",
             parsed_from="int",
-            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -58,7 +46,6 @@ def all_primitive_types():
             corresponding_input_types=["float"],
             glsl="float",
             parsed_from="float",
-            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -67,7 +54,6 @@ def all_primitive_types():
             corresponding_input_types=["glm::vec2"],
             glsl="vec2",
             parsed_from="vec2",
-            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -76,7 +62,6 @@ def all_primitive_types():
             corresponding_input_types=["glm::vec3"],
             glsl="vec3",
             parsed_from="vec3",
-            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -85,7 +70,6 @@ def all_primitive_types():
             corresponding_input_types=["glm::vec4"],
             glsl="vec4",
             parsed_from="vec4",
-            conversions=[],
             can_be_a_template_type=True,
         ),
         PrimitiveType(
@@ -94,7 +78,6 @@ def all_primitive_types():
             corresponding_input_types=["glm::mat2"],
             glsl="mat2",
             parsed_from="mat2",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -103,7 +86,6 @@ def all_primitive_types():
             corresponding_input_types=["glm::mat3"],
             glsl="mat3",
             parsed_from="mat3",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -112,7 +94,6 @@ def all_primitive_types():
             corresponding_input_types=["glm::mat4"],
             glsl="mat4",
             parsed_from="mat4",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -121,7 +102,6 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Point2D"],
             glsl="vec2",
             parsed_from="UV",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -130,7 +110,6 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="float",
             parsed_from="SignedDistance",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -139,7 +118,6 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Angle"],
             glsl="float",
             parsed_from="Angle",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -148,7 +126,6 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Hue"],
             glsl="float",
             parsed_from="Hue",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -157,7 +134,6 @@ def all_primitive_types():
             corresponding_input_types=["Cool::Direction2D"],
             glsl="vec2",
             parsed_from="Direction2D",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -166,7 +142,6 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="void",
             parsed_from=None,
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(
@@ -175,7 +150,6 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="ERROR the Any type should have been converted earlier in the compilation process.",
             parsed_from="Any",
-            conversions=[],
             can_be_a_template_type=False,
         ),
         PrimitiveType(  # TODO(JF) Remove this once helper functions can use whatever type they want.
@@ -184,7 +158,6 @@ def all_primitive_types():
             corresponding_input_types=[],
             glsl="RayMarchRes",
             parsed_from="RayMarchRes",
-            conversions=[],
             can_be_a_template_type=False,
         ),
     ]
@@ -192,6 +165,115 @@ def all_primitive_types():
     res.extend(primitive_types_for_color_spaces())
 
     return res
+
+
+def all_conversions():
+    return [
+        Conversion(
+            from_="Float",
+            to="Angle",
+            implementation="",
+        ),
+        Conversion(
+            from_="Angle",
+            to="Float",
+            implementation="",
+        ),
+        Conversion(
+            from_="Float",
+            to="Hue",
+            implementation="",
+        ),
+        Conversion(
+            from_="Hue",
+            to="Float",
+            implementation="",
+        ),
+        Conversion(
+            from_="Float",
+            to="Int",
+            implementation="""
+                int FUNCTION_NAME(float x)
+                {
+                    return int(floor(x));
+                }
+            """,
+        ),
+        Conversion(
+            from_="Int",
+            to="Float",
+            implementation="""
+                float FUNCTION_NAME(int x)
+                {
+                    return float(x);
+                }
+            """,
+        ),
+        Conversion(
+            from_="Float",
+            to="Bool",
+            implementation="""
+                bool FUNCTION_NAME(float x)
+                {
+                    return x > 0.5;
+                }
+            """,
+        ),
+        Conversion(
+            from_="Bool",
+            to="Float",
+            implementation="""
+                float FUNCTION_NAME(bool b)
+                {
+                    return b ? 1. : 0.;
+                }
+            """,
+        ),
+        Conversion(
+            from_="Angle",
+            to="Direction2D",
+            implementation="""
+                vec2 FUNCTION_NAME(float angle)
+                {
+                    return vec2(cos(angle), sin(angle));
+                }
+            """,
+        ),
+        Conversion(
+            from_="Float",
+            to="Direction2D",
+            implementation="""
+                vec2 FUNCTION_NAME(float x)
+                {
+                    return vec2(cos(x), sin(x));
+                }
+            """,
+        ),
+        Conversion(
+            from_="Direction2D",
+            to="Angle",
+            implementation="""
+                float FUNCTION_NAME(vec2 dir)
+                {
+                    return dir.x != 0.f
+                                ? atan(dir.y, dir.x)
+                                : dir.y > 0.
+                                    ? PI / 2.
+                                    : -PI / 2.;
+                }
+            """,
+        ),
+        Conversion(
+            from_="UV",
+            to="Vec2",
+            implementation="",
+        ),
+        Conversion(
+            from_="Vec2",
+            to="UV",
+            implementation="",
+        ),
+    ]
 
 
 def color_spaces():
@@ -226,7 +308,6 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
                 corresponding_input_types=["Cool::Color"],
                 glsl="vec3",
                 parsed_from=color_space.name_in_code,
-                conversions=[],
                 can_be_a_template_type=False,
             )
         )
@@ -238,7 +319,6 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
                 corresponding_input_types=["Cool::ColorAndAlpha"],
                 glsl="vec4",
                 parsed_from=color_space.name_in_code + "_PremultipliedA",
-                conversions=[],
                 can_be_a_template_type=False,
             )
         )
@@ -250,7 +330,6 @@ def primitive_types_for_color_spaces() -> List[PrimitiveType]:
                 corresponding_input_types=["Cool::ColorAndAlpha"],
                 glsl="vec4",
                 parsed_from=color_space.name_in_code + "_StraightA",
-                conversions=[],
                 can_be_a_template_type=False,
             )
         )
@@ -552,10 +631,16 @@ def implicit_conversions():
     def replace_function_name(code: str, name: str):
         return code.replace("FUNCTION_NAME", name)
 
-    def gen_conversion(type_name: str, conversion: Conversion):
-        function_name = f"Coollab_{type_name}_to_{conversion.to}"
+    def gen_conversion(conversion: Conversion):
+        if conversion.implementation == "":
+            return f"""
+                if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
+                    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+            """
+
+        function_name = f"Coollab_{conversion.from_}_to_{conversion.to}"
         return f"""
-            if (from == PrimitiveType::{type_name} && to == PrimitiveType::{conversion.to})
+            if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
             {{
                 return context.push_function({{
                     .name       = "{function_name}",
@@ -564,11 +649,9 @@ def implicit_conversions():
             }}
         """
 
-    res = ""
-    for type in all_primitive_types():
-        for conversion in type.conversions:
-            res += gen_conversion(type.cpp, conversion)
-    return res
+    from pipe import map
+
+    return "\n".join(all_conversions() | map(gen_conversion))
 
 
 if __name__ == "__main__":
