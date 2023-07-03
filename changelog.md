@@ -11,6 +11,7 @@
 ## 🐣beta-6 WIP
 
 - ⚡️ Big performance improvements. If you experienced lag spikes before, they should be gone now!
+- 🐛 Fix: some nodes had the wrong color
 
 ## 🐣beta-5
 
