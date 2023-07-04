@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-7 WIP](#beta-7-wip)
+- [🐣beta-7](#beta-7)
 - [🐣beta-6](#beta-6)
 - [🐣beta-5](#beta-5)
 - [🐣beta-4](#beta-4)
@@ -9,7 +9,7 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-7 WIP
+## 🐣beta-7
 
 - ✨ Only one camera (either 2D or 3D) can be active at the same time.
 - ✨ Improved "Distortion Map" node.
