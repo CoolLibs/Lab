@@ -12,6 +12,9 @@
 ## 🐣beta-7 WIP
 
 - ✨ Improved "Distortion Map" node.
+- ✨ Added several "3D Shape from 2D" nodes.
+- 🚚 Renamed "Boolean" categories as "Blend".
+- 🚚 Renamed "Blend" nodes as "Mix".
 - 🚚 Moved "Time" node to the "Input" category.
 - 🐛 Fixed implicit conversion between numbers and angles: a number equal to 1 (white) now corresponds to a full turn (360 degrees).
 
