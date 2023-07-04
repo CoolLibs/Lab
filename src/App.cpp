@@ -338,24 +338,14 @@ void App::imgui_window_view()
             b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
-            // Enable 2D camera
-            if (Cool::ImGuiExtras::floating_button(ICOMOON_CAMERA, buttons_order++, align_buttons_vertically, _is_camera_2D_editable_in_view))
+            // Toggle 2D / 3D cameras
+            if (Cool::ImGuiExtras::floating_button(_is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
             {
-                _is_camera_2D_editable_in_view        = true;
+                _is_camera_2D_editable_in_view        = !_is_camera_2D_editable_in_view;
                 _camera_manager.is_editable_in_view() = !_is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is editable" : "2D camera is frozen");
-
-            // Enable 3D camera
-            if (Cool::ImGuiExtras::floating_button(ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically, _camera_manager.is_editable_in_view()))
-            {
-                _camera_manager.is_editable_in_view() = true;
-                _is_camera_2D_editable_in_view        = !_camera_manager.is_editable_in_view(); // Only allow one camera active at the same time.
-            }
-            b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_camera_manager.is_editable_in_view() ? "3D camera is editable" : "3D camera is frozen");
-
+            Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
             return b;
         },
     });

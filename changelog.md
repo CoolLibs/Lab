@@ -11,6 +11,7 @@
 
 ## 🐣beta-7 WIP
 
+- ✨ Only one camera (either 2D or 3D) can be active at the same time.
 - ✨ Improved "Distortion Map" node.
 - ✨ Added several "3D Shape from 2D" nodes.
 - 🚚 Renamed "Boolean" categories as "Blend".
