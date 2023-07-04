@@ -6,10 +6,30 @@
  */
 
 if (from == PrimitiveType::Float && to == PrimitiveType::Angle)
-    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+{
+    return context.push_function({
+        .name       = "Coollab_Float_to_Angle",
+        .definition = R"STR(
+                float Coollab_Float_to_Angle/*coollabdef*/(float x)
+                {
+                    return x * TAU;
+                }
+            )STR",
+    });
+}
 
 if (from == PrimitiveType::Angle && to == PrimitiveType::Float)
-    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+{
+    return context.push_function({
+        .name       = "Coollab_Angle_to_Float",
+        .definition = R"STR(
+                float Coollab_Angle_to_Float/*coollabdef*/(float angle)
+                {
+                    return angle / TAU;
+                }
+            )STR",
+    });
+}
 
 if (from == PrimitiveType::Float && to == PrimitiveType::Hue)
     return ""; // No need to do anything for this conversion, the difference is purely semantic.
@@ -89,7 +109,8 @@ if (from == PrimitiveType::Float && to == PrimitiveType::Direction2D)
         .definition = R"STR(
                 vec2 Coollab_Float_to_Direction2D/*coollabdef*/(float x)
                 {
-                    return vec2(cos(x), sin(x));
+                    float angle = x * TAU;
+                    return vec2(cos(angle), sin(angle));
                 }
             )STR",
     });

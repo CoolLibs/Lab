@@ -172,12 +172,22 @@ def all_conversions():
         Conversion(
             from_="Float",
             to="Angle",
-            implementation="",
+            implementation="""
+                float FUNCTION_NAME(float x)
+                {
+                    return x * TAU;
+                }
+            """,
         ),
         Conversion(
             from_="Angle",
             to="Float",
-            implementation="",
+            implementation="""
+                float FUNCTION_NAME(float angle)
+                {
+                    return angle / TAU;
+                }
+            """,
         ),
         Conversion(
             from_="Float",
@@ -245,7 +255,8 @@ def all_conversions():
             implementation="""
                 vec2 FUNCTION_NAME(float x)
                 {
-                    return vec2(cos(x), sin(x));
+                    float angle = x * TAU;
+                    return vec2(cos(angle), sin(angle));
                 }
             """,
         ),
