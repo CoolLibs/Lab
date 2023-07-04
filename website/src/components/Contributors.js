@@ -114,6 +114,12 @@ export default ({}) => {
           link="https://frankoo.artstation.com/"
           roles={["Video tutorials maker"]}
         />,
+        <Contributor
+          name="Philippe Rosales"
+          github_name="Audiophil15"
+          link="https://github.com/Audiophil15"
+          roles={["Programmer"]}
+        />,
       ]}
     />
   )
