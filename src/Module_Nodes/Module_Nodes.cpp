@@ -2,6 +2,7 @@
 #include <Cool/StrongTypes/set_uniform.h>
 #include <Module_Nodes/Module_Nodes.h>
 #include <stdexcept>
+#include <type_traits>
 #include "Common/make_shader_compilation_error_message.h"
 #include "Cool/Camera/Camera.h"
 #include "Cool/Camera/CameraShaderU.h"
@@ -10,7 +11,9 @@
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/Texture.h"
+#include "Cool/Gpu/TextureDescriptor.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Gpu/TextureSource.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
@@ -191,17 +194,19 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     );
 
     // HACK to send an error message whenever a Texture variable has an invalid path
-    if constexpr (std::is_same_v<T, Cool::TextureDescriptor>)
+    if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            auto const err = Cool::TextureLibrary_FromFile::instance().error_from(value.absolute_path);
+            // auto const err = value.get_err();
+            auto err = Cool::get_error(value.source);
+            // auto const err = Cool::TextureLibrary_FromFile::instance().error_from(value.source.absolute_path);
             if (err)
             {
                 Cool::Log::ToUser::console().send(
                     variable.message_id,
                     Cool::Message{
                         .category = "Load Image",
-                        .message  = fmt::format("Failed to load {}:\n{}", value.absolute_path, *err),
+                        .message  = err.value(),
                         .severity = Cool::MessageSeverity::Error,
                     }
                 );
