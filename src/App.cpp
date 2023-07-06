@@ -37,24 +37,14 @@
 namespace Lab {
 
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
-    : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
-    , _main_window{windows.main_window()}
+    : _main_window{windows.main_window()}
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
-    , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
+    , _project{_nodes_view}
 {
-    _camera_manager.is_editable_in_view() = false;
-    _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
-    hook_camera2D_events(
-        _nodes_view.mouse_events(),
-        _camera2D.value(),
-        [this]() { trigger_rerender(); },
-        [this]() { return !_is_camera_2D_editable_in_view; }
-    );
-    // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
+    // _project.camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
-    _clock.pause();
 }
 
 App::~App()
@@ -69,28 +59,33 @@ void App::on_shutdown()
 
 void App::compile_all_is0_nodes()
 {
-    // for (const auto& node_template : _nodes_module->nodes_templates())
+    // for (const auto& node_template : _project.nodes_module->nodes_templates())
     // {
-    //     _nodes_module->remove_all_nodes();
+    //     _project.nodes_module->remove_all_nodes();
     //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
-    //     _nodes_module->add_node(NodeFactoryU::node_from_template(node_template));
-    //     _nodes_module->recompile(update_context(), true);
+    //     _project.nodes_module->add_node(NodeFactoryU::node_from_template(node_template));
+    //     _project.nodes_module->recompile(update_context(), true);
     // }
-    // _nodes_module->remove_all_nodes();
+    // _project.nodes_module->remove_all_nodes();
 }
 
 void App::set_everybody_dirty()
 {
-    std::unique_lock lock{_dirty_registry.mutex()};
-    for (auto& [_, is_dirty] : _dirty_registry)
+    std::unique_lock lock{_project.dirty_registry.mutex()};
+    for (auto& [_, is_dirty] : _project.dirty_registry)
         is_dirty.is_dirty = true;
+}
+
+void App::load_project()
+{
+    // TODO(Project) unsubscribe the previous project from the view events.
 }
 
 void App::update()
 {
-    if (_is_first_frame)
+    if (_project.is_first_frame)
     {
-        _is_first_frame = false;
+        _project.is_first_frame = false;
         set_everybody_dirty();
     }
 
@@ -98,16 +93,16 @@ void App::update()
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_module->update(update_context());
+        _project.nodes_module->update(update_context());
         // _custom_shader_module->update(update_context());
         check_inputs();
     }
 
     if (!_exporter.is_exporting())
     {
-        _clock.update();
+        _project.clock.update();
         _nodes_view.update_size(_view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_clock.time());
+        polaroid().render(_project.clock.time());
     }
     else
     {
@@ -115,9 +110,9 @@ void App::update()
         _exporter.update(polaroid());
     }
 
-    if (_last_time != _clock.time())
+    if (_last_time != _project.clock.time())
     {
-        _last_time = _clock.time();
+        _last_time = _project.clock.time();
 
         trigger_rerender();
     }
@@ -156,13 +151,13 @@ void App::update()
 
 void App::trigger_rerender()
 {
-    set_dirty_flag()(_nodes_module->dirty_flag());
+    set_dirty_flag()(_project.nodes_module->dirty_flag());
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
 {
     // auto vec  = _custom_shader_module->all_inputs();
-    auto vec2 = _nodes_module->all_inputs();
+    auto vec2 = _project.nodes_module->all_inputs();
     // for (const auto& x : vec2)
     // {
     //     vec.push_back(x);
@@ -229,11 +224,11 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
     if (render_target.needs_resizing())
         trigger_rerender();
 
-    if (!_nodes_module->is_dirty(is_dirty__functor()))
+    if (!_project.nodes_module->is_dirty(is_dirty__functor()))
         return;
 
     render_target.set_size(size);
-    render_one_module(*_nodes_module, render_target, time);
+    render_one_module(*_project.nodes_module, render_target, time);
 }
 
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
@@ -264,10 +259,10 @@ void App::imgui_commands_and_registries_debug_windows()
         imgui_show(_variable_registries.of<Cool::Variable<Cool::Camera>>());
     });
     the_ui.window({.name = "Registry of DirtyFlag"}, [&]() {
-        imgui_show(_dirty_registry);
+        imgui_show(_project.dirty_registry);
     });
     the_ui.window({.name = "History"}, [&]() {
-        _history.imgui_show([](const ReversibleCommand& command) {
+        _project.history.imgui_show([](const ReversibleCommand& command) {
             return command_to_string(command);
         });
     });
@@ -292,9 +287,9 @@ void App::imgui_window_cameras()
 
     ImGui::PushID("##3D");
     Cool::ImGuiExtras::separator_text("3D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_camera_manager.is_editable_in_view());
+    Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_manager.is_editable_in_view());
     Cool::ImGuiExtras::help_marker(help_text);
-    _camera_manager.imgui(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.imgui(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
     ImGui::PopID();
 }
 
@@ -309,7 +304,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
+    _project.nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
@@ -341,8 +336,8 @@ void App::imgui_window_view()
             // Toggle 2D / 3D cameras
             if (Cool::ImGuiExtras::floating_button(_is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
             {
-                _is_camera_2D_editable_in_view        = !_is_camera_2D_editable_in_view;
-                _camera_manager.is_editable_in_view() = !_is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
+                _is_camera_2D_editable_in_view                = !_is_camera_2D_editable_in_view;
+                _project.camera_manager.is_editable_in_view() = !_is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
@@ -354,7 +349,7 @@ void App::imgui_window_view()
 void App::imgui_windows()
 {
     imgui_window_view();
-    imgui_window_exporter(_exporter, polaroid(), _clock.time());
+    imgui_window_exporter(_exporter, polaroid(), _project.clock.time());
     imgui_window_console();
     _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())
@@ -367,18 +362,18 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // _custom_shader_module->imgui_windows(the_ui);
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-    Cool::ClockU::imgui_timeline(_clock);
+    Cool::ClockU::imgui_timeline(_project.clock);
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
     imgui_window_cameras();
     ImGui::End();
     // Nodes
-    _nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Equalizer window is always preferred over Cameras in tabs.
+    _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Equalizer window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_clock.time(), size);
+        the_polaroid.render(_project.clock.time(), size);
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
@@ -396,7 +391,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
     if (DebugOptions::show_nodes_and_links_registries())
     {
-        _nodes_module->debug_show_nodes_and_links_registries_windows(ui());
+        _project.nodes_module->debug_show_nodes_and_links_registries_windows(ui());
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {
@@ -453,7 +448,7 @@ void App::view_menu()
     {
         if (_view_constraint.imgui())
         {
-            // render_impl(_view.render_target, *_current_module, _clock.time());
+            // render_impl(_view.render_target, *_current_module, _project.clock.time());
         }
         ImGui::EndMenu();
     }
@@ -496,8 +491,8 @@ void App::settings_menu()
         Cool::user_settings().imgui();
 
         Cool::ImGuiExtras::separator_text("History");
-        _history.imgui_max_size(&Cool::ImGuiExtras::help_marker);
-        _history.imgui_max_saved_size(&Cool::ImGuiExtras::help_marker);
+        _project.history.imgui_max_size(&Cool::ImGuiExtras::help_marker);
+        _project.history.imgui_max_saved_size(&Cool::ImGuiExtras::help_marker);
 
         Cool::ImGuiExtras::separator_text("Color Theme");
         Cool::user_settings().color_themes.imgui_theme_picker();
@@ -552,7 +547,7 @@ void App::imgui_menus()
 void App::reset_cameras()
 {
     _camera2D.value() = {}; // TODO(JF) Store this command in history
-    _camera_manager.reset_camera(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.reset_camera(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
 }
 
 void App::check_inputs()
@@ -577,14 +572,14 @@ void App::check_inputs__history()
     // Undo
     if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z))
     {
-        _history.move_backward(exec);
+        _project.history.move_backward(exec);
     }
 
     // Redo
     if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y))
         || (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
     {
-        _history.move_forward(exec);
+        _project.history.move_forward(exec);
     }
 }
 
@@ -602,7 +597,7 @@ void App::check_inputs__timeline()
 {
     if (ImGui::IsKeyReleased(ImGuiKey_Space))
     {
-        _clock.toggle_play_pause();
+        _project.clock.toggle_play_pause();
     }
 }
 
