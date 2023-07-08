@@ -12,6 +12,8 @@
 
 ## 🐣beta-8 WIP
 
+- 🐛 Fix: some nodes had the wrong color.
+
 ## 🐣beta-7
 
 - ✨ Only one camera (either 2D or 3D) can be active at the same time.
