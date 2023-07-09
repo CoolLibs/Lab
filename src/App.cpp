@@ -114,7 +114,7 @@ void App::update()
         check_inputs();
     }
 
-    if (!_exporter.is_exporting())
+    if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
         _nodes_view.update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
@@ -123,7 +123,7 @@ void App::update()
     else
     {
         trigger_rerender();
-        _exporter.update(polaroid());
+        _project.exporter.update(polaroid());
     }
 
     if (_last_time != _project.clock.time())
@@ -193,12 +193,12 @@ Cool::Polaroid App::polaroid()
 
 auto App::inputs_are_allowed() const -> bool
 {
-    return !_exporter.is_exporting();
+    return !_project.exporter.is_exporting();
 }
 
 auto App::wants_to_show_menu_bar() const -> bool
 {
-    return !_exporter.is_exporting() && !_wants_view_in_fullscreen;
+    return !_project.exporter.is_exporting() && !_wants_view_in_fullscreen;
 }
 
 static void imgui_window_console()
@@ -209,7 +209,7 @@ static void imgui_window_console()
 #endif
 }
 
-static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time)
+static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid const& polaroid, float time)
 {
     exporter.imgui_windows(polaroid, time);
 }
@@ -311,7 +311,7 @@ void App::imgui_window_cameras()
 
 void App::imgui_window_view()
 {
-    bool const view_in_fullscreen = _exporter.is_exporting() || _wants_view_in_fullscreen;
+    bool const view_in_fullscreen = _project.exporter.is_exporting() || _wants_view_in_fullscreen;
     {
         if (!_view_was_in_fullscreen_last_frame && view_in_fullscreen)
             save_imgui_windows_state(); // Save normal state before making the View fullscreen.
@@ -324,7 +324,7 @@ void App::imgui_window_view()
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
-            if (_exporter.is_exporting())
+            if (_project.exporter.is_exporting())
                 return false;
             bool b = false;
 
@@ -365,7 +365,7 @@ void App::imgui_window_view()
 void App::imgui_windows()
 {
     imgui_window_view();
-    imgui_window_exporter(_exporter, polaroid(), _project.clock.time());
+    imgui_window_exporter(_project.exporter, polaroid(), _project.clock.time());
     imgui_window_console();
     _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())
@@ -487,7 +487,7 @@ void App::export_menu()
     if (ImGui::BeginMenu(Cool::icon_fmt("Export", ICOMOON_UPLOAD2, true).c_str()))
     {
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2{0.f, 0.5f});
-        _exporter.imgui_menu_items(
+        _project.exporter.imgui_menu_items(
             {
                 .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
                 .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
@@ -619,14 +619,14 @@ void App::check_inputs__timeline()
 
 void App::open_image_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
-    _exporter.image_export_window().open();
+    _project.exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
+    _project.exporter.image_export_window().open();
 }
 
 void App::open_video_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
-    _exporter.video_export_window().open();
+    _project.exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
+    _project.exporter.video_export_window().open();
 }
 
 } // namespace Lab

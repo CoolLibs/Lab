@@ -23,6 +23,7 @@ struct Project {
     std::unique_ptr<Module_Nodes>  nodes_module;
     bool                           is_first_frame{true};
     bool                           is_camera_2D_editable_in_view{true};
+    Cool::Exporter                 exporter;
 
     void trigger_rerender();
 
@@ -45,7 +46,8 @@ private:
             cereal::make_nvp("Camera 2D", camera2D),
             cereal::make_nvp("History", history),
             cereal::make_nvp("Nodes Module", nodes_module),
-            cereal::make_nvp("Time", clock)
+            cereal::make_nvp("Time", clock),
+            cereal::make_nvp("Exporter (Image and Video)", exporter)
         );
     }
 };
