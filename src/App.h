@@ -14,6 +14,7 @@
 #include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
+#include <Dump/coollab_version.h>
 #include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/CommandLogger.h"
@@ -121,7 +122,9 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+        auto coollab_version_name = coollab_version();
         archive(
+            cereal::make_nvp("Coollab version", coollab_version_name), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
             cereal::make_nvp("Gallery Poster", _gallery_poster),
             cereal::make_nvp("Tips", _tips_manager),
             cereal::make_nvp("Project", _project) // TODO(Project) Save the project in its actual file, and only save a reference (filepath) here
