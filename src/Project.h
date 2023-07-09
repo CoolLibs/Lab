@@ -38,16 +38,16 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Is camera 2D editable in view", is_camera_2D_editable_in_view),
-            cereal::make_nvp("Camera Manager", camera_manager),
-            cereal::make_nvp("Dirty Registry", dirty_registry),
-            cereal::make_nvp("Variable Registries", variable_registries),
-            cereal::make_nvp("View Constraint", view_constraint),
-            cereal::make_nvp("Camera 2D", camera2D),
-            cereal::make_nvp("History", history),
-            cereal::make_nvp("Nodes Module", nodes_module),
             cereal::make_nvp("Time", clock),
-            cereal::make_nvp("Exporter (Image and Video)", exporter)
+            cereal::make_nvp("View Constraint", view_constraint),
+            cereal::make_nvp("Exporter (Image and Video)", exporter),
+            cereal::make_nvp("Camera Manager", camera_manager),
+            cereal::make_nvp("Camera 2D", camera2D),
+            cereal::make_nvp("Is camera 2D editable in view", is_camera_2D_editable_in_view),
+            cereal::make_nvp("Nodes Module", nodes_module),
+            cereal::make_nvp("Variable Registries", variable_registries),
+            cereal::make_nvp("History", history),
+            cereal::make_nvp("Dirty Registry", dirty_registry)
         );
     }
 };
