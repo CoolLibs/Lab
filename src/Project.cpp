@@ -8,9 +8,4 @@ Project::Project()
 {
 }
 
-void Project::trigger_rerender()
-{
-    set_dirty_flag()(nodes_module->dirty_flag());
-}
-
 } // namespace Lab

@@ -25,9 +25,6 @@ struct Project {
     bool                           is_camera_2D_editable_in_view{true};
     Cool::Exporter                 exporter;
 
-    void trigger_rerender();
-
-    auto set_dirty_flag() { return Cool::SetDirty_Ref{dirty_registry}; }
     auto input_factory() { return Cool::InputFactory_Ref{variable_registries, camera_manager.id()}; }
     auto dirty_flag_factory() { return Cool::DirtyFlagFactory_Ref{dirty_registry}; }
 

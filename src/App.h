@@ -64,7 +64,7 @@ private:
 
     // clang-format off
     auto all_inputs() -> Cool::AllInputRefsToConst;
-    auto set_dirty_flag                             () { return _project.set_dirty_flag(); }
+    auto set_dirty_flag                             () { return  Cool::SetDirty_Ref{_project.dirty_registry};; }
     auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_project.variable_registries, _project.camera_manager}}; }
     auto command_execution_context                  () { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty() }}; }
