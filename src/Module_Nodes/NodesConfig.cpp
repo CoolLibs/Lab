@@ -107,14 +107,10 @@ void NodesConfig::main_node_toggle(Cool::NodeId const& node_id)
     bool       is_main  = was_main;
     if (Cool::ImGuiExtras::toggle("Main node", &is_main))
     {
-        if (is_main && !was_main)
-        {
+        if (is_main)
             set_main_node_id(node_id);
-        }
-        else if (!is_main && was_main)
-        {
+        else
             set_main_node_id({}); // Unselect main node
-        }
     }
 }
 
