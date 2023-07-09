@@ -101,11 +101,13 @@ private:
     void compile_all_is0_nodes();
     void set_everybody_dirty();
 
+    void make_project();
     void load_project();
 
 private:
     Cool::Window&     _main_window;
     Cool::RenderView& _nodes_view;
+    Cool::Exporter    _exporter; // TODO(Project) Move in the project (or at least the ExportParams) (or copy the ExportParams saved in the project when loading it)
     Project           _project{};
     float             _last_time{0.f};
     bool              _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
@@ -122,7 +124,9 @@ private:
     {
         archive(
             cereal::make_nvp("Gallery Poster", _gallery_poster),
-            cereal::make_nvp("Tips", _tips_manager)
+            cereal::make_nvp("Tips", _tips_manager),
+            cereal::make_nvp("Project", _project), // TODO(Project) Save the project in its actual file, and only save a reference (filepath) here
+            cereal::make_nvp("Exporter (Image and Video)", _exporter)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};

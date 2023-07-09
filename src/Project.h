@@ -7,19 +7,17 @@
 #include "Cool/Image/ImageSizeConstraint.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
-#include "Cool/View/RenderView.h"
 
 namespace Lab {
 
 struct Project {
-    explicit Project(Cool::RenderView& nodes_view);
+    Project();
 
     Cool::VariableRegistries       variable_registries; // First because modules need the registries when they get created
     CameraManager                  camera_manager;      // First because modules need the camera id when they get created
     Cool::Variable<Cool::Camera2D> camera2D;
     Cool::Clock_Realtime           clock;
     Cool::ImageSizeConstraint      view_constraint;
-    Cool::Exporter                 exporter;
     Cool::DirtyRegistry            dirty_registry; // Before the modules because it is used to create them
     History                        history{};
     std::unique_ptr<Module_Nodes>  nodes_module;
@@ -44,7 +42,6 @@ private:
             cereal::make_nvp("Dirty Registry", dirty_registry),
             cereal::make_nvp("Variable Registries", variable_registries),
             cereal::make_nvp("View Constraint", view_constraint),
-            cereal::make_nvp("Exporter (Image and Video)", exporter),
             cereal::make_nvp("Camera 2D", camera2D),
             cereal::make_nvp("History", history),
             cereal::make_nvp("Nodes Module", nodes_module),

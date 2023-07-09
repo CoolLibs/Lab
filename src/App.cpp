@@ -39,9 +39,9 @@ namespace Lab {
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
-    , _project{_nodes_view}
 {
-    // _project.camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
+    make_project();
+    // _project.camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _project.variable_registries, command_executor());
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
@@ -76,9 +76,25 @@ void App::set_everybody_dirty()
         is_dirty.is_dirty = true;
 }
 
+void App::make_project()
+{
+    _project = Project{};
+
+    _project.camera_manager.is_editable_in_view() = false;
+    _project.clock.pause();
+    _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    hook_camera2D_events(
+        _nodes_view.mouse_events(),
+        _project.camera2D.value(),
+        [this]() { trigger_rerender(); },
+        [this]() { return !_project.is_camera_2D_editable_in_view; }
+    );
+}
+
 void App::load_project()
 {
-    // TODO(Project) unsubscribe the previous project from the view events.
+    // TODO(Project) Unload the current project : unsubscribe it from the view events, (etc ?).
+    make_project();
 }
 
 void App::update()
@@ -101,7 +117,7 @@ void App::update()
     if (!_exporter.is_exporting())
     {
         _project.clock.update();
-        _nodes_view.update_size(_view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
+        _nodes_view.update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_project.clock.time());
     }
     else
@@ -206,11 +222,11 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         some_module.do_rendering(
             {
-                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _camera2D.value().transform_matrix()),
+                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _project.camera2D.value().transform_matrix()),
                 input_factory(),
                 is_dirty__functor(),
                 set_clean__functor(),
-                _variable_registries,
+                _project.variable_registries,
             },
             update_context()
         );
@@ -247,16 +263,16 @@ void App::imgui_commands_and_registries_debug_windows()
 {
     const auto the_ui = ui();
     the_ui.window({.name = "Registry of vec3"}, [&]() {
-        imgui_show(_variable_registries.of<Cool::Variable<glm::vec3>>());
+        imgui_show(_project.variable_registries.of<Cool::Variable<glm::vec3>>());
     });
     the_ui.window({.name = "Registry of float"}, [&]() {
-        imgui_show(_variable_registries.of<Cool::Variable<float>>());
+        imgui_show(_project.variable_registries.of<Cool::Variable<float>>());
     });
     the_ui.window({.name = "Registry of int"}, [&]() {
-        imgui_show(_variable_registries.of<Cool::Variable<int>>());
+        imgui_show(_project.variable_registries.of<Cool::Variable<int>>());
     });
     the_ui.window({.name = "Registry of Camera"}, [&]() {
-        imgui_show(_variable_registries.of<Cool::Variable<Cool::Camera>>());
+        imgui_show(_project.variable_registries.of<Cool::Variable<Cool::Camera>>());
     });
     the_ui.window({.name = "Registry of DirtyFlag"}, [&]() {
         imgui_show(_project.dirty_registry);
@@ -277,9 +293,9 @@ void App::imgui_window_cameras()
 
     ImGui::PushID("##2D");
     Cool::ImGuiExtras::separator_text("2D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_is_camera_2D_editable_in_view);
+    Cool::ImGuiExtras::toggle("Editable in view", &_project.is_camera_2D_editable_in_view);
     Cool::ImGuiExtras::help_marker(help_text);
-    if (imgui_widget(_camera2D))
+    if (imgui_widget(_project.camera2D))
         trigger_rerender();
     ImGui::PopID();
 
@@ -289,7 +305,7 @@ void App::imgui_window_cameras()
     Cool::ImGuiExtras::separator_text("3D Camera");
     Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_manager.is_editable_in_view());
     Cool::ImGuiExtras::help_marker(help_text);
-    _project.camera_manager.imgui(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.imgui(_project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
     ImGui::PopID();
 }
 
@@ -313,7 +329,7 @@ void App::imgui_window_view()
             bool b = false;
 
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
-                                                  || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
+                                                  || !_project.view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             int buttons_order{0};
             // Reset cameras
@@ -334,13 +350,13 @@ void App::imgui_window_view()
             Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Toggle 2D / 3D cameras
-            if (Cool::ImGuiExtras::floating_button(_is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
+            if (Cool::ImGuiExtras::floating_button(_project.is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
             {
-                _is_camera_2D_editable_in_view                = !_is_camera_2D_editable_in_view;
-                _project.camera_manager.is_editable_in_view() = !_is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
+                _project.is_camera_2D_editable_in_view        = !_project.is_camera_2D_editable_in_view;
+                _project.camera_manager.is_editable_in_view() = !_project.is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
+            Cool::ImGuiExtras::tooltip(_project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
             return b;
         },
     });
@@ -446,7 +462,7 @@ void App::view_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("View", ICOMOON_IMAGE, true).c_str()))
     {
-        if (_view_constraint.imgui())
+        if (_project.view_constraint.imgui())
         {
             // render_impl(_view.render_target, *_current_module, _project.clock.time());
         }
@@ -478,7 +494,7 @@ void App::export_menu()
             },
             Cool::icon_fmt("Share online", ICOMOON_EARTH, true)
         );
-        _gallery_poster.imgui_open_sharing_form(_view_constraint.aspect_ratio());
+        _gallery_poster.imgui_open_sharing_form(_project.view_constraint.aspect_ratio());
         ImGui::PopStyleVar();
         ImGui::EndMenu();
     }
@@ -546,8 +562,8 @@ void App::imgui_menus()
 
 void App::reset_cameras()
 {
-    _camera2D.value() = {}; // TODO(JF) Store this command in history
-    _project.camera_manager.reset_camera(_variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera2D.value() = {}; // TODO(JF) Store this command in history
+    _project.camera_manager.reset_camera(_project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
 }
 
 void App::check_inputs()
@@ -603,13 +619,13 @@ void App::check_inputs__timeline()
 
 void App::open_image_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_view_constraint.aspect_ratio());
+    _exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
     _exporter.image_export_window().open();
 }
 
 void App::open_video_exporter()
 {
-    _exporter.maybe_set_aspect_ratio(_view_constraint.aspect_ratio());
+    _exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
     _exporter.video_export_window().open();
 }
 
