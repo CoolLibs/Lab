@@ -13,7 +13,7 @@
 ## 🐣beta-8 WIP
 
 - 🐛 Fix: some nodes had the wrong color.
-- 🐛 Fix: on Linux the context menu was not behaving properly if you used a custom window manager. (Now by default we disable multi-viewport on Linux, which fixes the issue but prevents you from dragging windows outside of the main Coollab window.) 
+- 🐛 Fix: on Linux, for some window managers like i3, the context menu was not behaving properly. (Now by default we disable multi-viewport for those custom window managers, which fixes the issue but prevents you from dragging windows outside of the main Coollab window.) 
 
 ## 🐣beta-7
 
