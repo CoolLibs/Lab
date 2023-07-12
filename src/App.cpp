@@ -99,6 +99,15 @@ void App::load_project()
 
 void App::update()
 {
+    glfwSetWindowTitle( // TODO(Project) Only set this when we load a project
+        _main_window.glfw(),
+        fmt::format(
+            "Coollab [{}]",
+            std::filesystem::weakly_canonical(_project_manager.current_path()).string()
+        )
+            .c_str()
+    );
+
     if (_project.is_first_frame)
     {
         _project.is_first_frame = false;

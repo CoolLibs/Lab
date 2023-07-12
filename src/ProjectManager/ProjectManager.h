@@ -17,6 +17,8 @@ public:
 
     void imgui(Project&);
 
+    [[nodiscard]] auto current_path() const -> std::filesystem::path const& { return _project_path; }
+
 private:
     std::filesystem::path _project_path{};
 

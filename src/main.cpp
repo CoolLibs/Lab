@@ -6,7 +6,7 @@ auto main() -> int
 {
     Cool::run<Lab::App>(
         {Cool::WindowConfig{
-            .title                  = "Coollab",
+            .title                  = "", // This is set when we load a project.
             .maximize_on_startup_if = true,
         }},
         Cool::InitConfig{
