@@ -1,4 +1,5 @@
 #include "App.h"
+#include <CommandLineArgs/CommandLineArgs.h>
 #include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/DebugOptions/TestPresets.h>
 #include <Cool/ImGui/Fonts.h>
@@ -112,6 +113,10 @@ void App::update()
     {
         _project.is_first_frame = false;
         set_everybody_dirty();
+        if (!command_line_args().get().empty())
+        {
+            _project_manager.load(_project, command_line_args().get()[0]); // TODO(Project) Do this elsewhere. Don't load the serialized path in project manager if a command line argument is set.
+        }
     }
 
     Cool::user_settings().color_themes.update();

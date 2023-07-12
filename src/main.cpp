@@ -1,9 +1,11 @@
 #include "App.h"
+#include "CommandLineArgs/CommandLineArgs.h"
 //
 #include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <cereal/archives/json.hpp>
 
-auto main() -> int
+auto main(int argc, char** argv) -> int
 {
+    Lab::command_line_args().init(argc, argv);
     Cool::run<Lab::App>(
         {Cool::WindowConfig{
             .title                  = "", // This is set when we load a project.
