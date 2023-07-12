@@ -1,5 +1,6 @@
 #pragma once
 #include <Dependencies/CameraManager.h>
+#include <Dump/coollab_version.h>
 #include <Module_Nodes/Module_Nodes.h>
 #include "Cool/Camera/CameraManager.h"
 #include "Cool/Dependencies/VariableRegistries.h"
@@ -34,7 +35,9 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
+        auto coollab_version_name = coollab_version();
         archive(
+            cereal::make_nvp("Coollab version", coollab_version_name), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
             cereal::make_nvp("Time", clock),
             cereal::make_nvp("View Constraint", view_constraint),
             cereal::make_nvp("Exporter (Image and Video)", exporter),
