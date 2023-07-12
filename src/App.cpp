@@ -458,9 +458,9 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     DebugOptions::empty_window([] {});
 }
 
-void App::project_menu()
+void App::file_menu()
 {
-    if (ImGui::BeginMenu(Cool::icon_fmt("Project", ICOMOON_IMAGE, true).c_str()))
+    if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
         _project_manager.imgui(_project);
         ImGui::EndMenu();
@@ -553,10 +553,10 @@ void App::debug_menu()
 
 void App::imgui_menus()
 {
-    project_menu();
-    view_menu();
-    // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
+    file_menu();
     export_menu();
+    // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
+    view_menu();
     settings_menu();
     commands_menu();
 
@@ -582,7 +582,7 @@ void App::check_inputs()
         return;
 
     check_inputs__history();
-    check_inputs__export_windows();
+    check_inputs__project();
     check_inputs__timeline();
     if (ImGui::IsKeyPressed(ImGuiKey_Escape))
     {
@@ -609,14 +609,14 @@ void App::check_inputs__history()
     }
 }
 
-void App::check_inputs__export_windows()
+void App::check_inputs__project()
 {
     auto const& io = ImGui::GetIO();
 
     if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl)
-        command_executor().execute(Command_OpenImageExporter{});
-    if (ImGui::IsKeyReleased(ImGuiKey_E) && io.KeyCtrl)
-        command_executor().execute(Command_OpenVideoExporter{});
+        _project_manager.save_as(_project);
+    if (ImGui::IsKeyReleased(ImGuiKey_O) && io.KeyCtrl)
+        _project_manager.load(_project);
 }
 
 void App::check_inputs__timeline()

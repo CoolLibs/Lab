@@ -1,10 +1,25 @@
 #include "ProjectManager.h"
 #include <Project.h>
+#include <ProjectManager/ProjectManager.h>
 #include "Cool/File/File.h"
 #include "Cool/Serialization/Serialization.h"
 #include "cereal/archives/json.hpp"
 
 namespace Lab {
+
+void ProjectManager::load(Project& project)
+{
+    auto const path = Cool::File::file_opening_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.        if (path)
+    if (path)
+        load(project, *path);
+}
+
+void ProjectManager::save_as(Project const& project)
+{
+    auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.        if (path)
+    if (path)
+        save_as(project, *path);
+}
 
 void ProjectManager::load(Project& project, std::filesystem::path const& path)
 {
@@ -41,12 +56,10 @@ void ProjectManager::save(Project const& project)
 
 void ProjectManager::imgui(Project& project)
 {
-    if (ImGui::Button("Save As"))
-    {
-        auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.        if (path)
-        if (path)
-            save_as(project, *path);
-    }
+    if (ImGui::MenuItem("Open", "Ctrl+O"))
+        load(project);
+    if (ImGui::MenuItem("Save As", "Ctrl+S"))
+        save_as(project);
 }
 
 } // namespace Lab

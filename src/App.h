@@ -60,7 +60,7 @@ private:
 
     void check_inputs();
     void check_inputs__history();
-    void check_inputs__export_windows();
+    void check_inputs__project();
     void check_inputs__timeline();
 
     // clang-format off
@@ -86,7 +86,7 @@ private:
 
     void reset_cameras();
 
-    void project_menu();
+    void file_menu();
     void view_menu();
     // void windows_menu();
     void export_menu();
