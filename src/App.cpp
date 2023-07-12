@@ -458,6 +458,15 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     DebugOptions::empty_window([] {});
 }
 
+void App::project_menu()
+{
+    if (ImGui::BeginMenu(Cool::icon_fmt("Project", ICOMOON_IMAGE, true).c_str()))
+    {
+        _project_manager.imgui(_project);
+        ImGui::EndMenu();
+    }
+}
+
 void App::view_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("View", ICOMOON_IMAGE, true).c_str()))
@@ -544,6 +553,7 @@ void App::debug_menu()
 
 void App::imgui_menus()
 {
+    project_menu();
     view_menu();
     // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
     export_menu();
