@@ -5,6 +5,14 @@ namespace Lab {
 
 class ProjectManager {
 public:
+    ProjectManager()  = default;
+    ~ProjectManager() = default;
+
+    ProjectManager(ProjectManager const&)                       = delete; // Non copyable and non-movable
+    auto operator=(ProjectManager const&) -> ProjectManager     = delete; // because we should only have one project manager
+    ProjectManager(ProjectManager&&) noexcept                   = delete; // that is responsible for loading and saving the project
+    auto operator=(ProjectManager&&) noexcept -> ProjectManager = delete; // automatically.
+
     /// Opens a file dialog and then loads the selected project. Does nothing if the file dialog is cancelled.
     void load(Project&);
     /// Opens a file dialog and then saves the project in the selected file. Does nothing if the file dialog is cancelled.
