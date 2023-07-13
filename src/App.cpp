@@ -123,6 +123,7 @@ void App::update()
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
+        _nodes_library_manager.update(update_context(), _project.nodes_module->regenerate_code_flag(), _project.nodes_module->graph(), _project.nodes_module->nodes_config(ui(), _nodes_library_manager.library()));
         _project.nodes_module->update(update_context());
         // _custom_shader_module->update(update_context());
         check_inputs();

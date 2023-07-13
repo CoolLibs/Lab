@@ -37,6 +37,7 @@ void ProjectManager::load(Project& project, std::filesystem::path const& path)
             Cool::Log::ToUser::console()
         );
         _project_path = "";
+        // TODO(Project) Load a default project, otherwise we could probably have corrupted state if only part of the project was loaded.
         return;
     }
     _project_path = path; // Only assign path if loading was successful.

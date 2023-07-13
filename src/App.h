@@ -14,6 +14,7 @@
 #include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
+#include <Module_Nodes/NodesLibraryManager.h>
 #include <ProjectManager/ProjectManager.h>
 #include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
@@ -79,7 +80,7 @@ private:
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_project.dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_project.dirty_registry}; }
     auto set_dirty__functor                         () { return Cool::SetDirty_Ref{_project.dirty_registry}; }
-    auto update_context                             () { return UpdateContext_Ref{{Cool::Log::ToUser::console(), set_clean__functor(), set_dirty__functor(), input_provider(0.f, 0.f, -100000.f, _project.camera2D.value().transform_matrix() /* HACK: Dummy values, they should not be needed. Currently this is only used by shader code generation to inject of very specific types like Gradient */), ui()}}; }
+    auto update_context                             () { return UpdateContext_Ref{{set_clean__functor(), set_dirty__functor(), input_provider(0.f, 0.f, -100000.f, _project.camera2D.value().transform_matrix() /* HACK: Dummy values, they should not be needed. Currently this is only used by shader code generation to inject of very specific types like Gradient */), ui(), _nodes_library_manager.library()}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();
@@ -107,16 +108,17 @@ private:
     void load_project();
 
 private:
-    Cool::Window&     _main_window;
-    Cool::RenderView& _nodes_view;
-    Project           _project{};
-    ProjectManager    _project_manager{};
-    float             _last_time{0.f};
-    bool              _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
-    bool              _view_was_in_fullscreen_last_frame{false};
-    GalleryPoster     _gallery_poster{};
-    Cool::TipsManager _tips_manager{};
-    CommandLogger     _command_logger{};
+    Cool::Window&       _main_window;
+    Cool::RenderView&   _nodes_view;
+    Project             _project{};
+    ProjectManager      _project_manager{};
+    float               _last_time{0.f};
+    bool                _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
+    bool                _view_was_in_fullscreen_last_frame{false};
+    GalleryPoster       _gallery_poster{};
+    Cool::TipsManager   _tips_manager{};
+    CommandLogger       _command_logger{};
+    NodesLibraryManager _nodes_library_manager{};
 
 private:
     // Serialization
