@@ -9,25 +9,26 @@ namespace Lab {
 
 void initial_project_opening(CommandExecutor_TopLevel_Ref const& command_executor, std::filesystem::path const& project_path_from_previous_session)
 {
-    // Load the project that was requested, e.g. when double-clicking on a .clb file.
-    if (!command_line_args().get().empty())
-    {
-        command_executor.execute(Command_OpenProject{
-            .path = command_line_args().get()[0],
-        });
-        // load(project, command_line_args().get()[0]);
-    }
-    // Load the project that was open during the previous session.
-    else // TODO(Project) if(project path is valid)
-    {
-        command_executor.execute(Command_OpenProject{
-            .path = project_path_from_previous_session,
-        });
-    }
-    // Fallback to the default project. // TODO(Project) This should probably be done by the OpenProject command itself.
-    // else {
-    //     load(default project);
-    // }
+    auto const path = [&]() -> std::filesystem::path {
+        // Load the project that was requested, e.g. when double-clicking on a .clb file.
+        if (!command_line_args().get().empty())
+        {
+            return command_line_args().get()[0];
+        }
+        // Load the project that was open during the previous session.
+        else // TODO(Project) if(project path is valid)
+        {
+            return project_path_from_previous_session;
+        }
+        // Fallback to the default project. // TODO(Project) This should probably be done by the OpenProject command itself.
+        // else {
+        //     load(default project);
+        // }
+    }();
+    command_executor.execute(Command_OpenProject{
+        .path                  = path,
+        .save_previous_project = false,
+    });
 }
 
 void dialog_to_open_project(CommandExecutor_TopLevel_Ref const& command_executor)
