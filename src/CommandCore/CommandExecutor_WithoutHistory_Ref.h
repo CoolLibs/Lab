@@ -2,27 +2,23 @@
 
 #include "CommandCore/Command.h"
 #include "CommandCore/CommandExecutionContext_Ref.h"
-#include "CommandCore/CommandLogger.h"
 #include "CommandCore/ConcreteCommand.h"
 #include "CommandCore/ConcreteReversibleCommand.h"
 #include "CommandCore/ReversibleCommand.h"
 #include "CommandCore/make_command.h"
 #include "CommandCore/make_reversible_command.h"
+#include "Debug/DebugOptions.h"
 #include "IReversibleCommand.h"
 
 namespace Lab {
 
 class CommandExecutor_WithoutHistory_Ref {
 public:
-    explicit CommandExecutor_WithoutHistory_Ref(
-        CommandExecutionContext_Ref context,
-        CommandLogger&              command_logger
-    )
+    explicit CommandExecutor_WithoutHistory_Ref(CommandExecutionContext_Ref context)
         : _context{context}
-        , _command_logger{command_logger}
     {
     }
-    /// To simplify the life of users so they don't need to call make_command()
+    // To simplify the life of users so they don't need to call make_command()
     template<ConcreteCommand ConcreteCommandT>
     void execute(ConcreteCommandT&& command)
     {
@@ -32,22 +28,18 @@ public:
     void execute(const Command& command)
     {
         command->execute(_context);
-        _command_logger.get().push(command);
+        if (DebugOptions::log_when_executing_a_command())
+            Cool::Log::ToUser::info("Command", command->to_string());
     }
 
 private:
-    CommandExecutionContext_Ref           _context;
-    std::reference_wrapper<CommandLogger> _command_logger;
+    CommandExecutionContext_Ref _context;
 };
 
 class ReversibleCommandExecutor_WithoutHistory_Ref {
 public:
-    explicit ReversibleCommandExecutor_WithoutHistory_Ref(
-        CommandExecutionContext_Ref context,
-        CommandLogger&              command_logger
-    )
+    explicit ReversibleCommandExecutor_WithoutHistory_Ref(CommandExecutionContext_Ref context)
         : _context{context}
-        , _command_logger{command_logger}
     {
     }
 
@@ -68,18 +60,19 @@ public:
     void execute(const ReversibleCommand& command)
     {
         command->execute(_context);
-        _command_logger.get().push(command);
+        if (DebugOptions::log_when_executing_a_command())
+            Cool::Log::ToUser::info("Command", command->to_string());
     }
 
     void revert(const ReversibleCommand& command)
     {
         command->revert(_context);
-        _command_logger.get().push(command);
+        if (DebugOptions::log_when_executing_a_command())
+            Cool::Log::ToUser::info("Command", command->to_string());
     }
 
 private:
-    CommandExecutionContext_Ref           _context;
-    std::reference_wrapper<CommandLogger> _command_logger;
+    CommandExecutionContext_Ref _context;
 };
 
 } // namespace Lab

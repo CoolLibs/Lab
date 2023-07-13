@@ -76,6 +76,11 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
+            name_in_code="log_when_executing_a_command",
+            name_in_ui="Log when executing a command",
+            available_in_release=True,
+        ),
+        DebugOption(
             name_in_code="show_generated_shader_code",
             name_in_ui="Show generated shader code",
             available_in_release=True,

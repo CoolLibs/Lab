@@ -289,9 +289,6 @@ void App::imgui_commands_and_registries_debug_windows()
             return command_to_string(command);
         });
     });
-    the_ui.window({.name = "Command Logger"}, [&]() {
-        _command_logger.imgui_show();
-    });
 }
 
 void App::imgui_window_cameras()

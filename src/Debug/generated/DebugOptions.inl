@@ -34,6 +34,7 @@ public:
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
     [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return instance().log_when_parsing_node_definition; }
+    [[nodiscard]] static auto log_when_executing_a_command() -> bool& { return instance().log_when_executing_a_command; }
     static void               show_generated_shader_code(std::function<void()> callback)
     {
         if (instance().show_generated_shader_code)
@@ -82,6 +83,7 @@ private:
         bool log_when_rendering{false};
         bool log_when_compiling_nodes{false};
         bool log_when_parsing_node_definition{false};
+        bool log_when_executing_a_command{false};
         bool show_generated_shader_code{false};
         bool test_all_variable_widgets__window{false};
         bool test_shaders_compilation__window{false};
@@ -102,6 +104,7 @@ private:
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
+                cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
                 cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
@@ -114,6 +117,7 @@ private:
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
+                cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
                 cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
@@ -133,6 +137,7 @@ private:
         instance().log_when_rendering                         = false;
         instance().log_when_compiling_nodes                   = false;
         instance().log_when_parsing_node_definition           = false;
+        instance().log_when_executing_a_command               = false;
         instance().show_generated_shader_code                 = false;
         instance().test_all_variable_widgets__window          = false;
         instance().test_shaders_compilation__window           = false;
@@ -210,6 +215,11 @@ private:
             Cool::ImGuiExtras::toggle("Log when parsing node definition", &instance().log_when_parsing_node_definition);
         }
 
+        if (wafl::similarity_match({filter, "Log when executing a command"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Log when executing a command", &instance().log_when_executing_a_command);
+        }
+
         if (wafl::similarity_match({filter, "Show generated shader code"}) >= wafl::Matches::Strongly)
         {
             Cool::ImGuiExtras::toggle("Show generated shader code", &instance().show_generated_shader_code);
@@ -285,6 +295,12 @@ private:
         if (wafl::similarity_match({filter, "Log when parsing node definition"}) >= wafl::Matches::Strongly)
         {
             instance().log_when_parsing_node_definition = !instance().log_when_parsing_node_definition;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Log when executing a command"}) >= wafl::Matches::Strongly)
+        {
+            instance().log_when_executing_a_command = !instance().log_when_executing_a_command;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
