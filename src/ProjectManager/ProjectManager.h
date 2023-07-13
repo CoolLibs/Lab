@@ -13,12 +13,14 @@ public:
     ProjectManager(ProjectManager&&) noexcept                   = delete; // that is responsible for loading and saving the project
     auto operator=(ProjectManager&&) noexcept -> ProjectManager = delete; // automatically.
 
-    void initial_project_loading(CommandExecutor_TopLevel_Ref const&);
+    void initial_project_opening(CommandExecutor_TopLevel_Ref const&);
 
-    /// Opens a file dialog and then loads the selected project. Does nothing if the file dialog is cancelled.
-    void load(CommandExecutor_TopLevel_Ref const&);
+    /// Opens a file dialog and then opens the selected project. Does nothing if the file dialog is cancelled.
+    void open(CommandExecutor_TopLevel_Ref const&);
     /// Opens a file dialog and then saves the project in the selected file. Does nothing if the file dialog is cancelled.
     void save_as(CommandExecutor_TopLevel_Ref const&);
+    /// Saves the project in the current project path.
+    void save(CommandExecutor_TopLevel_Ref const&);
 
     void imgui(CommandExecutor_TopLevel_Ref const&);
 

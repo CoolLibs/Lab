@@ -6,6 +6,7 @@ namespace Lab {
 
 void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
+    // TODO(Project) If we are on the default project, run a Save As ? (ask the user where they want to save their project) But this will be annoying with the autosave.
     save_project_to(ctx, ctx.project_path()); // TODO(Project) handle error from saving
 }
 

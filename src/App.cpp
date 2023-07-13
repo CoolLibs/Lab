@@ -102,7 +102,7 @@ void App::update()
     if (_is_first_frame)
     {
         _is_first_frame = false;
-        _project_manager.initial_project_loading(command_executor());
+        _project_manager.initial_project_opening(command_executor());
     }
     // First frame a project is loaded
     if (_project.is_first_frame)
@@ -620,10 +620,12 @@ void App::check_inputs__project()
 {
     auto const& io = ImGui::GetIO();
 
-    if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl)
+    if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
         _project_manager.save_as(command_executor());
-    if (ImGui::IsKeyReleased(ImGuiKey_O) && io.KeyCtrl)
-        _project_manager.load(command_executor());
+    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
+        _project_manager.save(command_executor());
+    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
+        _project_manager.open(command_executor());
 }
 
 void App::check_inputs__timeline()
