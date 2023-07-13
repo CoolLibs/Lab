@@ -1,23 +1,12 @@
-#include <Commands/Command_OpenProject.h>
+#include "Command_OpenProject.h"
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Serialization/Serialization.h"
 #include "Project.h"
 #include "cereal/archives/json.hpp"
+#include "internal_utils.h"
 
 namespace Lab {
-
-static void set_window_title(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path)
-{
-    glfwSetWindowTitle(
-        ctx.main_window().glfw(),
-        fmt::format(
-            "Coollab [{}]",
-            std::filesystem::weakly_canonical(path).string()
-        )
-            .c_str()
-    );
-}
 
 static void send_error_message(Cool::OptionalErrorMessage const& error)
 {
@@ -44,9 +33,8 @@ void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
         return;
     }
 
-    set_window_title(ctx, path);
+    set_current_project_path(ctx, path); // Only assign path if loading was successful.
     ctx.project().is_first_frame = true;
-    ctx.project_path()           = path; // Only assign path if loading was successful.
 }
 
 [[nodiscard]] auto Command_OpenProject::to_string() const -> std::string

@@ -1,4 +1,5 @@
-#include <Commands/Command_SaveProjectAs.h>
+#include "Command_SaveProjectAs.h"
+#include <ProjectManager/internal_utils.h>
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Serialization/Serialization.h"
@@ -10,8 +11,8 @@ namespace Lab {
 void Command_SaveProjectAs::execute(CommandExecutionContext_Ref const& ctx) const
 {
     // TODO(Project) If the path already exists, message box to confirm that user wants to overwrite the project.
-    ctx.project_path() = path;
-    Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project");
+    Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project"); // TODO(Project) Handle error, and don't set project path if there was an error
+    set_current_project_path(ctx, path);
 }
 
 [[nodiscard]] auto Command_SaveProjectAs::to_string() const -> std::string

@@ -1,9 +1,9 @@
 #include "ProjectManager.h"
 #include <CommandLineArgs/CommandLineArgs.h>
-#include <Commands/Command_OpenProject.h>
-#include <Commands/Command_SaveProjectAs.h>
 #include <Project.h>
 #include <ProjectManager/ProjectManager.h>
+#include "Command_OpenProject.h"
+#include "Command_SaveProjectAs.h"
 #include "Cool/File/File.h"
 
 namespace Lab {
