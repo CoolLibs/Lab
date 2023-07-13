@@ -11,6 +11,7 @@
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <ProjectManager/utils.h>
 #include <cmd/imgui.hpp>
 #include <reg/src/internal/generate_uuid.hpp>
 #include <stringify/stringify.hpp>
@@ -102,7 +103,7 @@ void App::update()
     if (_is_first_frame)
     {
         _is_first_frame = false;
-        _project_manager.initial_project_opening(command_executor());
+        initial_project_opening(command_executor(), _project_manager.current_project_path);
     }
     // First frame a project is loaded
     if (_project.is_first_frame)
@@ -466,7 +467,7 @@ void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
-        _project_manager.imgui(command_executor());
+        imgui_open_save_project(command_executor());
         ImGui::EndMenu();
     }
 }
@@ -618,11 +619,11 @@ void App::check_inputs__project()
     auto const& io = ImGui::GetIO();
 
     if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
-        _project_manager.save_as(command_executor());
+        dialog_to_save_project_as(command_executor());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
-        _project_manager.save(command_executor());
+        save_current_project(command_executor());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
-        _project_manager.open(command_executor());
+        dialog_to_open_project(command_executor());
 }
 
 void App::check_inputs__timeline()

@@ -1,40 +1,9 @@
 #pragma once
-#include "Project.h"
 
 namespace Lab {
 
-class ProjectManager {
-public:
-    ProjectManager()  = default;
-    ~ProjectManager() = default;
-
-    ProjectManager(ProjectManager const&)                       = delete; // Non copyable and non-movable
-    auto operator=(ProjectManager const&) -> ProjectManager     = delete; // because we should only have one project manager
-    ProjectManager(ProjectManager&&) noexcept                   = delete; // that is responsible for loading and saving the project
-    auto operator=(ProjectManager&&) noexcept -> ProjectManager = delete; // automatically.
-
-    void initial_project_opening(CommandExecutor_TopLevel_Ref const&);
-
-    /// Opens a file dialog and then opens the selected project. Does nothing if the file dialog is cancelled.
-    void open(CommandExecutor_TopLevel_Ref const&);
-    /// Opens a file dialog and then saves the project in the selected file. Does nothing if the file dialog is cancelled.
-    void save_as(CommandExecutor_TopLevel_Ref const&);
-    /// Saves the project in the current project path.
-    void save(CommandExecutor_TopLevel_Ref const&) const;
-
-    void imgui(CommandExecutor_TopLevel_Ref const&);
-
-    [[nodiscard]] auto current_path() const -> std::filesystem::path const&
-    {
-        return _project_path;
-    }
-    [[nodiscard]] auto current_path() -> std::filesystem::path&
-    {
-        return _project_path;
-    }
-
-private:
-    std::filesystem::path _project_path{};
+struct ProjectManager {
+    std::filesystem::path current_project_path{};
 
 private:
     // Serialization
@@ -43,7 +12,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Project path", _project_path)
+            cereal::make_nvp("Project path", current_project_path)
         );
     }
 };
