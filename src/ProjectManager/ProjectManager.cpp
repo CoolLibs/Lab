@@ -1,6 +1,7 @@
 #include "ProjectManager.h"
 #include <CommandLineArgs/CommandLineArgs.h>
 #include <Commands/Command_OpenProject.h>
+#include <Commands/Command_SaveProjectAs.h>
 #include <Project.h>
 #include <ProjectManager/ProjectManager.h>
 #include "Cool/File/File.h"
@@ -41,31 +42,23 @@ void ProjectManager::load(CommandExecutor_TopLevel_Ref const& command_executor)
     }
 }
 
-void ProjectManager::save_as(Project const& project)
+void ProjectManager::save_as(CommandExecutor_TopLevel_Ref const& command_executor)
 {
     auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.        if (path)
     if (path)
-        save_as(project, *path);
+    {
+        command_executor.execute(Command_SaveProjectAs{
+            .path = *path,
+        });
+    }
 }
 
-void ProjectManager::save_as(Project const& project, std::filesystem::path const& path)
-{
-    // TODO(Project) If the path already exists, message box to confirm that user wants to overwrite the project.
-    _project_path = path;
-    save(project);
-}
-
-void ProjectManager::save(Project const& project)
-{
-    // Cool::Serialization::save<Project, cereal::JSONOutputArchive>(project, _project_path, "Project");
-}
-
-void ProjectManager::imgui(Project& project, CommandExecutor_TopLevel_Ref const& command_executor)
+void ProjectManager::imgui(CommandExecutor_TopLevel_Ref const& command_executor)
 {
     if (ImGui::MenuItem("Open", "Ctrl+O"))
         load(command_executor);
     if (ImGui::MenuItem("Save As", "Ctrl+S"))
-        save_as(project);
+        save_as(command_executor);
 }
 
 } // namespace Lab

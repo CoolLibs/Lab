@@ -469,7 +469,7 @@ void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
-        _project_manager.imgui(_project, command_executor());
+        _project_manager.imgui(command_executor());
         ImGui::EndMenu();
     }
 }
@@ -621,7 +621,7 @@ void App::check_inputs__project()
     auto const& io = ImGui::GetIO();
 
     if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl)
-        _project_manager.save_as(_project);
+        _project_manager.save_as(command_executor());
     if (ImGui::IsKeyReleased(ImGuiKey_O) && io.KeyCtrl)
         _project_manager.load(command_executor());
 }
