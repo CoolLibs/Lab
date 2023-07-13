@@ -1,4 +1,7 @@
 #include "internal_utils.h"
+#include "Cool/Serialization/Serialization.h"
+#include "Project.h"
+#include "cereal/archives/json.hpp"
 
 namespace Lab {
 
@@ -20,8 +23,9 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::files
     ctx.project_path() = path;
 }
 
-void save_project_to(CommandExecutionContext_Ref const&, std::filesystem::path const&)
+void save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path)
 {
+    Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project");
 }
 
 } // namespace Lab
