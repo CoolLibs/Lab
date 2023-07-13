@@ -102,7 +102,7 @@ void App::update()
     if (_is_first_frame)
     {
         _is_first_frame = false;
-        _project_manager.initial_project_loading(_project);
+        _project_manager.initial_project_loading(command_executor());
     }
     // First frame a project is loaded
     if (_project.is_first_frame)
@@ -110,16 +110,6 @@ void App::update()
         _project.is_first_frame = false;
         set_everybody_dirty();
     }
-
-    // Must be done after `_project_manager.initial_project_loading(project);` so that we have the right project path.
-    glfwSetWindowTitle( // TODO(Project) Only set this when we load a project
-        _main_window.glfw(),
-        fmt::format(
-            "Coollab [{}]",
-            std::filesystem::weakly_canonical(_project_manager.current_path()).string()
-        )
-            .c_str()
-    );
 
     Cool::user_settings().color_themes.update();
 
@@ -479,7 +469,7 @@ void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
-        _project_manager.imgui(_project);
+        _project_manager.imgui(_project, command_executor());
         ImGui::EndMenu();
     }
 }
@@ -633,7 +623,7 @@ void App::check_inputs__project()
     if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl)
         _project_manager.save_as(_project);
     if (ImGui::IsKeyReleased(ImGuiKey_O) && io.KeyCtrl)
-        _project_manager.load(_project);
+        _project_manager.load(command_executor());
 }
 
 void App::check_inputs__timeline()
