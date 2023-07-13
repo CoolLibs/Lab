@@ -104,7 +104,7 @@ private:
     void compile_all_is0_nodes();
     void set_everybody_dirty();
 
-    void make_project();
+    void make_new_project();
     void load_project();
 
 private:
@@ -119,6 +119,7 @@ private:
     Cool::TipsManager   _tips_manager{};
     CommandLogger       _command_logger{};
     NodesLibraryManager _nodes_library_manager{};
+    bool                _is_first_frame{true};
 
 private:
     // Serialization
@@ -129,8 +130,7 @@ private:
         archive(
             cereal::make_nvp("Project Manager", _project_manager),
             cereal::make_nvp("Gallery Poster", _gallery_poster),
-            cereal::make_nvp("Tips", _tips_manager),
-            cereal::make_nvp("Project", _project) // TODO(Project) Save the project in its actual file, and only save a reference (filepath) here
+            cereal::make_nvp("Tips", _tips_manager)
         );
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};

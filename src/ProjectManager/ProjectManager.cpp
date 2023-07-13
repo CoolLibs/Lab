@@ -1,4 +1,5 @@
 #include "ProjectManager.h"
+#include <CommandLineArgs/CommandLineArgs.h>
 #include <Project.h>
 #include <ProjectManager/ProjectManager.h>
 #include "Cool/File/File.h"
@@ -6,6 +7,24 @@
 #include "cereal/archives/json.hpp"
 
 namespace Lab {
+
+void ProjectManager::initial_project_loading(Project& project)
+{
+    // Load the project that was requested, e.g. when double-clicking on a .clb file.
+    if (!command_line_args().get().empty())
+    {
+        load(project, command_line_args().get()[0]);
+    }
+    // Load the project that was open during the previous session.
+    else // TODO(Project) if(project path is valid)
+    {
+        load(project, _project_path);
+    }
+    // Fallback to the default project.
+    // else {
+    //     load(default project);
+    // }
+}
 
 void ProjectManager::load(Project& project)
 {

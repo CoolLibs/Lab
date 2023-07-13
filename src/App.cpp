@@ -1,5 +1,4 @@
 #include "App.h"
-#include <CommandLineArgs/CommandLineArgs.h>
 #include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/DebugOptions/TestPresets.h>
 #include <Cool/ImGui/Fonts.h>
@@ -41,8 +40,16 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
 {
-    make_project();
-    // _project.camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _project.variable_registries, command_executor());
+    make_new_project();
+
+    _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    hook_camera2D_events(
+        _nodes_view.mouse_events(),
+        _project.camera2D.value(),
+        [this]() { trigger_rerender(); },
+        [this]() { return !_project.is_camera_2D_editable_in_view; }
+    );
+
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
@@ -77,29 +84,34 @@ void App::set_everybody_dirty()
         is_dirty.is_dirty = true;
 }
 
-void App::make_project()
+void App::make_new_project()
 {
+    // TODO(Project) Make sure the previous project is serialized ?
+
     _project = Project{};
 
     _project.camera_manager.is_editable_in_view() = false;
     _project.clock.pause();
-    _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
-    hook_camera2D_events(
-        _nodes_view.mouse_events(),
-        _project.camera2D.value(),
-        [this]() { trigger_rerender(); },
-        [this]() { return !_project.is_camera_2D_editable_in_view; }
-    );
-}
-
-void App::load_project()
-{
-    // TODO(Project) Unload the current project : unsubscribe it from the view events, (etc ?).
-    make_project();
 }
 
 void App::update()
 {
+    // First frame the exe is open
+    // Since the construction of an App might be in two steps (constructor, and then deserialization)
+    // we do our actual construction logic here, to make sure it is done once and only once.
+    if (_is_first_frame)
+    {
+        _is_first_frame = false;
+        _project_manager.initial_project_loading(_project);
+    }
+    // First frame a project is loaded
+    if (_project.is_first_frame)
+    {
+        _project.is_first_frame = false;
+        set_everybody_dirty();
+    }
+
+    // Must be done after `_project_manager.after_deserialization(_project);` so that we have the right project path.
     glfwSetWindowTitle( // TODO(Project) Only set this when we load a project
         _main_window.glfw(),
         fmt::format(
@@ -108,16 +120,6 @@ void App::update()
         )
             .c_str()
     );
-
-    if (_project.is_first_frame)
-    {
-        _project.is_first_frame = false;
-        set_everybody_dirty();
-        if (!command_line_args().get().empty())
-        {
-            _project_manager.load(_project, command_line_args().get()[0]); // TODO(Project) Do this elsewhere. Don't load the serialized path in project manager if a command line argument is set.
-        }
-    }
 
     Cool::user_settings().color_themes.update();
 
