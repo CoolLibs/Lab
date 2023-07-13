@@ -20,7 +20,7 @@ public:
     /// Opens a file dialog and then saves the project in the selected file. Does nothing if the file dialog is cancelled.
     void save_as(CommandExecutor_TopLevel_Ref const&);
     /// Saves the project in the current project path.
-    void save(CommandExecutor_TopLevel_Ref const&);
+    void save(CommandExecutor_TopLevel_Ref const&) const;
 
     void imgui(CommandExecutor_TopLevel_Ref const&);
 

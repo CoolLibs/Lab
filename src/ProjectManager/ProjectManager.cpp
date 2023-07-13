@@ -54,7 +54,7 @@ void ProjectManager::save_as(CommandExecutor_TopLevel_Ref const& command_executo
     }
 }
 
-void ProjectManager::save(CommandExecutor_TopLevel_Ref const& command_executor)
+void ProjectManager::save(CommandExecutor_TopLevel_Ref const& command_executor) const
 {
     command_executor.execute(Command_SaveProject{});
 }

@@ -122,14 +122,25 @@ private:
 private:
     // Serialization
     friend class cereal::access;
-    template<class Archive>
-    void serialize(Archive& archive)
+    template<class Archive, class AppT>
+    static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
     {
         archive(
-            cereal::make_nvp("Project Manager", _project_manager),
-            cereal::make_nvp("Gallery Poster", _gallery_poster),
-            cereal::make_nvp("Tips", _tips_manager)
+            cereal::make_nvp("Project Manager", app._project_manager),
+            cereal::make_nvp("Gallery Poster", app._gallery_poster),
+            cereal::make_nvp("Tips", app._tips_manager)
         );
+    }
+    template<class Archive>
+    void save(Archive& archive) const
+    {
+        serialize_impl(archive, *this);
+        _project_manager.save(const_cast<App&>(*this).command_executor()); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because noone will ever create a const App.
+    }
+    template<class Archive>
+    void load(Archive& archive)
+    {
+        serialize_impl(archive, *this);
     }
     DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 };
