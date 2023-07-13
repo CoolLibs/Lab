@@ -59,6 +59,7 @@ void ProjectManager::load(Project& project, std::filesystem::path const& path)
         // TODO(Project) Load a default project, otherwise we could probably have corrupted state if only part of the project was loaded.
         return;
     }
+    project.is_first_frame = true;
     _project_path = path; // Only assign path if loading was successful.
 }
 

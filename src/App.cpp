@@ -111,7 +111,7 @@ void App::update()
         set_everybody_dirty();
     }
 
-    // Must be done after `_project_manager.after_deserialization(_project);` so that we have the right project path.
+    // Must be done after `_project_manager.initial_project_loading(project);` so that we have the right project path.
     glfwSetWindowTitle( // TODO(Project) Only set this when we load a project
         _main_window.glfw(),
         fmt::format(
