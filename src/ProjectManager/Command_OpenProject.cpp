@@ -24,6 +24,7 @@ static void send_error_message(Cool::OptionalErrorMessage const& error)
 
 void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
+    save_project_to(ctx, ctx.project_path()); // TODO(Project) Instead, use the SaveProject command: ctx.execute(Command_SaveProject{});
     auto const error = Cool::Serialization::load<Project, cereal::JSONInputArchive>(ctx.project(), path);
     if (error)
     {
