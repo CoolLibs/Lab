@@ -98,3 +98,7 @@ add_executable(Tests-Coollab tests/tests.cpp ${COOL_LAB_SOURCES})
 target_compile_definitions(Tests-Coollab PRIVATE LAB_ENABLE_TESTS)
 target_link_libraries(Tests-Coollab PRIVATE Coollab-Properties)
 target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
+
+if(WIN32)
+    target_link_libraries(Coollab-Properties INTERFACE winmm)
+endif()

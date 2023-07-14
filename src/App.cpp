@@ -353,6 +353,11 @@ void App::imgui_window_view()
 
 void App::imgui_windows()
 {
+    /* endless loop 
+    ImGui::Begin("MIDI");
+    // _midi_manager.imgui();
+    ImGui::End();*/
+    _midi_manager.connect();
     imgui_window_view();
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     imgui_window_console();
