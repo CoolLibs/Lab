@@ -10,6 +10,5 @@ auto FullscreenShader::compile(
     update_ctx.set_clean(_dirty_flag);
     return _fullscreen_pipeline.compile(fragment_shader_source_code);
 }
-//
 
 } // namespace Lab
