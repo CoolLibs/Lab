@@ -4,6 +4,7 @@
 
 auto main() -> int
 {
+    //
     Cool::run<Lab::App>(
         {Cool::WindowConfig{
             .title                  = "Coollab",
