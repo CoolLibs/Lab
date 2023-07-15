@@ -2,6 +2,7 @@
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"
+#include "Cool/Gpu/RenderTarget.h"
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Nodes/NodesFolderWatcher.h"
 #include "Cool/Nodes/NodesLibrary.h"
@@ -45,7 +46,10 @@ private:
     Cool::DirtyFlag                                                  _regenerate_code_flag;
     mutable Cool::MessageSender                                      _shader_compilation_error{};
     Cool::Input<Cool::Camera>                                        _camera_input;
-    Cool::Texture                                                    _previous_frame_texture;
+    Cool::RenderTarget                                               _feedback_render_target_ping{/* img::Size{1, 1}, 3, std::array<uint8_t, 3>{255, 0, 255}.data() */};
+    Cool::RenderTarget                                               _feedback_render_target_pong{/* img::Size{1, 1}, 3, std::array<uint8_t, 3>{255, 0, 255}.data() */};
+    bool                                                             _ping_pong{false};
+    bool                                                             _first_draw{true};
 
 private:
     // Serialization

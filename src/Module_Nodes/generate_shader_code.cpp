@@ -74,6 +74,8 @@ out vec4      out_Color;
 #include "_COOL_RES_/shaders/Texture.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 
+uniform sampler2D _previous_frame_texture; // Must be after the include of "_COOL_RES_/shaders/Texture.glsl"
+
 // TODO(JF) Move this to the 3D Renderer node
 #include "_ROOT_FOLDER_/res/3D-renderer.glsl"
 

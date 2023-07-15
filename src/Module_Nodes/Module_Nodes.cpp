@@ -15,6 +15,7 @@
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Gpu/TextureDescriptor.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Gpu/TextureSamplerDescriptor.h"
 #include "Cool/Gpu/TextureSource.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
@@ -290,8 +291,12 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
-    // shader.set_uniform("_previous_frame_texture_id", 7);
-    // _previous_frame_texture.attach_to_slot(7);
+
+    glActiveTexture(GL_TEXTURE0 + 3);
+    auto const id = (_ping_pong ? _feedback_render_target_ping : _feedback_render_target_pong).get().texture_id();
+    glBindTexture(GL_TEXTURE_2D, id);
+    glActiveTexture(GL_TEXTURE0 + 0);
+    shader.set_uniform("_previous_frame_texture", 3);
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
@@ -305,6 +310,17 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     });
 
     pipeline.draw();
+    if (_first_draw)
+    {
+        _feedback_render_target_pong.set_size({4080, 4080});
+        _feedback_render_target_ping.set_size({4080, 4080});
+        _first_draw = false;
+        (_ping_pong ? _feedback_render_target_pong : _feedback_render_target_ping).render([&]() {
+            render(in, update_ctx);
+        });
+        _first_draw = true;
+        _ping_pong  = !_ping_pong;
+    }
 }
 
 void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const
