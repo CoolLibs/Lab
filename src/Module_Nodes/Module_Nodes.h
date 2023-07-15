@@ -1,8 +1,8 @@
 #pragma once
-
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"
+#include "Cool/Gpu/Texture.h"
 #include "Cool/Nodes/NodesFolderWatcher.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Path/Path.h"
@@ -45,6 +45,7 @@ private:
     Cool::DirtyFlag                                                  _regenerate_code_flag;
     mutable Cool::MessageSender                                      _shader_compilation_error{};
     Cool::Input<Cool::Camera>                                        _camera_input;
+    Cool::Texture                                                    _previous_frame_texture;
 
 private:
     // Serialization

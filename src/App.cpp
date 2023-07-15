@@ -1,6 +1,8 @@
 #include "App.h"
 #include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/DebugOptions/TestPresets.h>
+#include <Cool/Gpu/TextureLibrary_FromFile.h>
+#include <Cool/Gpu/TextureLibrary_FromWebcam.h>
 #include <Cool/ImGui/Fonts.h>
 #include <Cool/ImGui/icon_fmt.h>
 #include <Cool/ImGui/test_markdown_formatting.h>
@@ -17,7 +19,6 @@
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
-#include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
@@ -400,7 +401,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {
-        Cool::TextureLibrary::instance().imgui_debug_view();
+        Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
     });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {

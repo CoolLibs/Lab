@@ -1,0 +1,9 @@
+uniform TextureInfo _previous_frame_texture;
+
+sRGB_StraightA main(UV uv)
+{
+    uv /= 2.;
+    uv.x /= _previous_frame_texture.aspect_ratio;
+    uv += 0.5;
+    return texture(_previous_frame_texture.tex, uv);
+}
