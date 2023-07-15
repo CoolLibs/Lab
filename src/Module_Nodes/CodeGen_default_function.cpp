@@ -97,7 +97,7 @@ static auto maybe_generate_default(FunctionSignature current_signature, std::str
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
-    using fmt::literals::operator""_a;
+    using fmt::literals::             operator""_a;
     static constexpr std::string_view signed_to_float = "antialised_step(sd)";
     {
         auto const func = maybe_generate_default(

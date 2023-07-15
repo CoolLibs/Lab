@@ -35,7 +35,6 @@
 #include "img/img.hpp"
 #include "imgui.h"
 
-
 namespace Lab {
 
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)

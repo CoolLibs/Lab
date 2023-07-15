@@ -9,6 +9,7 @@
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
+#include <Cool/Midi/MidiManager.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderView.h>
@@ -27,7 +28,6 @@
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Gallery/GalleryPoster.h"
 #include "Module_Nodes/Module_Nodes.h"
-#include <Cool/Midi/MidiManager.h>
 
 namespace Lab {
 

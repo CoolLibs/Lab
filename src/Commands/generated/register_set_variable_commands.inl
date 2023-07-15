@@ -50,4 +50,3 @@ LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<glm::mat2>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<glm::mat3>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<glm::mat4>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariable<Cool::MidiCc>)
-
