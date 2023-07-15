@@ -33,6 +33,7 @@
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
 #include "imgui.h"
+#include "Cool/Midi/MidiManager.h"
 
 namespace Lab {
 
@@ -42,6 +43,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 {
+     Cool::midi_manager().connect();
     _camera_manager.is_editable_in_view() = false;
     _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
@@ -353,11 +355,9 @@ void App::imgui_window_view()
 
 void App::imgui_windows()
 {
-    /* endless loop 
     ImGui::Begin("MIDI");
-    // _midi_manager.imgui();
-    ImGui::End();*/
-    _midi_manager.connect();
+    Cool::midi_manager().imgui();
+    ImGui::End();
     imgui_window_view();
     imgui_window_exporter(_exporter, polaroid(), _clock.time());
     imgui_window_console();

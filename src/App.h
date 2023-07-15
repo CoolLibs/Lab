@@ -121,7 +121,7 @@ private:
     bool                           _view_was_in_fullscreen_last_frame{false};
     GalleryPoster                  _gallery_poster{};
     Cool::TipsManager              _tips_manager{};
-    Cool::MidiManager              _midi_manager{};
+    // Cool::MidiManager              _midi_manager{};
 private:
     // Serialization
     friend class cereal::access;
