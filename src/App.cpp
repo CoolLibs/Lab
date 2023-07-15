@@ -22,6 +22,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Midi/MidiManager.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/ViewsManager.h"
 #include "Debug/DebugOptions.h"
@@ -33,7 +34,7 @@
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
 #include "imgui.h"
-#include "Cool/Midi/MidiManager.h"
+
 
 namespace Lab {
 
@@ -43,7 +44,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 {
-     Cool::midi_manager().connect();
+    Cool::midi_manager().connect();
     _camera_manager.is_editable_in_view() = false;
     _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
@@ -436,6 +437,10 @@ void App::imgui_windows_only_when_inputs_are_allowed()
 
     Cool::DebugOptions::test_markdown_formatting_window([]() {
         Cool::test_markdown_formatting();
+    });
+
+    Cool::DebugOptions::emulate_midi_keyboard([]() {
+        Cool::midi_manager().imgui_emulate_midi_keyboard();
     });
 
     Cool::DebugOptions::test_tips([this]() {
