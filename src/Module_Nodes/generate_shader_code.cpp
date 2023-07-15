@@ -74,6 +74,9 @@ out vec4      out_Color;
 #include "_COOL_RES_/shaders/Texture.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 
+// TODO(JF) Move this to the 3D Renderer node
+#include "_ROOT_FOLDER_/res/3D-renderer.glsl"
+
 vec2 to_view_space(vec2 uv)
 {{
     vec3 p = _camera2D_inverse * vec3(uv, 1.);

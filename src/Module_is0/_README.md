@@ -116,4 +116,4 @@ The material function should be defined in the node file alongside the SDF. It c
 
 Users should also be able to override materials: for example a smooth min could have one single material struct chosen by the user, instead of blending the materials of its children. Its only if no material is specified for the smooth min that the blending occurs.
 
-UI: it could be a simple input where your select your materia (Blender-like). You can create new materials, or share materials across objects. There would be a _default_ material for primitives (white) and a _None_ option for Booleans and Modifiers, which means that the material(s) of the child(ren) object(s) is(are) used.
+UI: it could be a simple input where your select your materia (Blender-like). You can create new materials, or share materials across objects. There would be a _default_ material for primitives (white) and a _None_ option for Blends and Modifiers, which means that the material(s) of the child(ren) object(s) is(are) used.

@@ -11,10 +11,10 @@
                                 "index": 2,
                                 "data": {
                                     "Name": "Strength",
-                                    "Value": 0.5,
+                                    "Value": 0.07000000029802323,
                                     "Metadata": {
                                         "Bounds": {
-                                            "Has min bound": false,
+                                            "Has min bound": true,
                                             "Min": 0.0,
                                             "Has max bound": false,
                                             "Max": 1.0,

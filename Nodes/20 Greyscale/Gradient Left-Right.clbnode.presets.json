@@ -26,6 +26,16 @@
                                     "Default Value": false,
                                     "Default Metadata": {}
                                 }
+                            },
+                            {
+                                "index": 0,
+                                "data": {
+                                    "Name": "Clamp",
+                                    "Value": false,
+                                    "Metadata": {},
+                                    "Default Value": false,
+                                    "Default Metadata": {}
+                                }
                             }
                         ]
                     }

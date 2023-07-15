@@ -94,6 +94,13 @@ def all_debug_options():
             kind=Kind.WINDOW,
             available_in_release=True,
         ),
+        DebugOption(
+            name_in_code="empty_window",
+            name_in_ui="Open Empty Window",
+            kind=Kind.WINDOW,
+            available_in_release=True,
+            detailed_description="Useful when you want some blank space in your windows layout.",
+        ),
     ]
 
 

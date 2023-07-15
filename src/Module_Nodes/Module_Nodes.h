@@ -20,6 +20,7 @@ public:
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
+    void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref) override;
     auto all_inputs() const -> Cool::AllInputRefsToConst override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
 

@@ -1,4 +1,5 @@
 #include "Module_Nodes.h"
+#include <Commands/Command_FinishedEditingVariable.h>
 #include <Cool/StrongTypes/set_uniform.h>
 #include <Module_Nodes/Module_Nodes.h>
 #include <stdexcept>
@@ -8,6 +9,7 @@
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
+#include "Cool/Dependencies/Input.h"
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/Texture.h"
@@ -51,7 +53,8 @@ void Module_Nodes::update(UpdateContext_Ref ctx)
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
-    _shader.pipeline().reset(); // Make sure the shader will be empty if the compilation fails.
+    _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
+    _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
 
     if (!_nodes_editor.graph().try_get_node<Node>(_main_node_id))
         return; // Otherwise we will get a default UV image instead of a transparent image.
@@ -130,6 +133,50 @@ void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
             handle_error(maybe_err, false);
 
             ui.dirty_setter()(dirty_flag()); // Trigger rerender
+        }
+    });
+}
+
+static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
+{
+    auto const cam_transform = ctx.input_provider()(Cool::Input_Camera2D{});
+    auto const id            = input._default_variable_id.raw();
+    return Cool::Gizmo_Point2D{
+        .get_position = [=]() {
+            auto const var = ctx.input_provider().variable_registries().get(id);
+            if (!var)
+                return Cool::ViewCoordinates{0.f};
+            return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{var->value().value, 1.f}}};
+            //
+        },
+        .set_position = [=](Cool::ViewCoordinates pos) {
+            //
+            auto const world_pos = glm::vec2{cam_transform * glm::vec3{pos, 1.f}};
+            ctx.ui().command_executor().execute(
+                Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{world_pos}}
+            );
+            //
+        },
+        .on_drag_stop = [=]() {
+            //
+            ctx.ui().command_executor().execute(
+                Command_FinishedEditingVariable{}
+            );
+            //
+        },
+        .id = id,
+    };
+}
+
+void Module_Nodes::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx)
+{
+    _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
+        for (auto const& input : node.downcast<Node>().value_inputs())
+        {
+            if (auto const* point_2D_input = std::get_if<Cool::Input<Cool::Point2D>>(&input))
+            {
+                gizmos.push(make_gizmo(*point_2D_input, ctx));
+            }
         }
     });
 }

@@ -2,12 +2,16 @@
 
 INPUT bool `Flip`;
 INPUT bool `Centered`;
+INPUT bool `Clamp`;
 
 float main(UV uv)
 {
     if (`Flip`)
         uv.y = -uv.y;
-    return `Centered`
-               ? uv.y
-               : uv.y * 0.5 + 0.5;
+    float res = `Centered`
+                    ? uv.y
+                    : uv.y * 0.5 + 0.5;
+    return `Clamp`
+               ? saturate(res)
+               : res;
 }

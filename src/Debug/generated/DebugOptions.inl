@@ -61,6 +61,15 @@ public:
             ImGui::End();
         }
     }
+    static void empty_window(std::function<void()> callback)
+    {
+        if (instance().empty_window)
+        {
+            ImGui::Begin(Cool::icon_fmt("Open Empty Window", ICOMOON_WRENCH).c_str(), &instance().empty_window, ImGuiWindowFlags_NoFocusOnAppearing);
+            callback();
+            ImGui::End();
+        }
+    }
 
 private:
     struct Instance {
@@ -76,6 +85,7 @@ private:
         bool show_generated_shader_code{false};
         bool test_all_variable_widgets__window{false};
         bool test_shaders_compilation__window{false};
+        bool empty_window{false};
 
     private:
         // Serialization
@@ -94,7 +104,8 @@ private:
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                cereal::make_nvp("Open Empty Window", empty_window)
 #else
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
@@ -105,7 +116,8 @@ private:
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                cereal::make_nvp("Open Empty Window", empty_window)
 #endif
 
             );
@@ -124,6 +136,7 @@ private:
         instance().show_generated_shader_code                 = false;
         instance().test_all_variable_widgets__window          = false;
         instance().test_shaders_compilation__window           = false;
+        instance().empty_window                               = false;
     }
 
     static void save_to_file();
@@ -211,6 +224,12 @@ private:
         {
             Cool::ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window);
         }
+
+        if (wafl::similarity_match({filter, "Open Empty Window"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Open Empty Window", &instance().empty_window);
+            Cool::ImGuiExtras::help_marker("Useful when you want some blank space in your windows layout.");
+        }
     }
 
     static void toggle_first_option(std::string_view filter)
@@ -284,6 +303,12 @@ private:
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
             instance().test_shaders_compilation__window = !instance().test_shaders_compilation__window;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Open Empty Window"}) >= wafl::Matches::Strongly)
+        {
+            instance().empty_window = !instance().empty_window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }

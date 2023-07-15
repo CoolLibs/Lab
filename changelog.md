@@ -1,16 +1,53 @@
 # Changelog
 
-- [🐣beta-5 WIP](#beta-5-wip)
+- [🐣beta-8 WIP](#beta-8-wip)
+- [🐣beta-7](#beta-7)
+- [🐣beta-6](#beta-6)
+- [🐣beta-5](#beta-5)
 - [🐣beta-4](#beta-4)
 - [🐣beta-3](#beta-3)
 - [🐣beta-2](#beta-2)
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-5 WIP
+## 🐣beta-8 WIP
+
+- 🐛 Fix: some nodes had the wrong color.
+- 🐛 Fix: on Linux, for some window managers like i3, the context menu was not behaving properly. (Now by default we disable multi-viewport for those custom window managers, which fixes the issue but prevents you from dragging windows outside of the main Coollab window.) 
+
+## 🐣beta-7
+
+- ✨ Only one camera (either 2D or 3D) can be active at the same time.
+- ✨ Improved "Distortion Map" node.
+- ✨ Added several "3D Shape from 2D" nodes.
+- 🚚 Renamed "Boolean" categories as "Blend".
+- 🚚 Renamed "Blend" nodes as "Mix".
+- 🚚 Moved "Time" node to the "Input" category.
+- 🐛 Fixed implicit conversion between numbers and angles: a number equal to 1 (white) now corresponds to a full turn (360 degrees).
+
+## 🐣beta-6
+
+- ✨ Added many Shape Booleans.
+- ⚡️ Big performance improvements. If you experienced lag spikes before, they should be gone now!
+- 🐛 Fix: some nodes had the wrong color.
+
+## 🐣beta-5
+
+- ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
+![Animation](https://github.com/CoolLibs/Lab/assets/45451201/b2a5ad91-e9bf-42d6-ab7a-c60e86e97c40)
+
+- ✨ Added Bezier Curve node.
+- ✨ Added a full 3D renderer node.
+![Animation-min](https://github.com/CoolLibs/Lab/assets/45451201/5996fb72-258b-46ff-b87d-4195bda21215)
 
 - ✨ Added tips that will show up from time to time and teach you about the subtleties and shortcuts of Coollab.
+![image](https://github.com/CoolLibs/Lab/assets/45451201/112c4431-5e68-4617-9bcb-6591755aae05)
+
 - ✨ Main input pins now have a different icon to distinguish them from the other pins.
+![image](https://github.com/CoolLibs/Lab/assets/45451201/73191129-3c1a-4fb0-afa8-6651100399aa)
+
+- 🐛 Fix: prevent panning the nodes while you are panning the camera.
+- 🐛 Fixed the camera controls not working when the View window was on another screen.
 
 ## 🐣beta-4
 

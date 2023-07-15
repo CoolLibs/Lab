@@ -12,6 +12,7 @@
 #include <Cool/Variables/TestVariables.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
 #include <cmd/imgui.hpp>
+#include <reg/src/internal/generate_uuid.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
@@ -20,8 +21,10 @@
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
+#include "Cool/View/ViewsManager.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -34,21 +37,18 @@
 
 namespace Lab {
 
-App::App(Cool::WindowManager& windows)
+App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _camera_manager{_variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
     , _main_window{windows.main_window()}
-    , _nodes_view{_views.make_view(Cool::icon_fmt("View", ICOMOON_IMAGE))}
-    // , _custom_shader_view{_views.make_view("View | Custom Shader")}
+    , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
-// , _custom_shader_module{std::make_unique<Module_CustomShader>(dirty_flag_factory(), input_factory())}
 {
-    _camera_manager.hook_events(_nodes_view.view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _camera_manager.is_editable_in_view() = false;
+    _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
-        _nodes_view.view.mouse_events(),
+        _nodes_view.mouse_events(),
         _camera2D.value(),
         [this]() { trigger_rerender(); },
-        [this]() { auto const sz =_nodes_view.view.size(); return sz ? static_cast<float>(sz->height()) : 1.f; },
-        [this]() { auto const sz =_nodes_view.view.size(); return sz ? img::SizeU::aspect_ratio(*sz) : 1.f; },
         [this]() { return !_is_camera_2D_editable_in_view; }
     );
     // _camera_manager.hook_events(_custom_shader_view.view.mouse_events(), _variable_registries, command_executor());
@@ -107,10 +107,7 @@ void App::update()
     if (!_exporter.is_exporting())
     {
         _clock.update();
-        for (auto& view : _views)
-        {
-            view.update_size(_view_constraint);
-        }
+        _nodes_view.update_size(_view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_clock.time());
     }
     else
@@ -178,7 +175,7 @@ auto App::all_inputs() -> Cool::AllInputRefsToConst
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _nodes_view.render_target,
+        .render_target = _nodes_view.render_target(),
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }};
@@ -242,13 +239,13 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
 // {
-// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target.get().texture_id());
+// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target().get().texture_id());
 // render_one_module(*_custom_shader_module, render_target, time);
 // }
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_nodes(_nodes_view.render_target, time, render_target.desired_size());
+    render_nodes(_nodes_view.render_target(), time, render_target.desired_size());
     // render_custom_shader(render_target, time);
 }
 
@@ -307,17 +304,19 @@ void App::imgui_window_view()
     bool const view_in_fullscreen = _exporter.is_exporting() || _wants_view_in_fullscreen;
     {
         if (!_view_was_in_fullscreen_last_frame && view_in_fullscreen)
-            save_windows_state(); // Save normal state before making the View fullscreen.
+            save_imgui_windows_state(); // Save normal state before making the View fullscreen.
         if (_view_was_in_fullscreen_last_frame && !view_in_fullscreen)
-            restore_windows_state(); // After fullscreen, restore the normal state.
+            restore_imgui_windows_state(); // After fullscreen, restore the normal state.
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
+    _nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
             if (_exporter.is_exporting())
-                return;
+                return false;
+            bool b = false;
 
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
                                                   || !_view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
@@ -328,6 +327,7 @@ void App::imgui_window_view()
             {
                 reset_cameras();
             }
+            b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
 
             // Toggle fullscreen
@@ -336,21 +336,18 @@ void App::imgui_window_view()
                 _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
                 _main_window.set_fullscreen(_wants_view_in_fullscreen);
             }
+            b |= ImGui::IsItemActive();
             Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
-            // Enable 2D camera
-            if (Cool::ImGuiExtras::floating_button(ICOMOON_CAMERA, buttons_order++, align_buttons_vertically, _is_camera_2D_editable_in_view))
+            // Toggle 2D / 3D cameras
+            if (Cool::ImGuiExtras::floating_button(_is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
             {
-                _is_camera_2D_editable_in_view = !_is_camera_2D_editable_in_view;
+                _is_camera_2D_editable_in_view        = !_is_camera_2D_editable_in_view;
+                _camera_manager.is_editable_in_view() = !_is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
-            Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is editable" : "2D camera is frozen");
-
-            // Enable 3D camera
-            if (Cool::ImGuiExtras::floating_button(ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically, _camera_manager.is_editable_in_view()))
-            {
-                _camera_manager.is_editable_in_view() = !_camera_manager.is_editable_in_view();
-            }
-            Cool::ImGuiExtras::tooltip(_camera_manager.is_editable_in_view() ? "3D camera is editable" : "3D camera is frozen");
+            b |= ImGui::IsItemActive();
+            Cool::ImGuiExtras::tooltip(_is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
+            return b;
         },
     });
 }
@@ -448,6 +445,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::DebugOptions::color_themes_editor([&]() {
         Cool::user_settings().color_themes.imgui_basic_theme_editor();
     });
+    DebugOptions::empty_window([] {});
 }
 
 void App::view_menu()
@@ -606,30 +604,6 @@ void App::check_inputs__timeline()
     if (ImGui::IsKeyReleased(ImGuiKey_Space))
     {
         _clock.toggle_play_pause();
-    }
-}
-
-void App::on_mouse_button(const Cool::MouseButtonEvent<Cool::WindowCoordinates>& event)
-{
-    for (auto& view : _views)
-    {
-        view.view.dispatch_mouse_button_event(view_event(event, view));
-    }
-}
-
-void App::on_mouse_scroll(const Cool::MouseScrollEvent<Cool::WindowCoordinates>& event)
-{
-    for (auto& view : _views)
-    {
-        view.view.dispatch_mouse_scroll_event(view_event(event, view));
-    }
-}
-
-void App::on_mouse_move(const Cool::MouseMoveEvent<Cool::WindowCoordinates>& event)
-{
-    for (auto& view : _views)
-    {
-        view.view.dispatch_mouse_move_event(view_event(event, view));
     }
 }
 
