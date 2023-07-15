@@ -44,6 +44,9 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     , _nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
 {
     Cool::midi_manager().connect();
+    Cool::midi_manager().set_additional_midi_callback([&]() {
+        trigger_rerender();
+    });
     _camera_manager.is_editable_in_view() = false;
     _camera_manager.hook_events(_nodes_view.mouse_events(), _variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
