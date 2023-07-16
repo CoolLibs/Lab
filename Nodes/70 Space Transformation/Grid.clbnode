@@ -4,14 +4,24 @@ INPUT float `Nb cells`;
 
 OUTPUT float `X Index`;
 OUTPUT float `Y Index`;
+OUTPUT float `X Center`;
+OUTPUT float `Y Center`;
 
 UV main(UV uv)
 {
-    uv = unnormalize_uv_with_aspect_ratio(uv, 1.) * `Nb cells`;
+    vec2 uv2 = unnormalize_uv_with_aspect_ratio(uv, 1.) * `Nb cells`;
 
-    vec2 gid    = floor(uv);
+    vec2 gid = floor(uv2);
+
     `X Index` = gid.x;
     `Y Index` = gid.y;
 
-    return normalize_uv_with_aspect_ratio(fract(uv), 1.);
+    vec2 ret = normalize_uv_with_aspect_ratio(fract(uv2), 1.);
+
+    vec2 center = uv - ret / `Nb cells`;
+
+    `X Center` = center.x;
+    `Y Center` = center.y;
+
+    return ret;
 }
