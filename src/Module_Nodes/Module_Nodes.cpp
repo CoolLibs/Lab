@@ -309,7 +309,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     pipeline.draw();
     if (_first_draw)
     {
-        _feedback_double_buffer.write_target().set_size({4080, 4080});
+        _feedback_double_buffer.write_target().set_size(in.render_target_size);
         _first_draw = false;
         _feedback_double_buffer.write_target().render([&]() {
             render(in, update_ctx);
