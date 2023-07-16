@@ -292,11 +292,8 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
 
-    glActiveTexture(GL_TEXTURE0 + 3);
     auto const id = (_ping_pong ? _feedback_render_target_ping : _feedback_render_target_pong).get().texture_id();
-    glBindTexture(GL_TEXTURE_2D, id);
-    glActiveTexture(GL_TEXTURE0 + 0);
-    shader.set_uniform("_previous_frame_texture", 3);
+    shader.set_uniform_texture("_previous_frame_texture", id);
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
@@ -312,10 +309,10 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     pipeline.draw();
     if (_first_draw)
     {
-        _feedback_render_target_pong.set_size({4080, 4080});
-        _feedback_render_target_ping.set_size({4080, 4080});
+        auto& write_texture = _ping_pong ? _feedback_render_target_pong : _feedback_render_target_ping;
+        write_texture.set_size({4080, 4080});
         _first_draw = false;
-        (_ping_pong ? _feedback_render_target_pong : _feedback_render_target_ping).render([&]() {
+        write_texture.render([&]() {
             render(in, update_ctx);
         });
         _first_draw = true;
