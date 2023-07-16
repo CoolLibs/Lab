@@ -35,6 +35,7 @@ protected:
 private:
     void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes) const;
     auto nodes_config(Ui_Ref ui) const -> NodesConfig;
+    void render_impl(RenderParams, UpdateContext_Ref);
 
 private:
     mutable std::string                                              _shader_code{};
@@ -48,7 +49,6 @@ private:
     mutable Cool::MessageSender                                      _shader_compilation_error{};
     Cool::Input<Cool::Camera>                                        _camera_input;
     Cool::DoubleBufferedRenderTarget                                 _feedback_double_buffer{};
-    bool                                                             _first_draw{true};
 
 private:
     // Serialization

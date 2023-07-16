@@ -269,6 +269,19 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
 
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
+    // Render on the normal render target
+    render_impl(in, update_ctx);
+
+    // Render on the feedback texture
+    _feedback_double_buffer.write_target().set_size(in.render_target_size);
+    _feedback_double_buffer.write_target().render([&]() {
+        render_impl(in, update_ctx);
+    });
+    _feedback_double_buffer.swap_buffers();
+}
+
+void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
+{
     in.set_clean(_shader.dirty_flag());
 
     if (in.is_dirty(_regenerate_code_flag))
@@ -307,16 +320,6 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     });
 
     pipeline.draw();
-    if (_first_draw)
-    {
-        _feedback_double_buffer.write_target().set_size(in.render_target_size);
-        _first_draw = false;
-        _feedback_double_buffer.write_target().render([&]() {
-            render(in, update_ctx);
-        });
-        _first_draw = true;
-        _feedback_double_buffer.swap_buffers();
-    }
 }
 
 void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const
