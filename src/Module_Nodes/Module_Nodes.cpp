@@ -305,8 +305,14 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
 
-    auto const id = _feedback_double_buffer.read_target().get().texture_id();
-    shader.set_uniform_texture("_previous_frame_texture", id, Cool::TextureSamplerDescriptor{.repeat_mode = Cool::TextureRepeatMode::None, .interpolation_mode = glpp::Interpolation::NearestNeighbour});
+    shader.set_uniform_texture(
+        "_previous_frame_texture",
+        _feedback_double_buffer.read_target().get().texture_id(),
+        Cool::TextureSamplerDescriptor{
+            .repeat_mode        = Cool::TextureRepeatMode::None,
+            .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
+        }
+    );
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
