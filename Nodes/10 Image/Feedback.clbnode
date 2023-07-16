@@ -1,5 +1,6 @@
 sRGB_StraightA main(UV uv)
 {
+    uv = to_view_space(uv);
     uv /= 2.;
     // uv.x /= _previous_frame_texture.aspect_ratio;
     uv += 0.5;
