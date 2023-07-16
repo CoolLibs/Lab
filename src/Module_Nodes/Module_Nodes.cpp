@@ -292,7 +292,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
 
-    auto const id = (_ping_pong ? _feedback_render_target_ping : _feedback_render_target_pong).get().texture_id();
+    auto const id = _feedback_double_buffer.read_target().get().texture_id();
     shader.set_uniform_texture("_previous_frame_texture", id);
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
@@ -309,14 +309,13 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     pipeline.draw();
     if (_first_draw)
     {
-        auto& write_texture = _ping_pong ? _feedback_render_target_pong : _feedback_render_target_ping;
-        write_texture.set_size({4080, 4080});
+        _feedback_double_buffer.write_target().set_size({4080, 4080});
         _first_draw = false;
-        write_texture.render([&]() {
+        _feedback_double_buffer.write_target().render([&]() {
             render(in, update_ctx);
         });
         _first_draw = true;
-        _ping_pong  = !_ping_pong;
+        _feedback_double_buffer.swap_buffers();
     }
 }
 
