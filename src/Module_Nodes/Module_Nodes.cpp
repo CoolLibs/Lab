@@ -293,7 +293,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
 
     auto const id = _feedback_double_buffer.read_target().get().texture_id();
-    shader.set_uniform_texture("_previous_frame_texture", id);
+    shader.set_uniform_texture("_previous_frame_texture", id, Cool::TextureSamplerDescriptor{.repeat_mode = Cool::TextureRepeatMode::None, .interpolation_mode = glpp::Interpolation::NearestNeighbour});
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
