@@ -127,7 +127,7 @@ private:
     static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
     {
         archive(
-            cereal::make_nvp("Project Manager", app._project_manager),
+            // cereal::make_nvp("Project Manager", app._project_manager),
             cereal::make_nvp("Gallery Poster", app._gallery_poster),
             cereal::make_nvp("Tips", app._tips_manager)
         );

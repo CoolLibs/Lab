@@ -5,7 +5,7 @@ namespace Lab {
 
 struct Command_OpenProject {
     std::filesystem::path path{};
-    bool                  save_previous_project{true};
+    // bool                  save_previous_project{true};
 
     void               execute(CommandExecutionContext_Ref const& ctx) const;
     [[nodiscard]] auto to_string() const -> std::string;

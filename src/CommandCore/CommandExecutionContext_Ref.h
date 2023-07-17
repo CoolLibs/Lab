@@ -25,7 +25,7 @@ public:
     [[nodiscard]] auto camera_manager() const -> CameraManager& { return _data.camera_manager; }
     [[nodiscard]] auto main_window() const -> Cool::Window& { return _data.main_window; }
     [[nodiscard]] auto project() const -> Project& { return _data.project; }
-    [[nodiscard]] auto project_path() const -> std::filesystem::path& { return _data.project_path; }
+    [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
     template<typename T>
     void set_dirty(const Cool::VariableId<T>& id)
     {
@@ -33,14 +33,14 @@ public:
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        std::reference_wrapper<App>                      app;
-        std::reference_wrapper<const History>            history;
-        std::reference_wrapper<Cool::VariableRegistries> registries;
-        std::reference_wrapper<CameraManager>            camera_manager;
-        Cool::SetVariableDirty_Ref                       set_dirty;
-        std::reference_wrapper<Cool::Window>             main_window;
-        std::reference_wrapper<Project>                  project;
-        std::reference_wrapper<std::filesystem::path>    project_path;
+        std::reference_wrapper<App>                                  app;
+        std::reference_wrapper<const History>                        history;
+        std::reference_wrapper<Cool::VariableRegistries>             registries;
+        std::reference_wrapper<CameraManager>                        camera_manager;
+        Cool::SetVariableDirty_Ref                                   set_dirty;
+        std::reference_wrapper<Cool::Window>                         main_window;
+        std::reference_wrapper<Project>                              project;
+        std::reference_wrapper<std::optional<std::filesystem::path>> project_path;
     };
     explicit CommandExecutionContext_Ref(Data data)
         : _data{std::move(data)}

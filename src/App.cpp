@@ -103,7 +103,7 @@ void App::update()
     if (_is_first_frame)
     {
         _is_first_frame = false;
-        initial_project_opening(command_executor(), _project_manager.current_project_path);
+        initial_project_opening(command_executor());
     }
     // First frame a project is loaded
     if (_project.is_first_frame)

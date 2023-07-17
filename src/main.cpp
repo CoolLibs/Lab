@@ -8,7 +8,7 @@ auto main(int argc, char** argv) -> int
     Lab::command_line_args().init(argc, argv);
     Cool::run<Lab::App>(
         {Cool::WindowConfig{
-            .title                  = "", // This is set when we load a project.
+            .title                  = "Coollab [Unsaved project]",
             .maximize_on_startup_if = true,
         }},
         Cool::InitConfig{
