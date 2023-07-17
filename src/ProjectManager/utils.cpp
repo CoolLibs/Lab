@@ -44,7 +44,7 @@ void dialog_to_open_project(CommandExecutor const& command_executor)
     }
 }
 
-void dialog_to_save_project_as(CommandExecutor const& command_executor)
+auto dialog_to_save_project_as(CommandExecutor const& command_executor) -> bool
 {
     auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.
     if (path)
@@ -52,7 +52,9 @@ void dialog_to_save_project_as(CommandExecutor const& command_executor)
         command_executor.execute(Command_SaveProjectAs{
             .path = *path,
         });
+        return true;
     }
+    return false;
 }
 
 void imgui_open_save_project(CommandExecutor const& command_executor)

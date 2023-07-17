@@ -1,4 +1,5 @@
 #include "internal_utils.h"
+#include <ProjectManager/utils.h>
 #include "Command_SaveProject.h"
 #include "Cool/Serialization/Serialization.h"
 #include "Project.h"
@@ -34,10 +35,15 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     }
     else
     {
-        if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
-            == boxer::Selection::Yes)
+        while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
         {
-            // dialog_to_save_project_as(); // TODO(Project)
+            if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
+                != boxer::Selection::Yes)
+            {
+                break;
+            }
+            if (dialog_to_save_project_as(ctx.command_executor()))
+                break;
         }
     }
 

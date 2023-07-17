@@ -27,6 +27,7 @@ public:
     [[nodiscard]] auto main_window() const -> Cool::Window& { return _data.main_window; }
     [[nodiscard]] auto project() const -> Project& { return _data.project; }
     [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
+    [[nodiscard]] auto command_executor() const -> CommandExecutor;
     template<ConcreteCommand ConcreteCommandT>
     void execute(ConcreteCommandT const& command) const
     {
