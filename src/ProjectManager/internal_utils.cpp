@@ -1,4 +1,5 @@
 #include "internal_utils.h"
+#include "Command_SaveProject.h"
 #include "Cool/Serialization/Serialization.h"
 #include "Project.h"
 #include "cereal/archives/json.hpp"
@@ -29,7 +30,7 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
 {
     if (ctx.project_path().has_value())
     {
-        save_project_to(ctx, *ctx.project_path()); // TODO(Project) Instead, use the SaveProject command: ctx.execute(Command_SaveProject{});
+        ctx.execute(Command_SaveProject{});
     }
     else
     {
