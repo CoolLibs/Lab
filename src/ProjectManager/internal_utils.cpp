@@ -25,6 +25,17 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optio
     ctx.project_path() = path;
 }
 
+void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& project, std::optional<std::filesystem::path> const& project_path)
+{
+    // TODO(Project) Check if the current project needs to be saved. Popup save as dialog if unsaved project.
+    if (/* save_previous_project && */ ctx.project_path())
+        save_project_to(ctx, *ctx.project_path()); // TODO(Project) Instead, use the SaveProject command: ctx.execute(Command_SaveProject{});
+
+    ctx.project() = std::move(project);
+    set_current_project_path(ctx, project_path);
+    ctx.project().is_first_frame = true;
+}
+
 void save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path)
 {
     Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project");

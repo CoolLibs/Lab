@@ -1,4 +1,5 @@
 #include "Command_OpenProject.h"
+#include <ProjectManager/internal_utils.h>
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Serialization/Serialization.h"
@@ -24,19 +25,15 @@ static void send_error_message(Cool::OptionalErrorMessage const& error)
 
 void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
-    if (/* save_previous_project && */ ctx.project_path())
-        save_project_to(ctx, *ctx.project_path()); // TODO(Project) Instead, use the SaveProject command: ctx.execute(Command_SaveProject{});
-    auto const error = Cool::Serialization::load<Project, cereal::JSONInputArchive>(ctx.project(), path);
+    auto       project = Project{};
+    auto const error   = Cool::Serialization::load<Project, cereal::JSONInputArchive>(project, path);
     if (error)
     {
         send_error_message(error);
-        ctx.project_path() = "";
-        // TODO(Project) Load a default project, otherwise we could probably have corrupted state if only part of the project was loaded.
         return;
     }
 
-    set_current_project_path(ctx, path); // Only assign path if loading was successful.
-    ctx.project().is_first_frame = true;
+    set_current_project(ctx, std::move(project), path);
 }
 
 [[nodiscard]] auto Command_OpenProject::to_string() const -> std::string
