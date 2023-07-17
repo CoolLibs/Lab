@@ -27,9 +27,18 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optio
 
 void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& project, std::optional<std::filesystem::path> const& project_path)
 {
-    // TODO(Project) Check if the current project needs to be saved. Popup save as dialog if unsaved project.
-    if (/* save_previous_project && */ ctx.project_path())
+    if (ctx.project_path().has_value())
+    {
         save_project_to(ctx, *ctx.project_path()); // TODO(Project) Instead, use the SaveProject command: ctx.execute(Command_SaveProject{});
+    }
+    else
+    {
+        if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
+            == boxer::Selection::Yes)
+        {
+            // dialog_to_save_project_as(); // TODO(Project)
+        }
+    }
 
     ctx.project() = std::move(project);
     set_current_project_path(ctx, project_path);
