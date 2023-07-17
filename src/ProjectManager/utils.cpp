@@ -33,7 +33,7 @@ void initial_project_opening(CommandExecutor_TopLevel_Ref const& command_executo
 
 void dialog_to_open_project(CommandExecutor_TopLevel_Ref const& command_executor)
 {
-    auto const path = Cool::File::file_opening_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.        if (path)
+    auto const path = Cool::File::file_opening_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.
     if (path)
     {
         command_executor.execute(Command_OpenProject{
@@ -44,7 +44,7 @@ void dialog_to_open_project(CommandExecutor_TopLevel_Ref const& command_executor
 
 void dialog_to_save_project_as(CommandExecutor_TopLevel_Ref const& command_executor)
 {
-    auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.        if (path)
+    auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.
     if (path)
     {
         command_executor.execute(Command_SaveProjectAs{
@@ -60,8 +60,14 @@ void save_current_project(CommandExecutor_TopLevel_Ref const& command_executor)
 
 void imgui_open_save_project(CommandExecutor_TopLevel_Ref const& command_executor)
 {
+    if (ImGui::MenuItem("New", "Ctrl+N"))
+    {
+    }
     if (ImGui::MenuItem("Open", "Ctrl+O"))
         dialog_to_open_project(command_executor);
+    if (ImGui::MenuItem("Open Recent", "Ctrl+R"))
+    {
+    }
     if (ImGui::MenuItem("Save", "Ctrl+S"))
         save_current_project(command_executor);
     if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
