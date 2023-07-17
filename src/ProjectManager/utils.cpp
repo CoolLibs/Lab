@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <CommandLineArgs/CommandLineArgs.h>
+#include "Command_NewProject.h"
 #include "Command_OpenProject.h"
 #include "Command_SaveProject.h"
 #include "Command_SaveProjectAs.h"
@@ -54,23 +55,17 @@ void dialog_to_save_project_as(CommandExecutor_TopLevel_Ref const& command_execu
     }
 }
 
-void save_current_project(CommandExecutor_TopLevel_Ref const& command_executor)
-{
-    command_executor.execute(Command_SaveProject{});
-}
-
 void imgui_open_save_project(CommandExecutor_TopLevel_Ref const& command_executor)
 {
     if (ImGui::MenuItem("New", "Ctrl+N"))
-    {
-    }
+        command_executor.execute(Command_NewProject{});
     if (ImGui::MenuItem("Open", "Ctrl+O"))
         dialog_to_open_project(command_executor);
     if (ImGui::MenuItem("Open Recent", "Ctrl+R"))
     {
     }
     if (ImGui::MenuItem("Save", "Ctrl+S"))
-        save_current_project(command_executor);
+        command_executor.execute(Command_SaveProject{});
     if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
         dialog_to_save_project_as(command_executor);
 }

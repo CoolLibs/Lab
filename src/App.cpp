@@ -30,6 +30,7 @@
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
+#include "ProjectManager/Command_NewProject.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
@@ -41,7 +42,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
 {
-    make_new_project();
+    command_executor().execute(Command_NewProject{});
 
     _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
@@ -83,16 +84,6 @@ void App::set_everybody_dirty()
     std::unique_lock lock{_project.dirty_registry.mutex()};
     for (auto& [_, is_dirty] : _project.dirty_registry)
         is_dirty.is_dirty = true;
-}
-
-void App::make_new_project()
-{
-    // TODO(Project) Make sure the previous project is serialized ?
-
-    _project = Project{};
-
-    _project.camera_manager.is_editable_in_view() = false;
-    _project.clock.pause();
 }
 
 void App::update()
@@ -621,9 +612,11 @@ void App::check_inputs__project()
     if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
         dialog_to_save_project_as(command_executor());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
-        save_current_project(command_executor());
+        command_executor().execute(Command_SaveProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
         dialog_to_open_project(command_executor());
+    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))
+        command_executor().execute(Command_NewProject{});
 }
 
 void App::check_inputs__timeline()

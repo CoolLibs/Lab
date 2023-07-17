@@ -15,8 +15,8 @@
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <Module_Nodes/NodesLibraryManager.h>
+#include <ProjectManager/Command_SaveProject.h>
 #include <ProjectManager/ProjectManager.h>
-#include <ProjectManager/utils.h>
 #include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
@@ -104,9 +104,6 @@ private:
     void compile_all_is0_nodes();
     void set_everybody_dirty();
 
-    void make_new_project();
-    void load_project();
-
 private:
     Cool::Window&       _main_window;
     Cool::RenderView&   _nodes_view;
@@ -136,7 +133,7 @@ private:
     void save(Archive& archive) const
     {
         serialize_impl(archive, *this);
-        save_current_project(const_cast<App&>(*this).command_executor()); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because noone will ever create a const App.
+        const_cast<App&>(*this).command_executor().execute(Command_SaveProject{}); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because noone will ever create a const App.
     }
     template<class Archive>
     void load(Archive& archive)

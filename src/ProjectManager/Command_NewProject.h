@@ -3,10 +3,7 @@
 
 namespace Lab {
 
-struct Command_OpenProject {
-    std::filesystem::path path{};
-    // bool                  save_previous_project{true};
-
+struct Command_NewProject {
     void               execute(CommandExecutionContext_Ref const&) const;
     [[nodiscard]] auto to_string() const -> std::string;
 };
@@ -15,7 +12,7 @@ struct Command_OpenProject {
 
 namespace cereal {
 template<class Archive>
-void serialize(Archive&, Lab::Command_OpenProject&)
+void serialize(Archive&, Lab::Command_NewProject&)
 {
 }
 } // namespace cereal
