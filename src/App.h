@@ -18,7 +18,9 @@
 #include <ProjectManager/Command_SaveProject.h>
 #include <ProjectManager/ProjectManager.h>
 #include <reg/cereal.hpp>
+#include "CommandCore/CommandExecutor_TopLevel.h"
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
+#include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
@@ -69,10 +71,11 @@ private:
     auto set_dirty_flag                             () { return  Cool::SetDirty_Ref{_project.dirty_registry};; }
     auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_project.variable_registries, _project.camera_manager}}; }
-    auto command_execution_context                  () { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty(), _main_window, _project, _project_manager.current_project_path }}; }
+    auto command_execution_context                  () { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty(), _main_window, _project, _project_manager.current_project_path, command_executor_top_level() }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
-    auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
-    auto command_executor                           () { return CommandExecutor_TopLevel_Ref{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
+    auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
+    auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
+    auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
     auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D}; }
     auto input_factory                              () { return _project.input_factory(); }
     auto ui                                         () { return Ui_Ref{_project.variable_registries, command_executor(), set_dirty_flag(), input_factory()}; }

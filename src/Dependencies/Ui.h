@@ -5,7 +5,7 @@
 #include <Cool/File/File.h>
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
-#include "CommandCore/CommandExecutor_TopLevel_Ref.h"
+#include "CommandCore/CommandExecutor.h"
 #include "Commands/Command_FinishedEditingVariable.h"
 #include "Commands/Command_SetVariable.h"
 #include "Commands/Command_SetVariableMetadata.h"
@@ -15,10 +15,10 @@ namespace Lab {
 class Ui_Ref {
 public:
     Ui_Ref(
-        Cool::VariableRegistries&    registries,
-        CommandExecutor_TopLevel_Ref command_executor,
-        Cool::SetDirty_Ref           set_dirty,
-        Cool::InputFactory_Ref       input_factory
+        Cool::VariableRegistries& registries,
+        CommandExecutor           command_executor,
+        Cool::SetDirty_Ref        set_dirty,
+        Cool::InputFactory_Ref    input_factory
     )
         : _variable_registries{registries}
         , _command_executor{command_executor}
@@ -109,7 +109,7 @@ private:
 
 private:
     std::reference_wrapper<Cool::VariableRegistries> _variable_registries;
-    CommandExecutor_TopLevel_Ref                     _command_executor;
+    CommandExecutor                                  _command_executor;
     Cool::SetDirty_Ref                               _set_dirty;
     Cool::InputFactory_Ref                           _input_factory;
 };

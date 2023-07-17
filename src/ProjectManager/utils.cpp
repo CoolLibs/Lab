@@ -8,7 +8,7 @@
 
 namespace Lab {
 
-void initial_project_opening(CommandExecutor_TopLevel_Ref const& command_executor)
+void initial_project_opening(CommandExecutor const& command_executor)
 {
     auto const path = [&]() -> std::filesystem::path {
         // Load the project that was requested, e.g. when double-clicking on a .clb file.
@@ -33,7 +33,7 @@ void initial_project_opening(CommandExecutor_TopLevel_Ref const& command_executo
     });
 }
 
-void dialog_to_open_project(CommandExecutor_TopLevel_Ref const& command_executor)
+void dialog_to_open_project(CommandExecutor const& command_executor)
 {
     auto const path = Cool::File::file_opening_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, of if the latter is nullopt, use the most recent proejct's path. Or if there is none then leave it empty.
     if (path)
@@ -44,7 +44,7 @@ void dialog_to_open_project(CommandExecutor_TopLevel_Ref const& command_executor
     }
 }
 
-void dialog_to_save_project_as(CommandExecutor_TopLevel_Ref const& command_executor)
+void dialog_to_save_project_as(CommandExecutor const& command_executor)
 {
     auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.
     if (path)
@@ -55,7 +55,7 @@ void dialog_to_save_project_as(CommandExecutor_TopLevel_Ref const& command_execu
     }
 }
 
-void imgui_open_save_project(CommandExecutor_TopLevel_Ref const& command_executor)
+void imgui_open_save_project(CommandExecutor const& command_executor)
 {
     if (ImGui::MenuItem("New", "Ctrl+N"))
         command_executor.execute(Command_NewProject{});
