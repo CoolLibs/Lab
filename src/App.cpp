@@ -13,11 +13,13 @@
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
 #include <ProjectManager/utils.h>
 #include <cmd/imgui.hpp>
+#include <filesystem>
 #include <reg/src/internal/generate_uuid.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
+#include "Common/Path.h"
 #include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -65,6 +67,9 @@ App::~App()
 void App::on_shutdown()
 {
     _tips_manager.on_app_shutdown();
+    before_project_destruction(command_execution_context());
+    std::filesystem::remove(Path::backup_project()); // The App exited successfully, no crash, so we know we don't need the backup anymore. If we were to keep it, then it would get opened the next time we open Coollab. But we want to open a new project instead.
+    _is_shutting_down = true;
 }
 
 void App::compile_all_is0_nodes()

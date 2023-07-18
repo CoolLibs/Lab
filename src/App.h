@@ -119,6 +119,7 @@ private:
     Cool::TipsManager   _tips_manager{};
     NodesLibraryManager _nodes_library_manager{};
     bool                _is_first_frame{true};
+    bool                _is_shutting_down{false};
 
 private:
     // Serialization
@@ -136,7 +137,9 @@ private:
     void save(Archive& archive) const
     {
         serialize_impl(archive, *this);
-        const_cast<App&>(*this).command_executor().execute(Command_SaveProject{}); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because noone will ever create a const App.
+        if (!_is_shutting_down)
+            const_cast<App&>(*this).command_executor().execute(Command_SaveProject{.is_autosave = true}); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because no one will ever create a const App.
+        // else: The project has already been saved during App::on_shutdown(), no need to save it here.
     }
     template<class Archive>
     void load(Archive& archive)

@@ -1,9 +1,11 @@
 #include "internal_utils.h"
 #include <ProjectManager/utils.h>
 #include "Command_SaveProject.h"
+#include "Common/Path.h"
 #include "Cool/Serialization/Serialization.h"
 #include "Project.h"
 #include "cereal/archives/json.hpp"
+#include "utils.h"
 
 namespace Lab {
 
@@ -29,29 +31,11 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optio
 
 void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& project, std::optional<std::filesystem::path> const& project_path)
 {
-    if (ctx.project_path().has_value())
-    {
-        ctx.execute(Command_SaveProject{});
-    }
-    else
-    {
-        if (!ctx.project().is_empty())
-        {
-            while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
-            {
-                if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
-                    != boxer::Selection::Yes)
-                {
-                    break;
-                }
-                if (dialog_to_save_project_as(ctx.command_executor()))
-                    break;
-            }
-        }
-    }
+    before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
-    set_current_project_path(ctx, project_path);
+    if (project_path != Path::backup_project()) // Special case: the backup project should not be visible to the end users.
+        set_current_project_path(ctx, project_path);
     ctx.project().is_first_frame = true;
 }
 

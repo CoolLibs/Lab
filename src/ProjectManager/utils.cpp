@@ -1,10 +1,13 @@
 #include "utils.h"
 #include <CommandLineArgs/CommandLineArgs.h>
+#include <Common/Path.h>
+#include <filesystem>
 #include "Command_NewProject.h"
 #include "Command_OpenProject.h"
 #include "Command_SaveProject.h"
 #include "Command_SaveProjectAs.h"
 #include "Cool/File/File.h"
+#include "Project.h"
 
 namespace Lab {
 
@@ -16,7 +19,7 @@ void initial_project_opening(CommandExecutor const& command_executor)
         {
             return command_line_args().get()[0];
         }
-        return "";
+        return Path::backup_project();
         // // Load the project that was open during the previous session.
         // else // TODO(Project) if(project path is valid)
         // {
@@ -27,6 +30,9 @@ void initial_project_opening(CommandExecutor const& command_executor)
         //     load(default project);
         // }
     }();
+    if (!std::filesystem::exists(path))
+        return; // Avoid error message caused by the fact that the file doesn't exist. It is legit if the backup project doesn't exist, we don't want an error in that case.
+
     command_executor.execute(Command_OpenProject{
         .path = path,
         // .save_previous_project = false, //Commented out: Not needed with the current loading / restoring logic.
@@ -55,6 +61,28 @@ auto dialog_to_save_project_as(CommandExecutor const& command_executor) -> bool
         return true;
     }
     return false;
+}
+
+void before_project_destruction(CommandExecutionContext_Ref const& ctx)
+{
+    if (ctx.project_path().has_value())
+    {
+        ctx.execute(Command_SaveProject{});
+        return;
+    }
+    if (ctx.project().is_empty())
+        return;
+
+    while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
+    {
+        if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
+            != boxer::Selection::Yes)
+        {
+            break;
+        }
+        if (dialog_to_save_project_as(ctx.command_executor()))
+            break;
+    }
 }
 
 void imgui_open_save_project(CommandExecutor const& command_executor)
