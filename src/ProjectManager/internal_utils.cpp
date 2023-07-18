@@ -35,15 +35,18 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     }
     else
     {
-        while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
+        if (!ctx.project().is_empty())
         {
-            if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
-                != boxer::Selection::Yes)
+            while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
             {
-                break;
+                if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
+                    != boxer::Selection::Yes)
+                {
+                    break;
+                }
+                if (dialog_to_save_project_as(ctx.command_executor()))
+                    break;
             }
-            if (dialog_to_save_project_as(ctx.command_executor()))
-                break;
         }
     }
 

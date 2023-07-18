@@ -8,4 +8,10 @@ Project::Project()
 {
 }
 
+auto Project::is_empty() const -> bool
+{
+    return nodes_module->graph().nodes().is_empty()
+           && history.size() == 0;
+}
+
 } // namespace Lab
