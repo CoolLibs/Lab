@@ -65,6 +65,7 @@ void imgui_open_save_project(CommandExecutor const& command_executor)
         dialog_to_open_project(command_executor);
     if (ImGui::MenuItem("Open Recent", "Ctrl+R"))
     {
+        // TODO(Project)
     }
     if (ImGui::MenuItem("Save", "Ctrl+S"))
         command_executor.execute(Command_SaveProject{});
