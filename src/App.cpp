@@ -11,6 +11,7 @@
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <Tips/Tips.h>
 #include <cmd/imgui.hpp>
 #include <reg/src/internal/generate_uuid.hpp>
 #include <stringify/stringify.hpp>
@@ -22,6 +23,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/ViewsManager.h"
 #include "Debug/DebugOptions.h"
@@ -198,9 +200,9 @@ static void imgui_window_console()
 #endif
 }
 
-static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time)
+static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time, Cool::TipsManager& tips_manager)
 {
-    exporter.imgui_windows(polaroid, time);
+    exporter.imgui_windows(polaroid, time, tips_manager);
 }
 
 void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
@@ -354,7 +356,7 @@ void App::imgui_window_view()
 void App::imgui_windows()
 {
     imgui_window_view();
-    imgui_window_exporter(_exporter, polaroid(), _clock.time());
+    imgui_window_exporter(_exporter, polaroid(), _clock.time(), _tips_manager);
     imgui_window_console();
     _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())
