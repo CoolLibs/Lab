@@ -39,9 +39,24 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     ctx.project().is_first_frame = true;
 }
 
-void save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path)
+auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
 {
-    Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project");
+    auto const success = Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project");
+    if (DebugOptions::log_project_related_events()
+        && !success)
+        Cool::Log::ToUser::info("Project", fmt::format("Failed to save project to {}.", path));
+    return success;
+}
+
+void error_when_save_failed(std::filesystem::path const& path)
+{
+    Cool::Log::ToUser::error(
+        "Save",
+        fmt::format(
+            "Failed to save project in {}, please select another location.",
+            path
+        )
+    );
 }
 
 } // namespace Lab

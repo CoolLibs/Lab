@@ -11,7 +11,11 @@ void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
     // Project already has a path, just save it there.
     if (ctx.project_path())
     {
-        save_project_to(ctx, *ctx.project_path()); // TODO(Project) handle error from saving
+        if (!save_project_to(ctx, *ctx.project_path()))
+        {
+            error_when_save_failed(*ctx.project_path());
+            dialog_to_save_project_as(ctx.command_executor());
+        }
     }
     // Autosave, save in the backup project.
     else if (is_autosave)
