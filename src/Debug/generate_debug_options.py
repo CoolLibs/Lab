@@ -81,6 +81,11 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
+            name_in_code="log_project_related_events",
+            name_in_ui="Log project-related events",
+            available_in_release=True,
+        ),
+        DebugOption(
             name_in_code="show_generated_shader_code",
             name_in_ui="Show generated shader code",
             available_in_release=True,
