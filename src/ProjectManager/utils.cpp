@@ -19,48 +19,38 @@ void initial_project_opening(CommandExecutor const& command_executor)
         {
             return command_line_args().get()[0];
         }
+        // Try the backup project. If it exists it means that the app did not exit successfully and there is a need to restore something.
         return Path::backup_project();
-        // // Load the project that was open during the previous session.
-        // else // TODO(Project) if(project path is valid)
-        // {
-        //     return project_path_from_previous_session;
-        // }
-        // Fallback to the default project. // TODO(Project) This should probably be done by the OpenProject command itself.
-        // else {
-        //     load(default project);
-        // }
     }();
     if (!std::filesystem::exists(path))
         return; // Avoid error message caused by the fact that the file doesn't exist. It is legit if the backup project doesn't exist, we don't want an error in that case.
 
     command_executor.execute(Command_OpenProject{
         .path = path,
-        // .save_previous_project = false, //Commented out: Not needed with the current loading / restoring logic.
     });
 }
 
 void dialog_to_open_project(CommandExecutor const& command_executor)
 {
     auto const path = Cool::File::file_opening_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, of if the latter is nullopt, use the most recent proejct's path. Or if there is none then leave it empty.
-    if (path)
-    {
-        command_executor.execute(Command_OpenProject{
-            .path = *path,
-        });
-    }
+    if (!path)
+        return;
+
+    command_executor.execute(Command_OpenProject{
+        .path = *path,
+    });
 }
 
 auto dialog_to_save_project_as(CommandExecutor const& command_executor) -> bool
 {
     auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.
-    if (path)
-    {
-        command_executor.execute(Command_SaveProjectAs{
-            .path = *path,
-        });
-        return true;
-    }
-    return false;
+    if (!path)
+        return false;
+
+    command_executor.execute(Command_SaveProjectAs{
+        .path = *path,
+    });
+    return true;
 }
 
 void before_project_destruction(CommandExecutionContext_Ref const& ctx)
