@@ -11,6 +11,7 @@
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
 #include <cmd/imgui.hpp>
 #include <filesystem>
@@ -213,11 +214,6 @@ static void imgui_window_console()
 #endif
 }
 
-static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid const& polaroid, float time)
-{
-    exporter.imgui_windows(polaroid, time);
-}
-
 void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
 {
     render_target.render([&]() {
@@ -363,10 +359,21 @@ void App::imgui_window_view()
     });
 }
 
+void App::imgui_window_exporter()
+{
+    _project.exporter.imgui_windows(polaroid(), _project.clock.time(), /*on_image_exported = */ [&](std::filesystem::path const& exported_image_path) {
+        auto folder_path = exported_image_path;
+        folder_path.replace_extension(); // Project folder should have the same name as the image
+        command_executor().execute(Command_PackageProjectInto{
+            .folder_path = folder_path,
+        });
+    });
+}
+
 void App::imgui_windows()
 {
     imgui_window_view();
-    imgui_window_exporter(_project.exporter, polaroid(), _project.clock.time());
+    imgui_window_exporter();
     imgui_window_console();
     _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())

@@ -48,9 +48,11 @@ auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::pa
     return success;
 }
 
-auto package_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
+auto package_project_into(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& folder_path) -> bool
 {
-    return save_project_to(ctx, path); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
+    auto file_path = folder_path;
+    file_path.replace_extension("clb");
+    return save_project_to(ctx, file_path); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 
 void error_when_save_failed(std::filesystem::path const& path)
