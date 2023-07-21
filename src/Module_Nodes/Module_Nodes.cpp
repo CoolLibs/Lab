@@ -1,7 +1,9 @@
 #include "Module_Nodes.h"
 #include <Commands/Command_FinishedEditingVariable.h>
 #include <Cool/StrongTypes/set_uniform.h>
+#include <Module_Nodes/Module_Nodes.h>
 #include <stdexcept>
+#include <type_traits>
 #include "Common/make_shader_compilation_error_message.h"
 #include "Cool/Camera/Camera.h"
 #include "Cool/Camera/CameraShaderU.h"
@@ -10,7 +12,11 @@
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
-#include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/Gpu/Texture.h"
+#include "Cool/Gpu/TextureDescriptor.h"
+#include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Gpu/TextureSamplerDescriptor.h"
+#include "Cool/Gpu/TextureSource.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
@@ -235,17 +241,19 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     );
 
     // HACK to send an error message whenever a Texture variable has an invalid path
-    if constexpr (std::is_same_v<T, Cool::TextureInfo>)
+    if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            auto const err = Cool::TextureLibrary::instance().error_from(value.absolute_path);
+            // auto const err = value.get_err();
+            auto err = Cool::get_error(value.source);
+            // auto const err = Cool::TextureLibrary_FromFile::instance().error_from(value.source.absolute_path);
             if (err)
             {
                 Cool::Log::ToUser::console().send(
                     variable.message_id,
                     Cool::Message{
                         .category = "Load Image",
-                        .message  = fmt::format("Failed to load {}:\n{}", value.absolute_path, *err),
+                        .message  = err.value(),
                         .severity = Cool::MessageSeverity::Error,
                     }
                 );
@@ -259,6 +267,19 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
 }
 
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
+{
+    // Render on the normal render target
+    render_impl(in, update_ctx);
+
+    // Render on the feedback texture
+    _feedback_double_buffer.write_target().set_size(in.render_target_size);
+    _feedback_double_buffer.write_target().render([&]() {
+        render_impl(in, update_ctx);
+    });
+    _feedback_double_buffer.swap_buffers();
+}
+
+void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
 {
     in.set_clean(_shader.dirty_flag());
 
@@ -282,6 +303,15 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+
+    shader.set_uniform_texture(
+        "_previous_frame_texture",
+        _feedback_double_buffer.read_target().get().texture_id(),
+        Cool::TextureSamplerDescriptor{
+            .repeat_mode        = Cool::TextureRepeatMode::None,
+            .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
+        }
+    );
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {

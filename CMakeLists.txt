@@ -34,6 +34,7 @@ endif()
 # set(COOL_USE_VULKAN 110)
 set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,410,430>) # Must be >= 330 for ImGui to work properly # We use 410 when building on Mac because it doesn't support higher versions of OpenGL
 
+
 # Include Cool
 add_subdirectory(Cool)
 target_link_libraries(Coollab-Properties INTERFACE Cool::Core)
@@ -48,6 +49,10 @@ target_link_libraries(Coollab-Properties INTERFACE cmd::cmd)
 
 # Include range-v3
 target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
+
+# target_link_opencv_to_exe(Coollab PUBLIC)
+
+
 
 set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, like making HTTPS requests to post images to the Coollab gallery. If you don't have the necessary dependencies these features will be disabled. If you want to make sure you have all the features of Coollab enabled, set this option to ON.")
 

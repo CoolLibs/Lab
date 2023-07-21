@@ -1,6 +1,8 @@
 #include "App.h"
 #include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/DebugOptions/TestPresets.h>
+#include <Cool/Gpu/TextureLibrary_FromFile.h>
+#include <Cool/Gpu/TextureLibrary_FromWebcam.h>
 #include <Cool/ImGui/Fonts.h>
 #include <Cool/ImGui/icon_fmt.h>
 #include <Cool/ImGui/test_markdown_formatting.h>
@@ -21,7 +23,6 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Common/Path.h"
-#include "Cool/Gpu/TextureLibrary.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
@@ -222,12 +223,13 @@ void App::render_one_module(Module& some_module, Cool::RenderTarget& render_targ
         glClear(GL_COLOR_BUFFER_BIT);
         const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
         some_module.do_rendering(
-            {
+            Module::RenderParams{
                 input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _project.camera2D.value().transform_matrix()),
                 input_factory(),
                 is_dirty__functor(),
                 set_clean__functor(),
                 _project.variable_registries,
+                render_target.desired_size(),
             },
             update_context()
         );
@@ -421,7 +423,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {
-        Cool::TextureLibrary::instance().imgui_debug_view();
+        Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
     });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {
