@@ -12,6 +12,7 @@
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderView.h>
+#include <Cool/View/ViewView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <Module_Nodes/NodesLibraryManager.h>
@@ -109,7 +110,8 @@ private:
 
 private:
     Cool::Window&                        _main_window;
-    Cool::RenderView&                    _nodes_view;
+    Cool::RenderView&                    _output_view;
+    Cool::ViewView&                      _nodes_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
     float                                _last_time{0.f};

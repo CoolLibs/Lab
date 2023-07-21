@@ -43,7 +43,8 @@ namespace Lab {
 
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
-    , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
+    , _output_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("Output", ICOMOON_IMAGE))}
+    , _nodes_view{views.make_view<Cool::ViewView>(_output_view, Cool::icon_fmt("View", ICOMOON_IMAGE))}
 {
     command_executor().execute(Command_NewProject{});
 
@@ -122,7 +123,7 @@ void App::update()
     if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
-        _nodes_view.update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
+        _output_view.update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_project.clock.time());
     }
     else
@@ -190,7 +191,7 @@ auto App::all_inputs() -> Cool::AllInputRefsToConst
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _nodes_view.render_target(),
+        .render_target = _output_view.render_target(),
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }};
@@ -255,7 +256,7 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_nodes(_nodes_view.render_target(), time, render_target.desired_size());
+    render_nodes(_output_view.render_target(), time, render_target.desired_size());
     // render_custom_shader(render_target, time);
 }
 
@@ -318,6 +319,7 @@ void App::imgui_window_view()
     }
 
     _project.nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
+    _output_view.imgui_window();
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
@@ -326,7 +328,7 @@ void App::imgui_window_view()
             bool b = false;
 
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
-                                                  || !_project.view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
+                                                  || (!_project.view_constraint.wants_to_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             int buttons_order{0};
             // Reset cameras
