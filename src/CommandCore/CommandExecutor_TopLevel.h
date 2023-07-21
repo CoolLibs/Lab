@@ -1,5 +1,5 @@
 #pragma once
-
+#include <Dependencies/History.h>
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ConcreteCommand.h"
 #include "CommandCore/ReversibleCommandMerger_Ref.h"
@@ -8,9 +8,9 @@
 
 namespace Lab {
 
-class CommandExecutor_TopLevel_Ref {
+class CommandExecutor_TopLevel {
 public:
-    CommandExecutor_TopLevel_Ref(
+    CommandExecutor_TopLevel(
         CommandExecutor_WithoutHistory_Ref sub_executor,
         History&                           history,
         MakeReversibleCommandContext_Ref   make_reversible_commands_context
@@ -23,20 +23,12 @@ public:
 
     /// To simplify the life of users so they don't need to call make_command()
     template<ConcreteCommand ConcreteCommandT>
-    void execute(ConcreteCommandT&& command) const
+    void execute(ConcreteCommandT&& command, CommandExecutionContext_Ref const& ctx) const
     {
-        execute(make_command(std::forward<ConcreteCommandT>(command)));
+        execute(make_command(std::forward<ConcreteCommandT>(command)), ctx);
     }
 
-    void execute(const Command& command) const
-    {
-        const auto reversible = try_make_reversible(command, _make_reversible_commands_context); // Must be before the execution of the command because we need to retrieve the state of the app before execution to create the reversible command
-        _sub_executor.execute(command);
-        if (reversible)
-        {
-            _history.get().push(*reversible, ReversibleCommandMerger_Ref{});
-        }
-    }
+    void execute(const Command& command, CommandExecutionContext_Ref const& ctx) const;
 
 private:
     mutable CommandExecutor_WithoutHistory_Ref _sub_executor;
