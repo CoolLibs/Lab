@@ -16,7 +16,6 @@
 #include <Cool/Window/WindowManager.h>
 #include <Module_Nodes/NodesLibraryManager.h>
 #include <ProjectManager/Command_SaveProject.h>
-#include <ProjectManager/ProjectManager.h>
 #include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_TopLevel.h"
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
@@ -68,10 +67,10 @@ private:
 
     // clang-format off
     auto all_inputs() -> Cool::AllInputRefsToConst;
-    auto set_dirty_flag                             () { return  Cool::SetDirty_Ref{_project.dirty_registry};; }
+    auto set_dirty_flag                             () { return Cool::SetDirty_Ref{_project.dirty_registry}; }
     auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_project.variable_registries, _project.camera_manager}}; }
-    auto command_execution_context                  () { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty(), _main_window, _project, _project_manager.current_project_path, command_executor_top_level() }}; }
+    auto command_execution_context                  () { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty(), _main_window, _project, _current_project_path, command_executor_top_level() }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
@@ -109,18 +108,18 @@ private:
     void set_everybody_dirty();
 
 private:
-    Cool::Window&       _main_window;
-    Cool::RenderView&   _nodes_view;
-    Project             _project{};
-    ProjectManager      _project_manager{};
-    float               _last_time{0.f};
-    bool                _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
-    bool                _view_was_in_fullscreen_last_frame{false};
-    GalleryPoster       _gallery_poster{};
-    Cool::TipsManager   _tips_manager{};
-    NodesLibraryManager _nodes_library_manager{};
-    bool                _is_first_frame{true};
-    bool                _is_shutting_down{false};
+    Cool::Window&                        _main_window;
+    Cool::RenderView&                    _nodes_view;
+    Project                              _project{};
+    std::optional<std::filesystem::path> _current_project_path{};
+    float                                _last_time{0.f};
+    bool                                 _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
+    bool                                 _view_was_in_fullscreen_last_frame{false};
+    GalleryPoster                        _gallery_poster{};
+    Cool::TipsManager                    _tips_manager{};
+    NodesLibraryManager                  _nodes_library_manager{};
+    bool                                 _is_first_frame{true};
+    bool                                 _is_shutting_down{false};
 
 private:
     // Serialization
@@ -129,7 +128,6 @@ private:
     static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
     {
         archive(
-            // cereal::make_nvp("Project Manager", app._project_manager),
             cereal::make_nvp("Gallery Poster", app._gallery_poster),
             cereal::make_nvp("Tips", app._tips_manager)
         );
