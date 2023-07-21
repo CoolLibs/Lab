@@ -363,7 +363,7 @@ void App::imgui_window_exporter()
 {
     _project.exporter.imgui_windows(polaroid(), _project.clock.time(), /*on_image_exported = */ [&](std::filesystem::path const& exported_image_path) {
         auto folder_path = exported_image_path;
-        folder_path.replace_extension(); // Project folder should have the same name as the image
+        folder_path.replace_extension(); // Give project folder the same name as the image.
         command_executor().execute(Command_PackageProjectInto{
             .folder_path = folder_path,
         });
