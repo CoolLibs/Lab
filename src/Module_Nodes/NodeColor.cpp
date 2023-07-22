@@ -54,7 +54,7 @@ auto compute_primitive_type_color(PrimitiveType type) -> Cool::Color
     case PrimitiveType::Direction2D:
         return NodeColor::greyscale();
     case PrimitiveType::UV:
-        return NodeColor::space_transformation();
+        return NodeColor::modifier_2D();
     default:
         return NodeColor::miscellaneous();
     }

@@ -75,7 +75,7 @@ auto is_greyscale(FunctionSignature signature) -> bool
     return can_convert(signature.to, PrimitiveType::Float);
 }
 
-auto space_transformation_signature() -> FunctionSignature
+auto modifier_2D_signature() -> FunctionSignature
 {
     return FunctionSignature{
         .from  = PrimitiveType::UV,
@@ -83,9 +83,9 @@ auto space_transformation_signature() -> FunctionSignature
         .arity = 1,
     };
 }
-auto is_space_transformation(FunctionSignature signature) -> bool
+auto is_modifier_2D(FunctionSignature signature) -> bool
 {
-    return signature == space_transformation_signature();
+    return signature == modifier_2D_signature();
 }
 
 } // namespace Lab

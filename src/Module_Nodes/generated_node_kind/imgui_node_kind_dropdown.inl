@@ -6,7 +6,7 @@
  */
 
 int  tmp = static_cast<int>(*node_kind);
-bool b   = ImGui::Combo(label, &tmp, "Curve\0Shape 2D\0Shape 3D\0Image\0Greyscale Image\0Space transformation\0Miscellaneous\0\0");
+bool b   = ImGui::Combo(label, &tmp, "Curve\0Shape 2D\0Shape 3D\0Image\0Greyscale Image\02D Modifier\0Miscellaneous\0\0");
 if (b)
     *node_kind = static_cast<NodeKind>(tmp);
 return b;
