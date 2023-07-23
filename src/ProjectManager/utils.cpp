@@ -8,12 +8,13 @@
 #include "Command_SaveProject.h"
 #include "Command_SaveProjectAs.h"
 #include "Cool/File/File.h"
+#include "Cool/UserSettings/UserSettings.h"
 #include "Project.h"
 #include "RecentlyOpened.h"
 
 namespace Lab {
 
-void initial_project_opening(CommandExecutor const& command_executor)
+void initial_project_opening(CommandExecutionContext_Ref const& ctx)
 {
     auto const path = [&]() -> std::filesystem::path {
         // Load the project that was requested, e.g. when double-clicking on a .clb file.
@@ -21,13 +22,19 @@ void initial_project_opening(CommandExecutor const& command_executor)
         {
             return command_line_args().get()[0];
         }
+        if (Cool::user_settings().open_most_recent_project_when_opening_coollab)
+        {
+            auto const path = ctx.recently_opened_projects().most_recent_path();
+            if (path)
+                return *path;
+        }
         // Try the backup project. If it exists it means that the app did not exit successfully and there is a need to restore something.
         return Path::backup_project();
     }();
     if (!std::filesystem::exists(path))
         return; // Avoid error message caused by the fact that the file doesn't exist. It is legit if the backup project doesn't exist, we don't want an error in that case.
 
-    command_executor.execute(Command_OpenProject{
+    ctx.execute(Command_OpenProject{
         .path = path,
     });
 }

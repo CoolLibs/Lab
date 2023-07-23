@@ -18,9 +18,14 @@ void RecentlyOpened::on_project_opened(std::filesystem::path path)
     _list.push_front(std::move(path));
 }
 
-auto RecentlyOpened::get_list() -> PathsList const&
+auto RecentlyOpened::most_recent_path() const -> std::optional<std::filesystem::path>
 {
-    return _list;
+    for (auto const& path : _list)
+    {
+        if (std::filesystem::exists(path))
+            return path;
+    }
+    return std::nullopt;
 }
 
 void RecentlyOpened::imgui_window(CommandExecutionContext_Ref const& ctx)

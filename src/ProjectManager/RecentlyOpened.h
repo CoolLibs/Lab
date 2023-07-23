@@ -14,7 +14,7 @@ public:
     RecentlyOpened();
 
     void on_project_opened(std::filesystem::path);
-    auto get_list() -> PathsList const&;
+    auto most_recent_path() const -> std::optional<std::filesystem::path>;
     void imgui_window(CommandExecutionContext_Ref const&);
     void open_window();
 
