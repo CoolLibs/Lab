@@ -4,6 +4,7 @@
 #include <imgui.h>
 #include <filesystem>
 #include <optional>
+#include <wafl/wafl.hpp>
 
 namespace Lab {
 
@@ -32,8 +33,18 @@ void RecentlyOpened::imgui_window(CommandExecutionContext_Ref const& ctx)
 {
     auto selected_path = std::optional<std::filesystem::path>{};
     _dialog_window.show([&]() {
+        // Search bar
+        bool wants_to_select_first = ImGui::InputTextWithHint(
+            "##FilterProjects", Cool::icon_fmt("Select to open", ICOMOON_SEARCH).c_str(), &_filter,
+            ImGuiInputTextFlags_EnterReturnsTrue
+        );
+        auto const filtered_list = wafl::search_results(_filter, _list.underlying_container(), [](std::filesystem::path const& path) {
+            return path.stem().string();
+        });
+
+        // Display recent paths
         bool has_set_keyboard_focus{false};
-        for (auto const& path : _list)
+        for (auto const& path : filtered_list)
         {
             // Find the first path that is not the current path and focus it.
             if (ImGui::IsWindowAppearing()
@@ -43,9 +54,12 @@ void RecentlyOpened::imgui_window(CommandExecutionContext_Ref const& ctx)
                 ImGui::SetKeyboardFocusHere();
                 has_set_keyboard_focus = true;
             }
-            if (ImGui::Selectable(fmt::format("{} [{}]", path.stem().string(), path.parent_path().string()).c_str()))
+
+            if (ImGui::Selectable(fmt::format("{} [{}]", path.stem().string(), path.parent_path().string()).c_str())
+                || wants_to_select_first)
             {
-                selected_path = path;
+                selected_path         = path;
+                wants_to_select_first = false;
             }
         }
     });
@@ -60,6 +74,7 @@ void RecentlyOpened::imgui_window(CommandExecutionContext_Ref const& ctx)
 void RecentlyOpened::open_window()
 {
     remove_paths_that_dont_exist_anymore();
+    _filter.clear();
     _dialog_window.open();
 }
 

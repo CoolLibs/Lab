@@ -24,6 +24,7 @@ private:
 private:
     PathsList         _list{100};
     Cool::ImGuiWindow _dialog_window;
+    std::string       _filter{};
 
 private:
     // Serialization
