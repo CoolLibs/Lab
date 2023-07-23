@@ -12,7 +12,7 @@ void Command_NewProject::execute(CommandExecutionContext_Ref const& ctx) const
     project.camera_manager.is_editable_in_view() = false;
     project.clock.pause();
 
-    set_current_project(ctx, std::move(project), std::nullopt /*project_path*/);
+    internal_project::set_current_project(ctx, std::move(project), std::nullopt /*project_path*/);
 }
 
 [[nodiscard]] auto Command_NewProject::to_string() const -> std::string

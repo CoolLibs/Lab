@@ -7,7 +7,7 @@
 #include "cereal/archives/json.hpp"
 #include "utils.h"
 
-namespace Lab {
+namespace Lab::internal_project {
 
 static void set_window_title(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> const& path)
 {
@@ -66,4 +66,4 @@ void error_when_save_failed(std::filesystem::path const& path)
     );
 }
 
-} // namespace Lab
+} // namespace Lab::internal_project
