@@ -9,5 +9,5 @@ case NodeKind::Shape2D: return NodeColor::shape_2D();
 case NodeKind::Shape3D: return NodeColor::shape_3D();
 case NodeKind::Image: return NodeColor::image();
 case NodeKind::Greyscale: return NodeColor::greyscale();
-case NodeKind::SpaceTransformation: return NodeColor::space_transformation();
+case NodeKind::Modifier2D: return NodeColor::modifier_2D();
 case NodeKind::Miscellaneous: return NodeColor::miscellaneous(); 

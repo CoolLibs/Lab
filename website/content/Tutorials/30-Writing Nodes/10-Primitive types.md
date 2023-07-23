@@ -37,7 +37,7 @@ CIELAB main(CIELAB Color)
 }
 ```
 
-```glsl title="Space Transformation (Zoom, Distortion, ...)"
+```glsl title="2D Modifier (Zoom, Distortion, ...)"
 UV main(UV Input)
 {
     // ...
