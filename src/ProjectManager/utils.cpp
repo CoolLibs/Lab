@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <CommandCore/CommandExecutionContext_Ref.h>
 #include <CommandLineArgs/CommandLineArgs.h>
 #include <Common/Path.h>
 #include <filesystem>
@@ -8,6 +9,7 @@
 #include "Command_SaveProjectAs.h"
 #include "Cool/File/File.h"
 #include "Project.h"
+#include "RecentlyOpened.h"
 
 namespace Lab {
 
@@ -39,6 +41,11 @@ void dialog_to_open_project(CommandExecutor const& command_executor)
     command_executor.execute(Command_OpenProject{
         .path = *path,
     });
+}
+
+void dialog_to_open_recent_project(RecentlyOpened& recently_opened)
+{
+    recently_opened.open_window();
 }
 
 auto dialog_to_save_project_as(CommandExecutor const& command_executor) -> bool
@@ -75,20 +82,18 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
     }
 }
 
-void imgui_open_save_project(CommandExecutor const& command_executor)
+void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
 {
     if (ImGui::MenuItem("New", "Ctrl+N"))
-        command_executor.execute(Command_NewProject{});
+        ctx.execute(Command_NewProject{});
     if (ImGui::MenuItem("Open", "Ctrl+O"))
-        dialog_to_open_project(command_executor);
+        dialog_to_open_project(ctx.command_executor());
     if (ImGui::MenuItem("Open Recent", "Ctrl+R"))
-    {
-        // TODO(Project)
-    }
+        dialog_to_open_recent_project(ctx.recently_opened_projects());
     if (ImGui::MenuItem("Save", "Ctrl+S"))
-        command_executor.execute(Command_SaveProject{});
+        ctx.execute(Command_SaveProject{});
     if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
-        dialog_to_save_project_as(command_executor);
+        dialog_to_save_project_as(ctx.command_executor());
 }
 
 } // namespace Lab

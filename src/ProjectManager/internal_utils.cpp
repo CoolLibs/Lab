@@ -4,6 +4,7 @@
 #include "Common/Path.h"
 #include "Cool/Serialization/Serialization.h"
 #include "Project.h"
+#include "RecentlyOpened.h"
 #include "cereal/archives/json.hpp"
 #include "utils.h"
 

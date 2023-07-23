@@ -4,7 +4,6 @@
 #include <Cool/Dependencies/SetVariableDirty_Ref.h>
 #include <Cool/Dependencies/VariableId.h>
 #include <Cool/Dependencies/VariableRegistries.h>
-#include <ProjectManager/RecentlyOpened.h>
 #include <utility>
 #include "ConcreteCommand.h"
 #include "Cool/Window/Window.h"
@@ -14,6 +13,7 @@ namespace Lab {
 
 class CameraManager;
 class App;
+class RecentlyOpened;
 struct Project;
 
 // This is a class rather than a struct because we want to use methods to access the different members
