@@ -11,6 +11,7 @@
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
 #include <cmd/imgui.hpp>
@@ -372,6 +373,15 @@ void App::imgui_window_exporter()
 
 void App::imgui_windows()
 {
+    ImGui::Begin("Recent");
+    auto const path = _recently_opened_projects.imgui();
+    if (path)
+    {
+        command_executor().execute(Command_OpenProject{
+            .path = *path,
+        });
+    }
+    ImGui::End();
     imgui_window_view();
     imgui_window_exporter();
     imgui_window_console();

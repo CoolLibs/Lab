@@ -4,6 +4,7 @@
 #include <Cool/Dependencies/SetVariableDirty_Ref.h>
 #include <Cool/Dependencies/VariableId.h>
 #include <Cool/Dependencies/VariableRegistries.h>
+#include <ProjectManager/RecentlyOpened.h>
 #include <utility>
 #include "ConcreteCommand.h"
 #include "Cool/Window/Window.h"
@@ -28,6 +29,7 @@ public:
     [[nodiscard]] auto project() const -> Project& { return _data.project; }
     [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
     [[nodiscard]] auto command_executor() const -> CommandExecutor;
+    [[nodiscard]] auto recently_opened_projects() const -> RecentlyOpened& { return _data.recently_opened; }
     template<ConcreteCommand ConcreteCommandT>
     void execute(ConcreteCommandT const& command) const
     {
@@ -49,6 +51,7 @@ public:
         std::reference_wrapper<Project>                              project;
         std::reference_wrapper<std::optional<std::filesystem::path>> project_path;
         CommandExecutor_TopLevel                                     executor;
+        std::reference_wrapper<RecentlyOpened>                       recently_opened;
     };
     explicit CommandExecutionContext_Ref(Data data)
         : _data{std::move(data)}

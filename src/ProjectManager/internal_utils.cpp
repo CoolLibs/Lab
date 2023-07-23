@@ -26,6 +26,8 @@ static void set_window_title(CommandExecutionContext_Ref const& ctx, std::option
 void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> const& path)
 {
     set_window_title(ctx, path);
+    if (path)
+        ctx.recently_opened_projects().on_project_opened(*path);
     ctx.project_path() = path;
 }
 
