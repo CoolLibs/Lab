@@ -39,13 +39,27 @@ void initial_project_opening(CommandExecutionContext_Ref const& ctx)
     });
 }
 
-void dialog_to_open_project(CommandExecutor const& command_executor)
+static auto project_dialog_args(CommandExecutionContext_Ref const& ctx) -> Cool::File::file_dialog_args
 {
-    auto const path = Cool::File::file_opening_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, of if the latter is nullopt, use the most recent proejct's path. Or if there is none then leave it empty.
+    auto initial_folder = ctx.recently_opened_projects().most_recent_path(); // If a project is currently open this will be its path, else it will be the path of the last open one.
+    if (initial_folder)
+        initial_folder = initial_folder->parent_path(); // Remove the file part, keep only the folder.
+    else
+        initial_folder = "";
+
+    return Cool::File::file_dialog_args{
+        .file_filters   = {{"Coollab project", "clb"}},
+        .initial_folder = *initial_folder,
+    };
+}
+
+void dialog_to_open_project(CommandExecutionContext_Ref const& ctx)
+{
+    auto const path = Cool::File::file_opening_dialog(project_dialog_args(ctx));
     if (!path)
         return;
 
-    command_executor.execute(Command_OpenProject{
+    ctx.execute(Command_OpenProject{
         .path = *path,
     });
 }
@@ -55,13 +69,13 @@ void dialog_to_open_recent_project(RecentlyOpened& recently_opened)
     recently_opened.open_window();
 }
 
-auto dialog_to_save_project_as(CommandExecutor const& command_executor) -> bool
+auto dialog_to_save_project_as(CommandExecutionContext_Ref const& ctx) -> bool
 {
-    auto const path = Cool::File::file_saving_dialog({.file_filters = {{"Coollab project", "clb"}}, .initial_folder = ""}); // TODO(Project) initial_folder should be the folder of _project_path, unless the latter is the path to the default coollab project. In which case leave initial_folder empty.
+    auto const path = Cool::File::file_saving_dialog(project_dialog_args(ctx));
     if (!path)
         return false;
 
-    command_executor.execute(Command_SaveProjectAs{
+    ctx.execute(Command_SaveProjectAs{
         .path = *path,
     });
     return true;
@@ -84,7 +98,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
         {
             break;
         }
-        if (dialog_to_save_project_as(ctx.command_executor()))
+        if (dialog_to_save_project_as(ctx))
             break;
     }
 }
@@ -94,13 +108,13 @@ void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
     if (ImGui::MenuItem("New", "Ctrl+N"))
         ctx.execute(Command_NewProject{});
     if (ImGui::MenuItem("Open", "Ctrl+O"))
-        dialog_to_open_project(ctx.command_executor());
+        dialog_to_open_project(ctx);
     if (ImGui::MenuItem("Open Recent", "Ctrl+R"))
         dialog_to_open_recent_project(ctx.recently_opened_projects());
     if (ImGui::MenuItem("Save", "Ctrl+S"))
         ctx.execute(Command_SaveProject{});
     if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
-        dialog_to_save_project_as(ctx.command_executor());
+        dialog_to_save_project_as(ctx);
 }
 
 } // namespace Lab

@@ -14,7 +14,7 @@ void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
         if (!internal_project::save_project_to(ctx, *ctx.project_path()))
         {
             internal_project::error_when_save_failed(*ctx.project_path());
-            dialog_to_save_project_as(ctx.command_executor());
+            dialog_to_save_project_as(ctx);
         }
     }
     // Autosave, save in the backup project.
@@ -25,7 +25,7 @@ void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
     // The user explicitly asked to save on the Unsaved Project, so run as "Save As".
     else
     {
-        dialog_to_save_project_as(ctx.command_executor());
+        dialog_to_save_project_as(ctx);
     }
 }
 

@@ -70,7 +70,7 @@ void App::on_shutdown()
 {
     _tips_manager.on_app_shutdown();
     before_project_destruction(command_execution_context());
-        std::filesystem::remove(Path::backup_project()); // The App exited successfully, no crash, so we know we don't need the backup anymore. If we were to keep it, then it would get opened the next time we open Coollab. But we want to open a new project instead.
+    std::filesystem::remove(Path::backup_project()); // The App exited successfully, no crash, so we know we don't need the backup anymore. If we were to keep it, then it would get opened the next time we open Coollab. But we want to open a new project instead.
     _is_shutting_down = true;
 }
 
@@ -625,11 +625,11 @@ void App::check_inputs__project()
     auto const& io = ImGui::GetIO();
 
     if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
-        dialog_to_save_project_as(command_executor());
+        dialog_to_save_project_as(command_execution_context());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
         command_executor().execute(Command_SaveProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
-        dialog_to_open_project(command_executor());
+        dialog_to_open_project(command_execution_context());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_R))
         dialog_to_open_recent_project(_recently_opened_projects);
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))
