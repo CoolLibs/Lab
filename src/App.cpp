@@ -47,6 +47,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
 {
     command_executor().execute(Command_NewProject{});
+    _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(

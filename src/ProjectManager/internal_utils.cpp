@@ -34,12 +34,14 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optio
 
 void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& project, std::optional<std::filesystem::path> const& project_path)
 {
+    bool const is_playing = ctx.project().clock.is_playing(); // Make sure the play/pause state is kept while changing project.
     before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
     if (project_path != Path::backup_project()) // Special case: the backup project should not be visible to the end users.
         set_current_project_path(ctx, project_path);
     ctx.project().is_first_frame = true;
+    ctx.project().clock.set_playing(is_playing);
 }
 
 auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
