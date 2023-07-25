@@ -83,9 +83,16 @@ target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
 target_include_directories(Coollab-Properties SYSTEM INTERFACE src lib)
 
 # Copy resources to the output folder (where the executable is created) after each build
+# and register them for installation when creating the installer.
 include("Cool/CMakeUtils/files_and_folders.cmake")
-Cool__target_copy_folder(${PROJECT_NAME} "res")
-Cool__target_copy_folder(${PROJECT_NAME} "Nodes")
+
+function(Lab_copy_folder FOLDER_RELATIVE_PATH)
+    Cool__target_copy_folder(${PROJECT_NAME} ${FOLDER_RELATIVE_PATH})
+    install(DIRECTORY ${FOLDER_RELATIVE_PATH} DESTINATION bin)
+endfunction()
+
+Lab_copy_folder("res")
+Lab_copy_folder("Nodes")
 
 if(MSVC)
     target_compile_options(Coollab-Properties INTERFACE /bigobj) # We use too many templates apparently so we need this flag O:)

@@ -12,7 +12,7 @@ def main():
     # )
     os.chdir(Path(__file__).parent.joinpath("build"))
     os.system("cpack")
-    os.system("Coollab-0.1.1-win64.exe")
+    os.system("Coollab-0.9.9-win64.exe")
 
 
 if __name__ == "__main__":
