@@ -60,6 +60,7 @@ set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, lik
 # Note: cpp-httplib can only work with OpenSSL versions 3 or 1.1.1
 # Set the path to OpenSSL library directory
 set(OPENSSL_USE_STATIC_LIBS TRUE)
+
 if(COOLLAB_REQUIRE_ALL_FEATURES)
     find_package(OpenSSL REQUIRED)
 else()
@@ -98,3 +99,9 @@ add_executable(Tests-Coollab tests/tests.cpp ${COOL_LAB_SOURCES})
 target_compile_definitions(Tests-Coollab PRIVATE LAB_ENABLE_TESTS)
 target_link_libraries(Tests-Coollab PRIVATE Coollab-Properties)
 target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
+
+# ---------------------
+# ---CPack---
+# ---------------------
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+include(CPack)
