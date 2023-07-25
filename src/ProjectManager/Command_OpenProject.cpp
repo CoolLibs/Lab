@@ -33,7 +33,7 @@ void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
         return;
     }
 
-    set_current_project(ctx, std::move(project), path);
+    internal_project::set_current_project(ctx, std::move(project), path);
 }
 
 [[nodiscard]] auto Command_OpenProject::to_string() const -> std::string

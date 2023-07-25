@@ -11,21 +11,21 @@ void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
     // Project already has a path, just save it there.
     if (ctx.project_path())
     {
-        if (!save_project_to(ctx, *ctx.project_path()))
+        if (!internal_project::save_project_to(ctx, *ctx.project_path()))
         {
-            error_when_save_failed(*ctx.project_path());
-            dialog_to_save_project_as(ctx.command_executor());
+            internal_project::error_when_save_failed(*ctx.project_path());
+            dialog_to_save_project_as(ctx);
         }
     }
     // Autosave, save in the backup project.
     else if (is_autosave)
     {
-        save_project_to(ctx, Path::backup_project());
+        internal_project::save_project_to(ctx, Path::backup_project());
     }
     // The user explicitly asked to save on the Unsaved Project, so run as "Save As".
     else
     {
-        dialog_to_save_project_as(ctx.command_executor());
+        dialog_to_save_project_as(ctx);
     }
 }
 

@@ -4,10 +4,11 @@
 #include "Common/Path.h"
 #include "Cool/Serialization/Serialization.h"
 #include "Project.h"
+#include "RecentlyOpened.h"
 #include "cereal/archives/json.hpp"
 #include "utils.h"
 
-namespace Lab {
+namespace Lab::internal_project {
 
 static void set_window_title(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> const& path)
 {
@@ -26,17 +27,21 @@ static void set_window_title(CommandExecutionContext_Ref const& ctx, std::option
 void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> const& path)
 {
     set_window_title(ctx, path);
+    if (path)
+        ctx.recently_opened_projects().on_project_opened(*path);
     ctx.project_path() = path;
 }
 
 void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& project, std::optional<std::filesystem::path> const& project_path)
 {
+    bool const is_playing = ctx.project().clock.is_playing(); // Make sure the play/pause state is kept while changing project.
     before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
     if (project_path != Path::backup_project()) // Special case: the backup project should not be visible to the end users.
         set_current_project_path(ctx, project_path);
     ctx.project().is_first_frame = true;
+    ctx.project().clock.set_playing(is_playing);
 }
 
 auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
@@ -66,4 +71,4 @@ void error_when_save_failed(std::filesystem::path const& path)
     );
 }
 
-} // namespace Lab
+} // namespace Lab::internal_project

@@ -11,6 +11,7 @@
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
 #include <cmd/imgui.hpp>
@@ -46,6 +47,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
 {
     command_executor().execute(Command_NewProject{});
+    _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
@@ -100,7 +102,7 @@ void App::update()
     if (_is_first_frame)
     {
         _is_first_frame = false;
-        initial_project_opening(command_executor());
+        initial_project_opening(command_execution_context());
     }
     // First frame a project is loaded
     if (_project.is_first_frame)
@@ -393,7 +395,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     imgui_window_cameras();
     ImGui::End();
     // Nodes
-    _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Equalizer window is always preferred over Cameras in tabs.
+    _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
@@ -401,6 +403,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
+    // Recently opened projects
+    _recently_opened_projects.imgui_window(command_execution_context());
 
     DebugOptions::show_framerate_window([&] {
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
@@ -470,7 +474,7 @@ void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
-        imgui_open_save_project(command_executor());
+        imgui_open_save_project(command_execution_context());
         ImGui::EndMenu();
     }
 }
@@ -622,11 +626,13 @@ void App::check_inputs__project()
     auto const& io = ImGui::GetIO();
 
     if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
-        dialog_to_save_project_as(command_executor());
+        dialog_to_save_project_as(command_execution_context());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
         command_executor().execute(Command_SaveProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
-        dialog_to_open_project(command_executor());
+        dialog_to_open_project(command_execution_context());
+    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_R))
+        dialog_to_open_recent_project(_recently_opened_projects);
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))
         command_executor().execute(Command_NewProject{});
 }
