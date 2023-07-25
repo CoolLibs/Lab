@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(Coollab)
+set(COOLLAB_VERSION "beta-8 WIP")
 add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
@@ -77,7 +78,9 @@ endif()
 
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
-target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
+set(COOLLAB_VERSION_STRING "\"${COOLLAB_VERSION}\"")
+configure_file("src/Dump/coollab_version.cpp.in" "src/Dump/coollab_version.cpp")
+target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES} src/Dump/coollab_version.cpp)
 
 # Set include directories
 target_include_directories(Coollab-Properties SYSTEM INTERFACE src lib)
@@ -111,4 +114,5 @@ target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
 # ---CPack---
 # ---------------------
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab-${COOLLAB_VERSION}")
 include(CPack)
