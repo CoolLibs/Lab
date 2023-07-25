@@ -3,6 +3,7 @@
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
 #include "Cool/Serialization/Serialization.h"
+#include "FileExtension.h"
 #include "Project.h"
 #include "RecentlyOpened.h"
 #include "cereal/archives/json.hpp"
@@ -56,7 +57,7 @@ auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::pa
 auto package_project_into(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& folder_path) -> bool
 {
     auto file_path = folder_path;
-    file_path.replace_extension("clb");
+    file_path.replace_extension(COOLLAB_FILE_EXTENSION);
     return save_project_to(ctx, file_path); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 

@@ -9,6 +9,7 @@
 #include "Command_SaveProjectAs.h"
 #include "Cool/File/File.h"
 #include "Cool/UserSettings/UserSettings.h"
+#include "FileExtension.h"
 #include "Project.h"
 #include "RecentlyOpened.h"
 
@@ -17,7 +18,7 @@ namespace Lab {
 void initial_project_opening(CommandExecutionContext_Ref const& ctx)
 {
     auto const path = [&]() -> std::filesystem::path {
-        // Load the project that was requested, e.g. when double-clicking on a .clb file.
+        // Load the project that was requested, e.g. when double-clicking on a .coollab file.
         if (!command_line_args().get().empty())
         {
             return command_line_args().get()[0];
@@ -48,7 +49,7 @@ static auto project_dialog_args(CommandExecutionContext_Ref const& ctx) -> Cool:
         initial_folder = "";
 
     return Cool::File::file_dialog_args{
-        .file_filters   = {{"Coollab project", "clb"}},
+        .file_filters   = {{"Coollab project", COOLLAB_FILE_EXTENSION}},
         .initial_folder = *initial_folder,
     };
 }
