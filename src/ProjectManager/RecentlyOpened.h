@@ -7,8 +7,6 @@
 
 namespace Lab {
 
-using PathsList = Cool::CircularBuffer<std::filesystem::path>;
-
 class RecentlyOpened {
 public:
     RecentlyOpened();
@@ -22,9 +20,9 @@ private:
     void remove_paths_that_dont_exist_anymore();
 
 private:
-    PathsList         _list{100};
-    Cool::ImGuiWindow _dialog_window;
-    std::string       _filter{};
+    Cool::CircularBuffer<std::filesystem::path> _list{100};
+    Cool::ImGuiWindow                           _dialog_window;
+    std::string                                 _filter{};
 
 private:
     // Serialization
