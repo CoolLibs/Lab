@@ -114,5 +114,7 @@ target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
 # ---CPack---
 # ---------------------
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab-${COOLLAB_VERSION}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab ${COOLLAB_VERSION}")
+
+set(CPACK_PACKAGE_FILE_NAME "Coollab-${COOLLAB_VERSION}-Installer")
 include(CPack)
