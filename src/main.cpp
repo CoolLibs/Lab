@@ -2,19 +2,16 @@
 #include "CommandLineArgs/CommandLineArgs.h"
 #include "Cool/Path/Path.h"
 #include "Cool/Path/PathsConfig.h"
+#include "exe_path/exe_path.h"
 //
 #include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <cereal/archives/json.hpp>
 
 class PathsConfig : public Cool::PathsConfig {
 public:
-    [[nodiscard]] auto user_data() const -> std::filesystem::path override
-    {
-#if DEBUG
-        return Cool::Path::root() / "User Data";
-#else
-        return exe_path::user_data() / "Coollab";
-#endif
-    }
+    PathsConfig()
+        : Cool::PathsConfig{"Coollab"}
+    {}
+
     [[nodiscard]] auto default_texture() const -> std::filesystem::path override
     {
         return Cool::Path::root() / "res/images/logo.png";
