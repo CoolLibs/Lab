@@ -17,8 +17,6 @@ videos
 
 .DS_Store
 
-test-presets-manager.json
-
 .cache
 src/Module_Nodes/__pycache__
 website/.docusaurus
