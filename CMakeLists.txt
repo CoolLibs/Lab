@@ -95,7 +95,7 @@ function(Lab_copy_folder FOLDER_RELATIVE_PATH)
 endfunction()
 
 Lab_copy_folder("res")
-Lab_copy_folder("Default user data")
+Lab_copy_folder("User data Default")
 Lab_copy_folder("Nodes")
 
 if(MSVC)
