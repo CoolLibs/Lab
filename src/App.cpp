@@ -152,7 +152,7 @@ void App::update()
     }
     if (DebugOptions::generate_dump_file())
     {
-        auto const path   = Cool::Path::root() / "info_dump.txt";
+        auto const path   = Cool::Path::user_data() / "info_dump.txt";
         auto const string = gen_dump_string();
         Cool::File::set_content(path, string);
         Cool::Log::ToUser::info(
