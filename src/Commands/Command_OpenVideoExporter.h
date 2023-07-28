@@ -7,7 +7,7 @@ namespace Lab {
 class App;
 
 struct Command_OpenVideoExporter {
-    void execute(CommandExecutionContext_Ref& ctx) const;
+    void execute(CommandExecutionContext_Ref const& ctx) const;
 
     auto to_string() const -> std::string
     {

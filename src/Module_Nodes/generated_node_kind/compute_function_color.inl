@@ -20,5 +20,5 @@ if (is_image(signature))
 if (is_greyscale(signature))
     return NodeColor::greyscale();
 
-if (is_space_transformation(signature))
-    return NodeColor::space_transformation();
+if (is_modifier_2D(signature))
+    return NodeColor::modifier_2D();

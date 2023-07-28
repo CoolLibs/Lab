@@ -3,7 +3,7 @@
 #include <Cool/ImGui/IcoMoonCodepoints.h>
 #include <Cool/ImGui/icon_fmt.h>
 #include "CommandCore/CommandExecutionContext_Ref.h"
-#include "CommandCore/CommandExecutor_TopLevel_Ref.h"
+#include "CommandCore/CommandExecutor.h"
 #include "Commands/Command_FinishedEditingVariable.h"
 #include "Commands/Command_SetCameraZoom.h"
 #include "Commands/Command_SetVariable.h"
@@ -13,7 +13,7 @@ namespace Lab {
 void CameraManager::hook_events(
     Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
     std::reference_wrapper<Cool::VariableRegistries>   registries,
-    CommandExecutor_TopLevel_Ref                       executor,
+    CommandExecutor const&                             executor,
     std::function<void()>                              on_change
 )
 {
@@ -60,7 +60,7 @@ void CameraManager::hook_events(
 
 void CameraManager::imgui(
     std::reference_wrapper<Cool::VariableRegistries> registries,
-    CommandExecutor_TopLevel_Ref                     executor,
+    CommandExecutor const&                           executor,
     std::function<void()>                            on_change
 )
 {
@@ -90,7 +90,7 @@ void CameraManager::imgui(
 
 void CameraManager::maybe_update_camera(
     std::reference_wrapper<Cool::VariableRegistries> registries,
-    CommandExecutor_TopLevel_Ref                     executor,
+    CommandExecutor const&                           executor,
     std::function<void()>                            on_change,
     std::function<bool(Cool::Camera&)>               fun
 )
@@ -103,7 +103,7 @@ void CameraManager::maybe_update_camera(
     }
 }
 
-void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref& ctx)
+void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref const& ctx)
 {
     auto camera = ctx.registries().get(_camera_id.raw())->value();
     Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, camera, zoom);
@@ -115,7 +115,7 @@ void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref& ctx)
 
 void CameraManager::reset_camera(
     std::reference_wrapper<Cool::VariableRegistries> registries,
-    CommandExecutor_TopLevel_Ref                     executor,
+    CommandExecutor const&                           executor,
     std::function<void()>                            on_change
 )
 {

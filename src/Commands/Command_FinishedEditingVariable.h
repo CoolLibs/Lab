@@ -8,7 +8,7 @@ namespace Lab {
 /// It will make sure that the commit will be locked in the history and future commands modifying the same value
 /// won't be merged with the ones that were issued before Command_FinishedEditingVariable.
 struct Command_FinishedEditingVariable {
-    void execute(CommandExecutionContext_Ref& ctx) const
+    void execute(CommandExecutionContext_Ref const& ctx) const
     {
         ctx.history().dont_merge_next_command();
     }

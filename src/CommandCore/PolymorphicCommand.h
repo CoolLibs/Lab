@@ -32,7 +32,7 @@ public:
     {
     }
 
-    void execute(CommandExecutionContext_Ref& ctx) const override
+    void execute(CommandExecutionContext_Ref const& ctx) const override
     {
         _concrete_command.execute(ctx);
     }

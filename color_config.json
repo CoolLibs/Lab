@@ -116,8 +116,8 @@
                     },
                     {
                         "Name": "Darker",
-                        "Brightness delta": -0.6859999895095825,
-                        "Opacity": 1.0
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.75
                     }
                 ]
             }
