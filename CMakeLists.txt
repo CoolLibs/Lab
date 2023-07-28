@@ -130,5 +130,8 @@ endif()
 
 set(CPACK_PACKAGE_FILE_NAME "Coollab-${COOLLAB_VERSION}-${OS_NAME}")
 
+# PACKAGE_ICON
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/app-resources\\\\installer_banner.bmp") # Seems like it has to be .bmp, at least for NSIS. NB: if there is any transparency in the image, NSIS won't be able to render it at all. Exporting a fully opaque .bmp from Paint.net works. 150x57 pixels is the ideal size to avoid uggly downscale artifacts.
+
 #
 include(CPack)
