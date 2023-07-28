@@ -115,7 +115,20 @@ target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
 # ---CPack---
 # ---------------------
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+# INSTALL_DIRECTORY
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab ${COOLLAB_VERSION}")
 
-set(CPACK_PACKAGE_FILE_NAME "Coollab-${COOLLAB_VERSION}-Installer")
+# PACKAGE_FILE_NAME
+if(WIN32)
+    set(OS_NAME "Windows")
+elseif(APPLE)
+    set(OS_NAME "Mac")
+else()
+    set(OS_NAME "Linux")
+endif()
+
+set(CPACK_PACKAGE_FILE_NAME "Coollab-${COOLLAB_VERSION}-${OS_NAME}")
+
+#
 include(CPack)
