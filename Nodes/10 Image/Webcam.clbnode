@@ -1,6 +1,6 @@
 INPUT Webcam `Webcam`;
 
-sRGB_StraightA main(UV uv) // TODO(TD) Check with color space OpenCV uses
+sRGB_StraightA main(UV uv)
 {
     uv /= 2.;
     uv.x /= -1.f *`Webcam`.aspect_ratio;
