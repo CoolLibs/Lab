@@ -49,6 +49,7 @@ target_link_libraries(Coollab-Properties INTERFACE cmd::cmd)
 
 # Include range-v3
 target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
+install(FILES "lib/range-v3/LICENSE.txt" DESTINATION "license/range-v3")
 
 set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, like making HTTPS requests to post images to the Coollab gallery. If you don't have the necessary dependencies these features will be disabled. If you want to make sure you have all the features of Coollab enabled, set this option to ON.")
 
@@ -75,6 +76,8 @@ if(OpenSSL_FOUND)
 else()
     message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
 endif()
+
+install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
 
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
@@ -135,6 +138,9 @@ set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL OFF) # TODO(Project) Set to ON (i
 
 # PACKAGE_ICON
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/app-resources\\\\installer_banner.bmp") # Seems like it has to be .bmp, at least for NSIS. NB: if there is any transparency in the image, NSIS won't be able to render it at all. Exporting a fully opaque .bmp from Paint.net works. 150x57 pixels is the ideal size to avoid uggly downscale artifacts.
+
+# LICENSE
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}\\\\LICENSE")
 
 # PACKAGE_VENDOR
 set(CPACK_PACKAGE_VENDOR "Coollab")
