@@ -145,5 +145,8 @@ set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}\\\\LICENSE")
 # PACKAGE_VENDOR
 set(CPACK_PACKAGE_VENDOR "Coollab")
 
+# Start menu shortcuts
+set(CPACK_PACKAGE_EXECUTABLES "Coollab" "Coollab")
+
 #
 include(CPack)
