@@ -202,7 +202,7 @@ static void imgui_window_console()
 
 static void imgui_window_exporter(Cool::Exporter& exporter, Cool::Polaroid polaroid, float time, Cool::TipsManager& tips_manager)
 {
-    exporter.imgui_windows(polaroid, time, tips_manager);
+    exporter.imgui_windows(polaroid, time, tips_manager, all_tips());
 }
 
 void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
