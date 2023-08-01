@@ -1,128 +1,126 @@
 {
-    "PresetManager": {
-        "Presets": {
-            "Underlying container": [
-                {
-                    "first": "07664ea7-6821-4868-9851-ba6e50c35e8b",
-                    "second": {
-                        "Name": "Default",
-                        "Values": [
-                            {
-                                "index": 1,
-                                "data": {
-                                    "Name": "Faces Count",
-                                    "Value": 5,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 3,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.019999999552965165,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 5,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "07664ea7-6821-4868-9851-ba6e50c35e8b",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 1,
+                            "data": {
+                                "Name": "Faces Count",
+                                "Value": 5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 3,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.019999999552965165,
+                                        "Use slider": false
                                     }
-                                }
-                            },
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Base Radius",
-                                    "Value": 1.0,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 1.0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Height",
-                                    "Value": 2.5,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 2.5,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    }
-                                }
-                            },
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Smoothing",
-                                    "Value": 0.0010000000474974514,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0.0010000000474974514,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.0010000000474974514,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 0.0010000000474974514,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
+                                },
+                                "Default Value": 5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
                                     }
                                 }
                             }
-                        ]
-                    }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Base Radius",
+                                "Value": 1.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 1.0,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Height",
+                                "Value": 2.5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 2.5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Smoothing",
+                                "Value": 0.0010000000474974514,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0010000000474974514,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.0010000000474974514,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
     }
 }

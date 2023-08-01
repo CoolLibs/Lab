@@ -1,44 +1,42 @@
 {
-    "PresetManager": {
-        "Presets": {
-            "Underlying container": [
-                {
-                    "first": "e43d72db-0655-48f1-be4d-64da00a203b0",
-                    "second": {
-                        "Name": "Default",
-                        "Values": [
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Smoothing",
-                                    "Value": 0.10000000149011612,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0.0010000000474974514,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.0010000000474974514,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 0.10000000149011612,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "e43d72db-0655-48f1-be4d-64da00a203b0",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Smoothing",
+                                "Value": 0.10000000149011612,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0010000000474974514,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.10000000149011612,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
                                     }
                                 }
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
     }
 }

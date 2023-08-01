@@ -1,44 +1,42 @@
 {
-    "PresetManager": {
-        "Presets": {
-            "Underlying container": [
-                {
-                    "first": "f05ed84f-0be3-4218-84a8-8ba1fd73d684",
-                    "second": {
-                        "Name": "Default",
-                        "Values": [
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Mask",
-                                    "Value": 0.5,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 0.0,
-                                            "Has max bound": true,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": true
-                                        }
-                                    },
-                                    "Default Value": 0.5,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "f05ed84f-0be3-4218-84a8-8ba1fd73d684",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Mask",
+                                "Value": 0.5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": true,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": true
+                                    }
+                                },
+                                "Default Value": 0.5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
                                     }
                                 }
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
     }
 }

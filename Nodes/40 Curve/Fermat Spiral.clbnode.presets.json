@@ -1,72 +1,70 @@
 {
-    "PresetManager": {
-        "Presets": {
-            "Underlying container": [
-                {
-                    "first": "6151f555-f20f-470e-9303-5dd9b982da30",
-                    "second": {
-                        "Name": "Default",
-                        "Values": [
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Radius",
-                                    "Value": 1.0,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 1.0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "6151f555-f20f-470e-9303-5dd9b982da30",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Radius",
+                                "Value": 1.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
                                     }
-                                }
-                            },
-                            {
-                                "index": 1,
-                                "data": {
-                                    "Name": "Twist",
-                                    "Value": 1,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 1,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
+                                },
+                                "Default Value": 1.0,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
                                     }
                                 }
                             }
-                        ]
-                    }
+                        },
+                        {
+                            "index": 1,
+                            "data": {
+                                "Name": "Twist",
+                                "Value": 1,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 1,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
     }
 }
