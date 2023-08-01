@@ -134,7 +134,7 @@ endif()
 set(CPACK_PACKAGE_FILE_NAME "Coollab-${COOLLAB_VERSION}-${OS_NAME}")
 
 # ENABLE_UNINSTALL_BEFORE_INSTALL
-set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL OFF) # TODO(Project) Set to ON (it is OFF because otherwise it is annoying for my tests).
+set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 
 # PACKAGE_ICON
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/app-resources\\\\installer_banner.bmp") # Seems like it has to be .bmp, at least for NSIS. NB: if there is any transparency in the image, NSIS won't be able to render it at all. Exporting a fully opaque .bmp from Paint.net works. 150x57 pixels is the ideal size to avoid uggly downscale artifacts.
@@ -147,6 +147,27 @@ set(CPACK_PACKAGE_VENDOR "Coollab")
 
 # Start menu shortcuts
 set(CPACK_PACKAGE_EXECUTABLES "Coollab" "Coollab")
+
+# .coollab extension
+# --- Windows
+set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+     WriteRegStr HKCR '.coollab' '' 'CoollabFile'
+     WriteRegStr HKCR 'CoollabFile' '' 'Coollab File'
+     WriteRegStr HKCR 'CoollabFile\\\\shell' '' 'open'
+     WriteRegStr HKCR 'CoollabFile\\\\DefaultIcon' \\\\
+                      '' '$INSTDIR\\\\bin\\\\coollab.exe,0'
+     WriteRegStr HKCR 'CoollabFile\\\\shell\\\\open\\\\command' \\\\
+                      '' '$INSTDIR\\\\bin\\\\coollab.exe \\\"%1\\\"'
+     WriteRegStr HKCR 'CoollabFile\\\\shell\\\\edit\\\\command' \\\\
+                      '' '$INSTDIR\\\\bin\\\\coollab.exe \\\"%1\\\"'
+     System::Call \\\\
+       'Shell32::SHChangeNotify(i 0x8000000, i 0, i 0, i 0)'
+     ")
+
+set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+     DeleteRegKey HKCR '.coollab'
+     DeleteRegKey HKCR 'CoollabFile'
+     ")
 
 #
 include(CPack)
