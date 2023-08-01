@@ -119,10 +119,17 @@ target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
 # ---------------------
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
-# INSTALL_DIRECTORY
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab\\\\Coollab ${COOLLAB_VERSION}")
+# Installer Info
+set(CPACK_PACKAGE_NAME "Coollab")
+set(CPACK_PACKAGE_VERSION "${COOLLAB_VERSION}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab ${COOLLAB_VERSION}") # Don't put this in a Coollab parent folder. In NSIS this messes up the install and prevents our app to appear in "Apps and Features" to uninstall it for example.
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/app-resources\\\\installer_banner.bmp") # Seems like it has to be .bmp, at least for NSIS. NB: if there is any transparency in the image, NSIS won't be able to render it at all. Exporting a fully opaque .bmp from Paint.net works. 150x57 pixels is the ideal size to avoid uggly downscale artifacts.
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}\\\\LICENSE")
+set(CPACK_PACKAGE_VENDOR "Coollab")
+set(CPACK_PACKAGE_EXECUTABLES "Coollab" "Coollab") # Creates Start Menu shortcuts
+set(CPACK_PACKAGE_CONTACT "coollab.lib@gmail.com")
 
-# PACKAGE_FILE_NAME
+# Name of the installer exe file
 if(WIN32)
     set(OS_NAME "Windows")
 elseif(APPLE)
@@ -133,41 +140,29 @@ endif()
 
 set(CPACK_PACKAGE_FILE_NAME "Coollab-${COOLLAB_VERSION}-${OS_NAME}")
 
-# ENABLE_UNINSTALL_BEFORE_INSTALL
+# NSIS specifics
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-
-# PACKAGE_ICON
-set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/app-resources\\\\installer_banner.bmp") # Seems like it has to be .bmp, at least for NSIS. NB: if there is any transparency in the image, NSIS won't be able to render it at all. Exporting a fully opaque .bmp from Paint.net works. 150x57 pixels is the ideal size to avoid uggly downscale artifacts.
-
-# LICENSE
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}\\\\LICENSE")
-
-# PACKAGE_VENDOR
-set(CPACK_PACKAGE_VENDOR "Coollab")
-
-# Start menu shortcuts
-set(CPACK_PACKAGE_EXECUTABLES "Coollab" "Coollab")
+set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\Coollab.exe")
 
 # .coollab extension
 # --- Windows
 set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-     WriteRegStr HKCR '.coollab' '' 'CoollabFile'
-     WriteRegStr HKCR 'CoollabFile' '' 'Coollab File'
-     WriteRegStr HKCR 'CoollabFile\\\\shell' '' 'open'
-     WriteRegStr HKCR 'CoollabFile\\\\DefaultIcon' \\\\
-                      '' '$INSTDIR\\\\bin\\\\coollab.exe,0'
-     WriteRegStr HKCR 'CoollabFile\\\\shell\\\\open\\\\command' \\\\
-                      '' '$INSTDIR\\\\bin\\\\coollab.exe \\\"%1\\\"'
-     WriteRegStr HKCR 'CoollabFile\\\\shell\\\\edit\\\\command' \\\\
-                      '' '$INSTDIR\\\\bin\\\\coollab.exe \\\"%1\\\"'
-     System::Call \\\\
-       'Shell32::SHChangeNotify(i 0x8000000, i 0, i 0, i 0)'
-     ")
-
+    WriteRegStr HKCR '.coollab' '' 'CoollabFile'
+    WriteRegStr HKCR 'CoollabFile' '' 'Coollab File'
+    WriteRegStr HKCR 'CoollabFile\\\\shell' '' 'open'
+    WriteRegStr HKCR 'CoollabFile\\\\DefaultIcon' \\\\
+    '' '$INSTDIR\\\\bin\\\\coollab.exe,0'
+    WriteRegStr HKCR 'CoollabFile\\\\shell\\\\open\\\\command' \\\\
+    '' '$INSTDIR\\\\bin\\\\coollab.exe \\\"%1\\\"'
+    WriteRegStr HKCR 'CoollabFile\\\\shell\\\\edit\\\\command' \\\\
+    '' '$INSTDIR\\\\bin\\\\coollab.exe \\\"%1\\\"'
+    System::Call \\\\
+    'Shell32::SHChangeNotify(i 0x8000000, i 0, i 0, i 0)'
+")
 set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
-     DeleteRegKey HKCR '.coollab'
-     DeleteRegKey HKCR 'CoollabFile'
-     ")
+    DeleteRegKey HKCR '.coollab'
+    DeleteRegKey HKCR 'CoollabFile'
+")
 
 #
 include(CPack)
