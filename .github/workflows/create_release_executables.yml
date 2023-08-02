@@ -30,7 +30,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: build\Coollab-beta-8 WIP-Windows.exe
+          files: ${{github.workspace}}\build\Coollab-beta-8 WIP-Windows.exe
 
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
