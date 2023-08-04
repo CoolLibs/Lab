@@ -1,7 +1,6 @@
 #include "Path.h"
 #include "Cool/Path/Path.h"
 #include "ProjectManager/FileExtension.h"
-#include "exe_path/exe_path.h"
 
 namespace Lab::Path {
 
