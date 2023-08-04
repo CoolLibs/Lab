@@ -24,6 +24,7 @@
 #include "Common/Path.h"
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Gpu/TextureLibrary_FromWebcam.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
@@ -395,6 +396,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
     imgui_window_cameras();
     ImGui::End();
+    // Webcams
+    Cool::TextureLibrary_FromWebcam::instance().imgui_windows();
     // Nodes
     _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
@@ -545,6 +548,8 @@ void App::commands_menu()
     {
         if (ImGui::Selectable("Show all the tips"))
             _tips_manager.open_all_tips_window();
+        if (ImGui::Selectable("Open webcams config"))
+            Cool::TextureLibrary_FromWebcam::instance().open_webcams_config_window();
         ImGui::EndMenu();
     }
 }
