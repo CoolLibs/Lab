@@ -28,9 +28,10 @@ public:
 
     void debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
 
-    auto regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; }
-    auto graph() -> Cool::Graph& { return _nodes_editor.graph(); }
-    auto nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
+    auto               regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; }
+    auto               graph() -> Cool::Graph& { return _nodes_editor.graph(); }
+    auto               nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
+    [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
 
 protected:
     void render(RenderParams, UpdateContext_Ref) override;

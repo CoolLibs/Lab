@@ -1,72 +1,70 @@
 {
-    "PresetManager": {
-        "Presets": {
-            "Underlying container": [
-                {
-                    "first": "f48b0458-12fd-431a-86cb-cd8fcbaea760",
-                    "second": {
-                        "Name": "Default",
-                        "Values": [
-                            {
-                                "index": 1,
-                                "data": {
-                                    "Name": "Number of Tiles",
-                                    "Value": 30,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 30,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "f48b0458-12fd-431a-86cb-cd8fcbaea760",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 1,
+                            "data": {
+                                "Name": "Number of Tiles",
+                                "Value": 30,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
                                     }
-                                }
-                            },
-                            {
-                                "index": 1,
-                                "data": {
-                                    "Name": "Mode",
-                                    "Value": 0,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 1,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": true
-                                        }
-                                    },
-                                    "Default Value": 0,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0,
-                                            "Has max bound": false,
-                                            "Max": 12,
-                                            "Drag speed": 0.03999999910593033,
-                                            "Use slider": false
-                                        }
+                                },
+                                "Default Value": 30,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
                                     }
                                 }
                             }
-                        ]
-                    }
+                        },
+                        {
+                            "index": 1,
+                            "data": {
+                                "Name": "Mode",
+                                "Value": 0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 1,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": true
+                                    }
+                                },
+                                "Default Value": 0,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
     }
 }

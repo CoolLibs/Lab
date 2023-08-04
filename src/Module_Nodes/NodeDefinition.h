@@ -34,7 +34,7 @@ struct NodeDefinition_Data {
 
 class NodeDefinition {
 public:
-    static auto make(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
+    static auto make(NodeDefinition_Data const&, Cool::PresetsPaths const&) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
         -> tl::expected<NodeDefinition, std::string>;
 
     [[nodiscard]] auto name() const -> auto const& { return _data.main_function.name; }
@@ -52,7 +52,7 @@ public:
     auto               imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
 
 private:
-    NodeDefinition(NodeDefinition_Data const&, std::filesystem::path const& presets_file_path); // Use NodeDefinition::make() to create a NodeDefinition
+    NodeDefinition(NodeDefinition_Data const&, Cool::PresetsPaths const&); // Use NodeDefinition::make() to create a NodeDefinition
 
 private:
     NodeDefinition_Data                  _data;
