@@ -83,7 +83,7 @@ Now, we can choose the resolution and the aspect ratio of the image as well as t
 
 ![Export Window](img/Tuto-A-simple-example/ExportWindow.png)
 
-:::tip Did you know?
+:::info Did you know?
 Note that you can go to **View > Fixed aspect ratio** to change the aspect ratio and see how the image will look like, according to the chosen ratio, in the view panel.
 :::
 
