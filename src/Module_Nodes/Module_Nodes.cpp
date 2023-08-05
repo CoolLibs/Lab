@@ -243,7 +243,7 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            auto err = Cool::get_error(value.source);
+            auto const err = Cool::get_error(value.source);
             if (err)
             {
                 Cool::Log::ToUser::console().send(

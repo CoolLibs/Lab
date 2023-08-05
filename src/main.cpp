@@ -4,8 +4,6 @@
 #include "Cool/Path/PathsConfig.h"
 //
 #include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <cereal/archives/json.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/opencv.hpp>
 
 class PathsConfig : public Cool::PathsConfig {
 public:
@@ -30,27 +28,4 @@ auto main(int argc, char** argv) -> int
             .maximize_on_startup_if = true,
         }}
     );
-
-    // cv::Mat image;
-    // cv::namedWindow("webcam");
-
-    // cv::VideoCapture cap(0);
-
-    // if (!cap.isOpened())
-    // {
-    //     std::cout << "cannot open camera";
-    // }
-
-    // while (true)
-    // {
-    //     cap >> image;
-    //     image *= 2;
-
-    //     cv::Mat img_gray;
-    //     cvtColor(image, img_gray, cv::COLOR_BGR2GRAY);
-
-    //     cv::imshow("Display window", img_gray);
-    //     cv::waitKey(25);
-    // }
-    // return 0;
 }

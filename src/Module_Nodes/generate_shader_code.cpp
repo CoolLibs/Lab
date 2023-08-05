@@ -64,8 +64,6 @@ uniform float _time;
 uniform float _height;
 uniform mat3  _camera2D;
 uniform mat3  _camera2D_inverse;
-uniform sampler2D  _webcam;
-uniform float _webcam_aspect_ratio;
 out vec4      out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"

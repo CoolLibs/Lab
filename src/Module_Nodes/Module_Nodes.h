@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Cool/Gpu/Texture.h>
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
 #include "Common/FullscreenShader.h"

@@ -3,8 +3,8 @@ INPUT Webcam `Webcam`;
 sRGB_StraightA main(UV uv)
 {
     uv /= 2.;
-    uv.x /= -1.f *`Webcam`.aspect_ratio;
-    uv.y *= -1.f;
+    uv.x /= `Webcam`.aspect_ratio;
+    uv *= -1.;
     uv += 0.5;
-    return texture(`Webcam`.tex, uv).bgra; // conversion BGR -> RGB because OpenCV gets Webcam texture in BRG
+    return texture(`Webcam`.tex, uv).bgra; // conversion BGR -> RGB because OpenCV gets Webcam texture in BGR
 }
