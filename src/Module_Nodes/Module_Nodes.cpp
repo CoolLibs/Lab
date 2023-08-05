@@ -243,15 +243,13 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            // auto const err = value.get_err();
             auto err = Cool::get_error(value.source);
-            // auto const err = Cool::TextureLibrary_FromFile::instance().error_from(value.source.absolute_path);
             if (err)
             {
                 Cool::Log::ToUser::console().send(
                     variable.message_id,
                     Cool::Message{
-                        .category = "Load Image",
+                        .category = "Missing Texture",
                         .message  = err.value(),
                         .severity = Cool::MessageSeverity::Error,
                     }
