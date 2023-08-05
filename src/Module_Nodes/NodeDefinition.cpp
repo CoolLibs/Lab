@@ -6,15 +6,15 @@
 
 namespace Lab {
 
-NodeDefinition::NodeDefinition(NodeDefinition_Data const& data, std::filesystem::path const& presets_file_path)
+NodeDefinition::NodeDefinition(NodeDefinition_Data const& data, Cool::PresetsPaths const& presets_paths)
     : _data{data}
-    , _presets_manager(std::make_shared<Cool::PresetManager>(presets_file_path))
+    , _presets_manager(std::make_shared<Cool::PresetManager>(presets_paths))
 {}
 
-auto NodeDefinition::make(NodeDefinition_Data const& data, std::filesystem::path const& presets_file_path)
+auto NodeDefinition::make(NodeDefinition_Data const& data, Cool::PresetsPaths const& presets_paths)
     -> tl::expected<NodeDefinition, std::string>
 {
-    auto def = NodeDefinition{data, presets_file_path};
+    auto def = NodeDefinition{data, presets_paths};
     // TODO(JF) Refactor that code duplicated with NodeInputDefinition.cpp
     // Check that the property names are valid, and remove the backticks from them.
     for (auto& prop : def._data.input_values)

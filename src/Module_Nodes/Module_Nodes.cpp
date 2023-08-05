@@ -291,7 +291,7 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
-    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work.
         for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {

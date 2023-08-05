@@ -1,80 +1,78 @@
 {
-    "PresetManager": {
-        "Presets": {
-            "Underlying container": [
-                {
-                    "first": "eead363d-7135-4eee-b6ce-f579246fb8ee",
-                    "second": {
-                        "Name": "Default",
-                        "Values": [
-                            {
-                                "index": 7,
-                                "data": {
-                                    "Name": "Image",
-                                    "Value": {
-                                        "sRGB": {
-                                            "x": 0.4326726198196411,
-                                            "y": 0.3938983678817749,
-                                            "z": 0.8964574933052063
-                                        }
-                                    },
-                                    "Metadata": {
-                                        "Is HDR": false
-                                    },
-                                    "Default Value": {
-                                        "sRGB": {
-                                            "x": 0.4326726198196411,
-                                            "y": 0.3938983678817749,
-                                            "z": 0.8964574933052063
-                                        }
-                                    },
-                                    "Default Metadata": {
-                                        "Is HDR": false
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "eead363d-7135-4eee-b6ce-f579246fb8ee",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 7,
+                            "data": {
+                                "Name": "Image",
+                                "Value": {
+                                    "sRGB": {
+                                        "x": 0.4326726198196411,
+                                        "y": 0.3938983678817749,
+                                        "z": 0.8964574933052063
                                     }
-                                }
-                            },
-                            {
-                                "index": 2,
-                                "data": {
-                                    "Name": "Period",
-                                    "Value": 0.3333333432674408,
-                                    "Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": true,
-                                            "Min": 9.999999974752428e-7,
-                                            "Has max bound": true,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.0010000000474974514,
-                                            "Use slider": false
-                                        }
-                                    },
-                                    "Default Value": 0.3333333432674408,
-                                    "Default Metadata": {
-                                        "Bounds": {
-                                            "Has min bound": false,
-                                            "Min": 0.0,
-                                            "Has max bound": false,
-                                            "Max": 1.0,
-                                            "Drag speed": 0.009999999776482582,
-                                            "Use slider": false
-                                        }
+                                },
+                                "Metadata": {
+                                    "Is HDR": false
+                                },
+                                "Default Value": {
+                                    "sRGB": {
+                                        "x": 0.4326726198196411,
+                                        "y": 0.3938983678817749,
+                                        "z": 0.8964574933052063
                                     }
-                                }
-                            },
-                            {
-                                "index": 0,
-                                "data": {
-                                    "Name": "Normalize",
-                                    "Value": true,
-                                    "Metadata": {},
-                                    "Default Value": true,
-                                    "Default Metadata": {}
+                                },
+                                "Default Metadata": {
+                                    "Is HDR": false
                                 }
                             }
-                        ]
-                    }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Period",
+                                "Value": 0.3333333432674408,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 9.999999974752428e-7,
+                                        "Has max bound": true,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.3333333432674408,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Normalize",
+                                "Value": true,
+                                "Metadata": {},
+                                "Default Value": true,
+                                "Default Metadata": {}
+                            }
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
     }
 }

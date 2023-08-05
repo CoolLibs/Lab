@@ -1,10 +1,8 @@
-#include "coollab_version.h"
-
 namespace Lab {
 
 auto coollab_version() -> std::string
 {
-    return "beta-8 WIP";
+    return @COOLLAB_VERSION_STRING@; // Variable configured by CMake
 }
 
 } // namespace Lab

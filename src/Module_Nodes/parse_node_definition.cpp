@@ -4,6 +4,7 @@
 #include <Cool/String/String.h>
 #include <algorithm>
 #include <exception>
+#include <filesystem>
 #include <iterator>
 #include <optional>
 #include <sstream>
@@ -605,7 +606,17 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
     filepath += ".presets.json";
     return NodeDefinition::make(
         res,
-        filepath
+#if DEBUG
+        {
+            .user_defined_presets = filepath,
+            .default_presets      = "",
+        }
+#else
+        {
+            .user_defined_presets = Cool::Path::user_data() / std::filesystem::relative(filepath, Cool::Path::root()), // Convert a path relative to root() into a path relative to user_data()
+            .default_presets      = filepath,
+        }
+#endif
     );
 }
 
