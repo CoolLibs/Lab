@@ -16,6 +16,7 @@
 #include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
+#include <Tips/Tips.h>
 #include <cmd/imgui.hpp>
 #include <filesystem>
 #include <reg/src/internal/generate_uuid.hpp>
@@ -28,6 +29,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
@@ -366,12 +368,23 @@ void App::imgui_window_view()
 
 void App::imgui_window_exporter()
 {
-    _project.exporter.imgui_windows(polaroid(), _project.clock.time(), /*on_image_exported = */ [&](std::filesystem::path const& exported_image_path) {
-        auto folder_path = exported_image_path;
-        folder_path.replace_extension(); // Give project folder the same name as the image.
-        command_executor().execute(Command_PackageProjectInto{
-            .folder_path = folder_path,
-        });
+    _project.exporter.imgui_windows({
+        .polaroid          = polaroid(),
+        .time              = _project.clock.time(),
+        .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
+            auto folder_path = exported_image_path;
+            folder_path.replace_extension(); // Give project folder the same name as the image.
+            command_executor().execute(Command_PackageProjectInto{
+                .folder_path = folder_path,
+            });
+            //
+        },
+        .widgets_in_window_video_export_in_progress = [&]() {
+            ImGui::NewLine();
+            ImGui::SeparatorText(Cool::icon_fmt("Did you know?", ICOMOON_BUBBLE).c_str());
+            _tips_manager.imgui_show_one_tip(all_tips());
+            //
+        },
     });
 }
 
@@ -380,7 +393,6 @@ void App::imgui_windows()
     imgui_window_view();
     imgui_window_exporter();
     imgui_window_console();
-    _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
@@ -399,6 +411,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::End();
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
+    // Tips
+    _tips_manager.imgui_windows(all_tips());
     // Nodes
     _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
