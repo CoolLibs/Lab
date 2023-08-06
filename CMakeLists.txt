@@ -145,7 +145,7 @@ else()
     set(OS_NAME "Linux")
 endif()
 
-set(CPACK_PACKAGE_FILE_NAME "Coollab-${COOLLAB_VERSION}-${OS_NAME}")
+set(CPACK_PACKAGE_FILE_NAME "Coollab-${OS_NAME}")
 
 # NSIS specifics
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)

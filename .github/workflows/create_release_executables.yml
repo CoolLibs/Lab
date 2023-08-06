@@ -29,7 +29,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: build/Coollab-beta-8 WIP-Windows.exe
+          files: build/Coollab-Windows.exe
 
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
@@ -63,7 +63,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{github.workspace}}/build/Coollab-beta-8 WIP-Linux.sh
+          files: ${{github.workspace}}/build/Coollab-Linux.sh
 
   #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release:
@@ -88,4 +88,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{github.workspace}}/build/Coollab-beta-8 WIP-Mac.dmg
+          files: ${{github.workspace}}/build/Coollab-Mac.dmg
