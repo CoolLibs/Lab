@@ -25,9 +25,14 @@ public:
     auto all_inputs() const -> Cool::AllInputRefsToConst override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
 
-    void compile(UpdateContext_Ref update_ctx, bool for_testing_nodes = false);
+    void compile(UpdateContext_Ref, bool for_testing_nodes = false);
 
     void debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
+
+    auto               regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; }
+    auto               graph() -> Cool::Graph& { return _nodes_editor.graph(); }
+    auto               nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
+    [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
 
 protected:
     void render(RenderParams, UpdateContext_Ref) override;

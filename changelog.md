@@ -12,6 +12,7 @@
 
 ## 🐣beta-8 WIP
 
+- 🚚 Renamed "Space Transformation" category as "2D Modifier".
 - ✨ Added feedback loops! Check out the "Feedback" node.
 - 🐛 Fix: some nodes had the wrong color.
 - 🐛 Fix: on Linux, for some window managers like i3, the context menu was not behaving properly. (Now by default we disable multi-viewport for those custom window managers, which fixes the issue but prevents you from dragging windows outside of the main Coollab window.) 

@@ -9,5 +9,5 @@ auto shape_2D() -> Cool::Color;
 auto shape_3D() -> Cool::Color;
 auto image() -> Cool::Color;
 auto greyscale() -> Cool::Color;
-auto space_transformation() -> Cool::Color;
+auto modifier_2D() -> Cool::Color;
 auto miscellaneous() -> Cool::Color;

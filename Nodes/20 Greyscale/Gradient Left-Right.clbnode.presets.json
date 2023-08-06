@@ -1,46 +1,44 @@
 {
-    "PresetManager": {
-        "Presets": {
-            "Underlying container": [
-                {
-                    "first": "fbc374f1-cb48-405f-80e4-daaf5e29ec0c",
-                    "second": {
-                        "Name": "Default",
-                        "Values": [
-                            {
-                                "index": 0,
-                                "data": {
-                                    "Name": "Flip",
-                                    "Value": false,
-                                    "Metadata": {},
-                                    "Default Value": false,
-                                    "Default Metadata": {}
-                                }
-                            },
-                            {
-                                "index": 0,
-                                "data": {
-                                    "Name": "Centered",
-                                    "Value": false,
-                                    "Metadata": {},
-                                    "Default Value": false,
-                                    "Default Metadata": {}
-                                }
-                            },
-                            {
-                                "index": 0,
-                                "data": {
-                                    "Name": "Clamp",
-                                    "Value": false,
-                                    "Metadata": {},
-                                    "Default Value": false,
-                                    "Default Metadata": {}
-                                }
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "fbc374f1-cb48-405f-80e4-daaf5e29ec0c",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Flip",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
                             }
-                        ]
-                    }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Centered",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Clamp",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
+                        }
+                    ]
                 }
-            ]
-        }
+            }
+        ]
     }
 }

@@ -3,7 +3,7 @@
 
 namespace Lab {
 
-void Command_OpenVideoExporter::execute(CommandExecutionContext_Ref& ctx) const
+void Command_OpenVideoExporter::execute(CommandExecutionContext_Ref const& ctx) const
 {
     ctx.app().open_video_exporter();
 }

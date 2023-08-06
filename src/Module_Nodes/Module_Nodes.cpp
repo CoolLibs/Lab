@@ -22,6 +22,7 @@
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Module.h"
@@ -44,12 +45,8 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 {
 }
 
-void Module_Nodes::update(UpdateContext_Ref ctx)
+void Module_Nodes::update(UpdateContext_Ref)
 {
-    auto cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
-    auto updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
-    if (_nodes_folder_watcher.update(updater, [](std::filesystem::path const& path) { return NodesCategoryConfig{path}; }))
-        ctx.set_dirty(_regenerate_code_flag);
 }
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
@@ -63,7 +60,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     auto const shader_code = generate_shader_code(
         _main_node_id,
         _nodes_editor.graph(),
-        Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library},
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
         update_ctx.input_provider()
     );
 
@@ -102,25 +99,27 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     }
 }
 
-auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
+auto Module_Nodes::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
 {
-    return {
+    return NodesConfig{
         ui.input_factory(),
-        _nodes_library,
-        Cool::GetNodeCategoryConfig_Ref{_nodes_library},
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{nodes_library},
+        Cool::GetMutableNodeDefinition_Ref<NodeDefinition>{nodes_library},
+        Cool::GetNodeCategoryConfig_Ref{nodes_library},
         ui,
         _main_node_id,
         _node_we_might_want_to_restore_as_main_node_id,
         _shader.dirty_flag(),
         _regenerate_code_flag,
-        _nodes_editor.graph()};
+        _nodes_editor.graph(),
+    };
 }
 
 void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
     {
-        auto cfg = Cool::NodesConfig{nodes_config(ui)};
-        if (_nodes_editor.imgui_windows(cfg, _nodes_library))
+        auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
+        if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
             ui.set_dirty(_regenerate_code_flag);
     }
 
@@ -245,15 +244,13 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            // auto const err = value.get_err();
-            auto err = Cool::get_error(value.source);
-            // auto const err = Cool::TextureLibrary_FromFile::instance().error_from(value.source.absolute_path);
+            auto const err = Cool::get_error(value.source);
             if (err)
             {
                 Cool::Log::ToUser::console().send(
                     variable.message_id,
                     Cool::Message{
-                        .category = "Load Image",
+                        .category = "Missing Texture",
                         .message  = err.value(),
                         .severity = Cool::MessageSeverity::Error,
                     }
@@ -315,7 +312,7 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
     );
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
-    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work.
         for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {
