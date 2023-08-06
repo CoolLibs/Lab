@@ -31,7 +31,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\Debug\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Windows_MSVC_Release:
@@ -52,7 +52,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Windows_Clang_Debug:
@@ -73,7 +73,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\Debug\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Windows_Clang_Release:
@@ -94,7 +94,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\Release\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Linux_GCC_Debug:
@@ -124,7 +124,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/build/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Linux_GCC_Release:
@@ -154,7 +154,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/build/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Debug:
@@ -184,7 +184,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/build/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
@@ -214,7 +214,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/build/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Debug:
@@ -235,7 +235,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/build/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release:
@@ -256,4 +256,4 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/build/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
