@@ -124,7 +124,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/build/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Linux_GCC_Release:
@@ -154,7 +154,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/build/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Debug:
@@ -184,7 +184,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/build/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
@@ -214,7 +214,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/build/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Debug:
@@ -235,7 +235,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/build/${{env.TESTS-TARGET}}
 
   #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release:
@@ -256,4 +256,4 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}/bin/${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}/bin/build/${{env.TESTS-TARGET}}
