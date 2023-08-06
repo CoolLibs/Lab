@@ -43,17 +43,15 @@ private:
     void render_impl(RenderParams, UpdateContext_Ref);
 
 private:
-    mutable std::string                                              _shader_code{};
-    mutable FullscreenShader                                         _shader{};
-    mutable Cool::NodesEditor                                        _nodes_editor{};
-    mutable Cool::NodesLibrary                                       _nodes_library{};
-    mutable /*TODO(JF) remove the mutable*/ Cool::NodesFolderWatcher _nodes_folder_watcher{Cool::Path::root() / "Nodes", ".clbnode"};
-    mutable Cool::NodeId                                             _main_node_id{};
-    mutable Cool::NodeId                                             _node_we_might_want_to_restore_as_main_node_id{};
-    Cool::DirtyFlag                                                  _regenerate_code_flag;
-    mutable Cool::MessageSender                                      _shader_compilation_error{};
-    Cool::Input<Cool::Camera>                                        _camera_input;
-    Cool::DoubleBufferedRenderTarget                                 _feedback_double_buffer{};
+    mutable std::string              _shader_code{};
+    mutable FullscreenShader         _shader{};
+    mutable Cool::NodesEditor        _nodes_editor{};
+    mutable Cool::NodeId             _main_node_id{};
+    mutable Cool::NodeId             _node_we_might_want_to_restore_as_main_node_id{};
+    Cool::DirtyFlag                  _regenerate_code_flag;
+    mutable Cool::MessageSender      _shader_compilation_error{};
+    Cool::Input<Cool::Camera>        _camera_input;
+    Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
 
 private:
     // Serialization
