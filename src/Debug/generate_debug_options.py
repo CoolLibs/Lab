@@ -76,6 +76,16 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
+            name_in_code="log_when_executing_a_command",
+            name_in_ui="Log when executing a command",
+            available_in_release=True,
+        ),
+        DebugOption(
+            name_in_code="log_project_related_events",
+            name_in_ui="Log project-related events",
+            available_in_release=True,
+        ),
+        DebugOption(
             name_in_code="show_generated_shader_code",
             name_in_ui="Show generated shader code",
             available_in_release=True,
@@ -110,6 +120,6 @@ if __name__ == "__main__":
     generate_debug_options(
         output_folder="generated",
         namespace="Lab",
-        cache_file_name="cache/debug-options-lab",
+        cache_file_name="debug-options-lab",
         debug_options=all_debug_options(),
     )

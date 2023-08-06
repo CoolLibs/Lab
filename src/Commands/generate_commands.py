@@ -35,7 +35,7 @@ struct ReversibleCommand_{cmd.name};
 struct Command_{cmd.name} {{
     {cmd.data_type} value{{}};
 
-    void execute(CommandExecutionContext_Ref& ctx) const
+    void execute(CommandExecutionContext_Ref const& ctx) const
     {{
         {cmd.set_value("value")}
     }}
@@ -52,12 +52,12 @@ struct ReversibleCommand_{cmd.name} {{
     Command_{cmd.name} forward_command{{}};
     {cmd.data_type}    old_value{{}};
 
-    void execute(CommandExecutionContext_Ref& ctx) const
+    void execute(CommandExecutionContext_Ref const& ctx) const
     {{
         forward_command.execute(ctx);
     }}
 
-    void revert(CommandExecutionContext_Ref& ctx) const
+    void revert(CommandExecutionContext_Ref const& ctx) const
     {{
         {cmd.set_value("old_value")}
     }}

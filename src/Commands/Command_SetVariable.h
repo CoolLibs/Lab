@@ -10,7 +10,7 @@ namespace Lab {
 namespace internal {
 
 template<typename T>
-void set_value_default_impl(CommandExecutionContext_Ref& ctx, const Cool::VariableId<T>& id, const T& value)
+void set_value_default_impl(CommandExecutionContext_Ref const& ctx, const Cool::VariableId<T>& id, const T& value)
 {
     ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
         variable.value() = value;
@@ -28,7 +28,7 @@ struct Command_SetVariable {
     Cool::VariableId<T> id{};
     T                   value{};
 
-    void execute(CommandExecutionContext_Ref& ctx) const
+    void execute(CommandExecutionContext_Ref const& ctx) const
     {
         internal::set_value_default_impl(ctx, id, value);
     }
@@ -38,7 +38,7 @@ struct Command_SetVariable {
         return "Set " + reg::to_string(id) + " to " + Cool::stringify(value);
     }
 
-    auto make_reversible(const MakeReversibleCommandContext_Ref& ctx) const
+    auto make_reversible(MakeReversibleCommandContext_Ref const& ctx) const
         -> ReversibleCommand_SetVariable<T>
     {
         return ReversibleCommand_SetVariable<T>{
@@ -53,12 +53,12 @@ struct ReversibleCommand_SetVariable {
     Command_SetVariable<T> forward_command{};
     T                      old_value{};
 
-    void execute(CommandExecutionContext_Ref& ctx) const
+    void execute(CommandExecutionContext_Ref const& ctx) const
     {
         forward_command.execute(ctx);
     }
 
-    void revert(CommandExecutionContext_Ref& ctx) const
+    void revert(CommandExecutionContext_Ref const& ctx) const
     {
         internal::set_value_default_impl(ctx, forward_command.id, old_value);
     }
@@ -69,7 +69,7 @@ struct ReversibleCommand_SetVariable {
                + " to " + Cool::stringify(forward_command.value);
     }
 
-    auto merge(const ReversibleCommand_SetVariable<T>& previous) const -> std::optional<ReversibleCommand_SetVariable<T>>
+    auto merge(ReversibleCommand_SetVariable<T> const& previous) const -> std::optional<ReversibleCommand_SetVariable<T>>
     {
         if (previous.forward_command.id == forward_command.id)
         {

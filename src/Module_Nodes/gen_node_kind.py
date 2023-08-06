@@ -38,8 +38,8 @@ def all_node_kinds():
             color_srgb="0.49803921580314639f, 0.49803921580314639f, 0.49803921580314639f",
         ),
         NodeKind(
-            name_in_code="space_transformation",
-            user_facing_name="Space transformation",
+            name_in_code="modifier_2D",
+            user_facing_name="2D Modifier",
             color_srgb="1.f, 1.f, 1.f",
         ),
         NodeKind(

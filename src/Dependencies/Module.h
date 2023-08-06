@@ -2,6 +2,7 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Dependencies/InputProvider_Ref.h>
+#include <img/src/Size.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
 #include <stringify/stringify.hpp>
@@ -25,6 +26,7 @@ public:
         Cool::IsDirty_Ref                                is_dirty;
         Cool::SetClean_Ref                               set_clean;
         std::reference_wrapper<Cool::VariableRegistries> variable_registries;
+        img::Size                                        render_target_size;
     };
 
     Module() = default;
