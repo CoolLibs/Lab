@@ -22,13 +22,15 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Common/Path.h"
-#include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/Gpu/Texture.h"
+#include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/ViewsManager.h"
+#include "Cool/Webcam/WebcamsConfigs.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
@@ -394,6 +396,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
     imgui_window_cameras();
     ImGui::End();
+    // Webcams
+    Cool::WebcamsConfigs::instance().imgui_window();
     // Nodes
     _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
@@ -423,7 +427,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {
-        Cool::TextureLibrary::instance().imgui_debug_view();
+        Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
     });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {
@@ -544,6 +548,8 @@ void App::commands_menu()
     {
         if (ImGui::Selectable("Show all the tips"))
             _tips_manager.open_all_tips_window();
+        if (ImGui::Selectable("Open webcams config"))
+            Cool::WebcamsConfigs::instance().open_imgui_window();
         ImGui::EndMenu();
     }
 }
