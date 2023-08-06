@@ -83,7 +83,8 @@ install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
 set(COOLLAB_VERSION_STRING "\"${COOLLAB_VERSION}\"")
 configure_file("src/Dump/coollab_version.cpp.in" "src/Dump/coollab_version.cpp")
-target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES} src/Dump/coollab_version.cpp)
+list(APPEND COOL_LAB_SOURCES "src/Dump/coollab_version.cpp")
+target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
 
 # Set include directories
 target_include_directories(Coollab-Properties SYSTEM INTERFACE src lib)
