@@ -69,7 +69,7 @@ jobs:
         if: always()
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{github.workspace}}/build_output_linux.tar.g
+          files: ${{github.workspace}}/build_output_linux.tar.gz
 
     #   - name: Release
     #     if: always()
