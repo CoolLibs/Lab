@@ -382,7 +382,7 @@ void App::imgui_window_exporter()
         .widgets_in_window_video_export_in_progress = [&]() {
             ImGui::NewLine();
             ImGui::SeparatorText(Cool::icon_fmt("Did you know?", ICOMOON_BUBBLE).c_str());
-            _tips_manager.imgui_content(all_tips());
+            _tips_manager.imgui_show_one_tip(all_tips());
             //
         },
     });
