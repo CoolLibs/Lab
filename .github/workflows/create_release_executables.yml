@@ -59,6 +59,7 @@ jobs:
         run: |
           cd ${{github.workspace}}/build
           cpack
+          cat /home/runner/work/Lab/Lab/build/_CPack_Packages/Linux/STGZ/PreinstallOutput.log
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -84,6 +85,7 @@ jobs:
         run: |
           cd ${{github.workspace}}/build
           cpack
+          cat /Users/runner/work/Lab/Lab/build/_CPack_Packages/Darwin/DragNDrop/PreinstallOutput.log
 
       - name: Release
         uses: softprops/action-gh-release@v1
