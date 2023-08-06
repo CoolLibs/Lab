@@ -59,15 +59,23 @@ jobs:
         run: |
           cd ${{github.workspace}}/build
           cpack
-          
-      - name: Debug
+
+      - name: Zip files
         if: always()
-        run: cat /home/runner/work/Lab/Lab/build/_CPack_Packages/Linux/STGZ/PreinstallOutput.log
+        run: |
+          tar -cvzf ${{github.workspace}}/build_output_linux.tar.gz ${{github.workspace}}/build
 
       - name: Release
+        if: always()
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{github.workspace}}/build/Coollab-beta-8 WIP-Linux.sh
+          files: ${{github.workspace}}/build_output_linux.tar.g
+
+    #   - name: Release
+    #     if: always()
+    #     uses: softprops/action-gh-release@v1
+    #     with:
+    #       files: ${{github.workspace}}/build/Coollab-beta-8 WIP-Linux.sh
 
   #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release:
@@ -89,11 +97,17 @@ jobs:
           cd ${{github.workspace}}/build
           cpack
 
-      - name: Debug
+      - name: Zip files
         if: always()
-        run: cat /Users/runner/work/Lab/Lab/build/_CPack_Packages/Darwin/DragNDrop/PreinstallOutput.log
+        run: |
+          zip -r ${{github.workspace}}/build_ooutput_mac.zip ${{github.workspace}}/build
 
       - name: Release
+        if: always()
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{github.workspace}}/build/Coollab-beta-8 WIP-Mac.dmg
+          files: ${{github.workspace}}/build_ooutput_mac.zip
+    #   - name: Release
+    #     uses: softprops/action-gh-release@v1
+    #     with:
+    #       files: ${{github.workspace}}/build/Coollab-beta-8 WIP-Mac.dmg
