@@ -15,6 +15,7 @@
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Gpu/TextureDescriptor.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Gpu/TextureSamplerDescriptor.h"
 #include "Cool/Gpu/TextureSource.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
@@ -265,6 +266,19 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
 
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
+    // Render on the normal render target
+    render_impl(in, update_ctx);
+
+    // Render on the feedback texture
+    _feedback_double_buffer.write_target().set_size(in.render_target_size);
+    _feedback_double_buffer.write_target().render([&]() {
+        render_impl(in, update_ctx);
+    });
+    _feedback_double_buffer.swap_buffers();
+}
+
+void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
+{
     in.set_clean(_shader.dirty_flag());
 
     if (in.is_dirty(_regenerate_code_flag))
@@ -287,6 +301,15 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+
+    shader.set_uniform_texture(
+        "_previous_frame_texture",
+        _feedback_double_buffer.read_target().get().texture_id(),
+        Cool::TextureSamplerDescriptor{
+            .repeat_mode        = Cool::TextureRepeatMode::None,
+            .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
+        }
+    );
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
     _nodes_editor.graph().for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work.
