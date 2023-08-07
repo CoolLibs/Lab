@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 project(Coollab)
 set(COOLLAB_VERSION "beta-8 WIP")
