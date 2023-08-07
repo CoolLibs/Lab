@@ -1,11 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 project(Coollab)
 set(COOLLAB_VERSION "beta-8 WIP")
 add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
+
+# Use static libs
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+if(NOT MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
+endif()
 
 # Choose C++ version
 target_compile_features(Coollab-Properties INTERFACE cxx_std_20)
