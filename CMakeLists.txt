@@ -6,17 +6,6 @@ add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
 
-# Use static libs
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-
-if(UNIX AND NOT APPLE) # Linux
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libcxx")
-    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU") # GCC
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++")
-    endif()
-endif()
-
 # Choose C++ version
 target_compile_features(Coollab-Properties INTERFACE cxx_std_20)
 
