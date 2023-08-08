@@ -9,9 +9,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
 # Use static libs
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
-if(NOT MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
+if(UNIX AND NOT APPLE) # Linux
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libcxx")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU") # GCC
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libstdc++")
+    endif()
 endif()
 
 # Choose C++ version
