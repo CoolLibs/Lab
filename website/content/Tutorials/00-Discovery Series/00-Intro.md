@@ -14,5 +14,3 @@ Here is the table of contents for the series:
 - Practicing with a simple example.
 - Animating with the `Time` node property.
 - Exploring the variety of nodes.
-
-The list above is updated whenever an ongoing or new feature is fully implemented in the software.

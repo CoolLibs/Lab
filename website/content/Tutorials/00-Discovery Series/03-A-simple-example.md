@@ -25,7 +25,7 @@ We can notice symmetry and repeating patterns.
 Thus, we are going to create a flower-inspired artwork, and this with only five or six nodes!<br/>
 Without further ado, let’s get into it!
 
-## Step by step creation within the software
+## Step by step creation with Coollab
 
 First, we will add a `Disk` as the base shape for our flower. We can keep the default parameters. We will then apply several transformations to this disk in order to turn it into a flower.
 
@@ -44,7 +44,7 @@ Now’s the time to build the petals! We can add a great `Kaleidoscope` node and
 
 ![Kaleidoscope](img/Tuto-A-simple-example/Kaleidoscope.png)
 
-If you accidentally moved inside the view panel, you can reset the position of the camera to the origin by clicking on the target button in the bottom right corner of the panel.
+If you accidentally moved inside the view panel, you can reset the position of the camera to the origin by clicking on the <span class="icon-target"></span> button in the bottom right corner of the panel.
 
 ![Camera Reset](img/Tuto-A-simple-example/CameraReset.png)
 
@@ -75,7 +75,7 @@ We have an interesting result with the default Candy preset! 😄
 
 ## Export the artwork
 
-When we are happy with the result from the view panel, we can go over to the export section in the menu bar. We will find a dropdown menu. Let’s click on the `Image` option.
+When we are happy with the result from the view panel, we can go over to the <span class="icon-upload2"></span> export section in the menu bar. We will find a dropdown menu. Let’s click on the `Image` option.
 
 ![Export Menu](img/Tuto-A-simple-example/ExportMenu.png)
 
@@ -84,7 +84,7 @@ Now, we can choose the resolution and the aspect ratio of the image as well as t
 ![Export Window](img/Tuto-A-simple-example/ExportWindow.png)
 
 :::info Did you know?
-Note that you can go to **View > Fixed aspect ratio** to change the aspect ratio and see how the image will look like, according to the chosen ratio, in the view panel.
+Note that you can go to &nbsp;<span class="icon-image"></span> **View > Fixed aspect ratio** in the menu bar to change the aspect ratio and see how the image will look like, according to the chosen ratio, in the view panel.
 :::
 
 And well done! We have a beautiful flower!
