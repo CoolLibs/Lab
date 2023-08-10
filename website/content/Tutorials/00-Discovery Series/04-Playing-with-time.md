@@ -77,7 +77,7 @@ You can also use maps and/or masks to change a property over space instead of ti
 
 ## Export the artwork as a video
 
-When we are happy with the animation, we can go over to the export section. In the drop down menu, click on the `Video` option.
+When we are happy with the animation, we can go over to the <span class="icon-upload2"></span> export section. In the drop down menu, click on the <span class="icon-film"></span> `Video` option.
 
 ![Export Video Options](img/Tuto-Playing-with-time/ExportVideoOptions.png)
 

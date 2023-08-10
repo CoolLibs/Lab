@@ -75,7 +75,7 @@ We have an interesting result with the default Candy preset! 😄
 
 ## Export the artwork
 
-When we are happy with the result from the view panel, we can go over to the <span class="icon-upload2"></span> export section in the menu bar. We will find a dropdown menu. Let’s click on the `Image` option.
+When we are happy with the result from the view panel, we can go over to the <span class="icon-upload2"></span> export section in the menu bar. We will find a dropdown menu. Let’s click on the <span class="icon-image"></span> `Image` option.
 
 ![Export Menu](img/Tuto-A-simple-example/ExportMenu.png)
 
