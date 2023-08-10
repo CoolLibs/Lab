@@ -9,27 +9,25 @@
 
 namespace Lab {
 
-static void send_error_message(Cool::OptionalErrorMessage const& error)
-{
-    error.send_error_if_any(
-        [&](std::string const& message) {
-            return Cool::Message{
-                .category = "Loading Project",
-                .message  = message,
-                .severity = Cool::MessageSeverity::Warning,
-            };
-        },
-        Cool::Log::ToUser::console()
-    );
-}
-
 void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
     auto       project = Project{};
     auto const error   = Cool::Serialization::load<Project, cereal::JSONInputArchive>(project, path);
     if (error)
     {
-        send_error_message(error);
+        error.send_error_if_any(
+            [&](std::string const& /* message */) {
+                return Cool::Message{
+                    .category = "Loading Project failed",
+                    .message  = fmt::format(
+                        "Incompatible version. Use Coollab **{}** instead. You can download it from [https://github.com/CoolLibs/Lab/releases](https://github.com/CoolLibs/Lab/releases).",
+                        project.debug_info_coollab_version
+                    ),
+                    .severity = Cool::MessageSeverity::Warning,
+                };
+            },
+            Cool::Log::ToUser::console()
+        );
         return;
     }
 

@@ -26,6 +26,8 @@ struct Project {
     bool                           is_camera_2D_editable_in_view{true};
     Cool::Exporter                 exporter;
 
+    std::string debug_info_coollab_version{}; // Only used to generate an error message when deserialization fails.
+
     [[nodiscard]] auto is_empty() const -> bool;
 
     auto input_factory() { return Cool::InputFactory_Ref{variable_registries, camera_manager.id()}; }
@@ -37,9 +39,9 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        auto coollab_version_name = coollab_version();
+        debug_info_coollab_version = coollab_version();
         archive(
-            cereal::make_nvp("Coollab version", coollab_version_name), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
+            cereal::make_nvp("Coollab version", debug_info_coollab_version), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
             cereal::make_nvp("Time", clock),
             cereal::make_nvp("View Constraint", view_constraint),
             cereal::make_nvp("Exporter (Image and Video)", exporter),
