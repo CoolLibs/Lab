@@ -1,4 +1,4 @@
-- If new windows have been added, make sure that *imgui.ini* has been updated in *User data Default*.
+- If new windows have been added, make sure that *imgui.ini* has been updated in *User data Default*, and increment `imgui_ini_version` in *main.cpp*.
 - Add gifs and images in the changelog to illustrate the changes.
 - Remove the "WIP" in the version number in *CMakeLists.txt* and in *changelog.md*, and commit with the message "🔖 [beta-1] Release" (make sure to replace with the right version number).
 - Create a tag on the commit used for the release.
