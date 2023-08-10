@@ -74,8 +74,7 @@ App::~App()
 void App::on_shutdown()
 {
     _tips_manager.on_app_shutdown();
-    before_project_destruction(command_execution_context());
-    std::filesystem::remove(Path::backup_project()); // The App exited successfully, no crash, so we know we don't need the backup anymore. If we were to keep it, then it would get opened the next time we open Coollab. But we want to open a new project instead.
+    command_execution_context().execute(Command_SaveProject{.is_autosave = true});
     _is_shutting_down = true;
 }
 

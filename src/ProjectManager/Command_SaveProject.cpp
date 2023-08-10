@@ -17,10 +17,10 @@ void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
             dialog_to_save_project_as(ctx);
         }
     }
-    // Autosave, save in the backup project.
+    // Autosave, save in the default project.
     else if (is_autosave)
     {
-        internal_project::save_project_to(ctx, Path::backup_project());
+        internal_project::save_project_to(ctx, Path::untitled_project());
     }
     // The user explicitly asked to save on the Unsaved Project, so run as "Save As".
     else

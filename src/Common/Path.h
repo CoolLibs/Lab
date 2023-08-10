@@ -2,6 +2,6 @@
 
 namespace Lab::Path {
 
-auto backup_project() -> std::filesystem::path;
+auto untitled_project() -> std::filesystem::path;
 
 } // namespace Lab::Path

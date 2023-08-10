@@ -19,7 +19,7 @@ static void set_window_title(CommandExecutionContext_Ref const& ctx, std::option
             "Coollab [{}]",
             path.has_value()
                 ? std::filesystem::weakly_canonical(*path).string()
-                : "Unsaved project"
+                : "Untitled project"
         )
             .c_str()
     );
@@ -39,7 +39,7 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
-    if (project_path != Path::backup_project()) // Special case: the backup project should not be visible to the end users.
+    if (project_path != Path::untitled_project()) // Special case: the backup project should not be visible to the end users.
         set_current_project_path(ctx, project_path);
     ctx.project().is_first_frame = true;
     ctx.project().clock.set_playing(is_playing);

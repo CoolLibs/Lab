@@ -23,17 +23,11 @@ void initial_project_opening(CommandExecutionContext_Ref const& ctx)
         {
             return command_line_args().get()[0];
         }
-        if (Cool::user_settings().open_most_recent_project_when_opening_coollab)
-        {
-            auto const path = ctx.recently_opened_projects().most_recent_path();
-            if (path)
-                return *path;
-        }
-        // Try the backup project. If it exists it means that the app did not exit successfully and there is a need to restore something.
-        return Path::backup_project();
+        // Try the untitled project.
+        return Path::untitled_project();
     }();
     if (!std::filesystem::exists(path))
-        return; // Avoid error message caused by the fact that the file doesn't exist. It is legit if the backup project doesn't exist, we don't want an error in that case.
+        return; // Avoid error message caused by the fact that the file doesn't exist. It is legit if the untitled project doesn't exist, we don't want an error in that case.
 
     ctx.execute(Command_OpenProject{
         .path = path,
@@ -92,6 +86,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
     if (ctx.project().is_empty())
         return;
 
+    // We are on an untitled project, ask to save it.
     while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
     {
         if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
@@ -102,6 +97,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
         if (dialog_to_save_project_as(ctx))
             break;
     }
+    std::filesystem::remove(Path::untitled_project()); // Users either saved their untitled project, or accepted to lose their changes.
 }
 
 void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
