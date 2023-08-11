@@ -52,7 +52,7 @@ target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
 install(FILES "lib/range-v3/LICENSE.txt" DESTINATION "license/range-v3")
 
 add_subdirectory(lib/libnyquist)
-target_include_directories(Coollab-Properties INTERFACE lib/libnyquist/include)
+target_include_directories(Coollab-Properties SYSTEM INTERFACE lib/libnyquist/include)
 target_link_libraries(Coollab-Properties INTERFACE libnyquist::libnyquist)
 
 target_include_directories(Coollab-Properties INTERFACE lib/dj_fft)
@@ -126,6 +126,7 @@ add_executable(Tests-Coollab tests/tests.cpp ${COOL_LAB_SOURCES})
 target_compile_definitions(Tests-Coollab PRIVATE LAB_ENABLE_TESTS)
 target_link_libraries(Tests-Coollab PRIVATE Coollab-Properties)
 target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
+file(COPY ${CMAKE_SOURCE_DIR}/tests DESTINATION bin)
 
 # ---------------------
 # ---CPack---

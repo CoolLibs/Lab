@@ -198,18 +198,21 @@ TEST_CASE("RtAudio test")
 						(void *)audioData->samples.data() );
 
 	std::cout << "Opening stream : " << err << "\n";
-	char input;
-	while (true) {
-		err = dac.startStream();
-		std::cout << "Starting stream : " << err << "\n";
-
-		std::cout << "\nPlaying ... press <enter> to quit.\n";
+	char input = '\n';
+	int playing = 0;
+	while (input == '\n') {
+		if (!playing) {
+			err = dac.startStream();
+			std::cout << "Starting stream : " << err << "\n";
+			std::cout << "\nPlaying ... press <enter> to stop.\n";
+			playing = 1;
+		} else {
+			err = dac.stopStream();
+			std::cout << "Stoping stream : " << err << "\n";
+			std::cout << "\nStopping ... press <enter> to play.\n";
+			playing = 0;
+		}
 		std::cin.get( input );
-		dac.stopStream();
-		std::cout << "Stoping stream : " << err << "\n";
-		std::cout << "\nStopping ... press <enter> to quit.\n";
-		std::cin.get( input );
-
 	}
 
 	if ( dac.isStreamOpen() ) dac.closeStream();
