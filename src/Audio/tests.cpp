@@ -1,5 +1,8 @@
+#include <cstddef>
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
+#include <vector>
 #include <cmath>
 #include <exception>
 
@@ -10,9 +13,11 @@
 #include "dj_fft/dj_fft.h"
 #include "RtAudioWrapper/rtaudio/RtAudio.h"
 
+static std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
+static int seek = 0;
+
 // Two-channel wave generator.
-auto sound_generator( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-			double streamTime, RtAudioStreamStatus status, void *userData ) -> int
+auto sound_generator(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *userData ) -> int
 	{
 	static float freq = 880.0;
 	static double x = 0;
@@ -21,6 +26,7 @@ auto sound_generator( void *outputBuffer, void *inputBuffer, unsigned int nBuffe
 	double *lastValues = (double *) userData;
 	if ( status )
 		std::cout << "Stream underflow detected!" << std::endl;
+
 	// Write interleaved audio data.
 	for ( i=0; i<nBufferFrames; i++ ) {
 		for ( j=0; j<2; j++ ) {
@@ -33,10 +39,41 @@ auto sound_generator( void *outputBuffer, void *inputBuffer, unsigned int nBuffe
 		x=freq*x/(freq-0.1); // "Connects" the successive sinusoids at the same value
 		freq -= 0.1;
 	}
-	std::cout << freq << "\n";
+
+	std::cout << seek << " : " << audioData->samples.data()[seek] << " : " << ((double*)outputBuffer)[0] << "\n";
+	seek += nBufferFrames*2;
 	return 0;
 
 }
+
+auto audio_through(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames, double streamTime, RtAudioStreamStatus status, void *userData ) -> int {
+
+	double *buffer = (double *) outputBuffer;
+	double *lastValues = (double *) userData;
+	if ( status )
+		std::cout << "Stream underflow detected!" << std::endl;
+
+	std::vector<double> test;
+	for (size_t i = 0; i<nBufferFrames; i++){
+		try {
+			test.push_back((double(audioData->samples.at(seek+i*2))));
+			test.push_back((double(audioData->samples.at(seek+i*2+1))));
+		}
+		catch (const std::out_of_range& e) {
+			test.push_back((double)0);
+			test.push_back((double)0);
+		}
+	}
+
+	std::memcpy(buffer, /*audioData->samples.data()+seek*/ test.data(), nBufferFrames*sizeof(double)*2);
+
+	std::cout << seek << " : " << audioData->samples.data()[seek] << " : " << ((double*)outputBuffer)[0] << "\n";
+
+	seek += nBufferFrames*2;
+	return 0;
+
+}
+
 
 #if LAB_ENABLE_TESTS
 #include <doctest/doctest.h>
@@ -44,7 +81,7 @@ auto sound_generator( void *outputBuffer, void *inputBuffer, unsigned int nBuffe
 
 TEST_CASE("libnyquist test : Opening a .wav file and reading its content in a struct")
 {
-	std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
+	// std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
 	nqr::NyquistIO io;
 	io.Load(audioData.get(), Cool::Path::root() / "tests/res/audio/10-1000-10000-20000.wav");
 
@@ -57,7 +94,7 @@ TEST_CASE("libnyquist test : Opening a .wav file and reading its content in a st
 }
 
 TEST_CASE("libnyquist test : Opening a .mp3 file in a struct, testing the Left channel signal values"){
-	std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
+	// std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
 	nqr::NyquistIO io;
 	io.Load(audioData.get(), Cool::Path::root() / "tests/res/audio/Monteverdi - L'Orfeo, Toccata.mp3");
 	std::ifstream in(Cool::Path::root() / "tests/res/audio/Orfeo.values.left");
@@ -71,7 +108,7 @@ TEST_CASE("libnyquist test : Opening a .mp3 file in a struct, testing the Left c
 }
 
 TEST_CASE("libnyquist test : Opening a .mp3 file in a struct, testing the Left channel signal values"){
-	std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
+	// std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
 	nqr::NyquistIO io;
 	io.Load(audioData.get(), Cool::Path::root() / "tests/res/audio/Monteverdi - L'Orfeo, Toccata.mp3");
 	std::ifstream in(Cool::Path::root() / "tests/res/audio/Orfeo.values.right");
@@ -89,7 +126,7 @@ TEST_CASE("dj_fft test : Opening a .wav file, reading its content in a struct, c
 {
 
 	// Load the audio file
-	std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
+	// std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
 	nqr::NyquistIO io;
 	io.Load(audioData.get(), Cool::Path::root() / "tests/res/audio/10-1000-10000-20000.wav");
 
@@ -154,14 +191,13 @@ TEST_CASE("dj_fft test : Opening a .wav file, reading its content in a struct, c
 // 	}
 // }
 
-TEST_CASE("RtAudio test")
+/*TEST_CASE("RtAudio test playing a function-generated sound")
 {
 
 // -----------------------------------------------------------
 
 	int framesize = 4096;
 
-	std::shared_ptr<nqr::AudioData> audioData = std::make_shared<nqr::AudioData>();
 	nqr::NyquistIO io;
 	io.Load(audioData.get(), Cool::Path::root() / "tests/res/audio/Monteverdi - L'Orfeo, Toccata.mp3");
 
@@ -195,6 +231,60 @@ TEST_CASE("RtAudio test")
 						sampleRate,
 						&bufferFrames,
 						&sound_generator,
+						(void *)data );
+
+	std::cout << "Opening stream : " << err << "\n";
+	char input = '\n';
+	int playing = 0;
+	while (input == '\n') {
+
+		if (!playing) {
+			err = dac.startStream();
+			std::cout << "Starting stream : " << err << "\n";
+			std::cout << "\nPlaying ... press <enter> to stop.\n";
+			playing = 1;
+		} else {
+			err = dac.stopStream();
+			std::cout << "Stoping stream : " << err << "\n";
+			std::cout << "\nStopping ... press <enter> to play.\n";
+			playing = 0;
+		}
+		std::cin.get( input );
+	}
+
+	if ( dac.isStreamOpen() ) dac.closeStream();
+
+}*/
+
+TEST_CASE("RtAudio test playing an audio file")
+{
+
+// -----------------------------------------------------------
+
+	int framesize = 4096;
+
+	nqr::NyquistIO io;
+	io.Load(audioData.get(), Cool::Path::root() / "tests/res/audio/Monteverdi - L'Orfeo, Toccata.mp3");
+
+	RtAudio dac;
+	if ( dac.getDeviceCount() < 1 ) {
+		std::cout << "\nNo audio devices found!\n";
+		exit( 0 );
+	}
+	RtAudio::StreamParameters parameters;
+	parameters.deviceId = dac.getDefaultOutputDevice();
+	parameters.nChannels = 2;
+	parameters.firstChannel = 0;
+	unsigned int sampleRate = 44100;
+	unsigned int bufferFrames = 256; // 256 sample frames
+	// Open a stream during RtAudio instantiation
+	RtAudioErrorType err;
+	err = dac.openStream(&parameters,
+						NULL,
+						RTAUDIO_FLOAT64,
+						sampleRate,
+						&bufferFrames,
+						&audio_through,
 						(void *)audioData->samples.data() );
 
 	std::cout << "Opening stream : " << err << "\n";
@@ -218,5 +308,6 @@ TEST_CASE("RtAudio test")
 	if ( dac.isStreamOpen() ) dac.closeStream();
 
 }
+
 
 #endif
