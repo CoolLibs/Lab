@@ -41,7 +41,7 @@ target_link_libraries(Coollab-Properties INTERFACE Cool::Core)
 cool_setup(${PROJECT_NAME})
 
 # Set app icon
-Cool__set_app_icon(${PROJECT_NAME} "res/logo.png" "${CMAKE_SOURCE_DIR}/app-resources/icon.rc" "${CMAKE_SOURCE_DIR}/app-resources/icon.icns")
+Cool__set_app_icon(${PROJECT_NAME} "res/logo.png" "${CMAKE_SOURCE_DIR}/app-resources/icon.rc")
 
 # Include cmd
 add_subdirectory(lib/cmd)
@@ -78,6 +78,7 @@ else()
 endif()
 
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
+install(FILES "LICENSE.txt" DESTINATION "license")
 
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
@@ -118,7 +119,11 @@ target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
 # ---------------------
 # ---CPack---
 # ---------------------
-install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+if(APPLE)
+    install(TARGETS ${PROJECT_NAME} DESTINATION .) # MacOS bundles must be installed at the root of the package: https://gitlab.kitware.com/cmake/community/-/wikis/doc/cpack/PackageGenerators#dragndrop-osx-only
+else()
+    install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+endif()
 
 if(WIN32)
     set(SEP "\\\\")
@@ -129,9 +134,9 @@ endif()
 # Installer Info
 set(CPACK_PACKAGE_NAME "Coollab")
 set(CPACK_PACKAGE_VERSION "${COOLLAB_VERSION}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab ${COOLLAB_VERSION}") # Don't put this in a Coollab parent folder. In NSIS this messes up the install and prevents our app to appear in "Apps and Features" to uninstall it for example.
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Coollab") # Don't put this in a Coollab parent folder. In NSIS this messes up the install and prevents our app to appear in "Apps and Features" to uninstall it for example.
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}/app-resources${SEP}installer_banner.bmp") # Seems like it has to be .bmp, at least for NSIS. NB: if there is any transparency in the image, NSIS won't be able to render it at all. Exporting a fully opaque .bmp from Paint.net works. 150x57 pixels is the ideal size to avoid uggly downscale artifacts.
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}${SEP}LICENSE")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}${SEP}LICENSE.txt")
 set(CPACK_PACKAGE_VENDOR "Coollab")
 set(CPACK_PACKAGE_EXECUTABLES "Coollab" "Coollab") # Creates Start Menu shortcuts
 set(CPACK_PACKAGE_CONTACT "coollab.lib@gmail.com")
@@ -170,6 +175,12 @@ set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
     DeleteRegKey HKCR '.coollab'
     DeleteRegKey HKCR 'CoollabFile'
 ")
+
+# MacOS Bundle specifics
+set(CPACK_BUNDLE_NAME "Coollab")
+set(CPACK_BUNDLE_PLIST "${CMAKE_SOURCE_DIR}/app-resources/Info.plist")
+set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/app-resources/icon.icns")
+set(CPACK_BUNDLE_STARTUP_COMMAND "Contents/MacOS/Coollab")
 
 #
 include(CPack)
