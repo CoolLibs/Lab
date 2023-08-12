@@ -55,19 +55,20 @@ auto audio_through(void *outputBuffer, void *inputBuffer, unsigned int nBufferFr
 
 	std::vector<double> test;
 	for (size_t i = 0; i<nBufferFrames; i++){
-		try {
-			test.push_back((double(audioData->samples.at(seek+i*2))));
-			test.push_back((double(audioData->samples.at(seek+i*2+1))));
+		if (seek+i*2+1 < audioData->samples.size()) {
+			test.push_back((double(audioData->samples[seek+i*2])));
+			test.push_back((double(audioData->samples[seek+i*2+1])));
 		}
-		catch (const std::out_of_range& e) {
+		else {
 			test.push_back((double)0);
 			test.push_back((double)0);
+			seek = 0;
 		}
 	}
 
 	std::memcpy(buffer, /*audioData->samples.data()+seek*/ test.data(), nBufferFrames*sizeof(double)*2);
 
-	std::cout << seek << " : " << audioData->samples.data()[seek] << " : " << ((double*)outputBuffer)[0] << "\n";
+	std::cout << seek/44100/2 << " : " << audioData->samples[seek] << " : " << ((double*)outputBuffer)[0] << "\n";
 
 	seek += nBufferFrames*2;
 	return 0;
@@ -290,7 +291,11 @@ TEST_CASE("RtAudio test playing an audio file")
 	std::cout << "Opening stream : " << err << "\n";
 	char input = '\n';
 	int playing = 0;
-	while (input == '\n') {
+	while (input != ' ') {
+		int a = (int)(input-'0');
+		if (a > 0 && a < 150){
+			seek = a*44100*2;
+		}
 		if (!playing) {
 			err = dac.startStream();
 			std::cout << "Starting stream : " << err << "\n";
