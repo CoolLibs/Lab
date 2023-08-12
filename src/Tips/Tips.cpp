@@ -8,6 +8,7 @@ auto all_tips() -> Cool::Tips
     static constexpr auto tips = std::array
     {
         "In the \" " ICOMOON_TREE "Nodes\" window, right-click (or press A) to create your first node!", // NOLINT(bugprone-suspicious-missing-comma)
+            "You can press ESCAPE to close these popups.",
 #if defined(_WIN32)
             R"STR(If your image takes more than 2 seconds to render, Windows will automatically kill Coollab because it thinks it has frozen. You can increase this value to something like 60 seconds to make sure Coollab won't crash during an export at a high resolution, or when you artwork starts to become too heavy.
 We **highly recommend** that you do change that, which is as simple as [following the steps in this great article](https://helpx.adobe.com/substance-3d-painter/technical-support/technical-issues/gpu-issues/gpu-drivers-crash-with-long-computations-tdr-crash.html).)STR",
