@@ -178,7 +178,6 @@ set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
 
 # MacOS Bundle specifics
 set(CPACK_BUNDLE_NAME "Coollab")
-set(CPACK_BUNDLE_STARTUP_COMMAND "Coollab")
 set(CPACK_BUNDLE_PLIST "${CMAKE_SOURCE_DIR}/app-resources/Info.plist")
 set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/app-resources/icon.icns")
 
