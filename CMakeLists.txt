@@ -120,7 +120,7 @@ target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
 # ---CPack---
 # ---------------------
 if(APPLE)
-    install(TARGETS ${PROJECT_NAME} DESTINATION .) # MacOS bundles must be installed at the root of the package: https://gitlab.kitware.com/cmake/community/-/wikis/doc/cpack/PackageGenerators#dragndrop-osx-only
+    install(TARGETS ${PROJECT_NAME} DESTINATION ../MacOS) # MacOS bundles must be installed at the root of the package: https://gitlab.kitware.com/cmake/community/-/wikis/doc/cpack/PackageGenerators#dragndrop-osx-only
 else()
     install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 endif()
