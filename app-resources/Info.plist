@@ -6,9 +6,30 @@
         <string>English</string>
         <key>CFBundleExecutable</key>
         <string>Coollab</string>
-        <key>CFBundleTypeExtensions</key>
+        <key>CFBundleIconFile</key>
+        <string>Coollab.icns</string>
+        <key>CFBundleDocumentTypes</key>
         <array>
-            <string>coollab</string>
+            <dict>
+                <key>CFBundleTypeExtensions</key>
+                <array>
+                    <string>coollab</string>
+                </array>
+                <key>CFBundleTypeIconFile</key>
+                <string>Coollab.icns</string>
+                <key>CFBundleTypeName</key>
+                <string>Coollab Project</string>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>LSItemContentTypes</key>
+                <array>
+                    <string>public.coollab</string>
+                </array>
+                <key>NSExportableTypes</key>
+                <array>
+                    <string>public.coollab</string>
+                </array>
+            </dict>
         </array>
         <key>CFBundleGetInfoString</key>
         <string></string>
