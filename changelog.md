@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-8 WIP](#beta-8-wip)
+- [🐣beta-8](#beta-8)
 - [🐣beta-7](#beta-7)
 - [🐣beta-6](#beta-6)
 - [🐣beta-5](#beta-5)
@@ -10,7 +10,7 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-8 WIP
+## 🐣beta-8
 
 - ✨ Added project files: you can now save and open projects, allowing you to keep and share your work!
 ![image](https://github.com/CoolLibs/Lab/assets/45451201/00270343-3a45-4e92-93cc-729f0f674c1e)
@@ -22,7 +22,7 @@
 ![ezgif-5-a3c56b1c92](https://github.com/CoolLibs/Lab/assets/45451201/d6513535-6f53-4932-b260-20a54c032380)
 - 🚚 Renamed "Space Transformation" category as "2D Modifier".
 - 🐛 Fix: some nodes had the wrong color.
-- 🐛 Fix: on Linux, for some window managers like i3, the context menu was not behaving properly. (Now by default we disable multi-viewport for those custom window managers, which fixes the issue but prevents you from dragging windows outside of the main Coollab window.) 
+- 🐛 Fix: on Linux, for some window managers like i3, the context menu was not behaving properly. (Now by default we disable multi-viewport in you use one of these custom window managers, which fixes the issue but prevents you from dragging windows outside of the main Coollab window. This can be changed in the Settings menu.) 
 
 ## 🐣beta-7
 
