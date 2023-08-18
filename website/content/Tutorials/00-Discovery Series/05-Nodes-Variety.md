@@ -119,7 +119,7 @@ This category serves as a catch-all.
 We find different inputs for the most part (2D vector, Integer, Number,…). This is also where we can find the `Time` node used for animation!
 
 ![Miscellaneous](img/Tuto-Nodes-Variety/Miscellaneous.gif)<br/>
-Here, the `Size` of our `Star` and its number of branches are controlled by values we input thanks to `Input Number` and `Input Integer`. Similarly, the time influences its Roundness.
+Here, the `Size` of our `Star` and its number of branches are controlled by values we input thanks to `Input Number` and `Input Integer`. Similarly, the time influences its `Roundness`.
 
 ## End of the tutorial
 
