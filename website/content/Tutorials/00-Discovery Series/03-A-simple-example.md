@@ -99,6 +99,8 @@ Here are some other examples we made using the same restriction on the number of
 
 ![Cherry Flake](img/Tuto-A-simple-example/CherryFlake.png)
 
+## End of the tutorial
+
 This the end of this tutorial. It is now your turn to experiment and create your first artwork! Try to keep it simple at first using no more than a couple of nodes 😉. 
 
 Also, feel free to modify the example we have done together, play with different parameters and/or try to add new nodes to the existing graph.

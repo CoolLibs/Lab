@@ -113,6 +113,8 @@ Here are some others animated examples!
 
 ![Compressor](img/Tuto-Playing-with-time/Compressor.gif)        ![Laser Loading](img/Tuto-Playing-with-time/LaserLoading.gif)       ![Beating](img/Tuto-Playing-with-time/Beating.gif)
 
+## End of the tutorial
+
 This the end of this tutorial. It is now your turn to experiment with the `Time` node to animate your artworks.
 
 Feel free to modify the example we have done together, play with different nodes’ parameters, add multiple `Time` nodes and admire the result! 😃

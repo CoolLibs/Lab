@@ -51,6 +51,8 @@ Now, the idea is to combine and link nodes together. We select the node we want,
 
 If we want to break the link, we just select the rope and press the **Delete** key on our keyboard.
 
+## End of the tutorial
+
 That’s pretty much all for today’s tutorial! You can already go a little further and try to add nodes by yourself in order to get more familiar with the node panel! 👋
 
 
