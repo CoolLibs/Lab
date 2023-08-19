@@ -5,7 +5,7 @@ In this tutorial, we will have an overview of the different main sections that m
 
 ## Exploring the interface
 
-This pop-up window will show after the launch. We can close it by clicking the `Got it!` button or by clicking the cross in the upper right corner. If we wish to retrieve all of the tips, such as shortcuts, we can click on the appropriate button. We may find the tips in the menu bar, in the commands area, symbolized by the <span class="icon-rocket"></span> icon.
+After opening Coollab, this  pop-up window will appear <span class="icon-bubble"></span> `Did you know?`. We can close it by clicking the `Got it!` button or by clicking the cross in the upper right corner. If we wish to retrieve all of the tips, such as shortcuts, we can click on the appropriate button. We may find the tips in the menu bar, in the commands area, symbolized by the <span class="icon-rocket"></span> icon.
 
 ![Pop up](img/Tuto-Interface/PopUp.png)
 
