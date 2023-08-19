@@ -33,7 +33,6 @@
 #include "UI/imgui_show.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
-#include "parse_node_definition.h"
 
 namespace Lab {
 

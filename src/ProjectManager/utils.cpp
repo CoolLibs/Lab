@@ -2,12 +2,16 @@
 #include <CommandCore/CommandExecutionContext_Ref.h>
 #include <CommandLineArgs/CommandLineArgs.h>
 #include <Common/Path.h>
+#include <ProjectManager/Command_OpenProject.h>
+#include <ProjectManager/internal_utils.h>
 #include <filesystem>
 #include "Command_NewProject.h"
+#include "Command_OpenBackupProject.h"
 #include "Command_OpenProject.h"
 #include "Command_SaveProject.h"
 #include "Command_SaveProjectAs.h"
 #include "Cool/File/File.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/UserSettings/UserSettings.h"
 #include "FileExtension.h"
 #include "Project.h"
@@ -87,17 +91,23 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
         return;
 
     // We are on an untitled project, ask to save it.
+    bool has_saved{false};
     while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
     {
-        if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
+        if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.\n(NB: Actually you can still recover them by using \"Load Backup\" in the \"File\" menu.)", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
             != boxer::Selection::Yes)
         {
             break;
         }
         if (dialog_to_save_project_as(ctx))
+        {
+            has_saved = true;
             break;
+        }
     }
     std::filesystem::remove(Path::untitled_project()); // Users either saved their untitled project, or accepted to lose their changes.
+    if (!has_saved)
+        internal_project::save_project_to(ctx, Path::backup_project());
 }
 
 void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
@@ -108,6 +118,9 @@ void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
         dialog_to_open_project(ctx);
     if (ImGui::MenuItem("Open Recent", "Ctrl+R"))
         dialog_to_open_recent_project(ctx.recently_opened_projects());
+    if (ImGui::MenuItem("Open Backup", "Ctrl+Shift+R"))
+        ctx.execute(Command_OpenBackupProject{});
+    Cool::ImGuiExtras::help_marker("If you accidentally don't save your changes when a message box prompts you to do so before they get lost, you can actually recover them here.");
     if (ImGui::MenuItem("Save", "Ctrl+S"))
         ctx.execute(Command_SaveProject{});
     if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))

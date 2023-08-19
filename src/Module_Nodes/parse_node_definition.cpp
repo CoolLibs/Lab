@@ -85,9 +85,8 @@ struct parse_signature_params {
     std::string const& output_type;
 };
 
-static auto
-    parse_signature(parse_signature_params p)
-        -> tl::expected<CompleteFunctionSignature, std::string>
+static auto parse_signature(parse_signature_params p)
+    -> tl::expected<CompleteFunctionSignature, std::string>
 {
     auto res = CompleteFunctionSignature{};
 
