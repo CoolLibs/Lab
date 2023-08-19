@@ -39,6 +39,7 @@
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
 #include "ProjectManager/Command_NewProject.h"
+#include "ProjectManager/Command_OpenBackupProject.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
@@ -651,6 +652,8 @@ void App::check_inputs__project()
         command_executor().execute(Command_SaveProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
         dialog_to_open_project(command_execution_context());
+    else if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_R))
+        command_executor().execute(Command_OpenBackupProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_R))
         dialog_to_open_recent_project(_recently_opened_projects);
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))

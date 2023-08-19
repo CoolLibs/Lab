@@ -13,6 +13,8 @@
 
 ## 🐣beta-9 WIP
 
+- ✨ Added "Load Backup" in case you accidentally refused to save your unsaved changes.
+
 ## 🐣beta-8
 
 - ✨ Added project files: you can now save and open projects, allowing you to keep and share your work!

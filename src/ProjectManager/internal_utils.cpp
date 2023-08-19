@@ -25,8 +25,13 @@ static void set_window_title(CommandExecutionContext_Ref const& ctx, std::option
     );
 }
 
-void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> const& path)
+void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> path)
 {
+    if (path == Path::untitled_project() // Special case: these project paths should not be visible to the end users.
+        || path == Path::backup_project())
+    {
+        path = std::nullopt;
+    }
     Cool::Path::project_folder() = path ? std::make_optional(Cool::File::without_file_name(*path)) : std::nullopt;
     set_window_title(ctx, path);
     if (path)
@@ -40,8 +45,8 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
-    if (project_path != Path::untitled_project()) // Special case: the backup project should not be visible to the end users.
-        set_current_project_path(ctx, project_path);
+
+    set_current_project_path(ctx, project_path);
     ctx.project().is_first_frame = true;
     ctx.project().clock.set_playing(is_playing);
 }
