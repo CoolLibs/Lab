@@ -22,7 +22,7 @@ As you can see, we have different links depending on the platform we are working
 
 ## Installer
 
-Now that we obtain the Coollab installer, it is time to execute it. We have to follow the setup through this installer in order to install Coollab.<br/> First, we will have to agree to the **GNU GENERAL PUBLIC LICENSE**. Then it will ask for the folder in which to install Coollab, here it is up to you!
+Now that we obtained the Coollab installer, it is time to execute it. We have to follow the setup through this installer in order to install Coollab.<br/> First, we will have to agree to the **GNU GENERAL PUBLIC LICENSE**. Then it will ask for the folder in which to install Coollab, here it is up to you!
 If we want to create a **Start Menu folder,** we can keep the `Do not create shortcuts` unchecked, then click on the `Install` button. When it is done you can click on `Finish` to close the setup.
 
 ![Installer](img/Tuto-Installation/Installer.gif)
