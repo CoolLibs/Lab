@@ -1,5 +1,9 @@
+import YoutubeVideo from "@site/src/components/YoutubeVideo"
+
 # Introduction : Discovering Coollab
 
+<YoutubeVideo id="swMZGsGje4E "/>
+<br/>
 Hello and welcome to this first tutorial series on the Coollab software!
 This series focuses on various basic aspects of the software and serves as an introduction for new users.
 
