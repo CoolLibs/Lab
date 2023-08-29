@@ -1,7 +1,5 @@
 import YoutubeVideo from "@site/src/components/YoutubeVideo"
 
-# Interface
-
 <YoutubeVideo id="FK1sMPgcE4Q "/>
 <br/>
 

@@ -1,5 +1,3 @@
-# Nodes' variety
-
 ## Summary
 
 Today we will see an overview of the different kinds of nodes in Coollab.

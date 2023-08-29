@@ -1,4 +1,7 @@
-# A simple example
+import YoutubeVideo from "@site/src/components/YoutubeVideo"
+
+<YoutubeVideo id="3op5PZnUNFU "/>
+<br/>
 
 ## Summary
 

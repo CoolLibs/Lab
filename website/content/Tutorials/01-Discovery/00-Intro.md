@@ -1,7 +1,5 @@
 import YoutubeVideo from "@site/src/components/YoutubeVideo"
 
-# Introduction : Discovering Coollab
-
 <YoutubeVideo id="swMZGsGje4E "/>
 <br/>
 Hello and welcome to this first tutorial series on the Coollab software!

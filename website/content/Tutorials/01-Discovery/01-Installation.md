@@ -1,7 +1,5 @@
 import YoutubeVideo from "@site/src/components/YoutubeVideo"
 
-# Installation
-
 <YoutubeVideo id="swMZGsGje4E "/>
 <br/>
 Welcome to the installation tutorial of Coollab.

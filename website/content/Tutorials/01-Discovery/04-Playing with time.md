@@ -1,5 +1,3 @@
-# Playing with time
-
 ## Summary
 
 Today we are going to see how to use the `Time` node in order to have an animated artwork.
