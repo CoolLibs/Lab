@@ -4,6 +4,7 @@ import YoutubeVideo from "@site/src/components/YoutubeVideo"
 <br/>
 
 ## Summary
+
 In this tutorial, we will have an overview of the different main sections that make up the interface of Coollab.
 
 ## Exploring the interface
