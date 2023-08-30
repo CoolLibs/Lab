@@ -4,8 +4,6 @@ import YoutubeVideo from "@site/src/components/YoutubeVideo"
 <br/>
 Welcome to the installation tutorial of Coollab.
 
-## Summary
-
 Today we will see how to get Coollab and how to install it on your machine.<br/>
 Let’s get started!
 
