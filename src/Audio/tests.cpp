@@ -11,8 +11,7 @@
 #include "libnyquist/Common.h"
 #include "libnyquist/Decoders.h"
 #include "dj_fft/dj_fft.h"
-#include "RtAudioWrapper/rtaudio/RtAudio.h"
-#include "RtAudioWrapper/Wrapper.h"
+#include "RtAudioWrapper/RtAudioWrapper.hpp"
 
 #if LAB_ENABLE_TESTS
 #include <doctest/doctest.h>
