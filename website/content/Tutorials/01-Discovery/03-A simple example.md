@@ -1,6 +1,6 @@
 import YoutubeVideo from "@site/src/components/YoutubeVideo"
 
-<YoutubeVideo id="3op5PZnUNFU "/>
+<YoutubeVideo id="3op5PZnUNFU"/>
 <br/>
 
 In this tutorial we are going to dive into the software in order to create a drawing using a couple of nodes.
