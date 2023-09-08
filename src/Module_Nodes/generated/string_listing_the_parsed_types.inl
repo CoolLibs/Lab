@@ -7,6 +7,8 @@
 R"STR(  - bool
   - int
   - float
+  - Float_PremultipliedA
+  - Float_StraightA
   - vec2
   - vec3
   - vec4

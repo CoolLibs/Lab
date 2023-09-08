@@ -12,4 +12,6 @@ case PrimitiveType::sRGB_StraightA:
 case PrimitiveType::sRGB_PremultipliedA:
 case PrimitiveType::HSLuv_StraightA:
 case PrimitiveType::HSLuv_PremultipliedA:
+case PrimitiveType::Float_StraightA:
+case PrimitiveType::Float_PremultipliedA:
 return true;

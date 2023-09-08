@@ -72,7 +72,8 @@ auto is_image(FunctionSignature signature) -> bool
 
 auto is_greyscale(FunctionSignature signature) -> bool
 {
-    return can_convert(signature.to, PrimitiveType::Float);
+    return can_convert(signature.to, PrimitiveType::Float)
+           || is_greyscale_type(signature.to);
 }
 
 auto modifier_2D_signature() -> FunctionSignature
@@ -86,6 +87,13 @@ auto modifier_2D_signature() -> FunctionSignature
 auto is_modifier_2D(FunctionSignature signature) -> bool
 {
     return signature == modifier_2D_signature();
+}
+
+auto is_color_or_greyscale_modifier(FunctionSignature signature) -> bool
+{
+    return signature.arity == 1
+           && is_color_or_greyscale_type(signature.from)
+           && is_color_or_greyscale_type(signature.to);
 }
 
 } // namespace Lab

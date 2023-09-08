@@ -39,4 +39,16 @@ auto is_color_type(PrimitiveType type) -> bool
         ;
 }
 
+auto is_greyscale_type(PrimitiveType type) -> bool
+{
+    return
+#include "generated/is_greyscale_type.inl"
+        ;
+}
+
+auto is_color_or_greyscale_type(PrimitiveType type) -> bool
+{
+    return is_greyscale_type(type) || is_color_type(type);
+}
+
 } // namespace Lab
