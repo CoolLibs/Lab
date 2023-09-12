@@ -9,3 +9,7 @@ Coollab is a node-based generative-art software where you compose small building
 ## Behind the curtain
 
 [Montrer l'implem de qques nodes, à quel point c'est simple et on se concentre sur le code de l'effet, 0 boilerplate, le logiciel gère les conversions etc.]
+
+## Conclusion
+
+You can download it and try it for yourself: https://coollab-art.com/
