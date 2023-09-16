@@ -342,7 +342,7 @@ void App::imgui_window_view()
                 reset_cameras();
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
+            ImGui::SetItemTooltip("%s", "Reset 2D and 3D cameras");
 
             // Toggle fullscreen
             if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, buttons_order++, align_buttons_vertically))
@@ -351,7 +351,7 @@ void App::imgui_window_view()
                 _main_window.set_fullscreen(_wants_view_in_fullscreen);
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
+            ImGui::SetItemTooltip("%s", _wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Toggle 2D / 3D cameras
             if (Cool::ImGuiExtras::floating_button(_project.is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
@@ -360,7 +360,7 @@ void App::imgui_window_view()
                 _project.camera_manager.is_editable_in_view() = !_project.is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
+            ImGui::SetItemTooltip("%s", _project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
             return b;
         },
     });

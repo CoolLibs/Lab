@@ -85,7 +85,12 @@
             "AntiAliasedLinesUseTex": true,
             "AntiAliasedFill": true,
             "CurveTessellationTol": 1.25,
-            "CircleTessellationMaxError": 0.30000001192092898
+            "CircleTessellationMaxError": 0.30000001192092898,
+            "HoverFlagsForTooltipMouse": 16384,
+            "HoverFlagsForTooltipNav": 16384,
+            "HoverDelayShort": 0.15000000596046449,
+            "HoverDelayNormal": 0.4000000059604645,
+            "HoverStationaryDelay": 0.15000000596046449
         },
         "ImGuiExtras Style": {
             "Floating buttons spacing": 4.0,
