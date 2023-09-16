@@ -66,7 +66,7 @@ def all_primitive_types():
         ),
         PrimitiveType(
             cpp="Float_PremultipliedA",
-            user_facing_name="Float, Premultiplied A",
+            user_facing_name="Float, Premultiplied Alpha",
             corresponding_input_types=[],
             glsl="vec2",
             parsed_from="Float_PremultipliedA",
@@ -74,7 +74,7 @@ def all_primitive_types():
         ),
         PrimitiveType(
             cpp="Float_StraightA",
-            user_facing_name="Float, Straight A",
+            user_facing_name="Float, Straight Alpha",
             corresponding_input_types=[],
             glsl="vec2",
             parsed_from="Float_StraightA",
