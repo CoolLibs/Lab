@@ -316,6 +316,16 @@ def all_conversions():
             to="UV",
             implementation="",
         ),
+        Conversion(
+            from_="Void",
+            to="UV",
+            implementation="""
+                vec2 FUNCTION_NAME()
+                {
+                    return coollab_context.uv;
+                }
+            """,
+        ),
     ]
 
 

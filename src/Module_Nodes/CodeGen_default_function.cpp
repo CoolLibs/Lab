@@ -41,6 +41,9 @@ static auto declare_inputs(std::string const& type, size_t arity)
 
 static auto list_converted_inputs(std::string const& conversion, size_t arity)
 {
+    if (arity == 0)
+        return fmt::format("{}()", conversion);
+
     auto res = std::string{};
     for (size_t i = 0; i < arity; ++i)
     {

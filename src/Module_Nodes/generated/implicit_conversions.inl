@@ -138,3 +138,16 @@ if (from == PrimitiveType::UV && to == PrimitiveType::Vec2)
 
 if (from == PrimitiveType::Vec2 && to == PrimitiveType::UV)
     return ""; // No need to do anything for this conversion, the difference is purely semantic.
+
+if (from == PrimitiveType::Void && to == PrimitiveType::UV)
+{
+    return context.push_function({
+        .name       = "Coollab_Void_to_UV",
+        .definition = R"STR(
+                vec2 Coollab_Void_to_UV/*coollabdef*/()
+                {
+                    return coollab_context.uv;
+                }
+            )STR",
+    });
+}
