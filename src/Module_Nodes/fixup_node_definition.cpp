@@ -29,10 +29,12 @@ static void add_alpha_forwarding(NodeDefinition_Data& data)
     data.helper_functions.push_back(FunctionPieces{
         .name      = name_of_original_main,
         .signature = CompleteFunctionSignature{
-            .parameters  = {ParamDesc{
-                 .name = data.main_function.signature.parameter_names[0],
-                 .type = data.main_function.signature.signature.from,
-            }},
+            .parameters = [&] { // HACK: wrapped in an immediately-invoked lambda to work around a bug in MSVC :/
+                return ParametersList{ParamDesc{
+                    .name = data.main_function.signature.parameter_names[0],
+                    .type = data.main_function.signature.signature.from,
+                }};
+            }(),
             .output_type = data.main_function.signature.signature.to,
         },
         .body = data.main_function.body,
