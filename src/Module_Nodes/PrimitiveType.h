@@ -13,6 +13,8 @@ auto glsl_type_as_string(PrimitiveType) -> std::string;
 /// Returns the PrimitiveType as a string
 auto cpp_type_as_string(PrimitiveType) -> std::string;
 
+auto can_convert(PrimitiveType from, PrimitiveType to) -> bool;
+
 auto is_color_type(PrimitiveType) -> bool;
 auto is_greyscale_type(PrimitiveType) -> bool;
 auto is_color_or_greyscale_type(PrimitiveType) -> bool;

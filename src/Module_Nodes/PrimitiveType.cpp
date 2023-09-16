@@ -32,6 +32,17 @@ auto cpp_type_as_string(PrimitiveType type) -> std::string
     }
 }
 
+auto can_convert(PrimitiveType from, PrimitiveType to) -> bool // NOLINT(readability-function-cognitive-complexity)
+{
+    if (from == to)
+        return true;
+
+    {
+#include "generated/can_convert.inl"
+    }
+    return false;
+}
+
 auto is_color_type(PrimitiveType type) -> bool
 {
     return
