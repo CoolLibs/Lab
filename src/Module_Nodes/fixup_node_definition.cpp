@@ -15,11 +15,15 @@ static void add_alpha_forwarding(NodeDefinition_Data& data)
 {
     using fmt::literals::operator""_a;
 
-    if (!is_color_or_greyscale_modifier(data.main_function.signature.signature)
-        || has_an_alpha_channel(data.main_function.signature.signature.from))
+    if (!( // NOLINT(readability-simplify-boolean-expr)
+            is_color_or_greyscale_modifier(data.main_function.signature.signature)
+            && !has_an_alpha_channel(data.main_function.signature.signature.from)
+        ))
     {
         return;
     }
+    // /!\ NB: the following code assumes that the main function has exactly 1 parameter.
+
     // Use "main" as a helper function
     auto const name_of_original_main = valid_glsl(data.main_function.name + "Original");
     data.helper_functions.push_back(FunctionPieces{
