@@ -14,6 +14,7 @@
 ## 🐣beta-9 WIP
 
 - ✨ Added "Load Backup" in case you accidentally refused to save your unsaved changes.
+- 🐛 Fix: the transparency information was sometimes getting lost between nodes.
 
 ## 🐣beta-8
 

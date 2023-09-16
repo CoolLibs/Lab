@@ -1,6 +1,22 @@
 from dataclasses import dataclass
 from typing import Optional, List, Any
 
+# HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
+# So we need to add the path manually to sys.path
+import os
+import sys
+from pathlib import Path
+
+sys.path.append(
+    os.path.join(
+        Path(os.path.abspath(__file__)).parent.parent.parent,
+        "Cool/src/Cool/ColorSpaces",
+    )
+)
+# End of HACK
+
+import generator_colors
+
 
 @dataclass
 class Conversion:
@@ -47,6 +63,22 @@ def all_primitive_types():
             glsl="float",
             parsed_from="float",
             can_be_a_template_type=True,
+        ),
+        PrimitiveType(
+            cpp="Float_PremultipliedA",
+            user_facing_name="Float, Premultiplied Alpha",
+            corresponding_input_types=[],
+            glsl="vec2",
+            parsed_from="Float_PremultipliedA",
+            can_be_a_template_type=False,
+        ),
+        PrimitiveType(
+            cpp="Float_StraightA",
+            user_facing_name="Float, Straight Alpha",
+            corresponding_input_types=[],
+            glsl="vec2",
+            parsed_from="Float_StraightA",
+            can_be_a_template_type=False,
         ),
         PrimitiveType(
             cpp="Vec2",
@@ -288,23 +320,20 @@ def all_conversions():
 
 
 def color_spaces():
-    # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
-    # So we need to add the path manually to sys.path
-    import os
-    import sys
-    from pathlib import Path
-
-    sys.path.append(
-        os.path.join(
-            Path(os.path.abspath(__file__)).parent.parent.parent,
-            "Cool/src/Cool/ColorSpaces",
-        )
-    )
-    # End of HACK
-
     import generator_colors
 
     return generator_colors.color_spaces()
+
+
+def color_and_greyscale_spaces():
+    spaces = color_spaces()
+    spaces.append(
+        generator_colors.ColorSpace(
+            name_in_code="Float",
+            user_facing_name="Float",
+        ),
+    )
+    return spaces
 
 
 def primitive_types_for_color_spaces() -> List[PrimitiveType]:
@@ -352,11 +381,25 @@ def alpha_spaces():
     return ["", "_StraightA", "_PremultipliedA"]
 
 
+def vec_type(dimension: int):
+    if dimension == 1:
+        return "float"
+    return f"vec{dimension}"
+
+
+def dimension(color: generator_colors.ColorSpace):
+    if color.name_in_code == "Float":
+        return 1
+    return 3
+
+
 def implicit_color_conversions():
     from itertools import product
 
     res = ""
-    for color1, color2 in product(color_spaces(), color_spaces()):
+    for color1, color2 in product(
+        color_and_greyscale_spaces(), color_and_greyscale_spaces()
+    ):
         for alpha1, alpha2 in product(alpha_spaces(), alpha_spaces()):
             type1 = color1.name_in_code + alpha1
             type2 = color2.name_in_code + alpha2
@@ -388,84 +431,84 @@ def implicit_color_conversions():
             match alpha1, alpha2:
                 case "", "":
                     gen_code(
-                        in_vec="vec3",
-                        out_vec="vec3",
+                        in_vec=vec_type(dimension(color1)),
+                        out_vec=vec_type(dimension(color2)),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from);
                         return to;
                     """,
                     )
                 case "_StraightA", "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
                     gen_code(
-                        in_vec="vec4",
-                        out_vec="vec3",
+                        in_vec=vec_type(dimension(color1) + 1),
+                        out_vec=vec_type(dimension(color2)),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from.xyz);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz);
                         return to;
                     """,
                     )
                 case "_PremultipliedA", "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
                     gen_code(
-                        in_vec="vec4",
-                        out_vec="vec3",
+                        in_vec=vec_type(dimension(color1) + 1),
+                        out_vec=vec_type(dimension(color2)),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from.xyz / saturate(from.a));
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz / saturate(from.a));
                         return to;
                     """,
                     )
                 case "", "_StraightA":
                     gen_code(
-                        in_vec="vec3",
-                        out_vec="vec4",
+                        in_vec=vec_type(dimension(color1)),
+                        out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from);
-                        return vec4(to, coollab_global_alpha);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from);
+                        return {vec_type(dimension(color2)+1)}(to, 1.);
                     """,
                     )
                 case "", "_PremultipliedA":
                     gen_code(
-                        in_vec="vec3",
-                        out_vec="vec4",
+                        in_vec=vec_type(dimension(color1)),
+                        out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        {vec_type(dimension(color2))} to = {color_conversion}(from);
+                        return {vec_type(dimension(color2)+1)}(to, 1.);
                     """,
                     )
                 case "_StraightA", "_StraightA":
                     gen_code(
-                        in_vec="vec4",
-                        out_vec="vec4",
+                        in_vec=vec_type(dimension(color1) + 1),
+                        out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from.xyz);
-                        return vec4(to, from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz);
+                        return {vec_type(dimension(color2)+1)}(to, from.a);
                     """,
                     )
                 case "_PremultipliedA", "_PremultipliedA":
                     gen_code(
-                        in_vec="vec4",
-                        out_vec="vec4",
+                        in_vec=vec_type(dimension(color1) + 1),
+                        out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = {color_conversion}(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz / saturate(from.a));
+                        return {vec_type(dimension(color2)+1)}(to * saturate(from.a), from.a);
                     """,
                     )
                 case "_PremultipliedA", "_StraightA":
                     gen_code(
-                        in_vec="vec4",
-                        out_vec="vec4",
+                        in_vec=vec_type(dimension(color1) + 1),
+                        out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from.xyz / saturate(from.a));
-                        return vec4(to, from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz / saturate(from.a));
+                        return {vec_type(dimension(color2)+1)}(to, from.a);
                     """,
                     )
                 case "_StraightA", "_PremultipliedA":
                     gen_code(
-                        in_vec="vec4",
-                        out_vec="vec4",
+                        in_vec=vec_type(dimension(color1) + 1),
+                        out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        vec3 to = {color_conversion}(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz);
+                        return {vec_type(dimension(color2)+1)}(to * saturate(from.a), from.a);
                     """,
                     )
     return res
@@ -473,11 +516,40 @@ def implicit_color_conversions():
 
 def has_an_alpha_channel():
     res = ""
-    for color_space in color_spaces():
+    for color_space in color_and_greyscale_spaces():
         res += f"case PrimitiveType::{color_space.name_in_code}_StraightA:\n"
         res += f"case PrimitiveType::{color_space.name_in_code}_PremultipliedA:\n"
 
     res += "return true;"
+    return res
+
+
+def has_straight_alpha_channel():
+    res = ""
+    for color_space in color_and_greyscale_spaces():
+        res += f"case PrimitiveType::{color_space.name_in_code}_StraightA:\n"
+
+    res += "return true;"
+    return res
+
+
+def with_straight_alpha():
+    res = ""
+    for color_space in color_and_greyscale_spaces():
+        res += f"""
+case PrimitiveType::{color_space.name_in_code}:
+    return PrimitiveType::{color_space.name_in_code}_StraightA;"""
+
+    return res
+
+
+def with_straight_alpha_if_has_no_alpha():
+    res = ""
+    for color_space in color_and_greyscale_spaces():
+        res += f"""
+case PrimitiveType::{color_space.name_in_code}:
+    return PrimitiveType::{color_space.name_in_code}_StraightA;"""
+
     return res
 
 
@@ -490,6 +562,15 @@ def is_color_type():
     return "\n ||".join(
         map(lambda x: code(x[0], x[1]), product(color_spaces(), alpha_spaces()))
     )
+
+
+def is_greyscale_type():
+    from itertools import product
+
+    def code(alpha_space):
+        return f"type == PrimitiveType::Float{alpha_space}"
+
+    return "\n ||".join(map(code, alpha_spaces()))
 
 
 def primitive_types_enum_members():
@@ -705,7 +786,11 @@ if __name__ == "__main__":
             string_listing_the_parsed_types,
             implicit_color_conversions,
             has_an_alpha_channel,
+            has_straight_alpha_channel,
+            with_straight_alpha,
+            with_straight_alpha_if_has_no_alpha,
             is_color_type,
+            is_greyscale_type,
             implicit_conversions,
             can_convert,
         ],
