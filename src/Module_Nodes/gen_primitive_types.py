@@ -428,6 +428,8 @@ def implicit_color_conversions():
                 if color1 != color2
                 else ""
             )
+            color_components = "xyz" if color1.name_in_code != "Float" else "x"
+            alpha_component = "a" if color1.name_in_code != "Float" else "y"
             match alpha1, alpha2:
                 case "", "":
                     gen_code(
@@ -443,7 +445,7 @@ def implicit_color_conversions():
                         in_vec=vec_type(dimension(color1) + 1),
                         out_vec=vec_type(dimension(color2)),
                         implementation=f"""
-                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components});
                         return to;
                     """,
                     )
@@ -452,7 +454,7 @@ def implicit_color_conversions():
                         in_vec=vec_type(dimension(color1) + 1),
                         out_vec=vec_type(dimension(color2)),
                         implementation=f"""
-                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz / saturate(from.a));
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components} / saturate(from.{alpha_component}));
                         return to;
                     """,
                     )
@@ -479,8 +481,8 @@ def implicit_color_conversions():
                         in_vec=vec_type(dimension(color1) + 1),
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz);
-                        return {vec_type(dimension(color2)+1)}(to, from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components});
+                        return {vec_type(dimension(color2)+1)}(to, from.{alpha_component});
                     """,
                     )
                 case "_PremultipliedA", "_PremultipliedA":
@@ -489,8 +491,8 @@ def implicit_color_conversions():
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz / saturate(from.a));
-                        return {vec_type(dimension(color2)+1)}(to * saturate(from.a), from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components} / saturate(from.{alpha_component}));
+                        return {vec_type(dimension(color2)+1)}(to * saturate(from.{alpha_component}), from.{alpha_component});
                     """,
                     )
                 case "_PremultipliedA", "_StraightA":
@@ -498,8 +500,8 @@ def implicit_color_conversions():
                         in_vec=vec_type(dimension(color1) + 1),
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz / saturate(from.a));
-                        return {vec_type(dimension(color2)+1)}(to, from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components} / saturate(from.{alpha_component}));
+                        return {vec_type(dimension(color2)+1)}(to, from.{alpha_component});
                     """,
                     )
                 case "_StraightA", "_PremultipliedA":
@@ -507,8 +509,8 @@ def implicit_color_conversions():
                         in_vec=vec_type(dimension(color1) + 1),
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        {vec_type(dimension(color2))} to = {color_conversion}(from.xyz);
-                        return {vec_type(dimension(color2)+1)}(to * saturate(from.a), from.a);
+                        {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components});
+                        return {vec_type(dimension(color2)+1)}(to * saturate(from.{alpha_component}), from.{alpha_component});
                     """,
                     )
     return res

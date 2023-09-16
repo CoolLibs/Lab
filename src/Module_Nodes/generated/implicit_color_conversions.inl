@@ -2765,7 +2765,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::CIELAB)
                             vec3 Coollab_CIELAB_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_from_Float(from.xyz);
+                        vec3 to = Cool_CIELAB_from_Float(from.x);
                         return to;
                     
                             }
@@ -2781,8 +2781,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::CIELAB_Straig
                             vec4 Coollab_CIELAB_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_from_Float(from.xyz);
-                        return vec4(to, from.a);
+                        vec3 to = Cool_CIELAB_from_Float(from.x);
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -2797,8 +2797,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::CIELAB_Premul
                             vec4 Coollab_CIELAB_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_from_Float(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_CIELAB_from_Float(from.x);
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -2813,7 +2813,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::CIELAB)
                             vec3 Coollab_CIELAB_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_from_Float(from.xyz / saturate(from.a));
+                        vec3 to = Cool_CIELAB_from_Float(from.x / saturate(from.y));
                         return to;
                     
                             }
@@ -2829,8 +2829,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::CIELAB_S
                             vec4 Coollab_CIELAB_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_CIELAB_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to, from.a);
+                        vec3 to = Cool_CIELAB_from_Float(from.x / saturate(from.y));
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -2846,8 +2846,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::CIELAB_P
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_CIELAB_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_CIELAB_from_Float(from.x / saturate(from.y));
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -2910,7 +2910,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::LinearRGB)
                             vec3 Coollab_LinearRGB_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Float(from.xyz);
+                        vec3 to = Cool_LinearRGB_from_Float(from.x);
                         return to;
                     
                             }
@@ -2926,8 +2926,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::LinearRGB_Str
                             vec4 Coollab_LinearRGB_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Float(from.xyz);
-                        return vec4(to, from.a);
+                        vec3 to = Cool_LinearRGB_from_Float(from.x);
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -2942,8 +2942,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::LinearRGB_Pre
                             vec4 Coollab_LinearRGB_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Float(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_LinearRGB_from_Float(from.x);
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -2958,7 +2958,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::LinearRG
                             vec3 Coollab_LinearRGB_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Float(from.xyz / saturate(from.a));
+                        vec3 to = Cool_LinearRGB_from_Float(from.x / saturate(from.y));
                         return to;
                     
                             }
@@ -2974,8 +2974,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::LinearRG
                             vec4 Coollab_LinearRGB_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to, from.a);
+                        vec3 to = Cool_LinearRGB_from_Float(from.x / saturate(from.y));
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -2991,8 +2991,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::LinearRG
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_LinearRGB_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_LinearRGB_from_Float(from.x / saturate(from.y));
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -3055,7 +3055,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::sRGB)
                             vec3 Coollab_sRGB_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Float(from.xyz);
+                        vec3 to = Cool_sRGB_from_Float(from.x);
                         return to;
                     
                             }
@@ -3071,8 +3071,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::sRGB_Straight
                             vec4 Coollab_sRGB_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Float(from.xyz);
-                        return vec4(to, from.a);
+                        vec3 to = Cool_sRGB_from_Float(from.x);
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -3087,8 +3087,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::sRGB_Premulti
                             vec4 Coollab_sRGB_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Float(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_sRGB_from_Float(from.x);
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -3103,7 +3103,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 Coollab_sRGB_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Float(from.xyz / saturate(from.a));
+                        vec3 to = Cool_sRGB_from_Float(from.x / saturate(from.y));
                         return to;
                     
                             }
@@ -3119,8 +3119,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::sRGB_Str
                             vec4 Coollab_sRGB_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to, from.a);
+                        vec3 to = Cool_sRGB_from_Float(from.x / saturate(from.y));
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -3136,8 +3136,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::sRGB_Pre
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_sRGB_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_sRGB_from_Float(from.x / saturate(from.y));
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -3200,7 +3200,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::HSLuv)
                             vec3 Coollab_HSLuv_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_from_Float(from.xyz);
+                        vec3 to = Cool_HSLuv_from_Float(from.x);
                         return to;
                     
                             }
@@ -3216,8 +3216,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::HSLuv_Straigh
                             vec4 Coollab_HSLuv_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_from_Float(from.xyz);
-                        return vec4(to, from.a);
+                        vec3 to = Cool_HSLuv_from_Float(from.x);
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -3232,8 +3232,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::HSLuv_Premult
                             vec4 Coollab_HSLuv_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_from_Float(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_HSLuv_from_Float(from.x);
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -3248,7 +3248,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::HSLuv)
                             vec3 Coollab_HSLuv_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_from_Float(from.xyz / saturate(from.a));
+                        vec3 to = Cool_HSLuv_from_Float(from.x / saturate(from.y));
                         return to;
                     
                             }
@@ -3264,8 +3264,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::HSLuv_St
                             vec4 Coollab_HSLuv_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_HSLuv_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to, from.a);
+                        vec3 to = Cool_HSLuv_from_Float(from.x / saturate(from.y));
+                        return vec4(to, from.y);
                     
                             }
                             )STR",
@@ -3281,8 +3281,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::HSLuv_Pr
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_HSLuv_from_Float(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_HSLuv_from_Float(from.x / saturate(from.y));
+                        return vec4(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -3329,7 +3329,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Float)
                             float Coollab_Float_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        float to = (from.xyz);
+                        float to = (from.x);
                         return to;
                     
                             }
@@ -3345,8 +3345,8 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Float_Premult
                             vec2 Coollab_Float_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
                             {
                                 
-                        float to = (from.xyz);
-                        return vec2(to * saturate(from.a), from.a);
+                        float to = (from.x);
+                        return vec2(to * saturate(from.y), from.y);
                     
                             }
                             )STR",
@@ -3361,7 +3361,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Float)
                             float Coollab_Float_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        float to = (from.xyz / saturate(from.a));
+                        float to = (from.x / saturate(from.y));
                         return to;
                     
                             }
@@ -3377,8 +3377,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Float_St
                             vec2 Coollab_Float_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        float to = (from.xyz / saturate(from.a));
-                        return vec2(to, from.a);
+                        float to = (from.x / saturate(from.y));
+                        return vec2(to, from.y);
                     
                             }
                             )STR",
