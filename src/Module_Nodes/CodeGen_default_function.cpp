@@ -161,6 +161,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
             return *func;
     }
 
+    if (!is_greyscale(signature)) // Without this, Greyscale would match the Image signature and use this default function, but we want to use another default function for Greyscale (the one that comes after this).
     {
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::UV, PrimitiveType::sRGB},
