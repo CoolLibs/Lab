@@ -51,4 +51,47 @@ auto is_color_or_greyscale_type(PrimitiveType type) -> bool
     return is_greyscale_type(type) || is_color_type(type);
 }
 
+auto has_an_alpha_channel(PrimitiveType type) -> bool
+{
+    switch (type)
+    {
+#include "generated/has_an_alpha_channel.inl"
+    default:
+        return false;
+    }
+}
+
+auto has_straight_alpha_channel(PrimitiveType type) -> bool
+{
+    switch (type)
+    {
+#include "generated/has_straight_alpha_channel.inl"
+    default:
+        return false;
+    }
+}
+
+auto with_straight_alpha(PrimitiveType type) -> PrimitiveType
+{
+    switch (type)
+    {
+#include "generated/with_straight_alpha.inl"
+    default:
+    {
+        assert(false && "This type is not a color or greyscale, or already has an alpha channel.");
+        return PrimitiveType::LinearRGB_StraightA;
+    }
+    }
+}
+
+auto with_straight_alpha_if_has_no_alpha(PrimitiveType type) -> PrimitiveType
+{
+    switch (type)
+    {
+#include "generated/with_straight_alpha.inl"
+    default:
+        return type;
+    }
+}
+
 } // namespace Lab

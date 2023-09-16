@@ -462,7 +462,7 @@ def implicit_color_conversions():
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
                         {vec_type(dimension(color2))} to = {color_conversion}(from);
-                        return {vec_type(dimension(color2)+1)}(to, coollab_global_alpha);
+                        return {vec_type(dimension(color2)+1)}(to, 1.);
                     """,
                     )
                 case "", "_PremultipliedA":
@@ -471,7 +471,7 @@ def implicit_color_conversions():
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
                         {vec_type(dimension(color2))} to = {color_conversion}(from);
-                        return {vec_type(dimension(color2)+1)}(to, 1.) * coollab_global_alpha;
+                        return {vec_type(dimension(color2)+1)}(to, 1.);
                     """,
                     )
                 case "_StraightA", "_StraightA":
@@ -521,6 +521,35 @@ def has_an_alpha_channel():
         res += f"case PrimitiveType::{color_space.name_in_code}_PremultipliedA:\n"
 
     res += "return true;"
+    return res
+
+
+def has_straight_alpha_channel():
+    res = ""
+    for color_space in color_and_greyscale_spaces():
+        res += f"case PrimitiveType::{color_space.name_in_code}_StraightA:\n"
+
+    res += "return true;"
+    return res
+
+
+def with_straight_alpha():
+    res = ""
+    for color_space in color_and_greyscale_spaces():
+        res += f"""
+case PrimitiveType::{color_space.name_in_code}:
+    return PrimitiveType::{color_space.name_in_code}_StraightA;"""
+
+    return res
+
+
+def with_straight_alpha_if_has_no_alpha():
+    res = ""
+    for color_space in color_and_greyscale_spaces():
+        res += f"""
+case PrimitiveType::{color_space.name_in_code}:
+    return PrimitiveType::{color_space.name_in_code}_StraightA;"""
+
     return res
 
 
@@ -757,6 +786,9 @@ if __name__ == "__main__":
             string_listing_the_parsed_types,
             implicit_color_conversions,
             has_an_alpha_channel,
+            has_straight_alpha_channel,
+            with_straight_alpha,
+            with_straight_alpha_if_has_no_alpha,
             is_color_type,
             is_greyscale_type,
             implicit_conversions,

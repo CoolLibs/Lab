@@ -14,7 +14,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::CIELAB_StraightA)
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -30,7 +30,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::CIELAB_PremultipliedA)
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -126,7 +126,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::LinearRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_CIELAB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -142,7 +142,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::LinearRGB_Premultiplie
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_CIELAB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -271,7 +271,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::sRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_sRGB_from_CIELAB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -287,7 +287,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::sRGB_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_sRGB_from_CIELAB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -416,7 +416,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::HSLuv_StraightA)
                             {
                                 
                         vec3 to = Cool_HSLuv_from_CIELAB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -432,7 +432,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::HSLuv_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_HSLuv_from_CIELAB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -561,7 +561,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::Float_StraightA)
                             {
                                 
                         float to = Cool_Float_from_CIELAB(from);
-                        return vec2(to, coollab_global_alpha);
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -577,7 +577,7 @@ if (from == PrimitiveType::CIELAB && to == PrimitiveType::Float_PremultipliedA)
                             {
                                 
                         float to = Cool_Float_from_CIELAB(from);
-                        return vec2(to, 1.) * coollab_global_alpha;
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -706,7 +706,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::CIELAB_StraightA)
                             {
                                 
                         vec3 to = Cool_CIELAB_from_LinearRGB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -722,7 +722,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::CIELAB_Premultiplie
                             {
                                 
                         vec3 to = Cool_CIELAB_from_LinearRGB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -835,7 +835,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::LinearRGB_StraightA
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -851,7 +851,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::LinearRGB_Premultip
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -947,7 +947,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::sRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_sRGB_from_LinearRGB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -963,7 +963,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::sRGB_PremultipliedA
                             {
                                 
                         vec3 to = Cool_sRGB_from_LinearRGB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1092,7 +1092,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::HSLuv_StraightA)
                             {
                                 
                         vec3 to = Cool_HSLuv_from_LinearRGB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1108,7 +1108,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::HSLuv_Premultiplied
                             {
                                 
                         vec3 to = Cool_HSLuv_from_LinearRGB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1237,7 +1237,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::Float_StraightA)
                             {
                                 
                         float to = Cool_Float_from_LinearRGB(from);
-                        return vec2(to, coollab_global_alpha);
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -1253,7 +1253,7 @@ if (from == PrimitiveType::LinearRGB && to == PrimitiveType::Float_Premultiplied
                             {
                                 
                         float to = Cool_Float_from_LinearRGB(from);
-                        return vec2(to, 1.) * coollab_global_alpha;
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -1382,7 +1382,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::CIELAB_StraightA)
                             {
                                 
                         vec3 to = Cool_CIELAB_from_sRGB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1398,7 +1398,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::CIELAB_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_CIELAB_from_sRGB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1527,7 +1527,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::LinearRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_sRGB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1543,7 +1543,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::LinearRGB_PremultipliedA
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_sRGB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1656,7 +1656,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::sRGB_StraightA)
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1672,7 +1672,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::sRGB_PremultipliedA)
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1768,7 +1768,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::HSLuv_StraightA)
                             {
                                 
                         vec3 to = Cool_HSLuv_from_sRGB(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1784,7 +1784,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::HSLuv_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_HSLuv_from_sRGB(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -1913,7 +1913,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::Float_StraightA)
                             {
                                 
                         float to = Cool_Float_from_sRGB(from);
-                        return vec2(to, coollab_global_alpha);
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -1929,7 +1929,7 @@ if (from == PrimitiveType::sRGB && to == PrimitiveType::Float_PremultipliedA)
                             {
                                 
                         float to = Cool_Float_from_sRGB(from);
-                        return vec2(to, 1.) * coollab_global_alpha;
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -2058,7 +2058,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::CIELAB_StraightA)
                             {
                                 
                         vec3 to = Cool_CIELAB_from_HSLuv(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2074,7 +2074,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::CIELAB_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_CIELAB_from_HSLuv(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2203,7 +2203,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::LinearRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_HSLuv(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2219,7 +2219,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::LinearRGB_Premultiplied
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_HSLuv(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2348,7 +2348,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::sRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_sRGB_from_HSLuv(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2364,7 +2364,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::sRGB_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_sRGB_from_HSLuv(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2477,7 +2477,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::HSLuv_StraightA)
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2493,7 +2493,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::HSLuv_PremultipliedA)
                             {
                                 
                         vec3 to = (from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2589,7 +2589,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::Float_StraightA)
                             {
                                 
                         float to = Cool_Float_from_HSLuv(from);
-                        return vec2(to, coollab_global_alpha);
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -2605,7 +2605,7 @@ if (from == PrimitiveType::HSLuv && to == PrimitiveType::Float_PremultipliedA)
                             {
                                 
                         float to = Cool_Float_from_HSLuv(from);
-                        return vec2(to, 1.) * coollab_global_alpha;
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -2734,7 +2734,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::CIELAB_StraightA)
                             {
                                 
                         vec3 to = Cool_CIELAB_from_Float(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2750,7 +2750,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::CIELAB_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_CIELAB_from_Float(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2879,7 +2879,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::LinearRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_Float(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -2895,7 +2895,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::LinearRGB_Premultiplied
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_Float(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -3024,7 +3024,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::sRGB_StraightA)
                             {
                                 
                         vec3 to = Cool_sRGB_from_Float(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -3040,7 +3040,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::sRGB_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_sRGB_from_Float(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -3169,7 +3169,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::HSLuv_StraightA)
                             {
                                 
                         vec3 to = Cool_HSLuv_from_Float(from);
-                        return vec4(to, coollab_global_alpha);
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -3185,7 +3185,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::HSLuv_PremultipliedA)
                             {
                                 
                         vec3 to = Cool_HSLuv_from_Float(from);
-                        return vec4(to, 1.) * coollab_global_alpha;
+                        return vec4(to, 1.);
                     
                             }
                             )STR",
@@ -3298,7 +3298,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::Float_StraightA)
                             {
                                 
                         float to = (from);
-                        return vec2(to, coollab_global_alpha);
+                        return vec2(to, 1.);
                     
                             }
                             )STR",
@@ -3314,7 +3314,7 @@ if (from == PrimitiveType::Float && to == PrimitiveType::Float_PremultipliedA)
                             {
                                 
                         float to = (from);
-                        return vec2(to, 1.) * coollab_global_alpha;
+                        return vec2(to, 1.);
                     
                             }
                             )STR",

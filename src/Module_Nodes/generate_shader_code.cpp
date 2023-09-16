@@ -87,8 +87,6 @@ struct CoollabContext
     vec2 uv;
 }};
 
-float coollab_global_alpha = 1.;
-
 {output_indices_declarations}
 
 {main_function_implementation}
