@@ -1,6 +1,8 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-CIELAB_PremultipliedA main(CIELAB_PremultipliedA Over, CIELAB_PremultipliedA Under)
+INPUT CIELAB_PremultipliedA `Background`;
+
+CIELAB_PremultipliedA main(CIELAB_PremultipliedA Foreground)
 {
-    return Over + (1. - Over.a) * Under;
+    return Foreground + (1. - Foreground.a) * `Background`;
 }

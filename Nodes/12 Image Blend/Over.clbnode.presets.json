@@ -2,42 +2,14 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "13b45a9d-9a60-4f54-98e4-0d74826b10b3",
+                "first": "ef366185-eeb3-4c86-92e6-a139302c3864",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
                             "index": 8,
                             "data": {
-                                "Name": "Over",
-                                "Value": {
-                                    "sRGB, Straight alpha": {
-                                        "x": 0.0,
-                                        "y": 0.0,
-                                        "z": 0.0,
-                                        "w": 1.0
-                                    }
-                                },
-                                "Metadata": {
-                                    "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB, Straight alpha": {
-                                        "x": 0.0,
-                                        "y": 0.0,
-                                        "z": 0.0,
-                                        "w": 1.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
-                                }
-                            }
-                        },
-                        {
-                            "index": 8,
-                            "data": {
-                                "Name": "Under",
+                                "Name": "Background",
                                 "Value": {
                                     "sRGB, Straight alpha": {
                                         "x": 0.0,
