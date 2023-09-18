@@ -4,6 +4,10 @@ Coollab is a node-based generative-art software where you compose small building
 
 ## On the user side
 
+[TODO refaire cette image en aillant les bons noms d'inputs sur les nodes + avoir le dernier node en main node]
+![Alt text](<demo V1.png>)
+![Alt text](images/img(0).png)
+
 [Comparaison uv distortion entre Blender et Coollab, l'ordre n'est pas le même, + intuitif / déclaratif dans Coollab]
 
 [Show fractal noise and the higher-order function approach: passing a noise function to the fractal noise node + this allows creative uses: people passing photos in there and having a nice repetition effect]

@@ -195,13 +195,13 @@
                                                                     }
                                                                 },
                                                                 {
-                                                                    "key": "737082f8-ab16-44be-a270-e68c560c054c",
+                                                                    "key": "9fd6d27f-2b92-4864-85c9-d86e66505b76",
                                                                     "value": {
                                                                         "Is Dirty": false
                                                                     }
                                                                 },
                                                                 {
-                                                                    "key": "9fd6d27f-2b92-4864-85c9-d86e66505b76",
+                                                                    "key": "737082f8-ab16-44be-a270-e68c560c054c",
                                                                     "value": {
                                                                         "Is Dirty": false
                                                                     }
@@ -331,21 +331,21 @@
                                                                                                                 "data": {
                                                                                                                     "Underlying container": [
                                                                                                                         {
-                                                                                                                            "key": "aca95d1b-4d82-4b16-bf70-3d9b68cb89ce",
+                                                                                                                            "key": "02e781df-a692-49d5-924c-4bbb16fa8b7d",
                                                                                                                             "value": {
-                                                                                                                                "Name": "Strength",
-                                                                                                                                "Value": 0.026000000536441804,
+                                                                                                                                "Name": "Time",
+                                                                                                                                "Value": 0.0,
                                                                                                                                 "Metadata": {
                                                                                                                                     "Bounds": {
-                                                                                                                                        "Has min bound": true,
+                                                                                                                                        "Has min bound": false,
                                                                                                                                         "Min": 0.0,
                                                                                                                                         "Has max bound": false,
                                                                                                                                         "Max": 1.0,
-                                                                                                                                        "Drag speed": 0.0010000000474974514,
+                                                                                                                                        "Drag speed": 0.009999999776482582,
                                                                                                                                         "Use slider": false
                                                                                                                                     }
                                                                                                                                 },
-                                                                                                                                "Default Value": 0.06499999761581421,
+                                                                                                                                "Default Value": 0.0,
                                                                                                                                 "Default Metadata": {
                                                                                                                                     "Bounds": {
                                                                                                                                         "Has min bound": false,
@@ -387,21 +387,21 @@
                                                                                                                             }
                                                                                                                         },
                                                                                                                         {
-                                                                                                                            "key": "02e781df-a692-49d5-924c-4bbb16fa8b7d",
+                                                                                                                            "key": "aca95d1b-4d82-4b16-bf70-3d9b68cb89ce",
                                                                                                                             "value": {
-                                                                                                                                "Name": "Time",
-                                                                                                                                "Value": 0.0,
+                                                                                                                                "Name": "Strength",
+                                                                                                                                "Value": 0.026000000536441804,
                                                                                                                                 "Metadata": {
                                                                                                                                     "Bounds": {
-                                                                                                                                        "Has min bound": false,
+                                                                                                                                        "Has min bound": true,
                                                                                                                                         "Min": 0.0,
                                                                                                                                         "Has max bound": false,
                                                                                                                                         "Max": 1.0,
-                                                                                                                                        "Drag speed": 0.009999999776482582,
+                                                                                                                                        "Drag speed": 0.0010000000474974514,
                                                                                                                                         "Use slider": false
                                                                                                                                     }
                                                                                                                                 },
-                                                                                                                                "Default Value": 0.0,
+                                                                                                                                "Default Value": 0.06499999761581421,
                                                                                                                                 "Default Metadata": {
                                                                                                                                     "Bounds": {
                                                                                                                                         "Has min bound": false,
@@ -639,34 +639,6 @@
                                                                                                                             }
                                                                                                                         },
                                                                                                                         {
-                                                                                                                            "key": "806ccd91-ad75-49ae-8e3d-75d11c9b3f60",
-                                                                                                                            "value": {
-                                                                                                                                "Name": "S",
-                                                                                                                                "Value": 1.0,
-                                                                                                                                "Metadata": {
-                                                                                                                                    "Bounds": {
-                                                                                                                                        "Has min bound": false,
-                                                                                                                                        "Min": 0.0,
-                                                                                                                                        "Has max bound": false,
-                                                                                                                                        "Max": 1.0,
-                                                                                                                                        "Drag speed": 0.009999999776482582,
-                                                                                                                                        "Use slider": true
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Default Value": 0.5,
-                                                                                                                                "Default Metadata": {
-                                                                                                                                    "Bounds": {
-                                                                                                                                        "Has min bound": false,
-                                                                                                                                        "Min": 0.0,
-                                                                                                                                        "Has max bound": false,
-                                                                                                                                        "Max": 1.0,
-                                                                                                                                        "Drag speed": 0.009999999776482582,
-                                                                                                                                        "Use slider": false
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        },
-                                                                                                                        {
                                                                                                                             "key": "92692ff4-49e4-4682-8b88-373d8459fe8c",
                                                                                                                             "value": {
                                                                                                                                 "Name": "Thickness",
@@ -682,6 +654,34 @@
                                                                                                                                     }
                                                                                                                                 },
                                                                                                                                 "Default Value": 0.029999999329447748,
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Bounds": {
+                                                                                                                                        "Has min bound": false,
+                                                                                                                                        "Min": 0.0,
+                                                                                                                                        "Has max bound": false,
+                                                                                                                                        "Max": 1.0,
+                                                                                                                                        "Drag speed": 0.009999999776482582,
+                                                                                                                                        "Use slider": false
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "key": "806ccd91-ad75-49ae-8e3d-75d11c9b3f60",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "S",
+                                                                                                                                "Value": 1.0,
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Bounds": {
+                                                                                                                                        "Has min bound": false,
+                                                                                                                                        "Min": 0.0,
+                                                                                                                                        "Has max bound": false,
+                                                                                                                                        "Max": 1.0,
+                                                                                                                                        "Drag speed": 0.009999999776482582,
+                                                                                                                                        "Use slider": true
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Value": 0.5,
                                                                                                                                 "Default Metadata": {
                                                                                                                                     "Bounds": {
                                                                                                                                         "Has min bound": false,
@@ -936,90 +936,6 @@
                                                     }
                                                 },
                                                 {
-                                                    "key": "bab18d02-d111-4bb0-9ac4-b9820bb6d73f",
-                                                    "value": {
-                                                        "pimpl": {
-                                                            "polymorphic_id": 2,
-                                                            "ptr_wrapper": {
-                                                                "valid": 1,
-                                                                "data": {
-                                                                    "Node": {
-                                                                        "Name": "",
-                                                                        "Definition": {
-                                                                            "Definition name": "Outline",
-                                                                            "Category name": "Shape Modifier"
-                                                                        },
-                                                                        "Input Pins": [
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Shape",
-                                                                                    "ID": "31572fe4-8928-40f4-89dd-9c79be1c1919"
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Thickness",
-                                                                                    "ID": "41a236be-9fac-4635-90db-41fff5f630b6"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Output Pins": [
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "OUT",
-                                                                                    "ID": "b74bfcd2-5a2f-429c-b8cd-c5c8f57dad31"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Value inputs": [
-                                                                            {
-                                                                                "index": 2,
-                                                                                "data": {
-                                                                                    "Name": "Thickness",
-                                                                                    "Default Variable ID": {
-                                                                                        "Underlying": {
-                                                                                            "ptr_wrapper": {
-                                                                                                "id": 2147483659,
-                                                                                                "data": {
-                                                                                                    "UUID": "92692ff4-49e4-4682-8b88-373d8459fe8c",
-                                                                                                    "Registry": {
-                                                                                                        "index": 0,
-                                                                                                        "data": {
-                                                                                                            "ptr_wrapper": {
-                                                                                                                "id": 8
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
-                                                                                    "Dirty Flag": {
-                                                                                        "ID": {
-                                                                                            "Underlying": {
-                                                                                                "ptr_wrapper": {
-                                                                                                    "id": 6
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "desired color space": 0
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Number of main input pins": 0,
-                                                                        "Number of function inputs": 1,
-                                                                        "Chosen Any type": {
-                                                                            "nullopt": true
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                {
                                                     "key": "ecd55f5f-7c34-4af3-99ea-29e136f6fbec",
                                                     "value": {
                                                         "pimpl": {
@@ -1063,7 +979,7 @@
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
-                                                                                                "id": 2147483660,
+                                                                                                "id": 2147483659,
                                                                                                 "data": {
                                                                                                     "UUID": "d04cf279-6051-4cfa-bcea-5a136d1ea13d",
                                                                                                     "Registry": {
@@ -1098,14 +1014,14 @@
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
-                                                                                                "id": 2147483661,
+                                                                                                "id": 2147483660,
                                                                                                 "data": {
                                                                                                     "UUID": "3edb5a07-a531-417a-8d7a-779da48f5905",
                                                                                                     "Registry": {
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 2147483662,
+                                                                                                                "id": 2147483661,
                                                                                                                 "data": {
                                                                                                                     "Underlying container": [
                                                                                                                         {
@@ -1205,6 +1121,90 @@
                                                                         ],
                                                                         "Number of main input pins": 0,
                                                                         "Number of function inputs": 0,
+                                                                        "Chosen Any type": {
+                                                                            "nullopt": true
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "key": "bab18d02-d111-4bb0-9ac4-b9820bb6d73f",
+                                                    "value": {
+                                                        "pimpl": {
+                                                            "polymorphic_id": 2,
+                                                            "ptr_wrapper": {
+                                                                "valid": 1,
+                                                                "data": {
+                                                                    "Node": {
+                                                                        "Name": "",
+                                                                        "Definition": {
+                                                                            "Definition name": "Outline",
+                                                                            "Category name": "Shape Modifier"
+                                                                        },
+                                                                        "Input Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Shape",
+                                                                                    "ID": "31572fe4-8928-40f4-89dd-9c79be1c1919"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Thickness",
+                                                                                    "ID": "41a236be-9fac-4635-90db-41fff5f630b6"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Output Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "OUT",
+                                                                                    "ID": "b74bfcd2-5a2f-429c-b8cd-c5c8f57dad31"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Value inputs": [
+                                                                            {
+                                                                                "index": 2,
+                                                                                "data": {
+                                                                                    "Name": "Thickness",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483662,
+                                                                                                "data": {
+                                                                                                    "UUID": "92692ff4-49e4-4682-8b88-373d8459fe8c",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 8
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 6
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Number of main input pins": 0,
+                                                                        "Number of function inputs": 1,
                                                                         "Chosen Any type": {
                                                                             "nullopt": true
                                                                         }
@@ -1414,7 +1414,7 @@
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 14
+                                                                                                                "id": 13
                                                                                                             }
                                                                                                         }
                                                                                                     }
@@ -1539,7 +1539,7 @@
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 14
+                                                                                                                "id": 13
                                                                                                             }
                                                                                                         }
                                                                                                     }
@@ -2085,172 +2085,6 @@
                                                     }
                                                 },
                                                 {
-                                                    "key": "3d0b4d27-49bf-4f35-ac8b-9e67a532909e",
-                                                    "value": {
-                                                        "pimpl": {
-                                                            "polymorphic_id": 2,
-                                                            "ptr_wrapper": {
-                                                                "valid": 1,
-                                                                "data": {
-                                                                    "Node": {
-                                                                        "Name": "",
-                                                                        "Definition": {
-                                                                            "Definition name": "Filter Tone",
-                                                                            "Category name": "Image Modifier (Post Process)"
-                                                                        },
-                                                                        "Input Pins": [
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "color",
-                                                                                    "ID": "f7a59d47-0781-455a-809f-65636cba711e"
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Shadows",
-                                                                                    "ID": "ae171571-d4df-4ca1-8e18-f1da41aba76b"
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Midtones",
-                                                                                    "ID": "5cc80c78-7030-4e52-8796-35bf4414ec74"
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Highlights",
-                                                                                    "ID": "e58fb166-f0b7-477d-8095-bc2499920364"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Output Pins": [
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "OUT",
-                                                                                    "ID": "5ed1f2c6-982c-4445-b00e-3aebb38c8867"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Value inputs": [
-                                                                            {
-                                                                                "index": 2,
-                                                                                "data": {
-                                                                                    "Name": "Shadows",
-                                                                                    "Default Variable ID": {
-                                                                                        "Underlying": {
-                                                                                            "ptr_wrapper": {
-                                                                                                "id": 2147483676,
-                                                                                                "data": {
-                                                                                                    "UUID": "94089cc2-116b-4845-8de6-a0b6735d5501",
-                                                                                                    "Registry": {
-                                                                                                        "index": 0,
-                                                                                                        "data": {
-                                                                                                            "ptr_wrapper": {
-                                                                                                                "id": 8
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
-                                                                                    "Dirty Flag": {
-                                                                                        "ID": {
-                                                                                            "Underlying": {
-                                                                                                "ptr_wrapper": {
-                                                                                                    "id": 6
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "desired color space": 0
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "index": 2,
-                                                                                "data": {
-                                                                                    "Name": "Midtones",
-                                                                                    "Default Variable ID": {
-                                                                                        "Underlying": {
-                                                                                            "ptr_wrapper": {
-                                                                                                "id": 2147483677,
-                                                                                                "data": {
-                                                                                                    "UUID": "4cde849e-eb3d-4fc5-a1c6-d35999e1a928",
-                                                                                                    "Registry": {
-                                                                                                        "index": 0,
-                                                                                                        "data": {
-                                                                                                            "ptr_wrapper": {
-                                                                                                                "id": 8
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
-                                                                                    "Dirty Flag": {
-                                                                                        "ID": {
-                                                                                            "Underlying": {
-                                                                                                "ptr_wrapper": {
-                                                                                                    "id": 6
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "desired color space": 0
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "index": 2,
-                                                                                "data": {
-                                                                                    "Name": "Highlights",
-                                                                                    "Default Variable ID": {
-                                                                                        "Underlying": {
-                                                                                            "ptr_wrapper": {
-                                                                                                "id": 2147483678,
-                                                                                                "data": {
-                                                                                                    "UUID": "8cd508d6-674e-4556-becc-27598a783185",
-                                                                                                    "Registry": {
-                                                                                                        "index": 0,
-                                                                                                        "data": {
-                                                                                                            "ptr_wrapper": {
-                                                                                                                "id": 8
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
-                                                                                    "Dirty Flag": {
-                                                                                        "ID": {
-                                                                                            "Underlying": {
-                                                                                                "ptr_wrapper": {
-                                                                                                    "id": 6
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "desired color space": 0
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Number of main input pins": 1,
-                                                                        "Number of function inputs": 0,
-                                                                        "Chosen Any type": {
-                                                                            "nullopt": true
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                {
                                                     "key": "fde38bbf-551a-4180-bb86-fa461e74d66b",
                                                     "value": {
                                                         "pimpl": {
@@ -2306,7 +2140,7 @@
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
-                                                                                                "id": 2147483679,
+                                                                                                "id": 2147483676,
                                                                                                 "data": {
                                                                                                     "UUID": "328919ae-e1ff-4436-8601-9d5a619f29f1",
                                                                                                     "Registry": {
@@ -2341,7 +2175,7 @@
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
-                                                                                                "id": 2147483680,
+                                                                                                "id": 2147483677,
                                                                                                 "data": {
                                                                                                     "UUID": "806ccd91-ad75-49ae-8e3d-75d11c9b3f60",
                                                                                                     "Registry": {
@@ -2376,9 +2210,175 @@
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
-                                                                                                "id": 2147483681,
+                                                                                                "id": 2147483678,
                                                                                                 "data": {
                                                                                                     "UUID": "b0ce055a-ba8b-4135-89c6-e2971eba5516",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 8
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 6
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Number of main input pins": 1,
+                                                                        "Number of function inputs": 0,
+                                                                        "Chosen Any type": {
+                                                                            "nullopt": true
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "key": "3d0b4d27-49bf-4f35-ac8b-9e67a532909e",
+                                                    "value": {
+                                                        "pimpl": {
+                                                            "polymorphic_id": 2,
+                                                            "ptr_wrapper": {
+                                                                "valid": 1,
+                                                                "data": {
+                                                                    "Node": {
+                                                                        "Name": "",
+                                                                        "Definition": {
+                                                                            "Definition name": "Filter Tone",
+                                                                            "Category name": "Image Modifier (Post Process)"
+                                                                        },
+                                                                        "Input Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "color",
+                                                                                    "ID": "f7a59d47-0781-455a-809f-65636cba711e"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Shadows",
+                                                                                    "ID": "ae171571-d4df-4ca1-8e18-f1da41aba76b"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Midtones",
+                                                                                    "ID": "5cc80c78-7030-4e52-8796-35bf4414ec74"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Highlights",
+                                                                                    "ID": "e58fb166-f0b7-477d-8095-bc2499920364"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Output Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "OUT",
+                                                                                    "ID": "5ed1f2c6-982c-4445-b00e-3aebb38c8867"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Value inputs": [
+                                                                            {
+                                                                                "index": 2,
+                                                                                "data": {
+                                                                                    "Name": "Shadows",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483679,
+                                                                                                "data": {
+                                                                                                    "UUID": "94089cc2-116b-4845-8de6-a0b6735d5501",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 8
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 6
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "index": 2,
+                                                                                "data": {
+                                                                                    "Name": "Midtones",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483680,
+                                                                                                "data": {
+                                                                                                    "UUID": "4cde849e-eb3d-4fc5-a1c6-d35999e1a928",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 8
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 6
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "index": 2,
+                                                                                "data": {
+                                                                                    "Name": "Highlights",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483681,
+                                                                                                "data": {
+                                                                                                    "UUID": "8cd508d6-674e-4556-becc-27598a783185",
                                                                                                     "Registry": {
                                                                                                         "index": 0,
                                                                                                         "data": {
@@ -2421,24 +2421,10 @@
                                         "Links": {
                                             "Underlying container": [
                                                 {
-                                                    "key": "c6c69d72-3120-4125-8a28-5aa2ddfbfdc3",
+                                                    "key": "340e38fc-86ee-4359-8b88-263f086b7257",
                                                     "value": {
-                                                        "From pin": "84b6f46b-70cc-4acf-93cd-baafa369c2b9",
-                                                        "To pin": "02378ae3-579f-4cb9-b349-cb2de8b9080e"
-                                                    }
-                                                },
-                                                {
-                                                    "key": "cda270e1-c945-425f-8aef-ef938c93fa33",
-                                                    "value": {
-                                                        "From pin": "b8c4140d-3306-403f-a66e-e8b5f1d19af5",
-                                                        "To pin": "ecb6c1d0-dfb2-4a74-ad28-99dfe1c946b0"
-                                                    }
-                                                },
-                                                {
-                                                    "key": "90569726-8597-4496-a080-1a6002004dfc",
-                                                    "value": {
-                                                        "From pin": "8027f769-0c38-443d-a601-cb0175983fb9",
-                                                        "To pin": "764b9257-b3d1-436b-94dd-d9e4baa8295b"
+                                                        "From pin": "07e4a5ac-306a-4abf-9b7b-ff1c37d09955",
+                                                        "To pin": "1c3e7a6a-abd3-44e7-9542-65f433d38146"
                                                     }
                                                 },
                                                 {
@@ -2456,10 +2442,17 @@
                                                     }
                                                 },
                                                 {
-                                                    "key": "2edfa484-f403-4ba1-b482-8cc94bcbf74a",
+                                                    "key": "c6c69d72-3120-4125-8a28-5aa2ddfbfdc3",
                                                     "value": {
-                                                        "From pin": "c0c257f5-d202-4c94-abe1-97f9f06669ae",
-                                                        "To pin": "c61563be-fd9e-48ff-a0e6-f34a4775309d"
+                                                        "From pin": "84b6f46b-70cc-4acf-93cd-baafa369c2b9",
+                                                        "To pin": "02378ae3-579f-4cb9-b349-cb2de8b9080e"
+                                                    }
+                                                },
+                                                {
+                                                    "key": "cda270e1-c945-425f-8aef-ef938c93fa33",
+                                                    "value": {
+                                                        "From pin": "b8c4140d-3306-403f-a66e-e8b5f1d19af5",
+                                                        "To pin": "ecb6c1d0-dfb2-4a74-ad28-99dfe1c946b0"
                                                     }
                                                 },
                                                 {
@@ -2470,10 +2463,17 @@
                                                     }
                                                 },
                                                 {
-                                                    "key": "340e38fc-86ee-4359-8b88-263f086b7257",
+                                                    "key": "90569726-8597-4496-a080-1a6002004dfc",
                                                     "value": {
-                                                        "From pin": "07e4a5ac-306a-4abf-9b7b-ff1c37d09955",
-                                                        "To pin": "1c3e7a6a-abd3-44e7-9542-65f433d38146"
+                                                        "From pin": "8027f769-0c38-443d-a601-cb0175983fb9",
+                                                        "To pin": "764b9257-b3d1-436b-94dd-d9e4baa8295b"
+                                                    }
+                                                },
+                                                {
+                                                    "key": "2edfa484-f403-4ba1-b482-8cc94bcbf74a",
+                                                    "value": {
+                                                        "From pin": "c0c257f5-d202-4c94-abe1-97f9f06669ae",
+                                                        "To pin": "c61563be-fd9e-48ff-a0e6-f34a4775309d"
                                                     }
                                                 },
                                                 {
@@ -2504,7 +2504,7 @@
                                         }
                                     ],
                                     "Context": {
-                                        "UI State": "{\"nodes\":{\"node:12703266763317293498\":{\"location\":{\"x\":1577,\"y\":332}},\"node:1317196857194401227\":{\"group_size\":{\"x\":652,\"y\":232},\"location\":{\"x\":1600,\"y\":672}},\"node:14721594680861544661\":{\"location\":{\"x\":1403,\"y\":332}},\"node:15658494441340550145\":{\"location\":{\"x\":856,\"y\":334}},\"node:17530882208273782252\":{\"location\":{\"x\":680,\"y\":332}},\"node:3841499328083200829\":{\"location\":{\"x\":2056,\"y\":732}},\"node:3913551688243190778\":{\"location\":{\"x\":1992,\"y\":332}},\"node:4706088772453883599\":{\"location\":{\"x\":1793,\"y\":332}},\"node:5783233898473486071\":{\"group_size\":{\"x\":1616,\"y\":310},\"location\":{\"x\":640,\"y\":272}},\"node:6360379555685189876\":{\"location\":{\"x\":1625,\"y\":720}},\"node:6507197430194304867\":{\"location\":{\"x\":1016,\"y\":334}},\"node:9241696865929126909\":{\"location\":{\"x\":1882,\"y\":726}},\"node:93396026554491683\":{\"location\":{\"x\":1192,\"y\":332}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":536.29730224609375,\"y\":173.876800537109375},\"visible_rect\":{\"max\":{\"x\":2422.29736328125,\"y\":1083.8768310546875},\"min\":{\"x\":536.29730224609375,\"y\":173.876800537109375}},\"zoom\":1}}"
+                                        "UI State": "{\"nodes\":{\"node:12703266763317293498\":{\"location\":{\"x\":1577,\"y\":332}},\"node:1317196857194401227\":{\"group_size\":{\"x\":652,\"y\":232},\"location\":{\"x\":1600,\"y\":672}},\"node:14721594680861544661\":{\"location\":{\"x\":1403,\"y\":332}},\"node:15658494441340550145\":{\"location\":{\"x\":856,\"y\":334}},\"node:17530882208273782252\":{\"location\":{\"x\":680,\"y\":332}},\"node:3841499328083200829\":{\"location\":{\"x\":2056,\"y\":732}},\"node:3913551688243190778\":{\"location\":{\"x\":1992,\"y\":332}},\"node:4706088772453883599\":{\"location\":{\"x\":1793,\"y\":332}},\"node:5783233898473486071\":{\"group_size\":{\"x\":1616,\"y\":310},\"location\":{\"x\":640,\"y\":272}},\"node:6360379555685189876\":{\"location\":{\"x\":1625,\"y\":720}},\"node:6507197430194304867\":{\"location\":{\"x\":1016,\"y\":334}},\"node:9241696865929126909\":{\"location\":{\"x\":1882,\"y\":726}},\"node:93396026554491683\":{\"location\":{\"x\":1192,\"y\":332}}},\"selection\":[\"node:17530882208273782252\"],\"view\":{\"scroll\":{\"x\":880.4788818359375,\"y\":152.26812744140625},\"visible_rect\":{\"max\":{\"x\":2369.979248046875,\"y\":1131.7496337890625},\"min\":{\"x\":938.06988525390625,\"y\":162.227783203125}},\"zoom\":0.938606977462768555}}"
                                     }
                                 }
                             }
@@ -2564,7 +2564,7 @@
                 "tuple_element3": {
                     "Underlying registry": {
                         "ptr_wrapper": {
-                            "id": 14
+                            "id": 13
                         }
                     }
                 },
