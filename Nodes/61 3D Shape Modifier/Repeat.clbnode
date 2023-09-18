@@ -1,27 +1,27 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT vec3->SignedDistance `3D Shape`;
+INPUT vec3->SignedDistance '3D Shape';
 
-INPUT int `X Repetitions`;
-INPUT int `Y Repetitions`;
-INPUT int `Z Repetitions`;
+INPUT int 'X Repetitions';
+INPUT int 'Y Repetitions';
+INPUT int 'Z Repetitions';
 
-INPUT float `X Spacing`;
-INPUT float `Y Spacing`;
-INPUT float `Z Spacing`;
+INPUT float 'X Spacing';
+INPUT float 'Y Spacing';
+INPUT float 'Z Spacing';
 
 SignedDistance main(vec3 pos)
 {
-    int x_repetition_number = `X Repetitions` - 1;
-    int y_repetition_number = `Y Repetitions` - 1;
-    int z_repetition_number = `Z Repetitions` - 1;
+    int x_repetition_number = 'X Repetitions' - 1;
+    int y_repetition_number = 'Y Repetitions' - 1;
+    int z_repetition_number = 'Z Repetitions' - 1;
 
     vec3 right      = vec3(x_repetition_number / 2, y_repetition_number / 2, z_repetition_number / 2);
     vec3 left       = -right - vec3(x_repetition_number % 2 == 0 ? 0. : 1., y_repetition_number % 2 == 0 ? 0. : 1., z_repetition_number % 2 == 0 ? 0. : 1.);
-    vec3 cell_radii = vec3(`X Spacing`, `Y Spacing`, `Z Spacing`);
+    vec3 cell_radii = vec3('X Spacing', 'Y Spacing', 'Z Spacing');
 
     vec3 q = pos - cell_radii * clamp(round(pos / cell_radii), left, right);
-    return `3D Shape`(q);
+    return '3D Shape'(q);
 }
 
 // int

@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT int `Detail`;
+INPUT int 'Detail';
 
 /// Taken from https://www.shadertoy.com/view/NtlSDs
 // hash by Hugo Elias
@@ -39,7 +39,7 @@ SignedDistance main(vec3 pos)
 {
     float f = 0.;
     float s = 0.5;
-    for (int i = 0; i < `Detail`; i++)
+    for (int i = 0; i < 'Detail'; i++)
     {
         f += s * iqnoise_3D(pos);
         s *= 0.5;

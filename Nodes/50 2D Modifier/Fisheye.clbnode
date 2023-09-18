@@ -1,5 +1,5 @@
 
-INPUT float `strength`;
+INPUT float 'strength';
 
 float delta(vec2 uv)
 {
@@ -11,7 +11,7 @@ UV main(UV uv)
     if (length_squared(uv) >= 1)
         return vec2(acosh(0)); // we want to return the NaN but there is no such value in glsl
 
-    vec2 direction_uv = normalize(uv) /`strength`;
+    vec2 direction_uv = normalize(uv) / 'strength';
     vec2 temp_val     = direction_uv * acosh(1 + delta(uv));
 
     return temp_val;

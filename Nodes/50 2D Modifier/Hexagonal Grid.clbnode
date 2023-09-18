@@ -2,20 +2,20 @@
 
 #include "_COOL_RES_/shaders/hexagonal_grid.glsl"
 
-INPUT float `Grid Size`;
+INPUT float 'Grid Size';
 
-OUTPUT float `Index X`;
-OUTPUT float `Index Y`;
+OUTPUT float 'Index X';
+OUTPUT float 'Index Y';
 
 UV main(UV uv)
 {
-    float grid_size = `Grid Size`/ 2;
+    float grid_size = 'Grid Size' / 2;
 
     vec2  gv = Cool_hex_uv(uv, grid_size);
     ivec2 id = Cool_hex_id(uv, grid_size);
 
-    `Index X` = id.x;
-    `Index Y` = id.y;
+    'Index X' = id.x;
+    'Index Y' = id.y;
 
     return gv;
 }

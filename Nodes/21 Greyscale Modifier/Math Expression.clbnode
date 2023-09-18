@@ -1,6 +1,6 @@
-INPUT MathExpression `Expr`;
+INPUT MathExpression 'Expr';
 
 float main(float x)
 {
-    return `Expr`(x);
+    return 'Expr'(x);
 }

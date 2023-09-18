@@ -1,8 +1,8 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT vec2 `Translation`;
+INPUT vec2 'Translation';
 
 UV main(UV Input)
 {
-    return Input - `Translation`;
-} 
+    return Input - 'Translation';
+}

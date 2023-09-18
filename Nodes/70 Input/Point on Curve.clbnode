@@ -1,7 +1,7 @@
-INPUT float->UV `Curve`;
-INPUT float `Position on Curve`;
+INPUT float->UV 'Curve';
+INPUT float 'Position on Curve';
 
 UV main()
 {
-    return `Curve`(`Position on Curve`);
+    return 'Curve'('Position on Curve');
 }

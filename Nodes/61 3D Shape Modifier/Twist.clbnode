@@ -1,21 +1,21 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT vec3->SignedDistance `3D Shape`;
-INPUT float `Strength`;
+INPUT vec3->SignedDistance '3D Shape';
+INPUT float 'Strength';
 
 SignedDistance main(vec3 pos)
 {
     vec3  Axis             = vec3(1, 0, 0);
     float proj             = dot(pos, Axis);
-    float c                = cos(`Strength` * proj);
-    float s                = sin(`Strength` * proj);
+    float c                = cos('Strength' * proj);
+    float s                = sin('Strength' * proj);
     mat2  m                = mat2(c, -s, s, c);
     vec3  plane_axis1      = normalize(vec3(-Axis.y, Axis.x, 0.));
     vec3  plane_axis2      = cross(plane_axis1, Axis);
     vec2  pos_in_plane     = vec2(dot(pos, plane_axis1), dot(pos, plane_axis2));
     vec2  pos_in_plane_rot = m * pos_in_plane;
     vec3  q                = proj * Axis + pos_in_plane_rot.x * plane_axis1 + pos_in_plane_rot.y * plane_axis2;
-    return CLB_FIX_ARTIFACTS(`3D Shape`(q));
+    return CLB_FIX_ARTIFACTS('3D Shape'(q));
 }
 
 // direction3D

@@ -1,8 +1,8 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 // Reference : https://www.shadertoy.com/view/ls2XWD
 
-INPUT float `strength`;
-INPUT Point2D `Center`;
+INPUT float 'strength';
+INPUT Point2D 'Center';
 
 vec2 distort(vec2 uv, float power)
 {
@@ -12,5 +12,5 @@ vec2 distort(vec2 uv, float power)
 
 UV main(UV uv)
 {
-    return distort(uv -`Center`,`strength`);
+    return distort(uv - 'Center', 'strength');
 }

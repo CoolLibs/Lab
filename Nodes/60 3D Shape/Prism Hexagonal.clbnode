@@ -1,7 +1,7 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float `Radius`;
-INPUT float `Height`;
+INPUT float 'Radius';
+INPUT float 'Height';
 
 SignedDistance main(vec3 pos)
 {
@@ -9,8 +9,8 @@ SignedDistance main(vec3 pos)
     pos          = abs(pos);
     pos.xy -= 2.0 * min(dot(k.xy, pos.xy), 0.) * k.xy;
     vec2 d = vec2(
-        length(pos.xy - vec2(clamp(pos.x, -k.z * `Radius`, k.z * `Radius`), `Radius`)) * sign(pos.y - `Radius`),
-        pos.z - `Height`
+        length(pos.xy - vec2(clamp(pos.x, -k.z * 'Radius', k.z * 'Radius'), 'Radius')) * sign(pos.y - 'Radius'),
+        pos.z - 'Height'
     );
     return min(max(d.x, d.y), 0.) + length(max(d, 0.));
 }
