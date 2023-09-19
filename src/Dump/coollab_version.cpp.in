@@ -1,0 +1,8 @@
+namespace Lab {
+
+auto coollab_version() -> std::string
+{
+    return @COOLLAB_VERSION_STRING@; // Variable configured by CMake
+}
+
+} // namespace Lab

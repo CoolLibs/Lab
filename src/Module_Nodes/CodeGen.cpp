@@ -16,6 +16,7 @@
 #include "Module_Nodes/NodeDefinition.h"
 #include "Node.h"
 #include "NodeDefinition.h"
+#include "helpers.h"
 #include "input_to_primitive_type.h"
 
 namespace Lab {
@@ -83,23 +84,6 @@ static auto gen_function_definition(Params_gen_function_definition p)
         "declaration"_a     = gen_function_declaration(p.signature, p.name),
         "body"_a            = p.body
     )};
-}
-
-static auto is_not_alphanumeric(char c) -> bool
-{
-    return !( // NOLINT(readability-simplify-boolean-expr)
-        ('0' <= c && c <= '9')
-        || ('a' <= c && c <= 'z')
-        || ('A' <= c && c <= 'Z')
-    );
-}
-
-auto valid_glsl(std::string s)
-    -> std::string
-{
-    // For glsl variable name rules, see https://www.informit.com/articles/article.aspx?p=2731929&seqNum=3, section "Declaring Variables".
-    s.erase(std::remove_if(s.begin(), s.end(), &is_not_alphanumeric), s.end()); // `s` can only contain letters and numbers (and _, but two consecutive underscores is invalid so we don't allow any: this is the simplest way to enforce that rule, at the cost of slightly uglier names)
-    return "_" + s;                                                             // We need a prefix to make sure `s` does not start with a number.
 }
 
 static auto base_function_name(
@@ -209,7 +193,7 @@ static auto gen_value_inputs(
             res.code += Cool::gen_input_shader_code(
                             prop,
                             context.input_provider(),
-                            std::visit([](auto&& prop) { return fmt::format("`{}`", prop.name()); }, prop) // Re-add backticks around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
+                            std::visit([](auto&& prop) { return fmt::format("'{}'", prop.name()); }, prop) // Re-add single quotes around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
                         )
                         + '\n';
 
@@ -234,11 +218,11 @@ static auto list_all_property_and_input_and_output_names(
     std::string res{};
 
     for (auto const& prop : properties)
-        res += fmt::format("  - `{}`\n", std::visit([](auto&& prop) { return prop.name(); }, prop));
+        res += fmt::format("  - '{}'\n", std::visit([](auto&& prop) { return prop.name(); }, prop));
     for (auto const& input : inputs)
-        res += fmt::format("  - `{}`\n", input.name());
+        res += fmt::format("  - '{}'\n", input.name());
     for (auto const& name : output_indices_names)
-        res += fmt::format("  - `{}`\n", name);
+        res += fmt::format("  - '{}'\n", name);
 
     return res;
 }
@@ -253,7 +237,7 @@ static auto replace_property_names(
     for (auto const& prop : properties)
     {
         std::visit([&](auto&& prop) {
-            Cool::String::replace_all(code, fmt::format("`{}`", prop.name()), real_name[i]);
+            Cool::String::replace_all(code, fmt::format("'{}'", prop.name()), real_name[i]);
         },
                    prop);
         i++;
@@ -268,7 +252,7 @@ static auto replace_input_names(
 ) -> std::string
 {
     for (auto const& [old_name, new_name] : real_names)
-        Cool::String::replace_all(code, fmt::format("`{}`", old_name), new_name);
+        Cool::String::replace_all(code, fmt::format("'{}'", old_name), new_name);
 
     return code;
 }
@@ -282,7 +266,7 @@ static auto replace_output_indices_names(
     {
         Cool::String::replace_all(
             code,
-            fmt::format("`{}`", node.output_pins()[i].name()),
+            fmt::format("'{}'", node.output_pins()[i].name()),
             make_valid_output_index_name(node.output_pins()[i])
         );
     }
@@ -290,16 +274,16 @@ static auto replace_output_indices_names(
     return code;
 }
 
-static auto check_there_are_no_backticks_left(std::string const& code, std::string const& input_names_list)
+static auto check_there_are_no_single_quotes_left(std::string const& code, std::string const& input_names_list)
     -> std::optional<std::string>
 {
-    auto const pos = code.find('`');
+    auto const pos = code.find('\'');
     if (pos == std::string::npos)
         return std::nullopt;
 
-    auto const pos2 = code.find('`', pos + 1);
+    auto const pos2 = code.find('\'', pos + 1);
     if (pos2 == std::string::npos)
-        return "A backtick (`) has no matching closing backtick. Did you make a typo?";
+        return "A single quote (') has no matching closing single quote. Did you make a typo?";
 
     return fmt::format(
         "\"{}\" is not an input or output that you declared. Here are all the names you declared:\n{}",
@@ -449,7 +433,7 @@ static auto gen_base_function(
     func_implementation = replace_helper_functions(func_implementation, node_definition.helper_functions(), helper_functions.new_names);
 
     {
-        auto const error = check_there_are_no_backticks_left(func_implementation, list_all_property_and_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices()));
+        auto const error = check_there_are_no_single_quotes_left(func_implementation, list_all_property_and_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices()));
         if (error)
             return tl::make_unexpected(*error);
     }

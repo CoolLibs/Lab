@@ -7,6 +7,8 @@
 Bool,
     Int,
     Float,
+    Float_PremultipliedA,
+    Float_StraightA,
     Vec2,
     Vec3,
     Vec4,

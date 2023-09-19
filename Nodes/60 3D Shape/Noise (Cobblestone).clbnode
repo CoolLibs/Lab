@@ -1,0 +1,14 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Frequency';
+INPUT float 'Amplitude';
+
+SignedDistance main(vec3 pos)
+{
+    return CLB_FIX_ARTIFACTS(
+        'Amplitude'
+        * sin('Frequency' * pos.x)
+        * sin('Frequency' * pos.y)
+        * sin('Frequency' * pos.z)
+    );
+}

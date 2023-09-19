@@ -2,8 +2,10 @@
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
 #include <Cool/RegExp/RegExp.h>
 #include <Cool/String/String.h>
+#include <Module_Nodes/fixup_node_definition.h>
 #include <algorithm>
 #include <exception>
+#include <filesystem>
 #include <iterator>
 #include <optional>
 #include <sstream>
@@ -84,9 +86,8 @@ struct parse_signature_params {
     std::string const& output_type;
 };
 
-static auto
-    parse_signature(parse_signature_params p)
-        -> tl::expected<CompleteFunctionSignature, std::string>
+static auto parse_signature(parse_signature_params p)
+    -> tl::expected<CompleteFunctionSignature, std::string>
 {
     auto res = CompleteFunctionSignature{};
 
@@ -349,7 +350,7 @@ static auto parse_input(std::vector<std::string> const& type_words, std::string 
     if (!signature)
         return signature.error();
 
-    res.input_function.emplace_back(NodeInputDefinition_Data{
+    res.input_functions.emplace_back(NodeInputDefinition_Data{
         .name      = name,
         .signature = *signature,
     });
@@ -377,11 +378,11 @@ static auto find_declaration(std::string const& text, std::string_view keyword, 
         auto const name_pos = Cool::String::find_matching_pair({
             .text    = text,
             .offset  = offset,
-            .opening = '`',
-            .closing = '`',
+            .opening = '\'',
+            .closing = '\'',
         });
         if (!name_pos || name_pos->second > end_of_line)
-            return error_message("missing name. A name must start and end with backticks (`)");
+            return error_message("missing name. A name must start and end with single quotes (')");
 
         auto const type_words = Cool::String::all_words(Cool::String::substring(text, offset, name_pos->first));
 
@@ -447,9 +448,9 @@ static void set_input_description(NodeDefinition_Data& res, std::string const& i
         std::visit([&](auto&& input) { maybe_set_input_description(input_name, input, input_description); }, input);
     }
 
-    for (auto& input : res.input_function)
+    for (auto& input : res.input_functions)
     {
-        if ("`" + input.name() + "`" == input_name)
+        if ("'" + input.name() + "'" == input_name)
             input.set_description(input_description);
     }
 }
@@ -466,8 +467,8 @@ static void find_inputs_descriptions(std::string const& text, NodeDefinition_Dat
         pos_of_the_input_name = Cool::String::find_matching_pair({
             .text    = text,
             .offset  = name_offset,
-            .opening = '`',
-            .closing = '`',
+            .opening = '\'',
+            .closing = '\'',
         });
         if (!pos_of_the_input_name)
             break;
@@ -501,7 +502,7 @@ static void find_inputs_descriptions(std::string const& text, NodeDefinition_Dat
             text_after_the_input_declaration.size()
         );
 
-        pos_of_the_input_name->second = pos_of_the_input_name->second + 1; // Increase by 1 to include the last backtick (`)
+        pos_of_the_input_name->second = pos_of_the_input_name->second + 1; // Increase by 1 to include the last single quote (')
         std::string const input_name  = Cool::String::substring(text, *pos_of_the_input_name);
 
         set_input_description(res, input_name, input_description);
@@ -552,33 +553,33 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
     if (DebugOptions::log_when_parsing_node_definition())
         Cool::Log::ToUser::info("Nodes", fmt::format("Parsing node definition from {}.", filepath));
 
-    NodeDefinition_Data res{};
+    NodeDefinition_Data def{};
 
     bool fix_artifacts = false;
     if (text.find("CLB_FIX_ARTIFACTS") != std::string::npos)
     {
         fix_artifacts = true;
-        Cool::String::replace_all(text, "CLB_FIX_ARTIFACTS", "(1. - `Fix Artifacts`) * ");
+        Cool::String::replace_all(text, "CLB_FIX_ARTIFACTS", "(1. - 'Fix Artifacts') * ");
     }
 
     auto text_without_comments = Cool::String::remove_comments(text);
     replace_defines_with_their_values(text_without_comments);
 
-    find_includes(text_without_comments, res);
+    find_includes(text_without_comments, def);
 
     {
-        auto const err = find_main_and_helper_functions(filepath, text_without_comments, res);
+        auto const err = find_main_and_helper_functions(filepath, text_without_comments, def);
         if (err)
             return tl::make_unexpected(*err);
     }
     {
-        auto const err = find_inputs(text_without_comments, res);
+        auto const err = find_inputs(text_without_comments, def);
         if (err)
             return tl::make_unexpected(*err);
         if (fix_artifacts)
         {
-            res.input_values.emplace_back(Cool::InputDefinition<float>{
-                .name          = "`Fix Artifacts`",
+            def.input_values.emplace_back(Cool::InputDefinition<float>{
+                .name          = "'Fix Artifacts'",
                 .description   = "Increase the value to fix glitches and holes in the shape. But note that higher values are slower to render.",
                 .default_value = 0.f,
                 .metadata      = Cool::VariableMetadata<float>{
@@ -595,17 +596,28 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
         }
     }
     {
-        auto const err = find_outputs(text_without_comments, res);
+        auto const err = find_outputs(text_without_comments, def);
         if (err)
             return tl::make_unexpected(*err);
     }
 
-    find_inputs_descriptions(text, res); // Must be done after finding the inputs. Must work on the text WITH comments because the descriptions are inside comments.
+    find_inputs_descriptions(text, def); // Must be done after finding the inputs. Must work on the text WITH comments because the descriptions are inside comments.
 
     filepath += ".presets.json";
+    fixup_node_definition(def);
     return NodeDefinition::make(
-        res,
-        filepath
+        def,
+#if DEBUG
+        {
+            .user_defined_presets = filepath,
+            .default_presets      = "",
+        }
+#else
+        {
+            .user_defined_presets = Cool::Path::user_data() / std::filesystem::relative(filepath, Cool::Path::root()), // Convert a path relative to root() into a path relative to user_data()
+            .default_presets      = filepath,
+        }
+#endif
     );
 }
 

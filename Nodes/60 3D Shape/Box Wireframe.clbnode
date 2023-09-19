@@ -1,0 +1,17 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3 'Size';
+INPUT float 'Thickness';
+
+SignedDistance main(vec3 pos)
+{
+    pos    = abs(pos) - 'Size';
+    vec3 q = abs(pos + 'Thickness') - 'Thickness';
+    return min(
+        min(
+            length(max(vec3(pos.x, q.y, q.z), 0.)) + min(max(pos.x, max(q.y, q.z)), 0.),
+            length(max(vec3(q.x, pos.y, q.z), 0.)) + min(max(q.x, max(pos.y, q.z)), 0.)
+        ),
+        length(max(vec3(q.x, q.y, pos.z), 0.)) + min(max(q.x, max(q.y, pos.z)), 0.)
+    );
+}

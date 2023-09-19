@@ -1,16 +1,17 @@
 #include "Path.h"
 #include "Cool/Path/Path.h"
+#include "ProjectManager/FileExtension.h"
 
 namespace Lab::Path {
 
-auto user_folder() -> std::filesystem::path
+auto untitled_project() -> std::filesystem::path
 {
-    return Cool::Path::root() / "User Data";
+    return Cool::Path::user_data() / "Untitled project." COOLLAB_FILE_EXTENSION;
 }
 
 auto backup_project() -> std::filesystem::path
 {
-    return user_folder() / "backup.clb";
+    return Cool::Path::user_data() / "Backup project." COOLLAB_FILE_EXTENSION;
 }
 
 } // namespace Lab::Path

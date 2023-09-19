@@ -13,6 +13,3 @@
 [submodule "lib/cpp-httplib"]
 	path = lib/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib
-[submodule "lib/easy_opencv"]
-	path = lib/easy_opencv
-	url = https://github.com/CoolLibs/easy_opencv.git

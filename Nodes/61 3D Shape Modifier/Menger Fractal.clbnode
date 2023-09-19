@@ -1,0 +1,22 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance '3D Shape';
+INPUT int 'Detail';
+INPUT float 'Offset';
+INPUT float 'Lacunarity';
+INPUT float 'Smoothing';
+
+SignedDistance main(vec3 pos)
+{
+    float s1 = 1.;
+    float d  = '3D Shape'(pos);
+    for (int m = 0; m < 'Detail'; m++)
+    {
+        vec3 a = mod(pos * s1, 'Offset') - 'Offset' / 2.;
+        s1 *= 'Lacunarity';
+        vec3  r = 1. - 'Lacunarity' * abs(a);
+        float c = '3D Shape'(r) / s1;
+        d       = smooth_max_polynomial(d, c, 'Smoothing');
+    }
+    return CLB_FIX_ARTIFACTS(d);
+}

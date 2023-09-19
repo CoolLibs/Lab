@@ -33,7 +33,6 @@
 #include "UI/imgui_show.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
-#include "parse_node_definition.h"
 
 namespace Lab {
 
@@ -244,15 +243,13 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            // auto const err = value.get_err();
-            auto err = Cool::get_error(value.source);
-            // auto const err = Cool::TextureLibrary_FromFile::instance().error_from(value.source.absolute_path);
+            auto const err = Cool::get_error(value.source);
             if (err)
             {
                 Cool::Log::ToUser::console().send(
                     variable.message_id,
                     Cool::Message{
-                        .category = "Load Image",
+                        .category = "Missing Texture",
                         .message  = err.value(),
                         .severity = Cool::MessageSeverity::Error,
                     }
@@ -314,7 +311,7 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
     );
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
-    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work.
         for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {

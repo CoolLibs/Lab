@@ -1,0 +1,20 @@
+// https://www.shadertoy.com/view/ldyXRR
+
+INPUT float 'Violence';
+INPUT float 'Level of extreme'; /// frequency of the repetition
+INPUT float 'Time';
+
+float warp(float a)
+{
+    float timeMod = 'Time' + a;
+    return a + sin(timeMod * 'Level of extreme') * 'Violence';
+}
+
+UV main(UV uv)
+{
+    // warp each uv coord seperately using our cool function
+    uv.x = warp(uv.x);
+    uv.y = warp(uv.y);
+
+    return uv;
+}

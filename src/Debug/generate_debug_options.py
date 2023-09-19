@@ -120,6 +120,6 @@ if __name__ == "__main__":
     generate_debug_options(
         output_folder="generated",
         namespace="Lab",
-        cache_file_name="cache/debug-options-lab",
+        cache_file_name="debug-options-lab",
         debug_options=all_debug_options(),
     )

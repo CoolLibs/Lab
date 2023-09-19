@@ -1,10 +1,10 @@
-INPUT Webcam `Webcam`;
+INPUT Webcam 'Webcam';
 
-sRGB main(UV uv) // TODO(TD) Check with color space OpenCV uses
+sRGB_StraightA main(UV uv)
 {
     uv /= 2.;
-    uv.x /= `Webcam`.aspect_ratio;
-    uv *= -1.f;
+    uv.x /= 'Webcam'.aspect_ratio;
+    uv *= -1.;
     uv += 0.5;
-    return texture(`Webcam`.tex, uv).bgr; // conversion BGR -> RGB because OpenCV gets Webcam texture in BRG
+    return texture('Webcam'.tex, uv).bgra; // conversion BGR -> RGB because OpenCV gets Webcam texture in BGR
 }

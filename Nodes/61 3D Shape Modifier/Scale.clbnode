@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance '3D Shape';
+
+INPUT float 'Scale X';
+INPUT float 'Scale Y';
+INPUT float 'Scale Z';
+
+SignedDistance main(vec3 pos)
+{
+    return CLB_FIX_ARTIFACTS('3D Shape'(pos / vec3('Scale X', 'Scale Y', 'Scale Z')));
+}

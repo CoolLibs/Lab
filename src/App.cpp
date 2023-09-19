@@ -2,7 +2,6 @@
 #include <Cool/DebugOptions/TestMessageConsole.h>
 #include <Cool/DebugOptions/TestPresets.h>
 #include <Cool/Gpu/TextureLibrary_FromFile.h>
-#include <Cool/Gpu/TextureLibrary_FromWebcam.h>
 #include <Cool/ImGui/Fonts.h>
 #include <Cool/ImGui/icon_fmt.h>
 #include <Cool/ImGui/test_markdown_formatting.h>
@@ -12,9 +11,12 @@
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
+#include <Cool/Webcam/TextureLibrary_FromWebcam.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
+#include <Tips/Tips.h>
 #include <cmd/imgui.hpp>
 #include <filesystem>
 #include <reg/src/internal/generate_uuid.hpp>
@@ -27,14 +29,17 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/ViewsManager.h"
+#include "Cool/Webcam/WebcamsConfigs.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
 #include "ProjectManager/Command_NewProject.h"
+#include "ProjectManager/Command_OpenBackupProject.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
@@ -48,6 +53,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     , _nodes_view{views.make_view<Cool::ViewView>(_output_view, Cool::icon_fmt("View", ICOMOON_IMAGE))}
 {
     command_executor().execute(Command_NewProject{});
+    _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
     hook_camera2D_events(
@@ -70,8 +76,7 @@ App::~App()
 void App::on_shutdown()
 {
     _tips_manager.on_app_shutdown();
-    before_project_destruction(command_execution_context());
-    std::filesystem::remove(Path::backup_project()); // The App exited successfully, no crash, so we know we don't need the backup anymore. If we were to keep it, then it would get opened the next time we open Coollab. But we want to open a new project instead.
+    command_execution_context().execute(Command_SaveProject{.is_autosave = true});
     _is_shutting_down = true;
 }
 
@@ -102,7 +107,7 @@ void App::update()
     if (_is_first_frame)
     {
         _is_first_frame = false;
-        initial_project_opening(command_executor());
+        initial_project_opening(command_execution_context());
     }
     // First frame a project is loaded
     if (_project.is_first_frame)
@@ -152,7 +157,7 @@ void App::update()
     }
     if (DebugOptions::generate_dump_file())
     {
-        auto const path   = Cool::Path::root() / "info_dump.txt";
+        auto const path   = Cool::Path::user_data() / "info_dump.txt";
         auto const string = gen_dump_string();
         Cool::File::set_content(path, string);
         Cool::Log::ToUser::info(
@@ -339,7 +344,7 @@ void App::imgui_window_view()
                 reset_cameras();
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
+            ImGui::SetItemTooltip("%s", "Reset 2D and 3D cameras");
 
             // Toggle fullscreen
             if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, buttons_order++, align_buttons_vertically))
@@ -348,7 +353,7 @@ void App::imgui_window_view()
                 _main_window.set_fullscreen(_wants_view_in_fullscreen);
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
+            ImGui::SetItemTooltip("%s", _wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Toggle 2D / 3D cameras
             if (Cool::ImGuiExtras::floating_button(_project.is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
@@ -357,7 +362,7 @@ void App::imgui_window_view()
                 _project.camera_manager.is_editable_in_view() = !_project.is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
+            ImGui::SetItemTooltip("%s", _project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
             return b;
         },
     });
@@ -365,12 +370,23 @@ void App::imgui_window_view()
 
 void App::imgui_window_exporter()
 {
-    _project.exporter.imgui_windows(polaroid(), _project.clock.time(), /*on_image_exported = */ [&](std::filesystem::path const& exported_image_path) {
-        auto folder_path = exported_image_path;
-        folder_path.replace_extension(); // Give project folder the same name as the image.
-        command_executor().execute(Command_PackageProjectInto{
-            .folder_path = folder_path,
-        });
+    _project.exporter.imgui_windows({
+        .polaroid          = polaroid(),
+        .time              = _project.clock.time(),
+        .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
+            auto folder_path = exported_image_path;
+            folder_path.replace_extension(); // Give project folder the same name as the image.
+            command_executor().execute(Command_PackageProjectInto{
+                .folder_path = folder_path,
+            });
+            //
+        },
+        .widgets_in_window_video_export_in_progress = [&]() {
+            ImGui::NewLine();
+            ImGui::SeparatorText(Cool::icon_fmt("Did you know?", ICOMOON_BUBBLE).c_str());
+            _tips_manager.imgui_show_one_tip(all_tips());
+            //
+        },
     });
 }
 
@@ -379,7 +395,6 @@ void App::imgui_windows()
     imgui_window_view();
     imgui_window_exporter();
     imgui_window_console();
-    _tips_manager.imgui_windows(all_tips());
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
@@ -396,8 +411,12 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
     imgui_window_cameras();
     ImGui::End();
+    // Webcams
+    Cool::WebcamsConfigs::instance().imgui_window();
+    // Tips
+    _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Equalizer window is always preferred over Cameras in tabs.
+    _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
@@ -405,6 +424,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
+    // Recently opened projects
+    _recently_opened_projects.imgui_window(command_execution_context());
 
     DebugOptions::show_framerate_window([&] {
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
@@ -474,7 +495,7 @@ void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
-        imgui_open_save_project(command_executor());
+        imgui_open_save_project(command_execution_context());
         ImGui::EndMenu();
     }
 }
@@ -544,6 +565,8 @@ void App::commands_menu()
     {
         if (ImGui::Selectable("Show all the tips"))
             _tips_manager.open_all_tips_window();
+        if (ImGui::Selectable("Open webcams config"))
+            Cool::WebcamsConfigs::instance().open_imgui_window();
         ImGui::EndMenu();
     }
 }
@@ -626,11 +649,15 @@ void App::check_inputs__project()
     auto const& io = ImGui::GetIO();
 
     if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
-        dialog_to_save_project_as(command_executor());
+        dialog_to_save_project_as(command_execution_context());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
         command_executor().execute(Command_SaveProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
-        dialog_to_open_project(command_executor());
+        dialog_to_open_project(command_execution_context());
+    else if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_R))
+        command_executor().execute(Command_OpenBackupProject{});
+    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_R))
+        dialog_to_open_recent_project(_recently_opened_projects);
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))
         command_executor().execute(Command_NewProject{});
 }

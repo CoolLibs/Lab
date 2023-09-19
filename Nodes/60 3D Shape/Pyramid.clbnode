@@ -1,0 +1,29 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT int 'Faces Count';
+
+INPUT float 'Base Radius';
+INPUT float 'Height';
+INPUT float 'Smoothing';
+
+float _pyramid_Half_Space_SDF(vec3 pos, vec3 normal, vec3 origin)
+{
+    return dot(pos - origin, normal);
+}
+
+SignedDistance main(vec3 pos)
+{
+    vec3  tip = vec3(0., 0., 'Height' / 2.);
+    float d   = -pos.z - 'Height' / 2.; // Distance to the base
+    for (int i = 0; i < 'Faces Count'; ++i)
+    {
+        float c1               = 'Base Radius' * cos(i * TAU / 'Faces Count');
+        float s1               = 'Base Radius' * sin(i * TAU / 'Faces Count');
+        float c2               = 'Base Radius' * cos((i + 1) * TAU / 'Faces Count');
+        float s2               = 'Base Radius' * sin((i + 1) * TAU / 'Faces Count');
+        vec3  polygon_vertex_1 = vec3(c1, s1, 0.);
+        vec3  polygon_vertex_2 = vec3(c2, s2, 0.);
+        d                      = smooth_max_polynomial(d, _pyramid_Half_Space_SDF(pos, normalize(cross(polygon_vertex_1 - tip, polygon_vertex_2 - tip)), tip), 'Smoothing');
+    }
+    return d;
+}

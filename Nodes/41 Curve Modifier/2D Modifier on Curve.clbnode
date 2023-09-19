@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float->UV 'Curve';
+INPUT UV->UV '2D Modifier';
+
+UV main(float t)
+{
+    return '2D Modifier'('Curve'(t));
+}

@@ -28,10 +28,10 @@ float main(float x, float y)
 Also, it is possible that your `main` function doesn't take any input at all if it represents a constant:
 
 ```glsl title="Float Value.clbnode"
-INPUT float `Value`;
+INPUT float 'Value';
 
 float main()
 {
-    return `Value`;
+    return 'Value';
 }
 ```

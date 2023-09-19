@@ -1,43 +1,32 @@
 #include "App.h"
 #include "CommandLineArgs/CommandLineArgs.h"
+#include "Cool/Path/Path.h"
+#include "Cool/Path/PathsConfig.h"
 //
 #include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <cereal/archives/json.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/opencv.hpp>
+
+class PathsConfig : public Cool::PathsConfig {
+public:
+    PathsConfig()
+        : Cool::PathsConfig{"Coollab"}
+    {}
+
+    [[nodiscard]] auto default_texture() const -> std::filesystem::path override
+    {
+        return Cool::Path::root() / "res/images/logo.png";
+    }
+};
 
 auto main(int argc, char** argv) -> int
 {
     Lab::command_line_args().init(argc, argv);
-    Cool::run<Lab::App>(
-        {Cool::WindowConfig{
-            .title                  = "", // This is set when we load a project.
-            .maximize_on_startup_if = true,
+    Cool::Path::initialize<PathsConfig>();
+
+    Cool::run<Lab::App>({
+        .windows_configs   = {Cool::WindowConfig{
+              .title                  = "", // This is set when we load a project.
+              .maximize_on_startup_if = true,
         }},
-        Cool::InitConfig{
-            .default_texture_path = Cool::compute_root_path() / "res/images/logo.png",
-        }
-    );
-
-    // cv::Mat image;
-    // cv::namedWindow("webcam");
-
-    // cv::VideoCapture cap(0);
-
-    // if (!cap.isOpened())
-    // {
-    //     std::cout << "cannot open camera";
-    // }
-
-    // while (true)
-    // {
-    //     cap >> image;
-    //     image *= 2;
-
-    //     cv::Mat img_gray;
-    //     cvtColor(image, img_gray, cv::COLOR_BGR2GRAY);
-
-    //     cv::imshow("Display window", img_gray);
-    //     cv::waitKey(25);
-    // }
-    // return 0;
+        .imgui_ini_version = 0,
+    });
 }

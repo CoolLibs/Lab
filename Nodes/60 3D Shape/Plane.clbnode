@@ -1,0 +1,16 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Thickness';
+
+SignedDistance main(vec3 pos)
+{
+    return abs(pos.z) - 'Thickness';
+}
+
+// float
+// {
+//     "Name" : "Thickness"
+//         , "Default" : 0.001
+//         , "Min" : 0.001
+//         , "Max" : 1.0
+// }

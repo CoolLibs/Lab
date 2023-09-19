@@ -2,13 +2,13 @@
 #include <Module_Nodes/CodeGen.h>
 #include <Module_Nodes/FunctionSignature.h>
 #include <string>
-#include "CodeGen.h"
 #include "CodeGen_default_function.h"
 #include "CodeGen_implicit_conversion.h"
 #include "Module_Nodes/CodeGenContext.h"
 #include "Module_Nodes/CodeGen_implicit_conversion.h"
 #include "Module_Nodes/FunctionSignature.h"
 #include "Module_Nodes/PrimitiveType.h"
+#include "helpers.h"
 #include "tl/expected.hpp"
 
 namespace Lab {
@@ -176,16 +176,6 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
     return res;
 }
 
-static auto has_an_alpha_channel(PrimitiveType type) -> bool
-{
-    switch (type)
-    {
-#include "generated/has_an_alpha_channel.inl"
-    default:
-        return false;
-    }
-}
-
 static auto gen_implicit_curve_renderer(
     FunctionSignature   desired,
     std::string_view    base_function_name,
@@ -346,18 +336,13 @@ auto gen_desired_function_implementation(
 
     auto const does_output_uv = current.to == PrimitiveType::UV
                                 || (current.to == PrimitiveType::Vec2 && desired.to == PrimitiveType::UV); // In case we want to output UV and implicitly convert from vec2, we want that transformation to apply to our global UV.
-    auto const does_output_alpha = has_an_alpha_channel(current.to);
     return fmt::format(
         FMT_COMPILE(R"STR(
 {store_uv}
-{store_alpha}
 return {transform_output}({implicit_output_conversion}({base_function_output}));
 )STR"),
         "store_uv"_a                   = does_output_uv ? fmt::format("coollab_context.uv = {};", call_base_function) : "",
-        "store_alpha"_a                = does_output_alpha ? fmt::format("vec4 color = {}; coollab_global_alpha = color.a;", call_base_function) : "",
-        "base_function_output"_a       = does_output_uv      ? "coollab_context.uv"
-                                         : does_output_alpha ? "color"
-                                                             : call_base_function,
+        "base_function_output"_a       = does_output_uv ? "coollab_context.uv" : call_base_function,
         "transform_output"_a           = *output_transformation_name,
         "implicit_output_conversion"_a = implicit_conversions.output.value_or("")
     );

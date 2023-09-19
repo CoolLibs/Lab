@@ -43,3 +43,6 @@ if (from == PrimitiveType::UV && to == PrimitiveType::Vec2)
 
 if (from == PrimitiveType::Vec2 && to == PrimitiveType::UV)
     return true;
+
+if (from == PrimitiveType::Void && to == PrimitiveType::UV)
+    return true;

@@ -1,0 +1,21 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+#include "_COOL_RES_/shaders/hexagonal_grid.glsl"
+
+INPUT float 'Grid Size';
+INPUT float 'Offset';
+
+UV main(UV Input)
+{
+    vec2  gv = Cool_hex_uv(Input, 'Grid Size');
+    ivec2 id = Cool_hex_id(Input, 'Grid Size');
+
+    float relative_angle = (Cool_angle(gv) + PI) / TAU;
+    int   angular_id     = int(floor(relative_angle * 6. + 0.5)) % 6;
+    float angle_middle   = angular_id * TAU / 6.;
+
+    vec2 offset = vec2_from_polar('Offset', angle_middle);
+    vec2 center = Cool_hex_center_from_hex_id(id, 'Grid Size');
+
+    return center + offset;
+}

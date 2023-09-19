@@ -1,0 +1,30 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT int 'Detail';
+
+float cross_sdf(vec3 p)
+{
+    vec3 absp = abs(p);
+    // get the distance to the closest axis
+    float maxyz = max(absp.y, absp.z);
+    float maxxz = max(absp.x, absp.z);
+    float maxxy = max(absp.x, absp.y);
+    float cr    = 1.0 - (step(maxyz, absp.x) * maxyz + step(maxxz, absp.y) * maxxz + step(maxxy, absp.z) * maxxy);
+    // cube
+    float cu = max(maxxy, absp.z) - 3.0;
+    // remove the cross from the cube
+    return max(cr, cu);
+}
+
+SignedDistance main(vec3 pos)
+{
+    float scale = 1.;
+    float dist  = -FLT_MAX;
+    for (int i = 0; i < 'Detail'; i++)
+    {
+        dist = max(dist, cross_sdf(pos) * scale);
+        pos  = fract((pos - 1.) * 0.5) * 6. - 3.;
+        scale /= 3.;
+    }
+    return dist;
+}

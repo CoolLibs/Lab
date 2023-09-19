@@ -2,17 +2,17 @@
 
 // Code inspired by https://www.shadertoy.com/view/4sBBDK
 
-INPUT UV->float `Greyscale`;
+INPUT UV->float 'Greyscale';
 
-INPUT float `Scale`;
+INPUT float 'Scale';
 
 float dot_screen(vec2 uv)
 {
-    uv *= `Scale`;
+    uv *= 'Scale';
     return sin(uv.x) * sin(uv.y) * 4.;
 }
 
 float main(UV uv)
 {
-    return saturate(`Greyscale`(uv) * 10. - 5. + dot_screen(uv));
+    return saturate('Greyscale'(uv)*10. - 5. + dot_screen(uv));
 }

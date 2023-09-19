@@ -6,7 +6,7 @@ namespace Lab {
 
 void Command_PackageProjectInto::execute(CommandExecutionContext_Ref const& ctx) const
 {
-    package_project_into(ctx, folder_path);
+    internal_project::package_project_into(ctx, folder_path);
 }
 
 [[nodiscard]] auto Command_PackageProjectInto::to_string() const -> std::string

@@ -1,0 +1,40 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "5f16eaf4-c889-4745-afde-77d9eb81c868",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 7,
+                            "data": {
+                                "Name": "Matrix",
+                                "Value": {
+                                    "sRGB": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Is HDR": false
+                                },
+                                "Default Value": {
+                                    "sRGB": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Is HDR": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
