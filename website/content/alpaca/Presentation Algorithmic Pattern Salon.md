@@ -9,8 +9,11 @@ Coollab is a node-based generative-art software where you compose small building
 ![Alt text](images/img(0).png)
 
 [Comparaison uv distortion entre Blender et Coollab, l'ordre n'est pas le même, + intuitif / déclaratif dans Coollab]
+![Alt text](functional_vs_imperative.png)
+In Coollab, it's not data that flows in the links! Each node receives functions and decides in which order things are called, which abstracts away these details for the users. Note that Coollab's nodes don't take UVs, but Images (aka *functions* that map each UV to a Color).
+Also, the order is inverted, and we believe Coollab's order is more intuitive for people who have no idea of what happens under the hood. (e.g. another effect, that modifies the output (eg. Color->Color) is applied the same in Coollab, but in a different order in Blender. For a user, they don't know why the Grid effect should be different from the Contrast effect.)
 
-[Show fractal noise and the higher-order function approach: passing a noise function to the fractal noise node + this allows creative uses: people passing photos in there and having a nice repetition effect]
+[Show fractal noise and the higher-order function approach: passing a noise function to the fractal noise node + this allows creative uses: people passing photos in there and having a nice repetition effect] 
 
 ## Behind the curtain
 
