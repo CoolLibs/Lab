@@ -4,6 +4,8 @@ Coollab is a node-based generative-art software where you compose small building
 
 ## On the user side
 
+DISCLAIMER: if you are not familiar with shader-based art, some details of the following discussion might be hard for you to grasp. You can learn the basics with / everything you need with: [TODO mettre la vidéo de kishimisu si elle est bien]
+
 Here is an example of an artwork made with Coollab:
 [TODO refaire cette image en aillant les bons noms d'inputs sur les nodes + avoir le dernier node en main node]
 ![Alt text](<demo V1.png>)
