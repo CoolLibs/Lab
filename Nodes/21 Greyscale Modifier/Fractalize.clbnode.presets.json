@@ -10,7 +10,7 @@
                             "index": 1,
                             "data": {
                                 "Name": "Iterations",
-                                "Value": 7,
+                                "Value": 6,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
@@ -88,44 +88,6 @@
                                         "Use slider": false
                                     }
                                 }
-                            }
-                        },
-                        {
-                            "index": 2,
-                            "data": {
-                                "Name": "Initial Amplitude",
-                                "Value": 0.5,
-                                "Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": true,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.003000000026077032,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "index": 0,
-                            "data": {
-                                "Name": "Clamp Output",
-                                "Value": true,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
                             }
                         }
                     ]

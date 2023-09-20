@@ -38,7 +38,7 @@
                             "index": 2,
                             "data": {
                                 "Name": "Frequency Multiplier",
-                                "Value": 2.0,
+                                "Value": 1.2000000476837159,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
@@ -66,7 +66,7 @@
                             "index": 2,
                             "data": {
                                 "Name": "Amplitude Multiplier",
-                                "Value": 0.5,
+                                "Value": 0.8259999752044678,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
@@ -94,7 +94,7 @@
                             "index": 2,
                             "data": {
                                 "Name": "Initial Amplitude",
-                                "Value": 0.5,
+                                "Value": 1.0,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
@@ -121,7 +121,7 @@
                         {
                             "index": 0,
                             "data": {
-                                "Name": "Clamp Output",
+                                "Name": "Clamp Output Alpha",
                                 "Value": true,
                                 "Metadata": {},
                                 "Default Value": false,

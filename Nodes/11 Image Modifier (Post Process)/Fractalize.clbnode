@@ -3,7 +3,7 @@ INPUT int 'Iterations'; /// The number of layers
 INPUT float 'Frequency Multiplier';
 INPUT float 'Amplitude Multiplier';
 INPUT float 'Initial Amplitude';
-INPUT bool 'Clamp Output';
+INPUT bool 'Clamp Output Alpha';
 
 LinearRGB_PremultipliedA main(UV uv)
 {
@@ -18,5 +18,7 @@ LinearRGB_PremultipliedA main(UV uv)
         uv *= 'Frequency Multiplier';
         amplitude *= 'Amplitude Multiplier';
     }
-    return 'Clamp Output' ? saturate(value) : value;
+    if ('Clamp Output Alpha')
+        value.a = saturate(value.a);
+    return value;
 }
