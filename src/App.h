@@ -24,6 +24,7 @@
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
+#include "Cool/View/ForwardingOrRenderView.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
@@ -60,6 +61,8 @@ private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_one_module(Module&, Cool::RenderTarget&, float time);
     void render_nodes(Cool::RenderTarget& render_target, float time, img::Size size);
+
+    auto render_view() -> Cool::RenderView&;
 
     void check_inputs();
     void check_inputs__history();
@@ -110,7 +113,8 @@ private:
 
 private:
     Cool::Window&                        _main_window;
-    Cool::RenderView&                    _nodes_view;
+    Cool::RenderView&                    _output_view;
+    Cool::ForwardingOrRenderView&        _nodes_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
     RecentlyOpened                       _recently_opened_projects{};
