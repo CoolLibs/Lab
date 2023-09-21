@@ -31,6 +31,7 @@
 #include "Cool/Log/Message.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
+#include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
 #include "Debug/DebugOptions.h"
@@ -49,8 +50,19 @@ namespace Lab {
 
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
-    , _output_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("Output", ICOMOON_IMAGE))}
-    , _nodes_view{views.make_view<Cool::ViewView>(_output_view, Cool::icon_fmt("View", ICOMOON_IMAGE))}
+    , _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
+          .name        = Cool::icon_fmt("Output", ICOMOON_IMAGE),
+          .is_closable = true,
+          .start_open  = false,
+      })}
+    , _nodes_view{views.make_view<Cool::ForwardingOrRenderView>(
+          _output_view,
+          Cool::ViewCreationParams{
+              .name        = Cool::icon_fmt("View", ICOMOON_IMAGE),
+              .is_closable = false,
+              .start_open  = true,
+          }
+      )}
 {
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
@@ -129,7 +141,7 @@ void App::update()
     if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
-        _output_view.update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
+        render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_project.clock.time());
     }
     else
@@ -194,10 +206,17 @@ auto App::all_inputs() -> Cool::AllInputRefsToConst
     return vec2;
 }
 
+auto App::render_view() -> Cool::RenderView&
+{
+    if (_output_view.is_open())
+        return _output_view;
+    return _nodes_view;
+}
+
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _output_view.render_target(),
+        .render_target = render_view().render_target(),
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }};
@@ -263,7 +282,7 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_nodes(_output_view.render_target(), time, render_target.desired_size());
+    render_nodes(render_view().render_target(), time, render_target.desired_size());
     // render_custom_shader(render_target, time);
 }
 
@@ -326,7 +345,10 @@ void App::imgui_window_view()
     }
 
     _project.nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
-    _output_view.imgui_window();
+    _output_view.imgui_window({
+        .on_open  = [&]() { trigger_rerender(); }, // When we switch between using the _output_view and the _nodes_view
+        .on_close = [&]() { trigger_rerender(); }, // as our render target, we need to rerender.
+    });
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
@@ -567,6 +589,8 @@ void App::commands_menu()
             _tips_manager.open_all_tips_window();
         if (ImGui::Selectable("Open webcams config"))
             Cool::WebcamsConfigs::instance().open_imgui_window();
+        if (ImGui::Selectable("Open output window"))
+            _output_view.open();
         ImGui::EndMenu();
     }
 }
