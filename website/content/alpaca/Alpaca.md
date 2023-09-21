@@ -124,6 +124,11 @@ Note that in Coollab, all effects are applied *after* the node they apply to (we
 
 [Show fractal noise and the higher-order function approach: passing a noise function to the fractal noise node + this allows creative uses: people passing photos in there and having a nice repetition effect] 
 
+## Implementation details
+
+To pass functions around, we do it when generating the shader code from the nodes: each nodes creates a function, and then those function names are injected in place of the INPUT names. For example, our Disk node might create a `Disk` function, and then, in the code for the grid node, we will replace `Image`, which was the name given to the input function, with `Disk`.
+[TODO example of the code before and after name injection]
+
 ## Conclusion
 
 You can download it and try it for yourself: https://coollab-art.com/
