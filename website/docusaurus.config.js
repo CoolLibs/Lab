@@ -120,6 +120,12 @@ const config = {
             position: "right",
             label: "About",
           },
+          {
+            type: "doc",
+            docId: "alpaca/Alpaca",
+            position: "right",
+            label: "Alpaca",
+          },
         ],
       },
       footer: {

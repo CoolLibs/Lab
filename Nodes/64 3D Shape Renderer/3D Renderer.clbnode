@@ -71,8 +71,6 @@ INPUT float 'Cartoon Edges Size Growth';
 INPUT float 'Cartoon Edges Size Power';
 INPUT LinearRGB 'Cartoon Edges Color';
 
-#include "_ROOT_FOLDER_/res/light.glsl"
-
 #define MAX_DIST cool_camera_far_plane
 
 vec3 get_normal(vec3 p)

@@ -9,7 +9,7 @@
                         {
                             "index": 1,
                             "data": {
-                                "Name": "Octaves",
+                                "Name": "Iterations",
                                 "Value": 6,
                                 "Metadata": {
                                     "Bounds": {
@@ -37,36 +37,8 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "Amplitude",
-                                "Value": 0.5,
-                                "Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": true,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.003000000026077032,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "index": 2,
-                            "data": {
                                 "Name": "Frequency Multiplier",
-                                "Value": 2.0,
+                                "Value": 1.2000000476837159,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
@@ -94,7 +66,7 @@
                             "index": 2,
                             "data": {
                                 "Name": "Amplitude Multiplier",
-                                "Value": 0.5,
+                                "Value": 0.8259999752044678,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
@@ -121,7 +93,7 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "Size",
+                                "Name": "Initial Amplitude",
                                 "Value": 1.0,
                                 "Metadata": {
                                     "Bounds": {
@@ -129,7 +101,7 @@
                                         "Min": 0.0,
                                         "Has max bound": false,
                                         "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
+                                        "Drag speed": 0.003000000026077032,
                                         "Use slider": false
                                     }
                                 },
@@ -144,6 +116,16 @@
                                         "Use slider": false
                                     }
                                 }
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Clamp Output Alpha",
+                                "Value": true,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
                             }
                         }
                     ]
