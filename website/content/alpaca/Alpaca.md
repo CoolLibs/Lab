@@ -7,8 +7,7 @@ In this article we present our approach to generating shaders from nodes, where 
 ## What is Coollab?
 
 Here is an example of an artwork made with Coollab:
-![Alt text](<demo V1.png>)
-![Alt text](images/img(0).png)
+![Alt text](<demo V1_merged.png>)
 
 As you can see, the graph is very declarative: you start with a shape (`Disk`) and then apply several effects on top of it (`Kaleidoscope`, `Zoom`, etc.).
 
@@ -68,7 +67,7 @@ function Disk(uv: UV) -> Color
 }
 ```
 
-On the other hand, in Coollab you first create your Disk node, and then pass that *function* to the Grid node, which will call it with a modified position. Note that here the pins of the nodes don't represent UVs or Colors, but *Images* (aka functions from UV to Color).
+On the other hand, in Coollab you first create your Disk node, and then pass that *function* to the Grid node, which will call it with a modified UV. Note that here the pins of the nodes don't represent UVs or Colors, but *Images* (i.e. functions from UV to Color).
 
 ![Alt text](function_flow.png)
 The Disk node is the same:
@@ -81,7 +80,7 @@ function Disk(uv: UV) -> Color
         return vec3(0.); // Color the pixel black
 }
 ```
-but the Grid is now an Image too, that takes another image as input:
+but the Grid is now an Image too, that takes another Image as input:
 ```glsl title="Grid"
 INPUT function Image: UV -> Color; // Declare an input pin on the node, that will receive a function called Image.
 
@@ -94,7 +93,7 @@ function Grid(uv: UV) -> Color
 
 It is important to note that the order of the nodes differs: in the data-flow example you use a Grid then a Disk, whereas in the function-flow the Disk comes first.
 
-To understand why the function-flow approach can be more intuitive, let's consider another effect, this time modifying the *Color* instead of the *UV* (a.k.a. the *output* of the Disk function instead of its *input*).
+To understand why the function-flow approach can be more intuitive, let's consider another effect, this time modifying the *Color* instead of the *UV* (i.e. the *output* of the Disk function instead of its *input*).
 
 In a data flow this would look like this:
 ![Alt text](data_flow2.png)
@@ -120,17 +119,14 @@ The key takeaway here is that in Coollab, all effects are placed *after* the nod
 
 And it goes even further! Some effects need to modify *both* the input and the output of the function, making them near impossible to implement with a single node in a data-oriented workflow. For example, a common technique in shader programming is to build *fractal noise*[^1] from a *base noise* function, by layering it several times on top of itself at different scales:
 
-![](./base_noise.png)
-![](./fractal_noise.png)
+![](./noise_merged.png)
 
 [^1]: https://thebookofshaders.com/13/
 
 In a data-oriented workflow it is not possible to provide the base noise function as an input to the fractal noise function, and so you will generally see the base function hardcoded in the node. But in Coollab we can give users the freedom to provide the base noise function they want! This led to some pleasant surprises when people started using photos as a "base noise", turning the fractal noise effect into an interesting way to add "glitch" to images.
 
-![](./logo.png)
-*Coollab's logo*
-![](./logo_fractal.png)
-*Coollab's logo with the fractal noise effect applied*
+![](./logo_merged.png)
+*Coollab's logo (left) and Coollab's logo with the fractal noise effect applied (right)*
 
 ```glsl title="Fractal Noise"
 INPUT function Noise: UV -> Color;
