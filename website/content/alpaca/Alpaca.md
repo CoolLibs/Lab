@@ -37,7 +37,7 @@ In Coollab, users don't need to write code (although advanced users can), they c
 
 Let's take the example of a grid of disks:
 ![](./grid_of_disks.png)
-The way to do this using a shader is to first write a function that draws a disk, and then modify it's input to make it tile over space by using the `fract` function (cf. https://youtu.be/svLzmFuSBhk?t=235, where `mod(x, 1)` is equivalent to `fract(x)`).
+The way to do this using a shader is to first write a function that draws a disk, and then modify its input to make it tile over space by using the `fract` function (cf. https://youtu.be/svLzmFuSBhk?t=235, where `mod(x, 1)` is equivalent to `fract(x)`).
 
 So a data-oriented workflow like we can find in Blender's Shader Nodes or Unity's Shader Graph would look like this: we first get the position (UV), then modify it with a Grid node, then pass it to the Disk node.
 
