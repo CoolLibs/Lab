@@ -195,13 +195,13 @@
                                                                     }
                                                                 },
                                                                 {
-                                                                    "key": "737082f8-ab16-44be-a270-e68c560c054c",
+                                                                    "key": "9fd6d27f-2b92-4864-85c9-d86e66505b76",
                                                                     "value": {
                                                                         "Is Dirty": false
                                                                     }
                                                                 },
                                                                 {
-                                                                    "key": "9fd6d27f-2b92-4864-85c9-d86e66505b76",
+                                                                    "key": "737082f8-ab16-44be-a270-e68c560c054c",
                                                                     "value": {
                                                                         "Is Dirty": false
                                                                     }
@@ -331,21 +331,21 @@
                                                                                                                 "data": {
                                                                                                                     "Underlying container": [
                                                                                                                         {
-                                                                                                                            "key": "aca95d1b-4d82-4b16-bf70-3d9b68cb89ce",
+                                                                                                                            "key": "02e781df-a692-49d5-924c-4bbb16fa8b7d",
                                                                                                                             "value": {
-                                                                                                                                "Name": "Strength",
-                                                                                                                                "Value": 0.004000000189989805,
+                                                                                                                                "Name": "Time",
+                                                                                                                                "Value": 0.0,
                                                                                                                                 "Metadata": {
                                                                                                                                     "Bounds": {
-                                                                                                                                        "Has min bound": true,
+                                                                                                                                        "Has min bound": false,
                                                                                                                                         "Min": 0.0,
                                                                                                                                         "Has max bound": false,
                                                                                                                                         "Max": 1.0,
-                                                                                                                                        "Drag speed": 0.0010000000474974514,
+                                                                                                                                        "Drag speed": 0.009999999776482582,
                                                                                                                                         "Use slider": false
                                                                                                                                     }
                                                                                                                                 },
-                                                                                                                                "Default Value": 0.06499999761581421,
+                                                                                                                                "Default Value": 0.0,
                                                                                                                                 "Default Metadata": {
                                                                                                                                     "Bounds": {
                                                                                                                                         "Has min bound": false,
@@ -387,21 +387,21 @@
                                                                                                                             }
                                                                                                                         },
                                                                                                                         {
-                                                                                                                            "key": "02e781df-a692-49d5-924c-4bbb16fa8b7d",
+                                                                                                                            "key": "aca95d1b-4d82-4b16-bf70-3d9b68cb89ce",
                                                                                                                             "value": {
-                                                                                                                                "Name": "Time",
-                                                                                                                                "Value": 0.0,
+                                                                                                                                "Name": "Strength",
+                                                                                                                                "Value": 0.004000000189989805,
                                                                                                                                 "Metadata": {
                                                                                                                                     "Bounds": {
-                                                                                                                                        "Has min bound": false,
+                                                                                                                                        "Has min bound": true,
                                                                                                                                         "Min": 0.0,
                                                                                                                                         "Has max bound": false,
                                                                                                                                         "Max": 1.0,
-                                                                                                                                        "Drag speed": 0.009999999776482582,
+                                                                                                                                        "Drag speed": 0.0010000000474974514,
                                                                                                                                         "Use slider": false
                                                                                                                                     }
                                                                                                                                 },
-                                                                                                                                "Default Value": 0.0,
+                                                                                                                                "Default Value": 0.06499999761581421,
                                                                                                                                 "Default Metadata": {
                                                                                                                                     "Bounds": {
                                                                                                                                         "Has min bound": false,
@@ -768,6 +768,225 @@
                                                     }
                                                 },
                                                 {
+                                                    "key": "ecd55f5f-7c34-4af3-99ea-29e136f6fbec",
+                                                    "value": {
+                                                        "pimpl": {
+                                                            "polymorphic_id": 2,
+                                                            "ptr_wrapper": {
+                                                                "valid": 1,
+                                                                "data": {
+                                                                    "Node": {
+                                                                        "Name": "",
+                                                                        "Definition": {
+                                                                            "Definition name": "Disk",
+                                                                            "Category name": "Shape"
+                                                                        },
+                                                                        "Input Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Radius",
+                                                                                    "ID": "f7857e36-c2a0-494e-b0b0-770fa656add0"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Center",
+                                                                                    "ID": "71a929a7-1c7d-4ff9-b5bf-bc257cac17f8"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Output Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "OUT",
+                                                                                    "ID": "8027f769-0c38-443d-a601-cb0175983fb9"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Value inputs": [
+                                                                            {
+                                                                                "index": 2,
+                                                                                "data": {
+                                                                                    "Name": "Radius",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483659,
+                                                                                                "data": {
+                                                                                                    "UUID": "d04cf279-6051-4cfa-bcea-5a136d1ea13d",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 8
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 6
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "index": 3,
+                                                                                "data": {
+                                                                                    "Name": "Center",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483660,
+                                                                                                "data": {
+                                                                                                    "UUID": "3edb5a07-a531-417a-8d7a-779da48f5905",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 2147483661,
+                                                                                                                "data": {
+                                                                                                                    "Underlying container": [
+                                                                                                                        {
+                                                                                                                            "key": "3edb5a07-a531-417a-8d7a-779da48f5905",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "Center",
+                                                                                                                                "Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": -0.32087448239326479,
+                                                                                                                                        "y": 0.7392208576202393
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Drag speed": 0.00009999999747378752
+                                                                                                                                },
+                                                                                                                                "Default Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Drag speed": 0.00009999999747378752
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "key": "93a3ec78-6ca5-4587-84aa-ca8cab4d236e",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "Center",
+                                                                                                                                "Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Drag speed": 0.000029999999242136256
+                                                                                                                                },
+                                                                                                                                "Default Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Drag speed": 0.000029999999242136256
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "key": "c2b9d517-1955-4cb9-a31c-7e458a966558",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "Center",
+                                                                                                                                "Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Drag speed": 0.000029999999242136256
+                                                                                                                                },
+                                                                                                                                "Default Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Drag speed": 0.000029999999242136256
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "key": "57fe967f-03e2-42bf-ae53-9e6c61a79701",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "Center",
+                                                                                                                                "Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Drag speed": 0.0006000000284984708
+                                                                                                                                },
+                                                                                                                                "Default Value": {
+                                                                                                                                    "Point2D": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Drag speed": 0.000029999999242136256
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 6
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Number of main input pins": 0,
+                                                                        "Number of function inputs": 0,
+                                                                        "Chosen Any type": {
+                                                                            "nullopt": true
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
                                                     "key": "bab18d02-d111-4bb0-9ac4-b9820bb6d73f",
                                                     "value": {
                                                         "pimpl": {
@@ -811,7 +1030,7 @@
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
-                                                                                                "id": 2147483659,
+                                                                                                "id": 2147483662,
                                                                                                 "data": {
                                                                                                     "UUID": "92692ff4-49e4-4682-8b88-373d8459fe8c",
                                                                                                     "Registry": {
@@ -895,14 +1114,14 @@
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
-                                                                                                "id": 2147483660,
+                                                                                                "id": 2147483663,
                                                                                                 "data": {
                                                                                                     "UUID": "e4bc6166-8a06-4a6b-9097-f0da53bce4b0",
                                                                                                     "Registry": {
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 2147483661,
+                                                                                                                "id": 2147483664,
                                                                                                                 "data": {
                                                                                                                     "Underlying container": [
                                                                                                                         {
@@ -963,225 +1182,6 @@
                                                                             }
                                                                         ],
                                                                         "Number of main input pins": 1,
-                                                                        "Number of function inputs": 0,
-                                                                        "Chosen Any type": {
-                                                                            "nullopt": true
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                {
-                                                    "key": "ecd55f5f-7c34-4af3-99ea-29e136f6fbec",
-                                                    "value": {
-                                                        "pimpl": {
-                                                            "polymorphic_id": 2,
-                                                            "ptr_wrapper": {
-                                                                "valid": 1,
-                                                                "data": {
-                                                                    "Node": {
-                                                                        "Name": "",
-                                                                        "Definition": {
-                                                                            "Definition name": "Disk",
-                                                                            "Category name": "Shape"
-                                                                        },
-                                                                        "Input Pins": [
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Radius",
-                                                                                    "ID": "f7857e36-c2a0-494e-b0b0-770fa656add0"
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Center",
-                                                                                    "ID": "71a929a7-1c7d-4ff9-b5bf-bc257cac17f8"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Output Pins": [
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "OUT",
-                                                                                    "ID": "8027f769-0c38-443d-a601-cb0175983fb9"
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Value inputs": [
-                                                                            {
-                                                                                "index": 2,
-                                                                                "data": {
-                                                                                    "Name": "Radius",
-                                                                                    "Default Variable ID": {
-                                                                                        "Underlying": {
-                                                                                            "ptr_wrapper": {
-                                                                                                "id": 2147483662,
-                                                                                                "data": {
-                                                                                                    "UUID": "d04cf279-6051-4cfa-bcea-5a136d1ea13d",
-                                                                                                    "Registry": {
-                                                                                                        "index": 0,
-                                                                                                        "data": {
-                                                                                                            "ptr_wrapper": {
-                                                                                                                "id": 8
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
-                                                                                    "Dirty Flag": {
-                                                                                        "ID": {
-                                                                                            "Underlying": {
-                                                                                                "ptr_wrapper": {
-                                                                                                    "id": 6
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "desired color space": 0
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "index": 3,
-                                                                                "data": {
-                                                                                    "Name": "Center",
-                                                                                    "Default Variable ID": {
-                                                                                        "Underlying": {
-                                                                                            "ptr_wrapper": {
-                                                                                                "id": 2147483663,
-                                                                                                "data": {
-                                                                                                    "UUID": "3edb5a07-a531-417a-8d7a-779da48f5905",
-                                                                                                    "Registry": {
-                                                                                                        "index": 0,
-                                                                                                        "data": {
-                                                                                                            "ptr_wrapper": {
-                                                                                                                "id": 2147483664,
-                                                                                                                "data": {
-                                                                                                                    "Underlying container": [
-                                                                                                                        {
-                                                                                                                            "key": "3edb5a07-a531-417a-8d7a-779da48f5905",
-                                                                                                                            "value": {
-                                                                                                                                "Name": "Center",
-                                                                                                                                "Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": -0.32087448239326479,
-                                                                                                                                        "y": 0.7392208576202393
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Metadata": {
-                                                                                                                                    "Drag speed": 0.00009999999747378752
-                                                                                                                                },
-                                                                                                                                "Default Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": 0.0,
-                                                                                                                                        "y": 0.0
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Default Metadata": {
-                                                                                                                                    "Drag speed": 0.00009999999747378752
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        },
-                                                                                                                        {
-                                                                                                                            "key": "c2b9d517-1955-4cb9-a31c-7e458a966558",
-                                                                                                                            "value": {
-                                                                                                                                "Name": "Center",
-                                                                                                                                "Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": 0.0,
-                                                                                                                                        "y": 0.0
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Metadata": {
-                                                                                                                                    "Drag speed": 0.000029999999242136256
-                                                                                                                                },
-                                                                                                                                "Default Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": 0.0,
-                                                                                                                                        "y": 0.0
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Default Metadata": {
-                                                                                                                                    "Drag speed": 0.000029999999242136256
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        },
-                                                                                                                        {
-                                                                                                                            "key": "93a3ec78-6ca5-4587-84aa-ca8cab4d236e",
-                                                                                                                            "value": {
-                                                                                                                                "Name": "Center",
-                                                                                                                                "Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": 0.0,
-                                                                                                                                        "y": 0.0
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Metadata": {
-                                                                                                                                    "Drag speed": 0.000029999999242136256
-                                                                                                                                },
-                                                                                                                                "Default Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": 0.0,
-                                                                                                                                        "y": 0.0
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Default Metadata": {
-                                                                                                                                    "Drag speed": 0.000029999999242136256
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        },
-                                                                                                                        {
-                                                                                                                            "key": "57fe967f-03e2-42bf-ae53-9e6c61a79701",
-                                                                                                                            "value": {
-                                                                                                                                "Name": "Center",
-                                                                                                                                "Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": 0.0,
-                                                                                                                                        "y": 0.0
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Metadata": {
-                                                                                                                                    "Drag speed": 0.0006000000284984708
-                                                                                                                                },
-                                                                                                                                "Default Value": {
-                                                                                                                                    "Point2D": {
-                                                                                                                                        "x": 0.0,
-                                                                                                                                        "y": 0.0
-                                                                                                                                    }
-                                                                                                                                },
-                                                                                                                                "Default Metadata": {
-                                                                                                                                    "Drag speed": 0.000029999999242136256
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                    ]
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
-                                                                                    "Dirty Flag": {
-                                                                                        "ID": {
-                                                                                            "Underlying": {
-                                                                                                "ptr_wrapper": {
-                                                                                                    "id": 6
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "desired color space": 0
-                                                                                }
-                                                                            }
-                                                                        ],
-                                                                        "Number of main input pins": 0,
                                                                         "Number of function inputs": 0,
                                                                         "Chosen Any type": {
                                                                             "nullopt": true
@@ -1392,7 +1392,7 @@
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 16
+                                                                                                                "id": 13
                                                                                                             }
                                                                                                         }
                                                                                                     }
@@ -1636,7 +1636,7 @@
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 16
+                                                                                                                "id": 13
                                                                                                             }
                                                                                                         }
                                                                                                     }
@@ -1829,7 +1829,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "key": "ad811991-a41d-4685-a221-b838a4a9c528",
+                                                    "key": "acd67620-2818-45fb-b7c3-75eab8679a56",
                                                     "value": {
                                                         "pimpl": {
                                                             "polymorphic_id": 2,
@@ -1839,20 +1839,26 @@
                                                                     "Node": {
                                                                         "Name": "",
                                                                         "Definition": {
-                                                                            "Definition name": "Gradient Radial",
-                                                                            "Category name": "Greyscale"
+                                                                            "Definition name": "Zoom",
+                                                                            "Category name": "2D Modifier"
                                                                         },
                                                                         "Input Pins": [
                                                                             {
                                                                                 "Base Pin": {
-                                                                                    "Name": "Stretch",
-                                                                                    "ID": "22a74a11-9045-4a99-bf95-a13a511982d8"
+                                                                                    "Name": "uv",
+                                                                                    "ID": "628cef16-9e5f-42da-9d88-cdedfcf86c62"
                                                                                 }
                                                                             },
                                                                             {
                                                                                 "Base Pin": {
-                                                                                    "Name": "Clamp",
-                                                                                    "ID": "1d0ea742-f2a2-4962-878c-75aa9fe4fff3"
+                                                                                    "Name": "Zoom",
+                                                                                    "ID": "3a1cdaed-518f-45b8-a947-160f72e61447"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Center",
+                                                                                    "ID": "03a3a800-a740-46aa-8420-2409cd22bdff"
                                                                                 }
                                                                             }
                                                                         ],
@@ -1860,7 +1866,7 @@
                                                                             {
                                                                                 "Base Pin": {
                                                                                     "Name": "OUT",
-                                                                                    "ID": "888b2bfb-d49a-47d6-b0ed-bdd7a38b8cbc"
+                                                                                    "ID": "b8445866-2a2b-4ec3-a35b-2842baae241f"
                                                                                 }
                                                                             }
                                                                         ],
@@ -1868,13 +1874,13 @@
                                                                             {
                                                                                 "index": 2,
                                                                                 "data": {
-                                                                                    "Name": "Stretch",
+                                                                                    "Name": "Zoom",
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
                                                                                                 "id": 2147483675,
                                                                                                 "data": {
-                                                                                                    "UUID": "665d91b8-2090-4fce-b5a5-769d2a2bd3ac",
+                                                                                                    "UUID": "7de09c72-7571-4652-8c8d-850ca8265081",
                                                                                                     "Registry": {
                                                                                                         "index": 0,
                                                                                                         "data": {
@@ -1901,20 +1907,20 @@
                                                                                 }
                                                                             },
                                                                             {
-                                                                                "index": 0,
+                                                                                "index": 3,
                                                                                 "data": {
-                                                                                    "Name": "Clamp",
+                                                                                    "Name": "Center",
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
                                                                                                 "id": 2147483676,
                                                                                                 "data": {
-                                                                                                    "UUID": "ab898369-458c-4e1f-9ea3-390162cb7b73",
+                                                                                                    "UUID": "c2b9d517-1955-4cb9-a31c-7e458a966558",
                                                                                                     "Registry": {
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 25
+                                                                                                                "id": 13
                                                                                                             }
                                                                                                         }
                                                                                                     }
@@ -1936,7 +1942,7 @@
                                                                                 }
                                                                             }
                                                                         ],
-                                                                        "Number of main input pins": 0,
+                                                                        "Number of main input pins": 1,
                                                                         "Number of function inputs": 0,
                                                                         "Chosen Any type": {
                                                                             "nullopt": true
@@ -2117,7 +2123,7 @@
                                                     }
                                                 },
                                                 {
-                                                    "key": "acd67620-2818-45fb-b7c3-75eab8679a56",
+                                                    "key": "ad811991-a41d-4685-a221-b838a4a9c528",
                                                     "value": {
                                                         "pimpl": {
                                                             "polymorphic_id": 2,
@@ -2127,26 +2133,20 @@
                                                                     "Node": {
                                                                         "Name": "",
                                                                         "Definition": {
-                                                                            "Definition name": "Zoom",
-                                                                            "Category name": "2D Modifier"
+                                                                            "Definition name": "Gradient Radial",
+                                                                            "Category name": "Greyscale"
                                                                         },
                                                                         "Input Pins": [
                                                                             {
                                                                                 "Base Pin": {
-                                                                                    "Name": "uv",
-                                                                                    "ID": "628cef16-9e5f-42da-9d88-cdedfcf86c62"
+                                                                                    "Name": "Stretch",
+                                                                                    "ID": "22a74a11-9045-4a99-bf95-a13a511982d8"
                                                                                 }
                                                                             },
                                                                             {
                                                                                 "Base Pin": {
-                                                                                    "Name": "Zoom",
-                                                                                    "ID": "3a1cdaed-518f-45b8-a947-160f72e61447"
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                "Base Pin": {
-                                                                                    "Name": "Center",
-                                                                                    "ID": "03a3a800-a740-46aa-8420-2409cd22bdff"
+                                                                                    "Name": "Clamp",
+                                                                                    "ID": "1d0ea742-f2a2-4962-878c-75aa9fe4fff3"
                                                                                 }
                                                                             }
                                                                         ],
@@ -2154,7 +2154,7 @@
                                                                             {
                                                                                 "Base Pin": {
                                                                                     "Name": "OUT",
-                                                                                    "ID": "b8445866-2a2b-4ec3-a35b-2842baae241f"
+                                                                                    "ID": "888b2bfb-d49a-47d6-b0ed-bdd7a38b8cbc"
                                                                                 }
                                                                             }
                                                                         ],
@@ -2162,13 +2162,13 @@
                                                                             {
                                                                                 "index": 2,
                                                                                 "data": {
-                                                                                    "Name": "Zoom",
+                                                                                    "Name": "Stretch",
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
                                                                                                 "id": 2147483679,
                                                                                                 "data": {
-                                                                                                    "UUID": "7de09c72-7571-4652-8c8d-850ca8265081",
+                                                                                                    "UUID": "665d91b8-2090-4fce-b5a5-769d2a2bd3ac",
                                                                                                     "Registry": {
                                                                                                         "index": 0,
                                                                                                         "data": {
@@ -2195,20 +2195,20 @@
                                                                                 }
                                                                             },
                                                                             {
-                                                                                "index": 3,
+                                                                                "index": 0,
                                                                                 "data": {
-                                                                                    "Name": "Center",
+                                                                                    "Name": "Clamp",
                                                                                     "Default Variable ID": {
                                                                                         "Underlying": {
                                                                                             "ptr_wrapper": {
                                                                                                 "id": 2147483680,
                                                                                                 "data": {
-                                                                                                    "UUID": "c2b9d517-1955-4cb9-a31c-7e458a966558",
+                                                                                                    "UUID": "ab898369-458c-4e1f-9ea3-390162cb7b73",
                                                                                                     "Registry": {
                                                                                                         "index": 0,
                                                                                                         "data": {
                                                                                                             "ptr_wrapper": {
-                                                                                                                "id": 16
+                                                                                                                "id": 25
                                                                                                             }
                                                                                                         }
                                                                                                     }
@@ -2230,7 +2230,7 @@
                                                                                 }
                                                                             }
                                                                         ],
-                                                                        "Number of main input pins": 1,
+                                                                        "Number of main input pins": 0,
                                                                         "Number of function inputs": 0,
                                                                         "Chosen Any type": {
                                                                             "nullopt": true
@@ -2421,17 +2421,17 @@
                                                     }
                                                 },
                                                 {
-                                                    "key": "30b3907f-a40e-4f2a-b615-fef3fa1718ac",
-                                                    "value": {
-                                                        "From pin": "2b3e4318-d563-418a-afeb-8150f66a7cc4",
-                                                        "To pin": "2c3698bf-3fa1-46f7-8c52-ec5953cccbe0"
-                                                    }
-                                                },
-                                                {
                                                     "key": "c6c69d72-3120-4125-8a28-5aa2ddfbfdc3",
                                                     "value": {
                                                         "From pin": "84b6f46b-70cc-4acf-93cd-baafa369c2b9",
                                                         "To pin": "02378ae3-579f-4cb9-b349-cb2de8b9080e"
+                                                    }
+                                                },
+                                                {
+                                                    "key": "30b3907f-a40e-4f2a-b615-fef3fa1718ac",
+                                                    "value": {
+                                                        "From pin": "2b3e4318-d563-418a-afeb-8150f66a7cc4",
+                                                        "To pin": "2c3698bf-3fa1-46f7-8c52-ec5953cccbe0"
                                                     }
                                                 },
                                                 {
@@ -2502,7 +2502,7 @@
                                     },
                                     "Frame nodes": [],
                                     "Context": {
-                                        "UI State": "{\"nodes\":{\"node:12703266763317293498\":{\"location\":{\"x\":2248,\"y\":444}},\"node:13997256126258797875\":{\"location\":{\"x\":1624,\"y\":350}},\"node:14721594680861544661\":{\"location\":{\"x\":1435,\"y\":348}},\"node:15658494441340550145\":{\"location\":{\"x\":856,\"y\":334}},\"node:164744236698066615\":{\"location\":{\"x\":3011,\"y\":286}},\"node:17530882208273782252\":{\"location\":{\"x\":632,\"y\":302}},\"node:18105904437535364780\":{\"location\":{\"x\":1851,\"y\":350}},\"node:2253155612342791821\":{\"location\":{\"x\":620,\"y\":478}},\"node:3695886866966258652\":{\"location\":{\"x\":2040,\"y\":354}},\"node:4706088772453883599\":{\"location\":{\"x\":2449,\"y\":286}},\"node:6360379555685189876\":{\"location\":{\"x\":2713,\"y\":286}},\"node:6507197430194304867\":{\"location\":{\"x\":1016,\"y\":338}},\"node:93396026554491683\":{\"location\":{\"x\":1192,\"y\":332}},\"node:9603395848060371373\":{\"location\":{\"x\":424,\"y\":478}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":2036.302734375,\"y\":-22.3012237548828125},\"visible_rect\":{\"max\":{\"x\":3359.302734375,\"y\":887.69879150390625},\"min\":{\"x\":2036.302734375,\"y\":-22.3012237548828125}},\"zoom\":1}}"
+                                        "UI State": "{\"nodes\":{\"node:12703266763317293498\":{\"location\":{\"x\":2248,\"y\":444}},\"node:13997256126258797875\":{\"location\":{\"x\":1624,\"y\":350}},\"node:14721594680861544661\":{\"location\":{\"x\":1435,\"y\":348}},\"node:15658494441340550145\":{\"location\":{\"x\":856,\"y\":334}},\"node:164744236698066615\":{\"location\":{\"x\":3011,\"y\":286}},\"node:17530882208273782252\":{\"location\":{\"x\":632,\"y\":302}},\"node:18105904437535364780\":{\"location\":{\"x\":1851,\"y\":350}},\"node:2253155612342791821\":{\"location\":{\"x\":620,\"y\":478}},\"node:3695886866966258652\":{\"location\":{\"x\":2040,\"y\":354}},\"node:4706088772453883599\":{\"location\":{\"x\":2449,\"y\":286}},\"node:6360379555685189876\":{\"location\":{\"x\":2713,\"y\":286}},\"node:6507197430194304867\":{\"location\":{\"x\":1016,\"y\":338}},\"node:93396026554491683\":{\"location\":{\"x\":1192,\"y\":332}},\"node:9603395848060371373\":{\"location\":{\"x\":424,\"y\":478}}},\"selection\":null,\"view\":{\"scroll\":{\"x\":1994.8065185546875,\"y\":-17.4491481781005859},\"visible_rect\":{\"max\":{\"x\":2846.0615234375,\"y\":887.69915771484375},\"min\":{\"x\":2549.544189453125,\"y\":-22.3015975952148438}},\"zoom\":0.782416939735412598}}"
                                     }
                                 }
                             }
@@ -2559,14 +2559,14 @@
                 "tuple_element3": {
                     "Underlying registry": {
                         "ptr_wrapper": {
-                            "id": 16
+                            "id": 13
                         }
                     }
                 },
                 "tuple_element4": {
                     "Underlying registry": {
                         "ptr_wrapper": {
-                            "id": 13
+                            "id": 16
                         }
                     }
                 },
