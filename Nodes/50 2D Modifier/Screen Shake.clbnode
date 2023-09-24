@@ -1,0 +1,14 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+#include "_COOL_RES_/shaders/simplex_noise_2D.glsl"
+
+INPUT float 'Time';
+INPUT float 'Speed';
+INPUT float 'Intensity';
+
+UV main(UV Image)
+{
+    float intensity = simplex_noise_2D(vec2('Time' * 'Speed', 10.)) * 'Intensity' / 10.;
+    float angle     = simplex_noise_2D(vec2('Time', -10.)) * TAU;
+    vec2  shake     = vec2_from_polar(intensity, angle);
+    return Image + shake;
+}

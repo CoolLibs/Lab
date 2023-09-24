@@ -10,7 +10,7 @@ struct Command_SetVariableMetadata {
     Cool::VariableId<T>       id{};
     Cool::VariableMetadata<T> metadata{};
 
-    void execute(CommandExecutionContext_Ref& ctx) const
+    void execute(CommandExecutionContext_Ref const& ctx) const
     {
         ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
             variable.metadata() = metadata;

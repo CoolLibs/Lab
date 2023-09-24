@@ -1,9 +1,9 @@
-INPUT Texture `Image`;
+INPUT Texture 'Image';
 
 sRGB_StraightA main(UV uv)
 {
     uv /= 2.;
-    uv.x /= `Image`.aspect_ratio;
+    uv.x /= 'Image'.aspect_ratio;
     uv += 0.5;
-    return texture(`Image`.tex, uv);
+    return texture('Image'.tex, uv);
 }

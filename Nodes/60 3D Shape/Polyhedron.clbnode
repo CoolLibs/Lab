@@ -1,0 +1,59 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Radius';
+INPUT float 'Vertices Radius';
+
+INPUT float 'Edges Thickness';
+INPUT float 'Faces Roundness';
+INPUT float 'Faces Size';
+INPUT float 'Faces Sharpness';
+
+INPUT int 'Kind';
+
+float _polyhedron_D2Planes(vec3 pos, vec3 p, vec3 pab, vec3 pbc, vec3 pca)
+{ // distance to the 3 faces
+    pos -= p;
+    float d0 = dot(pos, pab);
+    float d1 = dot(pos, pbc);
+    float d2 = dot(pos, pca);
+    return max(max(d0, d1), d2);
+}
+
+float _polyhedron_D2Segments(vec3 pos, vec3 p, vec3 nc, float SRadius)
+{
+    pos -= p;
+    float dla = length_squared(pos - min(0., pos.x) * vec3(1., 0., 0.));
+    float dlb = length_squared(pos - min(0., pos.y) * vec3(0., 1., 0.));
+    float dlc = length_squared(pos - min(0., dot(pos, nc)) * nc);
+    return sqrt(min(min(dla, dlb), dlc)) - SRadius;
+}
+
+float _polyhedron_D2Vertices(vec3 pos, vec3 p, float VRadius)
+{
+    return length(pos - p) - VRadius;
+}
+
+SignedDistance main(vec3 pos)
+{
+    // Thanks to https://www.shadertoy.com/view/XlX3zB
+    pos /= 'Radius';
+    float cospin  = cos(PI / 'Kind');
+    float scospin = sqrt(0.75 - cospin * cospin);
+    vec3  nc      = vec3(-0.5, -cospin, scospin); // 3rd folding plane. The two others are xz and yz planes
+    vec3  pab     = vec3(0., 0., 1.);
+    vec3  pbc     = vec3(scospin, 0., 0.5); // No normalization in order to have 'barycentric' coordinates work evenly
+    vec3  pca     = vec3(0., scospin, cospin);
+    vec3  p       = normalize(('Faces Roundness' * pab + 'Faces Size' * pbc + 'Faces Sharpness' * pca)); // 'Faces Roundness', 'Faces Size' and 'Faces Sharpness' are the 'barycentric' coordinates (quoted barycentric word because I'm not sure if they are really barycentric... have to check)
+    pbc           = normalize(pbc);                                                                      // For slightly better DE. In reality it's not necesary to apply normalization :)
+    pca           = normalize(pca);                                                                      // For slightly better DE. In reality it's not necesary to apply normalization :)
+    for (int i = 0; i < 'Kind'; i++)
+    {
+        pos.xy = abs(pos.xy);                   // fold about xz and yz planes
+        pos -= 2. * min(0., dot(pos, nc)) * nc; // fold about nc plane
+    }
+
+    float d = _polyhedron_D2Planes(pos, p, pab, pbc, pca);
+    d       = min(d, _polyhedron_D2Segments(pos, p, nc, 'Edges Thickness'));
+    d       = min(d, _polyhedron_D2Vertices(pos, p, 'Vertices Radius'));
+    return CLB_FIX_ARTIFACTS(d);
+}

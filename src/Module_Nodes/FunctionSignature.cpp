@@ -1,7 +1,6 @@
 #include "FunctionSignature.h"
 #include <Module_Nodes/FunctionSignature.h>
 #include <Module_Nodes/PrimitiveType.h>
-#include "can_convert.h"
 
 namespace Lab {
 
@@ -72,10 +71,11 @@ auto is_image(FunctionSignature signature) -> bool
 
 auto is_greyscale(FunctionSignature signature) -> bool
 {
-    return can_convert(signature.to, PrimitiveType::Float);
+    return can_convert(signature.to, PrimitiveType::Float)
+           || is_greyscale_type(signature.to);
 }
 
-auto space_transformation_signature() -> FunctionSignature
+auto modifier_2D_signature() -> FunctionSignature
 {
     return FunctionSignature{
         .from  = PrimitiveType::UV,
@@ -83,9 +83,16 @@ auto space_transformation_signature() -> FunctionSignature
         .arity = 1,
     };
 }
-auto is_space_transformation(FunctionSignature signature) -> bool
+auto is_modifier_2D(FunctionSignature signature) -> bool
 {
-    return signature == space_transformation_signature();
+    return signature == modifier_2D_signature();
+}
+
+auto is_color_or_greyscale_modifier(FunctionSignature signature) -> bool
+{
+    return signature.arity == 1
+           && is_color_or_greyscale_type(signature.from)
+           && is_color_or_greyscale_type(signature.to);
 }
 
 } // namespace Lab

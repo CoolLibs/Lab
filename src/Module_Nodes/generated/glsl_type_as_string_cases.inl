@@ -7,6 +7,8 @@
 case PrimitiveType::Bool: return "/*Bool*/ bool";
 case PrimitiveType::Int: return "/*Int*/ int";
 case PrimitiveType::Float: return "/*Float*/ float";
+case PrimitiveType::Float_PremultipliedA: return "/*Float_PremultipliedA*/ vec2";
+case PrimitiveType::Float_StraightA: return "/*Float_StraightA*/ vec2";
 case PrimitiveType::Vec2: return "/*Vec2*/ vec2";
 case PrimitiveType::Vec3: return "/*Vec3*/ vec3";
 case PrimitiveType::Vec4: return "/*Vec4*/ vec4";

@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance '3D Shape';
+
+INPUT float 'X Spacing';
+INPUT float 'Y Spacing';
+INPUT float 'Z Spacing';
+
+SignedDistance main(vec3 pos)
+{
+    vec3 cell_radii = vec3('X Spacing', 'Y Spacing', 'Z Spacing');
+    return '3D Shape'((fract(pos / cell_radii) - 0.5) * cell_radii);
+}

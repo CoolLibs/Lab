@@ -1,6 +1,0 @@
-INPUT Point2D `Point 2D`;
-
-UV main()
-{
-    return `Point 2D`;
-}

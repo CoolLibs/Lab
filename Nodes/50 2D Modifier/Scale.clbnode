@@ -1,0 +1,14 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Scale x';
+INPUT float 'Scale y';
+
+UV main(UV uv)
+{
+    mat2 scale = mat2(
+        1 / 'Scale x', 0.0,
+        0.0, 1 / 'Scale y'
+    );
+
+    return scale * uv;
+}

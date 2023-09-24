@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->float 'Image';
+INPUT float 'Density';
+
+float main(UV uv)
+{
+    float grey = 'Image'(uv);
+    return grey < pow(hash_0_to_1_2D_to_1D(uv), 'Density') ? 0. : 1.;
+}

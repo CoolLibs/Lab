@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+#include "_ROOT_FOLDER_/res/hg_sdf.glsl"
+
+INPUT vec3->SignedDistance '3D Shape';
+INPUT int 'Repetitions';
+
+SignedDistance main(vec3 pos)
+{
+    pModPolar(pos.xy, 'Repetitions');
+    return CLB_FIX_ARTIFACTS('3D Shape'(pos));
+}

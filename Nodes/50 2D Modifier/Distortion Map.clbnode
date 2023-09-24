@@ -1,0 +1,11 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->float 'Distortion Map';
+INPUT float 'Strength';
+INPUT float->UV 'Curve';
+
+UV main(UV Image)
+{
+    vec2 uv = Image;
+    return uv + 'Curve'('Distortion Map'(uv)) * 'Strength';
+}

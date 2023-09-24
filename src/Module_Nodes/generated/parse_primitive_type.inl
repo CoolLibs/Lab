@@ -16,6 +16,14 @@ if (str == "float")
 {
     return PrimitiveType::Float;
 }
+if (str == "Float_PremultipliedA")
+{
+    return PrimitiveType::Float_PremultipliedA;
+}
+if (str == "Float_StraightA")
+{
+    return PrimitiveType::Float_StraightA;
+}
 if (str == "vec2")
 {
     return PrimitiveType::Vec2;

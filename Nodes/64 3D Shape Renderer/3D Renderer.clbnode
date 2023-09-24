@@ -1,0 +1,363 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance 'Shape 3D';
+
+INPUT int 'Max number of steps';
+
+INPUT LinearRGB 'Background Color';
+
+INPUT float 'Blur normals at edges';
+
+INPUT bool 'Fresnel';
+INPUT float 'Fresnel Strength';
+INPUT LinearRGB 'Fresnel Color';
+
+INPUT bool 'Normals';
+INPUT float 'Normals Strength';
+
+INPUT bool 'PBR';
+INPUT LinearRGB 'PBR Light Color';
+INPUT LinearRGB 'PBR Ambient Color';
+
+INPUT float 'PBR Roughness';
+INPUT float 'PBR Metalness';
+
+INPUT bool 'Refraction';
+INPUT float 'Index of Refraction';
+
+INPUT float 'Refraction Aberration';
+INPUT float 'Refraction Density';
+
+INPUT bool 'Shadows';
+INPUT float 'Shadow Softness';
+INPUT float 'Shadow Strength';
+INPUT vec3 'Shadow Sun Position';
+
+INPUT bool 'SSAO';
+INPUT float 'SSAO Size';
+
+INPUT bool 'Ambient Occlusion';
+
+INPUT float 'Ambient Occlusion Size';
+
+// clang-format off
+INPUT bool  'Fog (Constant)';
+INPUT float 'Fog (Constant) Absorption';
+INPUT float 'Fog (Constant) Emission';
+INPUT LinearRGB 'Fog (Constant) Color';
+
+INPUT bool 'Fog (Gradient)';
+INPUT float 'Fog (Gradient) Density';
+INPUT float 'Fog (Gradient) Falloff';
+INPUT float 'Fog (Gradient) Max Absorption';
+INPUT float 'Fog (Gradient) Ground Height';
+INPUT LinearRGB  'Fog (Gradient) Color';
+// clang-format on
+INPUT bool 'Glow';
+INPUT float 'Glow Strength';
+INPUT float 'Glow Power';
+INPUT LinearRGB 'Glow Color';
+
+INPUT bool 'Glow2';
+INPUT float 'Glow2 Strength';
+INPUT float 'Glow2 Falloff';
+INPUT LinearRGB 'Glow2 Color';
+
+INPUT bool 'Cartoon Edges';
+
+INPUT float 'Cartoon Edges Size';
+
+INPUT float 'Cartoon Edges Size Growth';
+INPUT float 'Cartoon Edges Size Power';
+INPUT LinearRGB 'Cartoon Edges Color';
+
+#define MAX_DIST cool_camera_far_plane
+
+vec3 get_normal(vec3 p)
+{
+    float h = 'Blur normals at edges';
+
+    const vec2 k = vec2(1., -1.);
+    return normalize(k.xyy * 'Shape 3D'(p + k.xyy * h) + k.yyx * 'Shape 3D'(p + k.yyx * h) + k.yxy * 'Shape 3D'(p + k.yxy * h) + k.xxx * 'Shape 3D'(p + k.xxx * h));
+}
+
+#include "_COOL_RES_/shaders/pbr_calc.glsl"
+// PBR RENDERING thx to : https://www.shadertoy.com/view/4tXXzM
+
+float render_color(vec3 refraction_in, vec3 norm_exit, float IOR, float Abberation, int channel)
+{
+    vec3 refraction_out = refract(refraction_in, norm_exit, IOR - Abberation);
+    if (dot(refraction_out, refraction_out) == 0.)
+    {
+        refraction_out = reflect(refraction_in, norm_exit);
+    }
+    return refraction_out[channel];
+}
+
+float soft_shadow(vec3 ro, vec3 rd, float k)
+{
+    float res = 1.0;
+    float ph  = 1e20;
+    for (float t = 0.01; t < MAX_DIST;)
+    {
+        float h = 'Shape 3D'(ro + rd * t);
+        if (h < 0.0001)
+            return 0.0;
+        float y = h * h / (2.0 * ph);
+        float d = sqrt(h * h - y * y);
+        res     = min(res, k * d / max(0.0, t - y));
+        ph      = h;
+        t += h;
+    }
+    return res;
+}
+
+vec3 ssao_rotate_points(vec3 p, vec3 pts)
+{
+    vec3  normalSphere = vec3(0.0, 0.0, 1.0);
+    vec3  normal       = get_normal(p);
+    vec3  axeRot       = cross(normal, normalSphere);
+    float angle        = acos(dot(normal, normalize(normalSphere)));
+    pts                = rotation_around_axis(pts, normalize(axeRot), -angle);
+    return pts;
+}
+
+float ssao(vec3 p, float SSAO_Size)
+{
+    float bl = 0.0;
+    for (int i = 0; i < 32; i++)
+    {
+        if ('Shape 3D'(p + (ssao_rotate_points(p, SSAO_Size * (ssao_big_rand[i] - vec3(0.5, 0.5, 0.0))))) > 0.0)
+        {
+            bl += 1.0;
+        }
+    }
+    return bl / 32.0;
+}
+
+float calc_occlusion(vec3 pos, vec3 nor, float ra)
+{
+    float occ = 0.0;
+    for (int i = 0; i < 64; i++)
+    {
+        float h   = 0.01 + 2.0 * pow(float(i) / 63.0, 2.0);
+        vec2  an  = hash_0_to_1_1D_to_2D(ra + float(i) * 13.1) * vec2(3.14159, 6.2831);
+        vec3  dir = vec3(sin(an.x) * sin(an.y), sin(an.x) * cos(an.y), cos(an.x));
+        dir *= sign(dot(dir, nor));
+        occ += clamp(5.0 * 'Shape 3D'(pos + h * dir) / h, -1.0, 1.0);
+    }
+    return clamp(occ / 64.0, 0.0, 1.0);
+}
+
+#define SURF_DIST       0.0001
+#define DONT_INVERT_SDF 1.
+#define INVERT_SDF      -1.
+
+RayMarchRes rayMarching(vec3 ro, vec3 rd, float in_or_out)
+{
+    float t                                    = 0.;
+    float closest_grazed_object                = MAX_DIST;
+    float distance_when_grazing_closest_object = 0.;
+    float lastd                                = 'Shape 3D'(ro);
+    int   i                                    = 0;
+    for (; i < 'Max number of steps'; i++)
+    {
+        vec3  pos = ro + rd * t;
+        float d   = 'Shape 3D'(pos)*in_or_out;
+        t += d;
+        if (t > MAX_DIST || abs(d) < SURF_DIST * 0.99)
+            break;
+        if (d > lastd + 0.001)
+        {
+            if (lastd < closest_grazed_object)
+            {
+                closest_grazed_object                = lastd;
+                distance_when_grazing_closest_object = t;
+            }
+        }
+        lastd = d;
+    }
+    vec3 final_pos = ro + rd * t;
+    return RayMarchRes(t, i, rd, ro, final_pos, get_normal(final_pos), closest_grazed_object, distance_when_grazing_closest_object, vec3(0.));
+}
+
+vec3 apply_background(RayMarchRes res)
+{
+    return 'Background Color';
+}
+
+vec3 apply_material(RayMarchRes res)
+{
+    vec3 material_color = vec3(0., 0., 0.);
+    if ('Fresnel')
+    {
+        float fresnel = pow(clamp(1. - dot(res.normal, -res.ray_direction), 0., 1.), 'Fresnel Strength');
+
+        material_color += fresnel * 'Fresnel Color';
+    }
+    if ('Normals')
+    {
+        material_color += (res.normal * 0.5 + 0.5) * 'Normals Strength';
+    }
+    if ('PBR')
+    {
+        vec3 ligthDir = vec3(-1.0, -3.0, -1.0);
+        vec3 normal   = res.normal;
+
+        float F = fresnel(normal, 'PBR Metalness');
+        float D = dot(normal, ligthDir);
+        float S = specular(normal, ligthDir, 'PBR Roughness', 'PBR Metalness');
+
+        vec3 SpecCol = S * 'PBR Light Color';
+        vec3 DiffCol = D * 'PBR Light Color' * (1.0 - F);
+
+        const float cAmbiantMin = 0.04;
+        vec3        reflectCol  = res.reflection_color + 'PBR Ambient Color';
+
+        vec3 AmbiantColor = reflectCol * cAmbiantMin;
+        vec3 lights       = max((DiffCol + SpecCol) * (1.0 - cAmbiantMin), vec3(0.0, 0.0, 0.0));
+        material_color *= lights + AmbiantColor + (F * reflectCol);
+    }
+    if ('Refraction')
+    {
+        vec3 reflet_out    = reflect(res.ray_direction, res.normal);
+        vec3 refraction_in = refract(res.ray_direction, res.normal, 1. / 'Index of Refraction');
+
+        vec3        p_enter = res.hit_position - res.normal * SURF_DIST * 3.;
+        RayMarchRes d_in    = rayMarching(p_enter, refraction_in, INVERT_SDF); // Inside
+        float       d2      = d_in.distance;
+
+        vec3 p_exit       = p_enter + refraction_in * d2;
+        vec3 norm_exit    = -get_normal(p_exit);
+        vec3 reflect_text = vec3(0);
+
+        // Red
+        reflect_text.r = render_color(refraction_in, norm_exit, 'Index of Refraction', 'Refraction Aberration', 0);
+        // Green
+        reflect_text.g = render_color(refraction_in, norm_exit, 'Index of Refraction', 0., 1);
+        // Blue
+        reflect_text.b = render_color(refraction_in, norm_exit, 'Index of Refraction', -'Refraction Aberration', 2);
+
+        float optical_distance   = exp(-d2 * 'Refraction Density');
+        reflect_text             = reflect_text * optical_distance;
+        float fresnel_reflection = pow(1. + dot(res.ray_direction, res.normal), 5.);
+
+        material_color += mix(reflect_text, reflet_out, fresnel_reflection);
+    }
+    if ('Shadows')
+    {
+        material_color *= (1.0 - 'Shadow Strength') + 'Shadow Strength' * soft_shadow(res.hit_position, normalize('Shadow Sun Position' - res.hit_position), 'Shadow Softness');
+    }
+    if ('SSAO')
+    {
+        material_color *= ssao(res.hit_position, 'SSAO Size');
+    }
+    if ('Ambient Occlusion')
+    {
+        material_color *= calc_occlusion(res.hit_position, get_normal(res.hit_position), 'Ambient Occlusion Size');
+    }
+
+    return material_color;
+}
+
+vec3 post_process(RayMarchRes res, vec3 color)
+{
+    // clang-format off
+    if ('Fog (Constant)')
+    {
+        float fog_extinction   = 1.0 - exp(-res.distance * 'Fog (Constant) Absorption');
+        float fog_inscattering = 1.0 - exp(-res.distance * 'Fog (Constant) Emission');
+        color                  = color * (1. - fog_extinction) + 'Fog (Constant) Color' * fog_inscattering;
+    }
+    if ('Fog (Gradient)')
+    {
+        float fog_amount = ('Fog (Gradient) Density' / 'Fog (Gradient) Falloff') * exp(-(res.ray_origin.z - 'Fog (Gradient) Ground Height') * 'Fog (Gradient) Falloff') * (1.0 - exp(-res.distance * res.ray_direction.z * 'Fog (Gradient) Falloff')) / res.ray_direction.z;
+        color            = mix(color, 'Fog (Gradient) Color', min(fog_amount, 'Fog (Gradient) Max Absorption'));
+    }
+    // clang-format on
+    if ('Glow')
+    {
+        float glow = pow(float(res.iterations_count) * 'Glow Strength', 'Glow Power');
+
+        color += glow * 'Glow Color';
+    }
+    if ('Glow2')
+    {
+        float glow = 'Glow2 Strength' * exp(-res.closest_grazed_object * 'Glow2 Falloff');
+
+        color += glow * 'Glow2 Color';
+    }
+    if ('Cartoon Edges')
+    {
+        color = res.closest_grazed_object < 'Cartoon Edges Size' + 'Cartoon Edges Size Growth' * pow(res.distance_when_grazing_closest_object, 'Cartoon Edges Size Power') * 'Cartoon Edges Size'
+
+                    ? 'Cartoon Edges Color'
+                    : color;
+    }
+
+    return color;
+}
+
+vec3 compute_color3(vec3 ro, vec3 rd)
+{
+    return vec3(0.);
+}
+
+vec3 compute_color2(vec3 ro, vec3 rd)
+{
+    RayMarchRes res   = rayMarching(ro, rd, DONT_INVERT_SDF);
+    vec3        color = vec3(0.);
+    if (res.distance < MAX_DIST)
+    {
+        res.reflection_color = compute_color3(res.hit_position + res.normal * SURF_DIST, reflect(rd, res.normal));
+        color += apply_material(res);
+    }
+    else
+    {
+        res.distance = MAX_DIST;
+        color += apply_background(res);
+    }
+    return post_process(res, color);
+}
+
+vec3 compute_color1(vec3 ro, vec3 rd)
+{
+    RayMarchRes res   = rayMarching(ro, rd, DONT_INVERT_SDF);
+    vec3        color = vec3(0.);
+    if (res.distance < MAX_DIST)
+    {
+        res.reflection_color = compute_color2(res.hit_position + res.normal * SURF_DIST, reflect(rd, res.normal));
+        color += apply_material(res);
+    }
+    else
+    {
+        res.distance = MAX_DIST;
+        color += apply_background(res);
+    }
+    return post_process(res, color);
+}
+
+vec3 compute_color(vec3 ro, vec3 rd)
+{
+    RayMarchRes res   = rayMarching(ro, rd, DONT_INVERT_SDF);
+    vec3        color = vec3(0.);
+    if (res.distance < MAX_DIST)
+    {
+        res.reflection_color = compute_color1(res.hit_position + res.normal * SURF_DIST, reflect(rd, res.normal));
+        color += apply_material(res);
+    }
+    else
+    {
+        res.distance = MAX_DIST;
+        color += apply_background(res);
+    }
+    return post_process(res, color);
+}
+
+LinearRGB_StraightA main(UV uv)
+{
+    vec3 ro = cool_ray_origin(unnormalize_uv(uv));
+    vec3 rd = cool_ray_direction(unnormalize_uv(uv));
+
+    return vec4(compute_color(ro, rd), 1.);
+}

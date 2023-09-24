@@ -1,9 +1,0 @@
-// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
-
-INPUT float->UV `Curve`;
-INPUT UV->UV `Space Transformation`;
-
-UV main(float t)
-{
-    return `Space Transformation`(`Curve`(t));
-}

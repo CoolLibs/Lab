@@ -53,7 +53,9 @@ auto is_image(FunctionSignature) -> bool;
 
 auto is_greyscale(FunctionSignature) -> bool;
 
-auto space_transformation_signature() -> FunctionSignature;
-auto is_space_transformation(FunctionSignature) -> bool;
+auto modifier_2D_signature() -> FunctionSignature;
+auto is_modifier_2D(FunctionSignature) -> bool;
+
+auto is_color_or_greyscale_modifier(FunctionSignature) -> bool;
 
 } // namespace Lab

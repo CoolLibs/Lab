@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Mask';
+
+CIELAB_StraightA main(CIELAB_StraightA Image)
+{
+    Image.a *= 'Mask';
+    return Image;
+}

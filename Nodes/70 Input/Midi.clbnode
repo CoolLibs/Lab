@@ -1,0 +1,8 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT Midi 'Midi Index';
+
+float main()
+{
+    return 'Midi Index';
+}

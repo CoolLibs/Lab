@@ -15,7 +15,7 @@ void imgui_show(T const& value)
     bool const clicked = ImGui::IsItemClicked();
     if (ImGui::IsItemHovered())
         ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
-    Cool::ImGuiExtras::tooltip("Copy to clipboard");
+    ImGui::SetItemTooltip("%s", "Copy to clipboard");
     if (clicked)
         ImGui::SetClipboardText(text.c_str());
 }
