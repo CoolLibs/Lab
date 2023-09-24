@@ -82,6 +82,7 @@ function Disk(uv: UV) -> Color
 On the other hand, in Coollab you first create your Disk node, and then pass that *function* to the Grid node, which will call it with a modified UV. Note that here the pins of the nodes don't represent UVs or Colors, but *Images* (i.e. functions from UV to Color).
 
 ![Alt text](function_flow.png)
+
 The Disk node is the same:
 ```glsl title="Disk"
 function Disk(uv: UV) -> Color
