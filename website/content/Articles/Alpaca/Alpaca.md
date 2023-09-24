@@ -1,4 +1,3 @@
-
 # Simplifying node-based programming with a functional approach
 
 Coollab is a node-based generative-art software where you compose small building blocks to create abstract artworks. It shares a few similarities with TouchDesigner, NotchVFX and the likes. But unlike any other software that we are aware of, Coollab takes a much higher-level approach with its nodes, inspired by functional programming. The main design guideline of Coollab is to have a very low barrier to entry, and make shader-art techniques accessible even to people with little to no knowledge in programming or mathematics.
@@ -29,14 +28,27 @@ function Disk(uv: UV) -> Color
 ```
 After that function has been run on all the pixels, some of them will have been colored white, others black, and overall they will form a white disk on a black background.
 
+<!-- <img src="@website/content/alpaca/disk.png" alt="Image" width="300" height="200" /> -->
+
+<div style={{width: "30%", margin: "auto"}}>
+
 ![](./disk.png)
+
+</div>
+
 
 In Coollab, users don't need to write code (although advanced users can), they can use the nodes that we provide: they wrap-up common operations you might want to do in code, and Coollab generates the shader code under the hood based on the nodes and links you created.
 
 ## Function-flow vs Data-flow
 
 Let's take the example of a grid of disks:
+
+<div style={{width: "30%", margin: "auto"}}>
+
 ![](./grid_of_disks.png)
+
+</div>
+
 The way to do this using a shader is to first write a function that draws a disk, and then modify its input to make it tile over space by using the `fract` function (cf. https://youtu.be/svLzmFuSBhk?t=235, where `mod(x, 1)` is equivalent to `fract(x)`).
 
 So a data-oriented workflow like we can find in Blender's Shader Nodes or Unity's Shader Graph would look like this: we first get the position (UV), then modify it with a Grid node, then pass it to the Disk node.
