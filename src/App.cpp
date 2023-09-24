@@ -64,6 +64,12 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
               .start_open  = true,
           }
       )}
+    , _midi_visualizer_window{
+          Cool::icon_fmt("Midi", ICOMOON_EQUALIZER),
+          Cool::ImGuiWindowConfig{
+              .is_modal   = false,
+              .start_open = false,
+          }}
 {
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
@@ -421,6 +427,9 @@ void App::imgui_windows()
 {
     ImGui::Begin("MIDI");
     Cool::midi_manager().imgui();
+    _midi_visualizer_window.show([&]() {
+        Cool::midi_manager().imgui_visualize_channels();
+    });
     ImGui::End();
     imgui_window_view();
     imgui_window_exporter();
@@ -603,6 +612,8 @@ void App::commands_menu()
             Cool::WebcamsConfigs::instance().open_imgui_window();
         if (ImGui::Selectable("Open output window"))
             _output_view.open();
+        if (ImGui::Selectable("Open MIDI window"))
+            _midi_visualizer_window.open();
         ImGui::EndMenu();
     }
 }

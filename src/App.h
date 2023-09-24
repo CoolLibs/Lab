@@ -9,7 +9,6 @@
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
-#include <Cool/Midi/MidiManager.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderView.h>
@@ -23,6 +22,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Cool/ImGui/ImGuiWindow.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
@@ -127,6 +127,7 @@ private:
     NodesLibraryManager                  _nodes_library_manager{};
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
+    Cool::ImGuiWindow                    _midi_visualizer_window;
 
 private:
     // Serialization
