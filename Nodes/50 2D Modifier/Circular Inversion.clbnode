@@ -3,9 +3,9 @@
 INPUT float 'Radius';
 INPUT Point2D 'Center';
 
-UV main(UV uv)
+UV main(UV Image)
 {
-    float d   = distance('Center', uv);
-    vec2  dir = (uv - 'Center') / d;
+    float d   = distance('Center', Image);
+    vec2  dir = (Image - 'Center') / d;
     return 'Center' + dir * 'Radius' * 'Radius' / d;
 }

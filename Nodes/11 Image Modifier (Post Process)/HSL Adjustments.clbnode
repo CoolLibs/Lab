@@ -4,10 +4,10 @@ INPUT float 'Shift';
 INPUT float 'S';
 INPUT float 'L';
 
-HSLuv main(HSLuv hsl)
+HSLuv main(HSLuv Image)
 {
-    hsl.x = fract(hsl.x + 'Shift');
-    hsl.y = hsl.y * (-4. * 'S') * ('S' - 1.) + 2. * 'S' * ('S' - 0.5);
-    hsl.z = hsl.z * (-4. * 'L') * ('L' - 1.) + 2. * 'L' * ('L' - 0.5);
-    return hsl;
+    Image.x = fract(Image.x + 'Shift');
+    Image.y = Image.y * (-4. * 'S') * ('S' - 1.) + 2. * 'S' * ('S' - 0.5);
+    Image.z = Image.z * (-4. * 'L') * ('L' - 1.) + 2. * 'L' * ('L' - 0.5);
+    return Image;
 }

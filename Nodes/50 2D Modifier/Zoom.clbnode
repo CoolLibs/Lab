@@ -1,10 +1,10 @@
 INPUT float 'Zoom';
 INPUT Point2D 'Center';
 
-UV main(UV uv)
+UV main(UV Image)
 {
-    uv -= 'Center';
-    uv = uv / 'Zoom';
+    Image -= 'Center';
+    Image = Image / 'Zoom';
 
-    return uv + 'Center';
+    return Image + 'Center';
 }
