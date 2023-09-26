@@ -14,6 +14,13 @@ auto generate_shader_code(
     Cool::InputProvider_Ref
 ) -> tl::expected<std::string, std::string>;
 
+auto generate_meshing_shader_code(
+    Cool::NodeId const& main_node_id,
+    Cool::Graph const&,
+    Cool::GetNodeDefinition_Ref<NodeDefinition>,
+    Cool::InputProvider_Ref
+) -> tl::expected<std::string, std::string>;
+
 auto valid_property_name(
     std::string const& name,
     reg::AnyId const&  property_default_variable_id

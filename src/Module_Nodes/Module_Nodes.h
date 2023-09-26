@@ -27,6 +27,8 @@ public:
 
     void compile(UpdateContext_Ref, bool for_testing_nodes = false);
 
+    auto generate_meshing_shader(UpdateContext_Ref update_ctx) -> tl::expected<std::string, std::string>;
+
     void debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
 
     auto               regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; }

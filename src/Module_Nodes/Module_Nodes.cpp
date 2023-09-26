@@ -79,6 +79,21 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     handle_error(maybe_err, for_testing_nodes);
 }
 
+auto Module_Nodes::generate_meshing_shader(UpdateContext_Ref update_ctx) -> tl::expected<std::string, std::string>
+{
+    if (_nodes_editor.graph().nodes().is_empty())
+        return tl::make_unexpected("No nodes");
+
+    auto const shader_code = generate_meshing_shader_code(
+        _main_node_id,
+        _nodes_editor.graph(),
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
+        update_ctx.input_provider()
+    );
+
+    return shader_code;
+}
+
 void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
 {
     if (!for_testing_nodes)

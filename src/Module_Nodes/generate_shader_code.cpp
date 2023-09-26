@@ -109,4 +109,66 @@ void main()
     );
 }
 
+auto generate_meshing_shader_code(
+    Cool::NodeId const&                         main_node_id,
+    Cool::Graph const&                                graph,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Cool::InputProvider_Ref                     input_provider
+)
+    -> tl::expected<std::string, std::string>
+{
+    auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
+    auto const main_function_name = gen_desired_function(
+        FunctionSignature{
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::sRGB_StraightA, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
+            .arity = 1,
+        },
+        main_node_id,
+        context
+    );
+    if (!main_function_name)
+        return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
+
+    using fmt::literals::operator""_a;
+    return fmt::format(
+        FMT_COMPILE(R"STR(
+uniform float _time;
+
+layout(std430, binding=0) buffer sdf_buffer {{
+   float data[];
+}};
+
+#include "_ROOT_FOLDER_/res/shader-utils.glsl"
+#include "_COOL_RES_/shaders/math.glsl"
+#include "_COOL_RES_/shaders/TextureInfo.glsl"
+
+struct CoollabContext
+{{
+    vec2 uv;
+}};
+
+{output_indices_declarations}
+
+{main_function_implementation}
+
+void cool_main() {{
+    uint gid = gl_GlobalInvocationID.x + 
+        gl_GlobalInvocationID.y * gl_NumWorkGroups.x + 
+        gl_GlobalInvocationID.z * gl_NumWorkGroups.x * gl_NumWorkGroups.y;
+
+    vec3 pos = vec3(gl_GlobalInvocationID);
+
+    CoollabContext dummy_coollab_context;
+    dummy_coollab_context.uv = vec2(0);
+    data[gid] = {main_function_name}(dummy_coollab_context, pos);
+}}
+)STR"
+        ),
+        "output_indices_declarations"_a  = gen_all_output_indices_declarations(graph),
+        "main_function_implementation"_a = inject_context_argument_in_all_functions(context.code(), context.function_names()),
+        "main_function_name"_a           = *main_function_name
+    );
+}
+
 } // namespace Lab
