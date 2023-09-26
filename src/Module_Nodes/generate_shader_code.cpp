@@ -120,8 +120,8 @@ auto generate_meshing_shader_code(
     auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
     auto const main_function_name = gen_desired_function(
         FunctionSignature{
-            .from  = PrimitiveType::UV,
-            .to    = PrimitiveType::sRGB_StraightA, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
+            .from  = PrimitiveType::Vec3,
+            .to    = PrimitiveType::SignedDistance, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
             .arity = 1,
         },
         main_node_id,
@@ -134,12 +134,13 @@ auto generate_meshing_shader_code(
     return fmt::format(
         FMT_COMPILE(R"STR(
 uniform float _time;
+uniform float _step_size;
+uniform vec3 _box_size;
 
 layout(std430, binding=0) buffer sdf_buffer {{
    float data[];
 }};
 
-#include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/TextureInfo.glsl"
 
@@ -153,11 +154,11 @@ struct CoollabContext
 {main_function_implementation}
 
 void cool_main() {{
-    uint gid = gl_GlobalInvocationID.x + 
-        gl_GlobalInvocationID.y * gl_NumWorkGroups.x + 
-        gl_GlobalInvocationID.z * gl_NumWorkGroups.x * gl_NumWorkGroups.y;
+    uint gid = gl_GlobalInvocationID.x +
+        gl_GlobalInvocationID.y * DispatchSize.x + 
+        gl_GlobalInvocationID.z * DispatchSize.y * DispatchSize.y;
 
-    vec3 pos = vec3(gl_GlobalInvocationID);
+    vec3 pos = -_box_size/2. + vec3(gl_GlobalInvocationID)*_step_size;
 
     CoollabContext dummy_coollab_context;
     dummy_coollab_context.uv = vec2(0);
