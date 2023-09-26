@@ -45,6 +45,7 @@
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
 #include "imgui.h"
+#include "Module_Nodes/Meshing.h"
 
 namespace Lab {
 
@@ -448,6 +449,18 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     });
     // Recently opened projects
     _recently_opened_projects.imgui_window(command_execution_context());
+
+    ImGui::Begin("Meshing");
+    if (ImGui::Button("testMeshing"))
+    {
+        auto shader_code = _project.nodes_module->generate_meshing_shader(update_context());
+
+        // TODO handle error
+
+        meshing_test(*shader_code);
+
+    }
+    ImGui::End();
 
     DebugOptions::show_framerate_window([&] {
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
