@@ -51,11 +51,6 @@ target_link_libraries(Coollab-Properties INTERFACE cmd::cmd)
 target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
 install(FILES "lib/range-v3/LICENSE.txt" DESTINATION "license/range-v3")
 
-# Include RtMidi
-if(WIN32)
-    target_link_libraries(Coollab-Properties INTERFACE winmm)
-endif()
-
 set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, like making HTTPS requests to post images to the Coollab gallery. If you don't have the necessary dependencies these features will be disabled. If you want to make sure you have all the features of Coollab enabled, set this option to ON.")
 
 # ----------------

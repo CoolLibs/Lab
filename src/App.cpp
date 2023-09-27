@@ -65,7 +65,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
           }
       )}
     , _midi_visualizer_window{
-          Cool::icon_fmt("Midi", ICOMOON_EQUALIZER),
+          Cool::icon_fmt("Midi", ICOMOON_EQUALIZER2),
           Cool::ImGuiWindowConfig{
               .is_modal   = false,
               .start_open = false,
@@ -75,7 +75,6 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
-    Cool::midi_manager().connect();
     Cool::midi_manager().set_additional_midi_callback([&]() {
         trigger_rerender();
     });
@@ -423,14 +422,16 @@ void App::imgui_window_exporter()
     });
 }
 
-void App::imgui_windows()
+void App::imgui_window_midi()
 {
-    ImGui::Begin("MIDI");
-    Cool::midi_manager().imgui();
     _midi_visualizer_window.show([&]() {
         Cool::midi_manager().imgui_visualize_channels();
+        Cool::midi_manager().imgui_controllers_dropdown();
     });
-    ImGui::End();
+}
+
+void App::imgui_windows()
+{
     imgui_window_view();
     imgui_window_exporter();
     imgui_window_console();
@@ -452,6 +453,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::End();
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
+    // Midi
+    imgui_window_midi();
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
