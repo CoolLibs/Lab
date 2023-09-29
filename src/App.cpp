@@ -599,10 +599,10 @@ void App::commands_menu()
             _tips_manager.open_all_tips_window();
         if (ImGui::Selectable("Open webcams config"))
             Cool::WebcamsConfigs::instance().open_imgui_window();
+        if (ImGui::Selectable("Open MIDI config"))
+            Cool::midi_manager().open_config_window();
         if (ImGui::Selectable("Open output window"))
             _output_view.open();
-        if (ImGui::Selectable("Open MIDI window"))
-            Cool::midi_manager().open_config_window();
         ImGui::EndMenu();
     }
 }
