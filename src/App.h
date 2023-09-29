@@ -22,7 +22,6 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Cool/ImGui/ImGuiWindow.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
