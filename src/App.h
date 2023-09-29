@@ -106,7 +106,6 @@ private:
     void imgui_window_cameras();
     void imgui_window_view();
     void imgui_window_exporter();
-    void imgui_window_midi();
 
     void imgui_commands_and_registries_debug_windows();
 
@@ -128,7 +127,6 @@ private:
     NodesLibraryManager                  _nodes_library_manager{};
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
-    Cool::ImGuiWindow                    _midi_visualizer_window;
 
 private:
     // Serialization

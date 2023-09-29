@@ -64,12 +64,6 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
               .start_open  = true,
           }
       )}
-    , _midi_visualizer_window{
-          Cool::icon_fmt("Midi", ICOMOON_EQUALIZER2),
-          Cool::ImGuiWindowConfig{
-              .is_modal   = false,
-              .start_open = false,
-          }}
 {
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
@@ -422,14 +416,6 @@ void App::imgui_window_exporter()
     });
 }
 
-void App::imgui_window_midi()
-{
-    _midi_visualizer_window.show([&]() {
-        Cool::midi_manager().imgui_visualize_channels();
-        Cool::midi_manager().imgui_controllers_dropdown();
-    });
-}
-
 void App::imgui_windows()
 {
     imgui_window_view();
@@ -454,7 +440,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
     // Midi
-    imgui_window_midi();
+    Cool::midi_manager().imgui_window_config();
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
@@ -616,7 +602,7 @@ void App::commands_menu()
         if (ImGui::Selectable("Open output window"))
             _output_view.open();
         if (ImGui::Selectable("Open MIDI window"))
-            _midi_visualizer_window.open();
+            Cool::midi_manager().open_config_window();
         ImGui::EndMenu();
     }
 }
