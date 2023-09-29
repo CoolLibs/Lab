@@ -29,6 +29,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Midi/MidiManager.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/View.h"
@@ -68,6 +69,9 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    Cool::midi_manager().set_additional_midi_callback([&]() {
+        trigger_rerender();
+    });
     hook_camera2D_events(
         _nodes_view.mouse_events(),
         _project.camera2D.value(),
@@ -435,6 +439,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::End();
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
+    // Midi
+    Cool::midi_manager().imgui_window_config();
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
@@ -497,6 +503,10 @@ void App::imgui_windows_only_when_inputs_are_allowed()
 
     Cool::DebugOptions::test_markdown_formatting_window([]() {
         Cool::test_markdown_formatting();
+    });
+
+    Cool::DebugOptions::emulate_midi_keyboard([]() {
+        Cool::midi_manager().imgui_emulate_midi_keyboard();
     });
 
     Cool::DebugOptions::test_tips([this]() {
@@ -589,6 +599,8 @@ void App::commands_menu()
             _tips_manager.open_all_tips_window();
         if (ImGui::Selectable("Open webcams config"))
             Cool::WebcamsConfigs::instance().open_imgui_window();
+        if (ImGui::Selectable("Open MIDI config"))
+            Cool::midi_manager().open_config_window();
         if (ImGui::Selectable("Open output window"))
             _output_view.open();
         ImGui::EndMenu();

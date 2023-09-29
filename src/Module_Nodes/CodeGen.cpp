@@ -156,7 +156,7 @@ static auto gen_value_inputs(
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties res{};
+    Properties           res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
