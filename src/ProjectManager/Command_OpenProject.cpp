@@ -10,7 +10,7 @@ namespace Lab {
 void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
     auto       project = Project{};
-    auto const error   = do_deserialize(project, path);
+    auto const error   = do_load(project, path);
     if (error)
     {
         error.send_error_if_any(

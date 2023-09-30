@@ -52,7 +52,7 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
 
 auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
 {
-    bool const success = do_serialize(ctx.project(), path);
+    bool const success = do_save(ctx.project(), path);
     if (success)
     {
         if (!ctx.project_path().has_value() && path != Path::untitled_project())
