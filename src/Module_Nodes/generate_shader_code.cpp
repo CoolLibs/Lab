@@ -133,16 +133,18 @@ auto generate_meshing_shader_code(
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(R"STR(
-uniform float _time;
+uniform float     _time;
+
+#include "_COOL_RES_/shaders/math.glsl"
+#include "_COOL_RES_/shaders/color_conversions.glsl"
+#include "_COOL_RES_/shaders/Texture.glsl"
+
 uniform float _step_size;
 uniform vec3 _box_size;
 
 layout(std430, binding=0) buffer sdf_buffer {{
    float data[];
 }};
-
-#include "_COOL_RES_/shaders/math.glsl"
-#include "_COOL_RES_/shaders/TextureInfo.glsl"
 
 struct CoollabContext
 {{
@@ -156,7 +158,7 @@ struct CoollabContext
 void cool_main() {{
     uint gid = gl_GlobalInvocationID.x +
         gl_GlobalInvocationID.y * DispatchSize.x + 
-        gl_GlobalInvocationID.z * DispatchSize.y * DispatchSize.y;
+        gl_GlobalInvocationID.z * DispatchSize.x * DispatchSize.y;
 
     vec3 pos = -_box_size/2. + vec3(gl_GlobalInvocationID)*_step_size;
 
