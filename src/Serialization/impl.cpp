@@ -5,7 +5,10 @@
 /// this file as much as possible.
 ///
 
+#include <cereal/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
+#include "Module_Nodes/Module_Nodes.h"
+#include "SNodesCategoryConfig.h"
 #include "SProject.h"
 
 //
@@ -17,10 +20,20 @@ auto serialize(Project const& project, std::filesystem::path const& path) -> boo
 {
     return Cool::Serialization::save<Project, cereal::JSONOutputArchive>(project, path, "Project");
 }
-
 auto deserialize(Project& project, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
 {
     return Cool::Serialization::load<Project, cereal::JSONInputArchive>(project, path);
 }
 
+auto serialize_nodes_cat_cfg(NodesCategoryConfig const& config, std::filesystem::path const& path) -> bool
+{
+    return Cool::Serialization::save<NodesCategoryConfig, cereal::JSONOutputArchive>(config, path);
+}
+auto deserialize(NodesCategoryConfig& config, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
+{
+    return Cool::Serialization::load<NodesCategoryConfig, cereal::JSONInputArchive>(config, path);
+}
+
 } // namespace Lab
+
+CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT

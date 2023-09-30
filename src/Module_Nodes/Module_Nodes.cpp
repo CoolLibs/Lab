@@ -335,7 +335,3 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
 }
 
 } // namespace Lab
-
-#include <cereal/archives/json.hpp>
-#include <cereal/types/polymorphic.hpp>
-CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT
