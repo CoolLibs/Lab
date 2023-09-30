@@ -57,7 +57,7 @@ auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::pa
     {
         if (!ctx.project_path().has_value() && path != Path::untitled_project())
         { // We just saved the untitled project as an actual project, we can delete the untitled project file so that it won't be loaded the next time we open Coollab.
-            std::filesystem::remove(Path::untitled_project());
+            Cool::File::remove(Path::untitled_project());
         }
     }
     else
