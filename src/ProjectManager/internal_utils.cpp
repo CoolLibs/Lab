@@ -2,11 +2,10 @@
 #include <ProjectManager/utils.h>
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
-#include "Cool/Serialization/Serialization.h"
+#include "DoSerialize.h"
 #include "FileExtension.h"
 #include "Project.h"
 #include "RecentlyOpened.h"
-#include "cereal/archives/json.hpp"
 #include "utils.h"
 
 namespace Lab::internal_project {
@@ -53,10 +52,19 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
 
 auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
 {
-    auto const success = Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project");
-    if (DebugOptions::log_project_related_events()
-        && !success)
-        Cool::Log::ToUser::info("Project", fmt::format("Failed to save project to {}.", path));
+    bool const success = serialize(ctx.project(), path);
+    if (success)
+    {
+        if (!ctx.project_path().has_value() && path != Path::untitled_project())
+        { // We just saved the untitled project as an actual project, we can delete the untitled project file so that it won't be loaded the next time we open Coollab.
+            std::filesystem::remove(Path::untitled_project());
+        }
+    }
+    else
+    {
+        if (DebugOptions::log_project_related_events())
+            Cool::Log::ToUser::info("Project", fmt::format("Failed to save project to {}.", path));
+    }
     return success;
 }
 

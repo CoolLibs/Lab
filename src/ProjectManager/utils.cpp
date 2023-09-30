@@ -22,15 +22,26 @@ namespace Lab {
 void initial_project_opening(CommandExecutionContext_Ref const& ctx)
 {
     auto const path = [&]() -> std::filesystem::path {
-        // Load the project that was requested, e.g. when double-clicking on a .coollab file.
+        // If any, load the project that was requested, e.g. when double-clicking on a .coollab file.
         if (!command_line_args().get().empty())
         {
             return command_line_args().get()[0];
         }
         // Try the untitled project.
-        return Path::untitled_project();
+        if (Cool::File::exists(Path::untitled_project()))
+        {
+            return Path::untitled_project();
+        }
+        // // Try the most recently opened. EDIT: commented out because we are afraid that people will open Coollab, see some nodes, and delete them to start working fresh, thus destroying their project. We'd rather they open it themselves, so they know what they are working on.
+        // {
+        //     auto const maybe_path = ctx.recently_opened_projects().most_recent_path();
+        //     if (maybe_path.has_value())
+        //         return *maybe_path;
+        // }
+        // Found nothing
+        return "";
     }();
-    if (!std::filesystem::exists(path))
+    if (!Cool::File::exists(path))
         return; // Avoid error message caused by the fact that the file doesn't exist. It is legit if the untitled project doesn't exist, we don't want an error in that case.
 
     ctx.execute(Command_OpenProject{
@@ -94,7 +105,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
     bool has_saved{false};
     while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
     {
-        if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.\n(NB: Actually you can still recover them by using \"Load Backup\" in the \"File\" menu.)", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
+        if (boxer::show("You have unsaved changes. Do you want to save them? They will be lost otherwise.\n(NB: Actually you can still recover them by using \"Open Backup\" in the \"File\" menu.)", "Unsaved project", boxer::Style::Warning, boxer::Buttons::YesNo)
             != boxer::Selection::Yes)
         {
             break;

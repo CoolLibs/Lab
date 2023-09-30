@@ -13,8 +13,8 @@ void Command_SaveProjectAs::execute(CommandExecutionContext_Ref const& ctx) cons
         dialog_to_save_project_as(ctx); // Save failed, try in another location.
         return;
     }
-    if (!ctx.project_path().has_value()) // Only change the path if we were on the unsaved project. The most common use case is: you are working on your project, then want to save a specific step, so you run a Save As. But then you want to keep working on the main project, not on the step that you saved.
-        internal_project::set_current_project_path(ctx, path);
+    // Commented out because I don't like this behaviour actually: if (!ctx.project_path().has_value()) // Only change the path if we were on the unsaved project. The most common use case is: you are working on your project, then want to save a specific step, so you run a Save As. But then you want to keep working on the main project, not on the step that you saved.
+    internal_project::set_current_project_path(ctx, path);
 }
 
 [[nodiscard]] auto Command_SaveProjectAs::to_string() const -> std::string
