@@ -2,10 +2,10 @@
 #include <ProjectManager/utils.h>
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
-#include "DoSerialize.h"
 #include "FileExtension.h"
 #include "Project.h"
 #include "RecentlyOpened.h"
+#include "Serialization/SProject.h"
 #include "utils.h"
 
 namespace Lab::internal_project {
