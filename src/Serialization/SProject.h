@@ -5,7 +5,7 @@
 
 namespace Lab {
 
-auto serialize(Project const& project, std::filesystem::path const& path) -> bool;
-auto deserialize(Project& project, std::filesystem::path const& path) -> Cool::OptionalErrorMessage;
+auto do_serialize(Project const&, std::filesystem::path const&) -> bool;
+auto do_deserialize(Project&, std::filesystem::path const&) -> Cool::OptionalErrorMessage;
 
 } // namespace Lab

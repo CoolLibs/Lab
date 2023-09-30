@@ -11,12 +11,12 @@ namespace Lab {
 
 void NodesCategoryConfig::save_to_json() const
 {
-    serialize_nodes_cat_cfg(*this, _path_to_json);
+    do_serialize(*this, _path_to_json);
 }
 
 void NodesCategoryConfig::load_from_json()
 {
-    deserialize(*this, _path_to_json)
+    do_deserialize(*this, _path_to_json)
         .send_error_if_any([&](std::string const& message) {
             return Cool::Message{
                 .category = "Nodes Category",

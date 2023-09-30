@@ -5,7 +5,7 @@
 
 namespace Lab {
 
-auto serialize_nodes_cat_cfg(NodesCategoryConfig const& config, std::filesystem::path const& path) -> bool;
-auto deserialize(NodesCategoryConfig& config, std::filesystem::path const& path) -> Cool::OptionalErrorMessage;
+auto do_serialize(NodesCategoryConfig const&, std::filesystem::path const&) -> bool;
+auto do_deserialize(NodesCategoryConfig&, std::filesystem::path const&) -> Cool::OptionalErrorMessage;
 
 } // namespace Lab

@@ -16,20 +16,20 @@
 
 namespace Lab {
 
-auto serialize(Project const& project, std::filesystem::path const& path) -> bool
+auto do_serialize(Project const& project, std::filesystem::path const& path) -> bool
 {
     return Cool::Serialization::save<Project, cereal::JSONOutputArchive>(project, path, "Project");
 }
-auto deserialize(Project& project, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
+auto do_deserialize(Project& project, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
 {
     return Cool::Serialization::load<Project, cereal::JSONInputArchive>(project, path);
 }
 
-auto serialize_nodes_cat_cfg(NodesCategoryConfig const& config, std::filesystem::path const& path) -> bool
+auto do_serialize(NodesCategoryConfig const& config, std::filesystem::path const& path) -> bool
 {
     return Cool::Serialization::save<NodesCategoryConfig, cereal::JSONOutputArchive>(config, path);
 }
-auto deserialize(NodesCategoryConfig& config, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
+auto do_deserialize(NodesCategoryConfig& config, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
 {
     return Cool::Serialization::load<NodesCategoryConfig, cereal::JSONInputArchive>(config, path);
 }
