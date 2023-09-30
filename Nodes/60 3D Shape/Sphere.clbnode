@@ -4,5 +4,5 @@ INPUT float 'Radius';
 
 SignedDistance main(vec3 pos)
 {
-    return length(pos) - 'Radius';
+    return length(pos) - 1.0;
 }
