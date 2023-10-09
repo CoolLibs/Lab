@@ -100,7 +100,7 @@ static auto maybe_generate_default(FunctionSignature current_signature, std::str
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
-    using fmt::literals::             operator""_a;
+    using fmt::literals::operator""_a;
     static constexpr std::string_view signed_to_float = "antialised_step(sd)";
     {
         auto const func = maybe_generate_default(
@@ -213,7 +213,7 @@ vec2 default_curve/*coollabdef*/(float t)
 
     {
         auto const func = maybe_generate_default(
-            FunctionSignature{.from = PrimitiveType::CIELAB_PremultipliedA, .to = PrimitiveType::CIELAB_PremultipliedA, .arity = 2},
+            FunctionSignature{.from = PrimitiveType::Oklab_PremultipliedA, .to = PrimitiveType::Oklab_PremultipliedA, .arity = 2},
             "default_blend_mode", R"STR(
 vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
 {

@@ -2,7 +2,7 @@
 
 INPUT Gradient 'Color Gradient';
 
-CIELAB_PremultipliedA main(float Greyscale)
+Oklab_PremultipliedA main(float Greyscale)
 {
     return 'Color Gradient'(Greyscale);
 }

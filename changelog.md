@@ -17,6 +17,8 @@
 - ✨ Added an Output window that you can project during live shows, while still having your View window on your screen to move the camera and the widgets. To open this window, go in the `Commands` menu and select `Open output window`.
 - ✨ Added "Load Backup" in case you accidentally refused to save your unsaved changes.
 - 🐛 Fix: the transparency information was sometimes getting lost between nodes.
+- 👩‍💻 Replaced CIELAB with Oklab
+- 👩‍💻 Replaced HSLuv with Okhsl
 
 ## 🐣beta-8
 

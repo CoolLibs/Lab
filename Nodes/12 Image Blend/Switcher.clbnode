@@ -1,10 +1,10 @@
-INPUT UV->CIELAB_PremultipliedA 'Image 1';
-INPUT UV->CIELAB_PremultipliedA 'Image 2';
+INPUT UV->Oklab_PremultipliedA 'Image 1';
+INPUT UV->Oklab_PremultipliedA 'Image 2';
 INPUT float 'Duration of one image';
 INPUT float 'Transition duration';
 INPUT float 'Time';
 
-CIELAB_PremultipliedA main(UV uv)
+Oklab_PremultipliedA main(UV uv)
 {
     float t     = 'Time' / 'Duration of one image';
     int   index = int(floor(t));

@@ -1,12 +1,12 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT UV->CIELAB_PremultipliedA 'Image';
+INPUT UV->Oklab_PremultipliedA 'Image';
 INPUT int 'N';
-INPUT(CIELAB_PremultipliedA, CIELAB_PremultipliedA)->CIELAB_PremultipliedA 'Blend Mode';
+INPUT(Oklab_PremultipliedA, Oklab_PremultipliedA)->Oklab_PremultipliedA 'Blend Mode';
 
 OUTPUT float 'Index';
 
-CIELAB_PremultipliedA main(UV uv)
+Oklab_PremultipliedA main(UV uv)
 {
     vec4 color = vec4(0.);
 

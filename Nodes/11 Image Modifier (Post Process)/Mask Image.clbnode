@@ -2,7 +2,7 @@
 
 INPUT float 'Mask';
 
-CIELAB_StraightA main(CIELAB_StraightA Image)
+Oklab_StraightA main(Oklab_StraightA Image)
 {
     Image.a *= 'Mask';
     return Image;

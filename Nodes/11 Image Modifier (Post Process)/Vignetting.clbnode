@@ -1,10 +1,10 @@
 INPUT float 'Strength';
 INPUT float 'Radius';
-INPUT UV->CIELAB 'Image';
-INPUT CIELAB 'Color';
+INPUT UV->Oklab 'Image';
+INPUT Oklab 'Color';
 INPUT float 'Mask';
 
-CIELAB main(UV uv)
+Oklab main(UV uv)
 {
     vec3 in_color = 'Image'(uv);
 

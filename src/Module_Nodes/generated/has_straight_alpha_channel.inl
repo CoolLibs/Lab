@@ -4,7 +4,6 @@
  * Instead, go to "gen_primitive_types.py" and edit the "has_straight_alpha_channel" function there.
  * -----------------------------------------------------------------------------
  */
-case PrimitiveType::CIELAB_StraightA:
 case PrimitiveType::Oklab_StraightA:
 case PrimitiveType::LinearRGB_StraightA:
 case PrimitiveType::sRGB_StraightA:

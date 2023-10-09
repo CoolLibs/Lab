@@ -1,10 +1,10 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 // Inspired by https://youtube.com/shorts/mQp_Klk2gJs?feature=share
 
-INPUT UV->CIELAB 'Image';
+INPUT UV->Oklab 'Image';
 INPUT float 'Intensity';
 
-CIELAB main(UV uv)
+Oklab main(UV uv)
 {
     vec2 noise_uv = to_view_space(uv);
 

@@ -7,13 +7,13 @@ Such outputs are declared with the `OUTPUT` keyword, must have a name that start
 You can then simply assign to your output whenever it needs to change.
 
 ```glsl title="Render N Times.clbnode"
-INPUT UV->CIELAB_PremultipliedA 'Image';
+INPUT UV->Oklab_PremultipliedA 'Image';
 INPUT int 'N';
-INPUT(CIELAB_PremultipliedA, CIELAB_PremultipliedA)->CIELAB_PremultipliedA 'Blend Mode';
+INPUT(Oklab_PremultipliedA, Oklab_PremultipliedA)->Oklab_PremultipliedA 'Blend Mode';
 
 OUTPUT float 'Index';
 
-CIELAB_PremultipliedA main(UV uv)
+Oklab_PremultipliedA main(UV uv)
 {
     vec4 color = vec4(0.);
 

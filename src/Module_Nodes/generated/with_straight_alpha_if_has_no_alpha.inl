@@ -5,8 +5,6 @@
  * -----------------------------------------------------------------------------
  */
 
-case PrimitiveType::CIELAB:
-return PrimitiveType::CIELAB_StraightA;
 case PrimitiveType::Oklab:
 return PrimitiveType::Oklab_StraightA;
 case PrimitiveType::LinearRGB:

@@ -76,18 +76,6 @@ if (str == "RayMarchRes")
 {
     return PrimitiveType::RayMarchRes;
 }
-if (str == "CIELAB")
-{
-    return PrimitiveType::CIELAB;
-}
-if (str == "CIELAB_PremultipliedA")
-{
-    return PrimitiveType::CIELAB_PremultipliedA;
-}
-if (str == "CIELAB_StraightA")
-{
-    return PrimitiveType::CIELAB_StraightA;
-}
 if (str == "Oklab")
 {
     return PrimitiveType::Oklab;

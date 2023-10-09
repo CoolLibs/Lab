@@ -22,9 +22,6 @@ R"STR(  - bool
   - Direction2D
   - Any
   - RayMarchRes
-  - CIELAB
-  - CIELAB_PremultipliedA
-  - CIELAB_StraightA
   - Oklab
   - Oklab_PremultipliedA
   - Oklab_StraightA

@@ -1,9 +1,9 @@
-INPUT CIELAB 'Shape Color';
-INPUT CIELAB 'Background Color';
-INPUT CIELAB 'Border Color';
+INPUT Oklab 'Shape Color';
+INPUT Oklab 'Background Color';
+INPUT Oklab 'Border Color';
 
 // IQ's SDF debug view https://www.shadertoy.com/view/3ltSW2
-CIELAB main(SignedDistance Shape)
+Oklab main(SignedDistance Shape)
 {
     vec3 col = (Shape > 0.0) ? 'Background Color' : 'Shape Color';
     col *= 1.0 - exp(-4.0 * abs(Shape));                                     // Darken border
