@@ -88,6 +88,18 @@ if (str == "CIELAB_StraightA")
 {
     return PrimitiveType::CIELAB_StraightA;
 }
+if (str == "Oklab")
+{
+    return PrimitiveType::Oklab;
+}
+if (str == "Oklab_PremultipliedA")
+{
+    return PrimitiveType::Oklab_PremultipliedA;
+}
+if (str == "Oklab_StraightA")
+{
+    return PrimitiveType::Oklab_StraightA;
+}
 if (str == "LinearRGB")
 {
     return PrimitiveType::LinearRGB;

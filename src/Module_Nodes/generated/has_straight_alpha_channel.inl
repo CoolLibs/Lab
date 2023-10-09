@@ -5,6 +5,7 @@
  * -----------------------------------------------------------------------------
  */
 case PrimitiveType::CIELAB_StraightA:
+case PrimitiveType::Oklab_StraightA:
 case PrimitiveType::LinearRGB_StraightA:
 case PrimitiveType::sRGB_StraightA:
 case PrimitiveType::HSLuv_StraightA:

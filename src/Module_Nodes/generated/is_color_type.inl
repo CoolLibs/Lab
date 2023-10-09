@@ -7,6 +7,9 @@
 type == PrimitiveType::CIELAB
     || type == PrimitiveType::CIELAB_StraightA
     || type == PrimitiveType::CIELAB_PremultipliedA
+    || type == PrimitiveType::Oklab
+    || type == PrimitiveType::Oklab_StraightA
+    || type == PrimitiveType::Oklab_PremultipliedA
     || type == PrimitiveType::LinearRGB
     || type == PrimitiveType::LinearRGB_StraightA
     || type == PrimitiveType::LinearRGB_PremultipliedA

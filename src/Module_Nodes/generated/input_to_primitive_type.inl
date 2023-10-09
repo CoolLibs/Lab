@@ -53,6 +53,15 @@ if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<
 if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::CIELAB_StraightA))
     return PrimitiveType::CIELAB_StraightA;
 
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::Oklab))
+    return PrimitiveType::Oklab;
+
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Oklab_PremultipliedA))
+    return PrimitiveType::Oklab_PremultipliedA;
+
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Oklab_StraightA))
+    return PrimitiveType::Oklab_StraightA;
+
 if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::LinearRGB))
     return PrimitiveType::LinearRGB;
 

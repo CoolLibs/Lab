@@ -25,6 +25,9 @@ R"STR(  - bool
   - CIELAB
   - CIELAB_PremultipliedA
   - CIELAB_StraightA
+  - Oklab
+  - Oklab_PremultipliedA
+  - Oklab_StraightA
   - LinearRGB
   - LinearRGB_PremultipliedA
   - LinearRGB_StraightA
