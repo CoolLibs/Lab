@@ -4,7 +4,7 @@ namespace Lab {
 
 struct Function {
     std::string name;
-    std::string implementation;
+    std::string definition;
 };
 
 /// Function name, or an error message in the unexpected case.

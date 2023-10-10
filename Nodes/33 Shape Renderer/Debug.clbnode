@@ -1,0 +1,13 @@
+INPUT Oklab 'Shape Color';
+INPUT Oklab 'Background Color';
+INPUT Oklab 'Border Color';
+
+// IQ's SDF debug view https://www.shadertoy.com/view/3ltSW2
+Oklab main(SignedDistance Shape)
+{
+    vec3 col = (Shape > 0.0) ? 'Background Color' : 'Shape Color';
+    col *= 1.0 - exp(-4.0 * abs(Shape));                                     // Darken border
+    col *= 0.8 + 0.2 * cos(150.0 * Shape);                                   // Isolines
+    col = mix(col, 'Border Color', 1.0 - smoothstep(0.0, 0.01, abs(Shape))); // Highlight exact border
+    return col;
+}

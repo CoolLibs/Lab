@@ -1,7 +1,0 @@
-
-INPUT vec2 `a`;
-
-UV main(UV uv)
-{
-    return 0.5 * (uv + complex_division(complex_product(`a`, `a`), uv));
-}

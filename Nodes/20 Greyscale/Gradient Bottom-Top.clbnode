@@ -1,0 +1,17 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT bool 'Flip';
+INPUT bool 'Centered';
+INPUT bool 'Clamp';
+
+float main(UV uv)
+{
+    if ('Flip')
+        uv.y = -uv.y;
+    float res = 'Centered'
+                    ? uv.y
+                    : uv.y * 0.5 + 0.5;
+    return 'Clamp'
+               ? saturate(res)
+               : res;
+}

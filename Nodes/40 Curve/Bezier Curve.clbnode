@@ -1,0 +1,14 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT Point2D 'Anchor 1';
+INPUT Point2D 'Handle 1';
+INPUT Point2D 'Handle 2';
+INPUT Point2D 'Anchor 2';
+
+UV main(float t)
+{
+    return (1. - t) * (1. - t) * (1. - t) * 'Anchor 1'
+           + 3 * t * (1. - t) * (1. - t) * 'Handle 1'
+           + 3 * t * t * (1. - t) * 'Handle 2'
+           + t * t * t * 'Anchor 2';
+}

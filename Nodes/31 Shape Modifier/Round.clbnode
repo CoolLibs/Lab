@@ -1,0 +1,12 @@
+INPUT float 'Amount';
+INPUT float 'Shape radius';
+
+INPUT UV->SignedDistance 'Shape';
+
+SignedDistance main(UV uv)
+{
+    float zoom = ('Shape radius' + 'Amount') / 'Shape radius';
+
+    float d = 'Shape'(uv * zoom) - 'Amount';
+    return d;
+}

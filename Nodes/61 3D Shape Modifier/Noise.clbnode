@@ -1,0 +1,32 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance '3D Shape';
+INPUT vec3->SignedDistance 'Noise 3D';
+INPUT int 'Detail';
+INPUT float 'Smoothing';
+INPUT float 'Thickness';
+INPUT bool 'Carve';
+
+SignedDistance main(vec3 pos)
+{
+    float distance = '3D Shape'(pos);
+    float scale    = 1.;
+    for (int i = 0; i < 'Detail'; i++)
+    {
+        float new_octave = scale * 'Noise 3D'(pos);
+
+        new_octave = smooth_max_polynomial(new_octave, distance - 'Thickness' * scale, 'Smoothing' * scale);
+        if ('Carve')
+        {
+            distance = smooth_max_polynomial(-new_octave, distance, 'Smoothing' * scale);
+        }
+        else
+        {
+            distance = smooth_min_polynomial(new_octave, distance, 'Smoothing' * scale);
+        }
+
+        pos = mat3(0.00, 1.60, 1.20, -1.60, 0.72, -0.96, -1.20, -0.96, 1.28) * pos;
+        scale *= 0.5;
+    }
+    return CLB_FIX_ARTIFACTS(distance);
+}

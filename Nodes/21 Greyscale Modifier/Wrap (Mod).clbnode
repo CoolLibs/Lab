@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Greyscale';
+INPUT float 'Period';
+INPUT bool 'Normalize';
+
+float main()
+{
+    return 'Normalize'
+               ? mod('Greyscale', 'Period') / 'Period'
+               : mod('Greyscale', 'Period');
+}

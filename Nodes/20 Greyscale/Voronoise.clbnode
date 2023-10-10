@@ -1,0 +1,32 @@
+// https://www.shadertoy.com/view/Xd23Dh
+// A VALIDER PAR JULES
+vec3 hash3(vec2 p) // HASH 2D -> 3D, a garder ?
+{
+    vec3 q = vec3(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)), dot(p, vec2(419.2, 371.9)));
+    return fract(sin(q) * 43758.5453);
+}
+
+INPUT float 'Jittering';
+INPUT float 'Metric';
+INPUT float 'Size';
+
+float main(UV uv)
+{
+    float k = 1.0 + 63.0 * pow(1.0 - 'Metric', 6.0);
+
+    vec2 i = floor(uv * 'Size');
+    vec2 f = fract(uv * 'Size');
+
+    vec2 a = vec2(0);
+    for (int y = -2; y <= 2; y++)
+        for (int x = -2; x <= 2; x++)
+        {
+            vec2  g = vec2(x, y);
+            vec3  o = hash3(i + g) * vec3('Jittering', 'Jittering', 1.0); // 0 : classic grid, 1 : Voronoi like grid
+            vec2  d = g - f + o.xy;
+            float w = pow(1.0 - smoothstep(0.0, 1.414, length(d)), k); // distance
+            a += vec2(o.z * w, w);
+        }
+
+    return a.x / a.y;
+}

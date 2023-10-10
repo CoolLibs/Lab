@@ -1,27 +1,38 @@
 #include "Module_Nodes.h"
+#include <Commands/Command_FinishedEditingVariable.h>
 #include <Cool/StrongTypes/set_uniform.h>
+#include <Module_Nodes/Module_Nodes.h>
 #include <stdexcept>
+#include <type_traits>
 #include "Common/make_shader_compilation_error_message.h"
 #include "Cool/Camera/Camera.h"
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
+#include "Cool/Dependencies/Input.h"
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
-#include "Cool/Gpu/TextureInfo.h"
-#include "Cool/Gpu/TextureLibrary.h"
+#include "Cool/Gpu/Texture.h"
+#include "Cool/Gpu/TextureDescriptor.h"
+#include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Gpu/TextureSamplerDescriptor.h"
+#include "Cool/Gpu/TextureSource.h"
+#include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
+#include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Module.h"
 #include "Module_Nodes/Module_Nodes.h"
 #include "Module_Nodes/NodeDefinition.h"
 #include "Module_Nodes/NodesConfig.h"
+#include "NodesCategoryConfig.h"
 #include "UI/imgui_show.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
-#include "parse_node_definition.h"
 
 namespace Lab {
 
@@ -33,23 +44,22 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 {
 }
 
-void Module_Nodes::update(UpdateContext_Ref ctx)
+void Module_Nodes::update(UpdateContext_Ref)
 {
-    auto cfg     = Cool::NodesConfig{nodes_config(ctx.ui())};
-    auto updater = Cool::NodesDefinitionUpdater{cfg, _nodes_editor.graph(), _nodes_library, &parse_node_definition, _nodes_folder_watcher.errors_map()};
-    if (_nodes_folder_watcher.update(updater))
-        ctx.set_dirty(_regenerate_code_flag);
 }
 
 void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
-    if (_nodes_editor.graph().nodes().is_empty())
-        return;
+    _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
+    _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
+
+    if (!_nodes_editor.graph().try_get_node<Node>(_main_node_id))
+        return; // Otherwise we will get a default UV image instead of a transparent image.
 
     auto const shader_code = generate_shader_code(
         _main_node_id,
         _nodes_editor.graph(),
-        Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library},
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
         update_ctx.input_provider()
     );
 
@@ -69,7 +79,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     handle_error(maybe_err, for_testing_nodes);
 }
 
-void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes)
+void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
 {
     if (!for_testing_nodes)
     {
@@ -88,18 +98,85 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     }
 }
 
-auto Module_Nodes::nodes_config(Ui_Ref ui) const -> NodesConfig
+auto Module_Nodes::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
 {
-    return {ui.input_factory(), _nodes_library, ui, _main_node_id, _shader.dirty_flag(), _regenerate_code_flag};
+    return NodesConfig{
+        ui.input_factory(),
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{nodes_library},
+        Cool::GetMutableNodeDefinition_Ref<NodeDefinition>{nodes_library},
+        Cool::GetNodeCategoryConfig_Ref{nodes_library},
+        ui,
+        _main_node_id,
+        _node_we_might_want_to_restore_as_main_node_id,
+        _shader.dirty_flag(),
+        _regenerate_code_flag,
+        _nodes_editor.graph(),
+    };
 }
 
-void Module_Nodes::imgui_windows(Ui_Ref ui) const
+void Module_Nodes::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
-    if (_nodes_editor.imgui_window(nodes_config(ui), _nodes_library))
-        ui.set_dirty(_regenerate_code_flag);
+    {
+        auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
+        if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
+            ui.set_dirty(_regenerate_code_flag);
+    }
 
     DebugOptions::show_generated_shader_code([&] {
-        ImGui::InputTextMultiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
+        if (Cool::ImGuiExtras::input_text_multiline("##Nodes shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+        {
+            const auto maybe_err = _shader.compile(
+                _shader_code,
+                update_ctx
+            );
+            handle_error(maybe_err, false);
+
+            ui.dirty_setter()(dirty_flag()); // Trigger rerender
+        }
+    });
+}
+
+static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
+{
+    auto const cam_transform = ctx.input_provider()(Cool::Input_Camera2D{});
+    auto const id            = input._default_variable_id.raw();
+    return Cool::Gizmo_Point2D{
+        .get_position = [=]() {
+            auto const var = ctx.input_provider().variable_registries().get(id);
+            if (!var)
+                return Cool::ViewCoordinates{0.f};
+            return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{var->value().value, 1.f}}};
+            //
+        },
+        .set_position = [=](Cool::ViewCoordinates pos) {
+            //
+            auto const world_pos = glm::vec2{cam_transform * glm::vec3{pos, 1.f}};
+            ctx.ui().command_executor().execute(
+                Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{world_pos}}
+            );
+            //
+        },
+        .on_drag_stop = [=]() {
+            //
+            ctx.ui().command_executor().execute(
+                Command_FinishedEditingVariable{}
+            );
+            //
+        },
+        .id = id,
+    };
+}
+
+void Module_Nodes::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx)
+{
+    _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
+        for (auto const& input : node.downcast<Node>().value_inputs())
+        {
+            if (auto const* point_2D_input = std::get_if<Cool::Input<Cool::Point2D>>(&input))
+            {
+                gizmos.push(make_gizmo(*point_2D_input, ctx));
+            }
+        }
     });
 }
 
@@ -163,17 +240,17 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     );
 
     // HACK to send an error message whenever a Texture variable has an invalid path
-    if constexpr (std::is_same_v<T, Cool::TextureInfo>)
+    if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
     {
         input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
-            auto const err = Cool::TextureLibrary::instance().error_from(value.absolute_path);
+            auto const err = Cool::get_error(value.source);
             if (err)
             {
                 Cool::Log::ToUser::console().send(
                     variable.message_id,
                     Cool::Message{
-                        .category = "Load Image",
-                        .message  = fmt::format("Failed to load {}:\n{}", value.absolute_path, *err),
+                        .category = "Missing Texture",
+                        .message  = err.value(),
                         .severity = Cool::MessageSeverity::Error,
                     }
                 );
@@ -187,6 +264,19 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
 }
 
 void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
+{
+    // Render on the normal render target
+    render_impl(in, update_ctx);
+
+    // Render on the feedback texture
+    _feedback_double_buffer.write_target().set_size(in.render_target_size);
+    _feedback_double_buffer.write_target().render([&]() {
+        render_impl(in, update_ctx);
+    });
+    _feedback_double_buffer.swap_buffers();
+}
+
+void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
 {
     in.set_clean(_shader.dirty_flag());
 
@@ -210,10 +300,19 @@ void Module_Nodes::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
-    shader.set_uniform("mixbox_lut", Cool::TextureInfo{Cool::Path::root() / "res/mixbox/mixbox_lut.png"});
+    shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
+
+    shader.set_uniform_texture(
+        "_previous_frame_texture",
+        _feedback_double_buffer.read_target().get().texture_id(),
+        Cool::TextureSamplerDescriptor{
+            .repeat_mode        = Cool::TextureRepeatMode::None,
+            .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
+        }
+    );
     Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
 
-    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
+    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work.
         for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {
@@ -237,7 +336,3 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
 }
 
 } // namespace Lab
-
-#include <cereal/archives/json.hpp>
-#include <cereal/types/polymorphic.hpp>
-CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT

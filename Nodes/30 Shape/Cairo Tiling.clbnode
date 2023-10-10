@@ -1,0 +1,47 @@
+// Inspired by https://youtu.be/51LwM2R_e_o
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Orientation';
+INPUT float 'Thickness';
+INPUT float 'Grid Size';
+
+INPUT bool 'Flip every other tile';
+
+OUTPUT float 'X Index';
+OUTPUT float 'Y Index';
+
+SignedDistance main(UV uv)
+{
+    uv *= 'Grid Size';
+
+    vec2  id           = floor(uv);
+    float checkerboard = 'Flip every other tile'
+                             ? mod(id.x + id.y, 2.)
+                             : 0.1;
+
+    uv     = fract(uv) - 0.5;
+    vec2 p = abs(uv);
+
+    if (checkerboard > 0.5)
+        p = p.yx;
+
+    float a = ('Orientation' * 0.5 + 0.5) * PI;
+    vec2  n = vec2(sin(a), cos(a));
+    float d = dot(p - 0.5, n); // slanted line
+
+    if (d * (checkerboard - 0.5) < 0.)
+        id.x += sign(uv.x) * 0.5;
+    else
+        id.y += sign(uv.y) * 0.5;
+
+    'X Index' = id.x;
+    'Y Index' = id.y;
+
+    d = min(d, p.x);  // straight line
+    d = max(d, -p.y); // straight line
+    d = abs(d);
+    if ('Flip every other tile')
+        d = min(d, dot(p - 0.5, vec2(n.y, -n.x)));
+
+    return d - 'Thickness';
+}

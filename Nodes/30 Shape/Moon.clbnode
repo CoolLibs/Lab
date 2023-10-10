@@ -1,0 +1,14 @@
+INPUT float 'Radius1';
+INPUT float 'Radius2';
+INPUT float 'CircleDisplacement';
+
+// inspired by https://iquilezles.org/articles/distfunctions2d/
+SignedDistance main(UV uv)
+{
+    uv.y    = abs(uv.y);
+    float a = ('Radius1' * 'Radius1' - 'Radius2' * 'Radius2' + 'CircleDisplacement' * 'CircleDisplacement') / (2.0 * 'CircleDisplacement');
+    float b = sqrt(max('Radius1' * 'Radius1' - a * a, 0.0));
+    if ('CircleDisplacement' * (uv.x * b - uv.y * a) > 'CircleDisplacement' * 'CircleDisplacement' * max(b - uv.y, 0.0))
+        return length(uv - vec2(a, b));
+    return max((length(uv) - 'Radius1'), -(length(uv - vec2('CircleDisplacement', 0)) - 'Radius2'));
+}

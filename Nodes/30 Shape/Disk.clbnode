@@ -1,0 +1,8 @@
+INPUT float 'Radius';
+INPUT Point2D 'Center';
+
+// inspired by https://iquilezles.org/articles/distfunctions2d/
+SignedDistance main(UV uv)
+{
+    return length(uv - 'Center') - 'Radius';
+}

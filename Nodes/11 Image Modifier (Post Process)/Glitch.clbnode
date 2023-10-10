@@ -1,0 +1,37 @@
+// reference : https://www.shadertoy.com/view/lsXSWl
+
+INPUT float 'time';
+INPUT vec2 'square size'; /// gives the size of the rectangle glitches
+INPUT float 'strength';   /// control the offset amount of the glitches
+
+INPUT UV->sRGB 'Image';
+
+float rng2(vec2 seed, float time)
+{
+    return fract(sin(dot(seed * floor(time * 12.), vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+float rng(float seed, float time)
+{
+    return rng2(vec2(seed, 1.0), time);
+}
+
+sRGB main(UV uv)
+{
+    vec2 view_space_uv = to_view_space(uv);
+
+    const vec2 square_sizeL = vec2(8., 4.);
+    vec2       blockS       = floor(view_space_uv * 'square size');
+    vec2       blockL       = floor(view_space_uv * square_sizeL);
+
+    float r     = rng2(view_space_uv, 'time');
+    vec3  noise = (vec3(r, 1. - r, r / 2. + 0.5) * 1.0 - 2.0) * 0.08;
+
+    float lineNoise = pow(rng2(blockS, 'time'), 8.0) * pow(rng2(blockL, 'time'), 3.0) - pow(rng(7.2341, 'time'), 17.0) * 2.;
+
+    return vec3(
+        'Image'(uv).r,
+        'Image'(uv + 'strength' * vec2(lineNoise * 0.05 * rng(5.0, 'time'), 0)).y,
+        'Image'(uv - 'strength' * vec2(lineNoise * 0.05 * rng(31.0, 'time'), 0)).z
+    );
+}

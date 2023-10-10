@@ -1,12 +1,11 @@
 #include "post_image_online.h"
-#include <string>
-#include "Cool/String/String.h"
 #if COOLLAB_HAS_OPENSSL
-
+#include <string>
 #include "Cool/File/File.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Path/Path.h"
+#include "Cool/String/String.h"
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "cpp-httplib/httplib.h"
@@ -21,6 +20,13 @@ static auto escape(std::string str) -> std::string
     return str;
 }
 
+static auto process_link(std::string const& str) -> std::string
+{
+    if (str.empty() || str[0] != '@')
+        return str;
+    return fmt::format("https://www.instagram.com/{}", str.c_str() + 1); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+}
+
 #if LAB_ENABLE_TESTS
 #include <doctest/doctest.h>
 TEST_CASE("escape()")
@@ -32,11 +38,19 @@ TEST_CASE("escape()")
     CHECK(escape("\\=") == "\\\\\\=");
     CHECK(escape("Hello\\=Hello") == "Hello\\\\\\=Hello");
 }
+TEST_CASE("process_link()")
+{
+    CHECK(process_link("Hello") == "Hello");
+    CHECK(process_link("@julesfouchy") == "https://www.instagram.com/julesfouchy");
+    CHECK(process_link("Hel@lo") == "Hel@lo");
+    CHECK(process_link("@") == "https://www.instagram.com/");
+    CHECK(process_link("@@") == "https://www.instagram.com/@");
+}
 #endif
 
 namespace Lab {
 
-void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, std::string const& image_png_data)
+void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, LegalInfo const& legal_info, std::string const& image_png_data)
 {
     auto cli = httplib::SSLClient{"api.cloudinary.com"};
 
@@ -64,11 +78,13 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
         httplib::MultipartFormData{
             .name    = "context",
             .content = fmt::format(
-                "title={}|description={}|author_name={}|author_link={}",
+                "title={}|description={}|author_name={}|author_link={}|email={}|agreed_to_have_it_shared_on_our_instagram={}",
                 escape(artwork_info.title),
                 escape(artwork_info.description),
                 escape(author_info.name),
-                escape(author_info.link)
+                escape(process_link(author_info.link)),
+                escape(legal_info.email),
+                escape(legal_info.has_agreed_to_share_on_instagram ? "true" : "false")
             ),
             .filename     = {},
             .content_type = {},
@@ -103,9 +119,9 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 
 #else
 namespace Lab {
-void post_image_online(ArtworkInfo const&, AuthorInfo const&, std::string const&)
+void post_image_online(ArtworkInfo const&, AuthorInfo const&, LegalInfo const&, std::string const&)
 {
-    assert(false && "CoolLab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
+    assert(false && "Coollab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
 }
 } // namespace Lab
 #endif

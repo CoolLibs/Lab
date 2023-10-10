@@ -1,0 +1,6 @@
+INPUT float 'Threshold';
+
+float main(float Image)
+{
+    return antialised_step('Threshold' - Image);
+}

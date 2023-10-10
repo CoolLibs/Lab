@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT Angle 'Orientation';
+INPUT bool 'Flip direction';
+
+float main(UV uv)
+{
+    float orientation = 'Orientation' / TAU - 0.25;
+
+    float gradient = fract(abs(uv.x) <= 0.0000001 ? uv.y < 0. ? 0.5 + orientation : 0. + orientation : atan(-uv.x, -uv.y) / TAU + 0.5 + orientation);
+
+    return 'Flip direction' ? 1. - gradient : gradient;
+}

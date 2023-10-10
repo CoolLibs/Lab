@@ -1,0 +1,122 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "4d2b5c24-4b58-47ae-93ac-6d118baccce0",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Radius",
+                                "Value": 0.5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.004100000020116568,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 3,
+                            "data": {
+                                "Name": "Center",
+                                "Value": {
+                                    "Point2D": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Drag speed": 0.00009999999747378752
+                                },
+                                "Default Value": {
+                                    "Point2D": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Drag speed": 0.00009999999747378752
+                                }
+                            }
+                        },
+                        {
+                            "index": 1,
+                            "data": {
+                                "Name": "Sides",
+                                "Value": 5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 3,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.03999999910593033,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Roundness",
+                                "Value": 0.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": true,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": true
+                                    }
+                                },
+                                "Default Value": 0.0,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

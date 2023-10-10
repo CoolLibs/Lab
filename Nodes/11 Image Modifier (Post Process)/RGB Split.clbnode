@@ -1,0 +1,19 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->sRGB_StraightA 'Image';
+INPUT float 'Displacement';
+INPUT Direction2D 'Direction';
+
+sRGB_StraightA main(UV uv)
+{
+    vec4 R = 'Image'(uv + 'Displacement' * 'Direction');
+    vec4 G = 'Image'(uv);
+    vec4 B = 'Image'(uv - 'Displacement' * 'Direction');
+
+    return vec4(
+        R.r,
+        G.g,
+        B.b,
+        max(max(R.a, G.a), B.a)
+    );
+}

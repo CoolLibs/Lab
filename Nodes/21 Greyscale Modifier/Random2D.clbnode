@@ -1,0 +1,7 @@
+
+INPUT float 'Seed';
+
+float main(float a, float b)
+{
+    return hash_0_to_1_3D_to_1D(vec3(a, b, 'Seed'));
+}

@@ -1,0 +1,18 @@
+INPUT float 'Roundness';
+INPUT float 'Width';
+INPUT float 'Height';
+
+float minus(float a, float b)
+{
+    return (a < b) ? a : b;
+}
+
+// inspired by Ned Makes Games' video https://www.youtube.com/watch?v=WuNdmjca7eM&t=283s
+SignedDistance main(UV uv)
+{
+    vec2  d;
+    float r = clamp('Roundness', 0.0, minus('Width', 'Height') * 0.5);
+    d.x     = abs(uv.x) - ('Width' * 0.5) + r;
+    d.y     = abs(uv.y) - ('Height' * 0.5) + r;
+    return length(max(d, 0)) + min(max(d.x, d.y), 0) - r;
+}

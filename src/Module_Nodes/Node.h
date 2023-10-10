@@ -12,11 +12,10 @@ namespace Lab {
 class Node {
 public:
     Node() = default;
-    Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs, bool is_template_node)
+    Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs)
         : _id_names{id_names}
         , _number_of_main_input_pins{number_of_main_input_pins}
         , _number_of_function_inputs{number_of_function_inputs}
-        , _chosen_any_type{is_template_node ? std::make_optional(PrimitiveType::Float) : std::nullopt}
     {}
 
     auto name() const -> std::string { return _name; }
@@ -42,13 +41,16 @@ public:
     }
     auto main_output_pin() const -> Cool::OutputPin const& { return output_pins()[0]; }
     /// This corresponds to a subset of all the input_pints(); the ones that correspond to an INPUT of the node.
-    auto pin_of_function_input(size_t input_index) const -> Cool::InputPin const& { return input_pins()[_number_of_main_input_pins + input_index]; }
-    auto pin_of_value_input(size_t property_index) const -> Cool::InputPin const& { return input_pins()[_number_of_main_input_pins + _number_of_function_inputs + property_index]; }
-    auto pin_of_output_index(size_t output_index_index) const -> Cool::OutputPin const& { return output_pins()[_number_of_main_input_pins + output_index_index]; }
+    auto pin_of_function_input(size_t function_input_index) const -> Cool::InputPin const& { return input_pins()[function_input_pin_idx_begin() + function_input_index]; }
+    auto pin_of_value_input(size_t value_input_index) const -> Cool::InputPin const& { return input_pins()[value_input_pin_idx_begin() + value_input_index]; }
+    auto pin_of_output_index(size_t output_index_index) const -> Cool::OutputPin const& { return output_pins()[1 + output_index_index]; }
 
-    /// Only call this if this node is a template node
-    auto chosen_any_type() const -> PrimitiveType { return _chosen_any_type.value(); }
-    auto imgui_chosen_any_type() -> bool;
+    auto main_input_pin_idx_begin() const -> size_t { return 0; }
+    auto main_input_pin_idx_end() const -> size_t { return _number_of_main_input_pins; }
+    auto function_input_pin_idx_begin() const -> size_t { return main_input_pin_idx_end(); }
+    auto function_input_pin_idx_end() const -> size_t { return function_input_pin_idx_begin() + _number_of_function_inputs; }
+    auto value_input_pin_idx_begin() const -> size_t { return function_input_pin_idx_end(); }
+    auto value_input_pin_idx_end() const -> size_t { return _input_pins.size(); }
 
 private:
     Cool::NodeDefinitionIdentifier _id_names;
@@ -59,8 +61,6 @@ private:
     std::vector<Cool::AnyInput>  _value_inputs;
     size_t                       _number_of_main_input_pins{};
     size_t                       _number_of_function_inputs{};
-
-    std::optional<PrimitiveType> _chosen_any_type{}; // Only present if the node has `Any` in its signature.
 
 private:
     friend class cereal::access;
@@ -74,8 +74,7 @@ private:
             cereal::make_nvp("Output Pins", _output_pins),
             cereal::make_nvp("Value inputs", _value_inputs),
             cereal::make_nvp("Number of main input pins", _number_of_main_input_pins),
-            cereal::make_nvp("Number of function inputs", _number_of_function_inputs),
-            cereal::make_nvp("Chosen Any type", _chosen_any_type)
+            cereal::make_nvp("Number of function inputs", _number_of_function_inputs)
         );
     }
 };

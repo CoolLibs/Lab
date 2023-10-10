@@ -1,0 +1,15 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Inspired by https://youtube.com/shorts/mQp_Klk2gJs?feature=share
+
+INPUT UV->Oklab 'Image';
+INPUT float 'Intensity';
+
+Oklab main(UV uv)
+{
+    vec2 noise_uv = to_view_space(uv);
+
+    float rand  = hash_0_to_1_2D_to_1D(noise_uv);
+    vec3  color = 'Image'(uv);
+    color.x *= 1. + 'Intensity' * (rand * 2. - 1.);
+    return color;
+}

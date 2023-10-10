@@ -41,6 +41,9 @@ static auto declare_inputs(std::string const& type, size_t arity)
 
 static auto list_converted_inputs(std::string const& conversion, size_t arity)
 {
+    if (arity == 0)
+        return fmt::format("{}()", conversion);
+
     auto res = std::string{};
     for (size_t i = 0; i < arity; ++i)
     {
@@ -62,8 +65,8 @@ static auto gen_function_with_implicit_conversions(
 
     auto const name = fmt::format("{}implicitly{}", base_name, to_string(desired_signature));
     return context.push_function({
-        .name           = name,
-        .implementation = fmt::format(
+        .name       = name,
+        .definition = fmt::format(
             FMT_COMPILE(R"STR(
 {output} {name}/*coollabdef*/({inputs_declaration})
 {{
@@ -88,8 +91,8 @@ static auto maybe_generate_default(FunctionSignature current_signature, std::str
         return std::nullopt;
 
     auto const base_name = context.push_function({
-        .name           = name,
-        .implementation = implementation,
+        .name       = name,
+        .definition = implementation,
     });
     return gen_function_with_implicit_conversions(base_name, desired_signature, implicit_conversions, context);
 }
@@ -97,7 +100,7 @@ static auto maybe_generate_default(FunctionSignature current_signature, std::str
 auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
     -> ExpectedFunctionName
 {
-    using fmt::literals::             operator""_a;
+    using fmt::literals::operator""_a;
     static constexpr std::string_view signed_to_float = "antialised_step(sd)";
     {
         auto const func = maybe_generate_default(
@@ -161,6 +164,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
             return *func;
     }
 
+    if (!is_greyscale(signature)) // Without this, Greyscale would match the Image signature and use this default function, but we want to use another default function for Greyscale (the one that comes after this).
     {
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::UV, PrimitiveType::sRGB},
@@ -170,47 +174,6 @@ vec3 default_image_srgb/*coollabdef*/(vec2 uv)
     return vec3(saturate(uv), 0.);
 }
 )STR",
-            signature, context
-        );
-        if (func)
-            return *func;
-    }
-
-    // TODO(JF) Do we want our default colorize to be partly transparent? If so, uncomment the block below. (I don't think we want.)
-    // MAYBE_GENERATE_DEFAULT( // MUST be before default_colorizer_srgb otherwise the later will implicitly convert to default_colorizer_srgb_premultipliedA and this function will never get called.
-    //          FunctionSignature{PrimitiveType::Float, PrimitiveType::sRGB_PremultipliedA},
-    //         "default_colorizer_srgb_premultipliedA", R"STR(
-    // vec4 default_colorizer_srgb_premultipliedA/*coollabdef*/(float x)
-    // {
-    //     return vec4(x);
-    // }
-    // )STR"
-    //     );
-
-    {
-        auto const func = maybe_generate_default(
-            FunctionSignature{PrimitiveType::Float, PrimitiveType::CIELAB},
-            "default_colorizer_cielab", R"STR(
-vec3 default_colorizer_cielab/*coollabdef*/(float x)
-{
-    return vec3(saturate(x), 0., 0.);
-}
-)STR",
-            signature, context
-        );
-        if (func)
-            return *func;
-    }
-
-    {
-        auto const func = maybe_generate_default(
-            FunctionSignature{PrimitiveType::CIELAB, PrimitiveType::Float},
-            "default_black_and_white_cielab", R"STR(
-    float default_black_and_white_cielab/*coollabdef*/(vec3 lab)
-    {
-        return lab.x;
-    }
-    )STR",
             signature, context
         );
         if (func)
@@ -250,7 +213,7 @@ vec2 default_curve/*coollabdef*/(float t)
 
     {
         auto const func = maybe_generate_default(
-            FunctionSignature{.from = PrimitiveType::CIELAB_PremultipliedA, .to = PrimitiveType::CIELAB_PremultipliedA, .arity = 2},
+            FunctionSignature{.from = PrimitiveType::Oklab_PremultipliedA, .to = PrimitiveType::Oklab_PremultipliedA, .arity = 2},
             "default_blend_mode", R"STR(
 vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
 {
@@ -270,8 +233,8 @@ vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
         if (signature.to == PrimitiveType::UV) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
         {
             return context.push_function({
-                .name           = "default_uv",
-                .implementation = R"STR(
+                .name       = "default_uv",
+                .definition = R"STR(
 vec2 default_uv/*coollabdef*/()
 {
     return coollab_context.uv;
@@ -282,8 +245,8 @@ vec2 default_uv/*coollabdef*/()
         auto const glsl_type = raw_glsl_type_as_string(signature.to);
         auto const name      = fmt::format("default_constant_{}", glsl_type);
         return context.push_function({
-            .name           = name,
-            .implementation = fmt::format(
+            .name       = name,
+            .definition = fmt::format(
                 FMT_COMPILE(R"STR(
 {type} {name}/*coollabdef*/()
 {{

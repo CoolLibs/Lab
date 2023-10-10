@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->SignedDistance 'Shape 1';
+INPUT UV->SignedDistance 'Shape 2';
+INPUT float 'Progression'; /// When set to 0 you get Shape 1; when set to 1 you get Shape 2.
+
+SignedDistance main(UV pos)
+{
+    return mix('Shape 1'(pos), 'Shape 2'(pos), 'Progression');
+}

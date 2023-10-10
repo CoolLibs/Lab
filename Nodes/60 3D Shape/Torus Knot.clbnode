@@ -1,0 +1,28 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Size';
+INPUT float 'Thickness';
+INPUT int 'Twists';
+INPUT float 'Spacing';
+INPUT bool 'Square';
+
+SignedDistance main(vec3 pos)
+{
+    vec2  q    = vec2(length(pos.xy) - 'Size', pos.z);
+    float knot = atan(pos.x, pos.y) * 'Twists';
+    q *= rotation_2D(knot);
+    q.y = abs(q.y) - 'Spacing';
+    if ('Square')
+    {
+        q = abs(q) - vec2('Thickness');
+        return CLB_FIX_ARTIFACTS(
+            length(max(q, 0.)) + min(max(q.x, q.y), 0.)
+        );
+    }
+    else
+    {
+        return CLB_FIX_ARTIFACTS(
+            length(q) - 'Thickness'
+        );
+    }
+}

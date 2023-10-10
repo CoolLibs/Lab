@@ -1,0 +1,10 @@
+INPUT vec2 'a';
+INPUT vec2 'b';
+
+// inspired by https://iquilezles.org/articles/distfunctions2d/
+SignedDistance main(UV uv)
+{
+    vec2  pa = uv - 'a', ba = 'b' - 'a';
+    float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+    return length(pa - ba * h);
+}

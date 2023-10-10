@@ -1,0 +1,24 @@
+INPUT UV->LinearRGB_PremultipliedA 'Image';
+INPUT int 'Iterations'; /// The number of layers
+INPUT float 'Frequency Multiplier';
+INPUT float 'Amplitude Multiplier';
+INPUT float 'Initial Amplitude';
+INPUT bool 'Clamp Output Alpha';
+
+LinearRGB_PremultipliedA main(UV uv)
+{
+    // Initial values
+    vec4  value     = vec4(0.);
+    float amplitude = 'Initial Amplitude';
+
+    // Loop of octaves
+    for (int i = 0; i < 'Iterations'; i++)
+    {
+        value += amplitude * 'Image'(uv);
+        uv *= 'Frequency Multiplier';
+        amplitude *= 'Amplitude Multiplier';
+    }
+    if ('Clamp Output Alpha')
+        value.a = saturate(value.a);
+    return value;
+}

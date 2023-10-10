@@ -1,0 +1,20 @@
+INPUT int 'Detail';
+INPUT vec2 'Seed';
+
+float main(UV uv)
+{
+    vec2 z = 'Seed';
+    vec2 c = uv;
+
+    int i = 0;
+    for (; i < 'Detail'; i++)
+    {
+        z = complex_product(z, z) + c;
+
+        if (length(z) > 2.)
+        {
+            break;
+        }
+    }
+    return i / float('Detail');
+}

@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float->UV 'Curve1';
+INPUT float->UV 'Curve2';
+
+INPUT bool 'Clamp';
+
+UV main(float t)
+{
+    if ('Clamp')
+        t = fract(t);
+    return mix('Curve1'(t), 'Curve2'(t), t);
+}

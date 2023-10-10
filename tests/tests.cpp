@@ -1,8 +1,22 @@
 #if !DOCTEST_CONFIG_DISABLE
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#define DOCTEST_CONFIG_IMPLEMENT
+#include <Cool/Path/Path.h>
 #include <doctest/doctest.h>
 
-// Most of the tests are defined alongside the file that they test, not here.
+class PathsConfig : public Cool::PathsConfig {
+public:
+    PathsConfig()
+        : Cool::PathsConfig{"Coollab-Tests"}
+    {}
+};
+
+// NB: the tests are defined alongside the file that they test, not here.
+auto main() -> int
+{
+    Cool::Path::initialize<PathsConfig>();
+    return doctest::Context{}.run();
+}
+
 #else
-int main() {}
+auto main() -> int {}
 #endif

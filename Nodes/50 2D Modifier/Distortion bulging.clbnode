@@ -1,0 +1,16 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Reference : https://www.shadertoy.com/view/ls2XWD
+
+INPUT float 'strength';
+INPUT Point2D 'Center';
+
+vec2 distort(vec2 uv, float power)
+{
+    vec2 polar = Cool_polar_coordinates(uv);
+    return vec2_from_polar(pow(polar.x, power), polar.y);
+}
+
+UV main(UV uv)
+{
+    return distort(uv - 'Center', 'strength');
+}

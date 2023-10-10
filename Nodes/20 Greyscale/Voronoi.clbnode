@@ -1,0 +1,44 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+#include "_COOL_RES_/shaders/hexagonal_grid.glsl"
+
+INPUT float 'Grid Size';
+INPUT float 'Randomness';
+INPUT float 'Seed';
+
+float main(UV uv)
+{
+    ivec2 id = Cool_hex_id(uv, 'Grid Size');
+
+    float min_dist = 1000.;
+
+    // 3 vectors to map a hexagon
+    // Check Voronoi.png to see how is split the hexagone to generate random point in it
+    vec2 a = vec2(-0.5, 0.5 / sqrt_3) / 'Grid Size';
+    vec2 b = vec2(+0.5, 0.5 / sqrt_3) / 'Grid Size';
+    vec2 c = vec2(+0.0, -1. / sqrt_3) / 'Grid Size';
+
+    const ivec2 neighbour_offsets[7] = ivec2[7](ivec2(0, 0), ivec2(-1, -1), ivec2(0, -1), ivec2(-1, 0), ivec2(1, 1), ivec2(0, 1), ivec2(1, 0));
+
+    for (int i = 0; i < 7; i++)
+    {
+        ivec2 offset_id          = neighbour_offsets[i];
+        vec2  offset_cell_center = Cool_hex_center_from_hex_id(id + offset_id, 'Grid Size');
+
+        vec2 n         = hash_0_to_1_2D_to_2D(ivec2(id) + ivec2(offset_id));
+        n              = mix(vec2(0.4), vec2(1), n);
+        n              = 'Randomness' * sin(n * ('Seed' + 4.) + 100) / 2;
+        int rand_0_1_2 = int(floor(hash_0_to_1_2D_to_1D(ivec2(id) + ivec2(offset_id)) * 3.));
+
+        vec2 offset_position = offset_cell_center
+                               + ((rand_0_1_2 == 0)
+                                      ? n.x * a + n.y * b
+                                  : (rand_0_1_2 == 1)
+                                      ? n.x * b + n.y * c
+                                      : n.x * c + n.y * a);
+
+        min_dist = min(min_dist, length(uv - offset_position));
+    }
+
+    return min_dist * 'Grid Size';
+}

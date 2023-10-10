@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Size';
+
+SignedDistance main(vec3 pos)
+{
+    vec3 q = abs(pos) - 'Size';
+    return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.);
+}

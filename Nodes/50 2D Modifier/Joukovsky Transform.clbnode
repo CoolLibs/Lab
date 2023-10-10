@@ -1,0 +1,9 @@
+
+INPUT float 'Warp X';
+INPUT float 'Warp Y';
+
+UV main(UV uv)
+{
+    vec2 a = vec2('Warp X', 'Warp Y');
+    return 0.5 * (uv + complex_division(complex_product(a, a), uv));
+}

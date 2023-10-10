@@ -1,0 +1,18 @@
+INPUT float 'Strength';
+INPUT float 'Radius';
+INPUT UV->Oklab 'Image';
+INPUT Oklab 'Color';
+INPUT float 'Mask';
+
+Oklab main(UV uv)
+{
+    vec3 in_color = 'Image'(uv);
+
+    vec2 vignette_uv = unnormalize_uv(to_view_space(uv));
+    vignette_uv *= 1. - vignette_uv.yx;
+    vignette_uv.x *= _aspect_ratio;
+    float vignette  = vignette_uv.x * vignette_uv.y * 'Radius';
+    vignette        = min(max(pow(vignette, 'Strength' * 'Mask'), 0.), 1.);
+    vec3 vignetting = mix('Color', in_color, vignette);
+    return vignetting;
+}

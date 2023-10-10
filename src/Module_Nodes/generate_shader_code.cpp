@@ -60,19 +60,22 @@ auto generate_shader_code(
     return fmt::format(
         FMT_COMPILE(R"STR(#version 410
 
-uniform float _time;
-uniform float _height;
-uniform mat3  _camera2D;
-uniform mat3  _camera2D_inverse;
-out vec4      out_Color;
+uniform float     _time;
+uniform float     _height;
+uniform mat3      _camera2D;
+uniform mat3      _camera2D_inverse;
+uniform sampler2D _previous_frame_texture;
+out vec4          out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
-#include "_COOL_RES_/shaders/TextureInfo.glsl"
+#include "_COOL_RES_/shaders/Texture.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 
-uniform sampler2D mixbox_lut; // bind the "mixbox_lut.png" texture here
+// TODO(JF) Move this to the 3D Renderer node
+#include "_ROOT_FOLDER_/res/3D-renderer.glsl"
+uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 
 vec2 to_view_space(vec2 uv)
@@ -85,8 +88,6 @@ struct CoollabContext
 {{
     vec2 uv;
 }};
-
-float coollab_global_alpha = 1.;
 
 {output_indices_declarations}
 

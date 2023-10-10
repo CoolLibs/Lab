@@ -1,0 +1,46 @@
+INPUT int 'Number of Tiles';
+INPUT int 'Mode';
+
+UV main(UV uv)
+{
+    vec2 gv = fract(uv * 'Number of Tiles');
+    vec2 id = floor(uv * 'Number of Tiles');
+
+    // Up Left -> Down Right
+    if ('Mode' == 0)
+    {
+        if (gv.y > 1 - gv.x)
+        {
+            return (round(uv * 'Number of Tiles') / 'Number of Tiles') - 1. / (4. * 'Number of Tiles');
+        }
+        return (round(uv * 'Number of Tiles') / 'Number of Tiles') + 1. / (4. * 'Number of Tiles');
+    }
+    // Up Right -> Down Left
+    else if ('Mode' == 1)
+    {
+        if (gv.y > gv.x)
+        {
+            return (round(uv * 'Number of Tiles') / 'Number of Tiles') - 1. / (4. * 'Number of Tiles');
+        }
+    }
+    else
+    {
+        // Alternate
+        if (mod(id.x + id.y, 2) == 0)
+        {
+            if (gv.y > 1 - gv.x)
+            {
+                return (round(uv * 'Number of Tiles') / 'Number of Tiles') - 1. / (4. * 'Number of Tiles');
+            }
+            return (round(uv * 'Number of Tiles') / 'Number of Tiles') + 1. / (4. * 'Number of Tiles');
+        }
+        else
+        {
+            if (gv.y > gv.x)
+            {
+                return (round(uv * 'Number of Tiles') / 'Number of Tiles') - 1. / (4. * 'Number of Tiles');
+            }
+        }
+    }
+    return (round(uv * 'Number of Tiles') / 'Number of Tiles') + 1. / (4. * 'Number of Tiles');
+}

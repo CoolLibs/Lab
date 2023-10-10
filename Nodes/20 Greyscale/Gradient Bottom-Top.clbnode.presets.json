@@ -1,0 +1,44 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "7528c080-257b-4b34-a234-448f424d6a6e",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Flip",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Centered",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Clamp",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+INPUT UV->Oklab_PremultipliedA 'Image 1';
+INPUT UV->Oklab_PremultipliedA 'Image 2';
+INPUT float 'Duration of one image';
+INPUT float 'Transition duration';
+INPUT float 'Time';
+
+Oklab_PremultipliedA main(UV uv)
+{
+    float t     = 'Time' / 'Duration of one image';
+    int   index = int(floor(t));
+    float frac  = smoothstep('Duration of one image' - 'Transition duration', 'Duration of one image', mod('Time', 'Duration of one image'));
+    if (frac < 0.000001)
+        return (index % 2 == 0) ? 'Image 1'(uv) : 'Image 2'(uv);
+    return (index % 2 == 0)
+               ? mix('Image 1'(uv), 'Image 2'(uv), frac)
+               : mix('Image 2'(uv), 'Image 1'(uv), frac);
+}

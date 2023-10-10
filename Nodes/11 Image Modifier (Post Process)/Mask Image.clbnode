@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Mask';
+
+Oklab_StraightA main(Oklab_StraightA Image)
+{
+    Image.a *= 'Mask';
+    return Image;
+}

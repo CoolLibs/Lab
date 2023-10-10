@@ -94,13 +94,37 @@ export default ({}) => {
           name="Tristan Debeaune"
           github_name="tristetemps666"
           link="https://github.com/tristetemps666"
-          roles={["Programmer", "VFX Artist"]}
+          roles={["Programmer (Webcam)", "VFX Artist"]}
         />,
         <Contributor
           name="Amandine Kohlmuller"
           github_name="akohlmul"
           link="https://www.instagram.com/idnamaa/"
           roles={["UI / UX Designer"]}
+        />,
+        <Contributor
+          name="Aurore Lafaurie"
+          github_name="Just-Kiel"
+          link="https://github.com/Just-Kiel"
+          roles={["Programmer"]}
+        />,
+        <Contributor
+          name="Théo Couard"
+          github_name="TheoCrd"
+          link="https://frankoo.artstation.com/"
+          roles={["Video tutorials maker"]}
+        />,
+        <Contributor
+          name="Philippe Rosales"
+          github_name="Audiophil15"
+          link="https://github.com/Audiophil15"
+          roles={["Programmer (Audio)"]}
+        />,
+        <Contributor
+          name="Bruce Lane"
+          github_name="brucelane"
+          link="https://www.linkedin.com/in/brucelane06/"
+          roles={["Programmer (MIDI)"]}
         />,
       ]}
     />

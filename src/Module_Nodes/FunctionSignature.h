@@ -11,8 +11,6 @@ struct FunctionSignature {
     size_t        arity{1};
 
     friend auto operator==(const FunctionSignature&, const FunctionSignature&) -> bool = default;
-
-    auto is_template() const -> bool { return from == PrimitiveType::Any || to == PrimitiveType::Any; }
 };
 
 struct ParamDesc {
@@ -39,5 +37,23 @@ inline auto to_string(FunctionSignature signature) -> std::string
 
 auto make_complete_function_signature(MainFunctionSignature const& signature)
     -> CompleteFunctionSignature;
+
+auto curve_signature() -> FunctionSignature;
+auto is_curve(FunctionSignature) -> bool;
+
+auto shape_2D_signature() -> FunctionSignature;
+auto is_shape_2D(FunctionSignature) -> bool;
+
+auto shape_3D_signature() -> FunctionSignature;
+auto is_shape_3D(FunctionSignature) -> bool;
+
+auto is_image(FunctionSignature) -> bool;
+
+auto is_greyscale(FunctionSignature) -> bool;
+
+auto modifier_2D_signature() -> FunctionSignature;
+auto is_modifier_2D(FunctionSignature) -> bool;
+
+auto is_color_or_greyscale_modifier(FunctionSignature) -> bool;
 
 } // namespace Lab

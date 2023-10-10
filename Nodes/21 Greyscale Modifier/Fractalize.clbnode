@@ -1,0 +1,22 @@
+INPUT UV->float 'Greyscale';
+INPUT int 'Iterations'; /// The number of layers
+INPUT float 'Frequency Multiplier';
+INPUT float 'Amplitude Multiplier';
+
+float main(UV uv)
+{
+    // Initial values
+    float value     = 0.;
+    float amplitude = 'Amplitude Multiplier' == 1.
+                          ? 1. / 'Iterations'
+                          : (1. - 'Amplitude Multiplier') / (1. - pow('Amplitude Multiplier', 'Iterations'));
+
+    // Loop of octaves
+    for (int i = 0; i < 'Iterations'; i++)
+    {
+        value += amplitude * 'Greyscale'(uv);
+        uv *= 'Frequency Multiplier';
+        amplitude *= 'Amplitude Multiplier';
+    }
+    return value;
+}

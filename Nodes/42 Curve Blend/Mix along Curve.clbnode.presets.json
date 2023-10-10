@@ -1,0 +1,24 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "b3853721-2ed4-4afe-bc33-0a17c10e9def",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Clamp",
+                                "Value": true,
+                                "Metadata": {},
+                                "Default Value": true,
+                                "Default Metadata": {}
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

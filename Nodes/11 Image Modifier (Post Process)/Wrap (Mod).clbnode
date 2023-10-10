@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT sRGB 'Image';
+INPUT float 'Period';
+INPUT bool 'Normalize';
+
+sRGB main()
+{
+    return 'Normalize'
+               ? mod('Image', vec3('Period')) / 'Period'
+               : mod('Image', vec3('Period'));
+}

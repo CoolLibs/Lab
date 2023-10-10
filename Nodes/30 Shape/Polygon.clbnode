@@ -1,0 +1,28 @@
+// https://iquilezles.org/articles/distfunctions2d/
+
+INPUT float 'Radius';
+INPUT Point2D 'Center';
+INPUT int 'Sides';
+INPUT float 'Roundness';
+
+SignedDistance main(UV uv)
+{
+    uv -= 'Center';
+    float original_inner_radius = mix(0.0, 'Radius', 'Roundness');
+
+    float radius = ('Radius' - original_inner_radius) / cos(PI / float('Sides'));
+
+    float an = PI / float('Sides');
+
+    vec2 acs = vec2(cos(an), sin(an));
+    vec2 ecs = vec2(0., 1.);
+
+    // Symmetry
+    float bn = mod(atan(uv.x, uv.y), 2. * an) - an;
+    uv       = length(uv) * vec2(cos(bn), abs(sin(bn)));
+
+    uv -= radius * acs;
+    uv += ecs * clamp(-dot(uv, ecs), 0., radius * acs.y / ecs.y);
+
+    return length(uv) * sign(uv.x) - original_inner_radius;
+}

@@ -16,6 +16,7 @@
 #include "Module_Nodes/NodeDefinition.h"
 #include "Node.h"
 #include "NodeDefinition.h"
+#include "helpers.h"
 #include "input_to_primitive_type.h"
 
 namespace Lab {
@@ -85,25 +86,6 @@ static auto gen_function_definition(Params_gen_function_definition p)
     )};
 }
 
-static auto is_not_alphanumeric(char c) -> bool
-{
-    return !( // NOLINT(readability-simplify-boolean-expr)
-        ('0' <= c && c <= '9')
-        || ('a' <= c && c <= 'z')
-        || ('A' <= c && c <= 'Z')
-    );
-}
-
-/// Returns a string with only letters and numbers, no underscores.
-/// This string does not start with a number.
-static auto valid_glsl(std::string s)
-    -> std::string
-{
-    // For glsl variable name rules, see https://www.informit.com/articles/article.aspx?p=2731929&seqNum=3, section "Declaring Variables".
-    s.erase(std::remove_if(s.begin(), s.end(), &is_not_alphanumeric), s.end()); // `s` can only contain letters and numbers (and _, but two consecutive underscores is invalid so we don't allow any: this is the simplest way to enforce that rule, at the cost of slightly uglier names)
-    return "_" + s;                                                             // We need a prefix to make sure `s` does not start with a number.
-}
-
 static auto base_function_name(
     NodeDefinition const& definition,
     Cool::NodeId const&   id
@@ -168,20 +150,20 @@ struct Properties {
     std::vector<std::string> real_names;
 };
 
-static auto gen_properties(
+static auto gen_value_inputs(
     Node const&     node,
     CodeGenContext& context
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties           res{};
+    Properties res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
     {
         auto const input_pin     = node.pin_of_value_input(property_index); // NOLINT(performance-unnecessary-copy-initialization)
         auto       output_pin    = Cool::OutputPin{};
-        auto const input_node_id = context.graph().input_node_id(input_pin.id(), &output_pin);
+        auto const input_node_id = context.graph().find_node_connected_to_input_pin(input_pin.id(), &output_pin);
         auto const maybe_node    = context.graph().try_get_node<Node>(input_node_id);
         if (maybe_node)
         {
@@ -211,7 +193,7 @@ static auto gen_properties(
             res.code += Cool::gen_input_shader_code(
                             prop,
                             context.input_provider(),
-                            std::visit([](auto&& prop) { return fmt::format("`{}`", prop.name()); }, prop) // Re-add backticks around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
+                            std::visit([](auto&& prop) { return fmt::format("'{}'", prop.name()); }, prop) // Re-add single quotes around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
                         )
                         + '\n';
 
@@ -236,11 +218,11 @@ static auto list_all_property_and_input_and_output_names(
     std::string res{};
 
     for (auto const& prop : properties)
-        res += fmt::format("  - `{}`\n", std::visit([](auto&& prop) { return prop.name(); }, prop));
+        res += fmt::format("  - '{}'\n", std::visit([](auto&& prop) { return prop.name(); }, prop));
     for (auto const& input : inputs)
-        res += fmt::format("  - `{}`\n", input.name());
+        res += fmt::format("  - '{}'\n", input.name());
     for (auto const& name : output_indices_names)
-        res += fmt::format("  - `{}`\n", name);
+        res += fmt::format("  - '{}'\n", name);
 
     return res;
 }
@@ -255,7 +237,7 @@ static auto replace_property_names(
     for (auto const& prop : properties)
     {
         std::visit([&](auto&& prop) {
-            Cool::String::replace_all(code, fmt::format("`{}`", prop.name()), real_name[i]);
+            Cool::String::replace_all(code, fmt::format("'{}'", prop.name()), real_name[i]);
         },
                    prop);
         i++;
@@ -270,7 +252,7 @@ static auto replace_input_names(
 ) -> std::string
 {
     for (auto const& [old_name, new_name] : real_names)
-        Cool::String::replace_all(code, fmt::format("`{}`", old_name), new_name);
+        Cool::String::replace_all(code, fmt::format("'{}'", old_name), new_name);
 
     return code;
 }
@@ -284,7 +266,7 @@ static auto replace_output_indices_names(
     {
         Cool::String::replace_all(
             code,
-            fmt::format("`{}`", node.output_pins()[i].name()),
+            fmt::format("'{}'", node.output_pins()[i].name()),
             make_valid_output_index_name(node.output_pins()[i])
         );
     }
@@ -292,16 +274,16 @@ static auto replace_output_indices_names(
     return code;
 }
 
-static auto check_there_are_no_backticks_left(std::string const& code, std::string const& input_names_list)
+static auto check_there_are_no_single_quotes_left(std::string const& code, std::string const& input_names_list)
     -> std::optional<std::string>
 {
-    auto const pos = code.find('`');
+    auto const pos = code.find('\'');
     if (pos == std::string::npos)
         return std::nullopt;
 
-    auto const pos2 = code.find('`', pos + 1);
+    auto const pos2 = code.find('\'', pos + 1);
     if (pos2 == std::string::npos)
-        return "A backtick (`) has no matching closing backtick. Did you make a typo?";
+        return "A single quote (') has no matching closing single quote. Did you make a typo?";
 
     return fmt::format(
         "\"{}\" is not an input or output that you declared. Here are all the names you declared:\n{}",
@@ -325,7 +307,7 @@ struct GeneratedInputs {
     std::unordered_map<std::string, std::string> real_names;
 };
 
-static auto gen_inputs(
+static auto gen_function_inputs(
     Node const&           node,
     NodeDefinition const& node_definition,
     CodeGenContext&       context
@@ -333,27 +315,27 @@ static auto gen_inputs(
 {
     GeneratedInputs res;
 
-    for (size_t input_idx = 0; input_idx < node_definition.inputs().size(); ++input_idx)
+    for (size_t fn_input_idx = 0; fn_input_idx < node_definition.function_inputs().size(); ++fn_input_idx)
     {
-        auto const& input         = node_definition.inputs()[input_idx];
+        auto const& fn_input      = node_definition.function_inputs()[fn_input_idx];
         auto        output_pin    = Cool::OutputPin{};
-        auto const  input_node_id = context.graph().input_node_id(node.pin_of_function_input(input_idx).id(), &output_pin);
+        auto const  input_node_id = context.graph().find_node_connected_to_input_pin(node.pin_of_function_input(fn_input_idx).id(), &output_pin);
         auto const  input_node    = context.graph().try_get_node<Node>(input_node_id);
         if (!input_node || output_pin == input_node->main_output_pin()) // If we are plugged to the main output of a node (or to nothing, in which case we will generate a default function), then generate the corresponding function
         {
             auto const func_name = gen_desired_function(
-                input.signature(),
+                fn_input.signature(),
                 input_node,
                 input_node_id,
                 context
             );
             RETURN_IF_UNEXPECTED(func_name);
 
-            res.real_names[input.name()] = *func_name;
+            res.real_names[fn_input.name()] = *func_name;
         }
         else // We are plugged to an output index
         {
-            res.real_names[input.name()] = make_valid_output_index_name(output_pin);
+            res.real_names[fn_input.name()] = make_valid_output_index_name(output_pin);
         }
     }
 
@@ -386,20 +368,6 @@ static auto gen_helper_functions(std::vector<FunctionPieces> const& helper_funct
     return res;
 }
 
-/// Returns the signature where all template types have been resolved to a concrete type.
-static auto concrete_signature(NodeDefinition const& def, Node const& node)
-    -> FunctionSignature
-{
-    if (!def.signature().is_template())
-        return def.signature();
-
-    return FunctionSignature{
-        .from  = node.chosen_any_type(),
-        .to    = node.chosen_any_type(),
-        .arity = def.signature().arity,
-    };
-}
-
 static auto gen_includes(NodeDefinition const& node_definition)
     -> std::string
 {
@@ -416,11 +384,11 @@ static auto gen_base_function(
     CodeGenContext&       context
 ) -> ExpectedFunctionName
 {
-    auto const inputs = gen_inputs(node, node_definition, context);
-    RETURN_IF_UNEXPECTED(inputs);
+    auto const function_inputs = gen_function_inputs(node, node_definition, context);
+    RETURN_IF_UNEXPECTED(function_inputs);
 
-    auto const properties_code = gen_properties(node, context);
-    RETURN_IF_UNEXPECTED(properties_code);
+    auto const value_inputs_code = gen_value_inputs(node, context);
+    RETURN_IF_UNEXPECTED(value_inputs_code);
 
     auto const func_name = base_function_name(node_definition, id);
 
@@ -430,33 +398,33 @@ static auto gen_base_function(
     // We don't care about adding them through push_function() because their names will be unique anyways.
     // And we need them to be defined after properties_code->code
     for (auto const& helper_func_name : helper_functions.new_names)
-        context.push_function(Function{.name = helper_func_name, .implementation = ""});
+        context.push_function(Function{.name = helper_func_name, .definition = ""});
 
     auto func_implementation = gen_function_definition({
         .signature       = make_complete_function_signature(MainFunctionSignature{
-                  .signature       = concrete_signature(node_definition, node),
+                  .signature       = node_definition.signature(),
                   .parameter_names = node_definition.parameter_names(),
         }),
         .name            = func_name,
         .before_function = gen_includes(node_definition) + '\n'
-                           + properties_code->code + '\n'
+                           + value_inputs_code->code + '\n'
                            + helper_functions.code,
         .body = node_definition.function_body(),
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its value inputs) so that names don't clash with another instance of the same node.
-    func_implementation = replace_property_names(func_implementation, node.value_inputs(), properties_code->real_names);
-    func_implementation = replace_input_names(func_implementation, inputs->real_names);
+    func_implementation = replace_property_names(func_implementation, node.value_inputs(), value_inputs_code->real_names);
+    func_implementation = replace_input_names(func_implementation, function_inputs->real_names);
     func_implementation = replace_output_indices_names(func_implementation, node);
     func_implementation = replace_helper_functions(func_implementation, node_definition.helper_functions(), helper_functions.new_names);
 
     {
-        auto const error = check_there_are_no_backticks_left(func_implementation, list_all_property_and_input_and_output_names(node.value_inputs(), node_definition.inputs(), node_definition.output_indices()));
+        auto const error = check_there_are_no_single_quotes_left(func_implementation, list_all_property_and_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices()));
         if (error)
             return tl::make_unexpected(*error);
     }
 
-    context.push_function({.name = func_name, .implementation = func_implementation});
+    context.push_function({.name = func_name, .definition = func_implementation});
 
     return func_name;
 }
@@ -479,8 +447,8 @@ static auto gen_output_function(Cool::OutputPin const& pin, CodeGenContext& cont
     auto const func_name   = fmt::format("get{}", output_name);
 
     return context.push_function({
-        .name           = func_name,
-        .implementation = fmt::format(
+        .name       = func_name,
+        .definition = fmt::format(
             R"STR(
 float {}/*coollabdef*/()
 {{
@@ -500,7 +468,7 @@ auto gen_desired_function(
 ) -> ExpectedFunctionName
 {
     Cool::OutputPin output_pin;
-    auto const      node_id = context.graph().input_node_id(pin.id(), &output_pin);
+    auto const      node_id = context.graph().find_node_connected_to_input_pin(pin.id(), &output_pin);
     auto const      node    = context.graph().try_get_node<Node>(node_id);
 
     if (node && output_pin != node->main_output_pin())
@@ -582,10 +550,11 @@ auto gen_desired_function(
         ));
 
     auto const func_body = gen_desired_function_implementation(
-        concrete_signature(*node_definition, node),
+        node_definition->signature(),
         desired_signature,
         *base_function_name,
         node,
+        id,
         context
     );
     if (!func_body)
@@ -605,7 +574,7 @@ auto gen_desired_function(
         .body            = *func_body,
     });
 
-    context.push_function({.name = func_name, .implementation = func_definition});
+    context.push_function({.name = func_name, .definition = func_definition});
 
     return func_name;
 }

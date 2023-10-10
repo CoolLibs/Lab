@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT Hue 'Hue';
+INPUT float 'Saturation'; /// Goes between 0 and 1.
+INPUT float 'Lightness';  /// Goes between 0 and 1.
+
+Okhsl main()
+{
+    return vec3('Hue', 'Saturation', 'Lightness');
+}

@@ -1,0 +1,21 @@
+// https://www.shadertoy.com/view/tlyGW3
+
+INPUT float 'Glow';
+INPUT float 'Ray length';
+INPUT float 'Size';
+
+float main(UV uv)
+{
+    uv /= 'Size';
+    float d = length(uv);
+    float m = 'Glow' / 10. / d;
+
+    float rays = max(0.0, 1.0 - abs(uv.x * uv.y * 500.0));
+    m += rays * 'Ray length' * 'Glow';
+
+    rays = max(0.0, 1.0 - abs(uv.x * uv.y * 500.0));
+    m += rays * 'Ray length' * 'Glow';
+
+    m *= smoothstep(1.0, 0.08, d);
+    return m;
+}

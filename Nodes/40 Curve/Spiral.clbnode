@@ -1,0 +1,11 @@
+INPUT float 'Radius';
+INPUT float 'Spread';
+INPUT int 'Twist';
+
+UV main(float t)
+{
+    return vec2_from_polar(
+        'Radius' * exp('Spread' * t),
+        'Twist' * TAU * t
+    );
+}

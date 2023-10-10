@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Stretch';
+INPUT bool 'Clamp';
+
+float main(UV uv)
+{
+    float res = length(uv) * 'Stretch';
+    return 'Clamp'
+               ? saturate(res)
+               : res;
+}

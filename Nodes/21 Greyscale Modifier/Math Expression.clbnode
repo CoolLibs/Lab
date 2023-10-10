@@ -1,0 +1,6 @@
+INPUT MathExpression 'Expr';
+
+float main(float x)
+{
+    return 'Expr'(x);
+}

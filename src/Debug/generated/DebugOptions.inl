@@ -34,6 +34,8 @@ public:
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
     [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return instance().log_when_parsing_node_definition; }
+    [[nodiscard]] static auto log_when_executing_a_command() -> bool& { return instance().log_when_executing_a_command; }
+    [[nodiscard]] static auto log_project_related_events() -> bool& { return instance().log_project_related_events; }
     static void               show_generated_shader_code(std::function<void()> callback)
     {
         if (instance().show_generated_shader_code)
@@ -61,6 +63,15 @@ public:
             ImGui::End();
         }
     }
+    static void empty_window(std::function<void()> callback)
+    {
+        if (instance().empty_window)
+        {
+            ImGui::Begin(Cool::icon_fmt("Open Empty Window", ICOMOON_WRENCH).c_str(), &instance().empty_window, ImGuiWindowFlags_NoFocusOnAppearing);
+            callback();
+            ImGui::End();
+        }
+    }
 
 private:
     struct Instance {
@@ -73,9 +84,12 @@ private:
         bool log_when_rendering{false};
         bool log_when_compiling_nodes{false};
         bool log_when_parsing_node_definition{false};
+        bool log_when_executing_a_command{false};
+        bool log_project_related_events{false};
         bool show_generated_shader_code{false};
         bool test_all_variable_widgets__window{false};
         bool test_shaders_compilation__window{false};
+        bool empty_window{false};
 
     private:
         // Serialization
@@ -92,9 +106,12 @@ private:
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
+                cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
+                cereal::make_nvp("Log project-related events", log_project_related_events),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                cereal::make_nvp("Open Empty Window", empty_window)
 #else
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
@@ -103,9 +120,12 @@ private:
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
+                cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
+                cereal::make_nvp("Log project-related events", log_project_related_events),
                 cereal::make_nvp("Show generated shader code", show_generated_shader_code),
                 cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window)
+                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                cereal::make_nvp("Open Empty Window", empty_window)
 #endif
 
             );
@@ -121,9 +141,12 @@ private:
         instance().log_when_rendering                         = false;
         instance().log_when_compiling_nodes                   = false;
         instance().log_when_parsing_node_definition           = false;
+        instance().log_when_executing_a_command               = false;
+        instance().log_project_related_events                 = false;
         instance().show_generated_shader_code                 = false;
         instance().test_all_variable_widgets__window          = false;
         instance().test_shaders_compilation__window           = false;
+        instance().empty_window                               = false;
     }
 
     static void save_to_file();
@@ -148,7 +171,6 @@ private:
             if (ImGui::IsItemClicked())
                 instance().generate_dump_file = true;
 
-            ImGui::SameLine();
             Cool::ImGuiExtras::help_marker("Creates an info_dump.txt file next to your executable. It can be used when submitting a bug report, in order to give the devs more information.");
         }
 
@@ -160,7 +182,6 @@ private:
             if (ImGui::IsItemClicked())
                 instance().copy_info_dump_to_clipboard = true;
 
-            ImGui::SameLine();
             Cool::ImGuiExtras::help_marker("Copies an info dump to your clipboard. It can be used when submitting a bug report, in order to give the devs more information.");
         }
 
@@ -199,6 +220,16 @@ private:
             Cool::ImGuiExtras::toggle("Log when parsing node definition", &instance().log_when_parsing_node_definition);
         }
 
+        if (wafl::similarity_match({filter, "Log when executing a command"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Log when executing a command", &instance().log_when_executing_a_command);
+        }
+
+        if (wafl::similarity_match({filter, "Log project-related events"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Log project-related events", &instance().log_project_related_events);
+        }
+
         if (wafl::similarity_match({filter, "Show generated shader code"}) >= wafl::Matches::Strongly)
         {
             Cool::ImGuiExtras::toggle("Show generated shader code", &instance().show_generated_shader_code);
@@ -212,6 +243,12 @@ private:
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
             Cool::ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window);
+        }
+
+        if (wafl::similarity_match({filter, "Open Empty Window"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Open Empty Window", &instance().empty_window);
+            Cool::ImGuiExtras::help_marker("Useful when you want some blank space in your windows layout.");
         }
     }
 
@@ -271,6 +308,18 @@ private:
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
+        if (wafl::similarity_match({filter, "Log when executing a command"}) >= wafl::Matches::Strongly)
+        {
+            instance().log_when_executing_a_command = !instance().log_when_executing_a_command;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Log project-related events"}) >= wafl::Matches::Strongly)
+        {
+            instance().log_project_related_events = !instance().log_project_related_events;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
         if (wafl::similarity_match({filter, "Show generated shader code"}) >= wafl::Matches::Strongly)
         {
             instance().show_generated_shader_code = !instance().show_generated_shader_code;
@@ -286,6 +335,12 @@ private:
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
             instance().test_shaders_compilation__window = !instance().test_shaders_compilation__window;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Open Empty Window"}) >= wafl::Matches::Strongly)
+        {
+            instance().empty_window = !instance().empty_window;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }

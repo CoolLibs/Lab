@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Value 1';
+INPUT float 'Value 2';
+
+INPUT float 'Random value';
+
+INPUT float 'Probabilty of picking 1';
+
+float main()
+{
+    return 'Random value' < 'Probabilty of picking 1' ? 'Value 1' : 'Value 2';
+}

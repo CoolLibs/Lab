@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float->UV 'Curve1';
+INPUT float->UV 'Curve2';
+INPUT float 'Progression'; /// When set to 0 you get Curve 1; when set to 1 you get Curve 2.
+
+UV main(float t)
+{
+    return mix('Curve1'(t), 'Curve2'(t), 'Progression');
+}

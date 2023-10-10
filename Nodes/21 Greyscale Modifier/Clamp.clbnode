@@ -1,0 +1,8 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+INPUT float 'Min Value';
+INPUT float 'Max Value';
+
+float main(float V)
+{
+    return clamp(V, 'Min Value', 'Max Value');
+}
