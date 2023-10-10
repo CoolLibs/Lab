@@ -21,7 +21,6 @@ case PrimitiveType::Angle: return "float";
 case PrimitiveType::Hue: return "float";
 case PrimitiveType::Direction2D: return "vec2";
 case PrimitiveType::Void: return "void";
-case PrimitiveType::Any: return "ERROR the Any type should have been converted earlier in the compilation process.";
 case PrimitiveType::RayMarchRes: return "RayMarchRes";
 case PrimitiveType::Oklab: return "vec3";
 case PrimitiveType::Oklab_PremultipliedA: return "vec4";

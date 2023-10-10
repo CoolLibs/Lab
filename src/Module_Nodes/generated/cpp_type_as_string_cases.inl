@@ -21,7 +21,6 @@ case PrimitiveType::Angle: return "Angle";
 case PrimitiveType::Hue: return "Hue";
 case PrimitiveType::Direction2D: return "Direction2D";
 case PrimitiveType::Void: return "Void";
-case PrimitiveType::Any: return "Any";
 case PrimitiveType::RayMarchRes: return "RayMarchRes";
 case PrimitiveType::Oklab: return "Oklab";
 case PrimitiveType::Oklab_PremultipliedA: return "Oklab_PremultipliedA";

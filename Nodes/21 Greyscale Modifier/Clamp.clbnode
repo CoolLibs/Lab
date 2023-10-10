@@ -2,7 +2,7 @@
 INPUT float 'Min Value';
 INPUT float 'Max Value';
 
-Any main(Any V)
+float main(float V)
 {
     return clamp(V, 'Min Value', 'Max Value');
 }

@@ -12,11 +12,10 @@ namespace Lab {
 class Node {
 public:
     Node() = default;
-    Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs, bool is_template_node)
+    Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs)
         : _id_names{id_names}
         , _number_of_main_input_pins{number_of_main_input_pins}
         , _number_of_function_inputs{number_of_function_inputs}
-        , _chosen_any_type{is_template_node ? std::make_optional(PrimitiveType::Float) : std::nullopt}
     {}
 
     auto name() const -> std::string { return _name; }
@@ -53,10 +52,6 @@ public:
     auto value_input_pin_idx_begin() const -> size_t { return function_input_pin_idx_end(); }
     auto value_input_pin_idx_end() const -> size_t { return _input_pins.size(); }
 
-    /// Only call this if this node is a template node
-    auto chosen_any_type() const -> PrimitiveType { return _chosen_any_type.value(); }
-    auto imgui_chosen_any_type() -> bool;
-
 private:
     Cool::NodeDefinitionIdentifier _id_names;
     std::string                    _name{};
@@ -66,8 +61,6 @@ private:
     std::vector<Cool::AnyInput>  _value_inputs;
     size_t                       _number_of_main_input_pins{};
     size_t                       _number_of_function_inputs{};
-
-    std::optional<PrimitiveType> _chosen_any_type{}; // Only present if the node has `Any` in its signature.
 
 private:
     friend class cereal::access;
@@ -81,8 +74,7 @@ private:
             cereal::make_nvp("Output Pins", _output_pins),
             cereal::make_nvp("Value inputs", _value_inputs),
             cereal::make_nvp("Number of main input pins", _number_of_main_input_pins),
-            cereal::make_nvp("Number of function inputs", _number_of_function_inputs),
-            cereal::make_nvp("Chosen Any type", _chosen_any_type)
+            cereal::make_nvp("Number of function inputs", _number_of_function_inputs)
         );
     }
 };

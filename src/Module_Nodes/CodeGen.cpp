@@ -156,7 +156,7 @@ static auto gen_value_inputs(
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties           res{};
+    Properties res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
@@ -368,20 +368,6 @@ static auto gen_helper_functions(std::vector<FunctionPieces> const& helper_funct
     return res;
 }
 
-/// Returns the signature where all template types have been resolved to a concrete type.
-static auto concrete_signature(NodeDefinition const& def, Node const& node)
-    -> FunctionSignature
-{
-    if (!def.signature().is_template())
-        return def.signature();
-
-    return FunctionSignature{
-        .from  = node.chosen_any_type(),
-        .to    = node.chosen_any_type(),
-        .arity = def.signature().arity,
-    };
-}
-
 static auto gen_includes(NodeDefinition const& node_definition)
     -> std::string
 {
@@ -416,7 +402,7 @@ static auto gen_base_function(
 
     auto func_implementation = gen_function_definition({
         .signature       = make_complete_function_signature(MainFunctionSignature{
-                  .signature       = concrete_signature(node_definition, node),
+                  .signature       = node_definition.signature(),
                   .parameter_names = node_definition.parameter_names(),
         }),
         .name            = func_name,
@@ -564,7 +550,7 @@ auto gen_desired_function(
         ));
 
     auto const func_body = gen_desired_function_implementation(
-        concrete_signature(*node_definition, node),
+        node_definition->signature(),
         desired_signature,
         *base_function_name,
         node,

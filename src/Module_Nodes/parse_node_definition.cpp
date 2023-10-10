@@ -221,24 +221,6 @@ static auto make_main_function_pieces(FunctionPieces const& pieces, std::string 
     return res;
 }
 
-static auto check_that_helper_functions_dont_use_the_any_type(std::vector<FunctionPieces> const& functions)
-    -> std::optional<std::string>
-{
-    for (auto const& function : functions)
-    {
-        if (
-            function.signature.output_type == PrimitiveType::Any
-            || std::any_of(function.signature.parameters.begin(), function.signature.parameters.end(), [](ParamDesc const& param) {
-                   return param.type == PrimitiveType::Any;
-               })
-        )
-        {
-            return fmt::format("The Any type is only allowed for the main function. You cannot use it in {}.", function.name);
-        }
-    }
-    return std::nullopt;
-}
-
 static auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
@@ -259,11 +241,6 @@ static auto find_main_and_helper_functions(std::filesystem::path const& filepath
 
     functions->erase(main_function_it);
     res.helper_functions = *functions;
-    {
-        auto const err = check_that_helper_functions_dont_use_the_any_type(*functions);
-        if (err)
-            return *err;
-    }
 
     return std::nullopt;
 }
@@ -284,8 +261,6 @@ static auto parse_signature(std::vector<std::string> const& words)
     // Error checking
     if (input_type == PrimitiveType::Void)
         return tl::make_unexpected("'Void' is not allowed as an INPUT type.");
-    if (input_type == PrimitiveType::Any)
-        return tl::make_unexpected("'Any' is not allowed as an INPUT type.");
     for (size_t i = 1; i < words.size() - 1; ++i)
     {
         auto const other_input_type = parse_primitive_type(words[i]);

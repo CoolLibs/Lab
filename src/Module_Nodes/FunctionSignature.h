@@ -11,8 +11,6 @@ struct FunctionSignature {
     size_t        arity{1};
 
     friend auto operator==(const FunctionSignature&, const FunctionSignature&) -> bool = default;
-
-    auto is_template() const -> bool { return from == PrimitiveType::Any || to == PrimitiveType::Any; }
 };
 
 struct ParamDesc {
