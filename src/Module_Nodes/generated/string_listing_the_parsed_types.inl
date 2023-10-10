@@ -31,6 +31,6 @@ R"STR(  - bool
   - sRGB
   - sRGB_PremultipliedA
   - sRGB_StraightA
-  - HSLuv
-  - HSLuv_PremultipliedA
-  - HSLuv_StraightA)STR"
+  - Okhsl
+  - Okhsl_PremultipliedA
+  - Okhsl_StraightA)STR"

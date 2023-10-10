@@ -11,7 +11,7 @@ case PrimitiveType::LinearRGB:
 return PrimitiveType::LinearRGB_StraightA;
 case PrimitiveType::sRGB:
 return PrimitiveType::sRGB_StraightA;
-case PrimitiveType::HSLuv:
-return PrimitiveType::HSLuv_StraightA;
+case PrimitiveType::Okhsl:
+return PrimitiveType::Okhsl_StraightA;
 case PrimitiveType::Float:
 return PrimitiveType::Float_StraightA;

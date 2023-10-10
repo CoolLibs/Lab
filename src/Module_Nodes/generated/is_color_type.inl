@@ -13,6 +13,6 @@ type == PrimitiveType::Oklab
     || type == PrimitiveType::sRGB
     || type == PrimitiveType::sRGB_StraightA
     || type == PrimitiveType::sRGB_PremultipliedA
-    || type == PrimitiveType::HSLuv
-    || type == PrimitiveType::HSLuv_StraightA
-    || type == PrimitiveType::HSLuv_PremultipliedA
+    || type == PrimitiveType::Okhsl
+    || type == PrimitiveType::Okhsl_StraightA
+    || type == PrimitiveType::Okhsl_PremultipliedA

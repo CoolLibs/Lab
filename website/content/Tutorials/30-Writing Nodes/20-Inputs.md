@@ -26,8 +26,8 @@ Here are all the types you can have as a value input:
 - `Angle` (`float` under the hood)
 - `Direction2D` (`vec2` under the hood, guaranteed to be of length 1)
 - `Hue` (`float` under the hood, guaranteed to be between 0 and 1).
-- Color (`Oklab`, `sRGB`, `LinearRGB` or `HSLuv`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec3` under the hood).
-- Color and alpha (`Oklab_PremultipliedA`, `Oklab_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `HSLuv_PremultipliedA` or `HSLuv_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
+- Color (`Oklab`, `sRGB`, `LinearRGB` or `Okhsl`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec3` under the hood).
+- Color and alpha (`Oklab_PremultipliedA`, `Oklab_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `Okhsl_PremultipliedA` or `Okhsl_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
 
 ## Input functions
 

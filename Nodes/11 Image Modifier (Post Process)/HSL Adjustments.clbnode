@@ -4,7 +4,7 @@ INPUT float 'Shift';
 INPUT float 'S';
 INPUT float 'L';
 
-HSLuv main(HSLuv Image)
+Okhsl main(Okhsl Image)
 {
     Image.x = fract(Image.x + 'Shift');
     Image.y = Image.y * (-4. * 'S') * ('S' - 1.) + 2. * 'S' * ('S' - 0.5);

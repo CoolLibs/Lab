@@ -9,7 +9,7 @@ If you have the choice between several color spaces because your effect will wor
 - Oklab
 - Linear RGB
 - sRGB
-- HSLuv
+- Okhsl
 
 Now let's see why you might prefer one space over another:
 
@@ -22,11 +22,11 @@ The first component stores the lightness, a number between 0 and 1.<br/>
 The second and third components store chromaticity information. They don't have a specific range.
 For more information, see https://bottosson.github.io/posts/oklab/
 
-### HSLuv
+### Okhsl
 
-You might already be familiar with HSL (Hue - Saturation - Lightness); [HSLuv](https://www.hsluv.org/) is simply a perceptually-accurate version of it.
+You might already be familiar with HSL (Hue - Saturation - Lightness); [Okhsl](https://bottosson.github.io/posts/colorpicker/) is simply a perceptually-accurate version of it.
 
-**This is what you will want to use in nodes that directly manipulate either the hue and / or the saturation.** (Note that Oklab also gives you access to the lightness so there is no need to use HSLuv if you are only interested in the lightness).
+**This is what you will want to use in nodes that directly manipulate either the hue and / or the saturation.** (Note that Oklab also gives you access to the lightness so there is no need to use Okhsl if you are only interested in the lightness).
 
 The three channels are numbers between 0 and 1.
 

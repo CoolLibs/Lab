@@ -32,6 +32,6 @@ Bool,
     sRGB,
     sRGB_PremultipliedA,
     sRGB_StraightA,
-    HSLuv,
-    HSLuv_PremultipliedA,
-    HSLuv_StraightA
+    Okhsl,
+    Okhsl_PremultipliedA,
+    Okhsl_StraightA

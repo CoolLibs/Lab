@@ -6,8 +6,8 @@ Now that you know how to write a basic node, you might wonder what all the possi
 - `UV`: The 2D coordinates that we use to sample our images. (`vec2` under the hood).
 - `float`: Just a regular number.
 - `SignedDistance`: A distance to an object, used for [SDF rendering](https://youtu.be/PGtv-dBi2wE). (`float` under the hood).
-- Color (`Oklab`, `sRGB`, `LinearRGB` or `HSLuv`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec3` under the hood).
-- Color and alpha. (`Oklab_PremultipliedA`, `Oklab_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `HSLuv_PremultipliedA` or `HSLuv_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
+- Color (`Oklab`, `sRGB`, `LinearRGB` or `Okhsl`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec3` under the hood).
+- Color and alpha. (`Oklab_PremultipliedA`, `Oklab_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `Okhsl_PremultipliedA` or `Okhsl_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
 
 And here are all the remaining types, that are seldom used:
 - `bool`

@@ -7,6 +7,6 @@
 case PrimitiveType::Oklab_StraightA:
 case PrimitiveType::LinearRGB_StraightA:
 case PrimitiveType::sRGB_StraightA:
-case PrimitiveType::HSLuv_StraightA:
+case PrimitiveType::Okhsl_StraightA:
 case PrimitiveType::Float_StraightA:
 return true;

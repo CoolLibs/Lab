@@ -112,15 +112,15 @@ if (str == "sRGB_StraightA")
 {
     return PrimitiveType::sRGB_StraightA;
 }
-if (str == "HSLuv")
+if (str == "Okhsl")
 {
-    return PrimitiveType::HSLuv;
+    return PrimitiveType::Okhsl;
 }
-if (str == "HSLuv_PremultipliedA")
+if (str == "Okhsl_PremultipliedA")
 {
-    return PrimitiveType::HSLuv_PremultipliedA;
+    return PrimitiveType::Okhsl_PremultipliedA;
 }
-if (str == "HSLuv_StraightA")
+if (str == "Okhsl_StraightA")
 {
-    return PrimitiveType::HSLuv_StraightA;
+    return PrimitiveType::Okhsl_StraightA;
 }
