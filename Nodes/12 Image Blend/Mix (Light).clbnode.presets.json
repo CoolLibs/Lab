@@ -1,0 +1,68 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "92f7e19a-fc1c-49b8-8135-130c88229e1c",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 7,
+                            "data": {
+                                "Name": "Color2",
+                                "Value": {
+                                    "sRGB": {
+                                        "x": 1.0,
+                                        "y": 0.9998999834060669,
+                                        "z": 0.9998999834060669
+                                    }
+                                },
+                                "Metadata": {
+                                    "Is HDR": false
+                                },
+                                "Default Value": {
+                                    "sRGB": {
+                                        "x": 1.0,
+                                        "y": 0.9998999834060669,
+                                        "z": 0.9998999834060669
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Is HDR": false
+                                }
+                            }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Percent",
+                                "Value": 0.5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": true
+                                    }
+                                },
+                                "Default Value": 0.5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
