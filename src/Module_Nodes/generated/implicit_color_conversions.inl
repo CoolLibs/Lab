@@ -62,7 +62,7 @@ if (from == PrimitiveType::Oklab_StraightA && to == PrimitiveType::Oklab_Premult
                             {
                                 
                         vec3 to = (from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -77,7 +77,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Oklab)
                             vec3 Coollab_Oklab_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -93,7 +93,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Oklab_St
                             vec4 Coollab_Oklab_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -190,7 +190,7 @@ if (from == PrimitiveType::Oklab_StraightA && to == PrimitiveType::LinearRGB_Pre
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_Oklab(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -205,7 +205,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::LinearRG
                             vec3 Coollab_LinearRGB_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Oklab(from.xyz / saturate(from.a));
+                        vec3 to = Cool_LinearRGB_from_Oklab(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -221,7 +221,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::LinearRG
                             vec4 Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Oklab(from.xyz / saturate(from.a));
+                        vec3 to = Cool_LinearRGB_from_Oklab(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -238,8 +238,8 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::LinearRG
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_LinearRGB_from_Oklab(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_LinearRGB_from_Oklab(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -335,7 +335,7 @@ if (from == PrimitiveType::Oklab_StraightA && to == PrimitiveType::sRGB_Premulti
                             {
                                 
                         vec3 to = Cool_sRGB_from_Oklab(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -350,7 +350,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 Coollab_sRGB_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Oklab(from.xyz / saturate(from.a));
+                        vec3 to = Cool_sRGB_from_Oklab(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -366,7 +366,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::sRGB_Str
                             vec4 Coollab_sRGB_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Oklab(from.xyz / saturate(from.a));
+                        vec3 to = Cool_sRGB_from_Oklab(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -383,8 +383,8 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::sRGB_Pre
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_sRGB_from_Oklab(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_sRGB_from_Oklab(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -480,7 +480,7 @@ if (from == PrimitiveType::Oklab_StraightA && to == PrimitiveType::Okhsl_Premult
                             {
                                 
                         vec3 to = Cool_Okhsl_from_Oklab(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -495,7 +495,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Okhsl)
                             vec3 Coollab_Okhsl_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_Oklab(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Okhsl_from_Oklab(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -511,7 +511,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Okhsl_St
                             vec4 Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_Oklab(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Okhsl_from_Oklab(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -528,8 +528,8 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Okhsl_Pr
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Okhsl_from_Oklab(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_Okhsl_from_Oklab(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -625,7 +625,7 @@ if (from == PrimitiveType::Oklab_StraightA && to == PrimitiveType::Float_Premult
                             {
                                 
                         float to = Cool_Float_from_Oklab(from.xyz);
-                        return vec2(to * saturate(from.a), from.a);
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -640,7 +640,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Float)
                             float Coollab_Float_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_Oklab(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_Oklab(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -656,7 +656,7 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Float_St
                             vec2 Coollab_Float_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_Oklab(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_Oklab(unpremultiply(from.xyz, from.a));
                         return vec2(to, from.a);
                     
                             }
@@ -673,8 +673,8 @@ if (from == PrimitiveType::Oklab_PremultipliedA && to == PrimitiveType::Float_Pr
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        float to = Cool_Float_from_Oklab(from.xyz / saturate(from.a));
-                        return vec2(to * saturate(from.a), from.a);
+                        float to = Cool_Float_from_Oklab(unpremultiply(from.xyz, from.a));
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -770,7 +770,7 @@ if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::Oklab_Pre
                             {
                                 
                         vec3 to = Cool_Oklab_from_LinearRGB(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -785,7 +785,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Okla
                             vec3 Coollab_Oklab_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_LinearRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Oklab_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -801,7 +801,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Okla
                             vec4 Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_LinearRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Oklab_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -818,8 +818,8 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Okla
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Oklab_from_LinearRGB(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_Oklab_from_LinearRGB(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -883,7 +883,7 @@ if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::LinearRGB
                             {
                                 
                         vec3 to = (from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -898,7 +898,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Line
                             vec3 Coollab_LinearRGB_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -914,7 +914,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Line
                             vec4 Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -1011,7 +1011,7 @@ if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::sRGB_Prem
                             {
                                 
                         vec3 to = Cool_sRGB_from_LinearRGB(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1026,7 +1026,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::sRGB
                             vec3 Coollab_sRGB_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_LinearRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_sRGB_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -1042,7 +1042,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::sRGB
                             vec4 Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_LinearRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_sRGB_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -1059,8 +1059,8 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::sRGB
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_sRGB_from_LinearRGB(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_sRGB_from_LinearRGB(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1156,7 +1156,7 @@ if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::Okhsl_Pre
                             {
                                 
                         vec3 to = Cool_Okhsl_from_LinearRGB(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1171,7 +1171,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Okhs
                             vec3 Coollab_Okhsl_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_LinearRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Okhsl_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -1187,7 +1187,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Okhs
                             vec4 Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_LinearRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Okhsl_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -1204,8 +1204,8 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Okhs
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Okhsl_from_LinearRGB(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_Okhsl_from_LinearRGB(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1301,7 +1301,7 @@ if (from == PrimitiveType::LinearRGB_StraightA && to == PrimitiveType::Float_Pre
                             {
                                 
                         float to = Cool_Float_from_LinearRGB(from.xyz);
-                        return vec2(to * saturate(from.a), from.a);
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1316,7 +1316,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Floa
                             float Coollab_Float_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_LinearRGB(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -1332,7 +1332,7 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Floa
                             vec2 Coollab_Float_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_LinearRGB(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_LinearRGB(unpremultiply(from.xyz, from.a));
                         return vec2(to, from.a);
                     
                             }
@@ -1349,8 +1349,8 @@ if (from == PrimitiveType::LinearRGB_PremultipliedA && to == PrimitiveType::Floa
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        float to = Cool_Float_from_LinearRGB(from.xyz / saturate(from.a));
-                        return vec2(to * saturate(from.a), from.a);
+                        float to = Cool_Float_from_LinearRGB(unpremultiply(from.xyz, from.a));
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1446,7 +1446,7 @@ if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::Oklab_Premulti
                             {
                                 
                         vec3 to = Cool_Oklab_from_sRGB(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1461,7 +1461,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Oklab)
                             vec3 Coollab_Oklab_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_sRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Oklab_from_sRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -1477,7 +1477,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Oklab_Str
                             vec4 Coollab_Oklab_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_sRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Oklab_from_sRGB(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -1494,8 +1494,8 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Oklab_Pre
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Oklab_from_sRGB(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_Oklab_from_sRGB(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1591,7 +1591,7 @@ if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::LinearRGB_Prem
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_sRGB(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1606,7 +1606,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::LinearRGB
                             vec3 Coollab_LinearRGB_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_sRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_LinearRGB_from_sRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -1622,7 +1622,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::LinearRGB
                             vec4 Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_sRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_LinearRGB_from_sRGB(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -1639,8 +1639,8 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::LinearRGB
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_LinearRGB_from_sRGB(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_LinearRGB_from_sRGB(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1704,7 +1704,7 @@ if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::sRGB_Premultip
                             {
                                 
                         vec3 to = (from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1719,7 +1719,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 Coollab_sRGB_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -1735,7 +1735,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::sRGB_Stra
                             vec4 Coollab_sRGB_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -1832,7 +1832,7 @@ if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::Okhsl_Premulti
                             {
                                 
                         vec3 to = Cool_Okhsl_from_sRGB(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1847,7 +1847,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Okhsl)
                             vec3 Coollab_Okhsl_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_sRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Okhsl_from_sRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -1863,7 +1863,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Okhsl_Str
                             vec4 Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_sRGB(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Okhsl_from_sRGB(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -1880,8 +1880,8 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Okhsl_Pre
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Okhsl_from_sRGB(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_Okhsl_from_sRGB(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1977,7 +1977,7 @@ if (from == PrimitiveType::sRGB_StraightA && to == PrimitiveType::Float_Premulti
                             {
                                 
                         float to = Cool_Float_from_sRGB(from.xyz);
-                        return vec2(to * saturate(from.a), from.a);
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -1992,7 +1992,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Float)
                             float Coollab_Float_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_sRGB(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_sRGB(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -2008,7 +2008,7 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Float_Str
                             vec2 Coollab_Float_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_sRGB(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_sRGB(unpremultiply(from.xyz, from.a));
                         return vec2(to, from.a);
                     
                             }
@@ -2025,8 +2025,8 @@ if (from == PrimitiveType::sRGB_PremultipliedA && to == PrimitiveType::Float_Pre
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        float to = Cool_Float_from_sRGB(from.xyz / saturate(from.a));
-                        return vec2(to * saturate(from.a), from.a);
+                        float to = Cool_Float_from_sRGB(unpremultiply(from.xyz, from.a));
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2122,7 +2122,7 @@ if (from == PrimitiveType::Okhsl_StraightA && to == PrimitiveType::Oklab_Premult
                             {
                                 
                         vec3 to = Cool_Oklab_from_Okhsl(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2137,7 +2137,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Oklab)
                             vec3 Coollab_Oklab_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_Okhsl(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Oklab_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -2153,7 +2153,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Oklab_St
                             vec4 Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_Okhsl(from.xyz / saturate(from.a));
+                        vec3 to = Cool_Oklab_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -2170,8 +2170,8 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Oklab_Pr
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Oklab_from_Okhsl(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_Oklab_from_Okhsl(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2267,7 +2267,7 @@ if (from == PrimitiveType::Okhsl_StraightA && to == PrimitiveType::LinearRGB_Pre
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_Okhsl(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2282,7 +2282,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::LinearRG
                             vec3 Coollab_LinearRGB_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Okhsl(from.xyz / saturate(from.a));
+                        vec3 to = Cool_LinearRGB_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -2298,7 +2298,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::LinearRG
                             vec4 Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Okhsl(from.xyz / saturate(from.a));
+                        vec3 to = Cool_LinearRGB_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -2315,8 +2315,8 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::LinearRG
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_LinearRGB_from_Okhsl(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_LinearRGB_from_Okhsl(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2412,7 +2412,7 @@ if (from == PrimitiveType::Okhsl_StraightA && to == PrimitiveType::sRGB_Premulti
                             {
                                 
                         vec3 to = Cool_sRGB_from_Okhsl(from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2427,7 +2427,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 Coollab_sRGB_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Okhsl(from.xyz / saturate(from.a));
+                        vec3 to = Cool_sRGB_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -2443,7 +2443,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::sRGB_Str
                             vec4 Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Okhsl(from.xyz / saturate(from.a));
+                        vec3 to = Cool_sRGB_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -2460,8 +2460,8 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::sRGB_Pre
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_sRGB_from_Okhsl(from.xyz / saturate(from.a));
-                        return vec4(to * saturate(from.a), from.a);
+                        vec3 to = Cool_sRGB_from_Okhsl(unpremultiply(from.xyz, from.a));
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2525,7 +2525,7 @@ if (from == PrimitiveType::Okhsl_StraightA && to == PrimitiveType::Okhsl_Premult
                             {
                                 
                         vec3 to = (from.xyz);
-                        return vec4(to * saturate(from.a), from.a);
+                        return vec4(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2540,7 +2540,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Okhsl)
                             vec3 Coollab_Okhsl_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -2556,7 +2556,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Okhsl_St
                             vec4 Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        vec3 to = (from.xyz / saturate(from.a));
+                        vec3 to = (unpremultiply(from.xyz, from.a));
                         return vec4(to, from.a);
                     
                             }
@@ -2653,7 +2653,7 @@ if (from == PrimitiveType::Okhsl_StraightA && to == PrimitiveType::Float_Premult
                             {
                                 
                         float to = Cool_Float_from_Okhsl(from.xyz);
-                        return vec2(to * saturate(from.a), from.a);
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2668,7 +2668,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Float)
                             float Coollab_Float_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_Okhsl(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return to;
                     
                             }
@@ -2684,7 +2684,7 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Float_St
                             vec2 Coollab_Float_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
                             {
                                 
-                        float to = Cool_Float_from_Okhsl(from.xyz / saturate(from.a));
+                        float to = Cool_Float_from_Okhsl(unpremultiply(from.xyz, from.a));
                         return vec2(to, from.a);
                     
                             }
@@ -2701,8 +2701,8 @@ if (from == PrimitiveType::Okhsl_PremultipliedA && to == PrimitiveType::Float_Pr
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        float to = Cool_Float_from_Okhsl(from.xyz / saturate(from.a));
-                        return vec2(to * saturate(from.a), from.a);
+                        float to = Cool_Float_from_Okhsl(unpremultiply(from.xyz, from.a));
+                        return vec2(premultiply(to, from.a), from.a);
                     
                             }
                             )STR",
@@ -2798,7 +2798,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Oklab_Premult
                             {
                                 
                         vec3 to = Cool_Oklab_from_Float(from.x);
-                        return vec4(to * saturate(from.y), from.y);
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -2813,7 +2813,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Oklab)
                             vec3 Coollab_Oklab_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_Oklab_from_Float(unpremultiply(from.x, from.y));
                         return to;
                     
                             }
@@ -2829,7 +2829,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Oklab_St
                             vec4 Coollab_Oklab_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_Oklab_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_Oklab_from_Float(unpremultiply(from.x, from.y));
                         return vec4(to, from.y);
                     
                             }
@@ -2846,8 +2846,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Oklab_Pr
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Oklab_from_Float(from.x / saturate(from.y));
-                        return vec4(to * saturate(from.y), from.y);
+                        vec3 to = Cool_Oklab_from_Float(unpremultiply(from.x, from.y));
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -2943,7 +2943,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::LinearRGB_Pre
                             {
                                 
                         vec3 to = Cool_LinearRGB_from_Float(from.x);
-                        return vec4(to * saturate(from.y), from.y);
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -2958,7 +2958,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::LinearRG
                             vec3 Coollab_LinearRGB_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_LinearRGB_from_Float(unpremultiply(from.x, from.y));
                         return to;
                     
                             }
@@ -2974,7 +2974,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::LinearRG
                             vec4 Coollab_LinearRGB_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_LinearRGB_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_LinearRGB_from_Float(unpremultiply(from.x, from.y));
                         return vec4(to, from.y);
                     
                             }
@@ -2991,8 +2991,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::LinearRG
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_LinearRGB_from_Float(from.x / saturate(from.y));
-                        return vec4(to * saturate(from.y), from.y);
+                        vec3 to = Cool_LinearRGB_from_Float(unpremultiply(from.x, from.y));
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -3088,7 +3088,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::sRGB_Premulti
                             {
                                 
                         vec3 to = Cool_sRGB_from_Float(from.x);
-                        return vec4(to * saturate(from.y), from.y);
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -3103,7 +3103,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::sRGB)
                             vec3 Coollab_sRGB_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_sRGB_from_Float(unpremultiply(from.x, from.y));
                         return to;
                     
                             }
@@ -3119,7 +3119,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::sRGB_Str
                             vec4 Coollab_sRGB_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_sRGB_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_sRGB_from_Float(unpremultiply(from.x, from.y));
                         return vec4(to, from.y);
                     
                             }
@@ -3136,8 +3136,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::sRGB_Pre
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_sRGB_from_Float(from.x / saturate(from.y));
-                        return vec4(to * saturate(from.y), from.y);
+                        vec3 to = Cool_sRGB_from_Float(unpremultiply(from.x, from.y));
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -3233,7 +3233,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Okhsl_Premult
                             {
                                 
                         vec3 to = Cool_Okhsl_from_Float(from.x);
-                        return vec4(to * saturate(from.y), from.y);
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -3248,7 +3248,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Okhsl)
                             vec3 Coollab_Okhsl_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_Okhsl_from_Float(unpremultiply(from.x, from.y));
                         return to;
                     
                             }
@@ -3264,7 +3264,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Okhsl_St
                             vec4 Coollab_Okhsl_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        vec3 to = Cool_Okhsl_from_Float(from.x / saturate(from.y));
+                        vec3 to = Cool_Okhsl_from_Float(unpremultiply(from.x, from.y));
                         return vec4(to, from.y);
                     
                             }
@@ -3281,8 +3281,8 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Okhsl_Pr
                             {
                                 
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        vec3 to = Cool_Okhsl_from_Float(from.x / saturate(from.y));
-                        return vec4(to * saturate(from.y), from.y);
+                        vec3 to = Cool_Okhsl_from_Float(unpremultiply(from.x, from.y));
+                        return vec4(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -3346,7 +3346,7 @@ if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Float_Premult
                             {
                                 
                         float to = (from.x);
-                        return vec2(to * saturate(from.y), from.y);
+                        return vec2(premultiply(to, from.y), from.y);
                     
                             }
                             )STR",
@@ -3361,7 +3361,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Float)
                             float Coollab_Float_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        float to = (from.x / saturate(from.y));
+                        float to = (unpremultiply(from.x, from.y));
                         return to;
                     
                             }
@@ -3377,7 +3377,7 @@ if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Float_St
                             vec2 Coollab_Float_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
                             {
                                 
-                        float to = (from.x / saturate(from.y));
+                        float to = (unpremultiply(from.x, from.y));
                         return vec2(to, from.y);
                     
                             }
