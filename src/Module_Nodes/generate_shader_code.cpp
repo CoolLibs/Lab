@@ -73,8 +73,6 @@ out vec4          out_Color;
 #include "_COOL_RES_/shaders/Texture.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 
-// TODO(JF) Move this to the 3D Renderer node
-#include "_ROOT_FOLDER_/res/3D-renderer.glsl"
 uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 

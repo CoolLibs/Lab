@@ -73,6 +73,8 @@ INPUT LinearRGB 'Cartoon Edges Color';
 
 #define MAX_DIST cool_camera_far_plane
 
+#include "_ROOT_FOLDER_/res/3D-renderer.glsl"
+
 vec3 get_normal(vec3 p)
 {
     float h = 'Blur normals at edges';
