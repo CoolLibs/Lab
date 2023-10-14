@@ -38,14 +38,14 @@
                             "index": 1,
                             "data": {
                                 "Name": "Splits",
-                                "Value": 5,
+                                "Value": 6,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0,
+                                        "Has min bound": true,
+                                        "Min": 1,
                                         "Has max bound": false,
                                         "Max": 12,
-                                        "Drag speed": 0.03999999910593033,
+                                        "Drag speed": 0.019999999552965165,
                                         "Use slider": false
                                     }
                                 },
@@ -59,6 +59,32 @@
                                         "Drag speed": 0.03999999910593033,
                                         "Use slider": false
                                     }
+                                }
+                            }
+                        },
+                        {
+                            "index": 11,
+                            "data": {
+                                "Name": "Angle",
+                                "Value": {
+                                    "Radians": {
+                                        "Radians": 0.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
+                                },
+                                "Default Value": {
+                                    "Radians": {
+                                        "Radians": 0.0
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
                                 }
                             }
                         }
