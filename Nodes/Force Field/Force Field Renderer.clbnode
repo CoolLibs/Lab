@@ -1,0 +1,25 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Grid Size';
+INPUT float 'Arrow Thickness';
+INPUT float 'Period';
+INPUT float 'Color Min';
+INPUT float 'Color Max';
+INPUT UV->vec2 'Force Field';
+
+float main(UV uv)
+{
+    vec2 gid   = floor(uv * 'Grid Size') / 'Grid Size';
+    vec2 guv   = fract(uv * 'Grid Size') * 2. - 1.;
+    vec2 force = 'Force Field'(gid);
+    // force       = vec2(-force.y, force.x);
+    float angle = atan(force.y, force.x);
+    guv         = rotation_2D(angle) * guv;
+    return mix('Color Min', 'Color Max', sin(length(force) * 'Period') * 0.5 + 0.5)
+           * step(-1., guv.x)
+           * (1. - step(1., guv.x))
+           * step(-'Arrow Thickness', guv.y)
+           * (1. - step(+'Arrow Thickness', guv.y))
+        //
+        ;
+}

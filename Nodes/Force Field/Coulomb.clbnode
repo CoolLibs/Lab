@@ -1,0 +1,24 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Strength';
+INPUT Point2D 'Charge 1';
+INPUT float 'Charge 1 Strength';
+INPUT Point2D 'Charge 2';
+INPUT float 'Charge 2 Strength';
+INPUT Point2D 'Charge 3';
+INPUT float 'Charge 3 Strength';
+
+vec2 force(vec2 pos, vec2 charge_pos, float charge_strength)
+{
+    return 'Strength' * charge_strength / dot(pos - charge_pos, pos - charge_pos) * normalize(pos - charge_pos);
+}
+
+vec2 main(UV Position)
+{
+    return vec2(0.)
+           + force(Position, 'Charge 1', 'Charge 1 Strength')
+           + force(Position, 'Charge 2', 'Charge 2 Strength')
+           + force(Position, 'Charge 3', 'Charge 3 Strength')
+        //
+        ;
+}
