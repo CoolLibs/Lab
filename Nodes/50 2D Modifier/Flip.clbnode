@@ -1,0 +1,17 @@
+
+
+INPUT bool 'Horizontal';
+INPUT bool 'Vertical';
+
+UV main(UV uv)
+{
+    float x = float('Horizontal') * 2. - 1.;
+    float y = float('Vertical') * 2. - 1.;
+
+    mat2 scale = mat2(
+        -y, 0.0,
+        0.0, -x
+    );
+
+    return scale * uv;
+}

@@ -41,12 +41,13 @@ auto compute_primitive_type_color(PrimitiveType type) -> Cool::Color
 {
     if (is_color_type(type))
         return NodeColor::image();
+    if (is_greyscale_type(type))
+        return NodeColor::greyscale();
 
     switch (type)
     {
     case PrimitiveType::SignedDistance:
         return NodeColor::shape_2D();
-    case PrimitiveType::Float:
     case PrimitiveType::Int:
     case PrimitiveType::Bool:
     case PrimitiveType::Hue:

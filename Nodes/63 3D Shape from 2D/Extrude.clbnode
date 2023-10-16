@@ -1,0 +1,11 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->SignedDistance '2D Shape';
+INPUT float 'Height';
+
+SignedDistance main(vec3 pos)
+{
+    float d = '2D Shape'(pos.xy);
+    vec2  w = vec2(d, abs(pos.z) - 'Height');
+    return CLB_FIX_ARTIFACTS(min(max(w.x, w.y), 0.0) + length(max(w, 0.0)));
+}

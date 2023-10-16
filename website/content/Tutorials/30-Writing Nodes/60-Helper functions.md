@@ -3,11 +3,11 @@ You can define other functions in you *.clbnode* file, and call them in your `ma
 You are allowed to use your INPUTs inside these functions.
 
 ```glsl
-INPUT float `Value`;
+INPUT float 'Value';
 
 float helper(float x, bool maybe)
 {
-    return x + (maybe ? `Value` : 5.);
+    return x + (maybe ? 'Value' : 5.);
 }
 
 float main(float x)

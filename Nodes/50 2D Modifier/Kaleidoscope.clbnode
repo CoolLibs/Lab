@@ -1,0 +1,18 @@
+INPUT float 'Time';
+INPUT int 'Splits';
+INPUT Angle 'Angle';
+
+// inspired by Gatkan's work https://www.shadertoy.com/view/XdtBWH
+UV main(UV Image)
+{
+    float angle = atan(Image.y, Image.x);
+    angle       = ((angle / PI) + 1.) * 0.5;
+    angle       = angle + 0.25;
+    angle       = mod(angle, 1. / float('Splits')) * float('Splits');
+    float a     = (2. * angle - 1.);
+    angle       = -a * a + 1.;
+    angle       = angle * 0.1;
+    float y     = length(Image);
+    angle       = angle * (y * 3.);
+    return rotation_2D('Angle') * vec2(angle + ('Time' * 0.5), y + ('Time' * 0.1));
+}

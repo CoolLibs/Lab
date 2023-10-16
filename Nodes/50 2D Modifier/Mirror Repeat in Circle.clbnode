@@ -1,0 +1,11 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Period';
+
+UV main(UV _2D_Object)
+{
+    vec2 polar = Cool_polar_coordinates(_2D_Object);
+
+    polar.x = 1. - 2. * (abs(mod(polar.x / 'Period' * 0.5 + 0.5, 2.) - 1.)) * 'Period';
+    return vec2_from_polar(polar.x, polar.y);
+}

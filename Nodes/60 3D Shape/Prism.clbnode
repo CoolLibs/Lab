@@ -1,0 +1,28 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT int 'Faces Count';
+
+INPUT float 'Base Radius';
+INPUT float 'Height';
+INPUT float 'Smoothing';
+
+float half_space_sdf(vec3 pos, vec3 normal, vec3 origin)
+{
+    return dot(pos - origin, normal);
+}
+
+SignedDistance main(vec3 pos)
+{
+    float d = max(
+        -pos.z - 'Height' / 2,
+        pos.z - 'Height' / 2
+    );
+    for (int i = 0; i < 'Faces Count'; ++i)
+    {
+        float c              = cos(i * TAU / 'Faces Count');
+        float s              = sin(i * TAU / 'Faces Count');
+        vec3  polygon_vertex = vec3(c, s, 0.);
+        d                    = smooth_max_polynomial(d, half_space_sdf(pos, polygon_vertex, 'Base Radius' * polygon_vertex), 'Smoothing');
+    }
+    return d;
+}

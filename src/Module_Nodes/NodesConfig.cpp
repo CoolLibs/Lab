@@ -144,9 +144,6 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
 
     ImGui::NewLine();
 
-    if (node.imgui_chosen_any_type())
-        _ui.set_dirty(_regenerate_code_flag);
-
     for (size_t i = 0; i < node.value_inputs().size(); ++i)
     {
         Cool::ImGuiExtras::disabled_if(
@@ -301,7 +298,6 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
         {def.name(), cat_id.category_name},
         needs_main_pin ? def.signature().arity : 0,
         def.function_inputs().size(),
-        def.signature().is_template(),
     };
     auto const node_category_config = _get_node_category_config(cat_id.category_name);
 

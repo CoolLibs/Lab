@@ -33,7 +33,6 @@
 #include "UI/imgui_show.h"
 #include "generate_shader_code.h"
 #include "imgui.h"
-#include "parse_node_definition.h"
 
 namespace Lab {
 
@@ -301,6 +300,7 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+    shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
 
     shader.set_uniform_texture(
         "_previous_frame_texture",
@@ -336,7 +336,3 @@ void Module_Nodes::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
 }
 
 } // namespace Lab
-
-#include <cereal/archives/json.hpp>
-#include <cereal/types/polymorphic.hpp>
-CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT

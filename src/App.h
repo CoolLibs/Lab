@@ -24,6 +24,7 @@
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
+#include "Cool/View/ForwardingOrRenderView.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
@@ -61,6 +62,8 @@ private:
     void render_one_module(Module&, Cool::RenderTarget&, float time);
     void render_nodes(Cool::RenderTarget& render_target, float time, img::Size size);
 
+    auto render_view() -> Cool::RenderView&;
+
     void check_inputs();
     void check_inputs__history();
     void check_inputs__project();
@@ -71,7 +74,7 @@ private:
     auto set_dirty_flag                             () { return Cool::SetDirty_Ref{_project.dirty_registry}; }
     auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_project.variable_registries, _project.camera_manager}}; }
-    auto command_execution_context                  () { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty(), _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto command_execution_context                  () ->CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty(), _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
@@ -110,7 +113,8 @@ private:
 
 private:
     Cool::Window&                        _main_window;
-    Cool::RenderView&                    _nodes_view;
+    Cool::RenderView&                    _output_view;
+    Cool::ForwardingOrRenderView&        _nodes_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
     RecentlyOpened                       _recently_opened_projects{};

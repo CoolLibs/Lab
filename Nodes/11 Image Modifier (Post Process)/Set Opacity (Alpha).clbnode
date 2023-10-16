@@ -1,9 +1,9 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float `Opacity`;
+INPUT float 'Opacity';
 
-CIELAB_StraightA main(CIELAB_StraightA Image)
+Oklab_StraightA main(Oklab_StraightA Image)
 {
-    Image.a = `Opacity`;
+    Image.a = 'Opacity';
     return Image;
 }

@@ -1,23 +1,22 @@
 #include "NodesCategoryConfig.h"
 #include <Module_Nodes/NodeColor.h>
-#include <cereal/archives/json.hpp>
 #include <filesystem>
 #include <smart/smart.hpp>
 #include "Cool/Path/Path.h"
-#include "Cool/Serialization/Serialization.h"
 #include "Cool/Variables/internal/color_utils.h"
+#include "Serialization/SNodesCategoryConfig.h"
 #include "imgui.h"
 
 namespace Lab {
 
 void NodesCategoryConfig::save_to_json() const
 {
-    Cool::Serialization::save<decltype(*this), cereal::JSONOutputArchive>(*this, _path_to_json);
+    do_save(*this, _path_to_json);
 }
 
 void NodesCategoryConfig::load_from_json()
 {
-    Cool::Serialization::load<decltype(*this), cereal::JSONInputArchive>(*this, _path_to_json)
+    do_load(*this, _path_to_json)
         .send_error_if_any([&](std::string const& message) {
             return Cool::Message{
                 .category = "Nodes Category",

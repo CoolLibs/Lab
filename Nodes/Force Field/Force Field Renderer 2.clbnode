@@ -1,0 +1,91 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Thickness';
+INPUT float 'Blur';
+INPUT int 'Lines';
+INPUT Point2D 'Pos 1';
+INPUT Point2D 'Pos 2';
+INPUT float 'Charge 1';
+INPUT float 'Charge 2';
+INPUT float 'Seed';
+INPUT int 'Max steps';
+INPUT float 'h';
+
+// https://www.shadertoy.com/view/XsSyzc
+
+vec2 E(vec2 p, vec2 q, vec2 q1, vec2 q2)
+{
+    return normalize(q.x * (p - q1) / pow(length(q1 - p), 3.) + q.y * (p - q2) / pow(length(q2 - p), 3.));
+}
+
+float line(vec2 p, vec2 a, vec2 b)
+{
+    // vec2 dir = normalize(p2 - p1);
+    // mat2 inv = mat2(dir.x, -dir.y, dir.y, dir.x);
+    // uv       = inv * (uv - p1);
+    // p2       = inv * (p2 - p1);
+    // return float(abs(uv.y) < 'Thickness' && 0. < uv.x && uv.x < p2.x);
+
+    vec2  ba = b - a;
+    vec2  pa = p - a;
+    float h  = clamp(dot(pa, ba) / dot(ba, ba), 0., 1.);
+    return smoothstep(+'Blur', -'Blur', length(pa - h * ba) - 'Thickness');
+}
+
+vec2 RK4(vec2 p, vec2 q, vec2 q1, vec2 q2)
+{
+    vec2 k1 = E(p, q, q1, q2);
+    vec2 k2 = E(p + 0.5 * 'h' * k1, q, q1, q2);
+    vec2 k3 = E(p + 0.5 * 'h' * k2, q, q1, q2);
+    vec2 k4 = E(p + 'h' * k3, q, q1, q2);
+    return 'h' / 3. * (0.5 * k1 + k2 + k3 + 0.5 * k4);
+}
+
+vec2 integrate(float O, vec2 p, vec2 q, vec2 q1, vec2 q2, vec2 start, vec2 end)
+{
+    O += line(p, mix(q1, q2, float(length(q1 - start) > 'h' * 1.001)), start);
+    vec2 pn;
+    vec2 po = start;
+    for (int i = 0; i < 'Max steps'; i++)
+    {
+        pn = po + RK4(po, q, q1, q2);
+        O += line(p, po, pn);
+        po = pn;
+        if (length(end - po) < 'h')
+        {
+            O += line(p, po, end);
+            return vec2(O, -1.);
+        }
+        if (/* abs(po.x) > iResolution.x / iResolution.y || */ abs(po.y) > 1.0)
+            return vec2(O, +1.);
+    }
+    return vec2(O, +1.);
+}
+
+float main(UV uv)
+{
+    float O     = 0.;
+    float prevO = 0.;
+    vec2  q1    = 'Pos 1';
+    vec2  q2    = 'Pos 2';
+    vec2  q     = vec2('Charge 1', 'Charge 2');
+    float rand  = 0.;
+    for (float o = 0.; o < TAU; o += TAU / 'Lines')
+    {
+        float angle = TAU / (2. * 'Lines') + o;
+        vec2  os    = vec2(cos(angle), sin(angle)) * 0.01;
+        vec2  res   = integrate(O, uv, q, q1, q2, q1 + os, q2);
+        O           = res.x;
+        if (res.y > 0. && abs(q.y) > 0.)
+        {
+            res = integrate(O, uv, q.y / abs(q.y) * q, q1, q2, q2 + mat2(-1, 0, 0, 1) * os, q1);
+            O   = res.x;
+        }
+        if (O != prevO)
+        {
+            rand  = hash_0_to_1_2D_to_1D(vec2(o, 'Seed'));
+            prevO = O;
+        }
+    }
+    return rand;
+}

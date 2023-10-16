@@ -1,0 +1,6 @@
+INPUT mat2 'Matrix';
+
+mat2 main()
+{
+    return 'Matrix';
+}

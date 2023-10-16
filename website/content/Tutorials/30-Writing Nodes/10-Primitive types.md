@@ -6,8 +6,8 @@ Now that you know how to write a basic node, you might wonder what all the possi
 - `UV`: The 2D coordinates that we use to sample our images. (`vec2` under the hood).
 - `float`: Just a regular number.
 - `SignedDistance`: A distance to an object, used for [SDF rendering](https://youtu.be/PGtv-dBi2wE). (`float` under the hood).
-- Color (`CIELAB`, `sRGB`, `LinearRGB` or `HSLuv`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec3` under the hood).
-- Color and alpha. (`CIELAB_PremultipliedA`, `CIELAB_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `HSLuv_PremultipliedA` or `HSLuv_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
+- Color (`Oklab`, `sRGB`, `LinearRGB` or `Okhsl`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec3` under the hood).
+- Color and alpha. (`Oklab_PremultipliedA`, `Oklab_StraightA`, `LinearRGB_PremultipliedA`, `LinearRGB_StraightA`, `sRGB_PremultipliedA`, `sRGB_StraightA`, `Okhsl_PremultipliedA` or `Okhsl_StraightA`). See the [Color Spaces section](40-Color%20Spaces.md) to learn all about the various color types. (`vec4` under the hood).
 
 And here are all the remaining types, that are seldom used:
 - `bool`
@@ -31,7 +31,7 @@ It is important to note that these types are purely semantic, and in your code y
 Here are a few examples of typical `main` functions you might define:
 
 ```glsl title="Color Transformation"
-CIELAB main(CIELAB Color)
+Oklab main(Oklab Color)
 {
     // ...
 }
@@ -45,7 +45,7 @@ UV main(UV Input)
 ```
 
 ```glsl title="Image"
-CIELAB main(UV uv)
+Oklab main(UV uv)
 {
     // ...
 }
@@ -73,21 +73,21 @@ float main(UV uv)
 ```
 
 ```glsl title="Blend Mode"
-CIELAB_PremultipliedA main(CIELAB_PremultipliedA Over, CIELAB_PremultipliedA Under)
+Oklab_PremultipliedA main(Oklab_PremultipliedA Over, Oklab_PremultipliedA Under)
 {
     // ...
 }
 ```
 
 ```glsl title="Black & White"
-float main(CIELAB Color)
+float main(Oklab Color)
 {
     // ...
 }
 ```
 
 ```glsl title="Colorizer"
-CIELAB main(float Greyscale)
+Oklab main(float Greyscale)
 {
     // ...
 }

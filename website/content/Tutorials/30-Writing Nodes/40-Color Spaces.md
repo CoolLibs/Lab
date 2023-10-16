@@ -6,26 +6,27 @@ There exist quite a few different color spaces and alpha spaces. They all have a
 You can watch this presentation to get of good first introduction to color spaces: [RGB to XYZ: The Science and History of Color](https://youtu.be/AS1OHMW873s).
 
 If you have the choice between several color spaces because your effect will work the same in any of those, here is a list in order of which to prefer:
-- CIELAB
+- Oklab
 - Linear RGB
 - sRGB
-- HSLuv
+- Okhsl
 
 Now let's see why you might prefer one space over another:
 
-### CIELAB
+### Oklab
 
-In this space the euclidean distance between the `vec3`s accurately represents the perceived difference in color by a human. This means that if you need to do anything that is perceptually accurate, e.g. blending between two colors, CIELAB is what you need.<br/>
+In this space the euclidean distance between the `vec3`s accurately represents the perceived difference in color by a human. This means that if you need to do anything that is perceptually accurate, e.g. blending between two colors, Oklab is what you need.<br/>
 **This is the space that most effects will want to use.**
 
 The first component stores the lightness, a number between 0 and 1.<br/>
 The second and third components store chromaticity information. They don't have a specific range.
+For more information, see https://bottosson.github.io/posts/oklab/
 
-### HSLuv
+### Okhsl
 
-You might already be familiar with HSL (Hue - Saturation - Lightness); [HSLuv](https://www.hsluv.org/) is simply a perceptually-accurate version of it.
+You might already be familiar with HSL (Hue - Saturation - Lightness); [Okhsl](https://bottosson.github.io/posts/colorpicker/) is simply a perceptually-accurate version of it.
 
-**This is what you will want to use in nodes that directly manipulate either the hue and / or the saturation.** (Note that CIELAB also gives you access to the lightness so there is no need to use HSLuv if you are only interested in the lightness).
+**This is what you will want to use in nodes that directly manipulate either the hue and / or the saturation.** (Note that Oklab also gives you access to the lightness so there is no need to use Okhsl if you are only interested in the lightness).
 
 The three channels are numbers between 0 and 1.
 

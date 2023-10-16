@@ -1,0 +1,22 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance '3D Shape';
+INPUT Angle 'Rotation X';
+INPUT Angle 'Rotation Y';
+INPUT Angle 'Rotation Z';
+
+SignedDistance main(vec3 pos)
+{
+    float cx = cos('Rotation X');
+    float sx = sin('Rotation X');
+    float cy = cos('Rotation Y');
+    float sy = sin('Rotation Y');
+    float cz = cos('Rotation Z');
+    float sz = sin('Rotation Z');
+
+    mat3 rotx = mat3(1, 0, 0, 0, cx, -sx, 0, sx, cx);
+    mat3 roty = mat3(cy, 0, sy, 0, 1, 0, -sy, 0, cy);
+    mat3 rotz = mat3(cz, -sz, 0, sz, cz, 0, 0, 0, 1);
+
+    return '3D Shape'(rotx * roty * rotz * pos);
+}

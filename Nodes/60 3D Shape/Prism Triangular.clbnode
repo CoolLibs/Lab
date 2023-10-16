@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Radius';
+INPUT float 'Height';
+
+SignedDistance main(vec3 pos)
+{
+    vec3 q = abs(pos);
+    return max(q.z - 'Height', max(q.x * 0.866025 + pos.y * 0.5, -pos.y) - 'Radius' * 0.5);
+}

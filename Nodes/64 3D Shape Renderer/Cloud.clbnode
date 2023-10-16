@@ -1,0 +1,197 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Inspired by https://wallisc.github.io/rendering/2020/05/02/Volumetric-Rendering-Part-2.html
+
+INPUT vec3->SignedDistance 'Shape 3D';
+
+INPUT float 'Light intensity';
+INPUT float 'Light attenuation';
+INPUT float 'Absorption';
+
+INPUT float 'Fix artifacts';
+
+// TODO(JF) Share raymarching code between this and Normals renderer
+
+#define NUM_LIGHTS 3
+
+#define NUM_LIGHT_COLORS 3
+
+// #define CHECKER_FLOOR_MATERIAL_ID 0
+// #define LIGHT_BASE_MATERIAL_ID    1
+// #define NUM_MATERIALS             (LIGHT_BASE_MATERIAL_ID + NUM_LIGHTS)
+
+// #define PERFORMANCE_MODE 0
+
+// // #define INVALID_MATERIAL_ID int(-1)
+
+#define MAX_SDF_SPHERE_STEPS          15
+#define CAST_VOLUME_SHADOW_ON_OPAQUES 1
+
+#define MAX_VOLUME_MARCH_STEPS        50
+#define MAX_VOLUME_LIGHT_MARCH_STEPS  25
+#define ABSORPTION_CUTOFF             0.01
+#define MAX_OPAQUE_SHADOW_MARCH_STEPS 25
+
+#define UNIFORM_LIGHT_SPEED 1
+
+vec3 GetLightColor(int lightIndex)
+{
+    float lightMultiplier = 17.;
+    switch (lightIndex % NUM_LIGHT_COLORS)
+    {
+    case 0: return vec3('Light intensity', 0., 'Light intensity');
+    case 1: return vec3(0., 'Light intensity', 0.);
+    }
+    return vec3(0., 0., 'Light intensity');
+}
+
+vec3 GetLightPosition(int lightIndex)
+{
+#if UNIFORM_LIGHT_SPEED
+    float theta  = _time * 0.7 + float(lightIndex) * PI * 2.0 / float(NUM_LIGHT_COLORS);
+    float radius = 18.5f;
+#else
+    float theta  = _time * 0.4 * (float(lightIndex) + 1.0f);
+    float radius = 19.0f + float(lightIndex) * 2.0;
+#endif
+
+    return vec3(radius * cos(theta), 6.0 + sin(theta * 2.0) * 2.5, radius * sin(theta));
+}
+
+float GetLightAttenuation(float distanceToLight)
+{
+    return 1.0 / pow(distanceToLight, 'Light attenuation');
+}
+
+float IntersectVolumetric(vec3 rayOrigin, vec3 rayDirection, float maxT)
+{
+    // Precision isn't super important, just want a decent starting point before
+    // ray marching with fixed steps
+    float precis = 0.5;
+    float t      = 0.0f;
+    for (int i = 0; i < MAX_SDF_SPHERE_STEPS; i++)
+    {
+        float result = 'Shape 3D'(rayOrigin + rayDirection * t);
+        if (result < (precis) || t > maxT)
+            break;
+        t += result;
+    }
+    return (t >= maxT - 100.) ? -1.0 : t;
+}
+
+vec3 GetAmbientLight()
+{
+    return 1.2 * vec3(0.03, 0.018, 0.018);
+}
+
+float GetFogDensity(vec3 position, float sdfDistance)
+{
+    const float maxSDFMultiplier = 1.0;
+    bool        insideSDF        = sdfDistance < 0.0;
+    float       sdfMultiplier    = insideSDF ? min(abs(sdfDistance), maxSDFMultiplier) : 0.0;
+
+    // #if UNIFORM_FOG_DENSITY
+    return sdfMultiplier;
+    // #else
+    //     return sdfMultiplier * abs(fbm_4(position / 6.0) + 0.5);
+    // #endif
+}
+
+float BeerLambert(float absorption, float dist)
+{
+    return exp(-absorption * dist);
+}
+
+float GetLightVisiblity(vec3 rayOrigin, vec3 rayDirection, float maxT, int maxSteps, float marchSize)
+{
+    float t               = 0.0f;
+    float lightVisibility = 1.0f;
+    float signedDistance  = 0.0;
+    for (int i = 0; i < maxSteps; i++)
+    {
+        t += max(marchSize, signedDistance);
+        if (t > maxT || lightVisibility < ABSORPTION_CUTOFF)
+            break;
+
+        vec3 position = rayOrigin + t * rayDirection;
+
+        signedDistance = 'Shape 3D'(position);
+        if (signedDistance < 0.0)
+        {
+            lightVisibility *= BeerLambert('Absorption' * GetFogDensity(position, signedDistance), marchSize);
+        }
+    }
+    return lightVisibility;
+}
+
+float Luminance(vec3 color)
+{
+    return (color.r * 0.3) + (color.g * 0.59) + (color.b * 0.11);
+}
+
+bool IsColorInsignificant(vec3 color)
+{
+    const float minValue = 0.009;
+    return Luminance(color) < minValue;
+}
+
+vec4 Render(vec3 rayOrigin, vec3 rayDirection)
+{
+    float depth       = 1e10;
+    vec3  opaqueColor = vec3(0.0f);
+
+    float volumeDepth = IntersectVolumetric(rayOrigin, rayDirection, depth);
+    // return vec4(vec3(volumeDepth / 10.), 1);
+    float opaqueVisiblity = 1.0f;
+    vec3  volumetricColor = vec3(0.0f);
+    if (volumeDepth > 0.0)
+    {
+        const vec3 volumeAlbedo     = vec3(0.8);
+        float      marchSize        = 0.6f * 'Fix artifacts';
+        float      distanceInVolume = 0.0f;
+        float      signedDistance   = 0.0;
+        for (int i = 0; i < MAX_VOLUME_MARCH_STEPS; i++)
+        {
+            volumeDepth += max(marchSize, signedDistance);
+            if (volumeDepth > depth || opaqueVisiblity < ABSORPTION_CUTOFF)
+                break;
+
+            vec3 position = rayOrigin + volumeDepth * rayDirection;
+
+            signedDistance = 'Shape 3D'(position);
+            if (signedDistance < 0.0f)
+            {
+                distanceInVolume += marchSize;
+                float previousOpaqueVisiblity = opaqueVisiblity;
+                opaqueVisiblity *= BeerLambert('Absorption' * GetFogDensity(position, signedDistance), marchSize);
+                float absorptionFromMarch = previousOpaqueVisiblity - opaqueVisiblity;
+
+                for (int lightIndex = 0; lightIndex < NUM_LIGHTS; lightIndex++)
+                {
+                    float lightVolumeDepth = 0.0f;
+                    vec3  lightDirection   = (GetLightPosition(lightIndex) - position);
+                    float lightDistance    = length(lightDirection);
+                    lightDirection /= lightDistance;
+
+                    vec3 lightColor = GetLightColor(lightIndex) * GetLightAttenuation(lightDistance);
+                    if (IsColorInsignificant(lightColor))
+                        continue;
+
+                    float lightMarchSize = 0.65f * 'Fix artifacts';
+                    float lightVisiblity = GetLightVisiblity(position, lightDirection, lightDistance, MAX_VOLUME_LIGHT_MARCH_STEPS, lightMarchSize);
+                    volumetricColor += absorptionFromMarch * lightVisiblity * volumeAlbedo * lightColor;
+                }
+                volumetricColor += absorptionFromMarch * volumeAlbedo * GetAmbientLight();
+            }
+        }
+    }
+
+    return vec4(volumetricColor, 1. /* volumeDepth > 0.0 ? 1. : 0. */ /*TODO(JF) we need to find a better way to detect when we did not hit the object*/);
+}
+
+LinearRGB_StraightA main(UV uv)
+{
+    vec3 ro = cool_ray_origin(unnormalize_uv(uv));
+    vec3 rd = cool_ray_direction(unnormalize_uv(uv));
+
+    return vec4(Render(ro, rd));
+}

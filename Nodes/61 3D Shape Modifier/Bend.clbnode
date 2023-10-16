@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance '3D Shape';
+INPUT float 'Bending';
+
+SignedDistance main(vec3 pos)
+{
+    float c = cos('Bending' * pos.x);
+    float s = sin('Bending' * pos.x);
+    mat2  m = mat2(c, -s, s, c);
+    vec3  q = vec3(m * pos.xy, pos.z);
+    return CLB_FIX_ARTIFACTS('3D Shape'(q));
+}

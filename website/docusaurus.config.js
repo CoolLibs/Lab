@@ -99,7 +99,7 @@ const config = {
         items: [
           {
             type: "doc",
-            docId: "Tutorials/intro",
+            docId: "Tutorials/Discovery/Intro",
             position: "left",
             label: "Tutorials",
           },
@@ -113,6 +113,12 @@ const config = {
             to: "Gallery",
             position: "left",
             label: "Gallery",
+          },
+          {
+            type: "doc",
+            docId: "Articles/Alpaca/Alpaca",
+            position: "right",
+            label: "Articles",
           },
           {
             type: "doc",

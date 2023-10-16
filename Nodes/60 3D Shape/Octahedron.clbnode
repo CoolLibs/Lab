@@ -1,0 +1,21 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Size';
+
+SignedDistance main(vec3 pos)
+{
+    pos     = abs(pos);
+    float m = pos.x + pos.y + pos.z - 'Size';
+    vec3  q;
+    if (3. * pos.x < m)
+        q = pos.xyz;
+    else if (3. * pos.y < m)
+        q = pos.yzx;
+    else if (3. * pos.z < m)
+        q = pos.zxy;
+    else
+        return m * 0.57735027;
+
+    float k = clamp(0.5 * (q.z - q.y + 'Size'), 0., 'Size');
+    return length(vec3(q.x, q.y - 'Size' + k, q.z - k));
+}

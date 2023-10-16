@@ -1,0 +1,6 @@
+INPUT int 'Number of Tiles';
+
+UV main(UV uv)
+{
+    return floor(uv * 'Number of Tiles') / 'Number of Tiles' + 1. / (2. * 'Number of Tiles');
+}

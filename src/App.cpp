@@ -29,8 +29,10 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Midi/MidiManager.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
+#include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
 #include "Debug/DebugOptions.h"
@@ -39,6 +41,7 @@
 #include "Menus/about_menu.h"
 #include "Module_is0/Module_is0.h"
 #include "ProjectManager/Command_NewProject.h"
+#include "ProjectManager/Command_OpenBackupProject.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
@@ -48,12 +51,27 @@ namespace Lab {
 
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
-    , _nodes_view{views.make_view<Cool::RenderView>(Cool::icon_fmt("View", ICOMOON_IMAGE))}
+    , _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
+          .name        = Cool::icon_fmt("Output", ICOMOON_IMAGE),
+          .is_closable = true,
+          .start_open  = false,
+      })}
+    , _nodes_view{views.make_view<Cool::ForwardingOrRenderView>(
+          _output_view,
+          Cool::ViewCreationParams{
+              .name        = Cool::icon_fmt("View", ICOMOON_IMAGE),
+              .is_closable = false,
+              .start_open  = true,
+          }
+      )}
 {
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    Cool::midi_manager().set_additional_midi_callback([&]() {
+        trigger_rerender();
+    });
     hook_camera2D_events(
         _nodes_view.mouse_events(),
         _project.camera2D.value(),
@@ -127,7 +145,7 @@ void App::update()
     if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
-        _nodes_view.update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
+        render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_project.clock.time());
     }
     else
@@ -192,10 +210,17 @@ auto App::all_inputs() -> Cool::AllInputRefsToConst
     return vec2;
 }
 
+auto App::render_view() -> Cool::RenderView&
+{
+    if (_output_view.is_open())
+        return _output_view;
+    return _nodes_view;
+}
+
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = _nodes_view.render_target(),
+        .render_target = render_view().render_target(),
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }};
@@ -261,7 +286,7 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_nodes(_nodes_view.render_target(), time, render_target.desired_size());
+    render_nodes(render_view().render_target(), time, render_target.desired_size());
     // render_custom_shader(render_target, time);
 }
 
@@ -324,6 +349,10 @@ void App::imgui_window_view()
     }
 
     _project.nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
+    _output_view.imgui_window({
+        .on_open  = [&]() { trigger_rerender(); }, // When we switch between using the _output_view and the _nodes_view
+        .on_close = [&]() { trigger_rerender(); }, // as our render target, we need to rerender.
+    });
     _nodes_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
@@ -332,7 +361,7 @@ void App::imgui_window_view()
             bool b = false;
 
             bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
-                                                  || !_project.view_constraint.wants_to_constrain_aspect_ratio(); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
+                                                  || (!_project.view_constraint.wants_to_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             int buttons_order{0};
             // Reset cameras
@@ -341,7 +370,7 @@ void App::imgui_window_view()
                 reset_cameras();
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip("Reset 2D and 3D cameras");
+            ImGui::SetItemTooltip("%s", "Reset 2D and 3D cameras");
 
             // Toggle fullscreen
             if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, buttons_order++, align_buttons_vertically))
@@ -350,7 +379,7 @@ void App::imgui_window_view()
                 _main_window.set_fullscreen(_wants_view_in_fullscreen);
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
+            ImGui::SetItemTooltip("%s", _wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Toggle 2D / 3D cameras
             if (Cool::ImGuiExtras::floating_button(_project.is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
@@ -359,7 +388,7 @@ void App::imgui_window_view()
                 _project.camera_manager.is_editable_in_view() = !_project.is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            Cool::ImGuiExtras::tooltip(_project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
+            ImGui::SetItemTooltip("%s", _project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
             return b;
         },
     });
@@ -410,6 +439,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::End();
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
+    // Midi
+    Cool::midi_manager().imgui_window_config();
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
@@ -472,6 +503,10 @@ void App::imgui_windows_only_when_inputs_are_allowed()
 
     Cool::DebugOptions::test_markdown_formatting_window([]() {
         Cool::test_markdown_formatting();
+    });
+
+    Cool::DebugOptions::emulate_midi_keyboard([]() {
+        Cool::midi_manager().imgui_emulate_midi_keyboard();
     });
 
     Cool::DebugOptions::test_tips([this]() {
@@ -564,6 +599,10 @@ void App::commands_menu()
             _tips_manager.open_all_tips_window();
         if (ImGui::Selectable("Open webcams config"))
             Cool::WebcamsConfigs::instance().open_imgui_window();
+        if (ImGui::Selectable("Open MIDI config"))
+            Cool::midi_manager().open_config_window();
+        if (ImGui::Selectable("Open output window"))
+            _output_view.open();
         ImGui::EndMenu();
     }
 }
@@ -651,6 +690,8 @@ void App::check_inputs__project()
         command_executor().execute(Command_SaveProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
         dialog_to_open_project(command_execution_context());
+    else if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_R))
+        command_executor().execute(Command_OpenBackupProject{});
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_R))
         dialog_to_open_recent_project(_recently_opened_projects);
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))

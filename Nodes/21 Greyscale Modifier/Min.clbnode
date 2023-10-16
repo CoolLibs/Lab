@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-Any main(Any value1, Any value2)
+float main(float value1, float value2)
 {
-    return min(value1, value2); 
+    return min(value1, value2);
 }

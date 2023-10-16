@@ -2,11 +2,10 @@
 #include <ProjectManager/utils.h>
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
-#include "Cool/Serialization/Serialization.h"
 #include "FileExtension.h"
 #include "Project.h"
 #include "RecentlyOpened.h"
-#include "cereal/archives/json.hpp"
+#include "Serialization/SProject.h"
 #include "utils.h"
 
 namespace Lab::internal_project {
@@ -25,8 +24,14 @@ static void set_window_title(CommandExecutionContext_Ref const& ctx, std::option
     );
 }
 
-void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> const& path)
+void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> path)
 {
+    if (path == Path::untitled_project() // Special case: these project paths should not be visible to the end users.
+        || path == Path::backup_project())
+    {
+        path = std::nullopt;
+    }
+    Cool::Path::project_folder() = path ? std::make_optional(Cool::File::without_file_name(*path)) : std::nullopt;
     set_window_title(ctx, path);
     if (path)
         ctx.recently_opened_projects().on_project_opened(*path);
@@ -39,18 +44,27 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
-    if (project_path != Path::untitled_project()) // Special case: the backup project should not be visible to the end users.
-        set_current_project_path(ctx, project_path);
+
+    set_current_project_path(ctx, project_path);
     ctx.project().is_first_frame = true;
     ctx.project().clock.set_playing(is_playing);
 }
 
 auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
 {
-    auto const success = Cool::Serialization::save<Project, cereal::JSONOutputArchive>(ctx.project(), path, "Project");
-    if (DebugOptions::log_project_related_events()
-        && !success)
-        Cool::Log::ToUser::info("Project", fmt::format("Failed to save project to {}.", path));
+    bool const success = do_save(ctx.project(), path);
+    if (success)
+    {
+        if (!ctx.project_path().has_value() && path != Path::untitled_project())
+        { // We just saved the untitled project as an actual project, we can delete the untitled project file so that it won't be loaded the next time we open Coollab.
+            Cool::File::remove(Path::untitled_project());
+        }
+    }
+    else
+    {
+        if (DebugOptions::log_project_related_events())
+            Cool::Log::ToUser::info("Project", fmt::format("Failed to save project to {}.", path));
+    }
     return success;
 }
 

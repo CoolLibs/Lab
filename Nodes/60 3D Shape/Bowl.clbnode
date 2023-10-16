@@ -1,0 +1,16 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Size';
+INPUT float 'Thickness';
+INPUT float 'Fraction';
+
+SignedDistance main(vec3 pos)
+{
+    float cut = ('Fraction' * 2. - 1.) * 'Size';
+    float w   = sqrt('Size' * 'Size' - cut * cut);
+    vec2  q   = vec2(length(pos.xy), pos.z);
+    return (cut * q.x < w * q.y
+                ? length(q - vec2(w, cut))
+                : abs(length(q) - 'Size'))
+           - 'Thickness';
+}

@@ -1,0 +1,11 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Radius';
+INPUT Point2D 'Center';
+
+UV main(UV Image)
+{
+    float d   = distance('Center', Image);
+    vec2  dir = (Image - 'Center') / d;
+    return 'Center' + dir * 'Radius' * 'Radius' / d;
+}

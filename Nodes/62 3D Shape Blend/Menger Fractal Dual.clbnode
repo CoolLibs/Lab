@@ -1,0 +1,47 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance '3D Shape 1';
+INPUT vec3->SignedDistance '3D Shape 2';
+INPUT float 'Scale';
+INPUT int 'Steps';
+INPUT float 'Offset';
+
+SignedDistance main(vec3 pos)
+{
+    float s1 = 1 / 'Scale';
+    float d  = '3D Shape 1'(pos);
+    for (int m = 0; m < 'Steps'; m++)
+    {
+        vec3 a = mod(pos * s1, 'Offset') - 1.0;
+        s1 *= 3.0;
+        vec3  r = 1.0 - 3.0 * abs(a);
+        float c = '3D Shape 2'(r) / s1;
+        d       = max(d, c);
+    }
+
+    return d;
+}
+
+// float
+// {
+//     "Name" : "Scale"
+//         , "Default" : 1.0
+//         , "Min" : 0.0
+//         , "Max" : 10.0
+// }
+
+// int
+// {
+//     "Name" : "Steps"
+//         , "Default" : 3
+//         , "Min" : 0
+//         , "Max" : 10
+// }
+
+// float
+// {
+//     "Name" : "Offset"
+//         , "Default" : 2.0
+//         , "Min" : 0.0
+//         , "Max" : 10.0
+// }

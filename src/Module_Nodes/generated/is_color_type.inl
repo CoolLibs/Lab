@@ -4,15 +4,15 @@
  * Instead, go to "gen_primitive_types.py" and edit the "is_color_type" function there.
  * -----------------------------------------------------------------------------
  */
-type == PrimitiveType::CIELAB
-    || type == PrimitiveType::CIELAB_StraightA
-    || type == PrimitiveType::CIELAB_PremultipliedA
+type == PrimitiveType::Oklab
+    || type == PrimitiveType::Oklab_StraightA
+    || type == PrimitiveType::Oklab_PremultipliedA
     || type == PrimitiveType::LinearRGB
     || type == PrimitiveType::LinearRGB_StraightA
     || type == PrimitiveType::LinearRGB_PremultipliedA
     || type == PrimitiveType::sRGB
     || type == PrimitiveType::sRGB_StraightA
     || type == PrimitiveType::sRGB_PremultipliedA
-    || type == PrimitiveType::HSLuv
-    || type == PrimitiveType::HSLuv_StraightA
-    || type == PrimitiveType::HSLuv_PremultipliedA
+    || type == PrimitiveType::Okhsl
+    || type == PrimitiveType::Okhsl_StraightA
+    || type == PrimitiveType::Okhsl_PremultipliedA

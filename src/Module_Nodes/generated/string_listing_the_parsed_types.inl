@@ -7,6 +7,8 @@
 R"STR(  - bool
   - int
   - float
+  - Float_PremultipliedA
+  - Float_StraightA
   - vec2
   - vec3
   - vec4
@@ -18,17 +20,16 @@ R"STR(  - bool
   - Angle
   - Hue
   - Direction2D
-  - Any
   - RayMarchRes
-  - CIELAB
-  - CIELAB_PremultipliedA
-  - CIELAB_StraightA
+  - Oklab
+  - Oklab_PremultipliedA
+  - Oklab_StraightA
   - LinearRGB
   - LinearRGB_PremultipliedA
   - LinearRGB_StraightA
   - sRGB
   - sRGB_PremultipliedA
   - sRGB_StraightA
-  - HSLuv
-  - HSLuv_PremultipliedA
-  - HSLuv_StraightA)STR"
+  - Okhsl
+  - Okhsl_PremultipliedA
+  - Okhsl_StraightA)STR"

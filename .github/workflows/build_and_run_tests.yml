@@ -31,7 +31,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}.exe
 
   #-----------------------------------------------------------------------------------------------
   Windows_MSVC_Release:
@@ -52,7 +52,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}.exe
 
   #-----------------------------------------------------------------------------------------------
   Windows_Clang_Debug:
@@ -73,7 +73,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}.exe
 
   #-----------------------------------------------------------------------------------------------
   Windows_Clang_Release:
@@ -94,7 +94,7 @@ jobs:
         run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
 
       - name: Run tests
-        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}
+        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}.exe
 
   #-----------------------------------------------------------------------------------------------
   Linux_GCC_Debug:

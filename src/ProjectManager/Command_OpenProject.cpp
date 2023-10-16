@@ -1,10 +1,8 @@
 #include "Command_OpenProject.h"
 #include <ProjectManager/internal_utils.h>
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
-#include "Cool/Log/OptionalErrorMessage.h"
-#include "Cool/Serialization/Serialization.h"
 #include "Project.h"
-#include "cereal/archives/json.hpp"
+#include "Serialization/SProject.h"
 #include "internal_utils.h"
 
 namespace Lab {
@@ -12,7 +10,7 @@ namespace Lab {
 void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
     auto       project = Project{};
-    auto const error   = Cool::Serialization::load<Project, cereal::JSONInputArchive>(project, path);
+    auto const error   = do_load(project, path);
     if (error)
     {
         error.send_error_if_any(

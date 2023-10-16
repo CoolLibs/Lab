@@ -4,12 +4,14 @@
  * Instead, go to "gen_primitive_types.py" and edit the "has_an_alpha_channel" function there.
  * -----------------------------------------------------------------------------
  */
-case PrimitiveType::CIELAB_StraightA:
-case PrimitiveType::CIELAB_PremultipliedA:
+case PrimitiveType::Oklab_StraightA:
+case PrimitiveType::Oklab_PremultipliedA:
 case PrimitiveType::LinearRGB_StraightA:
 case PrimitiveType::LinearRGB_PremultipliedA:
 case PrimitiveType::sRGB_StraightA:
 case PrimitiveType::sRGB_PremultipliedA:
-case PrimitiveType::HSLuv_StraightA:
-case PrimitiveType::HSLuv_PremultipliedA:
+case PrimitiveType::Okhsl_StraightA:
+case PrimitiveType::Okhsl_PremultipliedA:
+case PrimitiveType::Float_StraightA:
+case PrimitiveType::Float_PremultipliedA:
 return true;

@@ -94,7 +94,7 @@ export default ({}) => {
           name="Tristan Debeaune"
           github_name="tristetemps666"
           link="https://github.com/tristetemps666"
-          roles={["Programmer", "VFX Artist"]}
+          roles={["Programmer (Webcam)", "VFX Artist"]}
         />,
         <Contributor
           name="Amandine Kohlmuller"
@@ -118,7 +118,13 @@ export default ({}) => {
           name="Philippe Rosales"
           github_name="Audiophil15"
           link="https://github.com/Audiophil15"
-          roles={["Programmer"]}
+          roles={["Programmer (Audio)"]}
+        />,
+        <Contributor
+          name="Bruce Lane"
+          github_name="brucelane"
+          link="https://www.linkedin.com/in/brucelane06/"
+          roles={["Programmer (MIDI)"]}
         />,
       ]}
     />

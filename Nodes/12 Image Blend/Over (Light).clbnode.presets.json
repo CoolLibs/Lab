@@ -1,0 +1,42 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "2dc66228-4356-4c03-b1a4-1b956c1351e8",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 8,
+                            "data": {
+                                "Name": "Background",
+                                "Value": {
+                                    "sRGB, Straight alpha": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0,
+                                        "w": 1.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Is HDR": false
+                                },
+                                "Default Value": {
+                                    "sRGB, Straight alpha": {
+                                        "x": 0.0,
+                                        "y": 0.0,
+                                        "z": 0.0,
+                                        "w": 1.0
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Is HDR": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

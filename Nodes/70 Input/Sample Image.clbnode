@@ -1,0 +1,7 @@
+INPUT UV->Oklab_PremultipliedA 'Image';
+INPUT Point2D 'Position';
+
+Oklab_PremultipliedA main()
+{
+    return 'Image'('Position');
+}

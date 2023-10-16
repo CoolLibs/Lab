@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT sRGB 'Color2';
+INPUT float 'Percent';
+
+sRGB main(sRGB Color1)
+{
+    return mixbox_lerp(Color1, 'Color2', 'Percent');
+}

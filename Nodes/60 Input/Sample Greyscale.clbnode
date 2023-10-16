@@ -1,7 +1,0 @@
-INPUT UV->float `Greyscale`;
-INPUT Point2D `Position`;
-
-float main()
-{
-    return `Greyscale`(`Position`);
-}
