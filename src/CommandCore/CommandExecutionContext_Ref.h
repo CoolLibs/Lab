@@ -35,11 +35,11 @@ public:
     {
         _data.executor.execute(command, *this);
     }
-    template<typename T>
-    void set_dirty(Cool::VariableId<T> const& id) const
-    {
-        _data.set_dirty(id);
-    }
+    // template<typename T>
+    // void set_dirty(Cool::VariableId<T> const& id) const
+    // {
+    //     _data.set_dirty(id);
+    // }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
         std::reference_wrapper<App>                                  app;

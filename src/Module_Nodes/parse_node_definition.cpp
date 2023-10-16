@@ -14,7 +14,7 @@
 #include <vector>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
-#include "Cool/Dependencies/InputDefinition.h"
+#include "Cool/Dependencies/VariableDefinition.h"
 #include "Cool/Log/Debug.h"
 #include "Cool/StrongTypes/Gradient.h"
 #include "Cool/type_from_string/type_from_string.h"
@@ -282,9 +282,9 @@ static auto parse_signature(std::vector<std::string> const& words)
 }
 
 template<typename T>
-static auto make_input_definition(std::string const& name, std::string const& type) -> Cool::AnyInputDefinition
+static auto make_input_definition(std::string const& name, std::string const& type) -> Cool::AnyVariableDefinition
 {
-    auto def = Cool::InputDefinition<T>{.name = name};
+    auto def = Cool::VariableDefinition<T>{.name = name};
 
     if constexpr (std::is_same_v<T, Cool::Color>)
     {
@@ -306,7 +306,7 @@ static auto parse_property(std::string const& type_as_string, std::string const&
         res.input_values.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
             make_input_definition,
             type_as_string,
-            Cool::AnyInputDefinition,
+            Cool::AnyVariableDefinition,
             (name, type_as_string)
         ));
     }
@@ -325,7 +325,7 @@ static auto parse_input(std::vector<std::string> const& type_words, std::string 
     if (!signature)
         return signature.error();
 
-    res.input_functions.emplace_back(NodeInputDefinition_Data{
+    res.input_functions.emplace_back(NodeVariableDefinition_Data{
         .name      = name,
         .signature = *signature,
     });
@@ -410,7 +410,7 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
 }
 
 template<typename T>
-static void maybe_set_input_description(std::string const& input_name, Cool::InputDefinition<T>& input, std::string const& description)
+static void maybe_set_input_description(std::string const& input_name, Cool::VariableDefinition<T>& input, std::string const& description)
 {
     if (input.name == input_name)
         input.description = description;
@@ -553,11 +553,11 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
             return tl::make_unexpected(*err);
         if (fix_artifacts)
         {
-            def.input_values.emplace_back(Cool::InputDefinition<float>{
+            def.input_values.emplace_back(Cool::VariableDefinition<float>{
                 .name          = "'Fix Artifacts'",
                 .description   = "Increase the value to fix glitches and holes in the shape. But note that higher values are slower to render.",
                 .default_value = 0.f,
-                .metadata      = Cool::VariableMetadata<float>{
+                .metadata      = Cool::Metadata<float>{
                          .bounds = {
                              .min           = 0.f,
                              .max           = 0.999f,

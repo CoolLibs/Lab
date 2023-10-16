@@ -7,8 +7,9 @@
 #include <Cool/NfdFileFilter/NfdFileFilter.h>
 #include "CommandCore/CommandExecutor.h"
 #include "Commands/Command_FinishedEditingVariable.h"
+#include "Commands/Command_SetMetadata.h"
 #include "Commands/Command_SetVariable.h"
-#include "Commands/Command_SetVariableMetadata.h"
+
 
 namespace Lab {
 
@@ -96,7 +97,7 @@ private:
                         const auto new_metadata = variable.metadata();
                         variable.metadata()       = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
                         _command_executor.execute(
-                                Command_SetVariableMetadata<T>{.id = id, .metadata = new_metadata}
+                                Command_SetMetadata<T>{.id = id, .metadata = new_metadata}
                             ); },
 
                 .on_value_editing_finished =

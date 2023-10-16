@@ -20,18 +20,18 @@ auto compute_function_color(FunctionSignature signature) -> Cool::Color
     return NodeColor::miscellaneous();
 }
 
-auto compute_value_input_color(Cool::AnyInputDefinition const& input_def) -> Cool::Color
+auto compute_value_input_color(Cool::AnyVariableDefinition const& input_def) -> Cool::Color
 {
-    if (std::holds_alternative<Cool::InputDefinition<Cool::Color>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::ColorAndAlpha>>(input_def))
+    if (std::holds_alternative<Cool::VariableDefinition<Cool::Color>>(input_def)
+        || std::holds_alternative<Cool::VariableDefinition<Cool::ColorAndAlpha>>(input_def))
         return NodeColor::image();
 
-    if (std::holds_alternative<Cool::InputDefinition<float>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<int>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<bool>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::Hue>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::Angle>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::Direction2D>>(input_def))
+    if (std::holds_alternative<Cool::VariableDefinition<float>>(input_def)
+        || std::holds_alternative<Cool::VariableDefinition<int>>(input_def)
+        || std::holds_alternative<Cool::VariableDefinition<bool>>(input_def)
+        || std::holds_alternative<Cool::VariableDefinition<Cool::Hue>>(input_def)
+        || std::holds_alternative<Cool::VariableDefinition<Cool::Angle>>(input_def)
+        || std::holds_alternative<Cool::VariableDefinition<Cool::Direction2D>>(input_def))
         return NodeColor::greyscale();
 
     return NodeColor::miscellaneous();

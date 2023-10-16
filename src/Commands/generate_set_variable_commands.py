@@ -32,9 +32,7 @@ def register_set_variable_commands():
 def register_set_variable_metadata_commands():
     out = "\n"
     for variable_type in generator_variables.all_variable_types():
-        out += (
-            f"LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<{variable_type}>)\n"
-        )
+        out += f"LAB_REGISTER_COMMAND(Lab::Command_SetMetadata<{variable_type}>)\n"
     return out
 
 

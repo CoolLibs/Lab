@@ -10,8 +10,8 @@
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/Input.h"
-#include "Cool/Dependencies/InputDefinition.h"
-#include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Cool/Dependencies/ValueProvider.h"
+#include "Cool/Dependencies/VariableDefinition.h"
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Gpu/TextureDescriptor.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
@@ -40,7 +40,7 @@ Module_Nodes::Module_Nodes(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
     : Module{"Nodes", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
     , _regenerate_code_flag{dirty_flag_factory.make()}
-    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, dirty_flag())}
+    , _camera_input{input_factory.make<Cool::Camera>(Cool::VariableDefinition<Cool::Camera>{.name = "Camera"}, dirty_flag())}
 {
 }
 
@@ -204,7 +204,7 @@ auto Module_Nodes::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 };
 
 template<typename T>
-static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const& shader, Cool::InputProvider_Ref input_provider)
+static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const& shader, Cool::ValueProvider input_provider)
 {
     auto const value = [&] {
         if constexpr (std::is_same_v<T, Cool::Color>)

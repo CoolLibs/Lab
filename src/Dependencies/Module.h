@@ -1,7 +1,7 @@
 #pragma once
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputFactory_Ref.h>
-#include <Cool/Dependencies/InputProvider_Ref.h>
+#include <Cool/Dependencies/ValueProvider.h>
 #include <img/src/Size.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
@@ -21,7 +21,7 @@ namespace Lab {
 class Module {
 public:
     struct RenderParams {
-        Cool::InputProvider_Ref                          provider;
+        Cool::ValueProvider                              provider;
         Cool::InputFactory_Ref                           input_factory;
         Cool::IsDirty_Ref                                is_dirty;
         Cool::SetClean_Ref                               set_clean;

@@ -14,8 +14,8 @@ void set_value_default_impl(CommandExecutionContext_Ref const& ctx, const Cool::
 {
     ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
         variable.value() = value;
+        ctx.set_dirty(variable.dirty_flag());
     });
-    ctx.set_dirty(id);
 }
 
 } // namespace internal

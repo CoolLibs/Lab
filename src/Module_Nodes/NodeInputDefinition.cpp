@@ -1,9 +1,10 @@
-#include "NodeInputDefinition.h"
 #include <Cool/String/String.h>
+#include "NodeVariableDefinition.h"
+
 
 namespace Lab {
 
-NodeInputDefinition::NodeInputDefinition(NodeInputDefinition_Data const& data)
+NodeVariableDefinition::NodeVariableDefinition(NodeVariableDefinition_Data const& data)
     : _data{data}
 {
     // TODO(JF) Refactor that code duplicated with NodeDefinition.cpp

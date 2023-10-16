@@ -1,5 +1,5 @@
 #pragma once
-#include <Cool/Dependencies/InputProvider_Ref.h>
+#include <Cool/Dependencies/ValueProvider.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/Graph.h>
 #include "Function.h"
@@ -12,7 +12,7 @@ public:
     CodeGenContext(
         Cool::Graph const&                          graph,
         Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-        Cool::InputProvider_Ref                     input_provider
+        Cool::ValueProvider                         input_provider
     )
         : _graph{graph}
         , _get_node_definition{get_node_definition}
@@ -21,7 +21,7 @@ public:
 
     auto graph() const -> Cool::Graph const& { return _graph; }
     auto get_node_definition(Cool::NodeDefinitionIdentifier const& id_names) const -> NodeDefinition const* { return _get_node_definition(id_names); }
-    auto input_provider() const -> Cool::InputProvider_Ref { return _input_provider; }
+    auto input_provider() const -> Cool::ValueProvider { return _input_provider; }
 
     /// Adds the code of the function to the global code, and returns its name as a convenience.
     auto push_function(Function const&) -> std::string; // Allows us to add checks like making sure the same function isn't generated twice
@@ -50,7 +50,7 @@ private:
 
     Cool::Graph const&                          _graph;
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
-    Cool::InputProvider_Ref                     _input_provider;
+    Cool::ValueProvider                         _input_provider;
 };
 
 } // namespace Lab

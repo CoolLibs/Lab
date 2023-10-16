@@ -1,6 +1,6 @@
 #pragma once
 #include <Cool/Dependencies/Dirty.h>
-#include <Cool/Dependencies/InputProvider_Ref.h>
+#include <Cool/Dependencies/ValueProvider.h>
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Ui.h"
 
@@ -17,7 +17,7 @@ public:
     struct Data { // We wrap our members in a struct to get a constructor automatically
         Cool::SetClean_Ref                         set_clean;
         Cool::SetDirty_Ref                         set_dirty;
-        Cool::InputProvider_Ref                    input_provider;
+        Cool::ValueProvider                        input_provider;
         Ui_Ref                                     ui;
         std::reference_wrapper<Cool::NodesLibrary> nodes_library;
     };

@@ -15,7 +15,7 @@ auto NodeDefinition::make(NodeDefinition_Data const& data, Cool::PresetsPaths co
     -> tl::expected<NodeDefinition, std::string>
 {
     auto def = NodeDefinition{data, presets_paths};
-    // TODO(JF) Refactor that code duplicated with NodeInputDefinition.cpp
+    // TODO(JF) Refactor that code duplicated with NodeVariableDefinition.cpp
     // Check that the property names are valid, and remove the single quotes from them.
     for (auto& prop : def._data.input_values)
     {

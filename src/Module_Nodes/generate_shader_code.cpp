@@ -39,7 +39,7 @@ auto generate_shader_code(
     Cool::NodeId const&                         main_node_id,
     Cool::Graph const&                          graph,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Cool::InputProvider_Ref                     input_provider
+    Cool::ValueProvider                         input_provider
 )
     -> tl::expected<std::string, std::string>
 {
