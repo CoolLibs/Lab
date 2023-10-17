@@ -1,13 +1,14 @@
 #pragma once
-#include <Dependencies/CameraManager.h>
-#include <Dump/coollab_version.h>
-#include <Module_Nodes/Module_Nodes.h>
+#include "Cool/Audio/AudioManager.h"
 #include "Cool/Camera/CameraManager.h"
 #include "Cool/Dependencies/VariableRegistries.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
+#include "Dependencies/CameraManager.h"
+#include "Dump/coollab_version.h"
+#include "Module_Nodes/Module_Nodes.h"
 
 namespace Lab {
 
@@ -25,6 +26,7 @@ struct Project {
     bool                           is_first_frame{true};
     bool                           is_camera_2D_editable_in_view{true};
     Cool::Exporter                 exporter;
+    Cool::AudioManager             audio;
 
     std::string debug_info_coollab_version{}; // Only used to generate an error message when deserialization fails.
 
@@ -51,7 +53,8 @@ private:
             cereal::make_nvp("Nodes Module", nodes_module),
             cereal::make_nvp("Variable Registries", variable_registries),
             cereal::make_nvp("History", history),
-            cereal::make_nvp("Dirty Registry", dirty_registry)
+            cereal::make_nvp("Dirty Registry", dirty_registry),
+            cereal::make_nvp("Audio", audio)
         );
     }
 };

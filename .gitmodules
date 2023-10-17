@@ -13,12 +13,3 @@
 [submodule "lib/cpp-httplib"]
 	path = lib/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib
-[submodule "lib/libnyquist"]
-	path = lib/libnyquist
-	url = https://github.com/ddiakopoulos/libnyquist.git
-[submodule "lib/RtAudioWrapper"]
-	path = lib/RtAudioWrapper
-	url = https://github.com/CoolLibs/RtAudioWrapper.git
-[submodule "lib/dj_fft"]
-	path = lib/dj_fft
-	url = https://github.com/jdupuy/dj_fft.git
