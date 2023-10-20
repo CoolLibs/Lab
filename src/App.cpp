@@ -136,7 +136,6 @@ void App::update()
     Cool::user_settings().color_themes.update();
 
     _project.audio.sync_with_clock(_project.clock);
-    _project.audio.update(); // TODO(Audio) Should only be done once for all the AudioManagers, by Coollab. Btw, should not be on the audio manager, since this is common and there can be several managers. Managers are only used to control which music is played, and the settings of the player (this means that settings should be copied and stored on the manager, and passed back to the player).
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
