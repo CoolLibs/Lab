@@ -442,9 +442,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     imgui_window_cameras();
     ImGui::End();
     // Audio
-    ImGui::Begin(Cool::icon_fmt("Audio", ICOMOON_MUSIC).c_str());
-    _project.audio.imgui();
-    ImGui::End();
+    _project.audio.imgui_window();
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
     // Midi
@@ -609,6 +607,8 @@ void App::commands_menu()
             Cool::WebcamsConfigs::instance().open_imgui_window();
         if (ImGui::Selectable("Open MIDI config"))
             Cool::midi_manager().open_config_window();
+        if (ImGui::Selectable("Open Audio config"))
+            _project.audio.open_imgui_window();
         if (ImGui::Selectable("Open output window"))
             _output_view.open();
         ImGui::EndMenu();
