@@ -136,6 +136,7 @@ void App::update()
     Cool::user_settings().color_themes.update();
 
     _project.audio.sync_with_clock(_project.clock);
+    _project.audio.update();
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
