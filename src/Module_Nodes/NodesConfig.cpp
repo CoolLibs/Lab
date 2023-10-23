@@ -3,6 +3,7 @@
 #include <Module_Nodes/NodeColor.h>
 #include <algorithm>
 #include <string>
+#include "Cool/Audio/AudioManager.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
@@ -143,6 +144,13 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     auto& node = abstract_node.downcast<Node>();
 
     ImGui::NewLine();
+
+    if (node.is_audio_node())
+    {
+        if (Cool::ImGuiExtras::button_with_text_icon(ICOMOON_COG))
+            _audio_manager.open_imgui_window();
+        ImGui::SetItemTooltip("%s", "Open audio config to select which audio file to play, or which input device (e.g. microphone) to use.");
+    }
 
     for (size_t i = 0; i < node.value_inputs().size(); ++i)
     {

@@ -111,6 +111,7 @@ auto Module_Nodes::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
         _shader.dirty_flag(),
         _regenerate_code_flag,
         _nodes_editor.graph(),
+        ui.audio_manager(),
     };
 }
 

@@ -3,6 +3,7 @@
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Nodes/Graph.h>
 #include <Cool/Nodes/NodeId.h>
+#include "Cool/Audio/AudioManager.h"
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
@@ -27,7 +28,8 @@ public:
         Cool::NodeId&                                      node_we_might_want_to_restore_as_main_node_id,
         Cool::DirtyFlag const&                             rerender_flag,
         Cool::DirtyFlag const&                             regenerate_code_flag,
-        Cool::Graph const&                                 graph
+        Cool::Graph const&                                 graph,
+        Cool::AudioManager&                                audio_manager
     )
         : _input_factory{input_factory}
         , _get_node_definition{get_node_definition}
@@ -39,6 +41,7 @@ public:
         , _rerender_flag{rerender_flag}
         , _regenerate_code_flag{regenerate_code_flag}
         , _graph{graph}
+        , _audio_manager{audio_manager}
     {}
 
     auto               name(Cool::Node const&) const -> std::string;
@@ -70,6 +73,7 @@ private:
     Cool::DirtyFlag                                    _rerender_flag;
     Cool::DirtyFlag                                    _regenerate_code_flag;
     Cool::Graph const&                                 _graph;
+    Cool::AudioManager&                                _audio_manager;
 };
 
 } // namespace Lab
