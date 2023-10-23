@@ -297,6 +297,7 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
 
     shader.bind();
     shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
+    shader.set_uniform("_audio_volume", in.provider(Cool::Input_AudioVolume{}));
     shader.set_uniform("_camera2D", in.provider(Cool::Input_Camera2D{}));
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
