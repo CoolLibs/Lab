@@ -578,14 +578,14 @@ void App::settings_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("Settings", ICOMOON_COG, true).c_str()))
     {
-        Cool::user_settings().imgui();
-
         Cool::ImGuiExtras::separator_text("History");
         _project.history.imgui_max_size(&Cool::ImGuiExtras::help_marker);
         _project.history.imgui_max_saved_size(&Cool::ImGuiExtras::help_marker);
 
         Cool::ImGuiExtras::separator_text("Color Theme");
         Cool::user_settings().color_themes.imgui_theme_picker();
+
+        Cool::user_settings().imgui();
 
         ImGui::EndMenu();
     }
