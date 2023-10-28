@@ -2,14 +2,8 @@
 
 INPUT UV->float 'Image';
 INPUT int 'Cells';
-INPUT float 'Power Min';
-INPUT float 'Power Max';
-INPUT float 'Threshold';
+INPUT float 'Power';
 INPUT float 'Max std dev';
-// INPUT int 'Subdiv Iter';
-// INPUT float 'Subdiv Threshold';
-// INPUT int 'Seed';
-// #include "_COOL_RES_/shaders/simplex_noise_3D.glsl"
 
 float squircle_length(vec2 uv, float radius, float power)
 {
@@ -76,10 +70,11 @@ SignedDistance main(UV uv)
         nb_cells *= 2.;
     }
 
-    float grey   = 'Image'(grid_center);
-    float radius = grey > 'Threshold' ? grey : 1. - grey;
-    float dist   = squircle_length(guv, radius, mix('Power Min', 'Power Max', radius));
-    if (grey < 'Threshold')
-        dist *= -1;
+    float cell_size = 1. / nb_cells;
+    float grey      = 'Image'(grid_center);
+    float radius    = sqrt(grey > 0.5 ? grey : 1. - grey); // cell_size * sqrt(grey / TAU);
+    float dist      = squircle_length(guv, radius, 'Power');
+    if (grey < 0.5)
+        dist *= -1.;
     return dist;
 }
