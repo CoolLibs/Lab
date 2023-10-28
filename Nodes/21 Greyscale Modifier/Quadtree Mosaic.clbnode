@@ -1,0 +1,85 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->float 'Image';
+INPUT int 'Cells';
+INPUT float 'Power Min';
+INPUT float 'Power Max';
+INPUT float 'Threshold';
+INPUT float 'Max std dev';
+// INPUT int 'Subdiv Iter';
+// INPUT float 'Subdiv Threshold';
+// INPUT int 'Seed';
+// #include "_COOL_RES_/shaders/simplex_noise_3D.glsl"
+
+float squircle_length(vec2 uv, float radius, float power)
+{
+    return pow(pow(abs(uv.x), power) + pow(abs(uv.y), power), 1. / power) - radius;
+}
+
+// float truchetLevel(vec2 pos)
+// {
+//     for (float j = 0.0; j < 'Subdiv Iter'; j++)
+//     {
+//         vec2  h    = floor(pos * exp2(j)) * exp2(-j);
+//         float rand = simplex_noise_3D(vec3(h + 'Seed', int(j)));
+//         if (rand * 0.5 + 0.5 >= 'Subdiv Threshold')
+//         {
+//             return j;
+//         }
+//     }
+//     return 'Subdiv Iter';
+// }
+
+float sq(float x)
+{
+    return x * x;
+}
+
+SignedDistance main(UV uv)
+{
+    vec2 guv         = vec2(0.);
+    vec2 grid_center = vec2(0.);
+
+    // float level = truchetLevel(uv);
+
+    // the position in the bottom left corner of the truchet cell
+    // vec2 fp = floor(uv * exp2(level)) * exp2(-level);
+    // // the local position on the truchet cell (always 0-1)
+    // vec2 lp = (uv - fp) * exp2(level);
+
+    int   it       = 0;
+    float std_dev  = FLT_MAX;
+    float nb_cells = 'Cells';
+    while (std_dev > 'Max std dev' && it++ < 10)
+    {
+        float cell_size = 1. / nb_cells;
+        grid_center     = floor(uv * nb_cells) / nb_cells + cell_size / 2.;
+        guv             = fract(uv * nb_cells) * 2. - 1.;
+
+        vec2 center1 = grid_center + cell_size * 0.5 * vec2(-1., -1.);
+        vec2 center2 = grid_center + cell_size * 0.5 * vec2(-1., +1.);
+        vec2 center3 = grid_center + cell_size * 0.5 * vec2(+1., +1.);
+        vec2 center4 = grid_center + cell_size * 0.5 * vec2(+1., -1.);
+
+        float val1 = 'Image'(center1);
+        float val2 = 'Image'(center2);
+        float val3 = 'Image'(center3);
+        float val4 = 'Image'(center4);
+
+        float average = (val1 + val2 + val3 + val4) / 4.;
+        std_dev       = sqrt(
+            sq(val1 - average)
+            + sq(val2 - average)
+            + sq(val3 - average)
+            + sq(val4 - average)
+        );
+        nb_cells *= 2.;
+    }
+
+    float grey   = 'Image'(grid_center);
+    float radius = grey > 'Threshold' ? grey : 1. - grey;
+    float dist   = squircle_length(guv, radius, mix('Power Min', 'Power Max', radius));
+    if (grey < 'Threshold')
+        dist *= -1;
+    return dist;
+}
