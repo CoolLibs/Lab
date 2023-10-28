@@ -1,0 +1,52 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT int 'Iterations';
+INPUT UV->float 'Shape';
+INPUT float 's';
+INPUT int 'l';
+
+float opLimitedRepetition(float p, float s, float l)
+{
+    return p - s * clamp(round(p / s), -l, l);
+}
+
+float draw_shape(vec2 uv, float radius)
+{
+    // uv.y -= 1. - radius;
+    uv /= radius;
+    return 'Shape'(uv);
+}
+
+float main(UV uv)
+{
+    // uv += 0.5;
+    uv /= 2.;
+    // uv = uv * 0.5;
+    // uv.y += 1.;
+    float dist = FLT_MAX;
+    float res  = 0.;
+    for (int i = 1; i < 'Iterations' + 1; ++i)
+    {
+        // i++;
+        float fraction      = 1. / float(i);
+        float interval_size = fraction;
+        float radius        = fraction * fraction * 0.5; // / interval_size * 2.;
+        // float diameter = fraction / 2.;
+        vec2 local_uv = uv;
+        // local_uv.y -= interval_size / 2. - radius;
+
+        local_uv += interval_size / 2.;
+
+        local_uv = (fract(local_uv / interval_size) - 0.5) * interval_size;
+        // local_uv.y += interval_size / 2. + radius;
+        // local_uv *= interval_size;
+        // local_uv.y *= interval_size * 2.;
+        // local_uv.y -= radius;
+        // local_uv.x = opLimitedRepetition(local_uv.x, 's', float('l') / 2.);
+        // local_uv.x = opLimitedRepetition(local_uv.x, 's', float('l') / 2.) * 2. - 1;
+        // local_uv.x = fract((local_uv.x * 0.5 + 0.5) / fraction) * fraction * 2. - 1.;
+        // dist = min(dist, draw_shape(local_uv, radius));
+        res += 0.3 * draw_shape(local_uv, radius);
+    }
+    return res;
+}
