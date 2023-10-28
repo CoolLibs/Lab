@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Radius';
+INPUT float 'Thickness';
+
+INPUT UV->SignedDistance 'Profile';
+
+SignedDistance main(vec3 pos)
+{
+    vec2 p = vec2(length(pos.xy), pos.z);
+
+    return length(p - vec2('Radius', 0.)) - 'Thickness';
+}

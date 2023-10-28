@@ -1,0 +1,11 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+INPUT float 'Period';
+INPUT float 'Fraction';
+INPUT float 'Min';
+INPUT float 'Max';
+
+float main(float x)
+{
+    x = mod(x, 'Period');
+    return 'Min' + step(x, 'Fraction' * 'Period') * ('Max' - 'Min');
+}

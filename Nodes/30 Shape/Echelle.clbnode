@@ -1,0 +1,27 @@
+INPUT float 'Roundness';
+INPUT float 'Width';
+INPUT float 'Height';
+INPUT float 'Height hole';
+
+float minus(float a, float b)
+{
+    return (a < b) ? a : b;
+}
+
+// inspired by Ned Makes Games' video https://www.youtube.com/watch?v=WuNdmjca7eM&t=283s
+float rectangle(vec2 uv, float height, float width)
+{
+    vec2  d;
+    float r = clamp('Roundness', 0.0, minus(width, height) * 0.5);
+    d.x     = abs(uv.x) - (width * 0.5) + r;
+    d.y     = abs(uv.y) - (height * 0.5) + r;
+    return length(max(d, 0)) + min(max(d.x, d.y), 0) - r;
+}
+
+SignedDistance main(UV uv)
+{
+    return max(
+        rectangle(uv, 'Height', 'Width'),
+        -rectangle(uv, 'Height hole', 'Width' * 10)
+    );
+}

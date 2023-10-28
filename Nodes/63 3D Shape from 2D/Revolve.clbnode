@@ -3,8 +3,11 @@
 INPUT UV->SignedDistance '2D Shape';
 INPUT float 'Ring';
 
+OUTPUT float 'Angle';
+
 SignedDistance main(vec3 pos)
 {
-    vec2 q = vec2(length(pos.xz) - 'Ring', pos.y);
+    vec2 q  = vec2(length(pos.xy) - 'Ring', pos.z);
+    'Angle' = atan(pos.y, pos.x);
     return CLB_FIX_ARTIFACTS('2D Shape'(q));
 }
