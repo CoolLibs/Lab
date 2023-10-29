@@ -4,6 +4,7 @@ INPUT UV->float 'Image';
 INPUT int 'Cells';
 INPUT float 'Power';
 INPUT float 'Max std dev';
+INPUT int 'Max subdivisions';
 
 float squircle_length(vec2 uv, float radius, float power)
 {
@@ -44,7 +45,7 @@ SignedDistance main(UV uv)
     int   it       = 0;
     float std_dev  = FLT_MAX;
     float nb_cells = 'Cells';
-    while (std_dev > 'Max std dev' && it++ < 10)
+    while (std_dev > 'Max std dev' && it++ < 'Max subdivisions')
     {
         float cell_size = 1. / nb_cells;
         grid_center     = floor(uv * nb_cells) / nb_cells + cell_size / 2.;
