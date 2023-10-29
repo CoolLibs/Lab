@@ -1,0 +1,70 @@
+// Inspired by https://youtu.be/51LwM2R_e_o
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Size';
+INPUT float 'Disk Size';
+INPUT float 'Disk Size Mult';
+INPUT float 'Subdiv proba';
+INPUT float 'Bob';
+INPUT int 'Seed';
+
+#include "_COOL_RES_/shaders/hexagonal_grid.glsl"
+
+bool above_line(vec2 p1, vec2 p2, vec2 uv)
+{
+    vec2 d1 = p2 - p1;
+    vec2 d2 = uv - p1;
+    return d1.y * d2.x - d1.x * d2.y > 0;
+}
+
+SignedDistance main(UV uv)
+{
+    vec2  gv = Cool_hex_uv(uv, 'Size');
+    ivec2 id = Cool_hex_id(uv, 'Size');
+
+    float angle_id = floor(Cool_angle(gv) / TAU * 6);
+    float angle    = angle_id * TAU / 6;
+
+    vec2 pt1 = Cool_hex_center_from_hex_id(id, 'Size');
+    vec2 pt2 = pt1 + vec2(cos(angle), sin(angle)) / 'Size' * 'Bob';
+    vec2 pt3 = pt1 + vec2(cos(angle + TAU / 6), sin(angle + TAU / 6)) / 'Size' * 'Bob';
+
+    float disk_size = 'Disk Size' / 'Size';
+
+    if (hash_0_to_1_3D_to_3D(vec3(6 * id + angle_id, 'Seed')).x < 'Subdiv proba')
+    {
+        disk_size *= 'Disk Size Mult';
+
+        vec2 pt12 = (pt1 + pt2) / 2.;
+        vec2 pt23 = (pt2 + pt3) / 2.;
+        vec2 pt31 = (pt3 + pt1) / 2.;
+        if (above_line(pt12, pt23, uv))
+        {
+            pt1 = pt2;
+            pt2 = pt12;
+            pt3 = pt23;
+        }
+        else if (above_line(pt23, pt31, uv))
+        {
+            pt1 = pt3;
+            pt2 = pt23;
+            pt3 = pt31;
+        }
+        if (above_line(pt31, pt12, uv))
+        {
+            pt1 = pt1;
+            pt2 = pt31;
+            pt3 = pt12;
+        }
+        else
+        {
+            pt1 = pt12;
+            pt2 = pt23;
+            pt3 = pt31;
+        }
+    }
+
+    vec2 center = (pt1 + pt2 + pt3) / 3.;
+
+    return length(uv - center) - disk_size;
+}
