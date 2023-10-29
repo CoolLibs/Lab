@@ -1,29 +1,16 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT UV->float 'Image';
-INPUT int 'Cells';
-INPUT float 'Power';
-INPUT float 'Max std dev';
+INPUT int 'Resolution';
+INPUT float 'Subdivision threshold';
 INPUT int 'Max subdivisions';
+INPUT float 'Roundness';
 
-float squircle_length(vec2 uv, float radius, float power)
+float squircle_sdf(vec2 uv, float radius)
 {
+    float power = 2. / 'Roundness';
     return pow(pow(abs(uv.x), power) + pow(abs(uv.y), power), 1. / power) - radius;
 }
-
-// float truchetLevel(vec2 pos)
-// {
-//     for (float j = 0.0; j < 'Subdiv Iter'; j++)
-//     {
-//         vec2  h    = floor(pos * exp2(j)) * exp2(-j);
-//         float rand = simplex_noise_3D(vec3(h + 'Seed', int(j)));
-//         if (rand * 0.5 + 0.5 >= 'Subdiv Threshold')
-//         {
-//             return j;
-//         }
-//     }
-//     return 'Subdiv Iter';
-// }
 
 float sq(float x)
 {
@@ -35,17 +22,10 @@ SignedDistance main(UV uv)
     vec2 guv         = vec2(0.);
     vec2 grid_center = vec2(0.);
 
-    // float level = truchetLevel(uv);
-
-    // the position in the bottom left corner of the truchet cell
-    // vec2 fp = floor(uv * exp2(level)) * exp2(-level);
-    // // the local position on the truchet cell (always 0-1)
-    // vec2 lp = (uv - fp) * exp2(level);
-
     int   it       = 0;
     float std_dev  = FLT_MAX;
-    float nb_cells = 'Cells';
-    while (std_dev > 'Max std dev' && it++ < 'Max subdivisions')
+    float nb_cells = 'Resolution';
+    while (std_dev > 'Subdivision threshold' && it++ < 'Max subdivisions')
     {
         float cell_size = 1. / nb_cells;
         grid_center     = floor(uv * nb_cells) / nb_cells + cell_size / 2.;
@@ -73,8 +53,8 @@ SignedDistance main(UV uv)
 
     float cell_size = 1. / nb_cells;
     float grey      = 'Image'(grid_center);
-    float radius    = sqrt(grey > 0.5 ? grey : 1. - grey); // cell_size * sqrt(grey / TAU);
-    float dist      = squircle_length(guv, radius, 'Power');
+    float radius    = sqrt(grey > 0.5 ? grey : 1. - grey);
+    float dist      = squircle_sdf(guv, radius);
     if (grey < 0.5)
         dist *= -1.;
     return dist;
