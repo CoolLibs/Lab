@@ -135,7 +135,11 @@ void App::update()
 
     Cool::user_settings().color_themes.update();
 
-    _project.audio.sync_with_clock(_project.clock);
+    _project.audio.sync_with_clock(
+        _project.exporter.is_exporting()
+            ? _project.exporter.clock()
+            : _project.clock
+    );
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
         // if (depends_on_audio()) // TODO(Audio)
         trigger_rerender();
