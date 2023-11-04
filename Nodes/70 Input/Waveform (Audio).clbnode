@@ -4,5 +4,5 @@ INPUT float 'Width';
 
 float main(float Time)
 {
-    return texture2D(_audio_waveform, vec2(Time / 'Width', 0.)).x * 2. - 1.;
+    return texture(_audio_waveform, Time / 'Width').r;
 }

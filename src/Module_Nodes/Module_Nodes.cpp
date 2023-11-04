@@ -303,8 +303,8 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
-    shader.set_uniform_texture("_audio_spectrum", in.provider(Cool::Input_Audio{}).spectrum_texture().id()); // TODO(Audio) Set the sampler properly
-    shader.set_uniform_texture("_audio_waveform", in.provider(Cool::Input_Audio{}).waveform_texture().id()); // TODO(Audio) Set the sampler properly
+    shader.set_uniform_texture1D("_audio_spectrum", in.provider(Cool::Input_Audio{}).spectrum_texture().id());
+    shader.set_uniform_texture1D("_audio_waveform", in.provider(Cool::Input_Audio{}).waveform_texture().id());
 
     shader.set_uniform_texture(
         "_previous_frame_texture",
