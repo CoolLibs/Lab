@@ -15,7 +15,7 @@ SignedDistance main(UV uv)
     int   vicinity       = 1;
     vec2  previous_point = vec2(uv.x - vicinity, 'Function'(-vicinity));
 
-    for (float i = -vicinity; i < vicinity; i += 0.1)
+    for (float i = -vicinity; i < vicinity; i += 0.01)
     {
         float current_iteration = uv.x + i;
         vec2  current_point     = vec2(current_iteration, 'Function'(current_iteration));

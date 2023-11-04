@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float->float 'Function';
+
+float main(UV uv)
+{
+    float val = 'Function'(uv.x);
+    if ((val > 0 && uv.y < val && uv.y > 0)
+        || (val < 0 && uv.y > val && uv.y < 0))
+        return 1.;
+    return 0.;
+}

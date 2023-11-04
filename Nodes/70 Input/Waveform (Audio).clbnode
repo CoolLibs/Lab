@@ -1,0 +1,8 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Width';
+
+float main(float Time)
+{
+    return texture2D(_audio_waveform, vec2(Time / 'Width', 0.)).x * 2. - 1.;
+}
