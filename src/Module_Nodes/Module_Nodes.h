@@ -41,6 +41,7 @@ private:
     void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes) const;
     auto nodes_config(Ui_Ref ui) const -> NodesConfig;
     void render_impl(RenderParams, UpdateContext_Ref);
+    void compute_dependency_on_audio_features(); // Since audio features are costly to compute, we only set these uniforms in the shader if we actually need them. So we need to check for that.
 
 private:
     mutable std::string              _shader_code{};
@@ -52,6 +53,10 @@ private:
     mutable Cool::MessageSender      _shader_compilation_error{};
     Cool::Input<Cool::Camera>        _camera_input;
     Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
+
+    bool _depends_on_audio_volume{false};
+    bool _depends_on_audio_waveform{false};
+    bool _depends_on_audio_spectrum{false};
 
 private:
     // Serialization
