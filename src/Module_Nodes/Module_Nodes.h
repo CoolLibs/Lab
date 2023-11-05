@@ -34,6 +34,9 @@ public:
     auto               nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
 
+    [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
+    [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on_audio_volume || _depends_on_audio_waveform || _depends_on_audio_spectrum; }
+
 protected:
     void render(RenderParams, UpdateContext_Ref) override;
 
@@ -41,7 +44,7 @@ private:
     void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes) const;
     auto nodes_config(Ui_Ref ui) const -> NodesConfig;
     void render_impl(RenderParams, UpdateContext_Ref);
-    void compute_dependency_on_audio_features(); // Since audio features are costly to compute, we only set these uniforms in the shader if we actually need them. So we need to check for that.
+    void compute_dependencies(); // We don't want to rerender when audio / time changes if we don't depend on them. Also, audio features are costly to compute, so we only set these uniforms in the shader if we actually need them.
 
 private:
     mutable std::string              _shader_code{};
@@ -54,6 +57,7 @@ private:
     Cool::Input<Cool::Camera>        _camera_input;
     Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
 
+    bool _depends_on_time{false};
     bool _depends_on_audio_volume{false};
     bool _depends_on_audio_waveform{false};
     bool _depends_on_audio_spectrum{false};

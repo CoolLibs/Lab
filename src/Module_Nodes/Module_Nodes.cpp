@@ -53,7 +53,11 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
     _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
     _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
-    _shader_code = "";
+    _shader_code               = "";
+    _depends_on_time           = false;
+    _depends_on_audio_volume   = false;
+    _depends_on_audio_waveform = false;
+    _depends_on_audio_spectrum = false;
 
     if (!_nodes_editor.graph().try_get_node<Node>(_main_node_id))
         return; // Otherwise we will get a default UV image instead of a transparent image.
@@ -77,7 +81,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 
     handle_error(maybe_err, for_testing_nodes);
 
-    compute_dependency_on_audio_features();
+    compute_dependencies();
 }
 
 void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
@@ -109,9 +113,10 @@ static auto contains_two_or_more(std::string_view word, std::string_view text) -
     return pos2 != std::string_view::npos;
 }
 
-void Module_Nodes::compute_dependency_on_audio_features()
+void Module_Nodes::compute_dependencies()
 {
     auto const code            = Cool::String::remove_comments(_shader_code);
+    _depends_on_time           = contains_two_or_more("_time", _shader_code);
     _depends_on_audio_volume   = contains_two_or_more("_audio_volume", _shader_code);
     _depends_on_audio_waveform = contains_two_or_more("_audio_waveform", _shader_code);
     _depends_on_audio_spectrum = contains_two_or_more("_audio_spectrum", _shader_code);

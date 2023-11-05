@@ -143,8 +143,8 @@ void App::update()
         _project.exporter.is_exporting() /* force_sync_time */
     );
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
-        // if (depends_on_audio()) // TODO(Audio)
-        trigger_rerender();
+        if (_project.nodes_module->depends_on_audio())
+            trigger_rerender();
     });
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
@@ -170,8 +170,8 @@ void App::update()
     if (_last_time != _project.clock.time())
     {
         _last_time = _project.clock.time();
-
-        trigger_rerender();
+        if (_project.nodes_module->depends_on_time())
+            trigger_rerender();
     }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {
