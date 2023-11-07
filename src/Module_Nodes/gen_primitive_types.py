@@ -295,7 +295,7 @@ def all_conversions():
                 from_="UV",
                 to="Vec2",
                 implementation="""
-                float FUNCTION_NAME(float x)
+                vec2 FUNCTION_NAME(vec2 x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
@@ -305,7 +305,7 @@ def all_conversions():
                 from_="Vec2",
                 to="UV",
                 implementation="""
-                float FUNCTION_NAME(float x)
+                vec2 FUNCTION_NAME(vec2 x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
