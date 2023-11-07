@@ -3,6 +3,9 @@
 
 namespace Lab {
 
+#include "generated/def_implicit_color_conversions.inl"
+#include "generated/def_implicit_conversions.inl"
+
 auto gen_implicit_conversion(PrimitiveType from, PrimitiveType to, CodeGenContext& context) // NOLINT(readability-function-cognitive-complexity)
     -> std::optional<std::string>
 {

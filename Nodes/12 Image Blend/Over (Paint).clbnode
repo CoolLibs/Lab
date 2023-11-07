@@ -6,10 +6,10 @@ sRGB_PremultipliedA main(sRGB_PremultipliedA Foreground)
 {
     float new_alpha = Foreground.a + (1. - Foreground.a) * 'Background'.a;
     return vec4(
-        premultiply(
+        Cool_premultiply_color(
             mixbox_lerp(
-                unpremultiply('Background'.rgb, 'Background'.a),
-                unpremultiply(Foreground.rgb, Foreground.a),
+                Cool_unpremultiply_color('Background'.rgb, 'Background'.a),
+                Cool_unpremultiply_color(Foreground.rgb, Foreground.a),
                 Foreground.a
             ),
             new_alpha

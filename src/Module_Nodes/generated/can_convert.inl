@@ -46,3 +46,57 @@ if (from == PrimitiveType::Vec2 && to == PrimitiveType::UV)
 
 if (from == PrimitiveType::Void && to == PrimitiveType::UV)
     return true;
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Angle)
+    return true;
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Angle)
+    return true;
+
+if (from == PrimitiveType::Angle && to == PrimitiveType::Float_StraightA)
+    return true;
+
+if (from == PrimitiveType::Angle && to == PrimitiveType::Float_PremultipliedA)
+    return true;
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Hue)
+    return true;
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Hue)
+    return true;
+
+if (from == PrimitiveType::Hue && to == PrimitiveType::Float_StraightA)
+    return true;
+
+if (from == PrimitiveType::Hue && to == PrimitiveType::Float_PremultipliedA)
+    return true;
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Int)
+    return true;
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Int)
+    return true;
+
+if (from == PrimitiveType::Int && to == PrimitiveType::Float_StraightA)
+    return true;
+
+if (from == PrimitiveType::Int && to == PrimitiveType::Float_PremultipliedA)
+    return true;
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Bool)
+    return true;
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Bool)
+    return true;
+
+if (from == PrimitiveType::Bool && to == PrimitiveType::Float_StraightA)
+    return true;
+
+if (from == PrimitiveType::Bool && to == PrimitiveType::Float_PremultipliedA)
+    return true;
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Direction2D)
+    return true;
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Direction2D)
+    return true;

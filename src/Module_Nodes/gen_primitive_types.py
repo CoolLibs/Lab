@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, List, Any
 
 # HACK: Python doesn't allow us to import from a parent folder (e.g. tooling.generate_files)
@@ -22,7 +22,8 @@ import generator_colors
 class Conversion:
     from_: str
     to: str
-    implementation: str  # An empty string means that the conversion doesn't need any code (e.g. between UV and Vec2)
+    implementation: str
+    intermediate_conversions: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -173,102 +174,113 @@ def all_primitive_types():
 
 
 def all_conversions():
-    return [
-        Conversion(
-            from_="Float",
-            to="Angle",
-            implementation="""
+    return add_float_with_alpha_conversions(
+        [
+            Conversion(
+                from_="Float",
+                to="Angle",
+                implementation="""
                 float FUNCTION_NAME(float x)
                 {
                     return x * TAU;
                 }
-            """,
-        ),
-        Conversion(
-            from_="Angle",
-            to="Float",
-            implementation="""
+                """,
+            ),
+            Conversion(
+                from_="Angle",
+                to="Float",
+                implementation="""
                 float FUNCTION_NAME(float angle)
                 {
                     return angle / TAU;
                 }
             """,
-        ),
-        Conversion(
-            from_="Float",
-            to="Hue",
-            implementation="",
-        ),
-        Conversion(
-            from_="Hue",
-            to="Float",
-            implementation="",
-        ),
-        Conversion(
-            from_="Float",
-            to="Int",
-            implementation="""
+            ),
+            Conversion(
+                from_="Float",
+                to="Hue",
+                implementation="""
+                float FUNCTION_NAME(float x)
+                {
+                    return x; // No need to do anything for this conversion, the difference is purely semantic.
+                }
+                """,
+            ),
+            Conversion(
+                from_="Hue",
+                to="Float",
+                implementation="""
+                float FUNCTION_NAME(float x)
+                {
+                    return x; // No need to do anything for this conversion, the difference is purely semantic.
+                }
+                """,
+            ),
+            Conversion(
+                from_="Float",
+                to="Int",
+                implementation="""
                 int FUNCTION_NAME(float x)
                 {
                     return int(floor(x));
                 }
             """,
-        ),
-        Conversion(
-            from_="Int",
-            to="Float",
-            implementation="""
+            ),
+            Conversion(
+                from_="Int",
+                to="Float",
+                implementation="""
                 float FUNCTION_NAME(int x)
                 {
                     return float(x);
                 }
             """,
-        ),
-        Conversion(
-            from_="Float",
-            to="Bool",
-            implementation="""
+            ),
+            Conversion(
+                from_="Float",
+                to="Bool",
+                implementation="""
                 bool FUNCTION_NAME(float x)
                 {
                     return x > 0.5;
                 }
             """,
-        ),
-        Conversion(
-            from_="Bool",
-            to="Float",
-            implementation="""
+            ),
+            Conversion(
+                from_="Bool",
+                to="Float",
+                implementation="""
                 float FUNCTION_NAME(bool b)
                 {
                     return b ? 1. : 0.;
                 }
             """,
-        ),
-        Conversion(
-            from_="Angle",
-            to="Direction2D",
-            implementation="""
+            ),
+            Conversion(
+                from_="Angle",
+                to="Direction2D",
+                implementation="""
                 vec2 FUNCTION_NAME(float angle)
                 {
                     return vec2(cos(angle), sin(angle));
                 }
             """,
-        ),
-        Conversion(
-            from_="Float",
-            to="Direction2D",
-            implementation="""
+            ),
+            Conversion(
+                from_="Float",
+                to="Direction2D",
+                implementation="""
                 vec2 FUNCTION_NAME(float x)
                 {
                     float angle = x * TAU;
                     return vec2(cos(angle), sin(angle));
                 }
             """,
-        ),
-        Conversion(
-            from_="Direction2D",
-            to="Angle",
-            implementation="""
+            ),
+            Conversion(
+                from_="Direction2D",
+                to="Angle",
+                implementation="""
                 float FUNCTION_NAME(vec2 dir)
                 {
                     return dir.x != 0.f
@@ -278,28 +290,86 @@ def all_conversions():
                                     : -PI / 2.;
                 }
             """,
-        ),
-        Conversion(
-            from_="UV",
-            to="Vec2",
-            implementation="",
-        ),
-        Conversion(
-            from_="Vec2",
-            to="UV",
-            implementation="",
-        ),
-        Conversion(
-            from_="Void",
-            to="UV",
-            implementation="""
+            ),
+            Conversion(
+                from_="UV",
+                to="Vec2",
+                implementation="""
+                float FUNCTION_NAME(float x)
+                {
+                    return x; // No need to do anything for this conversion, the difference is purely semantic.
+                }
+                """,
+            ),
+            Conversion(
+                from_="Vec2",
+                to="UV",
+                implementation="""
+                float FUNCTION_NAME(float x)
+                {
+                    return x; // No need to do anything for this conversion, the difference is purely semantic.
+                }
+                """,
+            ),
+            Conversion(
+                from_="Void",
+                to="UV",
+                implementation="""
                 vec2 FUNCTION_NAME()
                 {
                     return coollab_context.uv;
                 }
             """,
-        ),
-    ]
+            ),
+        ]
+    )
+
+
+def add_float_with_alpha_conversions(conversions: List[Conversion]) -> List[Conversion]:
+    for conversion in conversions:
+        if conversion.from_ == "Float":
+            for alpha_space in non_null_alpha_spaces():
+                conversions.append(
+                    Conversion(
+                        from_=f"Float{alpha_space}",
+                        to=conversion.to,
+                        implementation=f"""
+                        {glsl_type_from_cpp_type(conversion.to)} FUNCTION_NAME(vec2 x)
+                        {{
+                            return Coollab_{conversion.to}_from_Float(Coollab_Float_from_Float{alpha_space}(x));
+                        }}
+                    """,
+                        intermediate_conversions=[
+                            f"Coollab_{conversion.to}_from_Float",
+                            f"Coollab_Float_from_Float{alpha_space}",
+                        ],
+                    )
+                )
+        elif conversion.to == "Float":
+            for alpha_space in non_null_alpha_spaces():
+                conversions.append(
+                    Conversion(
+                        from_=conversion.from_,
+                        to=f"Float{alpha_space}",
+                        implementation=f"""
+                        vec2 FUNCTION_NAME({glsl_type_from_cpp_type(conversion.from_)} x)
+                        {{
+                            return Coollab_Float{alpha_space}_from_Float(Coollab_Float_from_{conversion.from_}(x));
+                        }}
+                    """,
+                        intermediate_conversions=[
+                            f"Coollab_Float{alpha_space}_from_Float",
+                            f"Coollab_Float_from_{conversion.from_}",
+                        ],
+                    )
+                )
+    return conversions
+
+
+def glsl_type_from_cpp_type(cpp_type: str):
+    for type in all_primitive_types():
+        if type.cpp == cpp_type:
+            return type.glsl
 
 
 def color_spaces():
@@ -361,6 +431,12 @@ def alpha_spaces():
     return ["", "_StraightA", "_PremultipliedA"]
 
 
+def non_null_alpha_spaces():
+    l = alpha_spaces()
+    l.remove("")
+    return l
+
+
 def vec_type(dimension: int):
     if dimension == 1:
         return "float"
@@ -373,10 +449,10 @@ def dimension(color: generator_colors.ColorSpace):
     return 3
 
 
-def implicit_color_conversions():
+def implicit_color_conversions_impl():
     from itertools import product
 
-    res = ""
+    res = ["", ""]
     for color1, color2 in product(
         color_and_greyscale_spaces(), color_and_greyscale_spaces()
     ):
@@ -388,18 +464,29 @@ def implicit_color_conversions():
 
             def gen_code(in_vec: str, out_vec: str, implementation: str):
                 nonlocal res
-                res += f"""
+                function_name = f"Coollab_{type2}_from_{type1}"
+                res[
+                    0
+                ] += f"""
+                    static auto gen_{function_name}() -> Function
+                    {{
+                        return {{
+                            .name       = "{function_name}",
+                            .definition = R"STR(
+                                {out_vec} {function_name}/*coollabdef*/({in_vec} from)
+                                {{
+                                    {implementation}
+                                }}
+                                )STR",
+                        }};
+                    }}
+                """
+                res[
+                    1
+                ] += f"""
                 if (from == PrimitiveType::{type1} && to == PrimitiveType::{type2})
                 {{
-                    return context.push_function({{
-                        .name           = "Coollab_{type2}_from_{type1}",
-                        .definition = R"STR(
-                            {out_vec} Coollab_{type2}_from_{type1}/*coollabdef*/({in_vec} from)
-                            {{
-                                {implementation}
-                            }}
-                            )STR",
-                    }});
+                    return context.push_function(gen_{function_name}());
                 }}
                 """
 
@@ -410,6 +497,12 @@ def implicit_color_conversions():
             )
             color_components = "xyz" if color1.name_in_code != "Float" else "x"
             alpha_component = "a" if color1.name_in_code != "Float" else "y"
+            color_or_greyscale_from = (
+                "color" if color1.name_in_code != "Float" else "greyscale"
+            )
+            color_or_greyscale_to = (
+                "color" if color2.name_in_code != "Float" else "greyscale"
+            )
             match alpha1, alpha2:
                 case "", "":
                     gen_code(
@@ -420,21 +513,21 @@ def implicit_color_conversions():
                         return to;
                     """,
                     )
-                case "_StraightA", "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
+                case "_StraightA", "":
+                    gen_code(
+                        in_vec=vec_type(dimension(color1) + 1),
+                        out_vec=vec_type(dimension(color2)),
+                        implementation=f"""
+                        {vec_type(dimension(color2))} to = {color_conversion}(Cool_premultiply_{color_or_greyscale_from}(from.{color_components}, from.{alpha_component}));
+                        return to;
+                    """,
+                    )
+                case "_PremultipliedA", "":
                     gen_code(
                         in_vec=vec_type(dimension(color1) + 1),
                         out_vec=vec_type(dimension(color2)),
                         implementation=f"""
                         {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components});
-                        return to;
-                    """,
-                    )
-                case "_PremultipliedA", "":  # We can afford to lose the alpha information because it is stored in the coollab_context anyways.
-                    gen_code(
-                        in_vec=vec_type(dimension(color1) + 1),
-                        out_vec=vec_type(dimension(color2)),
-                        implementation=f"""
-                        {vec_type(dimension(color2))} to = {color_conversion}(unpremultiply(from.{color_components}, from.{alpha_component}));
                         return to;
                     """,
                     )
@@ -462,7 +555,7 @@ def implicit_color_conversions():
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
                         {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components});
-                        return {vec_type(dimension(color2)+1)}(to, from.{alpha_component});
+                        return Cool_apply_straight_alpha_to_{color_or_greyscale_to}(to, from.{alpha_component});
                     """,
                     )
                 case "_PremultipliedA", "_PremultipliedA":
@@ -471,8 +564,8 @@ def implicit_color_conversions():
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
-                        {vec_type(dimension(color2))} to = {color_conversion}(unpremultiply(from.{color_components}, from.{alpha_component}));
-                        return {vec_type(dimension(color2)+1)}(premultiply(to, from.{alpha_component}), from.{alpha_component});
+                        {vec_type(dimension(color2))} to = {color_conversion}(Cool_unpremultiply_{color_or_greyscale_from}(from.{color_components}, from.{alpha_component}));
+                        return Cool_apply_premultiplied_alpha_to_{color_or_greyscale_to}(to, from.{alpha_component});
                     """,
                     )
                 case "_PremultipliedA", "_StraightA":
@@ -480,8 +573,8 @@ def implicit_color_conversions():
                         in_vec=vec_type(dimension(color1) + 1),
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
-                        {vec_type(dimension(color2))} to = {color_conversion}(unpremultiply(from.{color_components}, from.{alpha_component}));
-                        return {vec_type(dimension(color2)+1)}(to, from.{alpha_component});
+                        {vec_type(dimension(color2))} to = {color_conversion}(Cool_unpremultiply_{color_or_greyscale_from}(from.{color_components}, from.{alpha_component}));
+                        return Cool_apply_straight_alpha_to_{color_or_greyscale_to}(to, from.{alpha_component});
                     """,
                     )
                 case "_StraightA", "_PremultipliedA":
@@ -490,10 +583,18 @@ def implicit_color_conversions():
                         out_vec=vec_type(dimension(color2) + 1),
                         implementation=f"""
                         {vec_type(dimension(color2))} to = {color_conversion}(from.{color_components});
-                        return {vec_type(dimension(color2)+1)}(premultiply(to, from.{alpha_component}), from.{alpha_component});
+                        return Cool_apply_premultiplied_alpha_to_{color_or_greyscale_to}(to, from.{alpha_component});
                     """,
                     )
     return res
+
+
+def implicit_color_conversions():
+    return implicit_color_conversions_impl()[1]
+
+
+def def_implicit_color_conversions():
+    return implicit_color_conversions_impl()[0]
 
 
 def has_an_alpha_channel():
@@ -663,25 +764,35 @@ def string_listing_the_parsed_types():
     )
 
 
-def implicit_conversions():
+def def_implicit_conversions():
     def replace_function_name(code: str, name: str):
         return code.replace("FUNCTION_NAME", name)
 
     def gen_conversion(conversion: Conversion):
-        if conversion.implementation == "":
-            return f"""
-                if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
-                    return ""; // No need to do anything for this conversion, the difference is purely semantic.
-            """
+        function_name = f"Coollab_{conversion.to}_from_{conversion.from_}"
+        return f"""
+            static auto gen_{function_name}() -> Function
+            {{
+                return {{
+                    .name       = "{function_name}",
+                    .definition = R"STR({replace_function_name(conversion.implementation, function_name+"/*coollabdef*/")})STR",
+                }};
+            }}
+        """
 
-        function_name = f"Coollab_{conversion.from_}_to_{conversion.to}"
+    from pipe import map
+
+    return "\n".join(all_conversions() | map(gen_conversion))
+
+
+def implicit_conversions():
+    def gen_conversion(conversion: Conversion):
+        function_name = f"Coollab_{conversion.to}_from_{conversion.from_}"
         return f"""
             if (from == PrimitiveType::{conversion.from_} && to == PrimitiveType::{conversion.to})
             {{
-                return context.push_function({{
-                    .name       = "{function_name}",
-                    .definition = R"STR({replace_function_name(conversion.implementation, function_name+"/*coollabdef*/")})STR",
-                }});
+                {";\n".join([f"context.push_function(gen_{intermediate}())" for intermediate in conversion.intermediate_conversions])};
+                return context.push_function(gen_{function_name}());
             }}
         """
 
@@ -726,6 +837,7 @@ if __name__ == "__main__":
             parse_primitive_type,
             string_listing_the_parsed_types,
             implicit_color_conversions,
+            def_implicit_color_conversions,
             has_an_alpha_channel,
             has_straight_alpha_channel,
             with_straight_alpha,
@@ -733,6 +845,7 @@ if __name__ == "__main__":
             is_color_type,
             is_greyscale_type,
             implicit_conversions,
+            def_implicit_conversions,
             can_convert,
         ],
     )
