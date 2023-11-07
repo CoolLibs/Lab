@@ -158,7 +158,7 @@ static auto gen_Coollab_Vec2_from_UV() -> Function
     return {
         .name       = "Coollab_Vec2_from_UV",
         .definition = R"STR(
-                float Coollab_Vec2_from_UV/*coollabdef*/(float x)
+                vec2 Coollab_Vec2_from_UV/*coollabdef*/(vec2 x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
@@ -171,7 +171,7 @@ static auto gen_Coollab_UV_from_Vec2() -> Function
     return {
         .name       = "Coollab_UV_from_Vec2",
         .definition = R"STR(
-                float Coollab_UV_from_Vec2/*coollabdef*/(float x)
+                vec2 Coollab_UV_from_Vec2/*coollabdef*/(vec2 x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
