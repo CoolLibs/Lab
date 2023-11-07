@@ -7,147 +7,210 @@
 
 if (from == PrimitiveType::Float && to == PrimitiveType::Angle)
 {
-    return context.push_function({
-        .name       = "Coollab_Float_to_Angle",
-        .definition = R"STR(
-                float Coollab_Float_to_Angle/*coollabdef*/(float x)
-                {
-                    return x * TAU;
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Angle_from_Float());
 }
 
 if (from == PrimitiveType::Angle && to == PrimitiveType::Float)
 {
-    return context.push_function({
-        .name       = "Coollab_Angle_to_Float",
-        .definition = R"STR(
-                float Coollab_Angle_to_Float/*coollabdef*/(float angle)
-                {
-                    return angle / TAU;
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Float_from_Angle());
 }
 
 if (from == PrimitiveType::Float && to == PrimitiveType::Hue)
-    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+{
+    ;
+    return context.push_function(gen_Coollab_Hue_from_Float());
+}
 
 if (from == PrimitiveType::Hue && to == PrimitiveType::Float)
-    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+{
+    ;
+    return context.push_function(gen_Coollab_Float_from_Hue());
+}
 
 if (from == PrimitiveType::Float && to == PrimitiveType::Int)
 {
-    return context.push_function({
-        .name       = "Coollab_Float_to_Int",
-        .definition = R"STR(
-                int Coollab_Float_to_Int/*coollabdef*/(float x)
-                {
-                    return int(floor(x));
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Int_from_Float());
 }
 
 if (from == PrimitiveType::Int && to == PrimitiveType::Float)
 {
-    return context.push_function({
-        .name       = "Coollab_Int_to_Float",
-        .definition = R"STR(
-                float Coollab_Int_to_Float/*coollabdef*/(int x)
-                {
-                    return float(x);
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Float_from_Int());
 }
 
 if (from == PrimitiveType::Float && to == PrimitiveType::Bool)
 {
-    return context.push_function({
-        .name       = "Coollab_Float_to_Bool",
-        .definition = R"STR(
-                bool Coollab_Float_to_Bool/*coollabdef*/(float x)
-                {
-                    return x > 0.5;
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Bool_from_Float());
 }
 
 if (from == PrimitiveType::Bool && to == PrimitiveType::Float)
 {
-    return context.push_function({
-        .name       = "Coollab_Bool_to_Float",
-        .definition = R"STR(
-                float Coollab_Bool_to_Float/*coollabdef*/(bool b)
-                {
-                    return b ? 1. : 0.;
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Float_from_Bool());
 }
 
 if (from == PrimitiveType::Angle && to == PrimitiveType::Direction2D)
 {
-    return context.push_function({
-        .name       = "Coollab_Angle_to_Direction2D",
-        .definition = R"STR(
-                vec2 Coollab_Angle_to_Direction2D/*coollabdef*/(float angle)
-                {
-                    return vec2(cos(angle), sin(angle));
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Direction2D_from_Angle());
 }
 
 if (from == PrimitiveType::Float && to == PrimitiveType::Direction2D)
 {
-    return context.push_function({
-        .name       = "Coollab_Float_to_Direction2D",
-        .definition = R"STR(
-                vec2 Coollab_Float_to_Direction2D/*coollabdef*/(float x)
-                {
-                    float angle = x * TAU;
-                    return vec2(cos(angle), sin(angle));
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Direction2D_from_Float());
 }
 
 if (from == PrimitiveType::Direction2D && to == PrimitiveType::Angle)
 {
-    return context.push_function({
-        .name       = "Coollab_Direction2D_to_Angle",
-        .definition = R"STR(
-                float Coollab_Direction2D_to_Angle/*coollabdef*/(vec2 dir)
-                {
-                    return dir.x != 0.f
-                                ? atan(dir.y, dir.x)
-                                : dir.y > 0.
-                                    ? PI / 2.
-                                    : -PI / 2.;
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_Angle_from_Direction2D());
 }
 
 if (from == PrimitiveType::UV && to == PrimitiveType::Vec2)
-    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+{
+    ;
+    return context.push_function(gen_Coollab_Vec2_from_UV());
+}
 
 if (from == PrimitiveType::Vec2 && to == PrimitiveType::UV)
-    return ""; // No need to do anything for this conversion, the difference is purely semantic.
+{
+    ;
+    return context.push_function(gen_Coollab_UV_from_Vec2());
+}
 
 if (from == PrimitiveType::Void && to == PrimitiveType::UV)
 {
-    return context.push_function({
-        .name       = "Coollab_Void_to_UV",
-        .definition = R"STR(
-                vec2 Coollab_Void_to_UV/*coollabdef*/()
-                {
-                    return coollab_context.uv;
-                }
-            )STR",
-    });
+    ;
+    return context.push_function(gen_Coollab_UV_from_Void());
+}
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Angle)
+{
+    context.push_function(gen_Coollab_Angle_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_StraightA());
+    return context.push_function(gen_Coollab_Angle_from_Float_StraightA());
+}
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Angle)
+{
+    context.push_function(gen_Coollab_Angle_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_PremultipliedA());
+    return context.push_function(gen_Coollab_Angle_from_Float_PremultipliedA());
+}
+
+if (from == PrimitiveType::Angle && to == PrimitiveType::Float_StraightA)
+{
+    context.push_function(gen_Coollab_Float_StraightA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Angle());
+    return context.push_function(gen_Coollab_Float_StraightA_from_Angle());
+}
+
+if (from == PrimitiveType::Angle && to == PrimitiveType::Float_PremultipliedA)
+{
+    context.push_function(gen_Coollab_Float_PremultipliedA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Angle());
+    return context.push_function(gen_Coollab_Float_PremultipliedA_from_Angle());
+}
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Hue)
+{
+    context.push_function(gen_Coollab_Hue_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_StraightA());
+    return context.push_function(gen_Coollab_Hue_from_Float_StraightA());
+}
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Hue)
+{
+    context.push_function(gen_Coollab_Hue_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_PremultipliedA());
+    return context.push_function(gen_Coollab_Hue_from_Float_PremultipliedA());
+}
+
+if (from == PrimitiveType::Hue && to == PrimitiveType::Float_StraightA)
+{
+    context.push_function(gen_Coollab_Float_StraightA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Hue());
+    return context.push_function(gen_Coollab_Float_StraightA_from_Hue());
+}
+
+if (from == PrimitiveType::Hue && to == PrimitiveType::Float_PremultipliedA)
+{
+    context.push_function(gen_Coollab_Float_PremultipliedA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Hue());
+    return context.push_function(gen_Coollab_Float_PremultipliedA_from_Hue());
+}
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Int)
+{
+    context.push_function(gen_Coollab_Int_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_StraightA());
+    return context.push_function(gen_Coollab_Int_from_Float_StraightA());
+}
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Int)
+{
+    context.push_function(gen_Coollab_Int_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_PremultipliedA());
+    return context.push_function(gen_Coollab_Int_from_Float_PremultipliedA());
+}
+
+if (from == PrimitiveType::Int && to == PrimitiveType::Float_StraightA)
+{
+    context.push_function(gen_Coollab_Float_StraightA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Int());
+    return context.push_function(gen_Coollab_Float_StraightA_from_Int());
+}
+
+if (from == PrimitiveType::Int && to == PrimitiveType::Float_PremultipliedA)
+{
+    context.push_function(gen_Coollab_Float_PremultipliedA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Int());
+    return context.push_function(gen_Coollab_Float_PremultipliedA_from_Int());
+}
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Bool)
+{
+    context.push_function(gen_Coollab_Bool_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_StraightA());
+    return context.push_function(gen_Coollab_Bool_from_Float_StraightA());
+}
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Bool)
+{
+    context.push_function(gen_Coollab_Bool_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_PremultipliedA());
+    return context.push_function(gen_Coollab_Bool_from_Float_PremultipliedA());
+}
+
+if (from == PrimitiveType::Bool && to == PrimitiveType::Float_StraightA)
+{
+    context.push_function(gen_Coollab_Float_StraightA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Bool());
+    return context.push_function(gen_Coollab_Float_StraightA_from_Bool());
+}
+
+if (from == PrimitiveType::Bool && to == PrimitiveType::Float_PremultipliedA)
+{
+    context.push_function(gen_Coollab_Float_PremultipliedA_from_Float());
+    context.push_function(gen_Coollab_Float_from_Bool());
+    return context.push_function(gen_Coollab_Float_PremultipliedA_from_Bool());
+}
+
+if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Direction2D)
+{
+    context.push_function(gen_Coollab_Direction2D_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_StraightA());
+    return context.push_function(gen_Coollab_Direction2D_from_Float_StraightA());
+}
+
+if (from == PrimitiveType::Float_PremultipliedA && to == PrimitiveType::Direction2D)
+{
+    context.push_function(gen_Coollab_Direction2D_from_Float());
+    context.push_function(gen_Coollab_Float_from_Float_PremultipliedA());
+    return context.push_function(gen_Coollab_Direction2D_from_Float_PremultipliedA());
 }
