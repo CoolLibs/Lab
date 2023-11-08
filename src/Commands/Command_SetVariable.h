@@ -12,10 +12,17 @@ namespace internal {
 template<typename T>
 void set_value_default_impl(CommandExecutionContext_Ref const& ctx, const Cool::VariableId<T>& id, const T& value)
 {
+    bool use_secondary_flag{false};
     ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
+        if constexpr (std::is_same_v<T, Cool::Gradient>)
+        {
+            // Request shader code generation only if the number of marks has changed.
+            use_secondary_flag = variable.value().value.gradient().get_marks().size()
+                                 != value.value.gradient().get_marks().size();
+        }
         variable.value() = value;
     });
-    ctx.set_dirty(id);
+    ctx.set_dirty(id, use_secondary_flag);
 }
 
 } // namespace internal

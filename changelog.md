@@ -19,6 +19,7 @@
 - ✨ Added "Load Backup" in case you accidentally refused to save your unsaved changes.
 - 🐛 Fix: the transparency information was sometimes getting lost between nodes.
 - 🐛 Fix: crash on Linux "Too many open files".
+- ⚡️ Fix lag when editing the color gradient on a Color Ramp node.
 - 👩‍💻 Replaced CIELAB with Oklab
 - 👩‍💻 Replaced HSLuv with Okhsl
 

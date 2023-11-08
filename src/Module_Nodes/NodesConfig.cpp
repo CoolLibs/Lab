@@ -1,5 +1,5 @@
 #include "NodesConfig.h"
-#include <Cool/Dependencies/requires_shader_code_generation.h>
+#include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <Module_Nodes/NodeColor.h>
 #include <algorithm>
 #include <string>
@@ -319,7 +319,8 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     {
         node.value_inputs().push_back(_input_factory.make(
             value_input_def,
-            Cool::requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag
+            Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
+            _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
         ));
         node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
     }
