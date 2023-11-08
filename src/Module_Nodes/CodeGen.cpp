@@ -450,9 +450,9 @@ static auto gen_output_function(Cool::OutputPin const& pin, CodeGenContext& cont
         .name       = func_name,
         .definition = fmt::format(
             R"STR(
-float {}/*coollabdef*/()
+vec2 {}/*coollabdef*/()
 {{
-    return {};
+    return vec2({}, 1.); // Convert float to float_and_alpha
 }}
 )STR",
             func_name, output_name
