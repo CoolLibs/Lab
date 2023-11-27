@@ -22,6 +22,7 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Cool/Particles/ParticleSystem.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
@@ -126,6 +127,8 @@ private:
     NodesLibraryManager                  _nodes_library_manager{};
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
+
+    Cool::ParticleSystem _particle_system{};
 
 private:
     // Serialization

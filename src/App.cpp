@@ -223,7 +223,8 @@ Cool::Polaroid App::polaroid()
         .render_target = render_view().render_target(),
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
-        }};
+        }
+    };
 }
 
 auto App::inputs_are_allowed() const -> bool
@@ -287,6 +288,9 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
     render_nodes(render_view().render_target(), time, render_target.desired_size());
+    render_view().render_target().render([&]() {
+        _particle_system.render();
+    });
     // render_custom_shader(render_target, time);
 }
 
