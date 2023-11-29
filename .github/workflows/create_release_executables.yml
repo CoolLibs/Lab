@@ -9,7 +9,7 @@ jobs:
   #-----------------------------------------------------------------------------------------------
   Windows_Clang_Release:
     name: Windows Clang Release
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -34,7 +34,7 @@ jobs:
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
     name: Linux Clang Release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -71,7 +71,7 @@ jobs:
   #-----------------------------------------------------------------------------------------------
   MacOS_Clang_Release:
     name: MacOS Clang Release
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
         with:
