@@ -303,6 +303,14 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
 
     shader.set_uniform_texture(
+        "_particles_texture",
+        in.provider(Cool::Input_ParticlesTextureId{}),
+        Cool::TextureSamplerDescriptor{
+            .repeat_mode        = Cool::TextureRepeatMode::None,
+            .interpolation_mode = glpp::Interpolation::Linear,
+        }
+    );
+    shader.set_uniform_texture(
         "_previous_frame_texture",
         _feedback_double_buffer.read_target().get().texture_id(),
         Cool::TextureSamplerDescriptor{

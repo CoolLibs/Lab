@@ -134,8 +134,6 @@ void App::update()
 
     Cool::user_settings().color_themes.update();
 
-    _particle_system.update();
-
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
         _nodes_library_manager.update(update_context(), _project.nodes_module->regenerate_code_flag(), _project.nodes_module->graph(), _project.nodes_module->nodes_config(ui(), _nodes_library_manager.library()));
@@ -160,6 +158,7 @@ void App::update()
     {
         _last_time = _project.clock.time();
 
+        _particle_system.update();
         trigger_rerender();
     }
     // if (_custom_shader_view.render_target.needs_resizing())
@@ -289,13 +288,13 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    render_nodes(render_view().render_target(), time, render_target.desired_size());
-    render_view().render_target().render([&]() {
-        glClearColor(0.f, 0.f, 0.f, 1.f);
+    _particles_render_target.set_size(render_target.desired_size());
+    _particles_render_target.render([&]() {
+        glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         _particle_system.render();
     });
-    // render_custom_shader(render_target, time);
+    render_nodes(render_view().render_target(), time, render_target.desired_size());
 }
 
 void App::imgui_commands_and_registries_debug_windows()

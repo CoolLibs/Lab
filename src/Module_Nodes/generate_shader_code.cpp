@@ -65,6 +65,7 @@ uniform float     _height;
 uniform mat3      _camera2D;
 uniform mat3      _camera2D_inverse;
 uniform sampler2D _previous_frame_texture;
+uniform sampler2D _particles_texture;
 out vec4          out_Color;
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
