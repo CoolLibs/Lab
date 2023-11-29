@@ -13,10 +13,18 @@
 
 ## 🐣beta-9 WIP
 
-- ✨ Added Midi support!
+- ✨ Added MIDI support! You can now plug-in your MIDI keyboard, select your knob / slider by index, and use its value to control parameters of your nodes.
+![image](https://github.com/CoolLibs/.github/assets/45451201/5a8d4950-57a0-4282-b549-6c66487448c3)
 - ✨ Added the "Paint" blend mode.
+
+| ![image](https://github.com/CoolLibs/.github/assets/45451201/6f57a43d-a422-4056-81e1-c691e4c85d84)  | ![image](https://github.com/CoolLibs/.github/assets/45451201/9b12b5bf-7f15-408b-93e9-552e0caa30ea)  |
+|---|----|
+| "Light" mode (what was already there in Coollab) | "Paint" mode (the new blend mode) |
+
 - ✨ Added an Output window that you can project during live shows, while still having your View window on your screen to move the camera and the widgets. To open this window, go in the `Commands` menu and select `Open output window`.
-- ✨ Added "Load Backup" in case you accidentally refused to save your unsaved changes.
+![image](https://github.com/CoolLibs/.github/assets/45451201/3d6a14ec-69ca-44b1-81e0-1d4139b72544)
+- ✨ Added "Open Backup" in case you accidentally refused to save your unsaved changes.
+![image](https://github.com/CoolLibs/.github/assets/45451201/99287d7b-15a1-480b-98d4-0ca5c4777b86)
 - 🐛 Fix: the transparency information was sometimes getting lost between nodes.
 - 🐛 Fix: crash on Linux "Too many open files".
 - ⚡️ Fix lag when editing the color gradient on a Color Ramp node.
