@@ -27,6 +27,6 @@ auto main(int argc, char** argv) -> int
               .title                  = "", // This is set when we load a project.
               .maximize_on_startup_if = true,
         }},
-        .imgui_ini_version = 0,
+        .imgui_ini_version = 1,
     });
 }

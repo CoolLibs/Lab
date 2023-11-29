@@ -22,9 +22,12 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Cool/Midi/MidiChannel.h"
+#include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
+#include "Cool/Webcam/WebcamsConfigs.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
@@ -136,7 +139,10 @@ private:
         archive(
             cereal::make_nvp("Recently opened projects", app._recently_opened_projects),
             cereal::make_nvp("Gallery Poster", app._gallery_poster),
-            cereal::make_nvp("Tips", app._tips_manager)
+            cereal::make_nvp("Tips", app._tips_manager),
+            cereal::make_nvp("Output view", app._output_view),
+            cereal::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
+            cereal::make_nvp("MIDI config", Cool::midi_manager())
         );
     }
     template<class Archive>

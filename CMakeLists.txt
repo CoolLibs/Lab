@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(Coollab)
-set(COOLLAB_VERSION "beta-9 WIP")
+set(COOLLAB_VERSION "beta-10 WIP")
 add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
