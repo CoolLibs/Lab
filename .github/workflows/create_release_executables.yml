@@ -32,8 +32,8 @@ jobs:
           files: build/Coollab-Windows.exe
 
   #-----------------------------------------------------------------------------------------------
-  Linux_Clang_Release:
-    name: Linux Clang Release
+  Linux_GCC_Release:
+    name: Linux GCC Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -53,7 +53,7 @@ jobs:
         run: sudo apt install libasound2-dev
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D CPACK_GENERATOR=STGZ
+        run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D CPACK_GENERATOR=STGZ
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TARGET}}
