@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-9 WIP](#beta-9-wip)
+- [🐣beta-9](#beta-9)
 - [🐣beta-8](#beta-8)
 - [🐣beta-7](#beta-7)
 - [🐣beta-6](#beta-6)
@@ -11,7 +11,7 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-9 WIP
+## 🐣beta-9
 
 - ✨ Added MIDI support! You can now plug-in your MIDI keyboard, select your knob / slider by index, and use its value to control parameters of your nodes.
 ![image](https://github.com/CoolLibs/.github/assets/45451201/5a8d4950-57a0-4282-b549-6c66487448c3)
