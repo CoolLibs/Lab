@@ -34,7 +34,7 @@ jobs:
   #-----------------------------------------------------------------------------------------------
   Linux_Clang_Release:
     name: Linux Clang Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
         with:
