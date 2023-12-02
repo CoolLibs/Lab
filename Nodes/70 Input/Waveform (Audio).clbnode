@@ -2,7 +2,7 @@
 
 INPUT float 'Stretch';
 
-float main(float Time)
+float main(float t)
 {
-    return texture(_audio_waveform, Time / 'Stretch').r;
+    return texture(_audio_waveform, t / 'Stretch').r;
 }
