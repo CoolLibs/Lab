@@ -1,0 +1,12 @@
+layout(std430, binding = 0) buffer _positions_buffer
+{
+    float _positions[];
+};
+
+void cool_main()
+{
+    uint gid = gl_GlobalInvocationID.x;
+    _positions[gid * 2] += 0.001;
+    if (_positions[gid * 2] > 1.)
+        _positions[gid * 2] = -1.;
+}

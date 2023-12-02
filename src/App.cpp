@@ -481,6 +481,9 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::DebugOptions::texture_library_debug_view([&] {
         Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
     });
+    Cool::DebugOptions::particles_debug_menu_window([&] {
+        _particle_system.imgui_debug_menu();
+    });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {
         if (ImGui::Button("Compile everything"))

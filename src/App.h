@@ -22,7 +22,6 @@
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
-#include "Cool/Particles/ParticleSystem.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
@@ -33,6 +32,7 @@
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Gallery/GalleryPoster.h"
 #include "Module_Nodes/Module_Nodes.h"
+#include "Module_Particles/ParticleSystem.h"
 #include "Project.h"
 
 namespace Lab {
@@ -128,8 +128,8 @@ private:
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
 
-    Cool::ParticleSystem _particle_system{};
-    Cool::RenderTarget   _particles_render_target{};
+    ParticleSystem     _particle_system{};
+    Cool::RenderTarget _particles_render_target{};
 
 private:
     // Serialization
