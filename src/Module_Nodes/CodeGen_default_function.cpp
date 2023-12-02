@@ -163,6 +163,20 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         if (func)
             return *func;
     }
+    {
+        auto const func = maybe_generate_default(
+            FunctionSignature{PrimitiveType::Float, PrimitiveType::Float},
+            "default_1D_function", R"STR(
+    float default_1D_function/*coollabdef*/(float x)
+    {{
+        return sin(x*TAU*10.)*0.5+0.5;
+    }}
+    )STR",
+            signature, context
+        );
+        if (func)
+            return *func;
+    }
 
     if (!is_greyscale(signature)) // Without this, Greyscale would match the Image signature and use this default function, but we want to use another default function for Greyscale (the one that comes after this).
     {
