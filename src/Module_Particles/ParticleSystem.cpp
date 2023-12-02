@@ -4,13 +4,16 @@
 
 namespace Lab {
 
-static auto create_particle_system() -> Cool::ParticleSystem
+auto ParticleSystem::create_particle_system() const -> Cool::ParticleSystem
 {
-    return Cool::ParticleSystem{Cool::ParticlesShadersCode{
-        .simulation = *Cool::File::to_string(Cool::Path::root() / "res/Particles/simulation.comp"),
-        .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
-        .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-    }};
+    return Cool::ParticleSystem{
+        _particles_count,
+        Cool::ParticlesShadersCode{
+            .simulation = *Cool::File::to_string(Cool::Path::root() / "res/Particles/simulation.comp"),
+            .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
+            .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
+        }
+    };
 }
 
 ParticleSystem::ParticleSystem()
@@ -20,10 +23,10 @@ ParticleSystem::ParticleSystem()
 
 void ParticleSystem::imgui_debug_menu()
 {
-    if (ImGui::Button("Recreate Particle System"))
-    {
+    if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &_particles_count))
         recreate_particle_system();
-    }
+    if (ImGui::Button("Recreate Particle System"))
+        recreate_particle_system();
 }
 
 void ParticleSystem::recreate_particle_system()

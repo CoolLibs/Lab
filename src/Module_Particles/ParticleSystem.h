@@ -12,9 +12,11 @@ public:
     void render() { _particle_system.render(); }
 
 private:
+    auto create_particle_system() const -> Cool::ParticleSystem;
     void recreate_particle_system(); // TODO(Particles) Remove me, this is for tests only
 
 private:
+    size_t               _particles_count{500};
     Cool::ParticleSystem _particle_system;
 };
 
