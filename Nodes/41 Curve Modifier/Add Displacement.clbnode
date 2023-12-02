@@ -11,8 +11,8 @@ UV main(float t)
 
     vec2 curve_pos      = 'Curve'(t);
     vec2 curve_next_pos = 'Curve'(t + delta);
-    vec2 gradient       = normalize(curve_next_pos - curve_pos);
-    vec2 normal         = vec2(gradient.y, -gradient.x);
+    vec2 gradient       = curve_next_pos - curve_pos;
+    vec2 normal         = normalize(vec2(gradient.y, -gradient.x));
 
     return curve_pos + normal * 'Displacement Function'(t) * 'Amplitude';
 }

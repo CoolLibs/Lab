@@ -1,7 +1,8 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
 INPUT float->float 'Function';
 INPUT float 'Thickness';
 
-// https://iquilezles.org/articles/distfunctions2d/
 float sdSegment(vec2 p, vec2 a, vec2 b)
 {
     vec2  pa = p - a, ba = b - a;
