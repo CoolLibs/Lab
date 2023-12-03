@@ -9,7 +9,6 @@
 #include "helpers.h"
 #include "tl/expected.hpp"
 
-
 namespace Lab {
 
 namespace {

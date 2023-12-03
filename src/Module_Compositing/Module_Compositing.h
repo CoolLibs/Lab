@@ -7,6 +7,7 @@
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Nodes/NodeId.h"
 #include "Cool/Nodes/NodesFolderWatcher.h"
+#include "Cool/Nodes/NodesGraph.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Path/Path.h"
 #include "Module/Module.h"
@@ -21,6 +22,8 @@ public:
     auto operator=(Module_Compositing const&) -> Module_Compositing&     = default;
     Module_Compositing(Module_Compositing&&) noexcept                    = default;
     auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default;
+
+    Cool::NodesGraph const* _nodes_graph; // TODO(Modules) Remove
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;

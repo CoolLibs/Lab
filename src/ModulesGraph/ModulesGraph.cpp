@@ -41,6 +41,7 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
 
 void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
+    _compositing_module._nodes_graph = &_nodes_editor.graph();
     if (in.is_dirty(_regenerate_code_flag))
     {
         if (DebugOptions::log_when_compiling_nodes())
