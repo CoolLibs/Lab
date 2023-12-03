@@ -14,6 +14,9 @@
 
 ## 🐣beta-10 WIP
 
+- ✨ Added Audio support! You can now import an audio file and play it while you generate your images. You can also use its volume and waveform to control your images.
+- Added new nodes that you can use with waveform or spectrum: fill function, function to shape, add displacement
+
 ## 🐣beta-9
 
 - ✨ Added MIDI support! You can now plug-in your MIDI keyboard, select your knob / slider by index, and use its value to control parameters of your nodes.

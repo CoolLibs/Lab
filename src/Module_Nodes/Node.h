@@ -52,6 +52,8 @@ public:
     auto value_input_pin_idx_begin() const -> size_t { return function_input_pin_idx_end(); }
     auto value_input_pin_idx_end() const -> size_t { return _input_pins.size(); }
 
+    auto is_audio_node() const -> bool;
+
 private:
     Cool::NodeDefinitionIdentifier _id_names;
     std::string                    _name{};

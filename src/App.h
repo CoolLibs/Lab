@@ -82,9 +82,9 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D}; }
+    auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D, _project.audio}; }
     auto input_factory                              () { return _project.input_factory(); }
-    auto ui                                         () { return Ui_Ref{_project.variable_registries, command_executor(), set_dirty_flag(), input_factory()}; }
+    auto ui                                         () { return Ui_Ref{_project.variable_registries, command_executor(), set_dirty_flag(), input_factory(), _project.audio}; }
     auto dirty_flag_factory                         () { return _project.dirty_flag_factory(); }
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_project.dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_project.dirty_registry}; }

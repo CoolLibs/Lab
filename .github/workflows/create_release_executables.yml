@@ -52,6 +52,9 @@ jobs:
       - name: Install MIDI dependencies
         run: sudo apt install libasound2-dev
 
+      - name: Install Audio dependencies
+        run: sudo apt install libpulse-dev libasound2-dev
+
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D CPACK_GENERATOR=STGZ
 

@@ -23,6 +23,7 @@
 #include "Cool/Nodes/NodesConfig.h"
 #include "Cool/Nodes/NodesDefinitionUpdater.h"
 #include "Cool/Nodes/NodesLibrary.h"
+#include "Cool/String/String.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Module.h"
@@ -52,6 +53,11 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
     _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
     _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
+    _shader_code               = "";
+    _depends_on_time           = false;
+    _depends_on_audio_volume   = false;
+    _depends_on_audio_waveform = false;
+    _depends_on_audio_spectrum = false;
 
     if (!_nodes_editor.graph().try_get_node<Node>(_main_node_id))
         return; // Otherwise we will get a default UV image instead of a transparent image.
@@ -71,12 +77,11 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
 
     _shader_code = *shader_code;
 
-    const auto maybe_err = _shader.compile(
-        _shader_code,
-        update_ctx
-    );
+    auto const maybe_err = _shader.compile(_shader_code, update_ctx);
 
     handle_error(maybe_err, for_testing_nodes);
+
+    compute_dependencies();
 }
 
 void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
@@ -98,6 +103,25 @@ void Module_Nodes::handle_error(Cool::OptionalErrorMessage const& maybe_err, boo
     }
 }
 
+static auto contains_two_or_more(std::string_view word, std::string_view text) -> bool
+{
+    auto const pos = Cool::String::find_word(word, text, 0);
+    if (pos == std::string_view::npos)
+        return false;
+
+    auto const pos2 = Cool::String::find_word(word, text, pos + 1);
+    return pos2 != std::string_view::npos;
+}
+
+void Module_Nodes::compute_dependencies()
+{
+    auto const code            = Cool::String::remove_comments(_shader_code);
+    _depends_on_time           = contains_two_or_more("_time", _shader_code);
+    _depends_on_audio_volume   = contains_two_or_more("_audio_volume", _shader_code);
+    _depends_on_audio_waveform = contains_two_or_more("_audio_waveform", _shader_code);
+    _depends_on_audio_spectrum = contains_two_or_more("_audio_spectrum", _shader_code);
+}
+
 auto Module_Nodes::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
 {
     return NodesConfig{
@@ -111,6 +135,7 @@ auto Module_Nodes::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
         _shader.dirty_flag(),
         _regenerate_code_flag,
         _nodes_editor.graph(),
+        ui.audio_manager(),
     };
 }
 
@@ -301,6 +326,12 @@ void Module_Nodes::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
+    if (_depends_on_audio_volume)
+        shader.set_uniform("_audio_volume", in.provider(Cool::Input_Audio{}).volume());
+    if (_depends_on_audio_waveform)
+        shader.set_uniform_texture1D("_audio_waveform", in.provider(Cool::Input_Audio{}).waveform_texture().id());
+    if (_depends_on_audio_spectrum)
+        shader.set_uniform_texture1D("_audio_spectrum", in.provider(Cool::Input_Audio{}).spectrum_texture().id());
 
     shader.set_uniform_texture(
         "_previous_frame_texture",

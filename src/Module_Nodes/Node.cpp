@@ -1,5 +1,6 @@
 #include "Node.h"
 #include <stdexcept>
+#include "Cool/String/String.h"
 #include "Module_Nodes/PrimitiveType.h"
 
 namespace Lab {
@@ -7,6 +8,11 @@ namespace Lab {
 auto to_string(Node const& node) -> std::string
 {
     return !node.name().empty() ? node.name() : node.definition_name();
+}
+
+auto Node::is_audio_node() const -> bool
+{
+    return Cool::String::contains(_id_names.definition_name, "Audio");
 }
 
 } // namespace Lab
