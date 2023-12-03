@@ -1,5 +1,6 @@
 #include "ModulesGraph.h"
 #include <Module_Particles/Module_Particles.h>
+#include "Cool/Gpu/RenderTarget.h"
 #include "UI/imgui_show.h"
 
 namespace Lab {
@@ -12,7 +13,33 @@ ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 {
 }
 
-void ModulesGraph::render(Module::RenderParams in, UpdateContext_Ref update_ctx)
+void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
+{
+    // if (render_target.needs_resizing())
+    //     trigger_rerender_all(); // TODO(Modules)
+
+    _particles_render_target.set_size(render_target.desired_size());
+    _particles_render_target.render([&]() {
+        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        // _particles_module.render();
+        _particles_module.do_rendering(in, update_ctx); // TODO(Modules)
+    });
+    render_compositing_module(render_target, in, update_ctx);
+}
+
+void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx)
+{
+    render_target.render([&]() {
+        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        some_module.do_rendering(params, update_ctx);
+    });
+    if (DebugOptions::log_when_rendering())
+        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
+}
+
+void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
     if (in.is_dirty(_regenerate_code_flag))
     {
@@ -21,8 +48,12 @@ void ModulesGraph::render(Module::RenderParams in, UpdateContext_Ref update_ctx)
         _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
         in.set_clean(_regenerate_code_flag);
     }
-    _particles_module.do_rendering(in, update_ctx);
-    _compositing_module.do_rendering(in, update_ctx);
+
+    if (!_compositing_module.is_dirty(in.is_dirty))
+        return;
+
+    // render_target.set_size(size); // TODO(Modules)
+    render_one_module(_compositing_module, render_target, in, update_ctx);
 }
 
 void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)

@@ -13,6 +13,7 @@
 #include <Cool/Variables/TestVariables.h>
 #include <Cool/Webcam/TextureLibrary_FromWebcam.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <ModulesGraph/ModulesGraph.h>
 #include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
@@ -236,7 +237,7 @@ auto App::render_view() -> Cool::RenderView&
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = render_view().render_target(),
+        .render_target = render_view().render_target(), // TODO(Modules) Each module should have its own render target that it renders on. The views shouldn't have a render target, but receive the one of the top-most module by reference.
         .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
             render(render_target, time);
         }
@@ -261,40 +262,6 @@ static void imgui_window_console()
 #endif
 }
 
-void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
-{
-    render_target.render([&]() {
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        some_module.do_rendering(
-            Module::RenderParams{
-                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _project.camera2D.value().transform_matrix()),
-                input_factory(),
-                is_dirty__functor(),
-                set_clean__functor(),
-                _project.variable_registries,
-                render_target.desired_size(),
-            },
-            update_context()
-        );
-    });
-    if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
-}
-
-void App::render_compositing_module(Cool::RenderTarget& render_target, float time, img::Size size)
-{
-    if (render_target.needs_resizing())
-        trigger_rerender();
-
-    if (!_project.modules_graph->compositing_module().is_dirty(is_dirty__functor()))
-        return;
-
-    render_target.set_size(size);
-    render_one_module(_project.modules_graph->compositing_module(), render_target, time);
-}
-
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
 // {
 // _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target().get().texture_id());
@@ -303,13 +270,19 @@ void App::render_compositing_module(Cool::RenderTarget& render_target, float tim
 
 void App::render(Cool::RenderTarget& render_target, float time)
 {
-    _particles_render_target.set_size(render_target.desired_size());
-    _particles_render_target.render([&]() {
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        _project.modules_graph->particles_module().render();
-    });
-    render_compositing_module(render_view().render_target(), time, render_target.desired_size());
+    auto const aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
+    _project.modules_graph->render(
+        render_target,
+        Module::RenderParams{
+            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _project.camera2D.value().transform_matrix()),
+            input_factory(),
+            is_dirty__functor(),
+            set_clean__functor(),
+            _project.variable_registries,
+            render_target.desired_size(),
+        },
+        update_context()
+    );
 }
 
 void App::imgui_commands_and_registries_debug_windows()

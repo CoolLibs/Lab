@@ -13,7 +13,7 @@ public:
     ModulesGraph() = default;
     ModulesGraph(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
-    void render(Module::RenderParams params, UpdateContext_Ref update_ctx);
+    void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref);
     void trigger_rerender_all(Cool::SetDirty_Ref);
 
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
@@ -29,13 +29,17 @@ public:
     auto all_inputs() const -> Cool::AllInputRefsToConst;
     auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool;
 
-    auto compositing_module() const -> Module_Compositing const& { return _compositing_module; }
-    auto compositing_module() -> Module_Compositing& { return _compositing_module; }
-    auto particles_module() const -> Module_Particles const& { return _particles_module; }
-    auto particles_module() -> Module_Particles& { return _particles_module; }
+    auto compositing_module() const -> Module_Compositing const& { return _compositing_module; } // TODO(Modules) Remove
+    auto compositing_module() -> Module_Compositing& { return _compositing_module; }             // TODO(Modules) Remove
+    auto particles_module() const -> Module_Particles const& { return _particles_module; }       // TODO(Modules) Remove
+    auto particles_module() -> Module_Particles& { return _particles_module; }                   // TODO(Modules) Remove
+    auto particles_render_target() -> auto& { return _particles_render_target; }                 // TODO(Modules) Remove
+    auto particles_render_target() const -> auto const& { return _particles_render_target; }     // TODO(Modules) Remove
 
 private:
     void recreate_modules_graph();
+    void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params, UpdateContext_Ref update_ctx);
+    void render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx);
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
@@ -46,6 +50,7 @@ private:
 
     Module_Compositing _compositing_module{};
     Module_Particles   _particles_module{}; // TODO(Modules) Only create one (or several) when the nodes graph needs them.
+    Cool::RenderTarget _particles_render_target{};
 
 private:
     // Serialization

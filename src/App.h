@@ -60,8 +60,6 @@ public:
 
 private:
     void render(Cool::RenderTarget& render_target, float time);
-    void render_one_module(Module&, Cool::RenderTarget&, float time);
-    void render_compositing_module(Cool::RenderTarget& render_target, float time, img::Size size);
 
     auto render_view() -> Cool::RenderView&;
 
@@ -80,7 +78,7 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D, _project.audio, _particles_render_target.get().texture_id()}; }
+    auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D, _project.audio, _project.modules_graph->particles_render_target().get().texture_id()}; }
     auto input_factory                              () { return _project.input_factory(); }
     auto ui                                         () { return Ui_Ref{_project.variable_registries, command_executor(), set_dirty_flag(), input_factory(), _project.audio}; }
     auto dirty_flag_factory                         () { return _project.dirty_flag_factory(); }
@@ -127,8 +125,6 @@ private:
     NodesLibraryManager                  _nodes_library_manager{};
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
-
-    Cool::RenderTarget _particles_render_target{};
 
 private:
     // Serialization
