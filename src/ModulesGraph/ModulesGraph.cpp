@@ -49,8 +49,7 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
         _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
         in.set_clean(_regenerate_code_flag);
     }
-
-    if (!_compositing_module.is_dirty(in.is_dirty))
+    else if (!_compositing_module.is_dirty(in.is_dirty))
         return;
 
     // render_target.set_size(size); // TODO(Modules)
