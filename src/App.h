@@ -59,7 +59,7 @@ public:
     void open_video_exporter();
 
 private:
-    void render(Cool::RenderTarget& render_target, float time);
+    void render(Cool::RenderTarget& render_target, float time, float delta_time);
 
     auto render_view() -> Cool::RenderView&;
 
@@ -78,14 +78,14 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D, _project.audio}; }
+    auto input_provider                             (float render_target_aspect_ratio, float height, float time, float delta_time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, delta_time, cam2D, _project.audio}; }
     auto input_factory                              () { return _project.input_factory(); }
     auto ui                                         () { return Ui_Ref{_project.variable_registries, command_executor(), set_dirty_flag(), input_factory(), _project.audio}; }
     auto dirty_flag_factory                         () { return _project.dirty_flag_factory(); }
     auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_project.dirty_registry}; }
     auto set_clean__functor                         () { return Cool::SetClean_Ref{_project.dirty_registry}; }
     auto set_dirty__functor                         () { return Cool::SetDirty_Ref{_project.dirty_registry}; }
-    auto update_context                             () { return UpdateContext_Ref{{set_clean__functor(), set_dirty__functor(), input_provider(0.f, 0.f, -100000.f, _project.camera2D.value().transform_matrix() /* HACK: Dummy values, they should not be needed. Currently this is only used by shader code generation to inject of very specific types like Gradient */), ui(), _nodes_library_manager.library()}}; }
+    auto update_context                             () { return UpdateContext_Ref{{set_clean__functor(), set_dirty__functor(), input_provider(0.f, 0.f, -100000.f, 0.f, _project.camera2D.value().transform_matrix() /* HACK: Dummy values, they should not be needed. Currently this is only used by shader code generation to inject of very specific types like Gradient */), ui(), _nodes_library_manager.library()}}; }
     // clang-format on
 
     Cool::Polaroid polaroid();

@@ -159,7 +159,7 @@ void App::update()
     {
         _project.clock.update();
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_project.clock.time());
+        polaroid().render(_project.clock.time(), _project.clock.delta_time());
     }
     else
     {
@@ -238,8 +238,8 @@ Cool::Polaroid App::polaroid()
 {
     return {
         .render_target = render_view().render_target(), // TODO(Modules) Each module should have its own render target that it renders on. The views shouldn't have a render target, but receive the one of the top-most module by reference.
-        .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
-            render(render_target, time);
+        .render_fn     = [this](Cool::RenderTarget& render_target, float time, float delta_time) {
+            render(render_target, time, delta_time);
         }
     };
 }
@@ -268,13 +268,13 @@ static void imgui_window_console()
 // render_one_module(*_custom_shader_module, render_target, time);
 // }
 
-void App::render(Cool::RenderTarget& render_target, float time)
+void App::render(Cool::RenderTarget& render_target, float time, float delta_time)
 {
     auto const aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
     _project.modules_graph->render(
         render_target,
         Module::RenderParams{
-            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _project.camera2D.value().transform_matrix()),
+            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, delta_time, _project.camera2D.value().transform_matrix()),
             input_factory(),
             is_dirty__functor(),
             set_clean__functor(),
@@ -444,7 +444,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_project.clock.time(), size);
+        the_polaroid.render(_project.clock.time(), _project.clock.delta_time(), size);
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });

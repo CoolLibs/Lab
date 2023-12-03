@@ -1,3 +1,5 @@
+uniform float _delta_time;
+
 layout(std430, binding = 0) buffer _positions_buffer
 {
     float _positions[];
@@ -6,7 +8,9 @@ layout(std430, binding = 0) buffer _positions_buffer
 void cool_main()
 {
     uint gid = gl_GlobalInvocationID.x;
-    _positions[gid * 2] += 0.001;
+    _positions[gid * 2] += 0.1 * _delta_time;
     if (_positions[gid * 2] > 1.)
-        _positions[gid * 2] = -1.;
+        _positions[gid * 2] -= 2.;
+    if (_positions[gid * 2] < -1.)
+        _positions[gid * 2] += 2.;
 }
