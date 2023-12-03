@@ -25,7 +25,6 @@
 #include "Cool/String/String.h"
 #include "Cool/Variables/Variable.h"
 #include "Debug/DebugOptions.h"
-#include "Dependencies/Module.h"
 #include "NodeDefinition.h"
 #include "NodesCategoryConfig.h"
 #include "NodesConfig.h"

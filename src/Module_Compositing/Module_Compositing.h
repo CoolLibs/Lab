@@ -8,7 +8,7 @@
 #include "Cool/Nodes/NodesFolderWatcher.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Path/Path.h"
-#include "Dependencies/Module.h"
+#include "Module/Module.h"
 #include "NodesConfig.h"
 
 namespace Lab {
@@ -37,10 +37,8 @@ public:
     [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }
     [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on_audio_volume || _depends_on_audio_waveform || _depends_on_audio_spectrum; }
 
-protected:
-    void render(RenderParams, UpdateContext_Ref) override;
-
 private:
+    void render(RenderParams, UpdateContext_Ref) override;
     void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes) const;
     auto nodes_config(Ui_Ref ui) const -> NodesConfig;
     void render_impl(RenderParams, UpdateContext_Ref);

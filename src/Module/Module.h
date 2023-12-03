@@ -8,8 +8,8 @@
 #include <stringify/stringify.hpp>
 #include "Cool/View/GizmoManager.h"
 #include "Dependencies/History.h"
-#include "Ui.h"
-#include "UpdateContext_Ref.h"
+#include "Dependencies/Ui.h"
+#include "Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {
 
@@ -29,12 +29,11 @@ public:
         img::Size                                        render_target_size;
     };
 
-    Module() = default;
-
-    Module(const Module&)                    = delete;
-    auto operator=(const Module&) -> Module& = delete;
-    Module(Module&&)                         = delete;
-    auto operator=(Module&&) -> Module&      = delete;
+    Module()                                     = default;
+    Module(Module const&)                        = delete;
+    auto operator=(Module const&) -> Module&     = delete;
+    Module(Module&&) noexcept                    = delete;
+    auto operator=(Module&&) noexcept -> Module& = delete;
 
     Module(std::string_view name, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
         : _name{name}
