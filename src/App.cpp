@@ -98,14 +98,14 @@ void App::on_shutdown()
 
 void App::compile_all_is0_nodes()
 {
-    // for (const auto& node_template : _project.compositing_module->nodes_templates())
+    // for (const auto& node_template : _project.nodes_graph->compositing_module().nodes_templates())
     // {
-    //     _project.compositing_module->remove_all_nodes();
+    //     _project.nodes_graph->compositing_module().remove_all_nodes();
     //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
-    //     _project.compositing_module->add_node(NodeFactoryU::node_from_template(node_template));
-    //     _project.compositing_module->recompile(update_context(), true);
+    //     _project.nodes_graph->compositing_module().add_node(NodeFactoryU::node_from_template(node_template));
+    //     _project.nodes_graph->compositing_module().recompile(update_context(), true);
     // }
-    // _project.compositing_module->remove_all_nodes();
+    // _project.nodes_graph->compositing_module().remove_all_nodes();
 }
 
 void App::set_everybody_dirty()
@@ -142,14 +142,14 @@ void App::update()
         _project.exporter.is_exporting() /* force_sync_time */
     );
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
-        if (_project.compositing_module->depends_on_audio())
+        if (_project.nodes_graph->compositing_module().depends_on_audio())
             trigger_rerender();
     });
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(update_context(), _project.compositing_module->regenerate_code_flag(), _project.compositing_module->graph(), _project.compositing_module->nodes_config(ui(), _nodes_library_manager.library()));
-        _project.compositing_module->update(update_context());
+        _nodes_library_manager.update(update_context(), _project.nodes_graph->regenerate_code_flag(), _project.nodes_graph->graph(), _project.nodes_graph->nodes_config(ui(), _nodes_library_manager.library()));
+        _project.nodes_graph->compositing_module().update(update_context());
         // _custom_shader_module->update(update_context());
         check_inputs();
     }
@@ -169,9 +169,9 @@ void App::update()
     if (_last_time != _project.clock.time())
     {
         _last_time = _project.clock.time();
-        _particle_system.update();
-        if (_project.compositing_module->depends_on_time()
-            || _project.compositing_module->depends_on_particles())
+        _project.nodes_graph->update_particles(update_context());
+        if (_project.nodes_graph->compositing_module().depends_on_time()
+            || _project.nodes_graph->compositing_module().depends_on_particles())
         {
             trigger_rerender();
         }
@@ -211,13 +211,13 @@ void App::update()
 
 void App::trigger_rerender()
 {
-    set_dirty_flag()(_project.compositing_module->dirty_flag());
+    set_dirty_flag()(_project.nodes_graph->compositing_module().dirty_flag());
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
 {
     // auto vec  = _custom_shader_module->all_inputs();
-    auto vec2 = _project.compositing_module->all_inputs();
+    auto vec2 = _project.nodes_graph->all_inputs();
     // for (const auto& x : vec2)
     // {
     //     vec.push_back(x);
@@ -288,11 +288,11 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
     if (render_target.needs_resizing())
         trigger_rerender();
 
-    if (!_project.compositing_module->is_dirty(is_dirty__functor()))
+    if (!_project.nodes_graph->compositing_module().is_dirty(is_dirty__functor()))
         return;
 
     render_target.set_size(size);
-    render_one_module(*_project.compositing_module, render_target, time);
+    render_one_module(_project.nodes_graph->compositing_module(), render_target, time);
 }
 
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
@@ -307,7 +307,7 @@ void App::render(Cool::RenderTarget& render_target, float time)
     _particles_render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        _particle_system.render();
+        _project.nodes_graph->particles_module().render();
     });
     render_nodes(render_view().render_target(), time, render_target.desired_size());
 }
@@ -370,7 +370,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.compositing_module->submit_gizmos(_preview_view.gizmos_manager(), update_context());
+    _project.nodes_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context());
     _output_view.imgui_window({
         .on_open  = [&]() { trigger_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { trigger_rerender(); }, // as our render target, we need to rerender.
@@ -450,7 +450,6 @@ void App::imgui_windows()
 void App::imgui_windows_only_when_inputs_are_allowed()
 {
     const auto the_ui = ui();
-    // _custom_shader_module->imgui_windows(the_ui);
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
     Cool::ClockU::imgui_timeline(_project.clock);
@@ -468,7 +467,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.compositing_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
+    _project.nodes_graph->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
@@ -492,14 +491,14 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
     if (DebugOptions::show_nodes_and_links_registries())
     {
-        _project.compositing_module->debug_show_nodes_and_links_registries_windows(ui());
+        _project.nodes_graph->debug_show_nodes_and_links_registries_windows(ui());
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {
         Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
     });
     Cool::DebugOptions::particles_debug_menu_window([&] {
-        _particle_system.imgui_debug_menu();
+        _project.nodes_graph->particles_module().imgui_debug_menu();
     });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {

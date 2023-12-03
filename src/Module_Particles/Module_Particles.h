@@ -8,12 +8,18 @@ class Module_Particles : public Module {
 public:
     Module_Particles() = default;
     explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
+    Module_Particles(Module_Particles const&)                        = default;
+    auto operator=(Module_Particles const&) -> Module_Particles&     = default;
+    Module_Particles(Module_Particles&&) noexcept                    = default;
+    auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
 
     void update(UpdateContext_Ref) override;
+    void update_particles(UpdateContext_Ref);
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
-    void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref) override;
-    auto all_inputs() const -> Cool::AllInputRefsToConst override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
+
+    void render() { _particle_system.render(); }
+    void imgui_debug_menu() { _particle_system.imgui_debug_menu(); }
 
 private:
     void render(RenderParams, UpdateContext_Ref) override;

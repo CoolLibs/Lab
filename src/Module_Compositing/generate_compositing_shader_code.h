@@ -1,15 +1,14 @@
 #pragma once
-
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
-#include <Cool/Nodes/Graph.h>
+#include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Dependencies/InputProvider_Ref.h"
-#include "NodeDefinition.h"
+#include "NodesGraph/NodeDefinition.h"
 
 namespace Lab {
 
-auto generate_shader_code(
-    Cool::NodeId const& main_node_id,
-    Cool::Graph const&,
+auto generate_compositing_shader_code(
+    Cool::NodesGraph const&,
+    Cool::NodeId const& root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>,
     Cool::InputProvider_Ref
 ) -> tl::expected<std::string, std::string>;

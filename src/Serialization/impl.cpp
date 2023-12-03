@@ -4,13 +4,10 @@
 /// compilation by A LOT. So we want to avoid recompiling
 /// this file as much as possible.
 ///
-
 #include <cereal/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
-#include "Module_Compositing/Module_Compositing.h"
 #include "SNodesCategoryConfig.h"
 #include "SProject.h"
-
 //
 #include "cereal/archives/json.hpp"
 

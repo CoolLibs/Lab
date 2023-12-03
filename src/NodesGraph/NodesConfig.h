@@ -1,8 +1,7 @@
 #pragma once
-
 #include <Cool/Dependencies/InputFactory_Ref.h>
-#include <Cool/Nodes/Graph.h>
 #include <Cool/Nodes/NodeId.h>
+#include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
@@ -12,7 +11,6 @@
 #include "Dependencies/Ui.h"
 #include "Node.h"
 #include "NodeDefinition.h"
-
 
 namespace Lab {
 
@@ -28,7 +26,7 @@ public:
         Cool::NodeId&                                      node_we_might_want_to_restore_as_main_node_id,
         Cool::DirtyFlag const&                             rerender_flag,
         Cool::DirtyFlag const&                             regenerate_code_flag,
-        Cool::Graph const&                                 graph,
+        Cool::NodesGraph const&                            graph,
         Cool::AudioManager&                                audio_manager
     )
         : _input_factory{input_factory}
@@ -55,7 +53,7 @@ public:
     void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     void               on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
     auto               make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
-    void               update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::Graph&);
+    void               update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
     static void        widget_to_rename_node(Cool::Node&);
 
 private:
@@ -72,7 +70,7 @@ private:
     Cool::NodeId&                                      _node_we_might_want_to_restore_as_main_node_id;
     Cool::DirtyFlag                                    _rerender_flag;
     Cool::DirtyFlag                                    _regenerate_code_flag;
-    Cool::Graph const&                                 _graph;
+    Cool::NodesGraph const&                            _graph;
     Cool::AudioManager&                                _audio_manager;
 };
 

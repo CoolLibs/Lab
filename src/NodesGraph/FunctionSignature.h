@@ -1,6 +1,4 @@
 #pragma once
-
-#include "Module_Compositing/PrimitiveType.h"
 #include "PrimitiveType.h"
 
 namespace Lab {

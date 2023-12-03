@@ -1,8 +1,9 @@
 #pragma once
 #include <Cool/Dependencies/InputDefinition.h>
 #include <Cool/StrongTypes/Color.h>
-#include <Module_Compositing/PrimitiveType.h>
 #include "FunctionSignature.h"
+#include "PrimitiveType.h"
+
 
 namespace Lab {
 

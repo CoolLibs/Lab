@@ -1,12 +1,10 @@
-#include "generate_shader_code.h"
-#include <string>
-#include "CodeGen.h"
+#include "generate_compositing_shader_code.h"
 #include "Cool/String/String.h"
-#include "PrimitiveType.h"
+#include "NodesGraph/CodeGen.h"
 
 namespace Lab {
 
-static auto gen_all_output_indices_declarations(Cool::Graph const& graph)
+static auto gen_all_output_indices_declarations(Cool::NodesGraph const& graph)
     -> std::string
 {
     std::stringstream res{};
@@ -35,9 +33,9 @@ static auto inject_context_argument_in_all_functions(std::string code, std::vect
     return code;
 }
 
-auto generate_shader_code(
-    Cool::NodeId const&                         main_node_id,
-    Cool::Graph const&                          graph,
+auto generate_compositing_shader_code(
+    Cool::NodesGraph const&                     graph,
+    Cool::NodeId const&                         root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Cool::InputProvider_Ref                     input_provider
 )
@@ -50,7 +48,7 @@ auto generate_shader_code(
             .to    = PrimitiveType::sRGB_StraightA, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
             .arity = 1,
         },
-        main_node_id,
+        root_node_id,
         context
     );
     if (!main_function_name)

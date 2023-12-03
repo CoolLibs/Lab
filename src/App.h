@@ -14,7 +14,7 @@
 #include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
-#include <Module_Compositing/NodesLibraryManager.h>
+#include <NodesGraph/NodesLibraryManager.h>
 #include <ProjectManager/Command_SaveProject.h>
 #include <ProjectManager/RecentlyOpened.h>
 #include <reg/cereal.hpp>
@@ -33,9 +33,6 @@
 #include "Dependencies/History.h"
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Gallery/GalleryPoster.h"
-#include "Module/Module.h"
-#include "Module_Compositing/Module_Compositing.h"
-#include "Module_Particles/ParticleSystem.h"
 #include "Project.h"
 
 namespace Lab {
@@ -83,7 +80,7 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D, _project.audio,   _particles_render_target.get().texture_id()}; }
+    auto input_provider                             (float render_target_aspect_ratio,float height, float time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, cam2D, _project.audio, _particles_render_target.get().texture_id()}; }
     auto input_factory                              () { return _project.input_factory(); }
     auto ui                                         () { return Ui_Ref{_project.variable_registries, command_executor(), set_dirty_flag(), input_factory(), _project.audio}; }
     auto dirty_flag_factory                         () { return _project.dirty_flag_factory(); }
@@ -131,7 +128,6 @@ private:
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
 
-    ParticleSystem     _particle_system{};
     Cool::RenderTarget _particles_render_target{};
 
 private:

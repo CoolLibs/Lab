@@ -1,7 +1,7 @@
 #pragma once
 #include <filesystem>
 #include "Cool/Log/OptionalErrorMessage.h"
-#include "Module_Compositing/NodesCategoryConfig.h"
+#include "NodesGraph/NodesCategoryConfig.h"
 
 namespace Lab {
 

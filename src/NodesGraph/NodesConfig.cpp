@@ -123,7 +123,7 @@ void NodesConfig::imgui_below_node_pins(Cool::Node& /* abstract_node */, Cool::N
 {
 }
 
-static auto value_input_is_connected_to_a_node(size_t value_input_index, Node const& node, Cool::Graph const& graph) -> bool
+static auto value_input_is_connected_to_a_node(size_t value_input_index, Node const& node, Cool::NodesGraph const& graph) -> bool
 {
     auto const  input_pin     = node.pin_of_value_input(value_input_index); // NOLINT(performance-unnecessary-copy-initialization)
     auto const  input_node_id = graph.find_node_connected_to_input_pin(input_pin.id());
@@ -421,7 +421,7 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
     }
 }
 
-void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::Graph& graph)
+void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::NodesGraph& graph)
 {
     auto& out_node = abstract_out_node.downcast<Node>();
     auto  node     = make_node({definition, out_node.category_name()});
