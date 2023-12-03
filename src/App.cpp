@@ -40,7 +40,6 @@
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
-#include "Module_is0/Module_is0.h"
 #include "ProjectManager/Command_NewProject.h"
 #include "ProjectManager/Command_OpenBackupProject.h"
 #include "Tips/Tips.h"
@@ -57,7 +56,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
           .is_closable = true,
           .start_open  = false,
       })}
-    , _nodes_view{views.make_view<Cool::ForwardingOrRenderView>(
+    , _preview_view{views.make_view<Cool::ForwardingOrRenderView>(
           _output_view,
           Cool::ViewCreationParams{
               .name        = Cool::icon_fmt("View", ICOMOON_IMAGE),
@@ -69,12 +68,12 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
 
-    _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.hook_events(_preview_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
     Cool::midi_manager().set_additional_midi_callback([&]() {
         trigger_rerender();
     });
     hook_camera2D_events(
-        _nodes_view.mouse_events(),
+        _preview_view.mouse_events(),
         _project.camera2D.value(),
         [this]() { trigger_rerender(); },
         [this]() { return !_project.is_camera_2D_editable_in_view; }
@@ -99,14 +98,14 @@ void App::on_shutdown()
 
 void App::compile_all_is0_nodes()
 {
-    // for (const auto& node_template : _project.nodes_module->nodes_templates())
+    // for (const auto& node_template : _project.compositing_module->nodes_templates())
     // {
-    //     _project.nodes_module->remove_all_nodes();
+    //     _project.compositing_module->remove_all_nodes();
     //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
-    //     _project.nodes_module->add_node(NodeFactoryU::node_from_template(node_template));
-    //     _project.nodes_module->recompile(update_context(), true);
+    //     _project.compositing_module->add_node(NodeFactoryU::node_from_template(node_template));
+    //     _project.compositing_module->recompile(update_context(), true);
     // }
-    // _project.nodes_module->remove_all_nodes();
+    // _project.compositing_module->remove_all_nodes();
 }
 
 void App::set_everybody_dirty()
@@ -143,14 +142,14 @@ void App::update()
         _project.exporter.is_exporting() /* force_sync_time */
     );
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
-        if (_project.nodes_module->depends_on_audio())
+        if (_project.compositing_module->depends_on_audio())
             trigger_rerender();
     });
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(update_context(), _project.nodes_module->regenerate_code_flag(), _project.nodes_module->graph(), _project.nodes_module->nodes_config(ui(), _nodes_library_manager.library()));
-        _project.nodes_module->update(update_context());
+        _nodes_library_manager.update(update_context(), _project.compositing_module->regenerate_code_flag(), _project.compositing_module->graph(), _project.compositing_module->nodes_config(ui(), _nodes_library_manager.library()));
+        _project.compositing_module->update(update_context());
         // _custom_shader_module->update(update_context());
         check_inputs();
     }
@@ -171,8 +170,8 @@ void App::update()
     {
         _last_time = _project.clock.time();
         _particle_system.update();
-        if (_project.nodes_module->depends_on_time()
-            || _project.nodes_module->depends_on_particles())
+        if (_project.compositing_module->depends_on_time()
+            || _project.compositing_module->depends_on_particles())
         {
             trigger_rerender();
         }
@@ -212,13 +211,13 @@ void App::update()
 
 void App::trigger_rerender()
 {
-    set_dirty_flag()(_project.nodes_module->dirty_flag());
+    set_dirty_flag()(_project.compositing_module->dirty_flag());
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
 {
     // auto vec  = _custom_shader_module->all_inputs();
-    auto vec2 = _project.nodes_module->all_inputs();
+    auto vec2 = _project.compositing_module->all_inputs();
     // for (const auto& x : vec2)
     // {
     //     vec.push_back(x);
@@ -231,7 +230,7 @@ auto App::render_view() -> Cool::RenderView&
 {
     if (_output_view.is_open())
         return _output_view;
-    return _nodes_view;
+    return _preview_view;
 }
 
 Cool::Polaroid App::polaroid()
@@ -289,11 +288,11 @@ void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size 
     if (render_target.needs_resizing())
         trigger_rerender();
 
-    if (!_project.nodes_module->is_dirty(is_dirty__functor()))
+    if (!_project.compositing_module->is_dirty(is_dirty__functor()))
         return;
 
     render_target.set_size(size);
-    render_one_module(*_project.nodes_module, render_target, time);
+    render_one_module(*_project.compositing_module, render_target, time);
 }
 
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
@@ -371,19 +370,19 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
+    _project.compositing_module->submit_gizmos(_preview_view.gizmos_manager(), update_context());
     _output_view.imgui_window({
         .on_open  = [&]() { trigger_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { trigger_rerender(); }, // as our render target, we need to rerender.
     });
-    _nodes_view.imgui_window({
+    _preview_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
             if (_project.exporter.is_exporting())
                 return false;
             bool b = false;
 
-            bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
+            bool const align_buttons_vertically = _preview_view.has_vertical_margins()
                                                   || (!_project.view_constraint.wants_to_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             int buttons_order{0};
@@ -469,7 +468,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
+    _project.compositing_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
@@ -493,7 +492,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
     if (DebugOptions::show_nodes_and_links_registries())
     {
-        _project.nodes_module->debug_show_nodes_and_links_registries_windows(ui());
+        _project.compositing_module->debug_show_nodes_and_links_registries_windows(ui());
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {

@@ -4,13 +4,13 @@ namespace Lab {
 
 Project::Project()
     : camera_manager{variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
-    , nodes_module{std::make_unique<Module_Nodes>(dirty_flag_factory(), input_factory())}
+    , compositing_module{std::make_unique<Module_Compositing>(dirty_flag_factory(), input_factory())}
 {
 }
 
 auto Project::is_empty() const -> bool
 {
-    return nodes_module->is_empty()
+    return compositing_module->is_empty()
            && history.size() == 0;
 }
 

@@ -7,7 +7,7 @@
 
 #include <cereal/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
-#include "Module_Nodes/Module_Nodes.h"
+#include "Module_Compositing/Module_Compositing.h"
 #include "SNodesCategoryConfig.h"
 #include "SProject.h"
 
@@ -36,4 +36,4 @@ auto do_load(NodesCategoryConfig& config, std::filesystem::path const& path) -> 
 
 } // namespace Lab
 
-CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT
+CEREAL_REGISTER_TYPE(Lab::Module_Compositing); // NOLINT

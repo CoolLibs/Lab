@@ -14,7 +14,7 @@
 #include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
-#include <Module_Nodes/NodesLibraryManager.h>
+#include <Module_Compositing/NodesLibraryManager.h>
 #include <ProjectManager/Command_SaveProject.h>
 #include <ProjectManager/RecentlyOpened.h>
 #include <reg/cereal.hpp>
@@ -34,7 +34,7 @@
 #include "Dependencies/Module.h"
 #include "Dependencies/UpdateContext_Ref.h"
 #include "Gallery/GalleryPoster.h"
-#include "Module_Nodes/Module_Nodes.h"
+#include "Module_Compositing/Module_Compositing.h"
 #include "Module_Particles/ParticleSystem.h"
 #include "Project.h"
 
@@ -118,7 +118,7 @@ private:
 private:
     Cool::Window&                        _main_window;
     Cool::RenderView&                    _output_view;
-    Cool::ForwardingOrRenderView&        _nodes_view; // Must be after _output_view because it stores a reference to it
+    Cool::ForwardingOrRenderView&        _preview_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
     RecentlyOpened                       _recently_opened_projects{};
