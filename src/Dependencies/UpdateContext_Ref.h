@@ -10,6 +10,7 @@ class UpdateContext_Ref {
 public:
     void set_clean(Cool::DirtyFlag const& dirty_flag) { _data.set_clean(dirty_flag); }
     void set_dirty(Cool::DirtyFlag const& dirty_flag) { _data.set_dirty(dirty_flag); }
+    auto dirty_setter() const { return _data.set_dirty; }
     auto input_provider() const { return _data.input_provider; }
     auto ui() const { return _data.ui; }
     auto nodes_library() const -> auto& { return _data.nodes_library.get(); }

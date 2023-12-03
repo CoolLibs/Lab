@@ -15,8 +15,8 @@ ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 
 void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
-    // if (render_target.needs_resizing())
-    //     trigger_rerender_all(); // TODO(Modules)
+    if (render_target.needs_resizing())
+        trigger_rerender_all(update_ctx.dirty_setter());
 
     _particles_render_target.set_size(render_target.desired_size());
     _particles_render_target.render([&]() {
@@ -65,7 +65,6 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
         );
     }
 
-    // render_target.set_size(size); // TODO(Modules)
     render_one_module(_compositing_module, render_target, in, update_ctx);
 }
 
