@@ -9,6 +9,7 @@
 #include "Commands/Command_FinishedEditingVariable.h"
 #include "Commands/Command_SetVariable.h"
 #include "Commands/Command_SetVariableMetadata.h"
+#include "Cool/Audio/AudioManager.h"
 
 namespace Lab {
 
@@ -18,12 +19,14 @@ public:
         Cool::VariableRegistries& registries,
         CommandExecutor           command_executor,
         Cool::SetDirty_Ref        set_dirty,
-        Cool::InputFactory_Ref    input_factory
+        Cool::InputFactory_Ref    input_factory,
+        Cool::AudioManager&       audio_manager
     )
         : _variable_registries{registries}
         , _command_executor{command_executor}
         , _set_dirty{set_dirty}
         , _input_factory{input_factory}
+        , _audio_manager{audio_manager}
     {
     }
 
@@ -74,6 +77,8 @@ public:
 
     auto input_factory() const -> auto { return _input_factory; }
 
+    auto audio_manager() -> Cool::AudioManager& { return _audio_manager; }
+
 private:
     template<typename T>
     void widget(const Cool::VariableId<T>& id, Cool::Variable<T>& variable)
@@ -112,6 +117,7 @@ private:
     CommandExecutor                                  _command_executor;
     Cool::SetDirty_Ref                               _set_dirty;
     Cool::InputFactory_Ref                           _input_factory;
+    Cool::AudioManager&                              _audio_manager;
 };
 
 } // namespace Lab

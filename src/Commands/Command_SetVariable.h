@@ -16,9 +16,10 @@ void set_value_default_impl(CommandExecutionContext_Ref const& ctx, const Cool::
     ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
         if constexpr (std::is_same_v<T, Cool::Gradient>)
         {
-            // Request shader code generation only if the number of marks has changed.
-            use_secondary_flag = variable.value().value.gradient().get_marks().size()
-                                 != value.value.gradient().get_marks().size();
+            // Request shader code generation only if the number of marks has changed, or the wrap mode or interpolation mode has changed.
+            use_secondary_flag = variable.value().value.gradient().get_marks().size() != value.value.gradient().get_marks().size()
+                                 || variable.value().wrap_mode != value.wrap_mode
+                                 || variable.value().value.gradient().interpolation_mode() != value.value.gradient().interpolation_mode();
         }
         variable.value() = value;
     });

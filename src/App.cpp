@@ -17,6 +17,7 @@
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
 #include <Tips/Tips.h>
+#include <chrono>
 #include <cmd/imgui.hpp>
 #include <filesystem>
 #include <reg/src/internal/generate_uuid.hpp>
@@ -134,6 +135,18 @@ void App::update()
 
     Cool::user_settings().color_themes.update();
 
+    _project.audio.set_force_mute(_project.exporter.is_exporting());
+    _project.audio.sync_with_clock(
+        _project.exporter.is_exporting()
+            ? _project.exporter.clock()
+            : _project.clock,
+        _project.exporter.is_exporting() /* force_sync_time */
+    );
+    _project.audio.update(/*on_audio_data_changed = */ [&]() {
+        if (_project.nodes_module->depends_on_audio())
+            trigger_rerender();
+    });
+
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
         _nodes_library_manager.update(update_context(), _project.nodes_module->regenerate_code_flag(), _project.nodes_module->graph(), _project.nodes_module->nodes_config(ui(), _nodes_library_manager.library()));
@@ -157,9 +170,10 @@ void App::update()
     if (_last_time != _project.clock.time())
     {
         _last_time = _project.clock.time();
+        if (_project.nodes_module->depends_on_time())
+            trigger_rerender();
 
         _particle_system.update();
-        trigger_rerender();
     }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {
@@ -444,6 +458,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
     imgui_window_cameras();
     ImGui::End();
+    // Audio
+    _project.audio.imgui_window();
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
     // Midi
@@ -611,6 +627,8 @@ void App::commands_menu()
             Cool::WebcamsConfigs::instance().open_imgui_window();
         if (ImGui::Selectable("Open MIDI config"))
             Cool::midi_manager().open_config_window();
+        if (ImGui::Selectable("Open Audio config"))
+            _project.audio.open_imgui_window();
         if (ImGui::Selectable("Open output window"))
             _output_view.open();
         ImGui::EndMenu();
