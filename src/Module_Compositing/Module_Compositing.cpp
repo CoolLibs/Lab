@@ -217,15 +217,6 @@ void Module_Compositing::render_impl(RenderParams in, UpdateContext_Ref update_c
     if (_depends_on_audio_spectrum)
         shader.set_uniform_texture1D("_audio_spectrum", in.provider(Cool::Input_Audio{}).spectrum_texture().id());
 
-    // TODO(Modules)
-    // shader.set_uniform_texture(
-    //     "_particles_texture",
-    //     in.provider(Cool::Input_ParticlesTextureId{}),
-    //     Cool::TextureSamplerDescriptor{
-    //         .repeat_mode        = Cool::TextureRepeatMode::None,
-    //         .interpolation_mode = glpp::Interpolation::Linear,
-    //     }
-    // );
     shader.set_uniform_texture(
         "_previous_frame_texture",
         _feedback_double_buffer.read_target().get().texture_id(),

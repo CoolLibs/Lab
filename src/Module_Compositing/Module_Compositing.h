@@ -25,6 +25,9 @@ public:
 
     Cool::NodesGraph const* _nodes_graph; // TODO(Modules) Remove
 
+    auto shader_is_valid() const -> bool { return _shader.pipeline().shader().has_value(); } // TODO(Modules) Remove
+    auto shader() -> auto const& { return *_shader.pipeline().shader(); }                    // TODO(Modules) Remove
+
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;

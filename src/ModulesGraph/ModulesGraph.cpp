@@ -52,6 +52,19 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
     else if (!_compositing_module.is_dirty(in.is_dirty))
         return;
 
+    if (_compositing_module.shader_is_valid())
+    {
+        _compositing_module.shader().bind();
+        _compositing_module.shader().set_uniform_texture(
+            "_particles_texture",
+            _particles_render_target.get().texture_id(),
+            Cool::TextureSamplerDescriptor{
+                .repeat_mode        = Cool::TextureRepeatMode::None,
+                .interpolation_mode = glpp::Interpolation::Linear,
+            }
+        );
+    }
+
     // render_target.set_size(size); // TODO(Modules)
     render_one_module(_compositing_module, render_target, in, update_ctx);
 }
