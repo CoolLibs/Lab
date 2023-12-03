@@ -170,10 +170,12 @@ void App::update()
     if (_last_time != _project.clock.time())
     {
         _last_time = _project.clock.time();
-        if (_project.nodes_module->depends_on_time())
-            trigger_rerender();
-
         _particle_system.update();
+        if (_project.nodes_module->depends_on_time()
+            || _project.nodes_module->depends_on_particles())
+        {
+            trigger_rerender();
+        }
     }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {

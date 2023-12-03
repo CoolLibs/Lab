@@ -35,6 +35,7 @@ public:
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
+    [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }
     [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on_audio_volume || _depends_on_audio_waveform || _depends_on_audio_spectrum; }
 
 protected:
@@ -58,6 +59,7 @@ private:
     Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
 
     bool _depends_on_time{false};
+    bool _depends_on_particles{false};
     bool _depends_on_audio_volume{false};
     bool _depends_on_audio_waveform{false};
     bool _depends_on_audio_spectrum{false};

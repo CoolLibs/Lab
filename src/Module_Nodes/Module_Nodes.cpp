@@ -55,6 +55,7 @@ void Module_Nodes::compile(UpdateContext_Ref update_ctx, bool for_testing_nodes)
     _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
     _shader_code               = "";
     _depends_on_time           = false;
+    _depends_on_particles      = false;
     _depends_on_audio_volume   = false;
     _depends_on_audio_waveform = false;
     _depends_on_audio_spectrum = false;
@@ -117,6 +118,7 @@ void Module_Nodes::compute_dependencies()
 {
     auto const code            = Cool::String::remove_comments(_shader_code);
     _depends_on_time           = contains_two_or_more("_time", _shader_code);
+    _depends_on_particles      = contains_two_or_more("_particles_texture", _shader_code);
     _depends_on_audio_volume   = contains_two_or_more("_audio_volume", _shader_code);
     _depends_on_audio_waveform = contains_two_or_more("_audio_waveform", _shader_code);
     _depends_on_audio_spectrum = contains_two_or_more("_audio_spectrum", _shader_code);
