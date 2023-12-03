@@ -1,5 +1,6 @@
 #include "ModulesGraph.h"
 #include <Module_Particles/Module_Particles.h>
+#include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "UI/imgui_show.h"
 
@@ -63,6 +64,7 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
                 .interpolation_mode = glpp::Interpolation::Linear,
             }
         );
+        Cool::CameraShaderU::set_uniform(_compositing_module.shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
     }
 
     render_one_module(_compositing_module, render_target, in, update_ctx);
