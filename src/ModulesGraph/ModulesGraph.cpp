@@ -23,8 +23,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     _particles_render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        // _particles_module.render();
-        _particles_module.do_rendering(in, update_ctx); // TODO(Modules)
+        _particles_module.do_rendering(in, update_ctx);
     });
     render_compositing_module(render_target, in, update_ctx);
 }
