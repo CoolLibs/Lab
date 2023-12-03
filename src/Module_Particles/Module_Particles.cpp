@@ -27,7 +27,7 @@ auto Module_Particles::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 
 void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
-    // TODO(Particles) set the uniforms camera, time, dt, etc
+    // TODO(Modules) set the uniforms camera, time, dt, etc
     _particle_system.render();
 }
 

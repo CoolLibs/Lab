@@ -1,18 +1,18 @@
-#include "NodesGraph.h"
+#include "ModulesGraph.h"
 #include <Module_Particles/Module_Particles.h>
 #include "UI/imgui_show.h"
 
 namespace Lab {
 
-NodesGraph::NodesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
+ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : _compositing_module{dirty_flag_factory, input_factory}
     , _particles_module{dirty_flag_factory, input_factory}
     , _regenerate_code_flag{dirty_flag_factory.make()}
-    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _regenerate_code_flag)} // TODO(Particles) Move this to the project, like the Camera2D // TODO(Particles) Shouldn't pass _regenerate_code_flag
+    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _regenerate_code_flag)} // TODO(Modules) Move this to the project, like the Camera2D // TODO(Modules) Shouldn't pass _regenerate_code_flag
 {
 }
 
-void NodesGraph::render(Module::RenderParams in, UpdateContext_Ref update_ctx)
+void ModulesGraph::render(Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
     if (in.is_dirty(_regenerate_code_flag))
     {
@@ -25,7 +25,13 @@ void NodesGraph::render(Module::RenderParams in, UpdateContext_Ref update_ctx)
     _compositing_module.do_rendering(in, update_ctx);
 }
 
-void NodesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
+void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
+{
+    set_dirty(_compositing_module.dirty_flag());
+    set_dirty(_particles_module.dirty_flag());
+}
+
+void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
@@ -67,7 +73,7 @@ static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Re
     };
 }
 
-void NodesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx)
+void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx)
 {
     _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
         for (auto const& input : node.downcast<Node>().value_inputs())
@@ -80,7 +86,7 @@ void NodesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx
     });
 }
 
-auto NodesGraph::all_inputs() const -> Cool::AllInputRefsToConst
+auto ModulesGraph::all_inputs() const -> Cool::AllInputRefsToConst
 {
     Cool::AllInputRefsToConst inputs;
 
@@ -96,14 +102,14 @@ auto NodesGraph::all_inputs() const -> Cool::AllInputRefsToConst
     return inputs;
 }
 
-auto NodesGraph::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
+auto ModulesGraph::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
     return check_dirty(_regenerate_code_flag)
            || _compositing_module.is_dirty(check_dirty)
            || _particles_module.is_dirty(check_dirty);
 };
 
-auto NodesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
+auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
 {
     return NodesConfig{
         ui.input_factory(),
@@ -113,14 +119,14 @@ auto NodesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) cons
         ui,
         _main_node_id,
         _node_we_might_want_to_restore_as_main_node_id,
-        _compositing_module.shader_dirty_flag(), // TODO(Particles) Need to warn the particles_module too
+        _compositing_module.shader_dirty_flag(), // TODO(Modules) Need to warn the particles_module too
         _regenerate_code_flag,
         _nodes_editor.graph(),
         ui.audio_manager(),
     };
 }
 
-void NodesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const
+void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const
 {
     ui.window({.name = "Nodes Registry"}, [&]() {
         imgui_show(_nodes_editor.graph().nodes());

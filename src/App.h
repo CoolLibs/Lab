@@ -14,7 +14,7 @@
 #include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
-#include <NodesGraph/NodesLibraryManager.h>
+#include <Nodes/NodesLibraryManager.h>
 #include <ProjectManager/Command_SaveProject.h>
 #include <ProjectManager/RecentlyOpened.h>
 #include <reg/cereal.hpp>
@@ -61,7 +61,7 @@ public:
 private:
     void render(Cool::RenderTarget& render_target, float time);
     void render_one_module(Module&, Cool::RenderTarget&, float time);
-    void render_nodes(Cool::RenderTarget& render_target, float time, img::Size size);
+    void render_compositing_module(Cool::RenderTarget& render_target, float time, img::Size size);
 
     auto render_view() -> Cool::RenderView&;
 

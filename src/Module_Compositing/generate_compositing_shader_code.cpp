@@ -1,6 +1,6 @@
 #include "generate_compositing_shader_code.h"
 #include "Cool/String/String.h"
-#include "NodesGraph/CodeGen.h"
+#include "Nodes/CodeGen.h"
 
 namespace Lab {
 

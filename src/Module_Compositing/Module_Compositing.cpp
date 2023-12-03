@@ -2,8 +2,8 @@
 #include <Common/make_shader_compilation_error_message.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/String/String.h>
-#include <NodesGraph/Node.h>
-#include <NodesGraph/NodeDefinition.h>
+#include <Nodes/Node.h>
+#include <Nodes/NodeDefinition.h>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
@@ -233,9 +233,9 @@ void Module_Compositing::render_impl(RenderParams in, UpdateContext_Ref update_c
             .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
         }
     );
-    // Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{})); // TODO(Particles)
+    // Cool::CameraShaderU::set_uniform(shader, in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{})); // TODO(Modules)
 
-    // TODO(Particles) Reintroduce this:
+    // TODO(Modules) Reintroduce this:
     // _nodes_editor.graph().for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work.
     //     for (auto const& value_input : node.value_inputs())
     //     {

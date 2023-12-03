@@ -2,7 +2,7 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Dependencies/InputProvider_Ref.h"
-#include "NodesGraph/NodeDefinition.h"
+#include "Nodes/NodeDefinition.h"
 
 namespace Lab {
 

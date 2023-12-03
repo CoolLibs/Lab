@@ -2,22 +2,23 @@
 #include "Cool/View/GizmoManager.h"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Particles/Module_Particles.h"
-#include "NodesConfig.h"
+#include "Nodes/NodesConfig.h"
 
 namespace Lab {
 
 /// The main class containing all the nodes of the project.
 /// It is responsible for spawning the various modules as required by the nodes, and knowing the dependencies between them.
-class NodesGraph { // TODO(Particles) Should it be called ModuleGraph? If it stores the dependency graph between modules
+class ModulesGraph {
 public:
-    NodesGraph() = default;
-    NodesGraph(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
+    ModulesGraph() = default;
+    ModulesGraph(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
     void render(Module::RenderParams params, UpdateContext_Ref update_ctx);
+    void trigger_rerender_all(Cool::SetDirty_Ref);
 
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
-    auto               graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }               // TODO(Particles) Is this needed?
-    auto               regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; } // TODO(Particles) Is this needed?
+    auto               graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }               // TODO(Modules) Is this needed?
+    auto               regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; } // TODO(Modules) Is this needed?
     auto               nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     void               update_particles(UpdateContext_Ref update_ctx) { _particles_module.update_particles(update_ctx); }
@@ -38,13 +39,13 @@ private:
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
-    mutable Cool::NodeId      _main_node_id{}; // TODO(Particles) Rename as _root_node_id? Or _output_node_id?
+    mutable Cool::NodeId      _main_node_id{}; // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
     mutable Cool::NodeId      _node_we_might_want_to_restore_as_main_node_id{};
-    Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Particles) Rename as graph_has_changed_flag
-    Cool::Input<Cool::Camera> _camera_input{};         // TODO(Particles) Does it belong here?
+    Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
+    Cool::Input<Cool::Camera> _camera_input{};         // TODO(Modules) Does it belong here?
 
     Module_Compositing _compositing_module{};
-    Module_Particles   _particles_module{}; // TODO(Particles) Only create one (or several) when the nodes graph needs them.
+    Module_Particles   _particles_module{}; // TODO(Modules) Only create one (or several) when the nodes graph needs them.
 
 private:
     // Serialization
