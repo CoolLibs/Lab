@@ -23,12 +23,11 @@ float disk_sdf(vec2 position)
 
 vec2 disk_gradient(vec2 p)
 {
-    float h =0.001;
+    float h = 0.001;
     return vec2(
-        disk_sdf(p-vec2(h,0)) + disk_sdf(p+vec2(h,0)),
-        disk_sdf(p-vec2(0,h)) + disk_sdf(p+vec2(0,h))
+        disk_sdf(p-vec2(h,0)) - disk_sdf(p+vec2(h,0)),
+        disk_sdf(p-vec2(0,h)) - disk_sdf(p+vec2(0,h))
     ) / (2. * h);
-
 }
 
 void move_right(inout Particle particle)
@@ -49,6 +48,23 @@ void gravity(inout Particle particle)
     particle.acceleration.y -= 1;
 }
 
+void attractor_disk(inout Particle particle)
+{
+    float force = 1.;
+    if(disk_sdf(particle.position) < 0) {
+        force *= -1.;
+    }
+    particle.acceleration += disk_gradient(particle.position) * force;
+}
+
+void drag(inout Particle particle)
+{
+    float velocity_amplitude = length(particle.velocity);
+    vec2 velocity_direction = normalize(particle.velocity);
+    if(velocity_amplitude == 0) return;
+    particle.acceleration -= velocity_direction * velocity_amplitude * velocity_amplitude * 0.5;
+}
+
 void cool_main()
 {
     uint     gid = gl_GlobalInvocationID.x;
@@ -57,8 +73,10 @@ void cool_main()
     particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
     particle.acceleration = vec2(0.);
 
-    move_right(particle);
-    gravity(particle);
+    // move_right(particle);
+    // gravity(particle);
+    attractor_disk(particle);
+    drag(particle);
 
     particle.velocity += particle.acceleration * _delta_time;
     particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method
