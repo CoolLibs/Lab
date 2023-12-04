@@ -56,7 +56,7 @@ auto generate_compositing_shader_code(
 
     using fmt::literals::operator""_a;
     return fmt::format(
-        FMT_COMPILE(R"STR(#version 410
+        FMT_COMPILE(R"glsl(#version 410
 
 uniform float     _time;
 uniform float     _height;
@@ -103,7 +103,7 @@ void main()
     out_Color = {main_function_name}(coollab_context, uv);
 }}
 
-)STR"
+)glsl"
         ),
         "output_indices_declarations"_a  = gen_all_output_indices_declarations(graph),
         "main_function_implementation"_a = inject_context_argument_in_all_functions(context.code(), context.function_names()),

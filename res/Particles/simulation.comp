@@ -5,12 +5,51 @@ layout(std430, binding = 0) buffer _positions_buffer
     float _positions[];
 };
 
+layout(std430, binding = 1) buffer _velocities_buffer
+{
+    float _velocities[];
+};
+
+struct Particle {
+    vec2 position;
+    vec2 velocity;
+    vec2 acceleration;
+};
+
+void move_right(inout Particle particle)
+{
+    particle.position.x += 0.1 * _delta_time;
+    if (particle.position.x > 1.)
+        particle.position.x -= 2.;
+    if (particle.position.x < -1.)
+        particle.position.x += 2.;
+    if (particle.position.y > 1.)
+        particle.position.y -= 2.;
+    if (particle.position.y < -1.)
+        particle.position.y += 2.;
+}
+
+void gravity(inout Particle particle)
+{
+    particle.acceleration.y -= 1;
+}
+
 void cool_main()
 {
-    uint gid = gl_GlobalInvocationID.x;
-    _positions[gid * 2] += 0.1 * _delta_time;
-    if (_positions[gid * 2] > 1.)
-        _positions[gid * 2] -= 2.;
-    if (_positions[gid * 2] < -1.)
-        _positions[gid * 2] += 2.;
+    uint     gid = gl_GlobalInvocationID.x;
+    Particle particle;
+    particle.position     = vec2(_positions[gid * 2], _positions[gid * 2 + 1]);
+    particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
+    particle.acceleration = vec2(0.);
+
+    move_right(particle);
+    gravity(particle);
+
+    particle.velocity += particle.acceleration * _delta_time;
+    particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method
+
+    _positions[gid * 2]      = particle.position.x;
+    _positions[gid * 2 + 1]  = particle.position.y;
+    _velocities[gid * 2]     = particle.velocity.x;
+    _velocities[gid * 2 + 1] = particle.velocity.y;
 }
