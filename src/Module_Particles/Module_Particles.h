@@ -24,12 +24,12 @@ public:
 private:
     void render(RenderParams, UpdateContext_Ref) override;
 
-    auto create_particle_system() const -> Cool::ParticleSystem;
+    auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void recreate_particle_system(); // TODO(Modules) Remove me, this is for tests only
 
 private:
-    size_t               _particles_count{500};
-    Cool::ParticleSystem _particle_system;
+    size_t                              _particles_count{500};
+    std::optional<Cool::ParticleSystem> _particle_system;
 
 private:
     // Serialization
