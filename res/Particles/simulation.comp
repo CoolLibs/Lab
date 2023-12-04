@@ -16,6 +16,21 @@ struct Particle {
     vec2 acceleration;
 };
 
+float disk_sdf(vec2 position)
+{
+    return length(position) - 0.5;
+}
+
+vec2 disk_gradient(vec2 p)
+{
+    float h =0.001;
+    return vec2(
+        disk_sdf(p-vec2(h,0)) + disk_sdf(p+vec2(h,0)),
+        disk_sdf(p-vec2(0,h)) + disk_sdf(p+vec2(0,h))
+    ) / (2. * h);
+
+}
+
 void move_right(inout Particle particle)
 {
     particle.position.x += 0.1 * _delta_time;
