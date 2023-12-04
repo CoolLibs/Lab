@@ -31,22 +31,34 @@ vec2 disk_gradient(vec2 p)
 
 }
 
-void move_right(inout Particle particle)
+void warp_in_bound(inout Particle particle)
 {
-    particle.position.x += 0.1 * _delta_time;
     if (particle.position.x > 1.)
+    {
         particle.position.x -= 2.;
+    }
     if (particle.position.x < -1.)
+    {
         particle.position.x += 2.;
+    }
     if (particle.position.y > 1.)
+    {
         particle.position.y -= 2.;
+    }
     if (particle.position.y < -1.)
+    {
         particle.position.y += 2.;
+    }
 }
 
 void gravity(inout Particle particle)
 {
     particle.acceleration.y -= 1;
+}
+
+void vertex_effect(inout Particle particle)
+{
+    particle.velocity = 0.5*normalize(vec2(particle.position.y, -particle.position.x));
 }
 
 void cool_main()
@@ -58,7 +70,7 @@ void cool_main()
     particle.acceleration = vec2(0.);
 
     move_right(particle);
-    gravity(particle);
+    //vertex_effect(particle);
 
     particle.velocity += particle.acceleration * _delta_time;
     particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method
