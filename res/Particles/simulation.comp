@@ -60,9 +60,16 @@ void gravity(inout Particle particle, float g)
     particle.acceleration.y -= g;
 }
 
-void vertex_effect(inout Particle particle)
+void vortex_effect(inout Particle particle)
 {
-    particle.velocity = 0.5*normalize(vec2(particle.position.y, -particle.position.x));
+    float angle = 3.1415927535/1.1;
+    vec2 trans_pos = vec2(-particle.position.y, particle.position.x);
+    vec2 non_normalized_dir = 2*cos(angle)*particle.position + sin(angle)*trans_pos;
+    particle.acceleration += 0.05*normalize(non_normalized_dir)/length(non_normalized_dir);
+    if (length(particle.position) > 1)
+    {
+        particle.acceleration -= normalize(particle.position);
+    }
 }
 
 void attractor_disk(inout Particle particle, float force, bool repulse)
@@ -97,12 +104,12 @@ void cool_main()
     particle.acceleration = vec2(0.);
 
     // move_right(particle);
-    //vertex_effect(particle);
+    vortex_effect(particle);
     // move_right(particle);
-    gravity(particle, 1.);
-    attractor_disk(particle, 20., true);
+    // gravity(particle, 1.);
+    // attractor_disk(particle, 1., true);
     // repulsor_disk(particle, 1.);
-    drag(particle, 1.);
+    // drag(particle, 1.);
 
     particle.velocity += particle.acceleration * _delta_time;
     particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method
