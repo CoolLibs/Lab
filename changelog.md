@@ -16,6 +16,7 @@
 
 - ✨ Added Audio support! You can now import an audio file and play it while you generate your images. You can also use its volume and waveform to control your images.
 - Added new nodes that you can use with waveform or spectrum: fill function, function to shape, add displacement
+- 🐛 Fixed crash on Linux when opening a file explorer.
 
 ## 🐣beta-9
 
