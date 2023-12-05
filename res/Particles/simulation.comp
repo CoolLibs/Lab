@@ -65,9 +65,9 @@ void vertex_effect(inout Particle particle)
     particle.velocity = 0.5*normalize(vec2(particle.position.y, -particle.position.x));
 }
 
-void attractor_disk(inout Particle particle, float force)
+void attractor_disk(inout Particle particle, float force, bool repulse)
 {
-    if(disk_sdf(particle.position) < 0) {
+    if(repulse && disk_sdf(particle.position) < 0) {
         force *= -1.;
     }
     particle.acceleration += disk_gradient(particle.position) * force;
@@ -99,9 +99,9 @@ void cool_main()
     // move_right(particle);
     //vertex_effect(particle);
     // move_right(particle);
-    // gravity(particle, 1.);
-    // attractor_disk(particle, 1.);
-    repulsor_disk(particle, 1.);
+    gravity(particle, 1.);
+    attractor_disk(particle, 20., true);
+    // repulsor_disk(particle, 1.);
     drag(particle, 1.);
 
     particle.velocity += particle.acceleration * _delta_time;
