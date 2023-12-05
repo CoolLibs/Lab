@@ -471,7 +471,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
     });
     Cool::DebugOptions::particles_debug_menu_window([&] {
-        _project.modules_graph->particles_module().imgui_debug_menu();
+        _project.modules_graph->particles_module().imgui_debug_menu(set_dirty__functor());
     });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {

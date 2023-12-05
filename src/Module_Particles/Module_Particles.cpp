@@ -15,6 +15,7 @@ Module_Particles::Module_Particles()
 
 Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"Nodes", dirty_flag_factory}
+    , _regenerate_code_flag{dirty_flag_factory.make()}
 {
 }
 
@@ -73,12 +74,10 @@ void Module_Particles::compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId
     // compute_dependencies();
 }
 
-void Module_Particles::imgui_debug_menu()
+void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty)
 {
-    // if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &_particles_count))
-    //     recreate_particle_system();
-    // if (ImGui::Button("Recreate Particle System"))
-    //     recreate_particle_system();
+    if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &_particles_count))
+        set_dirty(_regenerate_code_flag);
 }
 
 // void Module_Particles::recreate_particle_system()
@@ -109,7 +108,7 @@ void Module_Particles::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) co
 
 auto Module_Particles::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
-    return Module::is_dirty(check_dirty);
+    return Module::is_dirty(check_dirty) && check_dirty(_regenerate_code_flag);
 };
 
 template<typename T>
@@ -174,6 +173,14 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
 
 void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
+    if (in.is_dirty(_regenerate_code_flag))
+    {
+        if (DebugOptions::log_when_compiling_nodes())
+            Cool::Log::ToUser::info("Nodes", "Compiled");
+        compile(*_nodes_graph, _main_node_id, update_ctx);
+        in.set_clean(_regenerate_code_flag);
+    }
+
     if (!_particle_system)
         return;
 

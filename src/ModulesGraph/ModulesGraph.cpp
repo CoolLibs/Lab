@@ -22,14 +22,15 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     // _particles_render_target.set_size(render_target.desired_size());
     // render_compositing_module(render_target, in, update_ctx);
 
-    _particles_module._nodes_graph = &_nodes_editor.graph();
-    if (in.is_dirty(_regenerate_code_flag))
-    {
-        if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::ToUser::info("Nodes", "Compiled");
-        _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-        in.set_clean(_regenerate_code_flag);
-    }
+    _particles_module._nodes_graph  = &_nodes_editor.graph();
+    _particles_module._main_node_id = _main_node_id;
+    // if (in.is_dirty(_regenerate_code_flag))
+    // {
+    //     if (DebugOptions::log_when_compiling_nodes())
+    //         Cool::Log::ToUser::info("Nodes", "Compiled");
+    //     _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+    //     in.set_clean(_regenerate_code_flag);
+    // }
 
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -91,7 +92,10 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
-            ui.set_dirty(_regenerate_code_flag);
+        {
+            // ui.set_dirty(_regenerate_code_flag);
+            ui.set_dirty(_particles_module.regenerate_code_flag());
+        }
     }
     // _compositing_module.imgui_windows(ui, update_ctx);
     _particles_module.imgui_windows(ui, update_ctx);
@@ -175,7 +179,8 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
         _main_node_id,
         _node_we_might_want_to_restore_as_main_node_id,
         _compositing_module.shader_dirty_flag(), // TODO(Modules) Need to warn the particles_module too
-        _regenerate_code_flag,
+        // _regenerate_code_flag,
+        _particles_module.regenerate_code_flag(),
         _nodes_editor.graph(),
         ui.audio_manager(),
     };

@@ -18,13 +18,16 @@ public:
     ~Module_Particles()                                              = default;
 
     Cool::NodesGraph const* _nodes_graph; // TODO(Particle) Remove
+    Cool::NodeId            _main_node_id{};
+
+    auto regenerate_code_flag() const -> Cool::DirtyFlag const& { return _regenerate_code_flag; };
 
     void update(UpdateContext_Ref) override;
     void update_particles(UpdateContext_Ref);
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
 
-    void imgui_debug_menu();
+    void imgui_debug_menu(Cool::SetDirty_Ref set_dirty);
 
     void compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref, bool for_testing_nodes = false);
 
@@ -41,6 +44,8 @@ private:
     size_t                              _particles_count{5'000};
     std::optional<Cool::ParticleSystem> _particle_system;
 
+    Cool::DirtyFlag _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
+
 private:
     // Serialization
     friend class cereal::access;
@@ -48,7 +53,8 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Base Module", cereal::base_class<Module>(this))
+            cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
+            cereal::make_nvp("Dirty Flag: Regenerate Code", _regenerate_code_flag)
         );
     }
 };
