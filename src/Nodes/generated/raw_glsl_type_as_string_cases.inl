@@ -20,6 +20,7 @@ case PrimitiveType::SignedDistance: return "float";
 case PrimitiveType::Angle: return "float";
 case PrimitiveType::Hue: return "float";
 case PrimitiveType::Direction2D: return "vec2";
+case PrimitiveType::Particle: return "Particle";
 case PrimitiveType::Void: return "void";
 case PrimitiveType::RayMarchRes: return "RayMarchRes";
 case PrimitiveType::Oklab: return "vec3";

@@ -19,13 +19,23 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     if (render_target.needs_resizing())
         trigger_rerender_all(update_ctx.dirty_setter());
 
-    _particles_render_target.set_size(render_target.desired_size());
-    _particles_render_target.render([&]() {
+    // _particles_render_target.set_size(render_target.desired_size());
+    // render_compositing_module(render_target, in, update_ctx);
+
+    _particles_module._nodes_graph = &_nodes_editor.graph();
+    if (in.is_dirty(_regenerate_code_flag))
+    {
+        if (DebugOptions::log_when_compiling_nodes())
+            Cool::Log::ToUser::info("Nodes", "Compiled");
+        _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+        in.set_clean(_regenerate_code_flag);
+    }
+
+    render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
         _particles_module.do_rendering(in, update_ctx);
     });
-    render_compositing_module(render_target, in, update_ctx);
 }
 
 void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx)
@@ -46,7 +56,8 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
     {
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Nodes", "Compiled");
-        _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+        // _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+        _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
         in.set_clean(_regenerate_code_flag);
     }
     else if (!_compositing_module.is_dirty(in.is_dirty))
@@ -82,7 +93,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
             ui.set_dirty(_regenerate_code_flag);
     }
-    _compositing_module.imgui_windows(ui, update_ctx);
+    // _compositing_module.imgui_windows(ui, update_ctx);
     _particles_module.imgui_windows(ui, update_ctx);
 }
 

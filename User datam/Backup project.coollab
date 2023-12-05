@@ -1,0 +1,894 @@
+{
+    "Project": {
+        "Coollab version": "beta-10 WIP",
+        "Time": {
+            "Time": -0.00014189101057127118,
+            "Is playing": false
+        },
+        "View Constraint": {
+            "Is controlling the number of pixels": false,
+            "Number of pixels": 250000,
+            "Is controlling the aspect ratio": true,
+            "Aspect ratio": 1.0,
+            "Interpolation mode": 0
+        },
+        "Exporter (Image and Video)": {
+            "Exporter (Image and Video)": {
+                "ptr_wrapper": {
+                    "valid": 1,
+                    "data": {
+                        "Video Settings": {
+                            "FPS": 30.0,
+                            "Beginning": 0.0,
+                            "End": 10.0
+                        },
+                        "Image Size": {
+                            "Size": {
+                                "w": 1920,
+                                "h": 1080
+                            },
+                            "Aspect Ratio is Locked": true,
+                            "Aspect Ratio": 1.0
+                        },
+                        "Image Output Folder": {
+                            "nullopt": true
+                        },
+                        "Video Output Folder": {
+                            "nullopt": true
+                        }
+                    }
+                }
+            }
+        },
+        "Camera Manager": {
+            "Camera ID": {
+                "Underlying": {
+                    "ptr_wrapper": {
+                        "id": 2147483649,
+                        "data": {
+                            "UUID": "7afd2e8f-29a6-473a-9aa1-23f98b5e3391",
+                            "Registry": {
+                                "index": 0,
+                                "data": {
+                                    "ptr_wrapper": {
+                                        "id": 2147483650,
+                                        "data": {
+                                            "Underlying container": [
+                                                {
+                                                    "key": "7afd2e8f-29a6-473a-9aa1-23f98b5e3391",
+                                                    "value": {
+                                                        "Name": "",
+                                                        "Value": {
+                                                            "Transform": {
+                                                                "value0": 0.5494011640548706,
+                                                                "value1": 0.8355584740638733,
+                                                                "value2": 0.0,
+                                                                "value3": -0.0,
+                                                                "value4": -0.4202671945095062,
+                                                                "value5": 0.2763364911079407,
+                                                                "value6": 0.8642993569374085,
+                                                                "value7": 0.0,
+                                                                "value8": 0.7221728563308716,
+                                                                "value9": -0.4748471975326538,
+                                                                "value10": 0.5029775500297546,
+                                                                "value11": -0.0,
+                                                                "value12": 2.6478638648986818,
+                                                                "value13": -1.7410386800765992,
+                                                                "value14": 1.8441791534423829,
+                                                                "value15": 1.0
+                                                            },
+                                                            "Projection": {
+                                                                "Field of View (in radians)": 1.5707963705062867,
+                                                                "Near Plane": 0.10000000149011612,
+                                                                "Far Plane": 200.0
+                                                            }
+                                                        },
+                                                        "Metadata": {},
+                                                        "Default Value": {
+                                                            "Transform": {
+                                                                "value0": 0.5494011640548706,
+                                                                "value1": 0.8355584740638733,
+                                                                "value2": 0.0,
+                                                                "value3": -0.0,
+                                                                "value4": -0.4202671945095062,
+                                                                "value5": 0.2763364911079407,
+                                                                "value6": 0.8642993569374085,
+                                                                "value7": 0.0,
+                                                                "value8": 0.7221728563308716,
+                                                                "value9": -0.4748471975326538,
+                                                                "value10": 0.5029775500297546,
+                                                                "value11": -0.0,
+                                                                "value12": 2.6478638648986818,
+                                                                "value13": -1.7410386800765992,
+                                                                "value14": 1.8441791534423829,
+                                                                "value15": 1.0
+                                                            },
+                                                            "Projection": {
+                                                                "Field of View (in radians)": 1.5707963705062867,
+                                                                "Near Plane": 0.10000000149011612,
+                                                                "Far Plane": 200.0
+                                                            }
+                                                        },
+                                                        "Default Metadata": {}
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ViewController": {
+                "Mode": 1,
+                "Translation Speed": 0.009999999776482582,
+                "Rotation Speed": 0.009999999776482582,
+                "Distance to Orbit Center": 5.0
+            },
+            "Is editable in view": false
+        },
+        "Camera 2D": {
+            "Name": "",
+            "Value": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "Zoom": 1.0,
+                "Rotation": {
+                    "Radians": {
+                        "Radians": 0.0
+                    }
+                }
+            },
+            "Metadata": {
+                "Number of snaps": 24,
+                "Snaps offset (in radians)": 0.0,
+                "Always snap": false
+            },
+            "Default Value": {
+                "Translation": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "Zoom": 1.0,
+                "Rotation": {
+                    "Radians": {
+                        "Radians": 0.0
+                    }
+                }
+            },
+            "Default Metadata": {
+                "Number of snaps": 24,
+                "Snaps offset (in radians)": 0.0,
+                "Always snap": false
+            }
+        },
+        "Is camera 2D editable in view": true,
+        "Modules Graph": {
+            "ptr_wrapper": {
+                "valid": 1,
+                "data": {
+                    "Compositing Module": {
+                        "Base Module": {
+                            "Name": "Nodes",
+                            "Dirty Flag": {
+                                "ID": {
+                                    "Underlying": {
+                                        "ptr_wrapper": {
+                                            "id": 2147483651,
+                                            "data": {
+                                                "UUID": "cc9a8cb7-b7b2-4855-afe8-6473d69713c3",
+                                                "Registry": {
+                                                    "index": 0,
+                                                    "data": {
+                                                        "ptr_wrapper": {
+                                                            "id": 2147483652,
+                                                            "data": {
+                                                                "Underlying container": [
+                                                                    {
+                                                                        "key": "119c3f99-6c17-4250-a56a-e2230fb4c2e7",
+                                                                        "value": {
+                                                                            "Is Dirty": false
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "key": "e4aed102-2b9d-4d27-a6ad-49d3faea096b",
+                                                                        "value": {
+                                                                            "Is Dirty": false
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "key": "cc9a8cb7-b7b2-4855-afe8-6473d69713c3",
+                                                                        "value": {
+                                                                            "Is Dirty": false
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "key": "e192613d-73b6-47fa-8378-49a8f4aa1b3e",
+                                                                        "value": {
+                                                                            "Is Dirty": false
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "Shader": {
+                            "Shader Dirty Flag": {
+                                "ID": {
+                                    "Underlying": {
+                                        "ptr_wrapper": {
+                                            "id": 2147483653,
+                                            "data": {
+                                                "UUID": "e4aed102-2b9d-4d27-a6ad-49d3faea096b",
+                                                "Registry": {
+                                                    "index": 0,
+                                                    "data": {
+                                                        "ptr_wrapper": {
+                                                            "id": 4
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "Particles Module": {
+                        "Base Module": {
+                            "Name": "Nodes",
+                            "Dirty Flag": {
+                                "ID": {
+                                    "Underlying": {
+                                        "ptr_wrapper": {
+                                            "id": 2147483654,
+                                            "data": {
+                                                "UUID": "119c3f99-6c17-4250-a56a-e2230fb4c2e7",
+                                                "Registry": {
+                                                    "index": 0,
+                                                    "data": {
+                                                        "ptr_wrapper": {
+                                                            "id": 4
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "Dirty Flag: Regenerate Code": {
+                        "ID": {
+                            "Underlying": {
+                                "ptr_wrapper": {
+                                    "id": 2147483655,
+                                    "data": {
+                                        "UUID": "e192613d-73b6-47fa-8378-49a8f4aa1b3e",
+                                        "Registry": {
+                                            "index": 0,
+                                            "data": {
+                                                "ptr_wrapper": {
+                                                    "id": 4
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "Node Editor": {
+                        "Pimpl": {
+                            "polymorphic_id": 2147483649,
+                            "polymorphic_name": "Cool::NodesEditorImpl",
+                            "ptr_wrapper": {
+                                "valid": 1,
+                                "data": {
+                                    "Graph": {
+                                        "Nodes": {
+                                            "Underlying container": [
+                                                {
+                                                    "key": "530d6680-fa3a-4a08-a4cd-8ba143122d96",
+                                                    "value": {
+                                                        "pimpl": {
+                                                            "polymorphic_id": 2147483650,
+                                                            "polymorphic_name": "Cool::Node::Model<Lab::Node>",
+                                                            "ptr_wrapper": {
+                                                                "valid": 1,
+                                                                "data": {
+                                                                    "Node": {
+                                                                        "Name": "",
+                                                                        "Definition": {
+                                                                            "Definition name": "Particles",
+                                                                            "Category name": "Image"
+                                                                        },
+                                                                        "Input Pins": [],
+                                                                        "Output Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "OUT",
+                                                                                    "ID": "1e477342-6b28-44f7-a0ca-2b8a6cc9344e"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Value inputs": [],
+                                                                        "Number of main input pins": 0,
+                                                                        "Number of function inputs": 0
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "key": "ba3628c3-044d-49dd-8ff1-2623a5a9d584",
+                                                    "value": {
+                                                        "pimpl": {
+                                                            "polymorphic_id": 2,
+                                                            "ptr_wrapper": {
+                                                                "valid": 1,
+                                                                "data": {
+                                                                    "Node": {
+                                                                        "Name": "",
+                                                                        "Definition": {
+                                                                            "Definition name": "Debug",
+                                                                            "Category name": "Shape Renderer"
+                                                                        },
+                                                                        "Input Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Shape",
+                                                                                    "ID": "7f4025b2-befa-43b6-909b-eba3a6e8c8a9"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Shape Color",
+                                                                                    "ID": "536c1b20-d859-4900-bfd5-e7ac25ddb456"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Background Color",
+                                                                                    "ID": "8257e8ef-d1ad-4a4e-a1dd-dd74a375e4e2"
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "Border Color",
+                                                                                    "ID": "0013145e-2219-4c3b-a2ef-63dfc27e8b25"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Output Pins": [
+                                                                            {
+                                                                                "Base Pin": {
+                                                                                    "Name": "OUT",
+                                                                                    "ID": "78f61789-0ecf-4b3f-9546-67f614fa5556"
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Value inputs": [
+                                                                            {
+                                                                                "index": 7,
+                                                                                "data": {
+                                                                                    "Name": "Shape Color",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483656,
+                                                                                                "data": {
+                                                                                                    "UUID": "1bdb4b2a-0b36-43d1-a882-223ca6a3307f",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 2147483657,
+                                                                                                                "data": {
+                                                                                                                    "Underlying container": [
+                                                                                                                        {
+                                                                                                                            "key": "b1b920ab-25b9-462f-baa8-e86d72f28ca7",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "Border Color",
+                                                                                                                                "Value": {
+                                                                                                                                    "sRGB": {
+                                                                                                                                        "x": 1.0,
+                                                                                                                                        "y": 1.0,
+                                                                                                                                        "z": 1.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Is HDR": false
+                                                                                                                                },
+                                                                                                                                "Default Value": {
+                                                                                                                                    "sRGB": {
+                                                                                                                                        "x": 0.0,
+                                                                                                                                        "y": 0.0,
+                                                                                                                                        "z": 0.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Is HDR": false
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "key": "fe08f31f-4031-4e50-9ca6-0474876866ff",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "Background Color",
+                                                                                                                                "Value": {
+                                                                                                                                    "sRGB": {
+                                                                                                                                        "x": 0.8999999761581421,
+                                                                                                                                        "y": 0.6000000238418579,
+                                                                                                                                        "z": 0.30000001192092898
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Is HDR": false
+                                                                                                                                },
+                                                                                                                                "Default Value": {
+                                                                                                                                    "sRGB": {
+                                                                                                                                        "x": 0.8999999761581421,
+                                                                                                                                        "y": 0.6000000238418579,
+                                                                                                                                        "z": 0.30000001192092898
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Is HDR": false
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "key": "1bdb4b2a-0b36-43d1-a882-223ca6a3307f",
+                                                                                                                            "value": {
+                                                                                                                                "Name": "Shape Color",
+                                                                                                                                "Value": {
+                                                                                                                                    "sRGB": {
+                                                                                                                                        "x": 0.6499999761581421,
+                                                                                                                                        "y": 0.8500000238418579,
+                                                                                                                                        "z": 1.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Metadata": {
+                                                                                                                                    "Is HDR": false
+                                                                                                                                },
+                                                                                                                                "Default Value": {
+                                                                                                                                    "sRGB": {
+                                                                                                                                        "x": 0.6499999761581421,
+                                                                                                                                        "y": 0.8500000238418579,
+                                                                                                                                        "z": 1.0
+                                                                                                                                    }
+                                                                                                                                },
+                                                                                                                                "Default Metadata": {
+                                                                                                                                    "Is HDR": false
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 5
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "index": 7,
+                                                                                "data": {
+                                                                                    "Name": "Background Color",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483658,
+                                                                                                "data": {
+                                                                                                    "UUID": "fe08f31f-4031-4e50-9ca6-0474876866ff",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 9
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 5
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "index": 7,
+                                                                                "data": {
+                                                                                    "Name": "Border Color",
+                                                                                    "Default Variable ID": {
+                                                                                        "Underlying": {
+                                                                                            "ptr_wrapper": {
+                                                                                                "id": 2147483659,
+                                                                                                "data": {
+                                                                                                    "UUID": "b1b920ab-25b9-462f-baa8-e86d72f28ca7",
+                                                                                                    "Registry": {
+                                                                                                        "index": 0,
+                                                                                                        "data": {
+                                                                                                            "ptr_wrapper": {
+                                                                                                                "id": 9
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                                                                                    "Dirty Flag": {
+                                                                                        "ID": {
+                                                                                            "Underlying": {
+                                                                                                "ptr_wrapper": {
+                                                                                                    "id": 5
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    },
+                                                                                    "desired color space": 0
+                                                                                }
+                                                                            }
+                                                                        ],
+                                                                        "Number of main input pins": 1,
+                                                                        "Number of function inputs": 0
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "Links": {
+                                            "Underlying container": []
+                                        }
+                                    },
+                                    "Frame nodes": [],
+                                    "Context": {
+                                        "UI State": "{\"nodes\":{\"node:15945360638531352250\":{\"location\":{\"x\":1224,\"y\":694}},\"node:597354748150418771\":{\"location\":{\"x\":1296,\"y\":347}}},\"selection\":[\"node:597354748150418771\"],\"view\":{\"scroll\":{\"x\":-60.7884712219238281,\"y\":-3.27005147933959961},\"visible_rect\":{\"max\":{\"x\":2017.148681640625,\"y\":963.2266845703125},\"min\":{\"x\":-97.1464614868164062,\"y\":-5.22589111328125}},\"zoom\":0.625740468502044678}}"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "Main Node ID": "530d6680-fa3a-4a08-a4cd-8ba143122d96",
+                    "Camera Input": {
+                        "Name": "Camera",
+                        "Default Variable ID": {
+                            "Underlying": {
+                                "ptr_wrapper": {
+                                    "id": 1
+                                }
+                            }
+                        },
+                        "Current Variable ID": "00000000-0000-0000-0000-000000000000",
+                        "Dirty Flag": {
+                            "ID": {
+                                "Underlying": {
+                                    "ptr_wrapper": {
+                                        "id": 7
+                                    }
+                                }
+                            }
+                        },
+                        "desired color space": 0
+                    }
+                }
+            }
+        },
+        "Variable Registries": {
+            "Underlying registries": {
+                "tuple_element0": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483660,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element1": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483661,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element2": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483662,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element3": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483663,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element4": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483664,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element5": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483665,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element6": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483666,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element7": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 9
+                        }
+                    }
+                },
+                "tuple_element8": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483667,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element9": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2
+                        }
+                    }
+                },
+                "tuple_element10": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483668,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element11": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483669,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element12": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483670,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element13": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483671,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element14": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483672,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element15": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483673,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element16": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483674,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element17": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483675,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element18": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483676,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element19": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483677,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element20": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483678,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element21": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483679,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                },
+                "tuple_element22": {
+                    "Underlying registry": {
+                        "ptr_wrapper": {
+                            "id": 2147483680,
+                            "data": {
+                                "Underlying container": []
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "History": {
+            "History": {
+                "Commits": [],
+                "Position in history": {
+                    "nullopt": true
+                },
+                "Max size": 1000
+            },
+            "Max saved size": 100
+        },
+        "Dirty Registry": {
+            "Underlying registry": {
+                "ptr_wrapper": {
+                    "id": 4
+                }
+            }
+        },
+        "Audio": {
+            "Window": {
+                "Is open": false
+            },
+            "File input": {
+                "Path": "",
+                "Properties": {
+                    "Volume": 1.0,
+                    "Is muted": false,
+                    "Does loop": false
+                }
+            },
+            "Device input": {
+                "Input Device": {
+                    "index": 0,
+                    "data": {}
+                },
+                "Volume": 30.0
+            },
+            "Current input mode": 1,
+            "Window size for waveform": 0.05000000074505806,
+            "Window size for spectrum": 0.014999999664723874,
+            "Window size for volume": 0.20000000298023225,
+            "Spectrum max frequency in Hz": 2500.0,
+            "Spectrum height scale": 1.0,
+            "Spectrum display as bars": true
+        }
+    }
+}

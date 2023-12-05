@@ -1,0 +1,22 @@
+{
+    "Debug Options": {
+        "Test Message Console": false,
+        "Log when autosaving": false,
+        "Log when rendering alpha checkerboard background": false,
+        "Log when creating textures": false,
+        "Log when computing audio features": false,
+        "View Texture Library": false,
+        "Log the number of threads in the thread pool": false,
+        "Log OpenGL info": false,
+        "Log mouse position in View": false,
+        "Test Presets": false,
+        "Test Markdown Formatting": false,
+        "Emulate midi keyboard": false,
+        "Test tips": false,
+        "Particles Debug Menu": true,
+        "Public exhibition mode": false,
+        "Style Editor": false,
+        "Color Themes: Editor": false,
+        "Color Themes: Advanced Config": false
+    }
+}

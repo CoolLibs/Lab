@@ -20,6 +20,7 @@ R"STR(  - bool
   - Angle
   - Hue
   - Direction2D
+  - Particle
   - RayMarchRes
   - Oklab
   - Oklab_PremultipliedA

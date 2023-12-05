@@ -1,4 +1,7 @@
 #pragma once
+#include "Cool/Log/OptionalErrorMessage.h"
+#include "Cool/Nodes/NodeId.h"
+#include "Cool/Nodes/NodesGraph.h"
 #include "Cool/Particles/ParticleSystem.h"
 #include "Module/Module.h"
 
@@ -14,6 +17,8 @@ public:
     auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
     ~Module_Particles()                                              = default;
 
+    Cool::NodesGraph const* _nodes_graph; // TODO(Particle) Remove
+
     void update(UpdateContext_Ref) override;
     void update_particles(UpdateContext_Ref);
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
@@ -21,14 +26,19 @@ public:
 
     void imgui_debug_menu();
 
+    void compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref, bool for_testing_nodes = false);
+
 private:
     void render(RenderParams, UpdateContext_Ref) override;
 
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
-    void recreate_particle_system(); // TODO(Modules) Remove me, this is for tests only
+    // void recreate_particle_system(); // TODO(Modules) Remove me, this is for tests only
 
 private:
-    size_t                              _particles_count{500};
+    mutable std::string         _shader_code{};
+    mutable Cool::MessageSender _shader_compilation_error{};
+
+    size_t                              _particles_count{5'000};
     std::optional<Cool::ParticleSystem> _particle_system;
 
 private:

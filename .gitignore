@@ -8,3 +8,4 @@ website/.docusaurus
 website/node_modules
 gitignored
 User data
+.venv

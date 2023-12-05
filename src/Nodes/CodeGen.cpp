@@ -17,7 +17,6 @@
 #include "helpers.h"
 #include "input_to_primitive_type.h"
 
-
 namespace Lab {
 
 static auto gen_params(CompleteFunctionSignature const& signature)

@@ -20,6 +20,7 @@ case PrimitiveType::SignedDistance: return "/*SignedDistance*/ float";
 case PrimitiveType::Angle: return "/*Angle*/ float";
 case PrimitiveType::Hue: return "/*Hue*/ float";
 case PrimitiveType::Direction2D: return "/*Direction2D*/ vec2";
+case PrimitiveType::Particle: return "/*Particle*/ Particle";
 case PrimitiveType::Void: return "/*Void*/ void";
 case PrimitiveType::RayMarchRes: return "/*RayMarchRes*/ RayMarchRes";
 case PrimitiveType::Oklab: return "/*Oklab*/ vec3";

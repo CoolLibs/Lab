@@ -20,6 +20,7 @@ case PrimitiveType::SignedDistance: return "SignedDistance";
 case PrimitiveType::Angle: return "Angle";
 case PrimitiveType::Hue: return "Hue";
 case PrimitiveType::Direction2D: return "Direction2D";
+case PrimitiveType::Particle: return "Particle";
 case PrimitiveType::Void: return "Void";
 case PrimitiveType::RayMarchRes: return "RayMarchRes";
 case PrimitiveType::Oklab: return "Oklab";

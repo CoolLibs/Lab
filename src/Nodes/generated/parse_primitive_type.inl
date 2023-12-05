@@ -68,6 +68,10 @@ if (str == "Direction2D")
 {
     return PrimitiveType::Direction2D;
 }
+if (str == "Particle")
+{
+    return PrimitiveType::Particle;
+}
 if (str == "RayMarchRes")
 {
     return PrimitiveType::RayMarchRes;

@@ -10,90 +10,71 @@ layout(std430, binding = 1) buffer _velocities_buffer
     float _velocities[];
 };
 
-struct Particle {
+struct Particle
+{
     vec2 position;
     vec2 velocity;
     vec2 acceleration;
 };
 
-float disk_sdf(vec2 position)
+
+
+
+
+
+            
+/*Float*/ float _disksdfa3e6ae5b36b44d8ab8fb4c634459a352(CoollabContext coollab_context, /*Vec2*/ vec2 position)
 {
+    
     return length(position) - 0.5;
+
 }
 
-vec2 disk_gradient(vec2 p)
+
+            
+/*Vec2*/ vec2 _diskgradienta3e6ae5b36b44d8ab8fb4c634459a352(CoollabContext coollab_context, /*Vec2*/ vec2 p)
 {
+    
     float h = 0.001;
     return vec2(
-        disk_sdf(p-vec2(h,0)) - disk_sdf(p+vec2(h,0)),
-        disk_sdf(p-vec2(0,h)) - disk_sdf(p+vec2(0,h))
+        _disksdfa3e6ae5b36b44d8ab8fb4c634459a352(coollab_context, p-vec2(h,0)) - _disksdfa3e6ae5b36b44d8ab8fb4c634459a352(coollab_context, p+vec2(h,0)),
+        _disksdfa3e6ae5b36b44d8ab8fb4c634459a352(coollab_context, p-vec2(0,h)) - _disksdfa3e6ae5b36b44d8ab8fb4c634459a352(coollab_context, p+vec2(0,h))
     ) / (2. * h);
+
 }
 
-void move_right(inout Particle particle)
-{
-    particle.velocity.x += 0.1;
-}
 
-void warp_in_bound(inout Particle particle)
+            
+/*Particle*/ Particle _attractordiska3e6ae5b36b44d8ab8fb4c634459a352(CoollabContext coollab_context, /*Particle*/ Particle particle, /*Float*/ float force, /*Bool*/ bool repulse)
 {
-    if (particle.position.x > 1.)
-    {
-        particle.position.x -= 2.;
-    }
-    if (particle.position.x < -1.)
-    {
-        particle.position.x += 2.;
-    }
-    if (particle.position.y > 1.)
-    {
-        particle.position.y -= 2.;
-    }
-    if (particle.position.y < -1.)
-    {
-        particle.position.y += 2.;
-    }
-}
-
-void gravity(inout Particle particle, float g)
-{
-    particle.acceleration.y -= g;
-}
-
-void vortex_effect(inout Particle particle)
-{
-    float angle = 3.1415927535/1.1;
-    vec2 trans_pos = vec2(-particle.position.y, particle.position.x);
-    vec2 non_normalized_dir = 2*cos(angle)*particle.position + sin(angle)*trans_pos;
-    particle.acceleration += 0.05*normalize(non_normalized_dir)/length(non_normalized_dir);
-    if (length(particle.position) > 1)
-    {
-        particle.acceleration -= normalize(particle.position);
-    }
-}
-
-void attractor_disk(inout Particle particle, float force, bool repulse)
-{
-    if(repulse && disk_sdf(particle.position) < 0) {
+    
+    if(repulse && _disksdfa3e6ae5b36b44d8ab8fb4c634459a352(coollab_context, particle.position) < 0) {
         force *= -1.;
     }
-    particle.acceleration += disk_gradient(particle.position) * force;
-}
-void repulsor_disk(inout Particle particle, float force)
-{
-    // if(disk_sdf(particle.position) < 0) {
-    //     force *= -1.;
-    // }
-    particle.acceleration -= disk_gradient(particle.position) * force;
+    particle.acceleration += _diskgradienta3e6ae5b36b44d8ab8fb4c634459a352(coollab_context, particle.position) * force;
+    return particle;
+
 }
 
-void drag(inout Particle particle, float coefficient)
+
+            
+/*Particle*/ Particle _Particles_a3e6ae5b36b44d8ab8fb4c634459a352(CoollabContext coollab_context, /*Particle*/ Particle particle)
 {
-    float velocity_amplitude = length(particle.velocity);
-    vec2 velocity_direction = normalize(particle.velocity);
-    if(velocity_amplitude == 0) return;
-    particle.acceleration -= coefficient * velocity_direction * velocity_amplitude * velocity_amplitude * 0.5;
+    
+    
+    return particle;
+
 }
+
+            
+/*Particle*/ Particle _Particles_ParticletoParticleArity1_a3e6ae5b36b44d8ab8fb4c634459a352(CoollabContext coollab_context, /*Particle*/ Particle in1)
+{
+    
+
+return ((_Particles_a3e6ae5b36b44d8ab8fb4c634459a352(coollab_context, ((in1)))));
+
+}
+
 
 void cool_main()
 {
@@ -103,13 +84,7 @@ void cool_main()
     particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
     particle.acceleration = vec2(0.);
 
-    // move_right(particle);
-    vortex_effect(particle);
-    // move_right(particle);
-    // gravity(particle, 1.);
-    // attractor_disk(particle, 1., true);
-    // repulsor_disk(particle, 1.);
-    // drag(particle, 1.);
+    particle = _Particles_ParticletoParticleArity1_a3e6ae5b36b44d8ab8fb4c634459a352(particle);
 
     particle.velocity += particle.acceleration * _delta_time;
     particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method

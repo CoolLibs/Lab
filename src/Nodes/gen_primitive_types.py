@@ -153,6 +153,13 @@ def all_primitive_types():
             parsed_from="Direction2D",
         ),
         PrimitiveType(
+            cpp="Particle",
+            user_facing_name="Particle",
+            corresponding_input_types=[],
+            glsl="Particle",
+            parsed_from="Particle",
+        ),
+        PrimitiveType(
             cpp="Void",
             user_facing_name="Void",
             corresponding_input_types=[],

@@ -1,0 +1,27 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->SignedDistance 'Shape';
+
+vec2 gradient(vec2 p)
+{
+    float h = 0.001;
+    return vec2(
+        'Shape'(p-vec2(h,0)) - 'Shape'(p+vec2(h,0)),
+        'Shape'(p-vec2(0,h)) - 'Shape'(p+vec2(0,h))
+    ) / (2. * h);
+}
+
+Particle attractor(Particle particle, float force, bool repulse)
+{
+    if(repulse && 'Shape'(particle.position) < 0) {
+        force *= -1.;
+    }
+    particle.acceleration += gradient(particle.position) * force;
+    return particle;
+}
+
+Particle main(Particle particle)
+{
+    particle = attractor(particle, 1., true);
+    return particle;
+}
