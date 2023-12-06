@@ -21,7 +21,7 @@ vec3 rayMarching(Particle particle)
     for (; i < 'Iterations'; i++) {
         vec2 velocity = particle.velocity * _delta_time;
         vec2 point = particle.position + normalize(velocity) * t;
-        float d   = abs('Shape'(point));
+        float d   = abs('Shape'(point)); // TODO(Particles) Handle filled shapes
 
         t += d * 0.8; // TODO(Particles) Put this 0.8 in an INPUT
         
