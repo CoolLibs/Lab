@@ -23,6 +23,7 @@ auto Module_Particles::create_particle_system() const -> std::optional<Cool::Par
             _particles_count,
             Cool::ParticlesShadersCode{
                 .simulation = *Cool::File::to_string(Cool::Path::root() / "res/Particles/simulation.comp"),
+                .init = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
                 .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
                 .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
             }

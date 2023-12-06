@@ -1,0 +1,54 @@
+INPUT UV->SignedDistance 'Shape';
+INPUT Point2D 'P1';
+INPUT Point2D 'P2';
+
+
+bool rayMarching()
+{
+    float MAX_DIST                             = 1000000;
+    float SURF_DIST                            = 0.001;
+    float t                                    = 0.;
+    int   i                                    = 0;
+
+    // march until we find a surface or exceed max distance
+    for (; i < 1500; i++) {
+        
+        vec2 velocity = 'P2' - 'P1';
+        
+        vec2 point = 'P1' + normalize(velocity) * t;
+        
+        // get distance to nearest surface
+        float d   = abs('Shape'(point));
+
+        t += d;
+
+        // if we are close enough to the surface or we are beyond max distance, stop marching
+        if (t > MAX_DIST || d < SURF_DIST * 0.99){
+
+            if(t > 0 && t < length(velocity)) {
+               return true;
+            }
+        }
+    }
+    // no intersection
+    return false;
+}
+
+SignedDistance segment_sdf(UV uv)
+{
+    vec2  pa = uv - 'P1', ba = 'P2' - 'P1';
+    float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+    return length(pa - ba * h)-0.01;
+}
+
+sRGB_StraightA main(UV uv)
+{
+    float d = segment_sdf(uv);
+    if (d > 0 )
+    return vec4(0);
+    bool b = rayMarching();
+    if (b)
+    return vec4(0, 1, 0, 1);
+    else
+    return vec4(1, 0, 0, 1);
+}
