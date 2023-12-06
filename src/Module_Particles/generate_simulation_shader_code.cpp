@@ -109,7 +109,7 @@ void cool_main()
     particle.acceleration = vec2(0.);
 
     CoollabContext coollab_context;
-    coollab_context.uv = vec2(0.);
+    coollab_context.uv = particle.position;
 
     particle = {main_function_name}(coollab_context, particle);
 
