@@ -1,6 +1,7 @@
 #pragma once
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
+#include <tl/expected.hpp>
 #include "Common/FullscreenShader.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Gpu/RenderTarget.h"
@@ -36,7 +37,7 @@ public:
 
     void reset();
 
-    // void compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref, bool for_testing_nodes = false);
+    void set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
     [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }

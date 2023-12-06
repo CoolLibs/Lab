@@ -7,6 +7,8 @@
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "UI/imgui_show.h"
 
+// TODO(Particles) Don't rerender everey frame (missing a set_clean(flag) somewhere)
+
 namespace Lab {
 
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
@@ -34,7 +36,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 
     // TODO(Particles) Render in the order of dependency between the modules
     for (auto& module : _particles_modules)
-        render_particle_module(*module, render_target, in, update_ctx);
+        render_particle_module(*module, render_target, in, update_ctx); // TODO(Particles) Create a render target for each module and render on it here.
     render_compositing_module(render_target, in, update_ctx);
 }
 
@@ -130,19 +132,15 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 get_node_def,
                 ctx.input_provider()
             );
-            // TODO(Particles)
-            // _particle_modules.push_back(
-            //     Module_Particles()
-            // );
+            // TODO(Particles) Create the module and set its shader
+            _particle_modules.push_back(
+                Module_Particles()
+            );
+            _particle_modules.back().set_simulation_shader_code(simulation_shader_code);
             return true;
         }
     );
-    // if (!shader_code)
-    // {
-    //     // handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
-    //     return;
-    // }
-    // _shader_code = *shader_code;
+    _compositing_module.set_shader_code(shader_code, ctx, false);
 
     // try
     // {

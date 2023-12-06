@@ -2,6 +2,7 @@
 #include <Common/make_shader_compilation_error_message.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/String/String.h>
+#include <Dependencies/UpdateContext_Ref.h>
 #include <Nodes/Node.h>
 #include <Nodes/NodeDefinition.h>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
@@ -32,31 +33,23 @@ void Module_Compositing::reset()
     _depends_on_audio_volume   = false;
     _depends_on_audio_waveform = false;
     _depends_on_audio_spectrum = false;
+}
 
-    // TODO(Particles) Hhandle errors in the module_graph
-    // if (!nodes_graph.try_get_node<Node>(root_node_id))
-    //     return; // Otherwise we will get a default UV image instead of a transparent image.
+void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes)
+{
+    if (!shader_code)
+    {
+        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
+        return;
+    }
 
-    // auto const shader_code = generate_compositing_shader_code(
-    //     nodes_graph,
-    //     root_node_id,
-    //     Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
-    //     update_ctx.input_provider(),
-    // );
+    _shader_code = *shader_code;
 
-    // if (!shader_code)
-    // {
-    //     handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
-    //     return;
-    // }
+    auto const maybe_err = _shader.compile(_shader_code, update_ctx);
 
-    // _shader_code = *shader_code;
+    handle_error(maybe_err, for_testing_nodes);
 
-    // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
-
-    // handle_error(maybe_err, for_testing_nodes);
-
-    // compute_dependencies();
+    compute_dependencies();
 }
 
 void Module_Compositing::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
