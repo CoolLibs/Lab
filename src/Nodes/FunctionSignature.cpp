@@ -63,6 +63,18 @@ auto is_shape_3D(FunctionSignature signature) -> bool
     return signature == shape_3D_signature();
 }
 
+auto particle_signature() -> FunctionSignature
+{
+    return FunctionSignature{
+        .from  = PrimitiveType::Particle,
+        .to    = PrimitiveType::Particle,
+        .arity = 1,
+    };
+}
+auto is_particle(FunctionSignature signature) -> bool
+{
+    return signature == particle_signature();
+}
 auto is_image(FunctionSignature signature) -> bool
 {
     return is_color_type(signature.to);

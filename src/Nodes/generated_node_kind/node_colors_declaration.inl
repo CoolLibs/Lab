@@ -11,3 +11,4 @@ auto image() -> Cool::Color;
 auto greyscale() -> Cool::Color;
 auto modifier_2D() -> Cool::Color;
 auto miscellaneous() -> Cool::Color;
+auto particle() -> Cool::Color;

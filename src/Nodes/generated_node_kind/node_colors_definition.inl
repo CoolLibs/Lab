@@ -39,3 +39,8 @@ auto miscellaneous() -> Cool::Color
 {
     return Cool::Color::from_srgb({0.8666666746139526f, 0.3176470696926117f, 0.19607843458652497f});
 }
+
+auto particle() -> Cool::Color
+{
+    return Cool::Color::from_srgb({0.27058823529411763f, 0.7607843137254902f, 0.8392156862745098f});
+}

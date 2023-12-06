@@ -58,6 +58,15 @@ auto generate_simulation_shader_code(
     return fmt::format(
         FMT_COMPILE(R"glsl(
 uniform float _delta_time;
+uniform float     _time;
+uniform float     _height;
+uniform float     _audio_volume;
+uniform sampler1D _audio_spectrum;
+uniform sampler1D _audio_waveform;
+uniform mat3      _camera2D;
+uniform mat3      _camera2D_inverse;
+uniform sampler2D _previous_frame_texture;
+uniform sampler2D _particles_texture;
 
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
