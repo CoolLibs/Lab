@@ -149,8 +149,9 @@ struct Properties {
 };
 
 static auto gen_value_inputs(
-    Node const&     node,
-    CodeGenContext& context
+    Node const&                   node,
+    CodeGenContext&               context,
+    NodeDefinitionCallback const& node_definition_callback
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
@@ -175,7 +176,8 @@ static auto gen_value_inputs(
                     {.from = PrimitiveType::Void, .to = *property_type, .arity = 0},
                     *maybe_node,
                     input_node_id,
-                    context
+                    context,
+                    node_definition_callback
                 );
                 RETURN_IF_UNEXPECTED(input_func_name);
 
@@ -306,9 +308,10 @@ struct GeneratedInputs {
 };
 
 static auto gen_function_inputs(
-    Node const&           node,
-    NodeDefinition const& node_definition,
-    CodeGenContext&       context
+    Node const&                   node,
+    NodeDefinition const&         node_definition,
+    CodeGenContext&               context,
+    NodeDefinitionCallback const& node_definition_callback
 ) -> tl::expected<GeneratedInputs, std::string>
 {
     GeneratedInputs res;
@@ -325,7 +328,8 @@ static auto gen_function_inputs(
                 fn_input.signature(),
                 input_node,
                 input_node_id,
-                context
+                context,
+                node_definition_callback
             );
             RETURN_IF_UNEXPECTED(func_name);
 
@@ -376,16 +380,17 @@ static auto gen_includes(NodeDefinition const& node_definition)
 }
 
 static auto gen_base_function(
-    Node const&           node,
-    NodeDefinition const& node_definition,
-    Cool::NodeId const&   id,
-    CodeGenContext&       context
+    Node const&                   node,
+    NodeDefinition const&         node_definition,
+    Cool::NodeId const&           id,
+    CodeGenContext&               context,
+    NodeDefinitionCallback const& node_definition_callback
 ) -> ExpectedFunctionName
 {
-    auto const function_inputs = gen_function_inputs(node, node_definition, context);
+    auto const function_inputs = gen_function_inputs(node, node_definition, context, node_definition_callback);
     RETURN_IF_UNEXPECTED(function_inputs);
 
-    auto const value_inputs_code = gen_value_inputs(node, context);
+    auto const value_inputs_code = gen_value_inputs(node, context, node_definition_callback);
     RETURN_IF_UNEXPECTED(value_inputs_code);
 
     auto const func_name = base_function_name(node_definition, id);
@@ -459,10 +464,11 @@ vec2 {}/*coollabdef*/()
 }
 
 auto gen_desired_function(
-    FunctionSignature     desired_signature,
-    Cool::InputPin const& pin,
-    CodeGenContext&       context,
-    bool                  fallback_to_a_default_function
+    FunctionSignature             desired_signature,
+    Cool::InputPin const&         pin,
+    CodeGenContext&               context,
+    NodeDefinitionCallback const& node_definition_callback,
+    bool                          fallback_to_a_default_function
 ) -> ExpectedFunctionName
 {
     Cool::OutputPin output_pin;
@@ -480,15 +486,17 @@ auto gen_desired_function(
         node,
         node_id,
         context,
+        node_definition_callback,
         fallback_to_a_default_function
     );
 }
 
 auto gen_desired_function(
-    FunctionSignature   desired_signature,
-    Cool::NodeId const& id,
-    CodeGenContext&     context,
-    bool                fallback_to_a_default_function
+    FunctionSignature             desired_signature,
+    Cool::NodeId const&           id,
+    CodeGenContext&               context,
+    NodeDefinitionCallback const& node_definition_callback,
+    bool                          fallback_to_a_default_function
 ) -> ExpectedFunctionName
 {
     auto const maybe_node = context.graph().try_get_node<Node>(id);
@@ -498,16 +506,18 @@ auto gen_desired_function(
         maybe_node,
         id,
         context,
+        node_definition_callback,
         fallback_to_a_default_function
     );
 }
 
 auto gen_desired_function(
-    FunctionSignature   desired_signature,
-    Node const*         maybe_node,
-    Cool::NodeId const& id,
-    CodeGenContext&     context,
-    bool                fallback_to_a_default_function
+    FunctionSignature             desired_signature,
+    Node const*                   maybe_node,
+    Cool::NodeId const&           id,
+    CodeGenContext&               context,
+    NodeDefinitionCallback const& node_definition_callback,
+    bool                          fallback_to_a_default_function
 ) -> ExpectedFunctionName
 {
     if (!maybe_node)
@@ -522,15 +532,17 @@ auto gen_desired_function(
         desired_signature,
         *maybe_node,
         id,
-        context
+        context,
+        node_definition_callback
     );
 }
 
 auto gen_desired_function(
-    FunctionSignature   desired_signature,
-    Node const&         node,
-    Cool::NodeId const& id,
-    CodeGenContext&     context
+    FunctionSignature             desired_signature,
+    Node const&                   node,
+    Cool::NodeId const&           id,
+    CodeGenContext&               context,
+    NodeDefinitionCallback const& node_definition_callback
 ) -> ExpectedFunctionName
 {
     auto const node_definition = context.get_node_definition(node.id_names()); // NOLINT(readability-qualified-auto)
@@ -540,7 +552,12 @@ auto gen_desired_function(
             node.definition_name()
         ));
 
-    auto const base_function_name = gen_base_function(node, *node_definition, id, context);
+    if (node_definition_callback(id, *node_definition))
+    {
+        return "pouet";
+    }
+
+    auto const base_function_name = gen_base_function(node, *node_definition, id, context, node_definition_callback);
     if (!base_function_name)
         return tl::make_unexpected(fmt::format(
             "Failed to generate code for node \"{}\":\n{}",
@@ -553,7 +570,8 @@ auto gen_desired_function(
         *base_function_name,
         node,
         id,
-        context
+        context,
+        node_definition_callback
     );
     if (!func_body)
         return tl::make_unexpected(fmt::format(

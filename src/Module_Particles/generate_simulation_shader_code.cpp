@@ -49,7 +49,8 @@ auto generate_simulation_shader_code(
             .arity = 1,
         },
         root_node_id,
-        context
+        context,
+        [](auto const&, auto const&) { return false; }
     );
     if (!main_function_name)
         return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));

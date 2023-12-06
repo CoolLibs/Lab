@@ -1,4 +1,5 @@
 #pragma once
+#include <Nodes/NodeDefinitionCallback.h>
 #include "CodeGenContext.h"
 #include "FunctionSignature.h"
 #include "Node.h"
@@ -12,7 +13,8 @@ auto gen_desired_function_implementation(
     std::string_view  base_function_name,
     Node const&,
     Cool::NodeId const&,
-    CodeGenContext&
+    CodeGenContext&,
+    NodeDefinitionCallback const&
 ) -> tl::expected<std::string, std::string>;
 
 } // namespace Lab

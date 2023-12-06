@@ -21,7 +21,11 @@ public:
     auto               regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; } // TODO(Modules) Is this needed?
     auto               nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
-    void               update_particles(UpdateContext_Ref update_ctx) { _particles_module.update_particles(update_ctx); }
+    void               update_particles(UpdateContext_Ref update_ctx)
+    {
+        for (auto& module : _particles_modules)
+            module->update_particles(update_ctx);
+    }
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);
@@ -31,15 +35,16 @@ public:
 
     auto compositing_module() const -> Module_Compositing const& { return _compositing_module; } // TODO(Modules) Remove
     auto compositing_module() -> Module_Compositing& { return _compositing_module; }             // TODO(Modules) Remove
-    auto particles_module() const -> Module_Particles const& { return _particles_module; }       // TODO(Modules) Remove
-    auto particles_module() -> Module_Particles& { return _particles_module; }                   // TODO(Modules) Remove
-    auto particles_render_target() -> auto& { return _particles_render_target; }                 // TODO(Modules) Remove
-    auto particles_render_target() const -> auto const& { return _particles_render_target; }     // TODO(Modules) Remove
+    // auto particles_module() const -> Module_Particles const& { return _particles_modules; }      // TODO(Modules) Remove
+    // auto particles_module() -> Module_Particles& { return _particles_modules; }                  // TODO(Modules) Remove
+    auto particles_render_target() -> auto& { return _particles_render_target; }             // TODO(Modules) Remove
+    auto particles_render_target() const -> auto const& { return _particles_render_target; } // TODO(Modules) Remove
 
 private:
-    void recreate_modules_graph();
+    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref);
     void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params, UpdateContext_Ref update_ctx);
     void render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx);
+    void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx);
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
@@ -48,9 +53,9 @@ private:
     Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
     Cool::Input<Cool::Camera> _camera_input{};         // TODO(Modules) Does it belong here?
 
-    Module_Compositing _compositing_module{};
-    Module_Particles   _particles_module{}; // TODO(Modules) Only create one (or several) when the nodes graph needs them.
-    Cool::RenderTarget _particles_render_target{};
+    Module_Compositing                             _compositing_module{};
+    std::vector<std::unique_ptr<Module_Particles>> _particles_modules{}; // TODO(Particles) We shouldn't need the unique_ptr
+    Cool::RenderTarget                             _particles_render_target{};
 
 private:
     // Serialization
@@ -60,11 +65,12 @@ private:
     {
         archive(
             cereal::make_nvp("Compositing Module", _compositing_module),
-            cereal::make_nvp("Particles Module", _particles_module),
+            cereal::make_nvp("Particles Module", _particles_modules),
             cereal::make_nvp("Dirty Flag: Regenerate Code", _regenerate_code_flag),
             cereal::make_nvp("Node Editor", _nodes_editor),
             cereal::make_nvp("Main Node ID", _main_node_id),
-            cereal::make_nvp("Camera Input", _camera_input)
+            cereal::make_nvp("Camera Input", _camera_input),
+            cereal::make_nvp("Dirty Flag: Regenerate Code", _regenerate_code_flag)
         );
     }
 };

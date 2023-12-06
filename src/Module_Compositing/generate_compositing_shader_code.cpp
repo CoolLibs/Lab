@@ -37,7 +37,8 @@ auto generate_compositing_shader_code(
     Cool::NodesGraph const&                     graph,
     Cool::NodeId const&                         root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Cool::InputProvider_Ref                     input_provider
+    Cool::InputProvider_Ref                     input_provider,
+    NodeDefinitionCallback const&               node_definition_callback
 )
     -> tl::expected<std::string, std::string>
 {
@@ -49,7 +50,8 @@ auto generate_compositing_shader_code(
             .arity = 1,
         },
         root_node_id,
-        context
+        context,
+        node_definition_callback
     );
     if (!main_function_name)
         return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));

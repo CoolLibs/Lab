@@ -1,14 +1,17 @@
 #include "ModulesGraph.h"
 #include <Module_Particles/Module_Particles.h>
+#include <Nodes/FunctionSignature.h>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
+#include "Module_Compositing/generate_compositing_shader_code.h"
+#include "Module_Particles/generate_simulation_shader_code.h"
 #include "UI/imgui_show.h"
 
 namespace Lab {
 
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : _compositing_module{dirty_flag_factory, input_factory}
-    , _particles_module{dirty_flag_factory, input_factory}
+    // , _particles_module{dirty_flag_factory, input_factory}
     , _regenerate_code_flag{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _regenerate_code_flag)} // TODO(Modules) Move this to the project, like the Camera2D // TODO(Modules) Shouldn't pass _regenerate_code_flag
 {
@@ -19,23 +22,39 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     if (render_target.needs_resizing())
         trigger_rerender_all(update_ctx.dirty_setter());
 
-    // _particles_render_target.set_size(render_target.desired_size());
-    // render_compositing_module(render_target, in, update_ctx);
+    if (in.is_dirty(_regenerate_code_flag))
+    {
+        if (DebugOptions::log_when_compiling_nodes())
+            Cool::Log::ToUser::info("Nodes", "Compiled");
+        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx);
+        in.set_clean(_regenerate_code_flag);
+    }
 
-    _particles_module._nodes_graph  = &_nodes_editor.graph();
-    _particles_module._main_node_id = _main_node_id;
-    // if (in.is_dirty(_regenerate_code_flag))
-    // {
-    //     if (DebugOptions::log_when_compiling_nodes())
-    //         Cool::Log::ToUser::info("Nodes", "Compiled");
-    //     _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-    //     in.set_clean(_regenerate_code_flag);
-    // }
+    // _particles_render_target.set_size(render_target.desired_size());
+
+    // TODO(Particles) Render in the order of dependency between the modules
+    for (auto& module : _particles_modules)
+        render_particle_module(*module, render_target, in, update_ctx);
+    render_compositing_module(render_target, in, update_ctx);
+}
+
+void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
+{
+    module._nodes_graph  = &_nodes_editor.graph();
+    module._main_node_id = _main_node_id;
+    if (in.is_dirty(_regenerate_code_flag))
+    {
+        if (DebugOptions::log_when_compiling_nodes())
+            Cool::Log::ToUser::info("Nodes", "Compiled");
+        // _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+        module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+        in.set_clean(_regenerate_code_flag);
+    }
 
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        _particles_module.do_rendering(in, update_ctx);
+        module.do_rendering(in, update_ctx);
     });
 }
 
@@ -53,16 +72,15 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
 void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
     _compositing_module._nodes_graph = &_nodes_editor.graph();
-    if (in.is_dirty(_regenerate_code_flag))
-    {
-        if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::ToUser::info("Nodes", "Compiled");
-        // _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-        _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-        in.set_clean(_regenerate_code_flag);
-    }
-    else if (!_compositing_module.is_dirty(in.is_dirty))
-        return;
+    // if (in.is_dirty(_regenerate_code_flag))
+    // {
+    //     if (DebugOptions::log_when_compiling_nodes())
+    //         Cool::Log::ToUser::info("Nodes", "Compiled");
+    //     _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+    //     // _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+    //     in.set_clean(_regenerate_code_flag);
+    // }
+    // else if (!_compositing_module.is_dirty(in.is_dirty)) return;
 
     if (_compositing_module.shader_is_valid())
     {
@@ -84,7 +102,72 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
 void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
 {
     set_dirty(_compositing_module.dirty_flag());
-    set_dirty(_particles_module.dirty_flag());
+    for (auto& module : _particles_modules)
+        set_dirty(module->dirty_flag());
+}
+
+void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx)
+{
+    _particles_modules.clear();
+    _compositing_module.reset();
+
+    if (!graph.try_get_node<Node>(root_node_id))
+        return;
+    auto const get_node_def = Cool::GetNodeDefinition_Ref<NodeDefinition>{ctx.nodes_library()};
+
+    auto const shader_code = generate_compositing_shader_code(
+        graph,
+        root_node_id,
+        get_node_def,
+        ctx.input_provider(),
+        [&](Cool::NodeId const& particles_root_node_id, NodeDefinition const& node_definition) {
+            if (!is_particle(node_definition.signature()))
+                return false;
+
+            auto const simulation_shader_code = generate_simulation_shader_code(
+                graph,
+                particles_root_node_id,
+                get_node_def,
+                ctx.input_provider()
+            );
+            // TODO(Particles)
+            // _particle_modules.push_back(
+            //     Module_Particles()
+            // );
+            return true;
+        }
+    );
+    // if (!shader_code)
+    // {
+    //     // handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
+    //     return;
+    // }
+    // _shader_code = *shader_code;
+
+    // try
+    // {
+    //     _particle_system = Cool::ParticleSystem{
+    //         _particles_count,
+    //         Cool::ParticlesShadersCode{
+    //             .simulation = _shader_code,
+    //             .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
+    //             .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
+    //             .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
+    //         }
+    //     };
+    // }
+    // catch (std::exception const& e)
+    // {
+    //     Cool::Log::ToUser::error("Particles Compilation Failed", e.what());
+    //     return;
+    // }
+
+    // TODO(Particles)
+    // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
+    //
+    // handle_error(maybe_err, for_testing_nodes);
+    //
+    // compute_dependencies();
 }
 
 void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
@@ -94,11 +177,11 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
         {
             // ui.set_dirty(_regenerate_code_flag);
-            ui.set_dirty(_particles_module.regenerate_code_flag());
+            ui.set_dirty(_regenerate_code_flag);
         }
     }
     // _compositing_module.imgui_windows(ui, update_ctx);
-    _particles_module.imgui_windows(ui, update_ctx);
+    // _particles_module.imgui_windows(ui, update_ctx);
 }
 
 static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
@@ -165,7 +248,9 @@ auto ModulesGraph::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
     return check_dirty(_regenerate_code_flag)
            || _compositing_module.is_dirty(check_dirty)
-           || _particles_module.is_dirty(check_dirty);
+           || std::any_of(_particles_modules.begin(), _particles_modules.end(), [&](std::unique_ptr<Module_Particles> const& module) {
+                  return module->is_dirty(check_dirty);
+              });
 };
 
 auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
@@ -180,7 +265,7 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
         _node_we_might_want_to_restore_as_main_node_id,
         _compositing_module.shader_dirty_flag(), // TODO(Modules) Need to warn the particles_module too
         // _regenerate_code_flag,
-        _particles_module.regenerate_code_flag(),
+        _regenerate_code_flag,
         _nodes_editor.graph(),
         ui.audio_manager(),
     };

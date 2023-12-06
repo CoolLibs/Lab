@@ -34,7 +34,9 @@ public:
 
     auto shader_dirty_flag() const -> Cool::DirtyFlag const& { return _shader.dirty_flag(); }
 
-    void compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref, bool for_testing_nodes = false);
+    void reset();
+
+    // void compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref, bool for_testing_nodes = false);
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
     [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }

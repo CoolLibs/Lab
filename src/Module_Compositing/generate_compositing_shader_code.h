@@ -3,6 +3,7 @@
 #include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Nodes/NodeDefinition.h"
+#include "Nodes/NodeDefinitionCallback.h"
 
 namespace Lab {
 
@@ -10,7 +11,8 @@ auto generate_compositing_shader_code(
     Cool::NodesGraph const&,
     Cool::NodeId const& root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>,
-    Cool::InputProvider_Ref
+    Cool::InputProvider_Ref,
+    NodeDefinitionCallback const& node_definition_callback
 ) -> tl::expected<std::string, std::string>;
 
 auto valid_property_name(

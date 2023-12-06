@@ -22,7 +22,7 @@ void Module_Compositing::update(UpdateContext_Ref)
 {
 }
 
-void Module_Compositing::compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref update_ctx, bool for_testing_nodes)
+void Module_Compositing::reset()
 {
     _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
     _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
@@ -33,29 +33,30 @@ void Module_Compositing::compile(Cool::NodesGraph const& nodes_graph, Cool::Node
     _depends_on_audio_waveform = false;
     _depends_on_audio_spectrum = false;
 
-    if (!nodes_graph.try_get_node<Node>(root_node_id))
-        return; // Otherwise we will get a default UV image instead of a transparent image.
+    // TODO(Particles) Hhandle errors in the module_graph
+    // if (!nodes_graph.try_get_node<Node>(root_node_id))
+    //     return; // Otherwise we will get a default UV image instead of a transparent image.
 
-    auto const shader_code = generate_compositing_shader_code(
-        nodes_graph,
-        root_node_id,
-        Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
-        update_ctx.input_provider()
-    );
+    // auto const shader_code = generate_compositing_shader_code(
+    //     nodes_graph,
+    //     root_node_id,
+    //     Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
+    //     update_ctx.input_provider(),
+    // );
 
-    if (!shader_code)
-    {
-        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
-        return;
-    }
+    // if (!shader_code)
+    // {
+    //     handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
+    //     return;
+    // }
 
-    _shader_code = *shader_code;
+    // _shader_code = *shader_code;
 
-    auto const maybe_err = _shader.compile(_shader_code, update_ctx);
+    // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
 
-    handle_error(maybe_err, for_testing_nodes);
+    // handle_error(maybe_err, for_testing_nodes);
 
-    compute_dependencies();
+    // compute_dependencies();
 }
 
 void Module_Compositing::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
