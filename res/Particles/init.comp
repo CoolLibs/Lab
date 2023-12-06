@@ -1,0 +1,30 @@
+#include "_COOL_RES_/shaders/math.glsl"
+
+layout(std430, binding = 0) buffer _positions_buffer
+{
+    float _positions[];
+};
+
+layout(std430, binding = 1) buffer _velocities_buffer
+{
+    float _velocities[];
+};
+
+struct Particle {
+    vec2 position;
+    vec2 velocity;
+    vec2 acceleration;
+};
+
+void cool_main()
+{
+    uint     gid = gl_GlobalInvocationID.x;
+    Particle particle;
+    particle.position     = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2 -1; // -1.0 to 1.0
+    particle.velocity     = hash_0_to_1_2D_to_2D(vec2(gid, 0)) * 2 -1;
+
+    _positions[gid * 2]      = particle.position.x;
+    _positions[gid * 2 + 1]  = particle.position.y;
+    _velocities[gid * 2]     = particle.velocity.x;
+    _velocities[gid * 2 + 1] = particle.velocity.y;
+}

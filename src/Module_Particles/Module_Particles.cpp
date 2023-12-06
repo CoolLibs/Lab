@@ -54,7 +54,7 @@ void Module_Particles::compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId
             _particles_count,
             Cool::ParticlesShadersCode{
                 .simulation = _shader_code,
-                // .simulation = *Cool::File::to_string(Cool::Path::root() / "res/Particles/simulation.comp"),
+                .init = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
                 .vertex   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
                 .fragment = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
             }
