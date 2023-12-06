@@ -68,6 +68,7 @@ uniform mat3      _camera2D_inverse;
 uniform sampler2D _previous_frame_texture;
 uniform sampler2D _particles_texture;
 
+#include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 #include "_COOL_RES_/shaders/Texture.glsl"
