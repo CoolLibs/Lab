@@ -170,9 +170,10 @@ void cool_main()
     // repulsor_disk(particle, 1.); 
     // bounce_disk(particle);
     // drag(particle, 1.);
-    bounce_disk(particle);
 
     particle.velocity += particle.acceleration * _delta_time;
+    bounce_disk(particle);
+    // 
     particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method
 
     bounce(particle);

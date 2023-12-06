@@ -23,7 +23,7 @@ vec3 rayMarching(Particle particle)
         vec2 point = particle.position + normalize(velocity) * t;
         float d   = abs('Shape'(point));
 
-        t += d;
+        t += d * 0.8; // TODO(Particles) Put this 0.8 in an INPUT
         
         if (d < SURF_DIST * 0.99999999){
             if(t > 0 && t < length(velocity)) {
@@ -36,7 +36,7 @@ vec3 rayMarching(Particle particle)
 
 Particle main(Particle particle)
 {
-    // TODO(Particles) Y a des fuites dans les collisions, 
+    // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
     vec3 intersection = rayMarching(particle);
     
     if (intersection.z > 0)
