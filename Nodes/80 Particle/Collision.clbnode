@@ -1,0 +1,52 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->SignedDistance 'Shape';
+INPUT int 'Iterations';
+
+vec2 gradient(vec2 p)
+{
+    float h = 0.001;
+    return vec2(
+        'Shape'(p-vec2(h,0)) - 'Shape'(p+vec2(h,0)),
+        'Shape'(p-vec2(0,h)) - 'Shape'(p+vec2(0,h))
+    ) / (2. * h);
+}
+
+vec3 rayMarching(Particle particle)
+{
+    float SURF_DIST                            = 0.0000001;
+    float t                                    = 0.;
+    int   i                                    = 0;
+
+    for (; i < 'Iterations'; i++) {
+        vec2 velocity = particle.velocity * _delta_time;
+        vec2 point = particle.position + normalize(velocity) * t;
+        float d   = abs('Shape'(point));
+
+        t += d;
+        
+        if (d < SURF_DIST * 0.99999999){
+            if(t > 0 && t < length(velocity)) {
+                return vec3(point, 1.);
+            }
+        }
+    }
+    return vec3(-1.);
+}
+
+Particle main(Particle particle)
+{
+    // TODO(Particles) Y a des fuites dans les collisions, 
+    vec3 intersection = rayMarching(particle);
+    
+    if (intersection.z > 0)
+    {
+        vec2 gradient = gradient(intersection.xy);
+        
+        float distance = abs('Shape'(particle.position));
+        
+        // particle.position = particle.position - normalize(gradient) * distance;
+        particle.velocity = reflect(particle.velocity, normalize(gradient));
+    }
+    return particle;
+}
