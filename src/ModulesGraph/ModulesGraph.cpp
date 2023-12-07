@@ -43,15 +43,18 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
     module._nodes_graph  = &_nodes_editor.graph();
-    module._main_node_id = _main_node_id;
-    if (in.is_dirty(_regenerate_code_flag))
-    {
-        if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::ToUser::info("Nodes", "Compiled");
-        // _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-        module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-        in.set_clean(_regenerate_code_flag);
-    }
+    module._main_node_id = _main_node_id; // TODO(Particles) delete this
+
+    // TODO(Particles) Rename module.is_dirty() as module.needs_to_render
+    // TODO(Particles) Remove module.is_dirty() from module
+    if (!module.is_dirty(in.is_dirty))
+        return;
+
+    if (DebugOptions::log_when_compiling_nodes())
+        Cool::Log::ToUser::info("Nodes", "Rendered particles");
+    // _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+    // module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+    in.set_clean(module.dirty_flag());
 
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -74,15 +77,17 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
 void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
     _compositing_module._nodes_graph = &_nodes_editor.graph();
-    // if (in.is_dirty(_regenerate_code_flag))
-    // {
-    //     if (DebugOptions::log_when_compiling_nodes())
-    //         Cool::Log::ToUser::info("Nodes", "Compiled");
-    //     _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-    //     // _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
-    //     in.set_clean(_regenerate_code_flag);
-    // }
-    // else if (!_compositing_module.is_dirty(in.is_dirty)) return;
+
+    // TODO(Particles) Rename module.is_dirty() as module.needs_to_render
+    // TODO(Particles) Remove module.is_dirty() from module
+    if (!_compositing_module.is_dirty(in.is_dirty))
+        return;
+
+    if (DebugOptions::log_when_compiling_nodes())
+        Cool::Log::ToUser::info("Nodes", "Rendered compositing");
+    // _compositing_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+    // _particles_module.compile(_nodes_editor.graph(), _main_node_id, update_ctx);
+    in.set_clean(_compositing_module.dirty_flag());
 
     if (_compositing_module.shader_is_valid())
     {
@@ -133,10 +138,10 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 ctx.input_provider()
             );
             // TODO(Particles) Create the module and set its shader
-            _particle_modules.push_back(
-                Module_Particles()
-            );
-            _particle_modules.back().set_simulation_shader_code(simulation_shader_code);
+            // _particle_modules.push_back(
+            //     Module_Particles()
+            // );
+            // _particle_modules.back().set_simulation_shader_code(simulation_shader_code);
             return true;
         }
     );
