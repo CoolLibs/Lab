@@ -19,7 +19,7 @@ ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 {
 }
 
-void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
+void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
     // TODO(Particles) Remove those _nodes_graph
     for (auto& module : _particles_modules)
@@ -33,7 +33,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     {
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Nodes", "Compiled");
-        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx);
+        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx, dirty_flag_factory);
         for (auto& module : _particles_modules)
             update_ctx.set_dirty(module->dirty_flag());
         update_ctx.set_dirty(_compositing_module.dirty_flag());
@@ -97,7 +97,7 @@ void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
         set_dirty(module->dirty_flag());
 }
 
-void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx)
+void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
     _particles_modules.clear();
     _compositing_module.reset();
@@ -121,11 +121,11 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 get_node_def,
                 ctx.input_provider()
             );
-            // TODO(Particles) Create the module and set its shader
-            // _particle_modules.push_back(
-            //     Module_Particles()
-            // );
-            // _particle_modules.back().set_simulation_shader_code(simulation_shader_code);
+
+            // Create the module and set its shader
+            _particles_modules.push_back(std::make_unique<Module_Particles>(dirty_flag_factory, ctx.ui().input_factory()));
+            _particles_modules.back()->set_simulation_shader_code(simulation_shader_code, ctx, false);
+
             return true;
         }
     );

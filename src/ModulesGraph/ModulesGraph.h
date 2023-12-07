@@ -13,7 +13,7 @@ public:
     ModulesGraph() = default;
     ModulesGraph(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
-    void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref);
+    void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
     void trigger_rerender_all(Cool::SetDirty_Ref);
 
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
@@ -41,7 +41,7 @@ public:
     auto particles_render_target() const -> auto const& { return _particles_render_target; } // TODO(Modules) Remove
 
 private:
-    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref);
+    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
     void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params, UpdateContext_Ref update_ctx);
     void render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx);
     void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx);

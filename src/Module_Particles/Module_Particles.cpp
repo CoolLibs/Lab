@@ -18,41 +18,27 @@ Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory
 {
 }
 
-void Module_Particles::compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref update_ctx, bool for_testing_nodes)
+void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
-    // TODO(Particles)
-    //
-    // _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
-    // _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
-    // _shader_code               = "";
-    // _depends_on_time           = false;
-    // _depends_on_particles      = false;
-    // _depends_on_audio_volume   = false;
-    // _depends_on_audio_waveform = false;
-    // _depends_on_audio_spectrum = false;
-
-    if (!nodes_graph.try_get_node<Node>(root_node_id))
-        return; // Otherwise we will get a default UV image instead of a transparent image.
-
-    auto const shader_code = generate_simulation_shader_code(
-        nodes_graph,
-        root_node_id,
-        Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
-        update_ctx.input_provider()
-    );
     if (!shader_code)
     {
-        // handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
+        // ? TODO(Particles): handle error (parent class with Compositing ?)
         return;
     }
+
     _shader_code = *shader_code;
 
+    // ? TODO(Particles): handle error (parent class with Compositing ?)
+    // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
+
+    // TODO(Particles) Don't recreate the particle system every time, just change  the shader but keep the current position and velocity of the particles
+    // _particle_system.set_simulation_shader(*shader_code); // TODO(Particles) Make this function return an optional error
     try
     {
         _particle_system = Cool::ParticleSystem{
             _particles_count,
             Cool::ParticlesShadersCode{
-                .simulation = _shader_code,
+                .simulation = *shader_code,
                 .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
                 .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
                 .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
@@ -65,11 +51,7 @@ void Module_Particles::compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId
         return;
     }
 
-    // TODO(Particles)
-    // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
-    //
-    // handle_error(maybe_err, for_testing_nodes);
-    //
+    // ? TODO(Particles): compute_dependencies (parent class with Compositing ?)
     // compute_dependencies();
 }
 

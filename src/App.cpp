@@ -281,7 +281,8 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
             _project.variable_registries,
             render_target.desired_size(),
         },
-        update_context()
+        update_context(),
+        dirty_flag_factory()
     );
 }
 

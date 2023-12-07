@@ -555,6 +555,9 @@ auto gen_desired_function(
     if (node_definition_callback(id, *node_definition))
     {
         return "pouet";
+        // TODO(Particles)
+        // now return the name of the function that was just generated
+        // return desired_function_name(*node_definition, id, desired_signature);
     }
 
     auto const base_function_name = gen_base_function(node, *node_definition, id, context, node_definition_callback);

@@ -1,4 +1,6 @@
 #pragma once
+#include <optional>
+#include "Common/FullscreenShader.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
 #include "Cool/Nodes/NodesGraph.h"
@@ -6,7 +8,6 @@
 #include "Module/Module.h"
 
 namespace Lab {
-
 class Module_Particles : public Module {
 public:
     Module_Particles();
@@ -26,12 +27,12 @@ public:
 
     void imgui_debug_menu(Cool::SetDirty_Ref set_dirty);
 
-    void compile(Cool::NodesGraph const& nodes_graph, Cool::NodeId const& root_node_id, UpdateContext_Ref, bool for_testing_nodes = false);
+    void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
 
 private:
     void render(RenderParams, UpdateContext_Ref) override;
-
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
+    void compute_dependencies();
     // void recreate_particle_system(); // TODO(Modules) Remove me, this is for tests only
 
 private:
