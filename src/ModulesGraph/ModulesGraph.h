@@ -6,6 +6,11 @@
 
 namespace Lab {
 
+struct ModulesGraphNode {
+    Module_Particles module;
+    Cool::RenderTarget render_target;
+}
+
 /// The main class containing all the nodes of the project.
 /// It is responsible for spawning the various modules as required by the nodes, and knowing the dependencies between them.
 class ModulesGraph {
@@ -24,7 +29,7 @@ public:
     void               update_particles(UpdateContext_Ref update_ctx)
     {
         for (auto& module : _particles_modules)
-            module->update_particles(update_ctx);
+            module.update_particles(update_ctx);
     }
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
@@ -54,7 +59,7 @@ private:
     Cool::Input<Cool::Camera> _camera_input{};         // TODO(Modules) Does it belong here?
 
     Module_Compositing                             _compositing_module{};
-    std::vector<std::unique_ptr<Module_Particles>> _particles_modules{}; // TODO(Particles) We shouldn't need the unique_ptr
+    std::vector<Module_Particles> _particles_modules{}; // TODO(Particles) We shouldn't need the unique_ptr
     Cool::RenderTarget                             _particles_render_target{};
 
 private:

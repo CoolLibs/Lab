@@ -44,7 +44,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 
     // TODO(Particles) Render in the order of dependency between the modules
     for (auto& module : _particles_modules)
-        render_particle_module(*module, render_target, in, update_ctx); // TODO(Particles) Create a render target for each module and render on it here.
+        render_particle_module(module, render_target, in, update_ctx); // TODO(Particles) Create a render target for each module and render on it here.
     render_compositing_module(render_target, in, update_ctx);
 }
 
@@ -94,7 +94,7 @@ void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
 {
     set_dirty(_compositing_module.dirty_flag());
     for (auto& module : _particles_modules)
-        set_dirty(module->dirty_flag());
+        set_dirty(module.dirty_flag());
 }
 
 void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
@@ -235,8 +235,8 @@ auto ModulesGraph::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
     return check_dirty(_regenerate_code_flag)
            || _compositing_module.is_dirty(check_dirty)
-           || std::any_of(_particles_modules.begin(), _particles_modules.end(), [&](std::unique_ptr<Module_Particles> const& module) {
-                  return module->is_dirty(check_dirty);
+           || std::any_of(_particles_modules.begin(), _particles_modules.end(), [&](Module_Particles const& module) {
+                  return module.is_dirty(check_dirty);
               });
 };
 
