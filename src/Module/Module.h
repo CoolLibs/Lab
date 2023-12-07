@@ -28,19 +28,22 @@ public:
         img::Size                                        render_target_size;
     };
 
-    Module()                                     = default;
-    Module(Module const&)                        = delete;
-    auto operator=(Module const&) -> Module&     = delete;
-    Module(Module&&) noexcept                    = delete;
-    auto operator=(Module&&) noexcept -> Module& = delete;
+    Module()                                 = default;
+    Module(Module const&)                    = delete;
+    auto operator=(Module const&) -> Module& = delete;
+
+protected:
+    Module(Module&&) noexcept                    = default;
+    auto operator=(Module&&) noexcept -> Module& = default;
+
+public:
+    virtual ~Module() = default;
 
     Module(std::string_view name, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
         : _name{name}
         , _dirty_flag{dirty_flag_factory.make()}
     {
     }
-
-    virtual ~Module() = default;
 
     [[nodiscard]] auto name() const -> const std::string& { return _name; }
 
