@@ -11,11 +11,11 @@ class Module_Particles : public Module {
 public:
     Module_Particles();
     explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
-    Module_Particles(Module_Particles const&)                        = default;
-    auto operator=(Module_Particles const&) -> Module_Particles&     = default;
+    Module_Particles(Module_Particles const&)                        = delete;
+    auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
     Module_Particles(Module_Particles&&) noexcept                    = default;
     auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
-    ~Module_Particles()                                              = default;
+    ~Module_Particles() override                                     = default;
 
     Cool::NodesGraph const* _nodes_graph; // TODO(Particles) Remove
 
