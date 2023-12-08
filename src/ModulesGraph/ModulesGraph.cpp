@@ -111,9 +111,9 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
         root_node_id,
         get_node_def,
         ctx.input_provider(),
-        [&](Cool::NodeId const& particles_root_node_id, NodeDefinition const& node_definition) {
+        [&](Cool::NodeId const& particles_root_node_id, NodeDefinition const& node_definition) -> std::optional<std::string> {
             if (!is_particle(node_definition.signature()))
-                return false;
+                return std::nullopt;
 
             auto const simulation_shader_code = generate_simulation_shader_code(
                 graph,
@@ -126,10 +126,10 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             _particles_modules.push_back(std::make_unique<Module_Particles>(dirty_flag_factory, ctx.ui().input_factory()));
             _particles_modules.back()->set_simulation_shader_code(simulation_shader_code, ctx, false);
 
-            return true;
+            return node_definition.name();
         }
     );
-    _compositing_module.set_shader_code(shader_code, ctx, false);
+    _compositing_module.set_shader_code(shader_code.value(), ctx, false);
 
     // try
     // {

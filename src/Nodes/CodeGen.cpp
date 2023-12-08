@@ -4,6 +4,8 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
+#include <Nodes/PrimitiveType.h>
+#include <fmt/core.h>
 #include <optional>
 #include <string>
 #include "CodeGenContext.h"
@@ -545,20 +547,51 @@ auto gen_desired_function(
     NodeDefinitionCallback const& node_definition_callback
 ) -> ExpectedFunctionName
 {
-    auto const node_definition = context.get_node_definition(node.id_names()); // NOLINT(readability-qualified-auto)
+    auto node_definition = context.get_node_definition(node.id_names()); // NOLINT(readability-qualified-auto)
     if (!node_definition)
         return tl::make_unexpected(fmt::format(
             "Node definition \"{}\" was not found. Are you missing a file in your nodes folder?",
             node.definition_name()
         ));
 
-    if (node_definition_callback(id, *node_definition))
+    std::optional<std::string> const maybe_texture_name = node_definition_callback(id, *node_definition);
+
+    if (maybe_texture_name.has_value())
     {
-        return "pouet";
-        // TODO(Particles)
-        // now return the name of the function that was just generated
-        // return desired_function_name(*node_definition, id, desired_signature);
-    }
+        using fmt::literals::operator""_a;
+        auto const main_function_signature = MainFunctionSignature{
+            FunctionSignature{
+                .from  = PrimitiveType::UV,
+                .to    = PrimitiveType::sRGB_StraightA,
+                .arity = 1,
+            },
+            std::vector<std::string>{"uv"}
+        };
+        auto const main_function_pieces = MainFunctionPieces{
+            .name      = "read_particle_texture",
+            .signature = main_function_signature,
+            .body      = fmt::format(R"glsl(
+uv = unnormalize_uv(to_view_space(uv));
+return texture({texture_name}, uv);
+)glsl",
+                                     "texture_name"_a = *maybe_texture_name),
+        };
+        static const auto node_make_definition = NodeDefinition::make(
+            NodeDefinition_Data{
+                .main_function    = main_function_pieces,
+                .helper_functions = {},
+                .included_files   = {},
+                .input_functions  = {},
+                .input_values     = {},
+                .output_indices   = {},
+            },
+            {}
+        );
+
+        // We control the node definition callback, so we know that the node definition we are getting is valid.
+        assert(node_make_definition.has_value());
+        node_definition = &node_make_definition.value();
+    } // namespace Lab
 
     auto const base_function_name = gen_base_function(node, *node_definition, id, context, node_definition_callback);
     if (!base_function_name)

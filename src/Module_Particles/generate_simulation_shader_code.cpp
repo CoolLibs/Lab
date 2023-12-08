@@ -1,4 +1,5 @@
 #include "generate_simulation_shader_code.h"
+#include <optional>
 #include "Nodes/shader_boilerplate.h"
 
 // #include "Cool/String/String.h"
@@ -78,7 +79,7 @@ auto generate_simulation_shader_code(
     };
 
     auto node_definition_callback = [](auto const&, auto const&) {
-        return false;
+        return std::nullopt;
     };
 
     return generate_shader_code(
