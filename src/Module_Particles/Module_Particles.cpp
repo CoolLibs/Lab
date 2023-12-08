@@ -35,26 +35,34 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
 
     // TODO(Particles) Don't recreate the particle system every time, just change  the shader but keep the current position and velocity of the particles
     // _particle_system.set_simulation_shader(*shader_code); // TODO(Particles) Make this function return an optional error
+
     try
     {
-        _particle_system = Cool::ParticleSystem{
-            _particles_count,
-            Cool::ParticlesShadersCode{
-                .simulation = *shader_code,
-                .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
-                .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
-                .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-            }
-        };
+        if (_particle_system.has_value())
+        {
+            _particle_system->set_simulation_shader(_shader_code);
+        }
+        else
+        {
+            _particle_system = Cool::ParticleSystem{
+                _particles_count,
+                Cool::ParticlesShadersCode{
+                    .simulation = *shader_code,
+                    .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
+                    .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
+                    .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
+                }
+            };
+
+            // ? TODO(Particles): compute_dependencies (parent class with Compositing ?)
+            compute_dependencies();
+        }
     }
     catch (std::exception const& e)
     {
         Cool::Log::ToUser::error("Particles Compilation Failed", e.what());
         return;
     }
-
-    // ? TODO(Particles): compute_dependencies (parent class with Compositing ?)
-    compute_dependencies();
 }
 
 void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty)
