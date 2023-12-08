@@ -38,7 +38,10 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 
     // TODO(Particles) Remove those _nodes_graph
     for (auto& module_node : _particles_module_nodes)
-        module_node->module._nodes_graph = &_nodes_editor.graph();
+    {
+        module_node->module._nodes_graph            = &_nodes_editor.graph();
+        module_node->module._feedback_double_buffer = &_compositing_module.feedback_double_buffer();
+    }
     _compositing_module._nodes_graph = &_nodes_editor.graph();
     // TODO(Particles) Render in the order of dependency between the modules
     for (auto& node : _particles_module_nodes)

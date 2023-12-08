@@ -1,6 +1,7 @@
 #pragma once
 #include <optional>
 #include "Common/FullscreenShader.h"
+#include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
 #include "Cool/Nodes/NodesGraph.h"
@@ -18,7 +19,8 @@ public:
     auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
     ~Module_Particles() override                                     = default;
 
-    Cool::NodesGraph const* _nodes_graph; // TODO(Particles) Remove
+    Cool::NodesGraph const*                 _nodes_graph;            // TODO(Particles) Remove
+    Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer; // TODO(Particles) Remove
 
     void update(UpdateContext_Ref) override;
     void update_particles(UpdateContext_Ref);
@@ -29,6 +31,10 @@ public:
 
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
 
+    [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
+    [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }
+    [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on_audio_volume || _depends_on_audio_waveform || _depends_on_audio_spectrum; }
+
 private:
     void render(RenderParams, UpdateContext_Ref) override;
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
@@ -38,6 +44,12 @@ private:
 private:
     mutable std::string         _shader_code{};
     mutable Cool::MessageSender _shader_compilation_error{};
+
+    bool _depends_on_time{false};
+    bool _depends_on_particles{false};
+    bool _depends_on_audio_volume{false};
+    bool _depends_on_audio_waveform{false};
+    bool _depends_on_audio_spectrum{false};
 
     size_t                              _particles_count{5'000};
     std::optional<Cool::ParticleSystem> _particle_system;

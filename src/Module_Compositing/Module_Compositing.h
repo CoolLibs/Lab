@@ -1,6 +1,7 @@
 #pragma once
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
+#include <memory>
 #include <tl/expected.hpp>
 #include "Common/FullscreenShader.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
@@ -42,6 +43,8 @@ public:
     [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
     [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }
     [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on_audio_volume || _depends_on_audio_waveform || _depends_on_audio_spectrum; }
+
+    auto feedback_double_buffer() const -> Cool::DoubleBufferedRenderTarget const& { return _feedback_double_buffer; }
 
 private:
     void render(RenderParams, UpdateContext_Ref) override;
