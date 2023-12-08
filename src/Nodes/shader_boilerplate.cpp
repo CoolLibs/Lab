@@ -33,13 +33,14 @@ static auto inject_context_argument_in_all_functions(std::string code, std::vect
 }
 
 auto generate_shader_code(
-    Cool::NodesGraph const&                     graph,
-    Cool::NodeId const&                         root_node_id,
-    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Cool::InputProvider_Ref                     input_provider,
-    NodeDefinitionCallback const&               node_definition_callback,
-    FunctionSignature const&                    signature,
-    ShaderContent const&                        content
+    Cool::NodesGraph const&                          graph,
+    Cool::NodeId const&                              root_node_id,
+    Cool::GetNodeDefinition_Ref<NodeDefinition>      get_node_definition,
+    Cool::InputProvider_Ref                          input_provider,
+    NodeDefinitionCallback const&                    node_definition_callback,
+    FunctionSignature const&                         signature,
+    ShaderContent const&                             content,
+    std::function<std::vector<std::string>()> const& get_textures_names
 )
     -> tl::expected<std::string, std::string>
 {
@@ -50,6 +51,7 @@ auto generate_shader_code(
         context,
         node_definition_callback
     );
+
     if (!main_function_name)
         return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
 
@@ -64,7 +66,6 @@ uniform sampler1D _audio_waveform;
 uniform mat3      _camera2D;
 uniform mat3      _camera2D_inverse;
 uniform sampler2D _previous_frame_texture;
-uniform sampler2D _particles_texture;
 )glsl";
 
     static std::string const global_includes =
@@ -98,12 +99,20 @@ struct CoollabContext
     // if (!main_function_name)
     //     return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
 
+    std::string textures_uniforms;
+    auto const  tex_names = get_textures_names();
+    for (auto const& name : tex_names)
+    {
+        textures_uniforms += fmt::format("uniform sampler2D {};\n", name);
+    }
+
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(R"glsl(
             {in_version}
             {global_uniforms}
             {in_uniforms}
+            {textures_uniforms}
             {global_includes}
             {in_includes}
             {global_structuration}
@@ -115,6 +124,7 @@ struct CoollabContext
         "in_version"_a                   = content.version,
         "global_uniforms"_a              = global_uniforms,
         "in_uniforms"_a                  = content.uniforms,
+        "textures_uniforms"_a            = textures_uniforms,
         "global_includes"_a              = global_includes,
         "in_includes"_a                  = content.includes,
         "global_structuration"_a         = global_structuration,

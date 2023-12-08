@@ -7,10 +7,20 @@
 namespace Lab {
 
 struct ModulesGraphNode {
-    Module_Particles   module;
-    Cool::RenderTarget render_target;
+    // ModulesGraphNode()  = default;
+    // ~ModulesGraphNode() = default;
+
+    // ModulesGraphNode(const ModulesGraphNode&)                      = delete; // We disable copying
+    // ModulesGraphNode& operator=(const ModulesGraphNode&)           = delete; // We disable copying
+    // ModulesGraphNode(ModulesGraphNode&& other) noexcept            = default;
+    // ModulesGraphNode& operator=(ModulesGraphNode&& other) noexcept = default;
+
+    Module_Particles   module{};
+    std::string        texture_name_in_shader{};
+    Cool::RenderTarget render_target{};
 
 private:
+    // TODO(Particles) Think about how we serialize this
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)
@@ -39,7 +49,10 @@ public:
     void               update_particles(UpdateContext_Ref update_ctx)
     {
         for (auto& node : _particles_module_nodes)
-            node.module.update_particles(update_ctx);
+        {
+            node->module._nodes_graph = &_nodes_editor.graph();
+            node->module.update_particles(update_ctx);
+        }
     }
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
@@ -64,11 +77,8 @@ private:
     Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
     Cool::Input<Cool::Camera> _camera_input{};         // TODO(Modules) Does it belong here?
 
-    Module_Compositing _compositing_module{};
-    // TODO(Particles) update all uses of
-    // _particles_render_target and _particles_modules
-    // to match te Module_Particles struct
-    std::vector<ModulesGraphNode> _particles_module_nodes{};
+    Module_Compositing                             _compositing_module{};
+    std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)
 
 private:
     // Serialization

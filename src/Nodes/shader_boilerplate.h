@@ -31,7 +31,8 @@ auto generate_shader_code(
     Cool::InputProvider_Ref,
     NodeDefinitionCallback const&,
     FunctionSignature const&,
-    ShaderContent const&
+    ShaderContent const&,
+    std::function<std::vector<std::string>()> const& get_textures_names
 ) -> tl::expected<std::string, std::string>;
 
 auto valid_property_name(

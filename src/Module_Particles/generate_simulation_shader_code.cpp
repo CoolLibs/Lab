@@ -89,7 +89,8 @@ auto generate_simulation_shader_code(
         input_provider,
         node_definition_callback,
         signature,
-        content
+        content,
+        []() { return std::vector<std::string>(); }
     );
 
     //     using fmt::literals::operator""_a;

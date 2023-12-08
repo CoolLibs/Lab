@@ -4,11 +4,12 @@
 namespace Lab {
 
 auto generate_compositing_shader_code(
-    Cool::NodesGraph const&                     graph,
-    Cool::NodeId const&                         root_node_id,
-    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Cool::InputProvider_Ref                     input_provider,
-    NodeDefinitionCallback const&               node_definition_callback
+    Cool::NodesGraph const&                          graph,
+    Cool::NodeId const&                              root_node_id,
+    Cool::GetNodeDefinition_Ref<NodeDefinition>      get_node_definition,
+    Cool::InputProvider_Ref                          input_provider,
+    NodeDefinitionCallback const&                    node_definition_callback,
+    std::function<std::vector<std::string>()> const& get_textures_names
 )
     -> tl::expected<std::string, std::string>
 {
@@ -17,6 +18,7 @@ auto generate_compositing_shader_code(
         .version       = "#version 410",
         .uniforms      = R"glsl(
             uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
+
             out vec4 out_Color;
         )glsl",
         .includes      = R"glsl(
@@ -62,7 +64,8 @@ auto generate_compositing_shader_code(
         input_provider,
         node_definition_callback,
         signature,
-        content
+        content,
+        get_textures_names
     );
 }
 

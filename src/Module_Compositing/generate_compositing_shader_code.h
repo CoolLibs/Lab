@@ -12,7 +12,8 @@ auto generate_compositing_shader_code(
     Cool::NodeId const& root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>,
     Cool::InputProvider_Ref,
-    NodeDefinitionCallback const& node_definition_callback
+    NodeDefinitionCallback const&                    node_definition_callback,
+    std::function<std::vector<std::string>()> const& get_textures_names
 ) -> tl::expected<std::string, std::string>;
 
 auto valid_property_name(
