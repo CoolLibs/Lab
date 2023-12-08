@@ -40,6 +40,7 @@ public:
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
+    [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }
     [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on_audio_volume || _depends_on_audio_waveform || _depends_on_audio_spectrum; }
 
 private:
@@ -55,6 +56,7 @@ private:
     Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
 
     bool _depends_on_time{false};
+    bool _depends_on_particles{false};
     bool _depends_on_audio_volume{false};
     bool _depends_on_audio_waveform{false};
     bool _depends_on_audio_spectrum{false};

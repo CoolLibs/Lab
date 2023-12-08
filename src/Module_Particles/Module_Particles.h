@@ -1,7 +1,6 @@
 #pragma once
 #include <optional>
 #include "Common/FullscreenShader.h"
-#include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
 #include "Cool/Nodes/NodesGraph.h"
@@ -32,23 +31,16 @@ public:
 
 private:
     void render(RenderParams, UpdateContext_Ref) override;
-    void render_impl(RenderParams, UpdateContext_Ref);
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void compute_dependencies();
     // void recreate_particle_system(); // TODO(Modules) Remove me, this is for tests only
 
 private:
-    mutable std::string              _shader_code{};
-    mutable Cool::MessageSender      _shader_compilation_error{};
-    Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
+    mutable std::string         _shader_code{};
+    mutable Cool::MessageSender _shader_compilation_error{};
 
     size_t                              _particles_count{5'000};
     std::optional<Cool::ParticleSystem> _particle_system;
-
-    bool _depends_on_time{false};
-    bool _depends_on_audio_volume{false};
-    bool _depends_on_audio_waveform{false};
-    bool _depends_on_audio_spectrum{false};
 
 private:
     // Serialization
