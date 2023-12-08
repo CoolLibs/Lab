@@ -10,6 +10,7 @@
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/StrongTypes/set_uniform.h"
+#include "Module/ShaderBased/handle_error.h"
 #include "generate_compositing_shader_code.h"
 
 namespace Lab {
@@ -36,11 +37,11 @@ void Module_Compositing::reset()
     _depends_on_audio_spectrum = false;
 }
 
-void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes)
+void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx)
 {
     if (!shader_code)
     {
-        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, for_testing_nodes);
+        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, name(), _shader_compilation_error);
         return;
     }
 
@@ -48,28 +49,9 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
 
     auto const maybe_err = _shader.compile(_shader_code, update_ctx);
 
-    handle_error(maybe_err, for_testing_nodes);
+    handle_error(maybe_err, name(), _shader_compilation_error);
 
     compute_dependencies();
-}
-
-void Module_Compositing::handle_error(Cool::OptionalErrorMessage const& maybe_err, bool for_testing_nodes) const
-{
-    if (!for_testing_nodes)
-    {
-        maybe_err.send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
-            return make_shader_compilation_error_message(name(), "", msg);
-        });
-    }
-    else
-    {
-        maybe_err.send_error_if_any(
-            [&](const std::string& msg) {
-                return make_shader_compilation_error_message("Test Nodes", "", msg);
-            },
-            Cool::Log::ToUser::console()
-        );
-    }
 }
 
 static auto contains_two_or_more(std::string_view word, std::string_view text) -> bool
@@ -101,7 +83,7 @@ void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) 
                 _shader_code,
                 update_ctx
             );
-            handle_error(maybe_err, false);
+            handle_error(maybe_err, name(), _shader_compilation_error);
 
             ui.dirty_setter()(dirty_flag()); // Trigger rerender
         }

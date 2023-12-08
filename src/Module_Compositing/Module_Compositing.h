@@ -38,7 +38,7 @@ public:
 
     void reset();
 
-    void set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
+    void set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx);
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on_time; }
     [[nodiscard]] auto depends_on_particles() const -> bool { return _depends_on_particles; }
@@ -48,7 +48,6 @@ public:
 
 private:
     void render(RenderParams, UpdateContext_Ref) override;
-    void handle_error(Cool::OptionalErrorMessage const&, bool for_testing_nodes) const;
     void render_impl(RenderParams, UpdateContext_Ref);
     void compute_dependencies(); // We don't want to rerender when audio / time changes if we don't depend on them. Also, audio features are costly to compute, so we only set these uniforms in the shader if we actually need them.
 
