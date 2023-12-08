@@ -7,8 +7,6 @@
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "UI/imgui_show.h"
 
-// TODO(Particles) Don't rerender everey frame (missing a set_clean(flag) somewhere)
-
 namespace Lab {
 
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
@@ -35,7 +33,8 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
         in.set_clean(_regenerate_code_flag);
     }
 
-    // _particles_render_target.set_size(render_target.desired_size());
+    for (auto& module_node : _particles_module_nodes)
+        module_node->render_target.set_size(render_target.desired_size());
 
     // TODO(Particles) Remove those _nodes_graph
     for (auto& module_node : _particles_module_nodes)
