@@ -7,9 +7,19 @@
 namespace Lab {
 
 struct ModulesGraphNode {
-    Module_Particles module;
+    Module_Particles   module;
     Cool::RenderTarget render_target;
-}
+
+private:
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Module", module)
+        );
+    }
+};
 
 /// The main class containing all the nodes of the project.
 /// It is responsible for spawning the various modules as required by the nodes, and knowing the dependencies between them.
@@ -28,8 +38,8 @@ public:
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     void               update_particles(UpdateContext_Ref update_ctx)
     {
-        for (auto& module : _particles_modules)
-            module.update_particles(update_ctx);
+        for (auto& node : _particles_module_nodes)
+            node.module.update_particles(update_ctx);
     }
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
@@ -40,10 +50,6 @@ public:
 
     auto compositing_module() const -> Module_Compositing const& { return _compositing_module; } // TODO(Modules) Remove
     auto compositing_module() -> Module_Compositing& { return _compositing_module; }             // TODO(Modules) Remove
-    // auto particles_module() const -> Module_Particles const& { return _particles_modules; }      // TODO(Modules) Remove
-    // auto particles_module() -> Module_Particles& { return _particles_modules; }                  // TODO(Modules) Remove
-    auto particles_render_target() -> auto& { return _particles_render_target; }             // TODO(Modules) Remove
-    auto particles_render_target() const -> auto const& { return _particles_render_target; } // TODO(Modules) Remove
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
@@ -58,9 +64,11 @@ private:
     Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
     Cool::Input<Cool::Camera> _camera_input{};         // TODO(Modules) Does it belong here?
 
-    Module_Compositing                             _compositing_module{};
-    std::vector<Module_Particles> _particles_modules{}; // TODO(Particles) We shouldn't need the unique_ptr
-    Cool::RenderTarget                             _particles_render_target{};
+    Module_Compositing _compositing_module{};
+    // TODO(Particles) update all uses of
+    // _particles_render_target and _particles_modules
+    // to match te Module_Particles struct
+    std::vector<ModulesGraphNode> _particles_module_nodes{};
 
 private:
     // Serialization
@@ -70,7 +78,7 @@ private:
     {
         archive(
             cereal::make_nvp("Compositing Module", _compositing_module),
-            cereal::make_nvp("Particles Module", _particles_modules),
+            cereal::make_nvp("Particles Module", _particles_module_nodes),
             cereal::make_nvp("Dirty Flag: Regenerate Code", _regenerate_code_flag),
             cereal::make_nvp("Node Editor", _nodes_editor),
             cereal::make_nvp("Main Node ID", _main_node_id),

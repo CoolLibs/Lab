@@ -22,8 +22,8 @@ ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
     // TODO(Particles) Remove those _nodes_graph
-    for (auto& module : _particles_modules)
-        (*module)._nodes_graph = &_nodes_editor.graph();
+    for (auto& module_node : _particles_module_nodes)
+        module_node.module._nodes_graph = &_nodes_editor.graph();
     (_compositing_module)._nodes_graph = &_nodes_editor.graph();
 
     if (render_target.needs_resizing())
@@ -34,8 +34,8 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Nodes", "Compiled");
         create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx, dirty_flag_factory);
-        for (auto& module : _particles_modules)
-            update_ctx.set_dirty(module->dirty_flag());
+        for (auto& node : _particles_module_nodes)
+            update_ctx.set_dirty(node.module.dirty_flag());
         update_ctx.set_dirty(_compositing_module.dirty_flag());
         in.set_clean(_regenerate_code_flag);
     }
@@ -43,8 +43,8 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     // _particles_render_target.set_size(render_target.desired_size());
 
     // TODO(Particles) Render in the order of dependency between the modules
-    for (auto& module : _particles_modules)
-        render_particle_module(module, render_target, in, update_ctx); // TODO(Particles) Create a render target for each module and render on it here.
+    for (auto& node : _particles_module_nodes)
+        render_particle_module(node.module, node.render_target, in, update_ctx);
     render_compositing_module(render_target, in, update_ctx);
 }
 
@@ -76,14 +76,14 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
     if (_compositing_module.shader_is_valid())
     {
         _compositing_module.shader().bind();
-        _compositing_module.shader().set_uniform_texture(
-            "_particles_texture",
-            _particles_render_target.get().texture_id(),
-            Cool::TextureSamplerDescriptor{
-                .repeat_mode        = Cool::TextureRepeatMode::None,
-                .interpolation_mode = glpp::Interpolation::Linear,
-            }
-        );
+        // _compositing_module.shader().set_uniform_texture(
+        //     "_particles_texture",
+        //     _particles_render_target.get().texture_id(),
+        //     Cool::TextureSamplerDescriptor{
+        //         .repeat_mode        = Cool::TextureRepeatMode::None,
+        //         .interpolation_mode = glpp::Interpolation::Linear,
+        //     }
+        // );
         Cool::CameraShaderU::set_uniform(_compositing_module.shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
     }
 
@@ -93,13 +93,13 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
 void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
 {
     set_dirty(_compositing_module.dirty_flag());
-    for (auto& module : _particles_modules)
-        set_dirty(module.dirty_flag());
+    for (auto& node : _particles_module_nodes)
+        set_dirty(node.module.dirty_flag());
 }
 
 void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
-    _particles_modules.clear();
+    _particles_module_nodes.clear();
     _compositing_module.reset();
 
     if (!graph.try_get_node<Node>(root_node_id))
@@ -123,8 +123,12 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             );
 
             // Create the module and set its shader
-            _particles_modules.push_back(std::make_unique<Module_Particles>(dirty_flag_factory, ctx.ui().input_factory()));
-            _particles_modules.back()->set_simulation_shader_code(simulation_shader_code, ctx, false);
+            _particles_module_nodes.push_back(ModulesGraphNode{
+                .module        = Module_Particles(dirty_flag_factory, ctx.ui().input_factory()),
+                .render_target = Cool::RenderTarget(),
+            });
+
+            _particles_module_nodes.back().module.set_simulation_shader_code(simulation_shader_code, ctx, false);
 
             return node_definition.name();
         }
@@ -180,25 +184,16 @@ static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Re
             auto const var = ctx.input_provider().variable_registries().get(id);
             if (!var)
                 return Cool::ViewCoordinates{0.f};
-            return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{var->value().value, 1.f}}};
-            //
-        },
+            return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{var->value().value, 1.f}}}; },
         .set_position = [=](Cool::ViewCoordinates pos) {
-            //
-            auto const world_pos = glm::vec2{cam_transform * glm::vec3{pos, 1.f}};
-            ctx.ui().command_executor().execute(
-                Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{world_pos}}
-            );
-            //
-        },
-        .on_drag_stop = [=]() {
-            //
-            ctx.ui().command_executor().execute(
-                Command_FinishedEditingVariable{}
-            );
-            //
-        },
-        .id = id,
+                auto const world_pos = glm::vec2{cam_transform * glm::vec3{pos, 1.f}};
+                ctx.ui().command_executor().execute(
+                        Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{world_pos}}
+                        ); },
+        .on_drag_stop = [=]() { ctx.ui().command_executor().execute(
+                                    Command_FinishedEditingVariable{}
+                                ); },
+        .id           = id,
     };
 }
 
@@ -235,8 +230,8 @@ auto ModulesGraph::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
     return check_dirty(_regenerate_code_flag)
            || _compositing_module.is_dirty(check_dirty)
-           || std::any_of(_particles_modules.begin(), _particles_modules.end(), [&](Module_Particles const& module) {
-                  return module.is_dirty(check_dirty);
+           || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](ModulesGraphNode const& node) {
+                  return node.module.is_dirty(check_dirty);
               });
 };
 
@@ -267,5 +262,4 @@ void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
         imgui_show(_nodes_editor.graph().links());
     });
 }
-
 } // namespace Lab
