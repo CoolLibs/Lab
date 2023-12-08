@@ -172,8 +172,8 @@ void App::update()
         _last_time = _project.clock.time();
         _project.modules_graph->update_particles(update_context());
         // TODO(Particles) Compute dependencies properly ??
-        // if (_project.modules_graph->compositing_module().depends_on_time()
-        //     || _project.modules_graph->compositing_module().depends_on_particles())
+        if (_project.modules_graph->compositing_module().depends_on_time()
+            || _project.modules_graph->compositing_module().depends_on_particles())
         {
             trigger_rerender();
         }
