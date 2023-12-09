@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-10 WIP](#beta-10-wip)
+- [🐣beta-10](#beta-10)
 - [🐣beta-9](#beta-9)
 - [🐣beta-8](#beta-8)
 - [🐣beta-7](#beta-7)
@@ -12,11 +12,13 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-10 WIP
+## 🐣beta-10
 
 - ✨ Added Audio support! You can now import an audio file and play it while you generate your images. You can also use its volume and waveform to control your images. You can also receive sound from an input device (microphone, etc.). Check out [our audio tutorial](https://coollab-art.com/Tutorials/Features/Audio) to learn everything about it!
+![node_spectrum](https://github.com/CoolLibs/Lab/assets/45451201/17e77692-7941-4983-b2cf-a30b13aeee12)
 - 🟦 Added new nodes that you can use to display the audio features: "Fill Function", "Function to Shape" and "Add Displacement".
 - 💄 Added icons in the Commands menu.
+![open_audio_config_command](https://github.com/CoolLibs/Lab/assets/45451201/3a49dd4b-1247-4329-8ed0-81004940ae77)
 - 🐛 Fixed crash on Linux when opening a file explorer.
 - 🐛 Temporary workaround: on Linux the history isn't saved when closing Coollab, in order to avoid a crash.
 - 🚚 On Linux, moved user-data folder to *.local/share*
