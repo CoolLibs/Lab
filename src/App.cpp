@@ -170,13 +170,7 @@ void App::update()
     if (_last_time != _project.clock.time())
     {
         _last_time = _project.clock.time();
-        _project.modules_graph->update_particles(update_context());
-        // TODO(Particles) Compute dependencies properly ??
-        if (_project.modules_graph->compositing_module().depends_on_time()
-            || _project.modules_graph->compositing_module().depends_on_particles())
-        {
-            trigger_rerender();
-        }
+        _project.modules_graph->on_time_changed(update_context());
     }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {

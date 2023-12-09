@@ -268,6 +268,22 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
     };
 }
 
+void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
+{
+    for (auto& node : _particles_module_nodes)
+    {
+        // TODO(Particles) Debug option "Log when updating particles"
+        node->module._nodes_graph = &_nodes_editor.graph();
+        node->module.update_particles(update_ctx);
+    }
+
+    if (_compositing_module.depends_on_time()
+        || !_particles_module_nodes.empty())
+    {
+        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on time
+    }
+}
+
 void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const
 {
     ui.window({.name = "Nodes Registry"}, [&]() {
@@ -277,4 +293,5 @@ void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
         imgui_show(_nodes_editor.graph().links());
     });
 }
+
 } // namespace Lab
