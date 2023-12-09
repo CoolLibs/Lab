@@ -48,7 +48,7 @@ You can configure each audio feature on the <span class="icon-music"></span> *Au
 
 The *Window size* controls over how long of a section of the audio the volume will be averaged. A longer duration will result in smoother variations, but will be slower to compute.
 
-You can then access it with the node "*Volume (Audio)*". It is a number that you will typically use to drive some parameters of your nodes:
+You can access it with the node "*Volume (Audio)*". It is a number that you will typically use to drive some parameters of your nodes:
 
 ![node volume](img/Audio/node_volume.png)
 
@@ -60,7 +60,7 @@ The waveform is the raw amplitude of the audio signal, plotted over time.
 
 The *Window size* controls how big of a section of the audio will be visualized at once. A longer duration will result in more apparent scrolling, but will better show the shape of the wave.
 
-You can then access it with the node "*Waveform (Audio)*". You will typically visualize it as a function (with either "*Fill Function*" or "*Function to Shape*"), or apply it on top of a curve with "*Add Displacement*":
+You can access it with the node "*Waveform (Audio)*". You will typically visualize it as a function (with either "*Fill Function*" or "*Function to Shape*"), or apply it on top of a curve with "*Add Displacement*":
 
 ![node waveform](img/Audio/node_waveform.png)
 
@@ -72,6 +72,6 @@ The spectrum shows how much low and high pitches there is in your audio at the c
 
 The *Window size* controls over how long of a section of the audio the spectrum will be averaged. A longer duration will result in smoother variations, but will be slower to compute.
 
-You can then access it with the node "*Spectrum (Audio)*". You will typically visualize it as a function (with either "*Fill Function*" or "*Function to Shape*"), or apply it on top of a curve with "*Add Displacement*":
+You can access it with the node "*Spectrum (Audio)*". You will typically visualize it as a function (with either "*Fill Function*" or "*Function to Shape*"), or apply it on top of a curve with "*Add Displacement*":
 
 ![node spectrum](img/Audio/node_spectrum.png)
