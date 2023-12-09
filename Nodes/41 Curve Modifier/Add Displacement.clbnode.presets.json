@@ -33,6 +33,16 @@
                                     }
                                 }
                             }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Flip direction",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
                         }
                     ]
                 }
