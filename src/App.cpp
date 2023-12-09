@@ -610,15 +610,15 @@ void App::commands_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("Commands", ICOMOON_ROCKET, true).c_str()))
     {
-        if (ImGui::Selectable("Show all the tips"))
+        if (ImGui::Selectable(ICOMOON_BUBBLE " Show all the tips"))
             _tips_manager.open_all_tips_window();
-        if (ImGui::Selectable("Open webcams config"))
+        if (ImGui::Selectable(ICOMOON_VIDEO_CAMERA " Open webcams config"))
             Cool::WebcamsConfigs::instance().open_imgui_window();
-        if (ImGui::Selectable("Open MIDI config"))
+        if (ImGui::Selectable(ICOMOON_EQUALIZER2 " Open MIDI config"))
             Cool::midi_manager().open_config_window();
-        if (ImGui::Selectable("Open Audio config"))
+        if (ImGui::Selectable(ICOMOON_MUSIC " Open Audio config"))
             _project.audio.open_imgui_window();
-        if (ImGui::Selectable("Open output window"))
+        if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
             _output_view.open();
         ImGui::EndMenu();
     }
