@@ -58,6 +58,8 @@ public:
     auto compositing_module() const -> Module_Compositing const& { return _compositing_module; } // TODO(Modules) Remove
     auto compositing_module() -> Module_Compositing& { return _compositing_module; }             // TODO(Modules) Remove
 
+    void reset_particle_module() const;
+
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
     void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params, UpdateContext_Ref update_ctx);
