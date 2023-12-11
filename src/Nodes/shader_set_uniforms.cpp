@@ -1,11 +1,11 @@
 #include "shader_set_uniforms.h"
-#include <Nodes/Node.h>
 #include <variant>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/StrongTypes/set_uniform.h"
+#include "Nodes/Node.h"
 #include "shader_boilerplate.h"
 
 namespace Lab {
