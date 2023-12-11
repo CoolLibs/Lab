@@ -7,6 +7,7 @@
 
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <wafl/wafl.hpp>
+#include "Cool/ImGui/icon_fmt.h"
 
 namespace Cool {
 template<typename... Ts>
