@@ -186,8 +186,11 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
             ui.set_dirty(_regenerate_code_flag);
         }
     }
-    // _compositing_module.imgui_windows(ui, update_ctx);
-    // _particles_module.imgui_windows(ui, update_ctx);
+    _compositing_module.imgui_windows(ui, update_ctx);
+    for (auto& _particles_module : _particles_module_nodes)
+    {
+        _particles_module->module.imgui_windows(ui, update_ctx);
+    }
 }
 
 static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D

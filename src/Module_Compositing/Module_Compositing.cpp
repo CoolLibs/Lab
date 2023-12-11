@@ -6,6 +6,7 @@
 #include <Nodes/Node.h>
 #include <Nodes/NodeDefinition.h>
 #include <Nodes/shader_set_uniforms.h>
+#include <imgui.h>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
@@ -77,6 +78,7 @@ void Module_Compositing::compute_dependencies()
 void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
     DebugOptions::show_generated_shader_code([&] {
+        ImGui::SeparatorText("Compositing shader");
         if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
         {
             const auto maybe_err = _shader.compile(

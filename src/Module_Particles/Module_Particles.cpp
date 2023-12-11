@@ -103,6 +103,7 @@ void Module_Particles::compute_dependencies()
 void Module_Particles::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
     DebugOptions::show_generated_shader_code([&] {
+        ImGui::SeparatorText("Particle shader");
         if (Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
         {
         }
