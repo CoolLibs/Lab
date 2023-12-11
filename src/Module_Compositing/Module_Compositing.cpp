@@ -51,16 +51,6 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     compute_dependencies();
 }
 
-static auto contains_two_or_more(std::string_view word, std::string_view text) -> bool
-{
-    auto const pos = Cool::String::find_word(word, text, 0);
-    if (pos == std::string_view::npos)
-        return false;
-
-    auto const pos2 = Cool::String::find_word(word, text, pos + 1);
-    return pos2 != std::string_view::npos;
-}
-
 void Module_Compositing::compute_dependencies()
 {
     auto const code = Cool::String::remove_comments(_shader_code);
