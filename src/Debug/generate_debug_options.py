@@ -66,6 +66,11 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
+            name_in_code="log_when_updating_particles",
+            name_in_ui="Log when updating particles",
+            available_in_release=True,
+        ),
+        DebugOption(
             name_in_code="log_when_compiling_nodes",
             name_in_ui="Log when compiling nodes",
             available_in_release=True,

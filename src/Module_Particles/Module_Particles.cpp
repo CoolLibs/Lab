@@ -77,6 +77,9 @@ void Module_Particles::update_particles(UpdateContext_Ref)
     if (!_particle_system)
         return;
 
+    if (DebugOptions::log_when_updating_particles())
+        Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
+
     _particle_system->update();
 }
 
