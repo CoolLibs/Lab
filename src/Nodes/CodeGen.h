@@ -44,11 +44,11 @@ auto gen_desired_function(
 
 /// Creates a function with the `desired_signature` from the given `node`.
 auto gen_desired_function(
-    FunctionSignature             desired_signature,
-    Node const&                   node,
-    Cool::NodeId const&           id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    FunctionSignature                  desired_signature,
+    std::reference_wrapper<Node const> node,
+    Cool::NodeId const&                id,
+    CodeGenContext&                    context,
+    NodeDefinitionCallback const&      node_definition_callback
 ) -> ExpectedFunctionName;
 
 } // namespace Lab

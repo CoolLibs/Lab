@@ -157,7 +157,7 @@ static auto gen_value_inputs(
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties res{};
+    Properties           res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
@@ -540,33 +540,33 @@ auto gen_desired_function(
 }
 
 auto gen_desired_function(
-    FunctionSignature             desired_signature,
-    Node const&                   node,
-    Cool::NodeId const&           id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    FunctionSignature                  desired_signature,
+    std::reference_wrapper<Node const> node,
+    Cool::NodeId const&                id,
+    CodeGenContext&                    context,
+    NodeDefinitionCallback const&      node_definition_callback
 ) -> ExpectedFunctionName
 {
-    auto node_definition = context.get_node_definition(node.id_names()); // NOLINT(readability-qualified-auto)
+    auto node_definition = context.get_node_definition(node.get().id_names()); // NOLINT(readability-qualified-auto)
     if (!node_definition)
         return tl::make_unexpected(fmt::format(
             "Node definition \"{}\" was not found. Are you missing a file in your nodes folder?",
-            node.definition_name()
+            node.get().definition_name()
         ));
 
     std::optional<std::string> const maybe_texture_name = node_definition_callback(id, *node_definition);
 
+    Node new_node;
     if (maybe_texture_name.has_value())
     {
         using fmt::literals::operator""_a;
-        auto const main_function_signature = MainFunctionSignature{
+        auto const           main_function_signature = MainFunctionSignature{
             FunctionSignature{
-                .from  = PrimitiveType::UV,
-                .to    = PrimitiveType::sRGB_StraightA,
-                .arity = 1,
+                          .from  = PrimitiveType::UV,
+                          .to    = PrimitiveType::sRGB_StraightA,
+                          .arity = 1,
             },
-            std::vector<std::string>{"uv"}
-        };
+            std::vector<std::string>{"uv"}};
         auto const main_function_pieces = MainFunctionPieces{
             .name      = "read_particle_texture",
             .signature = main_function_signature,
@@ -588,10 +588,13 @@ return texture({texture_name}, uv);
             {}
         );
 
+        new_node = Node(Cool::NodeDefinitionIdentifier{.definition_name = "get_module_texture", .category_name = "get_module_texture"}, 0, 0);
+        node = new_node;
+
         // We control the node definition callback, so we know that the node definition we are getting is valid.
         assert(node_make_definition.has_value());
         node_definition = &node_make_definition.value();
-    } // namespace Lab
+    }
 
     auto const base_function_name = gen_base_function(node, *node_definition, id, context, node_definition_callback);
     if (!base_function_name)
