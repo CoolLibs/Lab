@@ -19,6 +19,7 @@ auto generate_simulation_shader_code(
     ShaderContent content{
         .version       = "",
         .uniforms      = R"glsl(
+            uniform float _particle_size;
         )glsl",
         .includes      = R"glsl(
         )glsl",
@@ -38,6 +39,7 @@ auto generate_simulation_shader_code(
                 vec2 position;
                 vec2 velocity;
                 vec2 acceleration;
+                float size;
             };
         )glsl",
         .main          = [](
@@ -52,6 +54,7 @@ auto generate_simulation_shader_code(
                         particle.position     = vec2(_positions[gid * 2], _positions[gid * 2 + 1]);
                         particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
                         particle.acceleration = vec2(0.);
+                        particle.size = _particle_size;
 
                         CoollabContext coollab_context;
                         coollab_context.uv = particle.position;

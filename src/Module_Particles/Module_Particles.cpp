@@ -88,6 +88,8 @@ void Module_Particles::update_particles(UpdateContext_Ref)
     if (DebugOptions::log_when_updating_particles())
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
+    _particle_system->simulation_shader().bind();
+    _particle_system->simulation_shader().set_uniform("_particle_size", _particle_size);
     _particle_system->update();
 }
 
@@ -123,6 +125,7 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer);
     shader_send_uniforms(_particle_system->render_shader(), in, _nodes_graph);
 
+    _particle_system->render_shader().set_uniform("_particle_size", _particle_size);
     _particle_system->render();
 }
 

@@ -48,6 +48,7 @@ private:
     ModuleShaderDependencyFlags _dependencies;
 
     size_t                              _particles_count{5'000};
+    float                               _particle_size{0.01f};
     std::optional<Cool::ParticleSystem> _particle_system;
 
 private:
