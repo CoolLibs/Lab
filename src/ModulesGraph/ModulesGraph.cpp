@@ -8,6 +8,8 @@
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "UI/imgui_show.h"
 
+#include <iostream>
+
 namespace Lab {
 
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
@@ -141,6 +143,8 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             ));
 
             _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, ctx, false);
+
+            std::cout << "texture name: " << texture_name_in_shader << '\n';
 
             return texture_name_in_shader;
         },
