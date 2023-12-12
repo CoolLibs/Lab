@@ -1,6 +1,7 @@
 #include "ModulesGraph.h"
 #include <Module_Particles/Module_Particles.h>
 #include <Nodes/FunctionSignature.h>
+#include <Nodes/module_texture_name.h>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
@@ -126,7 +127,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 ctx.input_provider()
             );
 
-            auto const texture_name_in_shader = node_definition.name();
+            auto const texture_name_in_shader = base_function_name(node_definition, particles_root_node_id);
             // Create the module and set its shader
             _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
                 /*  .module                 =*/Module_Particles(dirty_flag_factory, ctx.ui().input_factory()),

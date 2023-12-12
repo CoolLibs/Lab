@@ -123,6 +123,24 @@ static auto desired_function_name(
     );
 }
 
+auto module_texture_name(
+    NodeDefinition const& definition,
+    Cool::NodeId const&   id
+)
+    -> std::string
+{
+    using fmt::literals::operator""_a;
+    return valid_glsl(
+        fmt::format(
+            FMT_COMPILE(
+                R"STR(texture_{name}{id})STR"
+            ),
+            "name"_a = definition.name(),
+            "id"_a   = to_string(id.underlying_uuid())
+        )
+    );
+}
+
 auto valid_property_name(std::string const& name, reg::AnyId const& property_default_variable_id) // We use a unique id per property to make sure they don't clash with anything. For example if the node was called Zoom and its property was also called Zoom, both the function and the uniform variable would get the same name.
     -> std::string
 {
