@@ -556,7 +556,7 @@ auto gen_desired_function(
 
     std::optional<std::string> const maybe_texture_name = node_definition_callback(id, *node_definition);
 
-    Node new_node;
+    Node                                      new_node;
     tl::expected<NodeDefinition, std::string> new_node_definition;
     if (maybe_texture_name.has_value())
     {
@@ -590,7 +590,7 @@ return texture({texture_name}, uv);
         );
 
         new_node = Node(Cool::NodeDefinitionIdentifier{.definition_name = "get_module_texture", .category_name = "get_module_texture"}, 0, 0);
-        node = new_node;
+        node     = new_node;
 
         // We control the node definition callback, so we know that the node definition we are getting is valid.
         assert(new_node_definition.has_value());
