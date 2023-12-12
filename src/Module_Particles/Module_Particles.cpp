@@ -20,6 +20,12 @@ Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory
 {
 }
 
+void Module_Particles::reset()
+{
+    if(_particle_system.has_value())
+        _particle_system->reset();
+}
+
 void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes)
 {
     if (!shader_code)

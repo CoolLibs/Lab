@@ -14,6 +14,7 @@
 #include <Cool/Webcam/TextureLibrary_FromWebcam.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
 #include <ModulesGraph/ModulesGraph.h>
+#include <Project.h>
 #include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
@@ -421,7 +422,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     const auto the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-    Cool::ClockU::imgui_timeline(_project.clock);
+    Cool::ClockU::imgui_timeline(_project.clock, [&]() { _project.modules_graph->on_time_reset(); });
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
