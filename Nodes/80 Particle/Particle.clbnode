@@ -1,0 +1,46 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3->SignedDistance 'Attractor Shape';
+INPUT float 'Attractor Force';
+INPUT bool 'Attractor Repulse out';
+
+INPUT float 'Drag Density';
+
+INPUT int 'Collision Iterations';
+
+vec3 gradient(vec3 p)
+{
+    float h = 0.001;
+    return vec3(
+               'Attractor Shape'(p - vec3(h, 0, 0)) - 'Attractor Shape'(p + vec3(h, 0, 0)),
+               'Attractor Shape'(p - vec3(0, h, 0)) - 'Attractor Shape'(p + vec3(0, h, 0)),
+               'Attractor Shape'(p - vec3(0, 0, h)) - 'Attractor Shape'(p + vec3(0, 0, h))
+           )
+           / (2. * h);
+}
+
+Particle drag(Particle particle)
+{
+    float amplitude = length(particle.velocity);
+    vec3  direction = amplitude == 0 ? vec3(0) : normalize(particle.velocity);
+    particle.acceleration -= direction * amplitude * amplitude * 'Drag Density';
+    return particle;
+}
+
+Particle attractor(Particle particle)
+{
+    float force = 'Attractor Force';
+    if ('Attractor Repulse out' && 'Attractor Shape'(particle.position) < 0)
+    {
+        force *= -1.;
+    }
+    particle.acceleration += gradient(particle.position) * force;
+    return particle;
+}
+
+Particle main(Particle particle)
+{
+    particle = attractor(particle);
+    particle = drag(particle);
+    return particle;
+}

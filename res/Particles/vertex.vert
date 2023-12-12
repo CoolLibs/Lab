@@ -1,6 +1,9 @@
 #version 430
 
-layout(location = 0) in vec2 _position;
+#include "_COOL_RES_/shaders/camera.glsl"
+
+// layout(location = 0) in vec2 _position;
+layout(location = 0) in vec3 _position;
 layout(location = 1) in vec2 _uv;
 
 out vec2 _varying_uv;
@@ -14,8 +17,13 @@ layout(std430, binding = 0) buffer _positions_buffer
 
 void main()
 {
-    _varying_uv   = _uv;
-    vec2 pos      = _position * 0.01 + vec2(_positions[2 * gl_InstanceID], _positions[2 * gl_InstanceID + 1]);
-    vec3 proj_pos = _camera2D_inverse * vec3(pos, 1.);
-    gl_Position   = vec4(proj_pos.xy / proj_pos.z, 0., 1.);
+    _varying_uv = _uv;
+    // vec2 pos      = _position * 0.01 + vec2(_positions[3 * gl_InstanceID], _positions[3 * gl_InstanceID + 1]);
+    // vec3 proj_pos = _camera2D_inverse * vec3(pos, 1.);
+    // gl_Position   = vec4(proj_pos.xy / proj_pos.z, 0., 1.);
+
+    vec3 pos = _position * 0.01 + vec3(_positions[3 * gl_InstanceID], _positions[3 * gl_InstanceID + 1], _positions[3 * gl_InstanceID + 2]);
+
+    vec4 proj_pos = cool_camera_view_projection * vec4(pos, 1.);
+    gl_Position   = vec4(proj_pos.xyz / proj_pos.w, 1.);
 }

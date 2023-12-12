@@ -103,7 +103,7 @@ void Module_Compositing::render_impl(RenderParams in, UpdateContext_Ref update_c
     auto const& pipeline = _shader.pipeline();
     auto const& shader   = *pipeline.shader();
 
-    shader_set_uniforms(shader, in, _dependencies, _feedback_double_buffer);
+    shader_set_uniforms(shader, in, _dependencies, _feedback_double_buffer, *_camera_input);
     shader_send_uniforms(shader, in, _nodes_graph);
 
     pipeline.draw();

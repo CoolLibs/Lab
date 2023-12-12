@@ -1,5 +1,6 @@
 #include "shader_set_uniforms.h"
 #include <variant>
+#include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/Input.h"
@@ -17,7 +18,8 @@ auto shader_set_uniforms(
     Cool::OpenGL::Shader const&             shader,
     Module::RenderParams const&             in,
     ModuleShaderDependencyFlags const&      dependencies,
-    Cool::DoubleBufferedRenderTarget const& feedback_double_buffer
+    Cool::DoubleBufferedRenderTarget const& feedback_double_buffer,
+    Cool::Input<Cool::Camera> const&        camera_input
 ) -> void
 {
     shader.bind();
@@ -46,6 +48,7 @@ auto shader_set_uniforms(
             .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
         }
     );
+    Cool::CameraShaderU::set_uniform(shader, in.provider(camera_input), in.provider(Cool::Input_AspectRatio{}));
 }
 
 auto shader_send_uniforms(Cool::OpenGL::Shader const& shader, Module::RenderParams const& in, Cool::NodesGraph const* _nodes_graph) -> void

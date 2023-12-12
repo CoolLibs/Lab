@@ -11,20 +11,24 @@ layout(std430, binding = 1) buffer _velocities_buffer
 };
 
 struct Particle {
-    vec2 position;
-    vec2 velocity;
-    vec2 acceleration;
+    vec3 position;
+    vec3 velocity;
+    vec3 acceleration;
 };
 
 void cool_main()
 {
     uint     gid = gl_GlobalInvocationID.x;
     Particle particle;
-    particle.position     = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2 -1; // -1.0 to 1.0
-    particle.velocity     = hash_0_to_1_2D_to_2D(vec2(gid, 0)) * 2 -1;
+    // particle.position = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2 - 1; // -1.0 to 1.0
+    // particle.velocity = hash_0_to_1_2D_to_2D(vec2(gid, 0)) * 2 - 1;
+    particle.position = hash_0_to_1_3D_to_3D(vec3(gid, 100, 2)) * 2 - 1; // -1.0 to 1.0
+    particle.velocity = hash_0_to_1_3D_to_3D(vec3(gid, 0, 0)) * 2 - 1;
 
-    _positions[gid * 2]      = particle.position.x;
-    _positions[gid * 2 + 1]  = particle.position.y;
-    _velocities[gid * 2]     = particle.velocity.x;
-    _velocities[gid * 2 + 1] = particle.velocity.y;
+    _positions[gid * 3]      = particle.position.x;
+    _positions[gid * 3 + 1]  = particle.position.y;
+    _positions[gid * 3 + 2]  = particle.position.z;
+    _velocities[gid * 3]     = particle.velocity.x;
+    _velocities[gid * 3 + 1] = particle.velocity.y;
+    _velocities[gid * 3 + 2] = particle.velocity.z;
 }

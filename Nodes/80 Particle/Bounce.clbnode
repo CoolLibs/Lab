@@ -6,21 +6,33 @@ Particle main(Particle particle)
     {
         particle.position.x = 1.;
         particle.velocity.x = -particle.velocity.x;
-    } else
-    if (particle.position.x < -1.)
+    }
+    else if (particle.position.x < -1.)
     {
         particle.position.x = -1.;
         particle.velocity.x = -particle.velocity.x;
-    } else
+    }
+
     if (particle.position.y > 1.)
     {
         particle.position.y = 1.;
         particle.velocity.y = -particle.velocity.y;
-    } else
-    if (particle.position.y < -1.)
+    }
+    else if (particle.position.y < -1.)
     {
         particle.position.y = -1.;
         particle.velocity.y = -particle.velocity.y;
+    }
+
+    if (particle.position.z > 1.)
+    {
+        particle.position.z = 1.;
+        particle.velocity.z = -particle.velocity.z;
+    }
+    else if (particle.position.z < -1.)
+    {
+        particle.position.z = -1.;
+        particle.velocity.z = -particle.velocity.z;
     }
     return particle;
 }

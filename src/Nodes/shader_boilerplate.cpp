@@ -85,20 +85,6 @@ struct CoollabContext
 };
 )glsl";
 
-    // auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
-    // auto const main_function_name = gen_desired_function(
-    //     FunctionSignature{
-    //         .from  = PrimitiveType::UV,
-    //         .to    = PrimitiveType::sRGB_StraightA, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
-    //         .arity = 1,
-    //     },
-    //     root_node_id,
-    //     context,
-    //     node_definition_callback
-    // );
-    // if (!main_function_name)
-    //     return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
-
     std::string textures_uniforms;
     auto const  tex_names = get_textures_names();
     for (auto const& name : tex_names)
@@ -109,18 +95,18 @@ struct CoollabContext
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(R"glsl(
-            {in_version}
-            {global_uniforms}
-            {in_uniforms}
-            {textures_uniforms}
-            {global_includes}
-            {in_includes}
-            {global_structuration}
-            {in_structuration}
-            {output_indices_declarations}
-            {main_function_implementation}
-            {in_main_content}
-        )glsl"),
+{in_version}
+{global_uniforms}
+{in_uniforms}
+{textures_uniforms}
+{global_includes}
+{in_includes}
+{global_structuration}
+{in_structuration}
+{output_indices_declarations}
+{main_function_implementation}
+{in_main_content}
+)glsl"),
         "in_version"_a                   = content.version,
         "global_uniforms"_a              = global_uniforms,
         "in_uniforms"_a                  = content.uniforms,

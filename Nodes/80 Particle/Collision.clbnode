@@ -1,50 +1,55 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT UV->SignedDistance 'Shape';
+INPUT vec3->SignedDistance 'Shape 3D';
 INPUT int 'Iterations';
 
-vec2 gradient(vec2 p)
+vec3 gradient(vec3 p)
 {
     float h = 0.001;
-    return vec2(
-        'Shape'(p-vec2(h,0)) - 'Shape'(p+vec2(h,0)),
-        'Shape'(p-vec2(0,h)) - 'Shape'(p+vec2(0,h))
-    ) / (2. * h);
+    return vec3(
+               'Shape 3D'(p - vec3(h, 0, 0)) - 'Shape 3D'(p + vec3(h, 0, 0)),
+               'Shape 3D'(p - vec3(0, h, 0)) - 'Shape 3D'(p + vec3(0, h, 0)),
+               'Shape 3D'(p - vec3(0, 0, h)) - 'Shape 3D'(p + vec3(0, 0, h))
+           )
+           / (2. * h);
 }
 
-vec3 rayMarching(Particle particle)
+vec4 rayMarching(Particle particle)
 {
-    float SURF_DIST                            = 0.0000001;
-    float t                                    = 0.;
-    int   i                                    = 0;
+    float SURF_DIST = 0.0000001;
+    float t         = 0.;
+    int   i         = 0;
 
-    for (; i < 'Iterations'; i++) {
-        vec2 velocity = particle.velocity * _delta_time;
-        vec2 point = particle.position + normalize(velocity) * t;
-        float d   = abs('Shape'(point)); // TODO(Particles) Handle filled shapes
+    for (; i < 'Iterations'; i++)
+    {
+        vec3  velocity = particle.velocity * _delta_time;
+        vec3  point    = particle.position + normalize(velocity) * t;
+        float d        = abs('Shape 3D'(point)); // TODO(Particles) Handle filled shapes
 
         t += d * 0.8; // TODO(Particles) Put this 0.8 in an INPUT
-        
-        if (d < SURF_DIST * 0.99999999){
-            if(t > 0 && t < length(velocity)) {
-                return vec3(point, 1.);
+
+        if (d < SURF_DIST * 0.99999999)
+        {
+            if (t > 0 && t < length(velocity))
+            {
+                return vec4(point, 1.);
             }
         }
     }
-    return vec3(-1.);
+    return vec4(-1.);
 }
 
 Particle main(Particle particle)
 {
     // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
-    vec3 intersection = rayMarching(particle);
-    
+    vec4 intersection = rayMarching(particle);
+
     if (intersection.z > 0)
     {
-        vec2 gradient = gradient(intersection.xy);
-        
-        float distance = abs('Shape'(particle.position));
-        
+        vec3 gradient = gradient(intersection.xyz);
+
+        float distance = abs('Shape 3D'(particle.position));
+
         // particle.position = particle.position - normalize(gradient) * distance;
         particle.velocity = reflect(particle.velocity, normalize(gradient));
     }

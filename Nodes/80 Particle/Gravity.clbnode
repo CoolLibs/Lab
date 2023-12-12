@@ -1,7 +1,8 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT float 'Gravity';
-INPUT Direction2D 'Direction';
+INPUT vec3 'Direction';
+// INPUT Direction2D 'Direction';
 
 Particle main(Particle particle)
 {

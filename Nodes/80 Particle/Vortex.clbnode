@@ -2,10 +2,11 @@
 
 INPUT Angle 'Angle';
 
-Particle main(Particle particle) {
-    vec2 trans_pos = vec2(-particle.position.y, particle.position.x);
-    vec2 non_normalized_dir = 2*cos('Angle')*particle.position + sin('Angle')*trans_pos;
-    particle.acceleration += 0.05*normalize(non_normalized_dir)/length(non_normalized_dir);
+Particle main(Particle particle)
+{
+    vec2 trans_pos          = vec2(-particle.position.y, particle.position.x);
+    vec2 non_normalized_dir = 2 * cos('Angle') * particle.position + sin('Angle') * trans_pos;
+    particle.acceleration += 0.05 * normalize(non_normalized_dir) / length(non_normalized_dir);
     if (length(particle.position) > 1)
     {
         particle.acceleration -= normalize(particle.position);

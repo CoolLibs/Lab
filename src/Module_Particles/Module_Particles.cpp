@@ -109,10 +109,10 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     if (!_particle_system)
         return;
 
-    shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer);
+    shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input);
     shader_send_uniforms(_particle_system->simulation_shader(), in, _nodes_graph);
 
-    shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer);
+    shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input);
     shader_send_uniforms(_particle_system->render_shader(), in, _nodes_graph);
 
     _particle_system->render();
