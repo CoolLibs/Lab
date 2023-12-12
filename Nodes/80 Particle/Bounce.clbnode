@@ -11,7 +11,7 @@ Particle main(Particle particle)
     {
         particle.position.x = -1.;
         particle.velocity.x = -particle.velocity.x;
-    } else
+    } 
     if (particle.position.y > 1.)
     {
         particle.position.y = 1.;
