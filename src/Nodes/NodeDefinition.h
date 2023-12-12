@@ -34,6 +34,7 @@ struct NodeDefinition_Data {
 
 class NodeDefinition {
 public:
+    NodeDefinition() = default;
     static auto make(NodeDefinition_Data const&, Cool::PresetsPaths const&) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
         -> tl::expected<NodeDefinition, std::string>;
 

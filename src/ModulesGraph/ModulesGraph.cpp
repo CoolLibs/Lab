@@ -7,11 +7,12 @@
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "UI/imgui_show.h"
 
+#include <iostream>
+
 namespace Lab {
 
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : _compositing_module{dirty_flag_factory, input_factory}
-    // , _particles_module{dirty_flag_factory, input_factory}
     , _regenerate_code_flag{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _regenerate_code_flag)} // TODO(Modules) Move this to the project, like the Camera2D // TODO(Modules) Shouldn't pass _regenerate_code_flag
 {
@@ -141,6 +142,8 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             ));
 
             _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, ctx, false);
+
+            std::cout << "texture name: " << texture_name_in_shader << '\n';
 
             return texture_name_in_shader;
         },

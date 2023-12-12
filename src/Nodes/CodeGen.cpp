@@ -557,6 +557,7 @@ auto gen_desired_function(
     std::optional<std::string> const maybe_texture_name = node_definition_callback(id, *node_definition);
 
     Node new_node;
+    tl::expected<NodeDefinition, std::string> new_node_definition;
     if (maybe_texture_name.has_value())
     {
         using fmt::literals::operator""_a;
@@ -576,7 +577,7 @@ return texture({texture_name}, uv);
 )glsl",
                                      "texture_name"_a = *maybe_texture_name),
         };
-        static const auto node_make_definition = NodeDefinition::make(
+        new_node_definition = NodeDefinition::make(
             NodeDefinition_Data{
                 .main_function    = main_function_pieces,
                 .helper_functions = {},
@@ -592,8 +593,8 @@ return texture({texture_name}, uv);
         node = new_node;
 
         // We control the node definition callback, so we know that the node definition we are getting is valid.
-        assert(node_make_definition.has_value());
-        node_definition = &node_make_definition.value();
+        assert(new_node_definition.has_value());
+        node_definition = &new_node_definition.value();
     }
 
     auto const base_function_name = gen_base_function(node, *node_definition, id, context, node_definition_callback);
