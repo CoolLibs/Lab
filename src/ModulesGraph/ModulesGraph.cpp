@@ -104,10 +104,11 @@ void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
         set_dirty(node->module.dirty_flag());
 }
 
-void ModulesGraph::reset_particle_module()
+void ModulesGraph::on_time_reset()
 {
-    for (auto const& node : _particles_module_nodes)
-        node->module.reset(*Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"));
+    if(!_particles_module_nodes.empty())
+        for (auto& node : _particles_module_nodes)
+            node->module.reset();
 }
 
 void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
