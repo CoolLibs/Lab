@@ -11,7 +11,6 @@ namespace Lab {
 
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : _compositing_module{dirty_flag_factory, input_factory}
-    // , _particles_module{dirty_flag_factory, input_factory}
     , _regenerate_code_flag{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _regenerate_code_flag)} // TODO(Modules) Move this to the project, like the Camera2D // TODO(Modules) Shouldn't pass _regenerate_code_flag
 {
