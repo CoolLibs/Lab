@@ -93,12 +93,14 @@ static auto base_function_name(
     -> std::string
 {
     using fmt::literals::operator""_a;
-    return fmt::format(
-        FMT_COMPILE(
-            R"STR({name}{id})STR"
-        ),
-        "name"_a = valid_glsl(definition.name()), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
-        "id"_a   = valid_glsl(to_string(id.underlying_uuid()))
+    return valid_glsl(
+        fmt::format(
+            FMT_COMPILE(
+                R"STR({name}{id})STR"
+            ),
+            "name"_a = definition.name(), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
+            "id"_a   = to_string(id.underlying_uuid())
+        )
     );
 }
 
@@ -109,13 +111,15 @@ static auto desired_function_name(
 ) -> std::string
 {
     using fmt::literals::operator""_a;
-    return fmt::format(
-        FMT_COMPILE(
-            "{name}{signature}{id}"
-        ),
-        "name"_a      = valid_glsl(definition.name()), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
-        "signature"_a = valid_glsl(to_string(signature)),
-        "id"_a        = valid_glsl(to_string(id.underlying_uuid()))
+    return valid_glsl(
+        fmt::format(
+            FMT_COMPILE(
+                "{name}{signature}{id}"
+            ),
+            "name"_a      = definition.name(), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
+            "signature"_a = to_string(signature),
+            "id"_a        = to_string(id.underlying_uuid())
+        )
     );
 }
 
