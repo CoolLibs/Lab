@@ -60,7 +60,7 @@ public:
 
 private:
     void render(Cool::RenderTarget& render_target, float time, float delta_time);
-
+    void on_time_changed();
     auto render_view() -> Cool::RenderView&;
 
     void check_inputs();

@@ -116,6 +116,11 @@ void App::set_everybody_dirty()
         is_dirty.is_dirty = true;
 }
 
+void App::on_time_changed()
+{
+    _project.modules_graph->on_time_changed(update_context());
+}
+
 void App::update()
 {
     // First frame the exe is open
@@ -158,20 +163,21 @@ void App::update()
     if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
+        if (_last_time != _project.clock.time())
+        {
+            _last_time = _project.clock.time();
+            on_time_changed();
+        }
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_project.clock.time(), _project.clock.delta_time());
     }
     else
     {
+        on_time_changed();
         trigger_rerender();
         _project.exporter.update(polaroid());
     }
 
-    if (_last_time != _project.clock.time())
-    {
-        _last_time = _project.clock.time();
-        _project.modules_graph->on_time_changed(update_context());
-    }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {
     // set_dirty_flag()(_custom_shader_module->dirty_flag());
