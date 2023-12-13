@@ -34,6 +34,11 @@ auto generate_simulation_shader_code(
                 float _velocities[];
             };
 
+            layout(std430, binding = 2) buffer _sizes_buffer
+            {
+                float _sizes[];
+            };
+
             struct Particle
             {
                 vec2 position;
@@ -54,7 +59,7 @@ auto generate_simulation_shader_code(
                         particle.position     = vec2(_positions[gid * 2], _positions[gid * 2 + 1]);
                         particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
                         particle.acceleration = vec2(0.);
-                        particle.size = _particle_size;
+                        particle.size         = _sizes[gid];
 
                         CoollabContext coollab_context;
                         coollab_context.uv = particle.position;
@@ -68,6 +73,7 @@ auto generate_simulation_shader_code(
                         _positions[gid * 2 + 1]  = particle.position.y;
                         _velocities[gid * 2]     = particle.velocity.x;
                         _velocities[gid * 2 + 1] = particle.velocity.y;
+                        _sizes[gid]              = particle.size;
                     }}
                 )glsl"),
                 "main_function_name"_a = main_function_name

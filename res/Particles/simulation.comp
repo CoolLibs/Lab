@@ -10,10 +10,16 @@ layout(std430, binding = 1) buffer _velocities_buffer
     float _velocities[];
 };
 
+layout(std430, binding = 2) buffer _velocities_buffer
+{
+    float _sizes[];
+};
+
 struct Particle {
     vec2 position;
     vec2 velocity;
     vec2 acceleration;
+    float size;
 };
 
 float disk_sdf(vec2 position)
