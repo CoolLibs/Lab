@@ -6,6 +6,7 @@ INPUT bool 'Attractor Repulse out';
 
 INPUT float 'Drag Density';
 
+INPUT vec3->SignedDistance 'Collision Shape';
 INPUT int 'Collision Iterations';
 
 vec3 gradient(vec3 p)
@@ -17,6 +18,36 @@ vec3 gradient(vec3 p)
                'Attractor Shape'(p - vec3(0, 0, h)) - 'Attractor Shape'(p + vec3(0, 0, h))
            )
            / (2. * h);
+}
+
+vec4 rayMarching(Particle particle)
+{
+    float SURF_DIST = 0.0000001;
+    float t         = 0.;
+    int   i         = 0;
+
+    for (; i < 'Collision Iterations'; i++)
+    {
+        vec3  velocity = particle.velocity * _delta_time;
+        vec3  point    = particle.position + normalize(velocity) * t;
+        float d        = abs('Collision Shape'(point)) - 0.01; // TODO(Particles) Handle filled shapes
+
+        t += d * 0.8; // TODO(Particles) Put this 0.8 in an INPUT
+
+        if (d < SURF_DIST * 0.99999999)
+        {
+            if (t > 0 && t < length(velocity))
+            {
+                return vec4(point, t);
+            }
+        }
+    }
+    return vec4(-1.);
+}
+
+vec3 set_length(vec3 vector, float new_length)
+{
+    return normalize(vector) * new_length;
 }
 
 Particle drag(Particle particle)
@@ -38,9 +69,40 @@ Particle attractor(Particle particle)
     return particle;
 }
 
+Particle collision(Particle particle)
+{
+    // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
+    vec4  intersection    = rayMarching(particle);
+    int   compteur        = 0;
+    float original_length = length(particle.velocity);
+
+    // Must be between 0 and 1 (exclusive of 1). The greater the value, the more precise the collision, but it also increases the likelihood of leaks.
+    const float offset_from_side = 0.5;
+
+    while (intersection.z > 0 && compteur < 10000)
+    {
+        vec3 gradient     = gradient(intersection.xyz);
+        particle.position = mix(particle.position, intersection.xyz, offset_from_side); // TODO(Particles) Pass the actual size, don't hardcore the 0.1
+
+        float vel_length = length(particle.velocity);
+        particle.velocity *= 1 - intersection.w * offset_from_side / vel_length;
+
+        float distance = abs('Collision Shape'(particle.position));
+
+        particle.velocity = reflect(particle.velocity, normalize(gradient));
+
+        intersection = rayMarching(particle);
+        compteur++;
+    }
+    particle.velocity = set_length(particle.velocity, original_length);
+
+    return particle;
+}
+
 Particle main(Particle particle)
 {
     particle = attractor(particle);
     particle = drag(particle);
+    particle = collision(particle);
     return particle;
 }

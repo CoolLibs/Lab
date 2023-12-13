@@ -1,15 +1,15 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT vec3->SignedDistance 'Shape 3D';
+INPUT vec3->SignedDistance 'Shape';
 INPUT int 'Iterations';
 
 vec3 gradient(vec3 p)
 {
     float h = 0.001;
     return vec3(
-               'Shape 3D'(p - vec3(h, 0, 0)) - 'Shape 3D'(p + vec3(h, 0, 0)),
-               'Shape 3D'(p - vec3(0, h, 0)) - 'Shape 3D'(p + vec3(0, h, 0)),
-               'Shape 3D'(p - vec3(0, 0, h)) - 'Shape 3D'(p + vec3(0, 0, h))
+               'Shape'(p - vec3(h, 0, 0)) - 'Shape'(p + vec2(h, 0, 0)),
+               'Shape'(p - vec3(0, h, 0)) - 'Shape'(p + vec2(0, h, 0)),
+               'Shape'(p - vec3(0, 0, h)) - 'Shape'(p + vec2(0, 0, h))
            )
            / (2. * h);
 }
@@ -24,7 +24,7 @@ vec4 rayMarching(Particle particle)
     {
         vec3  velocity = particle.velocity * _delta_time;
         vec3  point    = particle.position + normalize(velocity) * t;
-        float d        = abs('Shape 3D'(point)); // TODO(Particles) Handle filled shapes
+        float d        = abs('Shape'(point)) - 0.01; // TODO(Particles) Handle filled shapes
 
         t += d * 0.8; // TODO(Particles) Put this 0.8 in an INPUT
 
@@ -32,26 +32,44 @@ vec4 rayMarching(Particle particle)
         {
             if (t > 0 && t < length(velocity))
             {
-                return vec4(point, 1.);
+                return vec4(point, t);
             }
         }
     }
     return vec4(-1.);
 }
 
+vec3 set_length(vec3 vector, float new_length)
+{
+    return normalize(vector) * new_length;
+}
+
 Particle main(Particle particle)
 {
     // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
-    vec4 intersection = rayMarching(particle);
+    vec4  intersection    = rayMarching(particle);
+    int   compteur        = 0;
+    float original_length = length(particle.velocity);
 
-    if (intersection.z > 0)
+    // Must be between 0 and 1 (exclusive of 1). The greater the value, the more precise the collision, but it also increases the likelihood of leaks.
+    const float offset_from_side = 0.5;
+
+    while (intersection.z > 0 && compteur < 10000)
     {
-        vec3 gradient = gradient(intersection.xyz);
+        vec3 gradient     = gradient(intersection.xyz);
+        particle.position = mix(particle.position, intersection.xyz, offset_from_side); // TODO(Particles) Pass the actual size, don't hardcore the 0.1
 
-        float distance = abs('Shape 3D'(particle.position));
+        float vel_length = length(particle.velocity);
+        particle.velocity *= 1 - intersection.w * offset_from_side / vel_length;
 
-        // particle.position = particle.position - normalize(gradient) * distance;
+        float distance = abs('Shape'(particle.position));
+
         particle.velocity = reflect(particle.velocity, normalize(gradient));
+
+        intersection = rayMarching(particle);
+        compteur++;
     }
+    particle.velocity = set_length(particle.velocity, original_length);
+
     return particle;
 }
