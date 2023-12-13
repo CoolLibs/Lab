@@ -16,14 +16,14 @@ auto generate_simulation_shader_code(
     -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
-    ShaderContent content{
-        .version       = "",
-        .uniforms      = R"glsl(
+    ShaderContent        content{
+               .version       = "",
+               .uniforms      = R"glsl(
             uniform float _particle_size;
         )glsl",
-        .includes      = R"glsl(
+               .includes      = R"glsl(
         )glsl",
-        .structuration = R"glsl(
+               .structuration = R"glsl(
             layout(std430, binding = 0) buffer _positions_buffer
             {
                 float _positions[];
@@ -39,19 +39,26 @@ auto generate_simulation_shader_code(
                 float _sizes[];
             };
 
+            layout(std430, binding = 3) buffer _lifetimes_buffer
+            {
+                float _lifetimes[];
+            };
+
             struct Particle
             {
                 vec2 position;
                 vec2 velocity;
                 vec2 acceleration;
                 float size;
+                float lifetime;
+                uint id;
             };
         )glsl",
-        .main          = [](
+               .main          = [](
                     std::string const& main_function_name
                 ) -> std::string {
             return fmt::format(
-                FMT_COMPILE(R"glsl(   
+                       FMT_COMPILE(R"glsl(   
                     void cool_main()
                     {{
                         uint     gid = gl_GlobalInvocationID.x;
@@ -60,6 +67,8 @@ auto generate_simulation_shader_code(
                         particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
                         particle.acceleration = vec2(0.);
                         particle.size         = _sizes[gid];
+                        particle.lifetime     = _lifetimes[gid];
+                        particle.id           = gid;
 
                         CoollabContext coollab_context;
                         coollab_context.uv = particle.position;
@@ -74,10 +83,11 @@ auto generate_simulation_shader_code(
                         _velocities[gid * 2]     = particle.velocity.x;
                         _velocities[gid * 2 + 1] = particle.velocity.y;
                         _sizes[gid]              = particle.size;
+                        _lifetimes[gid]          = particle.lifetime;
                     }}
                 )glsl"),
-                "main_function_name"_a = main_function_name
-            );
+                       "main_function_name"_a = main_function_name
+                   );
         },
     };
 
