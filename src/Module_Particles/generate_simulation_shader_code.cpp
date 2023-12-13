@@ -1,6 +1,7 @@
 #include "generate_simulation_shader_code.h"
 #include <optional>
 #include "Nodes/shader_boilerplate.h"
+#include "microcode_generator.h"
 
 // #include "Cool/String/String.h"
 // #include "Nodes/CodeGen.h"
@@ -63,9 +64,12 @@ auto generate_simulation_shader_code(
                     {{
                         uint     gid = gl_GlobalInvocationID.x;
                         Particle particle;
-                        particle.position     = vec2(_positions[gid * 2], _positions[gid * 2 + 1]);
-                        particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
-                        particle.acceleration = vec2(0.);
+                        // particle.position     = vec2(_positions[gid * 2], _positions[gid * 2 + 1]);
+                        // particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
+                        // particle.acceleration = vec2(0.);
+                        particle.position     = {position_b2v};
+                        particle.velocity     = {velocity_b2v};
+                        particle.acceleration = {acceler_zero};
                         particle.size         = _sizes[gid];
                         particle.lifetime     = _lifetimes[gid];
                         particle.id           = gid;
@@ -78,15 +82,22 @@ auto generate_simulation_shader_code(
                         particle.velocity += particle.acceleration * _delta_time;
                         particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method
 
-                        _positions[gid * 2]      = particle.position.x;
-                        _positions[gid * 2 + 1]  = particle.position.y;
-                        _velocities[gid * 2]     = particle.velocity.x;
-                        _velocities[gid * 2 + 1] = particle.velocity.y;
+                        // _positions[gid * 2]      = particle.position.x;
+                        // _positions[gid * 2 + 1]  = particle.position.y;
+                        // _velocities[gid * 2]     = particle.velocity.x;
+                        // _velocities[gid * 2 + 1] = particle.velocity.y;
+                        {position_v2b}
+                        {velocity_v2b}
                         _sizes[gid]              = particle.size;
                         _lifetimes[gid]          = particle.lifetime;
                     }}
                 )glsl"),
-                       "main_function_name"_a = main_function_name
+                        "main_function_name"_a = main_function_name,
+                        "position_b2v"_a = buffer_to_vec(2, "_positions", "gid"),
+                        "velocity_b2v"_a = buffer_to_vec(2, "_velocities", "gid"),
+                        "acceler_zero"_a = vec_zero(2),
+                        "position_v2b"_a = vec_to_buffer(2, "_positions", "gid", "particle.position"),
+                        "velocity_v2b"_a = vec_to_buffer(2, "_velocities", "gid", "particle.velocity")
                    );
         },
     };
