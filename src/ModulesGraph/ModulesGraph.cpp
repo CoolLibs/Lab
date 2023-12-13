@@ -2,13 +2,12 @@
 #include <Module_Particles/Module_Particles.h>
 #include <Nodes/FunctionSignature.h>
 #include <Nodes/module_texture_name.h>
+#include <algorithm>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "UI/imgui_show.h"
-
-#include <iostream>
 
 namespace Lab {
 
@@ -106,7 +105,7 @@ void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
 
 void ModulesGraph::on_time_reset()
 {
-    if(!_particles_module_nodes.empty())
+    if (!_particles_module_nodes.empty())
         for (auto& node : _particles_module_nodes)
             node->module.reset();
 }
@@ -138,14 +137,22 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
 
             auto const texture_name_in_shader = module_texture_name(node_definition, particles_root_node_id);
             // Create the module and set its shader
-            _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
-                /*  .module                 =*/Module_Particles(dirty_flag_factory, ctx.ui().input_factory()),
-                /*   .texture_name_in_shader = */ texture_name_in_shader
-            ));
 
-            _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, ctx, false);
+            if (!std::any_of(
+                    _particles_module_nodes.begin(),
+                    _particles_module_nodes.end(),
+                    [&](std::unique_ptr<ModulesGraphNode> const& node) {
+                        return node->texture_name_in_shader == texture_name_in_shader;
+                    }
+                ))
+            {
+                _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
+                    /*  .module                 =*/Module_Particles(dirty_flag_factory, ctx.ui().input_factory()),
+                    /*   .texture_name_in_shader = */ texture_name_in_shader
+                ));
 
-            std::cout << "texture name: " << texture_name_in_shader << '\n';
+                _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, ctx, false);
+            }
 
             return texture_name_in_shader;
         },
