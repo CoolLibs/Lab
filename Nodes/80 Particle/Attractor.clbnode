@@ -8,15 +8,17 @@ vec2 gradient(vec2 p)
 {
     float h = 0.001;
     return vec2(
-        'Shape'(p-vec2(h,0)) - 'Shape'(p+vec2(h,0)),
-        'Shape'(p-vec2(0,h)) - 'Shape'(p+vec2(0,h))
-    ) / (2. * h);
+               'Shape'(p - vec2(h, 0)) - 'Shape'(p + vec2(h, 0)),
+               'Shape'(p - vec2(0, h)) - 'Shape'(p + vec2(0, h))
+           )
+           / (2. * h);
 }
 
 Particle main(Particle particle)
 {
     float force = 'Force';
-    if('Repulse out' && 'Shape'(particle.position) < 0) {
+    if ('Repulse out' && 'Shape'(particle.position) < 0)
+    {
         force *= -1.;
     }
     particle.acceleration += gradient(particle.position) * force;
