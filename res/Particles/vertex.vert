@@ -2,8 +2,7 @@
 
 #include "_COOL_RES_/shaders/camera.glsl"
 
-// layout(location = 0) in vec2 _position;
-layout(location = 0) in vec3 _position;
+layout(location = 0) in vec2 _position;
 layout(location = 1) in vec2 _uv;
 
 out vec2 _varying_uv;
