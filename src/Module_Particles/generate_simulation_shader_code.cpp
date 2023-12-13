@@ -64,9 +64,6 @@ auto generate_simulation_shader_code(
                     {{
                         uint     gid = gl_GlobalInvocationID.x;
                         Particle particle;
-                        // particle.position     = vec2(_positions[gid * 2], _positions[gid * 2 + 1]);
-                        // particle.velocity     = vec2(_velocities[gid * 2], _velocities[gid * 2 + 1]);
-                        // particle.acceleration = vec2(0.);
                         particle.position     = {position_b2v};
                         particle.velocity     = {velocity_b2v};
                         particle.acceleration = {acceler_zero};
@@ -82,10 +79,6 @@ auto generate_simulation_shader_code(
                         particle.velocity += particle.acceleration * _delta_time;
                         particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method
 
-                        // _positions[gid * 2]      = particle.position.x;
-                        // _positions[gid * 2 + 1]  = particle.position.y;
-                        // _velocities[gid * 2]     = particle.velocity.x;
-                        // _velocities[gid * 2 + 1] = particle.velocity.y;
                         {position_v2b}
                         {velocity_v2b}
                         _sizes[gid]              = particle.size;
