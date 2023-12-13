@@ -23,7 +23,7 @@ Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory
 {
 }
 
-void Module_Particles::reset()
+void Module_Particles::on_time_reset()
 {
     if (_particle_system.has_value())
         _particle_system->reset();

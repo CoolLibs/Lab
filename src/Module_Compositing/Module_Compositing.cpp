@@ -26,12 +26,17 @@ void Module_Compositing::update(UpdateContext_Ref)
 {
 }
 
-void Module_Compositing::reset()
+void Module_Compositing::reset_shader()
 {
     _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
     _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
     _shader_code = "";
     _dependencies.reset();
+}
+
+void Module_Compositing::on_time_reset()
+{
+    _feedback_double_buffer.clear_render_targets();
 }
 
 void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx)

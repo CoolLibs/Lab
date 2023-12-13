@@ -37,7 +37,8 @@ public:
 
     auto shader_dirty_flag() const -> Cool::DirtyFlag const& { return _shader.dirty_flag(); }
 
-    void reset();
+    void reset_shader();
+    void on_time_reset();
 
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx);
 

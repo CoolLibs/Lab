@@ -31,7 +31,7 @@ public:
     void imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const;
 
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
-    void reset();
+    void on_time_reset();
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }
     [[nodiscard]] auto depends_on_audio() const -> bool { return _dependencies.depends_on_audio_volume || _dependencies.depends_on_audio_waveform || _dependencies.depends_on_audio_spectrum; }
