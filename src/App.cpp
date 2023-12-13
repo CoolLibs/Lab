@@ -121,6 +121,11 @@ void App::on_time_changed()
     _project.modules_graph->on_time_changed(update_context());
 }
 
+void App::on_time_reset()
+{
+    _project.modules_graph->on_time_reset();
+}
+
 void App::update()
 {
     // First frame the exe is open
@@ -404,6 +409,7 @@ void App::imgui_window_exporter()
             });
             //
         },
+        .on_video_export_start                      = [&]() { on_time_reset(); },
         .widgets_in_window_video_export_in_progress = [&]() {
             ImGui::NewLine();
             ImGui::SeparatorText(Cool::icon_fmt("Did you know?", ICOMOON_BUBBLE).c_str());
@@ -427,7 +433,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     const auto the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-    Cool::ClockU::imgui_timeline(_project.clock, [&]() { _project.modules_graph->on_time_reset(); });
+    Cool::ClockU::imgui_timeline(_project.clock, /* on_time_reset = */ [&]() { on_time_reset(); });
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
