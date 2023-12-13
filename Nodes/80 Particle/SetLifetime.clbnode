@@ -4,7 +4,7 @@ INPUT float 'Lifetime';
 
 Particle reset(Particle particle)
 {
-    particle.lifetime = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position);
+    particle.lifetime = 'Lifetime';
     particle.position = hash_0_to_1_2D_to_2D(particle.velocity) * 2 - 1; // -1.0 to 1.0
     particle.velocity = hash_0_to_1_2D_to_2D(particle.position) * 2 - 1;
     particle.size     = 0.01;
