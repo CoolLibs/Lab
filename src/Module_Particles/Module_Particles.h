@@ -28,7 +28,7 @@ public:
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
 
-    void imgui_debug_menu(Cool::SetDirty_Ref set_dirty);
+    void imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const;
 
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
     void reset();
@@ -48,9 +48,9 @@ private:
 
     ModuleShaderDependencyFlags _dependencies;
 
-    size_t                              _particles_count{5'000};
-    float                               _particle_size{0.01f};
-    std::optional<Cool::ParticleSystem> _particle_system;
+    mutable size_t                              _particles_count{5'000}; // TODO(History) Change through command
+    mutable float                               _particle_size{0.01f};   // TODO(History) Change through command
+    mutable std::optional<Cool::ParticleSystem> _particle_system;
 
 private:
     // Serialization

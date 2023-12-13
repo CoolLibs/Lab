@@ -3,6 +3,7 @@
 #include <Nodes/FunctionSignature.h>
 #include <Nodes/module_texture_name.h>
 #include <algorithm>
+#include <iostream>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
@@ -42,6 +43,8 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     {
         module_node->module._nodes_graph            = &_nodes_editor.graph();
         module_node->module._feedback_double_buffer = &_compositing_module.feedback_double_buffer();
+        if (module_node->module.is_dirty(in.is_dirty))
+            update_ctx.set_dirty(_compositing_module.dirty_flag());
     }
     _compositing_module._nodes_graph = &_nodes_editor.graph();
     // TODO(Particles) Render in the order of dependency between the modules

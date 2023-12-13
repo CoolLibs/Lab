@@ -1,7 +1,9 @@
 #include "Module_Particles.h"
 #include <Nodes/shader_set_uniforms.h>
+#include <imgui.h>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
+#include "Cool/DebugOptions/DebugOptions.h"
 #include "Cool/File/File.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Particles/ParticleSystem.h"
@@ -11,18 +13,19 @@
 #include "generate_simulation_shader_code.h"
 
 namespace Lab {
+
 Module_Particles::Module_Particles()
 {
 }
 
 Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
-    : Module{"Nodes", dirty_flag_factory}
+    : Module{"Particles", dirty_flag_factory}
 {
 }
 
 void Module_Particles::reset()
 {
-    if(_particle_system.has_value())
+    if (_particle_system.has_value())
         _particle_system->reset();
 }
 
@@ -71,10 +74,22 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
     }
 }
 
-void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty)
+void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const
 {
-    // if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &_particles_count))
-    //     set_dirty(_regenerate_code_flag);
+    if (!_particle_system.has_value())
+        return;
+
+    if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &_particles_count))
+    {
+        _particle_system->set_particles_count(_particles_count);
+        set_dirty(dirty_flag());
+    }
+
+    if (ImGui::SliderFloat("Particle Size", &_particle_size, 0.f, 0.1f))
+    {
+        _particle_system->set_particle_size(_particle_size);
+        set_dirty(dirty_flag());
+    }
 }
 
 // void Module_Particles::recreate_particle_system()
@@ -107,11 +122,16 @@ void Module_Particles::compute_dependencies()
 
 void Module_Particles::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
-    DebugOptions::show_generated_shader_code([&] {
+    Lab::DebugOptions::show_generated_shader_code([&] {
         ImGui::SeparatorText("Particle shader");
         if (Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
         {
         }
+    });
+
+    Cool::DebugOptions::particles_debug_menu_window([&] {
+        // TODO voir avec jules plus tard (push id + mettre un separator text)
+        imgui_debug_menu(update_ctx.dirty_setter());
     });
 }
 

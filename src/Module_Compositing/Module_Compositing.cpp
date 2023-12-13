@@ -17,7 +17,7 @@
 namespace Lab {
 
 Module_Compositing::Module_Compositing(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
-    : Module{"Nodes", dirty_flag_factory}
+    : Module{"Compositing", dirty_flag_factory}
     , _shader{dirty_flag_factory.make()}
 {
 }
