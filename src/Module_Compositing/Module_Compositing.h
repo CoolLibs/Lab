@@ -40,6 +40,8 @@ public:
     void reset_shader();
     void on_time_reset();
 
+    void set_render_target_size(img::Size const& size);
+
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx);
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }

@@ -37,6 +37,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 
     for (auto& module_node : _particles_module_nodes)
         module_node->render_target.set_size(render_target.desired_size());
+    _compositing_module.set_render_target_size(render_target.desired_size()); // Must be done before rendering, otherwise we might read a target that is too small. (e.g. 1 pixel on app startup)
 
     // TODO(Particles) Remove those _nodes_graph
     for (auto& module_node : _particles_module_nodes)

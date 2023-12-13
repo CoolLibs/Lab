@@ -85,13 +85,18 @@ auto Module_Compositing::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
            || check_dirty(_shader.dirty_flag());
 };
 
+void Module_Compositing::set_render_target_size(img::Size const& size)
+{
+    _feedback_double_buffer.write_target().set_size(size);
+    _feedback_double_buffer.set_read_target_size_immediately(size);
+}
+
 void Module_Compositing::render(RenderParams in, UpdateContext_Ref update_ctx)
 {
     // Render on the normal render target
     render_impl(in, update_ctx);
 
     // Render on the feedback texture
-    _feedback_double_buffer.write_target().set_size(in.render_target_size);
     _feedback_double_buffer.write_target().render([&]() {
         render_impl(in, update_ctx);
     });
