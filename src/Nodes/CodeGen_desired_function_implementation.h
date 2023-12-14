@@ -1,5 +1,5 @@
 #pragma once
-#include <Nodes/NodeDefinitionCallback.h>
+#include <Nodes/MaybeGenerateModule.h>
 #include "CodeGenContext.h"
 #include "FunctionSignature.h"
 #include "Node.h"
@@ -14,7 +14,7 @@ auto gen_desired_function_implementation(
     Node const&,
     Cool::NodeId const&,
     CodeGenContext&,
-    NodeDefinitionCallback const&
+    MaybeGenerateModule const&
 ) -> tl::expected<std::string, std::string>;
 
 } // namespace Lab

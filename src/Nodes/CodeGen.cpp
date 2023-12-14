@@ -173,13 +173,13 @@ struct Properties {
 };
 
 static auto gen_value_inputs(
-    Node const&                   node,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    Node const&                node,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module
 ) -> tl::expected<Properties, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties           res{};
+    Properties res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
@@ -201,7 +201,7 @@ static auto gen_value_inputs(
                     *maybe_node,
                     input_node_id,
                     context,
-                    node_definition_callback
+                    maybe_generate_module
                 );
                 RETURN_IF_UNEXPECTED(input_func_name);
 
@@ -332,10 +332,10 @@ struct GeneratedInputs {
 };
 
 static auto gen_function_inputs(
-    Node const&                   node,
-    NodeDefinition const&         node_definition,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    Node const&                node,
+    NodeDefinition const&      node_definition,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module
 ) -> tl::expected<GeneratedInputs, std::string>
 {
     GeneratedInputs res;
@@ -353,7 +353,7 @@ static auto gen_function_inputs(
                 input_node,
                 input_node_id,
                 context,
-                node_definition_callback
+                maybe_generate_module
             );
             RETURN_IF_UNEXPECTED(func_name);
 
@@ -404,17 +404,17 @@ static auto gen_includes(NodeDefinition const& node_definition)
 }
 
 static auto gen_base_function(
-    Node const&                   node,
-    NodeDefinition const&         node_definition,
-    Cool::NodeId const&           id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    Node const&                node,
+    NodeDefinition const&      node_definition,
+    Cool::NodeId const&        id,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module
 ) -> ExpectedFunctionName
 {
-    auto const function_inputs = gen_function_inputs(node, node_definition, context, node_definition_callback);
+    auto const function_inputs = gen_function_inputs(node, node_definition, context, maybe_generate_module);
     RETURN_IF_UNEXPECTED(function_inputs);
 
-    auto const value_inputs_code = gen_value_inputs(node, context, node_definition_callback);
+    auto const value_inputs_code = gen_value_inputs(node, context, maybe_generate_module);
     RETURN_IF_UNEXPECTED(value_inputs_code);
 
     auto const func_name = base_function_name(node_definition, id);
@@ -488,11 +488,11 @@ vec2 {}/*coollabdef*/()
 }
 
 auto gen_desired_function(
-    FunctionSignature             desired_signature,
-    Cool::InputPin const&         pin,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback,
-    bool                          fallback_to_a_default_function
+    FunctionSignature          desired_signature,
+    Cool::InputPin const&      pin,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module,
+    bool                       fallback_to_a_default_function
 ) -> ExpectedFunctionName
 {
     Cool::OutputPin output_pin;
@@ -510,17 +510,17 @@ auto gen_desired_function(
         node,
         node_id,
         context,
-        node_definition_callback,
+        maybe_generate_module,
         fallback_to_a_default_function
     );
 }
 
 auto gen_desired_function(
-    FunctionSignature             desired_signature,
-    Cool::NodeId const&           id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback,
-    bool                          fallback_to_a_default_function
+    FunctionSignature          desired_signature,
+    Cool::NodeId const&        id,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module,
+    bool                       fallback_to_a_default_function
 ) -> ExpectedFunctionName
 {
     auto const maybe_node = context.graph().try_get_node<Node>(id);
@@ -530,18 +530,18 @@ auto gen_desired_function(
         maybe_node,
         id,
         context,
-        node_definition_callback,
+        maybe_generate_module,
         fallback_to_a_default_function
     );
 }
 
 auto gen_desired_function(
-    FunctionSignature             desired_signature,
-    Node const*                   maybe_node,
-    Cool::NodeId const&           id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback,
-    bool                          fallback_to_a_default_function
+    FunctionSignature          desired_signature,
+    Node const*                maybe_node,
+    Cool::NodeId const&        id,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module,
+    bool                       fallback_to_a_default_function
 ) -> ExpectedFunctionName
 {
     if (!maybe_node)
@@ -557,7 +557,7 @@ auto gen_desired_function(
         *maybe_node,
         id,
         context,
-        node_definition_callback
+        maybe_generate_module
     );
 }
 
@@ -566,7 +566,7 @@ auto gen_desired_function(
     std::reference_wrapper<Node const> node,
     Cool::NodeId const&                id,
     CodeGenContext&                    context,
-    NodeDefinitionCallback const&      node_definition_callback
+    MaybeGenerateModule const&         maybe_generate_module
 ) -> ExpectedFunctionName
 {
     auto node_definition = context.get_node_definition(node.get().id_names()); // NOLINT(readability-qualified-auto)
@@ -576,20 +576,21 @@ auto gen_desired_function(
             node.get().definition_name()
         ));
 
-    std::optional<std::string> const maybe_texture_name = node_definition_callback(id, *node_definition);
+    std::optional<std::string> const maybe_texture_name = maybe_generate_module(id, *node_definition);
 
     Node                                      new_node;
     tl::expected<NodeDefinition, std::string> new_node_definition;
     if (maybe_texture_name.has_value())
     {
         using fmt::literals::operator""_a;
-        auto const           main_function_signature = MainFunctionSignature{
+        auto const main_function_signature = MainFunctionSignature{
             FunctionSignature{
-                          .from  = PrimitiveType::UV,
-                          .to    = PrimitiveType::sRGB_StraightA,
-                          .arity = 1,
+                .from  = PrimitiveType::UV,
+                .to    = PrimitiveType::sRGB_StraightA,
+                .arity = 1,
             },
-            std::vector<std::string>{"uv"}};
+            std::vector<std::string>{"uv"}
+        };
         auto const main_function_pieces = MainFunctionPieces{
             .name      = "read_particle_texture",
             .signature = main_function_signature,
@@ -619,7 +620,7 @@ return texture({texture_name}, uv);
         node_definition = &new_node_definition.value();
     }
 
-    auto const base_function_name = gen_base_function(node, *node_definition, id, context, node_definition_callback);
+    auto const base_function_name = gen_base_function(node, *node_definition, id, context, maybe_generate_module);
     if (!base_function_name)
         return tl::make_unexpected(fmt::format(
             "Failed to generate code for node \"{}\":\n{}",
@@ -633,7 +634,7 @@ return texture({texture_name}, uv);
         node,
         id,
         context,
-        node_definition_callback
+        maybe_generate_module
     );
     if (!func_body)
         return tl::make_unexpected(fmt::format(

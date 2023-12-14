@@ -15,7 +15,7 @@ namespace {
 
 class TransformationStrategy_DoNothing {
 public:
-    static auto gen_func(Cool::InputPin const&, CodeGenContext&, NodeDefinitionCallback const&)
+    static auto gen_func(Cool::InputPin const&, CodeGenContext&, MaybeGenerateModule const&)
         -> ExpectedFunctionName
     {
         return "";
@@ -24,7 +24,7 @@ public:
 
 class TransformationStrategy_UseDefaultFunction {
 public:
-    auto gen_func(Cool::InputPin const&, CodeGenContext& context, NodeDefinitionCallback const&) const
+    auto gen_func(Cool::InputPin const&, CodeGenContext& context, MaybeGenerateModule const&) const
         -> ExpectedFunctionName
     {
         return gen_default_function(
@@ -42,14 +42,14 @@ private:
 
 class TransformationStrategy_UseInputNode {
 public:
-    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context, NodeDefinitionCallback const& node_definition_callback) const
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context, MaybeGenerateModule const& maybe_generate_module) const
         -> ExpectedFunctionName
     {
         return gen_desired_function(
             _signature,
             pin,
             context,
-            node_definition_callback
+            maybe_generate_module
         );
     }
 
@@ -62,14 +62,14 @@ private:
 
 class TransformationStrategy_UseInputNodeIfItExists {
 public:
-    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context, NodeDefinitionCallback const& node_definition_callback) const
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context, MaybeGenerateModule const& maybe_generate_module) const
         -> ExpectedFunctionName
     {
         return gen_desired_function(
             _signature,
             pin,
             context,
-            node_definition_callback,
+            maybe_generate_module,
             false /*fallback_to_a_default_function*/ // The default behavior of gen_desired_function() when there is no input node is to try to generate a default function, which is not what we want in the case of this strategy. This is what differentiates it from TransformationStrategy_UseInputNode
         );
     }
@@ -93,10 +93,10 @@ public:
         : _strategy{strategy}
     {}
 
-    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context, NodeDefinitionCallback const& node_definition_callback) const
+    auto gen_func(Cool::InputPin const& pin, CodeGenContext& context, MaybeGenerateModule const& maybe_generate_module) const
         -> ExpectedFunctionName
     {
-        return std::visit([&](auto&& strategy) { return strategy.gen_func(pin, context, node_definition_callback); }, _strategy);
+        return std::visit([&](auto&& strategy) { return strategy.gen_func(pin, context, maybe_generate_module); }, _strategy);
     }
 
 private:
@@ -177,15 +177,15 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
 }
 
 static auto gen_implicit_curve_renderer(
-    FunctionSignature             desired,
-    std::string_view              base_function_name,
-    Node const&                   node,
-    Cool::NodeId const&           node_id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    FunctionSignature          desired,
+    std::string_view           base_function_name,
+    Node const&                node,
+    Cool::NodeId const&        node_id,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module
 ) -> tl::expected<std::string, std::string>
 {
-    auto const curve_func_name = gen_desired_function(curve_signature(), node, node_id, context, node_definition_callback);
+    auto const curve_func_name = gen_desired_function(curve_signature(), node, node_id, context, maybe_generate_module);
     if (!curve_func_name)
         return tl::make_unexpected(curve_func_name.error());
     auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
@@ -233,21 +233,21 @@ float {}/*coollabdef*/(vec2 uv)
 )STR",
                                   shape_func_name, *curve_func_name),
     });
-    return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context, node_definition_callback);
+    return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context, maybe_generate_module);
 }
 
 static auto gen_implicit_shape_3D_renderer(
-    FunctionSignature             desired,
-    std::string_view              base_function_name,
-    Node const&                   node,
-    Cool::NodeId const&           node_id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    FunctionSignature          desired,
+    std::string_view           base_function_name,
+    Node const&                node,
+    Cool::NodeId const&        node_id,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
 
-    auto const shape_3D_func_name = gen_desired_function(shape_3D_signature(), node, node_id, context, node_definition_callback);
+    auto const shape_3D_func_name = gen_desired_function(shape_3D_signature(), node, node_id, context, maybe_generate_module);
     if (!shape_3D_func_name)
         return tl::make_unexpected(shape_3D_func_name.error());
     auto const image_func_name = fmt::format("shape3DRenderer{}", valid_glsl(std::string{base_function_name}));
@@ -292,25 +292,25 @@ vec4 {image_name}/*coollabdef*/(vec2 uv)
         ),
     });
     auto const image_signature = FunctionSignature{.from = PrimitiveType::UV, .to = PrimitiveType::LinearRGB_StraightA, .arity = 1};
-    return gen_desired_function_implementation(image_signature, desired, image_func_name, node, node_id, context, node_definition_callback);
+    return gen_desired_function_implementation(image_signature, desired, image_func_name, node, node_id, context, maybe_generate_module);
 }
 
 auto gen_desired_function_implementation(
-    FunctionSignature             current,
-    FunctionSignature             desired,
-    std::string_view              base_function_name,
-    Node const&                   node,
-    Cool::NodeId const&           node_id,
-    CodeGenContext&               context,
-    NodeDefinitionCallback const& node_definition_callback
+    FunctionSignature          current,
+    FunctionSignature          desired,
+    std::string_view           base_function_name,
+    Node const&                node,
+    Cool::NodeId const&        node_id,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
 
     if (is_curve(current) && !is_curve(desired))
-        return gen_implicit_curve_renderer(desired, base_function_name, node, node_id, context, node_definition_callback);
+        return gen_implicit_curve_renderer(desired, base_function_name, node, node_id, context, maybe_generate_module);
     if (is_shape_3D(current) && !is_shape_3D(desired))
-        return gen_implicit_shape_3D_renderer(desired, base_function_name, node, node_id, context, node_definition_callback);
+        return gen_implicit_shape_3D_renderer(desired, base_function_name, node, node_id, context, maybe_generate_module);
 
     auto const implicit_conversions = gen_implicit_conversions(current, desired, context);
 
@@ -319,7 +319,7 @@ auto gen_desired_function_implementation(
     for (size_t i = 0; i < current.arity; ++i)
     {
         auto const input_transformation_name = input_transformation(current, desired, implicit_conversions)
-                                                   .gen_func(node.number_of_main_input_pins() > i ? node.main_input_pin(i) : Cool::InputPin{}, context, node_definition_callback);
+                                                   .gen_func(node.number_of_main_input_pins() > i ? node.main_input_pin(i) : Cool::InputPin{}, context, maybe_generate_module);
         if (!input_transformation_name)
             return input_transformation_name;
 
@@ -327,7 +327,7 @@ auto gen_desired_function_implementation(
     }
 
     auto const output_transformation_name = output_transformation(current, desired, implicit_conversions)
-                                                .gen_func(node.number_of_main_input_pins() > 0 ? node.main_input_pin(0) : Cool::InputPin{}, context, node_definition_callback);
+                                                .gen_func(node.number_of_main_input_pins() > 0 ? node.main_input_pin(0) : Cool::InputPin{}, context, maybe_generate_module);
     if (!output_transformation_name)
         return output_transformation_name;
 

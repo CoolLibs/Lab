@@ -37,7 +37,7 @@ auto generate_shader_code(
     Cool::NodeId const&                              root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>      get_node_definition,
     Cool::InputProvider_Ref                          input_provider,
-    NodeDefinitionCallback const&                    node_definition_callback,
+    MaybeGenerateModule const&                       maybe_generate_module,
     FunctionSignature const&                         signature,
     ShaderContent const&                             content,
     std::function<std::vector<std::string>()> const& get_textures_names
@@ -49,7 +49,7 @@ auto generate_shader_code(
         signature,
         root_node_id,
         context,
-        node_definition_callback
+        maybe_generate_module
     );
 
     if (!main_function_name)
@@ -94,7 +94,7 @@ struct CoollabContext
     //     },
     //     root_node_id,
     //     context,
-    //     node_definition_callback
+    //     maybe_generate_module
     // );
     // if (!main_function_name)
     //     return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));

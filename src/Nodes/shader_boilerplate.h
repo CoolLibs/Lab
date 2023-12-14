@@ -6,8 +6,9 @@
 #include <string>
 #include "CodeGen.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Nodes/MaybeGenerateModule.h"
 #include "Nodes/NodeDefinition.h"
-#include "Nodes/NodeDefinitionCallback.h"
+
 
 namespace Lab {
 
@@ -29,7 +30,7 @@ auto generate_shader_code(
     Cool::NodeId const& root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>,
     Cool::InputProvider_Ref,
-    NodeDefinitionCallback const&,
+    MaybeGenerateModule const&,
     FunctionSignature const&,
     ShaderContent const&,
     std::function<std::vector<std::string>()> const& get_textures_names
