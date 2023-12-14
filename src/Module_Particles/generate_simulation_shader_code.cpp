@@ -25,7 +25,7 @@ auto constexpr main_template = FMT_COMPILE(R"glsl(
 void cool_main()
 {{
     uint     gid = gl_GlobalInvocationID.x;
-    Particle2D particle;
+    Particle{n}D particle;
     particle.position     = {position_b2v};
     particle.velocity     = {velocity_b2v};
     particle.acceleration = {acceler_zero};
@@ -69,17 +69,18 @@ auto generate_simulation_shader_code(
             "buffers"_a = buffers,
             "n"_a       = n
         ),
-        .main = [](
+        .main = [&](
                     std::string const& main_function_name
                 ) -> std::string {
             return fmt::format(
                 main_template,
                 "main_function_name"_a = main_function_name,
-                "position_b2v"_a       = buffer_to_vec(2, "_positions", "gid"),
-                "velocity_b2v"_a       = buffer_to_vec(2, "_velocities", "gid"),
-                "acceler_zero"_a       = vec_zero(2),
-                "position_v2b"_a       = vec_to_buffer(2, "_positions", "gid", "particle.position"),
-                "velocity_v2b"_a       = vec_to_buffer(2, "_velocities", "gid", "particle.velocity")
+                "position_b2v"_a       = buffer_to_vec(n, "_positions", "gid"),
+                "velocity_b2v"_a       = buffer_to_vec(n, "_velocities", "gid"),
+                "position_v2b"_a       = vec_to_buffer(n, "_positions", "gid", "particle.position"),
+                "velocity_v2b"_a       = vec_to_buffer(n, "_velocities", "gid", "particle.velocity"),
+                "acceler_zero"_a       = vec_zero(n),
+                "n"_a                  = n
             );
         },
     };
