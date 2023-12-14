@@ -25,6 +25,7 @@ auto shader_set_uniforms(
     shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
     shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
     shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
+    shader.set_uniform("_inverse_aspect_ratio", 1.f / in.provider(Cool::Input_AspectRatio{}));
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
 
     // if (dependencies.depends_on_time)
