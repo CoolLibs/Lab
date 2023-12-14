@@ -63,7 +63,7 @@ auto is_shape_3D(FunctionSignature signature) -> bool
     return signature == shape_3D_signature();
 }
 
-auto particle_signature() -> FunctionSignature
+auto particle_2D_signature() -> FunctionSignature
 {
     return FunctionSignature{
         .from  = PrimitiveType::Particle2D,
@@ -71,9 +71,25 @@ auto particle_signature() -> FunctionSignature
         .arity = 1,
     };
 }
+auto particle_3D_signature() -> FunctionSignature
+{
+    return FunctionSignature{
+        .from  = PrimitiveType::Particle2D,
+        .to    = PrimitiveType::Particle2D,
+        .arity = 1,
+    };
+}
+auto is_particle_2D(FunctionSignature signature) -> bool
+{
+    return signature == particle_2D_signature();
+}
+auto is_particle_3D(FunctionSignature signature) -> bool
+{
+    return signature == particle_3D_signature();
+}
 auto is_particle(FunctionSignature signature) -> bool
 {
-    return signature == particle_signature();
+    return is_particle_2D(signature) || is_particle_3D(signature);
 }
 auto is_image(FunctionSignature signature) -> bool
 {

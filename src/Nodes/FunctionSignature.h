@@ -45,7 +45,11 @@ auto is_shape_2D(FunctionSignature) -> bool;
 auto shape_3D_signature() -> FunctionSignature;
 auto is_shape_3D(FunctionSignature) -> bool;
 
+auto particle_2D_signature() -> FunctionSignature;
+auto particle_3D_signature() -> FunctionSignature;
 auto particle_signature() -> FunctionSignature;
+auto is_particle_2D(FunctionSignature) -> bool;
+auto is_particle_3D(FunctionSignature) -> bool;
 auto is_particle(FunctionSignature) -> bool;
 
 auto is_image(FunctionSignature) -> bool;
