@@ -70,7 +70,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
     }
     catch (std::exception const& e)
     {
-        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, name(), _shader_compilation_error);
+        handle_error(Cool::OptionalErrorMessage{fmt::format("{}:\n\n{}", e.what(), shader_code.error())}, name(), _shader_compilation_error);
         return;
     }
 }
