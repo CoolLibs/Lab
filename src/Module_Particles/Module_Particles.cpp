@@ -9,7 +9,7 @@
 #include "Cool/Particles/ParticleSystem.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/set_uniform.h"
-#include "Module\ShaderBased\handle_error.h"
+#include "Module/ShaderBased/handle_error.h"
 #include "Nodes/Node.h"
 #include "generate_simulation_shader_code.h"
 
@@ -146,10 +146,10 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     if (!_particle_system)
         return;
 
-    shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer);
+    shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input);
     shader_send_uniforms(_particle_system->simulation_shader(), in, _nodes_graph);
 
-    shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer);
+    shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input);
     shader_send_uniforms(_particle_system->render_shader(), in, _nodes_graph);
 
     _particle_system->render_shader().set_uniform("_particle_size", _particle_size);

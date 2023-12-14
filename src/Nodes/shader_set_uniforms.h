@@ -8,7 +8,17 @@
 
 namespace Lab {
 
-auto shader_set_uniforms(Cool::OpenGL::Shader const&, Module::RenderParams const&, ModuleShaderDependencyFlags const&, Cool::DoubleBufferedRenderTarget const&) -> void;
-auto shader_send_uniforms(Cool::OpenGL::Shader const&, Module::RenderParams const&, Cool::NodesGraph const*) -> void;
+auto shader_set_uniforms(
+    Cool::OpenGL::Shader const&,
+    Module::RenderParams const&,
+    ModuleShaderDependencyFlags const&,
+    Cool::DoubleBufferedRenderTarget const&,
+    Cool::Input<Cool::Camera> const&
+) -> void;
+auto shader_send_uniforms(
+    Cool::OpenGL::Shader const&,
+    Module::RenderParams const&,
+    Cool::NodesGraph const*
+) -> void;
 
 } // namespace Lab

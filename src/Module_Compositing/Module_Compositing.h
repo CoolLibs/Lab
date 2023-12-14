@@ -26,10 +26,15 @@ public:
     Module_Compositing(Module_Compositing&&) noexcept                    = default;
     auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default;
 
-    Cool::NodesGraph const* _nodes_graph; // TODO(Modules) Remove
+    Cool::NodesGraph const*          _nodes_graph; // TODO(Modules) Remove
+    Cool::Input<Cool::Camera> const* _camera_input;
 
-    auto shader_is_valid() const -> bool { return _shader.pipeline().shader().has_value(); } // TODO(Modules) Remove
-    auto shader() -> auto const& { return *_shader.pipeline().shader(); }                    // TODO(Modules) Remove
+    auto
+        shader_is_valid() const -> bool
+    {
+        return _shader.pipeline().shader().has_value();
+    }                                                                     // TODO(Modules) Remove
+    auto shader() -> auto const& { return *_shader.pipeline().shader(); } // TODO(Modules) Remove
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;

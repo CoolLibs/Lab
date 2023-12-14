@@ -43,11 +43,13 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     for (auto& module_node : _particles_module_nodes)
     {
         module_node->module._nodes_graph            = &_nodes_editor.graph();
+        module_node->module._camera_input           = &_camera_input;
         module_node->module._feedback_double_buffer = &_compositing_module.feedback_double_buffer();
         if (module_node->module.is_dirty(in.is_dirty))
             update_ctx.set_dirty(_compositing_module.dirty_flag());
     }
-    _compositing_module._nodes_graph = &_nodes_editor.graph();
+    _compositing_module._nodes_graph  = &_nodes_editor.graph();
+    _compositing_module._camera_input = &_camera_input;
     // TODO(Particles) Render in the order of dependency between the modules
     for (auto& node : _particles_module_nodes)
         render_particle_module(node->module, node->render_target, in, update_ctx);
@@ -301,7 +303,6 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
         node->module._nodes_graph = &_nodes_editor.graph();
         node->module.update_particles(update_ctx);
     }
-
     if (_compositing_module.depends_on_time()
         || !_particles_module_nodes.empty())
     {
