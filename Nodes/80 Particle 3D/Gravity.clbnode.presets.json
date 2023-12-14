@@ -1,0 +1,72 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "ec6480ee-21de-46ef-bb9e-17c1d774beef",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Gravity",
+                                "Value": 5.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 5.0,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 12,
+                            "data": {
+                                "Name": "Direction",
+                                "Value": {
+                                    "Angle": {
+                                        "Radians": {
+                                            "Radians": -1.5707963705062867
+                                        }
+                                    }
+                                },
+                                "Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
+                                },
+                                "Default Value": {
+                                    "Angle": {
+                                        "Radians": {
+                                            "Radians": -1.5707963705062867
+                                        }
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

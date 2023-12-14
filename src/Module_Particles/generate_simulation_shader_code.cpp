@@ -34,7 +34,7 @@ void cool_main()
     particle.id           = gid;
 
     CoollabContext coollab_context;
-    coollab_context.uv = particle.position;
+    coollab_context.uv = particle.position.xy;
 
     particle = {main_function_name}(coollab_context, particle);
 
@@ -54,11 +54,11 @@ auto generate_simulation_shader_code(
     Cool::NodesGraph const&                     graph,
     Cool::NodeId const&                         root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Cool::InputProvider_Ref                     input_provider
+    Cool::InputProvider_Ref                     input_provider,
+    size_t const&                               dimension
 )
     -> tl::expected<std::string, std::string>
 {
-    size_t const& n = 2;
     using fmt::literals::operator""_a;
     ShaderContent content{
         .version       = version,
@@ -67,7 +67,7 @@ auto generate_simulation_shader_code(
         .structuration = fmt::format(
             structuration_template,
             "buffers"_a = buffers,
-            "n"_a       = n
+            "n"_a       = dimension
         ),
         .main = [&](
                     std::string const& main_function_name
@@ -75,12 +75,12 @@ auto generate_simulation_shader_code(
             return fmt::format(
                 main_template,
                 "main_function_name"_a = main_function_name,
-                "position_b2v"_a       = buffer_to_vec(n, "_positions", "gid"),
-                "velocity_b2v"_a       = buffer_to_vec(n, "_velocities", "gid"),
-                "position_v2b"_a       = vec_to_buffer(n, "_positions", "gid", "particle.position"),
-                "velocity_v2b"_a       = vec_to_buffer(n, "_velocities", "gid", "particle.velocity"),
-                "acceler_zero"_a       = vec_zero(n),
-                "n"_a                  = n
+                "position_b2v"_a       = buffer_to_vec(dimension, "_positions", "gid"),
+                "velocity_b2v"_a       = buffer_to_vec(dimension, "_velocities", "gid"),
+                "position_v2b"_a       = vec_to_buffer(dimension, "_positions", "gid", "particle.position"),
+                "velocity_v2b"_a       = vec_to_buffer(dimension, "_velocities", "gid", "particle.velocity"),
+                "acceler_zero"_a       = vec_zero(dimension),
+                "n"_a                  = dimension
             );
         },
     };
@@ -89,8 +89,8 @@ auto generate_simulation_shader_code(
         .arity = 1,
     };
 
-    assert(n == 2 || n == 3);
-    switch (n)
+    assert(dimension == 2 || dimension == 3);
+    switch (dimension)
     {
     case 2:
     {

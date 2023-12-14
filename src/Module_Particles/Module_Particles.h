@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #include <optional>
 #include "Common/FullscreenShader.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
@@ -31,7 +32,7 @@ public:
 
     void imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const;
 
-    void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes);
+    void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes, size_t dimension);
     void on_time_reset();
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }

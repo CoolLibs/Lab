@@ -3,6 +3,7 @@
 #include <Nodes/FunctionSignature.h>
 #include <Nodes/module_texture_name.h>
 #include <algorithm>
+#include <cstddef>
 #include <iostream>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
@@ -134,11 +135,16 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             if (!is_particle(node_definition.signature()))
                 return std::nullopt;
 
+            size_t dimension = 2;
+            if (is_particle_3D(node_definition.signature()))
+                dimension = 3;
+
             auto const simulation_shader_code = generate_simulation_shader_code(
                 graph,
                 particles_root_node_id,
                 get_node_def,
-                ctx.input_provider()
+                ctx.input_provider(),
+                dimension
             );
 
             auto const texture_name_in_shader = module_texture_name(node_definition, particles_root_node_id);
@@ -157,7 +163,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                     /*   .texture_name_in_shader = */ texture_name_in_shader
                 ));
 
-                _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, ctx, false);
+                _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, ctx, false, dimension);
             }
 
             return texture_name_in_shader;
@@ -300,7 +306,8 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
     for (auto& node : _particles_module_nodes)
     {
         // TODO(Particles) Debug option "Log when updating particles"
-        node->module._nodes_graph = &_nodes_editor.graph();
+        node->module._nodes_graph  = &_nodes_editor.graph();
+        node->module._camera_input = &_camera_input;
         node->module.update_particles(update_ctx);
     }
     if (_compositing_module.depends_on_time()

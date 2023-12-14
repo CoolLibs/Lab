@@ -30,7 +30,7 @@ void Module_Particles::on_time_reset()
         _particle_system->reset();
 }
 
-void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes)
+void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes, size_t dimension)
 {
     if (!shader_code)
     {
@@ -54,15 +54,33 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         }
         else
         {
-            _particle_system = Cool::ParticleSystem{
-                _particles_count,
-                Cool::ParticlesShadersCode{
-                    .simulation = *shader_code,
-                    .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
-                    .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
-                    .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-                }
-            };
+            assert(dimension == 2 || dimension == 3);
+            switch (dimension)
+            {
+            case 2:
+                _particle_system = Cool::ParticleSystem{
+                    _particles_count,
+                    Cool::ParticlesShadersCode{
+                        .simulation = *shader_code,
+                        .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init2.comp"),
+                        .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex2.vert"),
+                        .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
+                    }
+                };
+                break;
+            case 3:
+                _particle_system = Cool::ParticleSystem{
+                    _particles_count,
+                    Cool::ParticlesShadersCode{
+                        .simulation = *shader_code,
+                        .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init3.comp"),
+                        .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex3.vert"),
+                        .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
+                    }
+                };
+                break;
+            default: break;
+            }
 
             // ? TODO(Particles): compute_dependencies (parent class with Compositing ?)
             compute_dependencies();
