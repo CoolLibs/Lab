@@ -9,6 +9,7 @@
 #include "Cool/Particles/ParticleSystem.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/set_uniform.h"
+#include "Module\ShaderBased\handle_error.h"
 #include "Nodes/Node.h"
 #include "generate_simulation_shader_code.h"
 
@@ -69,7 +70,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
     }
     catch (std::exception const& e)
     {
-        Cool::Log::ToUser::error("Particles Compilation Failed", e.what());
+        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, name(), _shader_compilation_error);
         return;
     }
 }
