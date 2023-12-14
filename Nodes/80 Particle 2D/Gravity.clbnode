@@ -3,7 +3,7 @@
 INPUT float 'Gravity';
 INPUT Direction2D 'Direction';
 
-Particle main(Particle particle)
+Particle2D main(Particle2D particle)
 {
     particle.acceleration += 'Direction' * 'Gravity';
     return particle;

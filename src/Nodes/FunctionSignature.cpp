@@ -66,8 +66,8 @@ auto is_shape_3D(FunctionSignature signature) -> bool
 auto particle_signature() -> FunctionSignature
 {
     return FunctionSignature{
-        .from  = PrimitiveType::Particle,
-        .to    = PrimitiveType::Particle,
+        .from  = PrimitiveType::Particle2D,
+        .to    = PrimitiveType::Particle2D,
         .arity = 1,
     };
 }

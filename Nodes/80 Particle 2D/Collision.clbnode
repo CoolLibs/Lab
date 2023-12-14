@@ -13,7 +13,7 @@ vec2 gradient(vec2 p)
            / (2. * h);
 }
 
-vec4 rayMarching(Particle particle)
+vec4 rayMarching(Particle2D particle)
 {
     float SURF_DIST = 0.0000001;
     float t         = 0.;
@@ -43,7 +43,7 @@ vec2 set_length(vec2 vector, float new_length)
     return normalize(vector) * new_length;
 }
 
-Particle main(Particle particle)
+Particle2D main(Particle2D particle)
 {
     // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
     vec4  intersection    = rayMarching(particle);

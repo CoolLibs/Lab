@@ -2,7 +2,7 @@
 
 INPUT float 'Density';
 
-Particle main(Particle particle)
+Particle2D main(Particle2D particle)
 {
     float amplitude = length(particle.velocity);
     vec2  direction = amplitude == 0 ? vec2(0) : normalize(particle.velocity);

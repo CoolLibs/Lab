@@ -20,7 +20,7 @@ layout(std430, binding = 3) buffer _lifetimes_buffer
     float _lifetimes[];
 };
 
-struct Particle {
+struct Particle2D {
     vec2  position;
     vec2  velocity;
     vec2  acceleration;
@@ -30,8 +30,8 @@ struct Particle {
 
 void cool_main()
 {
-    uint     gid = gl_GlobalInvocationID.x;
-    Particle particle;
+    uint       gid = gl_GlobalInvocationID.x;
+    Particle2D particle;
     particle.position = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2 - 1; // -1.0 to 1.0
     // particle.velocity = hash_0_to_1_2D_to_2D(vec2(gid, 0)) * 2 - 1;
     particle.velocity = vec2(0.0);

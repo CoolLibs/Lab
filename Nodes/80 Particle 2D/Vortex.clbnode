@@ -3,7 +3,7 @@
 INPUT Angle 'Angle';
 INPUT float 'Strength';
 
-Particle main(Particle particle)
+Particle2D main(Particle2D particle)
 {
     vec2 trans_pos          = vec2(-particle.position.y, particle.position.x);
     vec2 non_normalized_dir = 2 * cos('Angle') * particle.position + sin('Angle') * trans_pos;

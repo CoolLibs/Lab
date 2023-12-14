@@ -68,9 +68,13 @@ if (str == "Direction2D")
 {
     return PrimitiveType::Direction2D;
 }
-if (str == "Particle")
+if (str == "Particle2D")
 {
-    return PrimitiveType::Particle;
+    return PrimitiveType::Particle2D;
+}
+if (str == "Particle3D")
+{
+    return PrimitiveType::Particle3D;
 }
 if (str == "RayMarchRes")
 {

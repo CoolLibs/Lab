@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-Particle main(Particle particle)
+Particle2D main(Particle2D particle)
 {
     if (particle.position.x > 1.)
     {
