@@ -170,7 +170,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             return tex_names;
         }
     );
-    _compositing_module.set_shader_code(shader_code.value(), ctx);
+    _compositing_module.set_shader_code(shader_code, ctx);
 
     // try
     // {
