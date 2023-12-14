@@ -4,6 +4,7 @@
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/DebugOptions/DebugOptions.h"
+#include "Cool/Exception/Exception.h"
 #include "Cool/File/File.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Particles/ParticleSystem.h"
@@ -86,9 +87,9 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
             compute_dependencies();
         }
     }
-    catch (std::exception const& e)
+    catch (Cool::Exception const& e)
     {
-        handle_error(Cool::OptionalErrorMessage{fmt::format("{}:\n\n{}", e.what(), shader_code.error())}, name(), _shader_compilation_error);
+        handle_error(e.error_message(), name(), _shader_compilation_error);
         return;
     }
 }
