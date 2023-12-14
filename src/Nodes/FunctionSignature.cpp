@@ -74,8 +74,8 @@ auto particle_2D_signature() -> FunctionSignature
 auto particle_3D_signature() -> FunctionSignature
 {
     return FunctionSignature{
-        .from  = PrimitiveType::Particle2D,
-        .to    = PrimitiveType::Particle2D,
+        .from  = PrimitiveType::Particle3D,
+        .to    = PrimitiveType::Particle3D,
         .arity = 1,
     };
 }
