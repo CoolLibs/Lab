@@ -35,13 +35,13 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
 {
     if (!shader_code)
     {
-        // ? TODO(Particles): handle error (parent class with Compositing ?)
+        // TODO(Particles): handle error (parent class with Compositing ?)
         return;
     }
 
     _shader_code = *shader_code;
 
-    // ? TODO(Particles): handle error (parent class with Compositing ?)
+    // TODO(Particles): handle error (parent class with Compositing ?)
     // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
 
     // TODO(Particles) Don't recreate the particle system every time, just change  the shader but keep the current position and velocity of the particles
@@ -83,7 +83,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
             default: break;
             }
 
-            // ? TODO(Particles): compute_dependencies (parent class with Compositing ?)
+            // TODO(Particles): compute_dependencies (parent class with Compositing ?)
             compute_dependencies();
         }
     }
