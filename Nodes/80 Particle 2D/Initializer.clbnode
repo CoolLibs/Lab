@@ -1,0 +1,20 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Lifetime';
+INPUT vec2 'Spawning pattern';
+INPUT vec2 'Velocity pattern';
+INPUT float 'Starting size';
+
+Particle2D main(Particle2D particle)
+{
+    particle.lifetime -= _delta_time;
+    if (particle.lifetime <= 0.0)
+    {
+        particle.lifetime = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position);
+        particle.position = 'Spawning pattern';
+        particle.velocity = 'Velocity pattern';
+        particle.size     = 'Starting size';
+    }
+
+    return particle;
+}
