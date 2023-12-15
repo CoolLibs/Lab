@@ -259,9 +259,21 @@ vec2 default_uv/*coollabdef*/()
         if (signature.to == PrimitiveType::Particle2D) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
         {
             return context.push_function({
-                .name       = "default_particle",
+                .name       = "default_particle_2D",
                 .definition = R"STR(
-vec2 default_particle/*coollabdef*/()
+Particle2D default_particle_2D/*coollabdef*/()
+{
+    return coollab_context.particle;
+}
+)STR",
+            });
+        }
+        if (signature.to == PrimitiveType::Particle3D) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
+        {
+            return context.push_function({
+                .name       = "default_particle_3D",
+                .definition = R"STR(
+Particle3D default_particle_3D/*coollabdef*/()
 {
     return coollab_context.particle;
 }
