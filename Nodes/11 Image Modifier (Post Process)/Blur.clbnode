@@ -1,0 +1,27 @@
+// Reference : https://www.shadertoy.com/view/3sSSW1
+
+INPUT UV->sRGB_PremultipliedA 'Image';
+INPUT float 'Size';
+
+sRGB_PremultipliedA main(UV uv)
+{
+    vec4 color = 'Image'(uv);
+
+    float radial_iter = 16.0;
+    float quality     = 4.0;
+    vec2  iResolution = vec2(1024);
+
+    vec2 radius = 'Size' / iResolution.xy;
+
+    for (float d = 0.0; d < PI; d += PI / radial_iter)
+    {
+        for (float i = 1.0 / quality; i <= 1.0; i += 1.0 / quality)
+        {
+            color += 'Image'(uv + vec2(cos(d), sin(d)) * radius * i);
+        }
+    }
+
+    color /= quality * radial_iter - 15.0;
+
+    return color;
+}
