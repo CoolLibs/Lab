@@ -8,9 +8,9 @@ Particle3D main(Particle3D particle)
     vec3 trans_pos          = vec3(-particle.position.y, particle.position.x, 0);
     vec3 non_normalized_dir = 2 * cos('Angle') * particle.position + sin('Angle') * trans_pos;
     particle.acceleration += 'Strength' * normalize(non_normalized_dir) / length(non_normalized_dir);
-    if (length(particle.position) > 1)
+    if (length(particle.position.xy) > 1)
     {
-        particle.acceleration -= normalize(particle.position);
+        particle.acceleration.xy -= normalize(particle.position.xy);
     }
     return particle;
 }
