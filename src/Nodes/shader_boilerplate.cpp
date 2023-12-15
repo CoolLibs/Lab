@@ -66,30 +66,27 @@ uniform sampler1D _audio_waveform;
 uniform mat3      _camera2D;
 uniform mat3      _camera2D_inverse;
 uniform sampler2D _previous_frame_texture;
+uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 )glsl";
 
     static std::string const global_includes =
         R"glsl(
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
+#include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 #include "_COOL_RES_/shaders/Texture.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 )glsl";
 
-    // auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
-    // auto const main_function_name = gen_desired_function(
-    //     FunctionSignature{
-    //         .from  = PrimitiveType::UV,
-    //         .to    = PrimitiveType::sRGB_StraightA, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
-    //         .arity = 1,
-    //     },
-    //     root_node_id,
-    //     context,
-    //     maybe_generate_module
-    // );
-    // if (!main_function_name)
-    //     return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
+    static std::string const global_structurations =
+        R"glsl(
+vec2 to_view_space(vec2 uv)
+{
+    vec3 p = _camera2D_inverse * vec3(uv, 1.);
+    return p.xy / p.z;
+}
+)glsl";
 
     std::string textures_uniforms;
     auto const  tex_names = get_textures_names();
@@ -107,6 +104,7 @@ uniform sampler2D _previous_frame_texture;
             {textures_uniforms}
             {global_includes}
             {in_includes}
+            {global_structurations}
             {in_structuration}
             {output_indices_declarations}
             {main_function_implementation}
@@ -118,6 +116,7 @@ uniform sampler2D _previous_frame_texture;
         "textures_uniforms"_a            = textures_uniforms,
         "global_includes"_a              = global_includes,
         "in_includes"_a                  = content.includes,
+        "global_structurations"_a        = global_structurations,
         "in_structuration"_a             = content.structuration,
         "output_indices_declarations"_a  = gen_all_output_indices_declarations(graph),
         "main_function_implementation"_a = inject_context_argument_in_all_functions(context.code(), context.function_names()),

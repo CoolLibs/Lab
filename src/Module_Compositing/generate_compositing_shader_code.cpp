@@ -17,24 +17,14 @@ auto generate_compositing_shader_code(
     ShaderContent content{
         .version       = "#version 410",
         .uniforms      = R"glsl(
-            uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
-
             out vec4 out_Color;
         )glsl",
-        .includes      = R"glsl(
-            #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
-        )glsl",
+        .includes      = R"glsl()glsl",
         .structuration = R"glsl(
             struct CoollabContext
             {
                 vec2 uv;
             };
-
-            vec2 to_view_space(vec2 uv)
-            {
-                vec3 p = _camera2D_inverse * vec3(uv, 1.);
-                return p.xy / p.z;
-            }
         )glsl",
         .main          = [](
                     std::string const& main_function_name
