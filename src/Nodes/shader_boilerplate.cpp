@@ -77,14 +77,6 @@ uniform sampler2D _previous_frame_texture;
 #include "_COOL_RES_/shaders/camera.glsl"
 )glsl";
 
-    static std::string const global_structuration =
-        R"glsl(
-struct CoollabContext
-{
-    vec2 uv;
-};
-)glsl";
-
     // auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
     // auto const main_function_name = gen_desired_function(
     //     FunctionSignature{
@@ -115,7 +107,6 @@ struct CoollabContext
             {textures_uniforms}
             {global_includes}
             {in_includes}
-            {global_structuration}
             {in_structuration}
             {output_indices_declarations}
             {main_function_implementation}
@@ -127,7 +118,6 @@ struct CoollabContext
         "textures_uniforms"_a            = textures_uniforms,
         "global_includes"_a              = global_includes,
         "in_includes"_a                  = content.includes,
-        "global_structuration"_a         = global_structuration,
         "in_structuration"_a             = content.structuration,
         "output_indices_declarations"_a  = gen_all_output_indices_declarations(graph),
         "main_function_implementation"_a = inject_context_argument_in_all_functions(context.code(), context.function_names()),

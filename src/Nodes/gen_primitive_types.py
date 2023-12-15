@@ -335,6 +335,16 @@ def all_conversions():
                 }
             """,
             ),
+            Conversion(
+                from_="Void",
+                to="Particle2D",
+                implementation="""
+                vec2 FUNCTION_NAME()
+                {
+                    return coollab_context.particle;
+                }
+            """,
+            ),
         ]
     )
 

@@ -89,6 +89,12 @@ if (from == PrimitiveType::Void && to == PrimitiveType::UV)
     return context.push_function(gen_Coollab_UV_from_Void());
 }
 
+if (from == PrimitiveType::Void && to == PrimitiveType::Particle2D)
+{
+    ;
+    return context.push_function(gen_Coollab_Particle2D_from_Void());
+}
+
 if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Angle)
 {
     context.push_function(gen_Coollab_Angle_from_Float());

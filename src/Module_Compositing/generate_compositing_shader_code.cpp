@@ -25,6 +25,11 @@ auto generate_compositing_shader_code(
             #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
         )glsl",
         .structuration = R"glsl(
+            struct CoollabContext
+            {
+                vec2 uv;
+            };
+
             vec2 to_view_space(vec2 uv)
             {
                 vec3 p = _camera2D_inverse * vec3(uv, 1.);

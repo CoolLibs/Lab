@@ -192,6 +192,19 @@ static auto gen_Coollab_UV_from_Void() -> Function
     };
 }
 
+static auto gen_Coollab_Particle2D_from_Void() -> Function
+{
+    return {
+        .name       = "Coollab_Particle2D_from_Void",
+        .definition = R"STR(
+                Particle2D Coollab_Particle2D_from_Void/*coollabdef*/()
+                {
+                    return coollab_context.particle;
+                }
+            )STR",
+    };
+}
+
 static auto gen_Coollab_Angle_from_Float_StraightA() -> Function
 {
     return {

@@ -256,6 +256,18 @@ vec2 default_uv/*coollabdef*/()
 )STR",
             });
         }
+        if (signature.to == PrimitiveType::Particle2D) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
+        {
+            return context.push_function({
+                .name       = "default_particle",
+                .definition = R"STR(
+vec2 default_particle/*coollabdef*/()
+{
+    return coollab_context.particle;
+}
+)STR",
+            });
+        }
         auto const glsl_type = raw_glsl_type_as_string(signature.to);
         auto const name      = fmt::format("default_constant_{}", glsl_type);
         return context.push_function({

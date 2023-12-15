@@ -19,6 +19,13 @@ struct Particle{n}D
     float lifetime;
     uint id;
 }};
+
+struct CoollabContext
+{{
+    vec2 uv;
+    Particle{n}D particle;
+}};
+
 )glsl");
 
 auto constexpr main_template = FMT_COMPILE(R"glsl(
@@ -35,6 +42,7 @@ void cool_main()
 
     CoollabContext coollab_context;
     coollab_context.uv = particle.position.xy;
+    coollab_context.particle = particle;
 
     particle = {main_function_name}(coollab_context, particle);
 
