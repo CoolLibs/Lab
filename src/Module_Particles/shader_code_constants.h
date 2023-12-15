@@ -30,6 +30,12 @@ layout(std430, binding = 3) buffer _lifetimes_buffer
 {
     float _lifetimes[];
 };
+
+layout(std430, binding = 4) buffer _colors_buffer
+{
+    float _colors[];
+};
+
 )glsl";
 
 } // namespace Lab

@@ -4,6 +4,7 @@ layout(location = 0) in vec2 _position;
 layout(location = 1) in vec2 _uv;
 
 out vec2 _varying_uv;
+flat out uint _particle_index;
 
 uniform mat3  _camera2D_inverse;
 uniform mat4  cool_camera_view_projection;
@@ -41,4 +42,6 @@ void main()
     vec4 proj_pos_3D = _camera2D_inverse_44 * cool_camera_view_projection * vec4(particle_position + position_right + position_up, 1.);
 
     gl_Position = vec4(proj_pos_3D.xyz / proj_pos_3D.w, 1.);
+
+    _particle_index = gl_InstanceID;
 }
