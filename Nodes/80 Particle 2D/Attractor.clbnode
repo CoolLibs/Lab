@@ -17,9 +17,9 @@ vec2 gradient(vec2 p)
 Particle2D main(Particle2D particle)
 {
     float force = 'Force';
-    if ('Repulse out' && 'Shape'(particle.position) < 0)
+    if ('Shape'(particle.position) < 0)
     {
-        force *= -1.;
+        force *= 'Repulse out' ? -1. : 0;
     }
     particle.acceleration += gradient(particle.position) * force;
     return particle;

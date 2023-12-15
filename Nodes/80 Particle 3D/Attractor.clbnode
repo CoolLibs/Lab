@@ -18,9 +18,9 @@ vec3 gradient(vec3 p)
 Particle3D main(Particle3D particle)
 {
     float force = 'Force';
-    if ('Repulse out' && 'Shape 3D'(particle.position) < 0)
+    if ('Shape 3D'(particle.position) < 0)
     {
-        force *= -1.;
+        force *= 'Repulse out' ? -1. : 0;
     }
     particle.acceleration += gradient(particle.position) * force;
     return particle;
