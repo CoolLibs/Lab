@@ -5,7 +5,7 @@ INPUT vec2 'Spawning pattern';
 INPUT vec2 'Velocity pattern';
 INPUT float 'Starting size';
 
-Particle2D main(Particle2D particle)
+Particle2D main(void)
 {
     particle.lifetime -= _delta_time;
     if (particle.lifetime <= 0.0)
@@ -13,7 +13,7 @@ Particle2D main(Particle2D particle)
         particle.lifetime        = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(particle.id, particle.position));
         coollab_context.particle = particle;
         particle.position        = 'Spawning pattern';
-        coollab_context.particle = particle;
+        coollab_context.particle.position = particle.position;
         particle.velocity        = 'Velocity pattern';
         particle.size            = 'Starting size';
     }
