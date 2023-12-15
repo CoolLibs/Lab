@@ -10,10 +10,12 @@ Particle2D main(Particle2D particle)
     particle.lifetime -= _delta_time;
     if (particle.lifetime <= 0.0)
     {
-        particle.lifetime = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position);
-        particle.position = 'Spawning pattern';
-        particle.velocity = 'Velocity pattern';
-        particle.size     = 'Starting size';
+        particle.lifetime        = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(particle.id, particle.position));
+        coollab_context.particle = particle;
+        particle.position        = 'Spawning pattern';
+        coollab_context.particle = particle;
+        particle.velocity        = 'Velocity pattern';
+        particle.size            = 'Starting size';
     }
 
     return particle;
