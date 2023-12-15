@@ -17,6 +17,7 @@ struct Particle{n}D
     vec{n} acceleration;
     float size;
     float lifetime;
+    vec4 color;
     uint id;
 }};
 
@@ -38,6 +39,10 @@ void cool_main()
     particle.acceleration = {acceler_zero};
     particle.size         = _sizes[gid];
     particle.lifetime     = _lifetimes[gid];
+    particle.color.x      = _colors[gid * 4];
+    particle.color.y      = _colors[gid * 4 + 1];
+    particle.color.z      = _colors[gid * 4 + 2];
+    particle.color.w      = _colors[gid * 4 + 3];
     particle.id           = gid;
 
     CoollabContext coollab_context;
@@ -53,6 +58,10 @@ void cool_main()
     {velocity_v2b}
     _sizes[gid]              = particle.size;
     _lifetimes[gid]          = particle.lifetime;
+    _colors[gid * 4]         = particle.color.x;
+    _colors[gid * 4 + 1]     = particle.color.y;
+    _colors[gid * 4 + 2]     = particle.color.z;
+    _colors[gid * 4 + 3]     = particle.color.w;
 }}
 )glsl");
 
