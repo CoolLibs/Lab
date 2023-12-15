@@ -5,7 +5,7 @@ INPUT vec2 'Spawning pattern';
 INPUT vec2 'Velocity pattern';
 INPUT float 'Starting size';
 
-Particle2D main(void)
+Particle2D main()
 {
     particle.lifetime -= _delta_time;
     if (particle.lifetime <= 0.0)
