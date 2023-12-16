@@ -312,9 +312,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     {
         for (size_t i = 0; i < def.signature().arity; ++i)
         {
-            std::string pin_name = def.main_parameter_names()[i];
-            Cool::String::replace_all(pin_name, "_", " ");
-            node.input_pins().push_back(Cool::InputPin{pin_name});
+            node.input_pins().push_back(Cool::InputPin{/*pin_name=*/Cool::String::replace_all(def.main_parameter_names()[i], "_", " ")});
         }
     }
     node.output_pins().emplace_back("OUT");

@@ -261,7 +261,7 @@ static auto replace_property_names(
     for (auto const& prop : properties)
     {
         std::visit([&](auto&& prop) {
-            Cool::String::replace_all(code, fmt::format("'{}'", prop.name()), real_name[i]);
+            Cool::String::replace_all_inplace(code, fmt::format("'{}'", prop.name()), real_name[i]);
         },
                    prop);
         i++;
@@ -276,7 +276,7 @@ static auto replace_input_names(
 ) -> std::string
 {
     for (auto const& [old_name, new_name] : real_names)
-        Cool::String::replace_all(code, fmt::format("'{}'", old_name), new_name);
+        Cool::String::replace_all_inplace(code, fmt::format("'{}'", old_name), new_name);
 
     return code;
 }
@@ -288,7 +288,7 @@ static auto replace_output_indices_names(
 {
     for (size_t i = 1; i < node.output_pins().size(); ++i)
     {
-        Cool::String::replace_all(
+        Cool::String::replace_all_inplace(
             code,
             fmt::format("'{}'", node.output_pins()[i].name()),
             make_valid_output_index_name(node.output_pins()[i])
@@ -322,7 +322,7 @@ static auto replace_helper_functions(std::string code, std::vector<FunctionPiece
     assert(old_functions.size() == new_names.size());
 
     for (size_t i = 0; i < new_names.size(); ++i)
-        code = Cool::String::replace_all_words(code, old_functions[i].name, new_names[i]);
+        Cool::String::replace_all_words_inplace(code, old_functions[i].name, new_names[i]);
 
     return code;
 }
