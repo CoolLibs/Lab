@@ -21,8 +21,8 @@ static auto inject_context_argument_in_all_functions(std::string code, std::vect
 {
     for (auto const& name : function_names)
     {
-        Cool::String::replace_all(code, name + "(", name + "(coollab_context, ");
-        Cool::String::replace_all(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
+        code = Cool::String::replace_all_beginnings_of_words(code, name + "(", name + "(coollab_context, ");
+        code = Cool::String::replace_all_beginnings_of_words(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
     }
 
     // Fixup the extra commas for functions that had no arguments initially
