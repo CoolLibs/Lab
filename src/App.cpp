@@ -168,17 +168,11 @@ void App::update()
     if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
-        if (_last_time != _project.clock.time())
-        {
-            _last_time = _project.clock.time();
-            on_time_changed();
-        }
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
         polaroid().render(_project.clock.time(), _project.clock.delta_time());
     }
     else
     {
-        on_time_changed();
         trigger_rerender();
         _project.exporter.update(polaroid());
     }
@@ -245,6 +239,11 @@ Cool::Polaroid App::polaroid()
     return {
         .render_target = render_view().render_target(), // TODO(Modules) Each module should have its own render target that it renders on. The views shouldn't have a render target, but receive the one of the top-most module by reference.
         .render_fn     = [this](Cool::RenderTarget& render_target, float time, float delta_time) {
+            if (_last_time != time)
+            {
+                _last_time = time;
+                on_time_changed();
+            }
             render(render_target, time, delta_time);
         }
     };
