@@ -87,6 +87,7 @@ private:
             cereal::make_nvp("Compositing Module", _compositing_module),
             cereal::make_nvp("Particles Module", _particles_module_nodes),
             cereal::make_nvp("Dirty Flag: Regenerate Code", _regenerate_code_flag),
+            cereal::make_nvp("Dirty Flag: Rerender all", _rerender_all_flag),
             cereal::make_nvp("Node Editor", _nodes_editor),
             cereal::make_nvp("Main Node ID", _main_node_id),
             cereal::make_nvp("Camera Input", _camera_input)
