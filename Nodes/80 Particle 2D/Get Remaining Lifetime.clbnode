@@ -1,6 +1,16 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
+INPUT bool 'isRelative';
+INPUT bool 'isDecreasing';
+
 float main(Particle2D particle)
 {
-    return particle.lifetime/(particle.lifetime + particle.age);
+    if('isRelative') {
+        if('isDecreasing') return particle.lifetime/particle.lifetime_max;
+        return 1. - particle.lifetime/particle.lifetime_max;
+    }
+    else {
+        if('isDecreasing') return particle.lifetime;
+        return particle.lifetime_max - particle.lifetime;
+    }
 }
