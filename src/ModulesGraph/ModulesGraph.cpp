@@ -34,7 +34,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     if (in.is_dirty(_regenerate_code_flag))
     {
         if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::ToUser::info("Nodes", "Compiled");
+            Cool::Log::ToUser::info("Modules Graph", "Compiled");
         create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx, dirty_flag_factory);
         trigger_rerender_all(update_ctx.dirty_setter());
         in.set_clean(_regenerate_code_flag);
@@ -76,7 +76,7 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
     });
 
     if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
+        Cool::Log::ToUser::info(some_module.name() + " Module", "Rendered");
 }
 
 void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
