@@ -36,9 +36,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Nodes", "Compiled");
         create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx, dirty_flag_factory);
-        for (auto& node : _particles_module_nodes)
-            update_ctx.set_dirty(node->module.dirty_flag());
-        update_ctx.set_dirty(_compositing_module.dirty_flag());
+        trigger_rerender_all(update_ctx.dirty_setter());
         in.set_clean(_regenerate_code_flag);
     }
 
@@ -52,8 +50,8 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
         module_node->module._nodes_graph            = &_nodes_editor.graph();
         module_node->module._camera_input           = &_camera_input;
         module_node->module._feedback_double_buffer = &_compositing_module.feedback_double_buffer();
-        if (module_node->module.is_dirty(in.is_dirty))
-            update_ctx.set_dirty(_compositing_module.dirty_flag());
+        if (module_node->module.needs_to_rerender(in.is_dirty))
+            update_ctx.set_dirty(_compositing_module.needs_to_rerender_flag());
     }
     _compositing_module._nodes_graph  = &_nodes_editor.graph();
     _compositing_module._camera_input = &_camera_input;
@@ -67,9 +65,9 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
 {
     // TODO(Modules) Rename module.is_dirty() as module.needs_to_render
     // TODO(Modules) Remove module.is_dirty() from module
-    if (!some_module.is_dirty(params.is_dirty))
+    if (!some_module.needs_to_rerender(params.is_dirty))
         return;
-    params.set_clean(some_module.dirty_flag());
+    params.set_clean(some_module.needs_to_rerender_flag());
 
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -111,9 +109,9 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
 
 void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
 {
-    set_dirty(_compositing_module.dirty_flag());
+    set_dirty(_compositing_module.needs_to_rerender_flag());
     for (auto& node : _particles_module_nodes)
-        set_dirty(node->module.dirty_flag());
+        set_dirty(node->module.needs_to_rerender_flag());
 }
 
 void ModulesGraph::on_time_reset()
@@ -252,15 +250,6 @@ auto ModulesGraph::all_inputs() const -> Cool::AllInputRefsToConst
 
     return inputs;
 }
-
-auto ModulesGraph::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
-{
-    return check_dirty(_regenerate_code_flag)
-           || _compositing_module.is_dirty(check_dirty)
-           || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](std::unique_ptr<ModulesGraphNode> const& node) {
-                  return node->module.is_dirty(check_dirty);
-              });
-};
 
 auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
 {

@@ -34,7 +34,7 @@ public:
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
-    auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
+    auto needs_to_rerender(Cool::IsDirty_Ref) const -> bool override;
 
     void reset_shader();
     void on_time_reset();

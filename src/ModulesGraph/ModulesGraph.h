@@ -53,7 +53,6 @@ public:
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);
 
     auto all_inputs() const -> Cool::AllInputRefsToConst;
-    auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool;
 
     auto compositing_module() const -> Module_Compositing const& { return _compositing_module; } // TODO(Modules) Remove
     auto compositing_module() -> Module_Compositing& { return _compositing_module; }             // TODO(Modules) Remove

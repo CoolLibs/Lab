@@ -111,13 +111,13 @@ void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const
     if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &_particles_count))
     {
         _particle_system->set_particles_count(_particles_count);
-        set_dirty(dirty_flag());
+        set_dirty(needs_to_rerender_flag());
     }
 
     if (ImGui::SliderFloat("Particle Size", &_particle_size, 0.f, 0.1f))
     {
         _particle_system->set_particle_size(_particle_size);
-        set_dirty(dirty_flag());
+        set_dirty(needs_to_rerender_flag());
     }
 }
 
@@ -164,9 +164,9 @@ void Module_Particles::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) co
     });
 }
 
-auto Module_Particles::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
+auto Module_Particles::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
 {
-    return Module::is_dirty(check_dirty);
+    return Module::needs_to_rerender(check_dirty);
 };
 
 void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)

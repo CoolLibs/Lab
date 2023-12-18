@@ -41,7 +41,7 @@ public:
 
     Module(std::string_view name, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
         : _name{name}
-        , _dirty_flag{dirty_flag_factory.make()}
+        , _needs_to_rerender_flag{dirty_flag_factory.make()}
     {
     }
 
@@ -50,24 +50,24 @@ public:
     void do_rendering(RenderParams params, UpdateContext_Ref update_ctx)
     {
         render(params, update_ctx);
-        params.set_clean(_dirty_flag);
+        params.set_clean(_needs_to_rerender_flag);
     }
     virtual void imgui_windows(Ui_Ref, UpdateContext_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
     virtual void update(UpdateContext_Ref){};
 
-    [[nodiscard]] virtual auto is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
+    [[nodiscard]] virtual auto needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
     {
-        return check_dirty(_dirty_flag);
+        return check_dirty(_needs_to_rerender_flag);
     };
 
-    [[nodiscard]] auto dirty_flag() const { return _dirty_flag; }
+    [[nodiscard]] auto needs_to_rerender_flag() const { return _needs_to_rerender_flag; }
 
 private:
     virtual void render(RenderParams, UpdateContext_Ref) = 0;
 
 private:
     std::string     _name;
-    Cool::DirtyFlag _dirty_flag;
+    Cool::DirtyFlag _needs_to_rerender_flag;
 
 private:
     friend class cereal::access;
@@ -76,7 +76,7 @@ private:
     {
         archive(
             cereal::make_nvp("Name", _name),
-            cereal::make_nvp("Dirty Flag", _dirty_flag)
+            cereal::make_nvp("Dirty Flag: needs to rerender", _needs_to_rerender_flag)
         );
     }
 };

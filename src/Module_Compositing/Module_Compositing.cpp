@@ -70,14 +70,14 @@ void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) 
             const auto maybe_err = _pipeline.compile(_shader_code);
             handle_error(maybe_err, name(), _shader_compilation_error);
 
-            ui.dirty_setter()(dirty_flag()); // Trigger rerender
+            ui.dirty_setter()(needs_to_rerender_flag()); // Trigger rerender
         }
     });
 }
 
-auto Module_Compositing::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
+auto Module_Compositing::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
 {
-    return Module::is_dirty(check_dirty);
+    return Module::needs_to_rerender(check_dirty);
 };
 
 void Module_Compositing::set_render_target_size(img::Size const& size)
