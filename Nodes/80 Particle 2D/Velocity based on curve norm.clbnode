@@ -1,0 +1,32 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float->UV 'Curve';
+INPUT bool 'Invert';
+
+vec2 main(Particle2D particle)
+{
+       uint particle_count = DispatchSize.x;
+
+    float t = float(particle.id) / float(particle_count - 1);
+
+    return getCurveNormal(particle.position, t);
+}
+
+vec2 getCurveNormal(vec2 position, float percent)
+{
+    float epsilon = 0.00001;
+
+    // Calculate the gradient using the central difference method
+    vec2 derrivate = 'Curve'(percent + epsilon) - 'Curve'(percent - epsilon);
+    
+    // Normalize the gradient to get the direction
+    vec2 gradient = normalize(derrivate);
+
+    // The normal to the curve is the perpendicular vector to the gradient
+    vec2 normal = vec2(-gradient.y, gradient.x);
+
+    if ('Invert')
+        normal *= -1;
+
+    return normal;
+}
