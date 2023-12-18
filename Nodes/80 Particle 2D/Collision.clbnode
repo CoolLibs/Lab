@@ -23,7 +23,7 @@ vec4 rayMarching(Particle2D particle)
     {
         vec2  velocity = particle.velocity * _delta_time;
         vec2  point    = particle.position + normalize(velocity) * t;
-        float d        = abs('Shape'(point)) - _particle_size; // TODO(Particles) Handle filled shapes
+        float d        = abs('Shape'(point)) - particle.size; // TODO(Particles) Handle filled shapes
 
         t += d * 0.8; // TODO(Particles) Put this 0.8 in an INPUT
 
@@ -56,7 +56,7 @@ Particle2D main(Particle2D particle)
     while (intersection.z > 0 && compteur < 10000)
     {
         vec2 gradient     = gradient(intersection.xy);
-        particle.position = mix(particle.position, intersection.xy, offset_from_side); // TODO(Particles) Pass the actual size, don't hardcore the 0.1
+        particle.position = mix(particle.position, intersection.xy, offset_from_side);
 
         float vel_length = length(particle.velocity);
         particle.velocity *= 1 - intersection.w * offset_from_side / vel_length;
