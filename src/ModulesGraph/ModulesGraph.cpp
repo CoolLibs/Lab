@@ -149,7 +149,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
 
             auto const texture_name_in_shader = module_texture_name(node_definition, particles_root_node_id);
 
-            if (!std::any_of(
+            if (std::none_of(
                     _particles_module_nodes.begin(),
                     _particles_module_nodes.end(),
                     [&](std::unique_ptr<ModulesGraphNode> const& node) {
