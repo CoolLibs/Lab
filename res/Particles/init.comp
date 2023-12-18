@@ -37,6 +37,8 @@ struct Particle3D {
     vec3  acceleration;
     float size;
     float lifetime;
+    float lifetime_max;
+    float age;
     vec4  color;
 };
 #else
@@ -48,7 +50,7 @@ struct Particle2D {
     float lifetime;
     float lifetime_max;
     float age;
-    vec4 color;
+    vec4  color;
 };
 #endif
 
