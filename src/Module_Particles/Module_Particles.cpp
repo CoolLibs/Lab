@@ -1,6 +1,7 @@
 #include "Module_Particles.h"
 #include <Nodes/shader_set_uniforms.h>
 #include <imgui.h>
+#include "Cool/Camera/Camera.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/DebugOptions/DebugOptions.h"
@@ -181,6 +182,9 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader_send_uniforms(_particle_system->render_shader(), in, _nodes_graph);
 
     _particle_system->render_shader().set_uniform("_particle_size", _particle_size);
+    auto const& cam = in.provider(*_camera_input);
+    _particle_system->render_shader().set_uniform("cool_camera_view_projection", cam.view_projection_matrix(/*aspect_ratio=*/1.f)); // The aspect ratio will be applied separately
+    _particle_system->render_shader().set_uniform("cool_camera_view", cam.view_matrix());
     _particle_system->render();
 }
 
