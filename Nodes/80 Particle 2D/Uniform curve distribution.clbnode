@@ -8,7 +8,7 @@ vec2 main(Particle2D particle)
 
     float t = float(particle.id) / float(particle_count - 1);
 
-    vec2 current_position_0_to_1 = 'Curve'(t);
+    return 'Curve'(t);
 
-    return mix(particle.position, current_position_0_to_1, 0.5);;
+    // return mix(particle.position, current_position_0_to_1, 0.5);;
 }
