@@ -9,4 +9,3 @@ Particle3D main(Particle3D particle)
     particle.acceleration -= direction * amplitude * amplitude * 'Density';
     return particle;
 }
-x
