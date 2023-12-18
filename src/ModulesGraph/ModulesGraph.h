@@ -71,7 +71,8 @@ private:
     mutable Cool::NodeId      _main_node_id{}; // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
     mutable Cool::NodeId      _node_we_might_want_to_restore_as_main_node_id{};
     Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
-    Cool::Input<Cool::Camera> _camera_input{};         // TODO(Modules) Does it belong here?
+    Cool::DirtyFlag           _rerender_all_flag{};
+    Cool::Input<Cool::Camera> _camera_input{}; // TODO(Modules) Does it belong here?
 
     Module_Compositing                             _compositing_module{};
     std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)

@@ -16,7 +16,8 @@ namespace Lab {
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : _compositing_module{dirty_flag_factory, input_factory}
     , _regenerate_code_flag{dirty_flag_factory.make()}
-    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _regenerate_code_flag)} // TODO(Modules) Move this to the project, like the Camera2D // TODO(Modules) Shouldn't pass _regenerate_code_flag
+    , _rerender_all_flag{dirty_flag_factory.make()}
+    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _rerender_all_flag)} // TODO(Modules) Move this to the project, like the Camera2D
 {
 }
 
@@ -24,6 +25,11 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 {
     if (render_target.needs_resizing())
         trigger_rerender_all(update_ctx.dirty_setter());
+    if (in.is_dirty(_rerender_all_flag))
+    {
+        trigger_rerender_all(update_ctx.dirty_setter());
+        in.set_clean(_rerender_all_flag);
+    }
 
     if (in.is_dirty(_regenerate_code_flag))
     {
