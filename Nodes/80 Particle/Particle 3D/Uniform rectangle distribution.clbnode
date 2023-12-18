@@ -1,0 +1,14 @@
+
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT vec3 'Position';
+INPUT vec3 'Size';
+
+vec3 main(Particle3D particle)
+{
+    ;
+    vec3 random = hash_0_to_1_3D_to_3D(vec3(_time, _delta_time, particle.id)).xyz;
+    ;
+
+    return 'Position' + 'Size' * (random - vec3(0.5));
+}

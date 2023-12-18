@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT $vec 'UV';
+
+$Particle main($Particle particle)
+{
+    particle.acceleration += 'UV';
+    return particle;
+}

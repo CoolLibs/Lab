@@ -1,0 +1,29 @@
+
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Lifetime';
+INPUT float 'Starting size';
+INPUT float 'Radius';
+INPUT float 'Strength';
+
+Particle2D main(Particle2D particle)
+{
+    particle.lifetime -= _delta_time;
+    if (particle.lifetime <= 0.0)
+    {
+        particle.lifetime = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(particle.id, particle.position.xy));
+        vec3  random      = hash_0_to_1_3D_to_3D(vec3(particle.position.x, _delta_time, particle.id)).xyz;
+        float r           = sqrt(random.z);
+        float theta       = 2 * PI * random.x;
+
+        ;
+        vec2 direction = (cos(theta) * vec2(1, 0) + sin(theta) * vec2(0, 1));
+        ;
+
+        particle.position = r * 'Radius' * direction;
+        particle.velocity = 'Strength' * direction;
+        particle.size     = 'Starting size';
+    }
+
+    return particle;
+}

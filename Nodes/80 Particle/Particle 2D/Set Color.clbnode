@@ -1,0 +1,14 @@
+
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT sRGB_StraightA 'Color';
+
+Particle2D main(Particle2D particle)
+{
+    particle.color = 'Color';
+    // particle.color.x = 1.0f;
+    // particle.color.y = 0;
+    // particle.color.z = 1.0f;
+    // particle.color.w = 1.0f;
+    return particle;
+}

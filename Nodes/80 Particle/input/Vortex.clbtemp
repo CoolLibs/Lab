@@ -1,0 +1,19 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT Angle 'Angle';
+INPUT float 'Strength';
+
+$Particle main($Particle particle)
+{
+    $vec trans_pos          = $vec(-particle.position.y, particle.position.x);
+    $vec non_normalized_dir = 2 * cos('Angle') * particle.position + sin('Angle') * trans_pos;
+    if (length(non_normalized_dir) > 0.0001)
+    {
+        particle.acceleration += 'Strength' * normalize(non_normalized_dir) / length(non_normalized_dir);
+    }
+    if (length(particle.position) > 1)
+    {
+        particle.acceleration -= normalize(particle.position);
+    }
+    return particle;
+}
