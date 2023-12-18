@@ -1,7 +1,6 @@
 #pragma once
 #include <cstddef>
 #include <optional>
-#include "Common/FullscreenShader.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"

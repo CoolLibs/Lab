@@ -18,7 +18,6 @@ namespace Lab {
 
 Module_Compositing::Module_Compositing(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
     : Module{"Compositing", dirty_flag_factory}
-    , _shader{dirty_flag_factory.make()}
 {
 }
 
@@ -28,7 +27,7 @@ void Module_Compositing::update(UpdateContext_Ref)
 
 void Module_Compositing::reset_shader()
 {
-    _shader.pipeline().reset();        // Make sure the shader will be empty if the compilation fails.
+    _pipeline.reset();                 // Make sure the shader will be empty if the compilation fails.
     _shader_compilation_error.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
     _shader_code = "";
     _dependencies.reset();
@@ -49,7 +48,7 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
 
     _shader_code = *shader_code;
 
-    auto const maybe_err = _shader.compile(_shader_code, update_ctx);
+    auto const maybe_err = _pipeline.compile(_shader_code);
 
     handle_error(maybe_err, name(), _shader_compilation_error);
 
@@ -68,10 +67,7 @@ void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) 
         ImGui::SeparatorText("Compositing shader");
         if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
         {
-            const auto maybe_err = _shader.compile(
-                _shader_code,
-                update_ctx
-            );
+            const auto maybe_err = _pipeline.compile(_shader_code);
             handle_error(maybe_err, name(), _shader_compilation_error);
 
             ui.dirty_setter()(dirty_flag()); // Trigger rerender
@@ -81,8 +77,7 @@ void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) 
 
 auto Module_Compositing::is_dirty(Cool::IsDirty_Ref check_dirty) const -> bool
 {
-    return Module::is_dirty(check_dirty)
-           || check_dirty(_shader.dirty_flag());
+    return Module::is_dirty(check_dirty);
 };
 
 void Module_Compositing::set_render_target_size(img::Size const& size)
@@ -105,18 +100,13 @@ void Module_Compositing::render(RenderParams in, UpdateContext_Ref update_ctx)
 
 void Module_Compositing::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
 {
-    in.set_clean(_shader.dirty_flag());
-
-    if (!_shader.pipeline().shader())
+    if (!_pipeline.shader())
         return;
 
-    auto const& pipeline = _shader.pipeline();
-    auto const& shader   = *pipeline.shader();
+    shader_set_uniforms(*_pipeline.shader(), in, _dependencies, _feedback_double_buffer, *_camera_input);
+    shader_send_uniforms(*_pipeline.shader(), in, _nodes_graph);
 
-    shader_set_uniforms(shader, in, _dependencies, _feedback_double_buffer, *_camera_input);
-    shader_send_uniforms(shader, in, _nodes_graph);
-
-    pipeline.draw();
+    _pipeline.draw();
 }
 
 } // namespace Lab

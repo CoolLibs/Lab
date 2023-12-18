@@ -4,8 +4,8 @@
 #include <Nodes/shader_dependency.h>
 #include <memory>
 #include <tl/expected.hpp>
-#include "Common/FullscreenShader.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
+#include "Cool/Gpu/FullscreenPipeline.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "Cool/Gpu/Texture.h"
 #include "Cool/Nodes/NodeId.h"
@@ -29,18 +29,12 @@ public:
     Cool::NodesGraph const*          _nodes_graph; // TODO(Modules) Remove
     Cool::Input<Cool::Camera> const* _camera_input;
 
-    auto
-        shader_is_valid() const -> bool
-    {
-        return _shader.pipeline().shader().has_value();
-    }                                                                     // TODO(Modules) Remove
-    auto shader() -> auto const& { return *_shader.pipeline().shader(); } // TODO(Modules) Remove
+    auto shader_is_valid() const -> bool { return _pipeline.shader().has_value(); } // TODO(Modules) Remove
+    auto shader() -> auto const& { return *_pipeline.shader(); }                    // TODO(Modules) Remove
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     auto is_dirty(Cool::IsDirty_Ref) const -> bool override;
-
-    auto shader_dirty_flag() const -> Cool::DirtyFlag const& { return _shader.dirty_flag(); }
 
     void reset_shader();
     void on_time_reset();
@@ -61,7 +55,7 @@ private:
 
 private:
     mutable std::string              _shader_code{};
-    mutable FullscreenShader         _shader{};
+    mutable Cool::FullscreenPipeline _pipeline{};
     mutable Cool::MessageSender      _shader_compilation_error{};
     Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
 
@@ -74,8 +68,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Base Module", cereal::base_class<Module>(this)),
-            cereal::make_nvp("Shader", _shader)
+            cereal::make_nvp("Base Module", cereal::base_class<Module>(this))
         );
     }
 };

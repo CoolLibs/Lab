@@ -192,7 +192,6 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
         auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
         {
-            // ui.set_dirty(_regenerate_code_flag);
             ui.set_dirty(_regenerate_code_flag);
         }
     }
@@ -273,8 +272,7 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
         ui,
         _main_node_id,
         _node_we_might_want_to_restore_as_main_node_id,
-        _compositing_module.shader_dirty_flag(), // TODO(Modules) Need to warn the particles_module too
-        // _regenerate_code_flag,
+        _rerender_all_flag,
         _regenerate_code_flag,
         _nodes_editor.graph(),
         ui.audio_manager(),
