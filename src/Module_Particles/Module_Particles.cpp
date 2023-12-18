@@ -6,6 +6,7 @@
 #include "Cool/DebugOptions/DebugOptions.h"
 #include "Cool/Exception/Exception.h"
 #include "Cool/File/File.h"
+#include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Particles/ParticleSystem.h"
 #include "Cool/String/String.h"
@@ -35,18 +36,14 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
 {
     if (!shader_code)
     {
-        // TODO(Particles): handle error (parent class with Compositing ?)
+        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, name(), _shader_compilation_error);
         return;
     }
 
     _shader_code = *shader_code;
-
-    // TODO(Particles): handle error (parent class with Compositing ?)
-    // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
+    _shader_compilation_error.clear();
 
     // TODO(Particles) Don't recreate the particle system every time, just change  the shader but keep the current position and velocity of the particles
-    // _particle_system.set_simulation_shader(*shader_code); // TODO(Particles) Make this function return an optional error
-
     try
     {
         if (_particle_system.has_value())
