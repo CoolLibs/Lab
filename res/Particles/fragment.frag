@@ -4,7 +4,7 @@ in vec2  _varying_uv;
 flat in uint  _particle_index;
 out vec4 _out_color;
 
-layout(std430, binding = 4) buffer _colors_buffer
+layout(std430, binding = 5) buffer _colors_buffer
 {
     float _colors[];
 };

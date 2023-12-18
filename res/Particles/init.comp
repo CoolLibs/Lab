@@ -20,7 +20,12 @@ layout(std430, binding = 3) buffer _lifetimes_buffer
     float _lifetimes[];
 };
 
-layout(std430, binding = 4) buffer _colors_buffer
+layout(std430, binding = 4) buffer _lages_buffer
+{
+    float _ages[];
+};
+
+layout(std430, binding = 5) buffer _colors_buffer
 {
     float _colors[];
 };
@@ -41,7 +46,8 @@ struct Particle2D {
     vec2  acceleration;
     float size;
     float lifetime;
-    vec4  color;
+    float age;
+    vec4 color;
 };
 #endif
 
@@ -59,6 +65,7 @@ void cool_main()
 #endif
     particle.size     = 0.01;
     particle.lifetime = -1.0;
+    particle.age      = 0.0;
     particle.color    = vec4(1.0);
 
 #ifdef IS_3D
@@ -76,6 +83,7 @@ void cool_main()
 #endif
     _sizes[gid]          = particle.size;
     _lifetimes[gid]      = particle.lifetime;
+    _ages[gid]           = particle.age;
     _colors[gid * 4]     = particle.color.x;
     _colors[gid * 4 + 1] = particle.color.y;
     _colors[gid * 4 + 2] = particle.color.z;

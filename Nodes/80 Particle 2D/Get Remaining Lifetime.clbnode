@@ -2,5 +2,5 @@
 
 float main(Particle2D particle)
 {
-    return particle.lifetime;
+    return particle.lifetime/(particle.lifetime + particle.age);
 }

@@ -31,7 +31,12 @@ layout(std430, binding = 3) buffer _lifetimes_buffer
     float _lifetimes[];
 };
 
-layout(std430, binding = 4) buffer _colors_buffer
+layout(std430, binding = 4) buffer _ages_buffer
+{
+    float _ages[];
+};
+
+layout(std430, binding = 5) buffer _colors_buffer
 {
     float _colors[];
 };
