@@ -51,7 +51,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     }
     _compositing_module._nodes_graph  = &_nodes_editor.graph();
     _compositing_module._camera_input = &_camera_input;
-    // TODO(Particles) Render in the order of dependency between the modules
+    // TODO(Modules) Render in the order of dependency between the modules
     for (auto& node : _particles_module_nodes)
         render_particle_module(node->module, node->render_target, in, update_ctx);
     render_compositing_module(render_target, in, update_ctx);
@@ -59,8 +59,8 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 
 void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx)
 {
-    // TODO(Particles) Rename module.is_dirty() as module.needs_to_render
-    // TODO(Particles) Remove module.is_dirty() from module
+    // TODO(Modules) Rename module.is_dirty() as module.needs_to_render
+    // TODO(Modules) Remove module.is_dirty() from module
     if (!some_module.is_dirty(params.is_dirty))
         return;
     params.set_clean(some_module.dirty_flag());
@@ -148,7 +148,6 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             );
 
             auto const texture_name_in_shader = module_texture_name(node_definition, particles_root_node_id);
-            // Create the module and set its shader
 
             if (!std::any_of(
                     _particles_module_nodes.begin(),
@@ -179,31 +178,6 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
         }
     );
     _compositing_module.set_shader_code(shader_code, ctx);
-
-    // try
-    // {
-    //     _particle_system = Cool::ParticleSystem{
-    //         _particles_count,
-    //         Cool::ParticlesShadersCode{
-    //             .simulation = _shader_code,
-    //             .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp"),
-    //             .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert"),
-    //             .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-    //         }
-    //     };
-    // }
-    // catch (std::exception const& e)
-    // {
-    //     Cool::Log::ToUser::error("Particles Compilation Failed", e.what());
-    //     return;
-    // }
-
-    // TODO(Particles)
-    // auto const maybe_err = _shader.compile(_shader_code, update_ctx);
-    //
-    // handle_error(maybe_err, for_testing_nodes);
-    //
-    // compute_dependencies();
 }
 
 void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
@@ -305,7 +279,6 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
 {
     for (auto& node : _particles_module_nodes)
     {
-        // TODO(Particles) Debug option "Log when updating particles"
         node->module._nodes_graph  = &_nodes_editor.graph();
         node->module._camera_input = &_camera_input;
         node->module.update_particles(update_ctx);
