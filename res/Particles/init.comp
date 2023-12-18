@@ -57,11 +57,11 @@ void cool_main()
 #ifdef IS_3D
     Particle3D particle;
     particle.position = hash_0_to_1_3D_to_3D(vec3(gid, 1, 1)) * 2 - 1; // -1.0 to 1.0
-    particle.velocity = vec3(0.0);
+    particle.velocity = hash_0_to_1_3D_to_3D(vec3(gid, 2, 1)) * 2 - 1; // -1.0 to 1.0
 #else
     Particle2D particle;
     particle.position        = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2 - 1; // -1.0 to 1.0
-    particle.velocity        = vec2(0.0);
+    particle.velocity        = hash_0_to_1_2D_to_2D(vec2(gid, 2)) * 2 - 1; // -1.0 to 1.0
 #endif
     particle.size     = 0.01;
     particle.lifetime = -1.0;
