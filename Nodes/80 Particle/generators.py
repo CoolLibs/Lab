@@ -222,15 +222,22 @@ def parse_snippets(
 
 VARIABLES_2D = {
     "vec": "vec2",
+    "vec23": "vec2",
+    "vec34": "vec3",
     "UV": "UV",
+    "Point2D": "Point2D",
     "Direction": "Direction2D",
     "Particle": "Particle2D"
 }
 FUNCTIONS_2D = {
-    "vec(a)": ("vec2(a)", ""),
-    "vec(a, b)": ("vec2(a, b)", ""),
-    "vec(a, b, c)": ("vec2(a, b)", ""),
-    "vec(a, b, c, d)": ("vec2(a, b)", ""),
+    "vec(a)"            : ("vec2(a)", ""),
+    "vec(a, b)"         : ("vec2(a, b)", ""),
+    "vec(a, b, c)"      : ("vec2(a, b)", ""),
+    "vec(a, b, c, d)"   : ("vec2(a, b)", ""),
+    "vec23(a)"          : ("vec2(a)", ""),
+    "vec23(a, b, c)"    : ("vec2(a, b)", ""),
+    "vec34(a)"          : ("vec3(a)", ""),
+    "vec34(a, b, c, d)" : ("vec3(a, b, c)", ""),
     "gradient(p, shape)": ("gradient(p)", """
 vec2 gradient(vec2 p)
 {
@@ -243,19 +250,28 @@ vec2 gradient(vec2 p)
 }
 """),
 }
-DEFINES_2D = []
+DEFINES_2D = [
+    "IS_2D"
+]
 
 VARIABLES_3D = {
     "vec": "vec3",
+    "vec23": "vec3",
+    "vec34": "vec4",
     "UV": "vec3",
+    "Point2D": "vec3",
     "Direction": "vec3",
     "Particle": "Particle3D"
 }
 FUNCTIONS_3D = {
-    "vec(a)": ("vec3(a)", ""),
-    "vec(a, b)": ("vec3(a, b, 0)", ""),
-    "vec(a, b, c)": ("vec3(a, b, c)", ""),
-    "vec(a, b, c, d)": ("vec3(a, b, c)", ""),
+    "vec(a)"            : ("vec3(a)", ""),
+    "vec(a, b)"         : ("vec3(a, b, 0)", ""),
+    "vec(a, b, c)"      : ("vec3(a, b, c)", ""),
+    "vec(a, b, c, d)"   : ("vec3(a, b, c)", ""),
+    "vec23(a)"          : ("vec3(a)", ""),
+    "vec23(a, b, c)"    : ("vec3(a, b, c)", ""),
+    "vec34(a)"          : ("vec4(a)", ""),
+    "vec34(a, b, c, d)" : ("vec4(a, b, c, d)", ""),
     "gradient(p, shape)": ("gradient(p)", """
 vec3 gradient(vec3 p)
 {
