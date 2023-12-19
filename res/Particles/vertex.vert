@@ -21,8 +21,18 @@ layout(std430, binding = 2) buffer _sizes_buffer
     float _sizes[];
 };
 
+layout(std430, binding = 3) buffer _lifetimes_buffer
+{
+    float _lifetimes[];
+};
+
 void main()
 {
+    if(_lifetimes[gl_InstanceID] <= 0)
+    {
+        gl_Position = vec4(0.);
+        return;
+    }
     _varying_uv                = _uv;
     float size                 = _sizes[gl_InstanceID];
     mat4  _camera2D_inverse_44 = mat4(

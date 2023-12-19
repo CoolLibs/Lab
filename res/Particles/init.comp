@@ -67,7 +67,7 @@ void cool_main()
     particle.velocity        = hash_0_to_1_2D_to_2D(vec2(gid, 2)) * 2 - 1; // -1.0 to 1.0
 #endif
     particle.size         = 0.01;
-    particle.lifetime     = -1.0;
+    particle.lifetime     = 1.0;
     particle.lifetime_max = 0.0;
     particle.color        = vec4(1.0);
 

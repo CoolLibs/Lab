@@ -1,0 +1,4 @@
+bool main(bool b)
+{
+  return !b;
+}

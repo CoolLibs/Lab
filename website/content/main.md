@@ -51,4 +51,4 @@ This project is still in the early phases of development, but you can already ob
 
 _Coollab_ is a place to experiment, a _Lab_. This refers both to the exploratory nature of generative art, and the fact that by building this software we want to push the limits of software engineering and build the software of the future, using the lessons of the past decades in software development. Enter C++ 20, modules, functional programming, a decoupled architecture, and many more cool stuff!
 
-_CooLab_ is also a pun on _collaboration_, reflecting our open-source nature and our desire to share knowledge and tools and build something grand together.
+_Coollab_ is also a pun on _collaboration_, reflecting our open-source nature and our desire to share knowledge and tools and build something grand together.
