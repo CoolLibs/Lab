@@ -33,6 +33,6 @@ $Particle main($Particle particle)
         particle.position.z = -1.;
         particle.velocity.z = -particle.velocity.z;
     }
-    $$endif(IS_3D);
+    $$endif;
     return particle;
 }

@@ -4,19 +4,16 @@ INPUT float 'Lifetime';
 
 $Particle reset($Particle particle)
 {
+    particle.lifetime     = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position.xy);
+    particle.lifetime_max = particle.lifetime;
+    particle.velocity     = $vec(0);
+    particle.size         = 0.5;
+
     $$if(IS_3D);
-    particle.lifetime     = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position);
-    particle.lifetime_max = particle.lifetime;
-    particle.position     = hash_0_to_1_3D_to_3D(vec3(_time, 0, 0)) * 2 - 1; // -1.0 to 1.0
-    particle.velocity     = vec3(0);
-    particle.size         = 0.5;
-    $$elif(IS_3D);
-    particle.lifetime     = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position);
-    particle.lifetime_max = particle.lifetime;
-    particle.position     = hash_0_to_1_2D_to_2D(vec2(_time, 0)) * 2 - 1; // -1.0 to 1.0
-    particle.velocity     = vec2(0);
-    particle.size         = 0.5;
-    $$endif(IS_3D);
+    particle.position = hash_0_to_1_3D_to_3D(vec3(_time, 0, 0)) * 2 - 1; // -1.0 to 1.0
+    $$else;
+    particle.position = hash_0_to_1_2D_to_2D(vec2(_time, 0)) * 2 - 1; // -1.0 to 1.0
+    $$endif;
 
     return particle;
 }

@@ -5,12 +5,13 @@ INPUT float 'Lifetime';
 
 Particle3D reset(Particle3D particle)
 {
-    ;
-    particle.lifetime     = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position);
+    particle.lifetime     = 'Lifetime' * hash_0_to_1_2D_to_1D(particle.position.xy);
     particle.lifetime_max = particle.lifetime;
-    particle.position     = hash_0_to_1_3D_to_3D(vec3(_time, 0, 0)) * 2 - 1; // -1.0 to 1.0
     particle.velocity     = vec3(0);
     particle.size         = 0.5;
+
+    ;
+    particle.position = hash_0_to_1_3D_to_3D(vec3(_time, 0, 0)) * 2 - 1; // -1.0 to 1.0
     ;
 
     return particle;

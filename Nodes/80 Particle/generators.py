@@ -173,6 +173,16 @@ def parse_snippets(
                 output += snip
             continue
         if type(snip) is MacroVariable:
+            if snip.name == "$else":
+                is_off_define = not is_off_define
+                continue
+            elif snip.name == "$endif":
+                if len(define_stack) == 0:
+                    raise f"$$endif without $$if"
+                define_stack.pop()
+                if len(define_stack) == 0 or define_stack[-1] in defines:
+                    is_off_define = False
+                continue
             if snip.name in variables:
                 output += variables[snip.name]
             else:
@@ -183,18 +193,6 @@ def parse_snippets(
                 define_stack.append(snip.params[0])
                 if snip.params[0] not in defines:
                     is_off_define = True
-            elif snip.name == "$elif":
-                is_off_define = False
-                if snip.params[0] in defines:
-                    is_off_define = True
-            elif snip.name == "$endif":
-                if len(define_stack) == 0:
-                    raise f"$$endif({snip.params[0]}) without $$if"
-                if define_stack[-1] != snip.params[0]:
-                    raise f"$$endif({snip.params[0]}) without $$if (current $$if: {define_stack[-1]})"
-                define_stack.pop()
-                if len(define_stack) == 0 or define_stack[-1] in defines:
-                    is_off_define = False
             else:
                 signature = f"{snip.name}({", ".join(snip.params)})"
                 if signature in used_signatures:

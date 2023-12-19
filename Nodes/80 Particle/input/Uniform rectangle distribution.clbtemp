@@ -7,9 +7,9 @@ $vec main($Particle particle)
 {
     $$if(IS_3D);
     vec3 random = hash_0_to_1_3D_to_3D(vec3(_time, _delta_time, particle.id)).xyz;
-    $$elif(IS_3D);
+    $$else;
     vec2 random = hash_0_to_1_3D_to_3D(vec3(_time, _delta_time, particle.id)).xy;
-    $$endif(IS_3D);
+    $$endif;
 
     return 'Position' + 'Size' * (random - $vec(0.5));
 }
