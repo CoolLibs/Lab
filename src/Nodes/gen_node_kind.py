@@ -49,9 +49,14 @@ def all_node_kinds():
             generate_compute_color_check=False,
         ),
         NodeKind(
-            name_in_code="particle",
-            user_facing_name="Particle",
-            color_srgb="0.27058823529411763f,0.7607843137254902f,0.8392156862745098f",
+            name_in_code="particle_2D",
+            user_facing_name="Particle 2D",
+            color_srgb="0.25f,0.25f,0.75f",
+        ),
+        NodeKind(
+            name_in_code="particle_3D",
+            user_facing_name="Particle 3D",
+            color_srgb="0.5f,0.25f,0.75f",
         ),
     ]
 

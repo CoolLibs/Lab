@@ -23,5 +23,8 @@ if (is_greyscale(signature))
 if (is_modifier_2D(signature))
     return NodeColor::modifier_2D();
 
-if (is_particle(signature))
-    return NodeColor::particle();
+if (is_particle_2D(signature))
+    return NodeColor::particle_2D();
+
+if (is_particle_3D(signature))
+    return NodeColor::particle_3D();

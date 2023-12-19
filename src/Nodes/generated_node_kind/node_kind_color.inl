@@ -11,4 +11,5 @@ case NodeKind::Image: return NodeColor::image();
 case NodeKind::Greyscale: return NodeColor::greyscale();
 case NodeKind::Modifier2D: return NodeColor::modifier_2D();
 case NodeKind::Miscellaneous: return NodeColor::miscellaneous();
-case NodeKind::Particle: return NodeColor::particle(); 
+case NodeKind::Particle2D: return NodeColor::particle_2D();
+case NodeKind::Particle3D: return NodeColor::particle_3D(); 

@@ -57,7 +57,9 @@ auto compute_primitive_type_color(PrimitiveType type) -> Cool::Color
     case PrimitiveType::UV:
         return NodeColor::modifier_2D();
     case PrimitiveType::Particle2D:
-        return NodeColor::particle();
+        return NodeColor::particle_2D();
+    case PrimitiveType::Particle3D:
+        return NodeColor::particle_3D();
     default:
         return NodeColor::miscellaneous();
     }
