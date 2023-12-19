@@ -317,8 +317,8 @@ for file in os.scandir(INPUT):
         PARSED_2D = WARNING + PARSED_2D
         PARSED_3D = WARNING + PARSED_3D
 
-        f_2d = open(os.path.join(PATH_2D, f"{name}.clbnode"), "w+")
-        f_3d = open(os.path.join(PATH_3D, f"{name}.clbnode"), "w+")
+        f_2d = open(os.path.join(PATH_2D, f"{name} 2D.clbnode"), "w+")
+        f_3d = open(os.path.join(PATH_3D, f"{name} 3D.clbnode"), "w+")
         f_2d.write(PARSED_2D)
         f_3d.write(PARSED_3D)
         f_2d.close()
