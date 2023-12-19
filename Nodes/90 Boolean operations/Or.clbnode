@@ -1,0 +1,4 @@
+bool main(bool b1, bool b2)
+{
+  return b || b2;
+}
