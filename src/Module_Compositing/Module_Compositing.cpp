@@ -63,16 +63,13 @@ void Module_Compositing::compute_dependencies()
 
 void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
-    DebugOptions::show_generated_shader_code([&] {
-        ImGui::SeparatorText("Compositing shader");
-        if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
-        {
-            const auto maybe_err = _pipeline.compile(_shader_code);
-            handle_error(maybe_err, name(), _shader_compilation_error);
+    if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+    {
+        const auto maybe_err = _pipeline.compile(_shader_code);
+        handle_error(maybe_err, name(), _shader_compilation_error);
 
-            ui.dirty_setter()(needs_to_rerender_flag()); // Trigger rerender
-        }
-    });
+        ui.dirty_setter()(needs_to_rerender_flag());
+    }
 }
 
 auto Module_Compositing::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool

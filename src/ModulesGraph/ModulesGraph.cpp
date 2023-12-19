@@ -2,6 +2,7 @@
 #include <Module_Particles/Module_Particles.h>
 #include <Nodes/FunctionSignature.h>
 #include <Nodes/module_texture_name.h>
+#include <imgui.h>
 #include <algorithm>
 #include <cstddef>
 #include <iostream>
@@ -193,11 +194,28 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
             ui.set_dirty(_regenerate_code_flag);
         }
     }
-    _compositing_module.imgui_windows(ui, update_ctx);
-    for (auto& _particles_module : _particles_module_nodes)
-    {
-        _particles_module->module.imgui_windows(ui, update_ctx);
-    }
+    DebugOptions::show_generated_shader_code([&] {
+        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+        if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+        {
+            if (ImGui::BeginTabItem("Compositing shader"))
+            {
+                _compositing_module.imgui_windows(ui, update_ctx);
+                ImGui::EndTabItem();
+            }
+            for (auto const& _particles_module : _particles_module_nodes)
+            {
+                ImGui::PushID(&_particles_module);
+                if (ImGui::BeginTabItem("Particle shader"))
+                {
+                    _particles_module->module.imgui_windows(ui, update_ctx);
+                    ImGui::EndTabItem();
+                }
+                 ImGui::PopID();
+            }
+            ImGui::EndTabBar();
+        }
+    });
 }
 
 static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D

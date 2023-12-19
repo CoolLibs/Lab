@@ -64,8 +64,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
                     .init       = init,
                     .vertex     = vertex,
                     .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-                }
-            };
+                }};
             // switch (dimension)
             // {
             // case 2:
@@ -152,13 +151,9 @@ void Module_Particles::compute_dependencies()
 
 void Module_Particles::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
-    Lab::DebugOptions::show_generated_shader_code([&] {
-        ImGui::SeparatorText("Particle shader");
-        if (Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
-        {
-        }
-    });
-
+    if (Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+    {
+    }
     Cool::DebugOptions::particles_debug_menu_window([&] {
         // TODO voir avec jules plus tard (push id + mettre un separator text)
         imgui_debug_menu(update_ctx.dirty_setter());
