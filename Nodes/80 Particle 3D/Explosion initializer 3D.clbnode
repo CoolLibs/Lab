@@ -5,21 +5,22 @@ INPUT float 'Starting size';
 INPUT float 'Radius';
 INPUT float 'Strength';
 
-Particle3D main(Particle3D particle)
+Particle3D main()
 {
-    particle.lifetime -= _delta_time;
-    if (particle.lifetime <= 0.0)
+    coollab_context.particle.lifetime -= _delta_time;
+    if (coollab_context.particle.lifetime <= 0.0)
     {
-        particle.lifetime = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(particle.id, particle.position));
-        vec3  random      = hash_0_to_1_3D_to_3D(vec3(particle.position.x, _delta_time, particle.id)).xyz;
+        coollab_context.particle.lifetime =
+            'Lifetime' * hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.id, coollab_context.particle.position));
+        vec3  random      = hash_0_to_1_3D_to_3D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id)).xyz;
         float r           = sqrt(random.y);
         float alpha       = PI * random.x;
         float beta        = 2 * PI * random.y;
         vec3  direction   = (cos(alpha) * cos(beta) * vec3(1, 0, 0) + sin(alpha) * cos(beta) * vec3(0, 1, 0) + sin(beta) * vec3(0, 0, 1));
-        particle.position = r * 'Radius' * direction;
-        particle.velocity = 'Strength' * direction;
-        particle.size     = 'Starting size';
+        coollab_context.particle.position = r * 'Radius' * direction;
+        coollab_context.particle.velocity = 'Strength' * direction;
+        coollab_context.particle.size     = 'Starting size';
     }
 
-    return particle;
+    return coollab_context.particle;
 }
