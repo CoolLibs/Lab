@@ -28,7 +28,7 @@ layout(std430, binding = 3) buffer _lifetimes_buffer
 
 void main()
 {
-    if(_lifetimes[gl_InstanceID] <= 0)
+    if (_lifetimes[gl_InstanceID] <= 0)
     {
         gl_Position = vec4(0.);
         return;
@@ -61,6 +61,6 @@ void main()
                            1.
                        );
     proj_pos_3D.x *= _inverse_aspect_ratio;
-    gl_Position     = vec4(proj_pos_3D.xyz / proj_pos_3D.w, 1.);
+    gl_Position     = proj_pos_3D;
     _particle_index = gl_InstanceID;
 }
