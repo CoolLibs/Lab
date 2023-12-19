@@ -20,6 +20,9 @@ namespace Lab {
 
 Module_Particles::Module_Particles()
 {
+#ifdef __APPLE__
+    Cool::Log::ToUser::error("Particles", "Particles are not supported on macOS for now.");
+#endif
 }
 
 Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
@@ -140,8 +143,10 @@ void Module_Particles::update_particles(UpdateContext_Ref)
     if (DebugOptions::log_when_updating_particles())
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
+#ifndef __APPLE__
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_particle_size", _particle_size);
+#endif
     _particle_system->update();
 }
 
@@ -172,6 +177,7 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     if (!_particle_system)
         return;
 
+#ifndef __APPLE__
     shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input);
     shader_send_uniforms(_particle_system->simulation_shader(), in, _nodes_graph);
 
@@ -183,6 +189,7 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     _particle_system->render_shader().set_uniform("cool_camera_view_projection", cam.view_projection_matrix(/*aspect_ratio=*/1.f)); // The aspect ratio will be applied separately
     _particle_system->render_shader().set_uniform("cool_camera_view", cam.view_matrix());
     _particle_system->render();
+#endif
 }
 
 } // namespace Lab
