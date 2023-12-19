@@ -290,8 +290,8 @@ DEFINES_3D = [
 
 
 INPUT = os.path.join(os.path.dirname(__file__), "./input/")
-PATH_2D = os.path.join(os.path.dirname(__file__), "./Particle 2D/")
-PATH_3D = os.path.join(os.path.dirname(__file__), "./Particle 3D/")
+PATH_2D = os.path.join(os.path.dirname(__file__), "../80 Particle 2D/")
+PATH_3D = os.path.join(os.path.dirname(__file__), "../80 Particle 3D/")
 
 if not os.path.exists(PATH_2D):
     os.mkdir(PATH_2D)
@@ -317,7 +317,7 @@ for file in os.scandir(INPUT):
         PARSED_2D = WARNING + PARSED_2D
         PARSED_3D = WARNING + PARSED_3D
 
-        f_2d = open(os.path.join(PATH_2D, f"{name} 2D.clbnode"), "w+")
+        f_2d = open(os.path.join(PATH_2D, f"{name}.clbnode"), "w+")
         f_3d = open(os.path.join(PATH_3D, f"{name} 3D.clbnode"), "w+")
         f_2d.write(PARSED_2D)
         f_3d.write(PARSED_3D)

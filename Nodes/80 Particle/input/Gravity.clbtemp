@@ -5,6 +5,6 @@ INPUT $Direction 'Direction';
 
 $Particle main($Particle particle)
 {
-    particle.acceleration += normalize('Direction') * 'Gravity';
+    particle.acceleration += (length('Direction') == 0 ? $vec(0) : normalize('Direction')) * 'Gravity';
     return particle;
 }

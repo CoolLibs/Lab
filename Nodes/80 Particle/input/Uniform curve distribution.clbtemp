@@ -8,7 +8,5 @@ $vec main($Particle particle)
 
     float t = float(particle.id) / float(particle_count - 1);
 
-    $vec current_position_0_to_1 = 'Curve'(t);
-
-    return mix(particle.position, current_position_0_to_1, 0.5);
+    return 'Curve'(t);
 }

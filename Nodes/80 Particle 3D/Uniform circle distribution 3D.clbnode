@@ -7,15 +7,16 @@
 
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT vec2 'Position';
+INPUT vec3 'Position';
 INPUT float 'Radius';
 
-vec2 main(Particle2D particle)
+vec3 main(Particle3D particle)
 {
     vec3  random = hash_0_to_1_3D_to_3D(vec3(particle.position.x, _delta_time, particle.id)).xyz;
     float r      = sqrt(random.z);
     float theta  = 2 * PI * random.x;
     ;
-    return 'Radius' * r * vec2(cos(theta), sin(theta)) + 'Position';
+    float omega = 2 * PI * random.y;
+    return 'Radius' * r * vec3(cos(theta) * cos(omega), sin(theta) * cos(omega), sin(omega)) + 'Position';
     ;
 }

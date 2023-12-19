@@ -10,11 +10,10 @@ $Particle main()
     coollab_context.particle.lifetime -= _delta_time;
     if (coollab_context.particle.lifetime <= 0.0)
     {
-        coollab_context.particle.lifetime =
-            'Lifetime' * hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.id, coollab_context.particle.position.xy));
-        vec3  random = hash_0_to_1_3D_to_3D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id)).xyz;
-        float r      = sqrt(random.z);
-        float theta  = 2 * PI * random.x;
+        coollab_context.particle.lifetime = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(particle.id, particle.position.xy));
+        vec3  random                      = hash_0_to_1_3D_to_3D(vec3(particle.position.x, _delta_time, particle.id)).xyz;
+        float r                           = sqrt(random.z);
+        float theta                       = 2 * PI * random.x;
 
         $$if(IS_3D);
         float omega     = 2 * PI * random.y;

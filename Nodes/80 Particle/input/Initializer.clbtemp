@@ -10,8 +10,7 @@ $Particle main()
     coollab_context.particle.lifetime -= _delta_time;
     if (coollab_context.particle.lifetime <= 0.0)
     {
-        coollab_context.particle.lifetime =
-            'Lifetime' * hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.id, coollab_context.particle.position.xy));
+        coollab_context.particle.lifetime = 'Lifetime' * hash_0_to_1_2D_to_1D(vec2(particle.id, _time));
         coollab_context.particle.position = 'Spawning pattern';
         coollab_context.particle.velocity = 'Velocity pattern';
         coollab_context.particle.size     = 'Starting size';

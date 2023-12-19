@@ -10,7 +10,7 @@
 INPUT bool 'isRelative';
 INPUT bool 'isDecreasing';
 
-float main(Particle2D particle)
+float main(Particle3D particle)
 {
     float age = (particle.lifetime_max - particle.lifetime);
 
