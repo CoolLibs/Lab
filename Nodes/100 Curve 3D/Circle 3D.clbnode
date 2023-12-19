@@ -1,0 +1,11 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Radius';
+INPUT float 'Radius X';
+INPUT float 'Radius Y';
+INPUT Point2D 'Center';
+
+vec3 main(float t)
+{
+    return vec3(vec2_from_polar('Radius', t * TAU) * vec2('Radius X', 'Radius Y') + 'Center', 0);
+}
