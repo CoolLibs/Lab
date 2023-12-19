@@ -292,7 +292,10 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
         // Curve
         || is_curve(signature)
         // Shape 3D
-        || is_shape_3D(signature);
+        || is_shape_3D(signature)
+        // Particle that doesn't need the main pin
+        || (signature.from == PrimitiveType::Particle2D && signature.to != PrimitiveType::Particle2D)
+        || (signature.from == PrimitiveType::Particle3D && signature.to != PrimitiveType::Particle3D);
 }
 
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
