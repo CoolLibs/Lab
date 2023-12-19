@@ -58,13 +58,15 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
             std::string vertex = std::string("#version 430\n") + (dimension == 3 ? "#define IS_3D\n" : "") + *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert");
 
             _particle_system = Cool::ParticleSystem{
+                dimension,
                 _particles_count,
                 Cool::ParticlesShadersCode{
                     .simulation = *shader_code,
                     .init       = init,
                     .vertex     = vertex,
                     .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-                }};
+                }
+            };
             // switch (dimension)
             // {
             // case 2:
