@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT bool 'Condition';
+
+$Particle main($Particle particle)
+{
+    if ('Condition')
+    {
+        particle.lifetime = -1.;
+    }
+    return particle;
+}

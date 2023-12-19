@@ -2,7 +2,7 @@
 
 INPUT float->$UV 'Curve';
 
-vec2 main($Particle particle)
+$vec main($Particle particle)
 {
     uint particle_count = DispatchSize.x;
 
