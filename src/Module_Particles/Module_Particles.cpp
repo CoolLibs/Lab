@@ -187,8 +187,8 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
 
     _particle_system->render_shader().set_uniform("_particle_size", _particle_size);
 
-    auto const& camera_2D_mat3 = glm::inverse(in.provider(Cool::Input_Camera2D{}));
-    auto const& camera_2D_mat4 = glm::mat4(
+    auto const camera_2D_mat3 = glm::inverse(in.provider(Cool::Input_Camera2D{}));
+    auto const camera_2D_mat4 = glm::mat4(
         glm::vec4(camera_2D_mat3[0], 0.f),
         glm::vec4(camera_2D_mat3[1], 0.f),
         glm::vec4(0.f),
@@ -196,7 +196,7 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     );
     auto const& camera_3D = in.provider(*_camera_input);
 
-    auto const& full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.);
+    auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.);
 
     _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());
     _particle_system->render_shader().set_uniform("camera_matrix_2d_44", camera_2D_mat4);
