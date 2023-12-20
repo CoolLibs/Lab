@@ -347,7 +347,7 @@ for dir in os.scandir(INPUT):
         f_2d.close()
         f_3d.close()
 
-if NODES_FOLDER.split("/")[-1] != "Nodes":
+if os.path.split(NODES_FOLDER)[-1] != "Nodes":
     print("Stopping there because this script's directory is not in the Nodes directory")
     exit()
 
