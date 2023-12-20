@@ -4,6 +4,7 @@ INPUT float->UV 'Curve';
 
 INPUT float->float 'Displacement Function';
 INPUT float 'Amplitude';
+INPUT bool 'Flip direction';
 
 UV main(float t)
 {
@@ -12,7 +13,9 @@ UV main(float t)
     vec2 curve_pos      = 'Curve'(t);
     vec2 curve_next_pos = 'Curve'(t + delta);
     vec2 gradient       = curve_next_pos - curve_pos;
-    vec2 normal         = normalize(vec2(gradient.y, -gradient.x));
+    vec2 normal         = 'Flip direction'
+                              ? normalize(vec2(-gradient.y, gradient.x))
+                              : normalize(vec2(gradient.y, -gradient.x));
 
     return curve_pos + normal * 'Displacement Function'(t) * 'Amplitude';
 }
