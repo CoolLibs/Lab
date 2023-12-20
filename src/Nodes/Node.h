@@ -1,6 +1,7 @@
 #pragma once
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Nodes/Pin.h>
+#include <cereal/details/helpers.hpp>
 #include <cereal/types/optional.hpp>
 #include <optional>
 #include <string_view>
@@ -54,6 +55,10 @@ public:
 
     auto is_audio_node() const -> bool;
 
+    auto is_particle_initializer() const -> bool;
+    auto particles_count() -> std::optional<size_t>& { return _particles_count; }
+    auto particles_count() const -> std::optional<size_t> const& { return _particles_count; }
+
 private:
     Cool::NodeDefinitionIdentifier _id_names;
     std::string                    _name{};
@@ -63,6 +68,8 @@ private:
     std::vector<Cool::AnyInput>  _value_inputs;
     size_t                       _number_of_main_input_pins{};
     size_t                       _number_of_function_inputs{};
+
+    std::optional<size_t> _particles_count{}; // Used in the case of particle initializer node
 
 private:
     friend class cereal::access;
@@ -76,7 +83,8 @@ private:
             cereal::make_nvp("Output Pins", _output_pins),
             cereal::make_nvp("Value inputs", _value_inputs),
             cereal::make_nvp("Number of main input pins", _number_of_main_input_pins),
-            cereal::make_nvp("Number of function inputs", _number_of_function_inputs)
+            cereal::make_nvp("Number of function inputs", _number_of_function_inputs),
+            cereal::make_nvp("Particle count", _particles_count)
         );
     }
 };

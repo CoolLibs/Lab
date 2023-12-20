@@ -73,6 +73,7 @@ void cool_main()
 auto generate_simulation_shader_code(
     Cool::NodesGraph const&                     graph,
     Cool::NodeId const&                         root_node_id,
+    Cool::NodeId&                               initializer_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Cool::InputProvider_Ref                     input_provider,
     size_t const&                               dimension
@@ -127,7 +128,11 @@ auto generate_simulation_shader_code(
     default: break; // that was asserted out
     }
 
-    auto node_definition_callback = [](auto const&, auto const&) {
+    auto node_definition_callback = [&graph, &initializer_node_id](auto const& node_id, auto const&) {
+        auto maybe_node = graph.try_get_node<Node>(node_id);
+        if (maybe_node != nullptr && maybe_node->is_particle_initializer()) {
+            initializer_node_id = node_id;
+        }
         return std::nullopt;
     };
 

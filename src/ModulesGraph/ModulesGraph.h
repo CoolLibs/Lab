@@ -7,7 +7,7 @@
 namespace Lab {
 
 struct ModulesGraphNode {
-    ModulesGraphNode()  = default;
+    ModulesGraphNode() = default;
     // ~ModulesGraphNode() = default;
 
     // ModulesGraphNode(const ModulesGraphNode&)                      = delete; // We disable copying
@@ -44,6 +44,7 @@ public:
     ModulesGraph() = default;
     ModulesGraph(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
+    void update(UpdateContext_Ref);
     void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
     void trigger_rerender_all(Cool::SetDirty_Ref);
 
