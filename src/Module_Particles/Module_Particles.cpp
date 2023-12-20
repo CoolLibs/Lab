@@ -15,6 +15,7 @@
 #include "Module/ShaderBased/handle_error.h"
 #include "Nodes/Node.h"
 #include "generate_simulation_shader_code.h"
+#include "glm/fwd.hpp"
 
 namespace Lab {
 
@@ -185,9 +186,21 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     shader_send_uniforms(_particle_system->render_shader(), in, _nodes_graph);
 
     _particle_system->render_shader().set_uniform("_particle_size", _particle_size);
-    auto const& cam = in.provider(*_camera_input);
-    _particle_system->render_shader().set_uniform("cool_camera_view_projection", cam.view_projection_matrix(/*aspect_ratio=*/1.f)); // The aspect ratio will be applied separately
-    _particle_system->render_shader().set_uniform("cool_camera_view", cam.view_matrix());
+
+    auto const& camera_2D_mat3 = glm::inverse(in.provider(Cool::Input_Camera2D{}));
+    auto const& camera_2D_mat4 = glm::mat4(
+        glm::vec4(camera_2D_mat3[0], 0.f),
+        glm::vec4(camera_2D_mat3[1], 0.f),
+        glm::vec4(0.f),
+        glm::vec4(camera_2D_mat3[2][0], camera_2D_mat3[2][1], 0.f, 1.f)
+    );
+    auto const& camera_3D = in.provider(*_camera_input);
+
+    auto const& full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.);
+
+    _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());
+    _particle_system->render_shader().set_uniform("camera_matrix_2d_44", camera_2D_mat4);
+    _particle_system->render_shader().set_uniform("camera_matrix_3d_44", full_camera_3D);
     _particle_system->render();
 #endif
 }
