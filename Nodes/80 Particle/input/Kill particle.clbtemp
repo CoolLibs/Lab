@@ -7,6 +7,7 @@ $Particle main($Particle particle)
     if ('Condition')
     {
         particle.lifetime = -1.;
+        particle.lifetime_max = 1.; // To be sure that the shader vertex won't show the particles
     }
     return particle;
 }
