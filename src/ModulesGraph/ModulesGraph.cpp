@@ -187,6 +187,11 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
 
 void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
+    for (auto const& _particles_module : _particles_module_nodes)
+    {
+        _particles_module->module.imgui_windows(ui, update_ctx);
+    }
+    _compositing_module.imgui_windows(ui, update_ctx);
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
@@ -200,7 +205,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
         {
             if (ImGui::BeginTabItem("Compositing shader"))
             {
-                _compositing_module.imgui_windows(ui, update_ctx);
+                _compositing_module.imgui_show_generated_shader_code(ui);
                 ImGui::EndTabItem();
             }
             for (auto const& _particles_module : _particles_module_nodes)
@@ -208,10 +213,10 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
                 ImGui::PushID(&_particles_module);
                 if (ImGui::BeginTabItem("Particle shader"))
                 {
-                    _particles_module->module.imgui_windows(ui, update_ctx);
+                    _particles_module->module.imgui_show_generated_shader_code();
                     ImGui::EndTabItem();
                 }
-                 ImGui::PopID();
+                ImGui::PopID();
             }
             ImGui::EndTabBar();
         }

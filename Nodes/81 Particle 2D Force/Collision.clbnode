@@ -2,6 +2,7 @@
 
 INPUT UV->SignedDistance 'Shape';
 INPUT int 'Iterations';
+INPUT float 'Fix Artefacts';
 
 vec2 gradient(vec2 p)
 {
@@ -25,7 +26,7 @@ vec4 rayMarching(Particle2D particle)
         vec2  point    = particle.position + normalize(velocity) * t;
         float d        = abs('Shape'(point)) - particle.size; // TODO(Particles) Handle filled shapes
 
-        t += d * 0.8; // TODO(Particles) Put this 0.8 in an INPUT
+        t += d * 'Fix Artefacts'; // TODO(Particles) Put this 0.8 in an INPUT
 
         if (d < SURF_DIST * 0.99999999)
         {
