@@ -188,6 +188,7 @@ def parse_snippets(
                 output += variables[snip.name]
             else:
                 output += snip.name
+                print(f"WARNING: {snip.name} is not a valid macro variable")
             continue
         if type(snip) is MacroFunction:
             if snip.name == "$if":
@@ -201,21 +202,25 @@ def parse_snippets(
                     output += call
                 else:
                     snip_name = [snip.name, len(snip.params)]
-                    call , name , function = convert_function(
-                        snip,
-                        list(functions.keys())[f_names.index(snip_name)],
-                        list(functions.values())[f_names.index(snip_name)][0],
-                        list(functions.values())[f_names.index(snip_name)][1]
-                    )
-                    if len(function) > 0:
-                        sig_hash = str(int(hashlib.sha1(signature.encode("utf-8")).hexdigest(), 16) % (10 ** 8))
-                    else:
-                        sig_hash = ""
-                    call = re.sub(r'\b'+snip.name+r'\b', f"{name}{sig_hash}", call)
-                    function = re.sub(r'\b'+snip.name+r'\b', f"{name}{sig_hash}", function)
-                    output += call
-                    output_functions += function
-                    used_signatures[signature] = (call, name , function)
+                    try:
+                        f_index = f_names.index(snip_name)
+                        call , name , function = convert_function(
+                            snip,
+                            list(functions.keys())[f_index],
+                            list(functions.values())[f_index][0],
+                            list(functions.values())[f_index][1]
+                        )
+                        if len(function) > 0:
+                            sig_hash = str(int(hashlib.sha1(signature.encode("utf-8")).hexdigest(), 16) % (10 ** 8))
+                        else:
+                            sig_hash = ""
+                        call = re.sub(r'\b'+snip.name+r'\b', f"{name}{sig_hash}", call)
+                        function = re.sub(r'\b'+snip.name+r'\b', f"{name}{sig_hash}", function)
+                        output += call
+                        output_functions += function
+                        used_signatures[signature] = (call, name , function)
+                    except:
+                        print(f"WARNING: {snip.name} is not a valid macro function")
     output = output_functions + "\n" + output
     return output
 
