@@ -7,13 +7,19 @@
 namespace Lab {
 
 struct ModulesGraphNode {
-    // ModulesGraphNode()  = default;
+    ModulesGraphNode()  = default;
     // ~ModulesGraphNode() = default;
 
     // ModulesGraphNode(const ModulesGraphNode&)                      = delete; // We disable copying
     // ModulesGraphNode& operator=(const ModulesGraphNode&)           = delete; // We disable copying
     // ModulesGraphNode(ModulesGraphNode&& other) noexcept            = default;
     // ModulesGraphNode& operator=(ModulesGraphNode&& other) noexcept = default;
+
+    ModulesGraphNode(Module_Particles module, std::string texture_name_in_shader)
+        : module{std::move(module)}
+        , texture_name_in_shader{std::move(texture_name_in_shader)}
+    {
+    }
 
     Module_Particles   module{};
     std::string        texture_name_in_shader{};
