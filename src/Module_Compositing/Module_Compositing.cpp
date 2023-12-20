@@ -63,6 +63,10 @@ void Module_Compositing::compute_dependencies()
 
 void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
+}
+
+void Module_Compositing::imgui_show_generated_shader_code(Ui_Ref ui) const
+{
     if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
     {
         const auto maybe_err = _pipeline.compile(_shader_code);

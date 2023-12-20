@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
+import shutil
 import sys, os
 import re
 
@@ -305,22 +306,51 @@ def read_and_parse(file: os.DirEntry[str]):
     return PARSED_2D , PARSED_3D
 
 
-INPUT = os.path.join(os.path.dirname(__file__), "./input/")
-PATH_2D = os.path.join(os.path.dirname(__file__), "../80 Particle 2D/")
-PATH_3D = os.path.join(os.path.dirname(__file__), "../80 Particle 3D/")
+INPUT = os.path.join(os.path.dirname(__file__), "input")
+OUTPUT = os.path.join(os.path.dirname(__file__), "output")
+NODES_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-if not os.path.exists(PATH_2D):
-    os.mkdir(PATH_2D)
-if not os.path.exists(PATH_3D):
-    os.mkdir(PATH_3D)
+if not os.path.exists(OUTPUT):
+    os.mkdir(OUTPUT)
 
-for file in os.scandir(INPUT):
-    if file.is_file() and file.name.endswith(".clbtemp"):
-        name = file.name.split(".clbtemp")[0]
+for dir in os.scandir(INPUT):
+    if not dir.is_dir():
+        continue
+    split = dir.name.split(" ", 1)
+    if len(split) == 1:
+        split.append("")
+    index , name = split
+    DIRNAME_2D = f"8{index} Particle 2D {name}".strip()
+    DIRNAME_3D = f"9{index} Particle 3D {name}".strip()
+    PATH_2D = os.path.join(OUTPUT, DIRNAME_2D)
+    PATH_3D = os.path.join(OUTPUT, DIRNAME_3D)
+    if not os.path.exists(PATH_2D):
+        os.mkdir(PATH_2D)
+    if not os.path.exists(PATH_3D):
+        os.mkdir(PATH_3D)
+    for file in os.scandir(dir.path):
+        if not file.name.endswith(".clbtemp"):
+            continue
+        name = file.name.replace(".clbtemp", "")
+        FILE_2D = os.path.join(PATH_2D, f"{name} 2D.clbnode")
+        FILE_3D = os.path.join(PATH_3D, f"{name} 3D.clbnode")
         PARSED_2D , PARSED_3D = read_and_parse(file)
-        f_2d = open(os.path.join(PATH_2D, f"{name} 2D.clbnode"), "w+")
-        f_3d = open(os.path.join(PATH_3D, f"{name} 3D.clbnode"), "w+")
+        f_2d = open(FILE_2D, "w+")
+        f_3d = open(FILE_3D, "w+")
         f_2d.write(PARSED_2D)
         f_3d.write(PARSED_3D)
         f_2d.close()
         f_3d.close()
+
+if NODES_FOLDER.split("/")[-1] != "Nodes":
+    print("Stopping there because this script's directory is not in the Nodes directory")
+    exit()
+
+for dir in os.scandir(OUTPUT):
+    destination = os.path.join(NODES_FOLDER, dir.name)
+    if not os.path.exists(destination):
+        os.mkdir(destination)
+    for file in os.scandir(dir.path):
+        shutil.move(file.path, os.path.join(destination, file.name))
+    os.rmdir(dir.path)
+os.rmdir(OUTPUT)
