@@ -159,13 +159,15 @@ void Module_Particles::compute_dependencies()
 
 void Module_Particles::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 {
-    if (Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
-    {
-    }
     Cool::DebugOptions::particles_debug_menu_window([&] {
         // TODO voir avec jules plus tard (push id + mettre un separator text)
         imgui_debug_menu(update_ctx.dirty_setter());
     });
+}
+
+void Module_Particles::imgui_show_generated_shader_code() const
+{
+    Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
 }
 
 auto Module_Particles::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool

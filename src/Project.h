@@ -42,6 +42,9 @@ private:
     void serialize(Archive& archive)
     {
         debug_info_coollab_version = coollab_version();
+#if defined(__linux__)
+        history.set_max_saved_size(0); // TODO HACK to avoid a crash when deserializing the history: https://github.com/orgs/CoolLibs/projects/1/views/1?pane=issue&itemId=46983814
+#endif
         archive(
             cereal::make_nvp("Coollab version", debug_info_coollab_version), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
             cereal::make_nvp("Time", clock),
