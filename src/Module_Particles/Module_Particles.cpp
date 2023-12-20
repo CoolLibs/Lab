@@ -201,8 +201,10 @@ void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
     auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.);
 
     _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());
-    _particle_system->render_shader().set_uniform("camera_matrix_2d_44", camera_2D_mat4);
-    _particle_system->render_shader().set_uniform("camera_matrix_3d_44", full_camera_3D);
+    if (_particle_system->dimension() == 2)
+        _particle_system->render_shader().set_uniform("transform_matrix", camera_2D_mat4);
+    else if (_particle_system->dimension() == 3)
+        _particle_system->render_shader().set_uniform("transform_matrix", full_camera_3D);
     _particle_system->render();
 #endif
 }
