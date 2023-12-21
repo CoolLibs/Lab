@@ -20,7 +20,7 @@ public:
     auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
     ~Module_Particles() override                                     = default;
 
-    Cool::NodesGraph const*                 _nodes_graph;            // TODO(Particles) Remove
+    Cool::NodesGraph const*                 _nodes_graph{};          // TODO(Particles) Remove
     Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer; // TODO(Particles) Remove
     Cool::Input<Cool::Camera> const*        _camera_input;
 
@@ -42,7 +42,8 @@ private:
     void render(RenderParams, UpdateContext_Ref) override;
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void compute_dependencies();
-    // void recreate_particle_system(); // TODO(Modules) Remove me, this is for tests only
+    void update_particles_count_ifn(UpdateContext_Ref);
+    auto desired_particles_count() const -> size_t;
 
 private:
     mutable std::string         _shader_code{};
@@ -50,9 +51,8 @@ private:
 
     ModuleShaderDependencyFlags _dependencies;
 
-    mutable size_t                              _particles_count{5'000}; // TODO(History) Change through command
     Cool::NodeId                                _initializer_id{};
-    mutable float                               _particle_size{0.01f};   // TODO(History) Change through command
+    mutable float                               _particle_size{0.01f}; // TODO(History) Change through command
     mutable std::optional<Cool::ParticleSystem> _particle_system;
 
 private:

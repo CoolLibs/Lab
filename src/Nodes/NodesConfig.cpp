@@ -323,7 +323,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
 
     if (is_particle_initializer(signature))
     {
-        node.particles_count() = std::optional<size_t>(5000);
+        node.particles_count() = std::make_optional<size_t>(1000);
     }
 
     if (needs_main_pin)

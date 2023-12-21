@@ -64,39 +64,14 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
 
             _particle_system = Cool::ParticleSystem{
                 dimension,
-                _particles_count,
+                desired_particles_count(),
                 Cool::ParticlesShadersCode{
                     .simulation = *shader_code,
                     .init       = init,
                     .vertex     = vertex,
                     .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-                }};
-            // switch (dimension)
-            // {
-            // case 2:
-            //     _particle_system = Cool::ParticleSystem{
-            //         _particles_count,
-            //         Cool::ParticlesShadersCode{
-            //             .simulation = *shader_code,
-            //             .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init2.comp"),
-            //             .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex2.vert"),
-            //             .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-            //         }
-            //     };
-            //     break;
-            // case 3:
-            //     _particle_system = Cool::ParticleSystem{
-            //         _particles_count,
-            //         Cool::ParticlesShadersCode{
-            //             .simulation = *shader_code,
-            //             .init       = *Cool::File::to_string(Cool::Path::root() / "res/Particles/init3.comp"),
-            //             .vertex     = *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex3.vert"),
-            //             .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-            //         }
-            //     };
-            //     break;
-            // default: break;
-            // }
+                }
+            };
 
             // TODO(Particles): compute_dependencies (parent class with Compositing ?)
             compute_dependencies();
@@ -114,12 +89,6 @@ void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const
     if (!_particle_system.has_value())
         return;
 
-    if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &_particles_count))
-    {
-        _particle_system->set_particles_count(_particles_count);
-        set_dirty(needs_to_rerender_flag());
-    }
-
     if (ImGui::SliderFloat("Particle Size", &_particle_size, 0.f, 0.1f))
     {
         _particle_system->set_particle_size(_particle_size);
@@ -132,17 +101,33 @@ void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const
 //     _particle_system = create_particle_system();
 // }
 
+auto Module_Particles::desired_particles_count() const -> size_t
+{
+    static constexpr size_t default_particles_count{1000};
+
+    if (!_nodes_graph)
+        return default_particles_count;
+
+    auto const* maybe_node = _nodes_graph->try_get_node<Node>(_initializer_id);
+    if (!maybe_node)
+        return default_particles_count;
+    return maybe_node->particles_count().value_or(default_particles_count);
+}
+
+void Module_Particles::update_particles_count_ifn(UpdateContext_Ref update_context)
+{
+    if (!_particle_system)
+        return;
+    auto const particles_count = desired_particles_count();
+    if (particles_count == _particle_system->particles_count())
+        return;
+    _particle_system->set_particles_count(particles_count); // TODO(History) Change through command
+    update_context.set_dirty(needs_to_rerender_flag());
+}
+
 void Module_Particles::update(UpdateContext_Ref update_context)
 {
-#ifndef __APPLE__
-    auto maybe_node = _nodes_graph->try_get_node<Node>(_initializer_id);
-    if (maybe_node != nullptr && maybe_node->particles_count().value() != _particles_count)
-    {
-        _particles_count = maybe_node->particles_count().value();
-        _particle_system->set_particles_count(_particles_count);
-        update_context.set_dirty(needs_to_rerender_flag());
-    }
-#endif
+    update_particles_count_ifn(update_context);
 }
 
 void Module_Particles::update_particles(UpdateContext_Ref)
