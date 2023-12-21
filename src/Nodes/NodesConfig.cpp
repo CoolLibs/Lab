@@ -151,6 +151,14 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         ImGui::SetItemTooltip("%s", "Open audio config to select which audio file to play, or which input device (e.g. microphone) to use.");
     }
 
+    if (node.is_particle_initializer())
+    {
+        auto& particles_count = node.particles_count().value();
+        if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &particles_count))
+        {
+        }
+    }
+
     for (size_t i = 0; i < node.value_inputs().size(); ++i)
     {
         Cool::ImGuiExtras::disabled_if(
@@ -302,7 +310,9 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
 
-    bool const needs_main_pin = !doesnt_need_main_pin(def.signature());
+    auto signature = def.signature();
+
+    bool const needs_main_pin = !doesnt_need_main_pin(signature);
 
     auto node = Node{
         {def.name(), cat_id.category_name},
@@ -310,6 +320,11 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
         def.function_inputs().size(),
     };
     auto const node_category_config = _get_node_category_config(cat_id.category_name);
+
+    if (is_particle_initializer(signature))
+    {
+        node.particles_count() = std::optional<size_t>(5000);
+    }
 
     if (needs_main_pin)
     {

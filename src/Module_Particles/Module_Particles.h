@@ -13,7 +13,7 @@ namespace Lab {
 class Module_Particles : public Module {
 public:
     Module_Particles();
-    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
+    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref, Cool::NodeId);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
     Module_Particles(Module_Particles&&) noexcept                    = default;
@@ -51,6 +51,7 @@ private:
     ModuleShaderDependencyFlags _dependencies;
 
     mutable size_t                              _particles_count{5'000}; // TODO(History) Change through command
+    Cool::NodeId                                _initializer_id{};
     mutable float                               _particle_size{0.01f};   // TODO(History) Change through command
     mutable std::optional<Cool::ParticleSystem> _particle_system;
 

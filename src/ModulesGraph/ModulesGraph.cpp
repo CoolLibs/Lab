@@ -22,6 +22,17 @@ ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 {
 }
 
+void ModulesGraph::update(UpdateContext_Ref update_context)
+{
+    _compositing_module.update(update_context);
+
+    for (auto& module_node : _particles_module_nodes)
+    {
+        module_node->module._nodes_graph = &_nodes_editor.graph();
+        module_node->module.update(update_context);
+    }
+}
+
 void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
     if (render_target.needs_resizing())
@@ -140,13 +151,16 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             if (!is_particle(node_definition.signature()))
                 return std::nullopt;
 
-            size_t dimension = 2;
+            auto dimension = size_t{2};
             if (is_particle_3D(node_definition.signature()))
                 dimension = 3;
+
+            auto initializer_node_id = Cool::NodeId();
 
             auto const simulation_shader_code = generate_simulation_shader_code(
                 graph,
                 particles_root_node_id,
+                initializer_node_id,
                 get_node_def,
                 ctx.input_provider(),
                 dimension
@@ -163,7 +177,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 ))
             {
                 _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
-                    /*  .module                 =*/Module_Particles(dirty_flag_factory, ctx.ui().input_factory()),
+                    /*  .module                 =*/Module_Particles(dirty_flag_factory, ctx.ui().input_factory(), initializer_node_id),
                     /*   .texture_name_in_shader = */ texture_name_in_shader
                 ));
 

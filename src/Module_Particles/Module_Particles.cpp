@@ -26,8 +26,9 @@ Module_Particles::Module_Particles()
 #endif
 }
 
-Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
+Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory, Cool::NodeId initilizer_id)
     : Module{"Particles", dirty_flag_factory}
+    , _initializer_id(initilizer_id)
 {
 }
 
@@ -69,8 +70,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
                     .init       = init,
                     .vertex     = vertex,
                     .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-                }
-            };
+                }};
             // switch (dimension)
             // {
             // case 2:
@@ -132,8 +132,17 @@ void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const
 //     _particle_system = create_particle_system();
 // }
 
-void Module_Particles::update(UpdateContext_Ref)
+void Module_Particles::update(UpdateContext_Ref update_context)
 {
+#ifndef __APPLE__
+    auto maybe_node = _nodes_graph->try_get_node<Node>(_initializer_id);
+    if (maybe_node != nullptr && maybe_node->particles_count().value() != _particles_count)
+    {
+        _particles_count = maybe_node->particles_count().value();
+        _particle_system->set_particles_count(_particles_count);
+        update_context.set_dirty(needs_to_rerender_flag());
+    }
+#endif
 }
 
 void Module_Particles::update_particles(UpdateContext_Ref)
