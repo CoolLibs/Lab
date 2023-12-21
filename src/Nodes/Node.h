@@ -58,6 +58,7 @@ public:
     auto is_particle_initializer() const -> bool;
     auto particles_count() -> std::optional<size_t>& { return _particles_count; }
     auto particles_count() const -> std::optional<size_t> const& { return _particles_count; }
+    void set_particles_count(std::optional<size_t> particles_count) { _particles_count = particles_count; }
 
 private:
     Cool::NodeDefinitionIdentifier _id_names;
