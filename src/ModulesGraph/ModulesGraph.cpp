@@ -157,15 +157,6 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
 
             auto initializer_node_id = Cool::NodeId();
 
-            auto const simulation_shader_code = generate_simulation_shader_code(
-                graph,
-                particles_root_node_id,
-                initializer_node_id,
-                get_node_def,
-                ctx.input_provider(),
-                dimension
-            );
-
             auto const texture_name_in_shader = module_texture_name(node_definition, particles_root_node_id);
 
             if (std::none_of(
@@ -176,6 +167,15 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                     }
                 ))
             {
+                auto const simulation_shader_code = generate_simulation_shader_code(
+                    graph,
+                    particles_root_node_id,
+                    initializer_node_id,
+                    get_node_def,
+                    ctx.input_provider(),
+                    dimension
+                );
+
                 _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
                     /*  .module                 =*/Module_Particles(dirty_flag_factory, ctx.ui().input_factory(), initializer_node_id),
                     /*   .texture_name_in_shader = */ texture_name_in_shader
