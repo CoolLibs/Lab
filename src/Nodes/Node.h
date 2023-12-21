@@ -69,7 +69,7 @@ private:
     size_t                       _number_of_main_input_pins{};
     size_t                       _number_of_function_inputs{};
 
-    std::optional<size_t> _particles_count{}; // Used in the case of particle initializer node
+    std::optional<size_t> _particles_count{}; // HACK Only used in the case of a particle initializer node
 
 private:
     friend class cereal::access;

@@ -24,9 +24,14 @@ layout(std430, binding = 3) buffer _lifetimes_buffer
     float _lifetimes[];
 };
 
+layout(std430, binding = 4) buffer _lifetime_maxs_buffer
+{
+    float _lifetime_maxs[];
+};
+
 void main()
 {
-    if (_lifetimes[gl_InstanceID] <= 0)
+    if (_lifetimes[gl_InstanceID] <= 0 && _lifetime_maxs[gl_InstanceID] > 0)
     {
         gl_Position = vec4(0.);
         return;
