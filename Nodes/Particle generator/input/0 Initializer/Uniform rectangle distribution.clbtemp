@@ -1,14 +1,16 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
+INPUT float 'Seed';
 INPUT $vec 'Position';
 INPUT $vec 'Size';
 
 $vec main($Particle particle)
 {
+    float seed = rand_xorshift_0_to_1('Seed' + _time);
     $$if(IS_3D);
-    vec3 random = hash_0_to_1_3D_to_3D(vec3(_time, _delta_time, particle.id)).xyz;
+    vec3 random = hash_0_to_1_3D_to_3D(seed * vec3(_time, _delta_time, particle.id)).xyz;
     $$else;
-    vec2 random = hash_0_to_1_3D_to_3D(vec3(_time, _delta_time, particle.id)).xy;
+    vec2 random = hash_0_to_1_3D_to_3D(seed * vec3(_time, _delta_time, particle.id)).xy;
     $$endif;
 
     return 'Position' + 'Size' * (random - $vec(0.5));
