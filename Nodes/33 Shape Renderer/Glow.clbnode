@@ -2,9 +2,9 @@
 // Inspired by https://inspirnathan.com/posts/65-glow-shader-in-shadertoy/
 
 INPUT float 'Strength';
-INPUT float 'Strength 2';
+INPUT float 'Stretch';
 
 float main(SignedDistance Shape)
 {
-    return pow(max(Shape * 'Strength 2', 0.) + 1., -1. / 'Strength'); // Add glow in the black part
+    return pow(max(Shape / 'Stretch', 0.) + 1., -1. / 'Strength');
 }

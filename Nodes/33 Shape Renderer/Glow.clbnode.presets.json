@@ -10,7 +10,7 @@
                             "index": 2,
                             "data": {
                                 "Name": "Strength",
-                                "Value": 0.10000000149011612,
+                                "Value": 0.20000000298023225,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
@@ -22,6 +22,34 @@
                                     }
                                 },
                                 "Default Value": 0.06499999761581421,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Stretch",
+                                "Value": 1.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0010000000474974514,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.0,
                                 "Default Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,
