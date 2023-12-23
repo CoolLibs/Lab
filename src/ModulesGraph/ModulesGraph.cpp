@@ -146,7 +146,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
         graph,
         root_node_id,
         get_node_def,
-        ctx.input_provider(),
+        ctx.hacky_input_provider(),
         [&](Cool::NodeId const& particles_root_node_id, NodeDefinition const& node_definition) -> std::optional<std::string> {
             if (!is_particle(node_definition.signature()))
                 return std::nullopt;
@@ -172,7 +172,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                     particles_root_node_id,
                     initializer_node_id,
                     get_node_def,
-                    ctx.input_provider(),
+                    ctx.hacky_input_provider(),
                     dimension
                 );
 
@@ -239,11 +239,11 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 
 static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
 {
-    auto const cam_transform = ctx.input_provider()(Cool::Input_Camera2D{});
+    auto const cam_transform = ctx.hacky_input_provider()(Cool::Input_Camera2D{});
     auto const id            = input._default_variable_id.raw();
     return Cool::Gizmo_Point2D{
         .get_position = [=]() {
-            auto const var = ctx.input_provider().variable_registries().get(id);
+            auto const var = ctx.hacky_input_provider().variable_registries().get(id);
             if (!var)
                 return Cool::ViewCoordinates{0.f};
             return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{var->value().value, 1.f}}}; },
