@@ -4,11 +4,10 @@
 #include <Nodes/CodeGenContext.h>
 #include <functional>
 #include <string>
-#include "CodeGen.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Nodes/CodeGen.h"
 #include "Nodes/MaybeGenerateModule.h"
 #include "Nodes/NodeDefinition.h"
-
 
 namespace Lab {
 

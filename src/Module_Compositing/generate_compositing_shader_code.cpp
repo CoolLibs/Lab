@@ -1,5 +1,5 @@
 #include "generate_compositing_shader_code.h"
-#include "Nodes/shader_boilerplate.h"
+#include "Module/ShaderBased/shader_boilerplate.h"
 
 namespace Lab {
 

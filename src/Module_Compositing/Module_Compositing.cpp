@@ -3,9 +3,9 @@
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/String/String.h>
 #include <Dependencies/UpdateContext_Ref.h>
+#include <Module/ShaderBased/shader_set_uniforms.h>
 #include <Nodes/Node.h>
 #include <Nodes/NodeDefinition.h>
-#include <Nodes/shader_set_uniforms.h>
 #include <imgui.h>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
@@ -13,6 +13,7 @@
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Module/ShaderBased/handle_error.h"
 #include "generate_compositing_shader_code.h"
+
 
 namespace Lab {
 

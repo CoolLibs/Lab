@@ -1,5 +1,5 @@
 #include "Module_Particles.h"
-#include <Nodes/shader_set_uniforms.h>
+#include <Module/ShaderBased/shader_set_uniforms.h>
 #include <imgui.h>
 #include "Cool/Camera/Camera.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"

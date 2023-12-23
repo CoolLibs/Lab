@@ -1,7 +1,7 @@
 #include "generate_simulation_shader_code.h"
 #include <Nodes/PrimitiveType.h>
 #include <optional>
-#include "Nodes/shader_boilerplate.h"
+#include "Module/ShaderBased/shader_boilerplate.h"
 #include "fmt/compile.h"
 #include "microcode_generator.h"
 #include "shader_code_constants.h"
@@ -130,7 +130,8 @@ auto generate_simulation_shader_code(
 
     auto node_definition_callback = [&graph, &initializer_node_id](auto const& node_id, auto const&) {
         auto maybe_node = graph.try_get_node<Node>(node_id);
-        if (maybe_node != nullptr && maybe_node->is_particle_initializer()) {
+        if (maybe_node != nullptr && maybe_node->is_particle_initializer())
+        {
             initializer_node_id = node_id;
         }
         return std::nullopt;

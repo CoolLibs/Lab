@@ -1,7 +1,7 @@
 #pragma once
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/Editor.h>
-#include <Nodes/shader_dependency.h>
+#include <Module/ShaderBased/shader_dependency.h>
 #include <memory>
 #include <tl/expected.hpp>
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"

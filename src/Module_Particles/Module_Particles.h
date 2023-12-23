@@ -7,7 +7,7 @@
 #include "Cool/Nodes/NodesGraph.h"
 #include "Cool/Particles/ParticleSystem.h"
 #include "Module/Module.h"
-#include "Nodes/shader_dependency.h"
+#include "Module/ShaderBased/shader_dependency.h"
 
 namespace Lab {
 class Module_Particles : public Module {
