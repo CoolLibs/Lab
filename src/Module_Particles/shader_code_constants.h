@@ -5,7 +5,6 @@ namespace Lab {
 auto constexpr version = R"glsl()glsl";
 
 auto constexpr uniforms = R"glsl(
-uniform float _particle_size;
 )glsl";
 
 auto constexpr includes = R"glsl()glsl";

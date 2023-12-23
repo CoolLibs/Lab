@@ -123,7 +123,6 @@ void Module_Particles::update_particles(UpdateContext_Ref ctx)
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
     _particle_system->simulation_shader().bind();
-    _particle_system->simulation_shader().set_uniform("_particle_size", _particle_size);
     shader_set_uniforms(_particle_system->simulation_shader(), ctx.input_provider(), _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
     _particle_system->update();
 #endif

@@ -50,7 +50,6 @@ private:
     ModuleShaderDependencyFlags _dependencies; // TODO(Particles) Two dependencies, one for each shader
 
     Cool::NodeId                                _initializer_id{};
-    mutable float                               _particle_size{0.01f}; // TODO(History) Change through command
     mutable std::optional<Cool::ParticleSystem> _particle_system;
 
 private:
