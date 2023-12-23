@@ -16,25 +16,25 @@ export default ({}) => {
           name="Jolan Goulin"
           github_name="Jolan-Goulin"
           link="https://github.com/Jolan-Goulin"
-          roles={["Programmer"]}
+          roles={["Programmer (3D)"]}
         />,
         <Contributor
           name="Emma Pernin"
           github_name="Emma-prn"
           link="https://github.com/Emma-prn"
-          roles={["Programmer"]}
+          roles={["Programmer (3D)"]}
         />,
         <Contributor
           name="Théo Arnauld des Lions"
           github_name="Dyokiin"
           link="https://github.com/Dyokiin"
-          roles={["Programmer"]}
+          roles={["Programmer (3D)"]}
         />,
         <Contributor
           name="Quentin Mesquita"
           github_name="MesQuentin"
           link="https://github.com/MesQuentin"
-          roles={["Programmer"]}
+          roles={["Programmer (3D)"]}
         />,
         <Contributor
           name="Lucas David"
@@ -58,7 +58,7 @@ export default ({}) => {
           name="Jordan Roberty"
           github_name="badbois"
           link="https://github.com/badbois"
-          roles={["Programmer"]}
+          roles={["Programmer (MacOS port, Tests)"]}
         />,
         <Contributor
           name="Éva Benharira"
@@ -70,25 +70,25 @@ export default ({}) => {
           name="Mattéo Leclercq"
           github_name="MatteoL-W"
           link="https://matteo-leclercq.fr/"
-          roles={["Programmer", "VFX Artist"]}
+          roles={["Programmer (Compositing)", "VFX Artist"]}
         />,
         <Contributor
           name="Wendy Gervais"
           github_name="kaugrv"
           link="https://linktr.ee/commandant.grant"
-          roles={["Programmer", "VFX Artist"]}
+          roles={["Programmer (Compositing)", "VFX Artist"]}
         />,
         <Contributor
           name="Romain Serres"
           github_name="Bouillon2Poulet"
           link="https://www.instagram.com/consomme2poyo/"
-          roles={["Programmer", "VFX Artist"]}
+          roles={["Programmer (Compositing)", "VFX Artist"]}
         />,
         <Contributor
           name="Lou Couard"
           github_name="Couloir00"
           link="https://loucouard.wixsite.com/website"
-          roles={["Programmer", "VFX Artist"]}
+          roles={["Programmer (Compositing)", "VFX Artist"]}
         />,
         <Contributor
           name="Tristan Debeaune"
@@ -125,6 +125,30 @@ export default ({}) => {
           github_name="brucelane"
           link="https://www.linkedin.com/in/brucelane06/"
           roles={["Programmer (MIDI)"]}
+        />,
+        <Contributor
+          name="Marianne Kerckhove"
+          github_name="Maria30"
+          link="https://github.com/Maria30"
+          roles={["Programmer (Particles)"]}
+        />,
+        <Contributor
+          name="Baptiste Jouin"
+          github_name="baptistejouin"
+          link="https://github.com/baptistejouin"
+          roles={["Programmer (Particles)"]}
+        />,
+        <Contributor
+          name="Thomas Garnier"
+          github_name="TotoShampoin"
+          link="https://github.com/TotoShampoin"
+          roles={["Programmer (Particles)"]}
+        />,
+        <Contributor
+          name="Mattéo Moulat"
+          github_name="Xiantas"
+          link="https://github.com/Xiantas"
+          roles={["Programmer (Particles)"]}
         />,
       ]}
     />
