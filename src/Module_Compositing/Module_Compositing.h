@@ -20,11 +20,11 @@ namespace Lab {
 class Module_Compositing : public Module {
 public:
     Module_Compositing() = default;
-    explicit Module_Compositing(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
-    Module_Compositing(Module_Compositing const&)                        = default;
-    auto operator=(Module_Compositing const&) -> Module_Compositing&     = default;
-    Module_Compositing(Module_Compositing&&) noexcept                    = default;
-    auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default;
+    explicit Module_Compositing(Cool::DirtyFlagFactory_Ref);
+    Module_Compositing(Module_Compositing const&)                    = delete;
+    auto operator=(Module_Compositing const&) -> Module_Compositing& = delete;
+    // Module_Compositing(Module_Compositing&&) noexcept                    = default; // TODO(Modules)
+    // auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default; // TODO(Modules)
 
     Cool::NodesGraph const*          _nodes_graph; // TODO(Modules) Remove
     Cool::Input<Cool::Camera> const* _camera_input;
@@ -42,7 +42,7 @@ public:
 
     void set_render_target_size(img::Size const& size);
 
-    void set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx);
+    void set_shader_code(tl::expected<std::string, std::string> const& shader_code);
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }
     [[nodiscard]] auto depends_on_audio() const -> bool { return _dependencies.depends_on_audio_volume || _dependencies.depends_on_audio_waveform || _dependencies.depends_on_audio_spectrum; }
@@ -50,8 +50,8 @@ public:
     auto feedback_double_buffer() const -> Cool::DoubleBufferedRenderTarget const& { return _feedback_double_buffer; }
 
 private:
-    void render(RenderParams, UpdateContext_Ref) override;
-    void render_impl(RenderParams, UpdateContext_Ref);
+    void render(RenderParams) override;
+    void render_impl(RenderParams);
     void compute_dependencies(); // We don't want to rerender when audio / time changes if we don't depend on them. Also, audio features are costly to compute, so we only set these uniforms in the shader if we actually need them.
 
 private:

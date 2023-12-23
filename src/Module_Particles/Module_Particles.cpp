@@ -26,7 +26,7 @@ Module_Particles::Module_Particles()
 #endif
 }
 
-Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory, Cool::NodeId initilizer_id)
+Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId initilizer_id)
     : Module{"Particles", dirty_flag_factory}
     , _initializer_id(initilizer_id)
 {
@@ -38,7 +38,7 @@ void Module_Particles::on_time_reset()
         _particle_system->reset();
 }
 
-void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes, size_t dimension)
+void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool /* for_testing_nodes */, size_t dimension)
 {
     if (!shader_code)
     {
@@ -49,7 +49,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
     _shader_code = *shader_code;
     _shader_compilation_error.clear();
 
-    // TODO(Particles) Don't recreate the particle system every time, just change  the shader but keep the current position and velocity of the particles
+    // TODO(Particles) Don't recreate the particle system every time, just change the shader but keep the current position and velocity of the particles
     try
     {
         if (_particle_system.has_value())
@@ -83,23 +83,6 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         return;
     }
 }
-
-void Module_Particles::imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const
-{
-    if (!_particle_system.has_value())
-        return;
-
-    if (ImGui::SliderFloat("Particle Size", &_particle_size, 0.f, 0.1f))
-    {
-        _particle_system->set_particle_size(_particle_size);
-        set_dirty(needs_to_rerender_flag());
-    }
-}
-
-// void Module_Particles::recreate_particle_system()
-// {
-//     _particle_system = create_particle_system();
-// }
 
 auto Module_Particles::desired_particles_count() const -> size_t
 {
@@ -151,12 +134,8 @@ void Module_Particles::compute_dependencies()
     _dependencies.compute_dependencies(code);
 }
 
-void Module_Particles::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
+void Module_Particles::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* update_ctx */) const
 {
-    Cool::DebugOptions::particles_debug_menu_window([&] {
-        // TODO voir avec jules plus tard (push id + mettre un separator text)
-        imgui_debug_menu(update_ctx.dirty_setter());
-    });
 }
 
 void Module_Particles::imgui_show_generated_shader_code() const
@@ -169,17 +148,14 @@ auto Module_Particles::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const ->
     return Module::needs_to_rerender(check_dirty);
 };
 
-void Module_Particles::render(RenderParams in, UpdateContext_Ref update_ctx)
+void Module_Particles::render(RenderParams in)
 {
     if (!_particle_system)
         return;
 
 #ifndef __APPLE__
-    shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input);
-    shader_send_uniforms(_particle_system->simulation_shader(), in, _nodes_graph);
-
-    shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input);
-    shader_send_uniforms(_particle_system->render_shader(), in, _nodes_graph);
+    shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph); // TODO(Particles) Do this during particles_update
+    shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
 
     _particle_system->render_shader().set_uniform("_particle_size", _particle_size);
 

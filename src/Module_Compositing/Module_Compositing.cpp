@@ -16,7 +16,7 @@
 
 namespace Lab {
 
-Module_Compositing::Module_Compositing(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
+Module_Compositing::Module_Compositing(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
     : Module{"Compositing", dirty_flag_factory}
 {
 }
@@ -38,7 +38,7 @@ void Module_Compositing::on_time_reset()
     _feedback_double_buffer.clear_render_targets();
 }
 
-void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx)
+void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code)
 {
     if (!shader_code)
     {
@@ -61,7 +61,7 @@ void Module_Compositing::compute_dependencies()
     _dependencies.compute_dependencies(code);
 }
 
-void Module_Compositing::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
+void Module_Compositing::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* update_ctx */) const
 {
 }
 
@@ -87,26 +87,24 @@ void Module_Compositing::set_render_target_size(img::Size const& size)
     _feedback_double_buffer.set_read_target_size_immediately(size);
 }
 
-void Module_Compositing::render(RenderParams in, UpdateContext_Ref update_ctx)
+void Module_Compositing::render(RenderParams in)
 {
     // Render on the normal render target
-    render_impl(in, update_ctx);
+    render_impl(in);
 
     // Render on the feedback texture
     _feedback_double_buffer.write_target().render([&]() {
-        render_impl(in, update_ctx);
+        render_impl(in);
     });
     _feedback_double_buffer.swap_buffers();
 }
 
-void Module_Compositing::render_impl(RenderParams in, UpdateContext_Ref update_ctx)
+void Module_Compositing::render_impl(RenderParams in)
 {
     if (!_pipeline.shader())
         return;
 
-    shader_set_uniforms(*_pipeline.shader(), in, _dependencies, _feedback_double_buffer, *_camera_input);
-    shader_send_uniforms(*_pipeline.shader(), in, _nodes_graph);
-
+    shader_set_uniforms(*_pipeline.shader(), in, _dependencies, _feedback_double_buffer, *_camera_input, *_nodes_graph);
     _pipeline.draw();
 }
 

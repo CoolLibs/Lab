@@ -47,9 +47,9 @@ public:
 
     [[nodiscard]] auto name() const -> const std::string& { return _name; }
 
-    void do_rendering(RenderParams params, UpdateContext_Ref update_ctx)
+    void do_rendering(RenderParams params)
     {
-        render(params, update_ctx);
+        render(params);
         params.set_clean(_needs_to_rerender_flag);
     }
     virtual void imgui_windows(Ui_Ref, UpdateContext_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
@@ -63,7 +63,7 @@ public:
     [[nodiscard]] auto needs_to_rerender_flag() const { return _needs_to_rerender_flag; }
 
 private:
-    virtual void render(RenderParams, UpdateContext_Ref) = 0;
+    virtual void render(RenderParams) = 0;
 
 private:
     std::string     _name;

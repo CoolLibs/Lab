@@ -13,7 +13,7 @@ namespace Lab {
 class Module_Particles : public Module {
 public:
     Module_Particles();
-    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref, Cool::NodeId);
+    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::NodeId);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
     Module_Particles(Module_Particles&&) noexcept                    = default;
@@ -30,16 +30,14 @@ public:
     void imgui_show_generated_shader_code() const;
     auto needs_to_rerender(Cool::IsDirty_Ref) const -> bool override;
 
-    void imgui_debug_menu(Cool::SetDirty_Ref set_dirty) const;
-
-    void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, UpdateContext_Ref update_ctx, bool for_testing_nodes, size_t dimension);
+    void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, size_t dimension);
     void on_time_reset();
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }
     [[nodiscard]] auto depends_on_audio() const -> bool { return _dependencies.depends_on_audio_volume || _dependencies.depends_on_audio_waveform || _dependencies.depends_on_audio_spectrum; }
 
 private:
-    void render(RenderParams, UpdateContext_Ref) override;
+    void render(RenderParams) override;
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void compute_dependencies();
     void update_particles_count_ifn(UpdateContext_Ref);
@@ -49,7 +47,7 @@ private:
     mutable std::string         _shader_code{};
     mutable Cool::MessageSender _shader_compilation_error{};
 
-    ModuleShaderDependencyFlags _dependencies;
+    ModuleShaderDependencyFlags _dependencies; // TODO(Particles) Two dependencies, one for each shader
 
     Cool::NodeId                                _initializer_id{};
     mutable float                               _particle_size{0.01f}; // TODO(History) Change through command

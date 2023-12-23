@@ -15,10 +15,10 @@
 namespace Lab {
 
 ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
-    : _compositing_module{dirty_flag_factory, input_factory}
-    , _regenerate_code_flag{dirty_flag_factory.make()}
+    : _regenerate_code_flag{dirty_flag_factory.make()}
     , _rerender_all_flag{dirty_flag_factory.make()}
     , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _rerender_all_flag)} // TODO(Modules) Move this to the project, like the Camera2D
+    , _compositing_module{dirty_flag_factory}
 {
 }
 
@@ -69,11 +69,11 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     _compositing_module._camera_input = &_camera_input;
     // TODO(Modules) Render in the order of dependency between the modules
     for (auto& node : _particles_module_nodes)
-        render_particle_module(node->module, node->render_target, in, update_ctx);
-    render_compositing_module(render_target, in, update_ctx);
+        render_particle_module(node->module, node->render_target, in);
+    render_compositing_module(render_target, in);
 }
 
-void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx)
+void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params)
 {
     // TODO(Modules) Rename module.is_dirty() as module.needs_to_render
     // TODO(Modules) Remove module.is_dirty() from module
@@ -84,19 +84,19 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        some_module.do_rendering(params, update_ctx);
+        some_module.do_rendering(params);
     });
 
     if (DebugOptions::log_when_rendering())
         Cool::Log::ToUser::info(some_module.name() + " Module", "Rendered");
 }
 
-void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
+void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, Module::RenderParams in)
 {
-    render_one_module(module, render_target, in, update_ctx);
+    render_one_module(module, render_target, in);
 }
 
-void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
+void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams in)
 {
     if (_compositing_module.shader_is_valid())
     {
@@ -116,7 +116,7 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
         // Cool::CameraShaderU::set_uniform(_compositing_module.shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
     }
 
-    render_one_module(_compositing_module, render_target, in, update_ctx);
+    render_one_module(_compositing_module, render_target, in);
 }
 
 void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
@@ -177,11 +177,11 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 );
 
                 _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
-                    /*  .module                 =*/Module_Particles(dirty_flag_factory, ctx.ui().input_factory(), initializer_node_id),
+                    /*  .module                 =*/Module_Particles(dirty_flag_factory, initializer_node_id),
                     /*   .texture_name_in_shader = */ texture_name_in_shader
                 ));
 
-                _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, ctx, false, dimension);
+                _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, false, dimension);
             }
 
             return texture_name_in_shader;
@@ -196,7 +196,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             return tex_names;
         }
     );
-    _compositing_module.set_shader_code(shader_code, ctx);
+    _compositing_module.set_shader_code(shader_code);
 }
 
 void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const

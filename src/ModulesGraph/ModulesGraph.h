@@ -68,9 +68,9 @@ public:
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
-    void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params, UpdateContext_Ref update_ctx);
-    void render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx);
-    void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, Module::RenderParams params, UpdateContext_Ref update_ctx);
+    void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params);
+    void render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams params);
+    void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, Module::RenderParams params);
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
