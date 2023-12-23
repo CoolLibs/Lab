@@ -5,6 +5,7 @@
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/DebugOptions/DebugOptions.h"
+#include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Exception/Exception.h"
 #include "Cool/File/File.h"
 #include "Cool/Log/OptionalErrorMessage.h"
@@ -113,7 +114,7 @@ void Module_Particles::update(UpdateContext_Ref update_context)
     update_particles_count_ifn(update_context);
 }
 
-void Module_Particles::update_particles(UpdateContext_Ref ctx)
+void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
 {
     if (!_particle_system)
         return;
@@ -123,7 +124,7 @@ void Module_Particles::update_particles(UpdateContext_Ref ctx)
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
     _particle_system->simulation_shader().bind();
-    shader_set_uniforms(_particle_system->simulation_shader(), ctx.input_provider(), _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    shader_set_uniforms(_particle_system->simulation_shader(), input_provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
     _particle_system->update();
 #endif
 }
@@ -152,6 +153,12 @@ void Module_Particles::render(RenderParams in)
 {
     if (!_particle_system)
         return;
+
+    if (_needs_to_update_particles)
+    {
+        update_particles(in.provider);
+        _needs_to_update_particles = false;
+    }
 
 #ifndef __APPLE__
     shader_set_uniforms(_particle_system->render_shader(), in.provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);

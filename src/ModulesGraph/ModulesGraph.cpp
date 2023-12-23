@@ -309,9 +309,7 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
 {
     for (auto& node : _particles_module_nodes)
     {
-        node->module._nodes_graph  = &_nodes_editor.graph();
-        node->module._camera_input = &_camera_input;
-        node->module.update_particles(update_ctx);
+        node->module.request_particles_to_update();
     }
     if (_compositing_module.depends_on_time()
         || !_particles_module_nodes.empty())

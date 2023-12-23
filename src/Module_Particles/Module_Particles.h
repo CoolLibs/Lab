@@ -25,7 +25,7 @@ public:
     Cool::Input<Cool::Camera> const*        _camera_input;
 
     void update(UpdateContext_Ref) override;
-    void update_particles(UpdateContext_Ref);
+    void request_particles_to_update() { _needs_to_update_particles = true; }
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     void imgui_show_generated_shader_code() const;
     auto needs_to_rerender(Cool::IsDirty_Ref) const -> bool override;
@@ -38,6 +38,7 @@ public:
 
 private:
     void render(RenderParams) override;
+    void update_particles(Cool::InputProvider_Ref);
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void compute_dependencies();
     void update_particles_count_ifn(UpdateContext_Ref);
@@ -46,6 +47,7 @@ private:
 private:
     mutable std::string         _shader_code{};
     mutable Cool::MessageSender _shader_compilation_error{};
+    bool                        _needs_to_update_particles{true};
 
     ModuleShaderDependencyFlags _dependencies; // TODO(Particles) Two dependencies, one for each shader
 
