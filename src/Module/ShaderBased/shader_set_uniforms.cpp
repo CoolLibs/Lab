@@ -73,7 +73,7 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
 
 auto shader_set_uniforms(
     Cool::OpenGL::Shader const&             shader,
-    Module::RenderParams const&             in,
+    Cool::InputProvider_Ref                 provider,
     ModuleShaderDependencyFlags const&      dependencies,
     Cool::DoubleBufferedRenderTarget const& feedback_double_buffer,
     Cool::Input<Cool::Camera> const&        camera_input,
@@ -81,22 +81,22 @@ auto shader_set_uniforms(
 ) -> void
 {
     shader.bind();
-    shader.set_uniform("_camera2D", in.provider(Cool::Input_Camera2D{}));
-    shader.set_uniform("_camera2D_inverse", glm::inverse(in.provider(Cool::Input_Camera2D{})));
-    shader.set_uniform("_height", in.provider(Cool::Input_Height{}));
-    shader.set_uniform("_aspect_ratio", in.provider(Cool::Input_AspectRatio{}));
-    shader.set_uniform("_inverse_aspect_ratio", 1.f / in.provider(Cool::Input_AspectRatio{}));
+    shader.set_uniform("_camera2D", provider(Cool::Input_Camera2D{}));
+    shader.set_uniform("_camera2D_inverse", glm::inverse(provider(Cool::Input_Camera2D{})));
+    shader.set_uniform("_height", provider(Cool::Input_Height{}));
+    shader.set_uniform("_aspect_ratio", provider(Cool::Input_AspectRatio{}));
+    shader.set_uniform("_inverse_aspect_ratio", 1.f / provider(Cool::Input_AspectRatio{}));
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
 
-    shader.set_uniform("_time", in.provider(Cool::Input_Time{}));
-    shader.set_uniform("_delta_time", in.provider(Cool::Input_DeltaTime{}));
+    shader.set_uniform("_time", provider(Cool::Input_Time{}));
+    shader.set_uniform("_delta_time", provider(Cool::Input_DeltaTime{}));
 
     if (dependencies.depends_on_audio_volume)
-        shader.set_uniform("_audio_volume", in.provider(Cool::Input_Audio{}).volume());
+        shader.set_uniform("_audio_volume", provider(Cool::Input_Audio{}).volume());
     if (dependencies.depends_on_audio_waveform)
-        shader.set_uniform_texture1D("_audio_waveform", in.provider(Cool::Input_Audio{}).waveform_texture().id());
+        shader.set_uniform_texture1D("_audio_waveform", provider(Cool::Input_Audio{}).waveform_texture().id());
     if (dependencies.depends_on_audio_spectrum)
-        shader.set_uniform_texture1D("_audio_spectrum", in.provider(Cool::Input_Audio{}).spectrum_texture().id());
+        shader.set_uniform_texture1D("_audio_spectrum", provider(Cool::Input_Audio{}).spectrum_texture().id());
 
     shader.set_uniform_texture(
         "_previous_frame_texture",
@@ -106,13 +106,13 @@ auto shader_set_uniforms(
             .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
         }
     );
-    Cool::CameraShaderU::set_uniform(shader, in.provider(camera_input), in.provider(Cool::Input_AspectRatio{}));
+    Cool::CameraShaderU::set_uniform(shader, provider(camera_input), provider(Cool::Input_AspectRatio{}));
 
     nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
         for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {
-                send_uniform(value_input, shader, in.provider);
+                send_uniform(value_input, shader, provider);
             },
                        value_input);
         }

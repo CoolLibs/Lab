@@ -113,19 +113,20 @@ void Module_Particles::update(UpdateContext_Ref update_context)
     update_particles_count_ifn(update_context);
 }
 
-void Module_Particles::update_particles(UpdateContext_Ref)
+void Module_Particles::update_particles(UpdateContext_Ref ctx)
 {
     if (!_particle_system)
         return;
 
+#ifndef __APPLE__
     if (DebugOptions::log_when_updating_particles())
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
-#ifndef __APPLE__
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_particle_size", _particle_size);
-#endif
+    shader_set_uniforms(_particle_system->simulation_shader(), ctx.input_provider(), _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
     _particle_system->update();
+#endif
 }
 
 void Module_Particles::compute_dependencies()
@@ -154,10 +155,7 @@ void Module_Particles::render(RenderParams in)
         return;
 
 #ifndef __APPLE__
-    shader_set_uniforms(_particle_system->simulation_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph); // TODO(Particles) Do this during particles_update
-    shader_set_uniforms(_particle_system->render_shader(), in, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
-
-    _particle_system->render_shader().set_uniform("_particle_size", _particle_size);
+    shader_set_uniforms(_particle_system->render_shader(), in.provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
 
     auto const camera_2D_mat3 = glm::inverse(in.provider(Cool::Input_Camera2D{}));
     auto const camera_2D_mat4 = glm::mat4(

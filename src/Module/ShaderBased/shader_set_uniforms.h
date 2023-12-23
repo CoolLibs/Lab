@@ -10,7 +10,7 @@ namespace Lab {
 
 auto shader_set_uniforms(
     Cool::OpenGL::Shader const&,
-    Module::RenderParams const&,
+    Cool::InputProvider_Ref,
     ModuleShaderDependencyFlags const&,
     Cool::DoubleBufferedRenderTarget const&,
     Cool::Input<Cool::Camera> const&,

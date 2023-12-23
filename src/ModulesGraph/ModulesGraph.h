@@ -54,7 +54,7 @@ public:
     auto               nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     /// Function called once on every frame where the time has changed.
-    void on_time_changed(UpdateContext_Ref update_ctx);
+    void on_time_changed(UpdateContext_Ref);
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);

@@ -14,7 +14,6 @@
 #include "Module/ShaderBased/handle_error.h"
 #include "generate_compositing_shader_code.h"
 
-
 namespace Lab {
 
 Module_Compositing::Module_Compositing(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
@@ -105,7 +104,7 @@ void Module_Compositing::render_impl(RenderParams in)
     if (!_pipeline.shader())
         return;
 
-    shader_set_uniforms(*_pipeline.shader(), in, _dependencies, _feedback_double_buffer, *_camera_input, *_nodes_graph);
+    shader_set_uniforms(*_pipeline.shader(), in.provider, _dependencies, _feedback_double_buffer, *_camera_input, *_nodes_graph);
     _pipeline.draw();
 }
 
