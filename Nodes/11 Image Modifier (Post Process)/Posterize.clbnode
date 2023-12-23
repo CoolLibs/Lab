@@ -1,10 +1,11 @@
 INPUT float 'Levels';
-INPUT UV->sRGB 'Image';
+INPUT UV->sRGB_StraightA 'Image';
 
-sRGB main(UV uv)
+sRGB_StraightA main(UV uv)
 {
     if ('Levels' == 1.f)
-        return vec3(0.f);
+        return vec4(vec3(0.f), 'Image'(uv).a);
 
-    return vec3(floor('Image'(uv) * 'Levels') / ('Levels' - 1.));
+    vec4 color = 'Image'(uv);
+    return vec4(vec3(floor(color.rgb * 'Levels') / ('Levels' - 1.)), color.a);
 }

@@ -1,11 +1,11 @@
-INPUT UV->sRGB 'Image';
+INPUT UV->sRGB_PremultipliedA 'Image';
 INPUT Point2D 'Center';
 
 INPUT int 'Sample Count';
 INPUT float 'Blur';
 INPUT float 'Falloff';
 
-sRGB main(UV uv)
+sRGB_PremultipliedA main(UV uv)
 {
     float inverse_sample_count = 1.0 / 'Sample Count';
 
@@ -21,14 +21,21 @@ sRGB main(UV uv)
         velocity * 4.0 * inverse_sample_count
     );
 
-    vec3   accumulator = vec3(0);
+    vec4   accumulator = vec4(0);
     mat3x2 offsets     = mat3x2(0);
 
     for (int i = 0; i < 'Sample Count'; i++)
     {
-        accumulator.g += 'Image'(uv + offsets[1]).g;
-        accumulator.b += 'Image'(uv + offsets[2]).b;
-        accumulator.r += 'Image'(uv + offsets[0]).r;
+        vec4 color0 = 'Image'(uv + offsets[0]);
+        vec4 color1 = 'Image'(uv + offsets[1]);
+        vec4 color2 = 'Image'(uv + offsets[2]);
+        accumulator.r += color0.r;
+        accumulator.g += color1.g;
+        accumulator.b += color2.b;
+        accumulator.a += (color0.a
+                          + color1.a
+                          + color2.a)
+                         / 3.;
 
         offsets -= increments;
     }
