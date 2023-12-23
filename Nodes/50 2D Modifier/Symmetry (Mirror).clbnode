@@ -1,0 +1,16 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+INPUT Direction2D 'Axis';
+INPUT Point2D 'Center';
+
+UV main(UV uv)
+{
+    uv -= 'Center';
+
+    vec2  proj     = 'Axis' * dot(uv, 'Axis');
+    vec2  ortho    = uv - proj;
+    float the_sign = sign(uv.x * 'Axis'.y - uv.y * 'Axis'.x);
+    uv             = proj + ortho * the_sign;
+
+    uv += 'Center';
+    return uv;
+}
