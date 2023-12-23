@@ -3,12 +3,14 @@
 // Code inspired by https://www.shadertoy.com/view/4sBBDK
 
 INPUT UV->float 'Greyscale';
+INPUT Angle 'Angle';
 
 INPUT float 'Scale';
 
 float dot_screen(vec2 uv)
 {
     uv *= 'Scale';
+    uv = rotation_2D('Angle') * uv;
     return sin(uv.x) * sin(uv.y) * 4.;
 }
 
