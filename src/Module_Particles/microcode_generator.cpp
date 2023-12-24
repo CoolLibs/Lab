@@ -7,12 +7,12 @@
 
 namespace Lab {
 
-auto buffer_to_vec(size_t dimension, std::string const& buffer_name, std::string const& id_name) -> std::string
+auto buffer_to_vec(int dimension, std::string const& buffer_name, std::string const& id_name) -> std::string
 {
     assert(2 <= dimension && dimension <= 4);
     using fmt::literals::operator""_a;
     std::string content = "";
-    for (size_t i = 0; i < dimension; i++)
+    for (int i = 0; i < dimension; i++)
     {
         content += fmt::format(
             FMT_COMPILE("{buffer_name}[{id_name} * {dimension} + {i}]"),
@@ -34,13 +34,13 @@ auto buffer_to_vec(size_t dimension, std::string const& buffer_name, std::string
     return vec;
 }
 
-auto vec_to_buffer(size_t dimension, std::string const& buffer_name, std::string const& id_name, std::string const& vec_name) -> std::string
+auto vec_to_buffer(int dimension, std::string const& buffer_name, std::string const& id_name, std::string const& vec_name) -> std::string
 {
     assert(2 <= dimension && dimension <= 4);
     static constexpr std::array<const char*, 4> dimension_lookup = {"x", "y", "z", "w"};
     using fmt::literals::operator""_a;
     std::string output = "";
-    for (size_t i = 0; i < dimension; i++)
+    for (int i = 0; i < dimension; i++)
     {
         output += fmt::format(
             FMT_COMPILE("{buffer_name}[{id_name} * {dimension} + {buffer_i}] = {vec_name}.{vec_i};\n"),
@@ -55,7 +55,7 @@ auto vec_to_buffer(size_t dimension, std::string const& buffer_name, std::string
     return output;
 }
 
-auto vec_zero(size_t dimension) -> std::string
+auto vec_zero(int dimension) -> std::string
 {
     assert(2 <= dimension && dimension <= 4);
     using fmt::literals::operator""_a;

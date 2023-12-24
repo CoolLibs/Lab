@@ -76,7 +76,7 @@ auto generate_simulation_shader_code(
     Cool::NodeId&                               initializer_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Cool::InputProvider_Ref                     input_provider,
-    size_t const&                               dimension
+    int                                         dimension
 )
     -> tl::expected<std::string, std::string>
 {
@@ -106,27 +106,11 @@ auto generate_simulation_shader_code(
         },
     };
 
-    FunctionSignature signature{
+    FunctionSignature const main_function_signature{
+        .from  = primitive_type_particle(dimension),
+        .to    = primitive_type_particle(dimension),
         .arity = 1,
     };
-
-    assert(dimension == 2 || dimension == 3);
-    switch (dimension)
-    {
-    case 2:
-    {
-        signature.from = PrimitiveType::Particle2D;
-        signature.to   = PrimitiveType::Particle2D;
-    }
-    break;
-    case 3:
-    {
-        signature.from = PrimitiveType::Particle3D;
-        signature.to   = PrimitiveType::Particle3D;
-    }
-    break;
-    default: break; // that was asserted out
-    }
 
     auto node_definition_callback = [&graph, &initializer_node_id](auto const& node_id, auto const&) {
         auto maybe_node = graph.try_get_node<Node>(node_id);
@@ -143,7 +127,7 @@ auto generate_simulation_shader_code(
         get_node_definition,
         input_provider,
         node_definition_callback,
-        signature,
+        main_function_signature,
         content,
         []() { return std::vector<std::string>(); }
     );

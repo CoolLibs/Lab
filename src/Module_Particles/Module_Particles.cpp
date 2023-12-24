@@ -39,7 +39,7 @@ void Module_Particles::on_time_reset()
         _particle_system->reset();
 }
 
-void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool /* for_testing_nodes */, size_t dimension)
+void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool /* for_testing_nodes */, int dimension)
 {
     if (!shader_code)
     {

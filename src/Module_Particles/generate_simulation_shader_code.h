@@ -12,7 +12,7 @@ auto generate_simulation_shader_code(
     Cool::NodeId&       initializer_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>,
     Cool::InputProvider_Ref,
-    size_t const&
+    int dimension
 ) -> tl::expected<std::string, std::string>;
 
 auto valid_property_name(

@@ -105,4 +105,18 @@ auto with_straight_alpha_if_has_no_alpha(PrimitiveType type) -> PrimitiveType
     }
 }
 
+auto primitive_type_particle(int dimension) -> PrimitiveType
+{
+    switch (dimension)
+    {
+    case 2:
+        return PrimitiveType::Particle2D;
+    case 3:
+        return PrimitiveType::Particle3D;
+    }
+
+    assert(false);
+    return PrimitiveType::Particle2D;
+}
+
 } // namespace Lab

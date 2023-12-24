@@ -151,9 +151,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             if (!is_particle(node_definition.signature()))
                 return std::nullopt;
 
-            auto dimension = size_t{2};
-            if (is_particle_3D(node_definition.signature()))
-                dimension = 3;
+            int const dimension = is_particle_3D(node_definition.signature()) ? 3 : 2;
 
             auto initializer_node_id = Cool::NodeId();
 

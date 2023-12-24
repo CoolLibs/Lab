@@ -30,7 +30,7 @@ public:
     void imgui_show_generated_shader_code() const;
     auto needs_to_rerender(Cool::IsDirty_Ref) const -> bool override;
 
-    void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, size_t dimension);
+    void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
     void on_time_reset();
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }

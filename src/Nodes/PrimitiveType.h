@@ -22,5 +22,6 @@ auto has_an_alpha_channel(PrimitiveType) -> bool;
 auto has_straight_alpha_channel(PrimitiveType) -> bool;
 auto with_straight_alpha(PrimitiveType) -> PrimitiveType;
 auto with_straight_alpha_if_has_no_alpha(PrimitiveType) -> PrimitiveType;
+auto primitive_type_particle(int dimension) -> PrimitiveType; // Returns Particle2D or Particle3D based on the dimension
 
 } // namespace Lab
