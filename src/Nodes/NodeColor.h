@@ -4,7 +4,6 @@
 #include "FunctionSignature.h"
 #include "PrimitiveType.h"
 
-
 namespace Lab {
 
 namespace NodeColor {

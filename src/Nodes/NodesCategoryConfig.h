@@ -3,7 +3,6 @@
 #include "Cool/StrongTypes/Color.h"
 #include "NodeColor.h"
 
-
 namespace Lab {
 
 class NodesCategoryConfig {

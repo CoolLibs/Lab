@@ -6,7 +6,6 @@
 #include "MaybeGenerateModule.h"
 #include "Node.h"
 
-
 namespace Lab {
 
 auto make_valid_output_index_name(Cool::OutputPin const& pin)
