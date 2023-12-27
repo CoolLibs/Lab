@@ -40,7 +40,7 @@ auto vec_to_buffer(int dimension, std::string const& buffer_name, std::string co
     static constexpr std::array<const char*, 4> dimension_lookup = {"x", "y", "z", "w"};
     using fmt::literals::operator""_a;
     std::string output = "";
-    for (int i = 0; i < dimension; i++)
+    for (size_t i = 0; i < static_cast<size_t>(dimension); i++)
     {
         output += fmt::format(
             FMT_COMPILE("{buffer_name}[{id_name} * {dimension} + {buffer_i}] = {vec_name}.{vec_i};\n"),
