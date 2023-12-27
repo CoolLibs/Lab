@@ -15,6 +15,12 @@
 
 ## 🐣beta-11 WIP
 
+- 🤏 You can now pan the Nodes view with the middle mouse button (and you can still use the right button as you used to).
+- ✨ Added A4/A3/A2/A1 aspect ratio (when selecting the size of the View and the exported images).
+- 🐛 Fixed crash on Windows when exporting an image was taking longer than 2 seconds.
+- 🐛 Fixed freeze on Linux when exporting a video.
+- 🐛 Fixed: we won't request use of your microphone unless we actually need it (e.g. as soon as you start using audio in Coollab).
+
 ## 🐣beta-10
 
 - ✨ Added Audio support! You can now import an audio file and play it while you generate your images. You can also use its volume and waveform to control your images. You can also receive sound from an input device (microphone, etc.). Check out [our audio tutorial](https://coollab-art.com/Tutorials/Features/Audio) to learn everything about it!
