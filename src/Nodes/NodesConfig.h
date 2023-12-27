@@ -55,6 +55,7 @@ public:
     auto               make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
     void               update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
     static void        widget_to_rename_node(Cool::Node&);
+    auto               maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
 
 private:
     void main_node_toggle(Cool::NodeId const&);

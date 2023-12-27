@@ -463,4 +463,19 @@ void NodesConfig::widget_to_rename_node(Cool::Node& abstract_node)
     node.set_name(name);
 }
 
+auto NodesConfig::maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition
+{
+#ifndef __APPLE__
+    return [](Cool::NodeDefinition const&, Cool::NodesCategory const&) -> std::optional<const char*> {
+        return std::nullopt;
+    };
+#else
+    return [](Cool::NodeDefinition const&, Cool::NodesCategory const& category) -> std::optional<const char*> {
+        if (Cool::String::contains(category.name(), "Particle"))
+            return "Particle nodes are not supported on MacOS";
+        return std::nullopt;
+    };
+#endif
+}
+
 } // namespace Lab

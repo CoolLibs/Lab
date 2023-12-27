@@ -65,13 +65,13 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
 
             _particle_system = Cool::ParticleSystem{
                 dimension,
-                desired_particles_count(),
                 Cool::ParticlesShadersCode{
                     .simulation = *shader_code,
                     .init       = init,
                     .vertex     = vertex,
                     .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
-                }
+                },
+                desired_particles_count()
             };
 
             // TODO(Particles): compute_dependencies (parent class with Compositing ?)
