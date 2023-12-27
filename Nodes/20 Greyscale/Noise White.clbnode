@@ -1,0 +1,6 @@
+INPUT int 'Seed';
+
+float main(UV p)
+{
+    return hash_0_to_1_3D_to_1D(vec3(p, 'Seed'));
+}

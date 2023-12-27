@@ -74,6 +74,7 @@ uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixb
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
+#include "_COOL_RES_/shaders/rand.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 #include "_COOL_RES_/shaders/Texture.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
