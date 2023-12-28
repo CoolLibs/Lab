@@ -48,8 +48,11 @@ void hook_camera2D_events(
             .on_start  = [is_locked_in_view](auto&&) { return !is_locked_in_view(); },
             .on_update = [&, on_change, is_locked_in_view](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
                 camera.translation -= event.delta / camera.zoom;
-                on_change(); },
-            .on_stop   = [&](auto&&) {},
+                on_change();
+                ImGui::WrapMousePos(ImGuiAxesMask_All);
+                //
+            },
+            .on_stop = [&](auto&&) {},
         });
 
     // TODO rotation when shift+scroll and explanation

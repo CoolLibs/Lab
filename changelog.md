@@ -17,6 +17,8 @@
 
 - ✨ Added particles! This a very promising prototype that you can already use today. An important overhaul of the system will come at some point. (NB: Unfortunately particles are not currently available on MacOS, and will not be for a very long while).
 - ✨ Improved the randomness of our Random and Noise nodes.
+- ✨ Prevent mouse from getting blocked on the screen edges while dragging a widget or the camera. Instead the mouse wraps around.
+- ✨ Prevent mouse from getting blocked on the screen edges while dragging a node or a link or a selection rectangle in the nodes view. Instead the canvas starts translating.
 - 🤏 You can now pan the Nodes view with the middle mouse button (and you can still use the right button as you used to).
 - ✨ Added A4/A3/A2/A1 aspect ratio (when selecting the size of the View and the exported images).
 - 🐛 Fixed crash on Windows when exporting an image was taking longer than 2 seconds.
