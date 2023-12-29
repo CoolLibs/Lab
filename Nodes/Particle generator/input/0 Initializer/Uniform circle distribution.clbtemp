@@ -10,12 +10,16 @@ $vec main($Particle particle)
     vec3  random = hash_0_to_1_3D_to_3D(seed * vec3(particle.position.x, _delta_time, particle.id)).xyz;
     float r      = sqrt(random.z);
     float theta  = 2 * PI * random.x;
+
     $$if(IS_3D);
-    float ry    = random.y * 2 - 1;
-    ry          = (1 - sqrt(abs(ry))) * sign(ry);
-    float omega = PI / 2 * ry;
-    return 'Radius' * r * vec3(cos(theta) * cos(omega), sin(theta) * cos(omega), sin(omega)) + 'Position';
+    float rz        = pow(random.z, 1. / 3.);
+    float ry        = random.y * 2 - 1;
+    float ry2       = sqrt(1 - ry * ry);
+    vec3  direction = vec3(cos(theta) * ry2, sin(theta) * ry2, ry);
     $$else;
-    return 'Radius' * r * vec2(cos(theta), sin(theta)) + 'Position';
+    float rz        = sqrt(random.z);
+    vec2  direction = vec2(cos(theta), sin(theta));
     $$endif;
+
+    return rz * 'Radius' * direction;
 }

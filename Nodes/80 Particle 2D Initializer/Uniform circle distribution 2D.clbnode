@@ -17,7 +17,11 @@ vec2 main(Particle2D particle)
     vec3  random = hash_0_to_1_3D_to_3D(seed * vec3(particle.position.x, _delta_time, particle.id)).xyz;
     float r      = sqrt(random.z);
     float theta  = 2 * PI * random.x;
+
     ;
-    return 'Radius' * r * vec2(cos(theta), sin(theta)) + 'Position';
+    float rz        = sqrt(random.z);
+    vec2  direction = vec2(cos(theta), sin(theta));
     ;
+
+    return rz * 'Radius' * direction;
 }

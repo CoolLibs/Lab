@@ -22,11 +22,11 @@ Particle2D main()
         float theta                       = 2 * PI * random.x;
 
         ;
-        float r         = sqrt(random.z);
-        vec2  direction = (cos(theta) * vec2(1, 0) + sin(theta) * vec2(0, 1));
+        float rz        = sqrt(random.z);
+        vec2  direction = vec2(cos(theta), sin(theta));
         ;
 
-        coollab_context.particle.position = r * 'Radius' * direction;
+        coollab_context.particle.position = rz * 'Radius' * direction;
         coollab_context.particle.velocity = 'Strength' * direction;
         coollab_context.particle.size     = 'Starting size';
     }

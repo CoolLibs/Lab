@@ -15,17 +15,16 @@ $Particle main()
         float theta                       = 2 * PI * random.x;
 
         $$if(IS_3D);
-        float r         = pow(random.z, 1. / 3.);
+        float rz        = pow(random.z, 1. / 3.);
         float ry        = random.y * 2 - 1;
-        ry              = (1 - sqrt(abs(ry))) * sign(ry);
-        float omega     = PI / 2 * ry;
-        vec3  direction = (cos(theta) * cos(omega) * vec3(1, 0, 0) + sin(theta) * cos(omega) * vec3(0, 1, 0) + sin(omega) * vec3(0, 0, 1));
+        float ry2       = sqrt(1 - ry * ry);
+        vec3  direction = vec3(cos(theta) * ry2, sin(theta) * ry2, ry);
         $$else;
-        float r         = sqrt(random.z);
-        vec2  direction = (cos(theta) * vec2(1, 0) + sin(theta) * vec2(0, 1));
+        float rz        = sqrt(random.z);
+        vec2  direction = vec2(cos(theta), sin(theta));
         $$endif;
 
-        coollab_context.particle.position = r * 'Radius' * direction;
+        coollab_context.particle.position = rz * 'Radius' * direction;
         coollab_context.particle.velocity = 'Strength' * direction;
         coollab_context.particle.size     = 'Starting size';
     }
