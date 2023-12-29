@@ -95,6 +95,12 @@ if (from == PrimitiveType::Void && to == PrimitiveType::Particle2D)
     return context.push_function(gen_Coollab_Particle2D_from_Void());
 }
 
+if (from == PrimitiveType::Void && to == PrimitiveType::Particle3D)
+{
+    ;
+    return context.push_function(gen_Coollab_Particle3D_from_Void());
+}
+
 if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Angle)
 {
     context.push_function(gen_Coollab_Angle_from_Float());

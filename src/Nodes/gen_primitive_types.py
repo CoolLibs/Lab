@@ -339,7 +339,17 @@ def all_conversions():
                 from_="Void",
                 to="Particle2D",
                 implementation="""
-                vec2 FUNCTION_NAME()
+                Particle2D FUNCTION_NAME()
+                {
+                    return coollab_context.particle;
+                }
+            """,
+            ),
+            Conversion(
+                from_="Void",
+                to="Particle3D",
+                implementation="""
+                Particle3D FUNCTION_NAME()
                 {
                     return coollab_context.particle;
                 }

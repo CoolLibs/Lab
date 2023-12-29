@@ -16,8 +16,8 @@
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeDefinition.h"
-#include "helpers.h"
 #include "input_to_primitive_type.h"
+#include "valid_glsl.h"
 
 namespace Lab {
 
@@ -93,14 +93,13 @@ static auto base_function_name(
     -> std::string
 {
     using fmt::literals::operator""_a;
-    return valid_glsl(
-        fmt::format(
-            FMT_COMPILE(
-                R"STR({name}{id})STR"
-            ),
-            "name"_a = definition.name(), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
-            "id"_a   = to_string(id.underlying_uuid())
-        )
+    return valid_glsl(fmt::format(
+        FMT_COMPILE(
+            R"STR({name}{id})STR"
+        ),
+        "name"_a = definition.name(), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
+        "id"_a   = to_string(id.underlying_uuid())
+    )
     );
 }
 
@@ -111,33 +110,14 @@ static auto desired_function_name(
 ) -> std::string
 {
     using fmt::literals::operator""_a;
-    return valid_glsl(
-        fmt::format(
-            FMT_COMPILE(
-                "{name}{signature}{id}"
-            ),
-            "name"_a      = definition.name(), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
-            "signature"_a = to_string(signature),
-            "id"_a        = to_string(id.underlying_uuid())
-        )
-    );
-}
-
-auto module_texture_name(
-    NodeDefinition const& definition,
-    Cool::NodeId const&   id
-)
-    -> std::string
-{
-    using fmt::literals::operator""_a;
-    return valid_glsl(
-        fmt::format(
-            FMT_COMPILE(
-                R"STR(texture_{name}{id})STR"
-            ),
-            "name"_a = definition.name(),
-            "id"_a   = to_string(id.underlying_uuid())
-        )
+    return valid_glsl(fmt::format(
+        FMT_COMPILE(
+            "{name}{signature}{id}"
+        ),
+        "name"_a      = definition.name(), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
+        "signature"_a = to_string(signature),
+        "id"_a        = to_string(id.underlying_uuid())
+    )
     );
 }
 
@@ -561,6 +541,52 @@ auto gen_desired_function(
     );
 }
 
+static auto make_node_read_from_texture() -> Node
+{
+    return Node{
+        Cool::NodeDefinitionIdentifier{
+            .definition_name = "read_module_texture",
+            .category_name   = "read_module_texture"
+        },
+        0, 0
+    };
+}
+
+static auto make_node_definition_read_from_texture(std::string const& texture_name) -> NodeDefinition
+{
+    using fmt::literals::operator""_a;
+
+    auto const main_function_signature = MainFunctionSignature{
+        FunctionSignature{
+            .from  = PrimitiveType::UV,
+            .to    = PrimitiveType::sRGB_StraightA,
+            .arity = 1,
+        },
+        std::vector<std::string>{"uv"}
+    };
+    auto const main_function_pieces = MainFunctionPieces{
+        .name      = "read_module_texture",
+        .signature = main_function_signature,
+        .body      = fmt::format(R"glsl(
+uv = unnormalize_uv(to_view_space(uv));
+return texture({texture_name}, uv);
+)glsl",
+                                 "texture_name"_a = texture_name),
+    };
+    return NodeDefinition::make(
+               NodeDefinition_Data{
+                   .main_function    = main_function_pieces,
+                   .helper_functions = {},
+                   .included_files   = {},
+                   .input_functions  = {},
+                   .input_values     = {},
+                   .output_indices   = {},
+               },
+               {}
+    )
+        .value(); // We are creating the node definition from scratch, so we know that it is valid.
+}
+
 auto gen_desired_function(
     FunctionSignature                  desired_signature,
     std::reference_wrapper<Node const> node,
@@ -569,55 +595,23 @@ auto gen_desired_function(
     MaybeGenerateModule const&         maybe_generate_module
 ) -> ExpectedFunctionName
 {
-    auto node_definition = context.get_node_definition(node.get().id_names()); // NOLINT(readability-qualified-auto)
+    auto const* node_definition = context.get_node_definition(node.get().id_names()); // NOLINT(readability-qualified-auto)
     if (!node_definition)
         return tl::make_unexpected(fmt::format(
             "Node definition \"{}\" was not found. Are you missing a file in your nodes folder?",
             node.get().definition_name()
         ));
 
-    std::optional<std::string> const maybe_texture_name = maybe_generate_module(id, *node_definition);
+    auto const maybe_texture_name = maybe_generate_module(id, *node_definition);
 
-    Node                                      new_node;
-    tl::expected<NodeDefinition, std::string> new_node_definition;
-    if (maybe_texture_name.has_value())
+    auto new_node            = Node{};
+    auto new_node_definition = NodeDefinition{};
+    if (maybe_texture_name.has_value()) // We need to replace the current node with a fake node that reads an image from the given texture
     {
-        using fmt::literals::operator""_a;
-        auto const main_function_signature = MainFunctionSignature{
-            FunctionSignature{
-                .from  = PrimitiveType::UV,
-                .to    = PrimitiveType::sRGB_StraightA,
-                .arity = 1,
-            },
-            std::vector<std::string>{"uv"}
-        };
-        auto const main_function_pieces = MainFunctionPieces{
-            .name      = "read_particle_texture",
-            .signature = main_function_signature,
-            .body      = fmt::format(R"glsl(
-uv = unnormalize_uv(to_view_space(uv));
-return texture({texture_name}, uv);
-)glsl",
-                                     "texture_name"_a = *maybe_texture_name),
-        };
-        new_node_definition = NodeDefinition::make(
-            NodeDefinition_Data{
-                .main_function    = main_function_pieces,
-                .helper_functions = {},
-                .included_files   = {},
-                .input_functions  = {},
-                .input_values     = {},
-                .output_indices   = {},
-            },
-            {}
-        );
-
-        new_node = Node(Cool::NodeDefinitionIdentifier{.definition_name = "get_module_texture", .category_name = "get_module_texture"}, 0, 0);
-        node     = new_node;
-
-        // We control the node definition callback, so we know that the node definition we are getting is valid.
-        assert(new_node_definition.has_value());
-        node_definition = &new_node_definition.value();
+        new_node            = make_node_read_from_texture();
+        new_node_definition = make_node_definition_read_from_texture(maybe_texture_name.value());
+        node_definition     = &new_node_definition;
+        node                = new_node; // Make the reference wrapper point to our new node
     }
 
     auto const base_function_name = gen_base_function(node, *node_definition, id, context, maybe_generate_module);

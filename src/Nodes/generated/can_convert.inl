@@ -50,6 +50,9 @@ if (from == PrimitiveType::Void && to == PrimitiveType::UV)
 if (from == PrimitiveType::Void && to == PrimitiveType::Particle2D)
     return true;
 
+if (from == PrimitiveType::Void && to == PrimitiveType::Particle3D)
+    return true;
+
 if (from == PrimitiveType::Float_StraightA && to == PrimitiveType::Angle)
     return true;
 

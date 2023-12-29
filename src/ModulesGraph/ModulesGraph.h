@@ -55,14 +55,13 @@ public:
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     /// Function called once on every frame where the time has changed.
     void on_time_changed(UpdateContext_Ref);
+    /// Function called once on every frame where the audio has changed.
+    void on_audio_changed(UpdateContext_Ref);
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);
 
     auto all_inputs() const -> Cool::AllInputRefsToConst;
-
-    auto compositing_module() const -> Module_Compositing const& { return _compositing_module; } // TODO(Modules) Remove
-    auto compositing_module() -> Module_Compositing& { return _compositing_module; }             // TODO(Modules) Remove
 
     void on_time_reset();
 

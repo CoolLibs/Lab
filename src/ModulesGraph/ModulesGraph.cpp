@@ -1,7 +1,6 @@
 #include "ModulesGraph.h"
 #include <Module_Particles/Module_Particles.h>
 #include <Nodes/FunctionSignature.h>
-#include <Nodes/module_texture_name.h>
 #include <imgui.h>
 #include <algorithm>
 #include <cstddef>
@@ -10,6 +9,7 @@
 #include "Cool/Gpu/RenderTarget.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
+#include "Nodes/valid_glsl.h"
 #include "UI/imgui_show.h"
 
 namespace Lab {
@@ -133,6 +133,19 @@ void ModulesGraph::on_time_reset()
         node->module.on_time_reset();
 }
 
+static auto texture_name_for_module(NodeDefinition const& definition, Cool::NodeId const& id) -> std::string
+{
+    using fmt::literals::operator""_a;
+    return valid_glsl(fmt::format(
+        FMT_COMPILE(
+            R"STR(texture_{name}{id})STR"
+        ),
+        "name"_a = definition.name(),
+        "id"_a   = to_string(id.underlying_uuid())
+    )
+    );
+}
+
 void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
 {
     _particles_module_nodes.clear();
@@ -155,7 +168,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
 
             auto initializer_node_id = Cool::NodeId();
 
-            auto const texture_name_in_shader = module_texture_name(node_definition, particles_root_node_id);
+            auto const texture_name_in_shader = texture_name_for_module(node_definition, particles_root_node_id);
 
             if (std::none_of(
                     _particles_module_nodes.begin(),
@@ -313,6 +326,15 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
         || !_particles_module_nodes.empty())
     {
         trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on time
+    }
+}
+
+void ModulesGraph::on_audio_changed(UpdateContext_Ref update_ctx)
+{
+    if (_compositing_module.depends_on_audio()
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [](auto const& module_node) { return module_node->module.depends_on_audio(); }))
+    {
+        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on audio
     }
 }
 

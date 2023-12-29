@@ -2,7 +2,7 @@
 #include "FunctionSignature.h"
 #include "NodeDefinition.h"
 #include "PrimitiveType.h"
-#include "helpers.h"
+#include "valid_glsl.h"
 
 namespace Lab {
 

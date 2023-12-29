@@ -256,7 +256,7 @@ vec2 default_uv/*coollabdef*/()
 )STR",
             });
         }
-        if (signature.to == PrimitiveType::Particle2D) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
+        if (signature.to == PrimitiveType::Particle2D) // Special case for Particle2D: we can get the current particle from the context
         {
             return context.push_function({
                 .name       = "default_particle_2D",
@@ -268,7 +268,7 @@ Particle2D default_particle_2D/*coollabdef*/()
 )STR",
             });
         }
-        if (signature.to == PrimitiveType::Particle3D) // Special case for UVs; they are not really constant, they use the current uv map, to which we have applied all the uv transformations, starting from normalized_uv().
+        if (signature.to == PrimitiveType::Particle3D) // Special case for Particle3D: we can get the current particle from the context
         {
             return context.push_function({
                 .name       = "default_particle_3D",

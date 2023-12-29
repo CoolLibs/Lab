@@ -33,12 +33,13 @@ void main()
 {
     if (_lifetimes[gl_InstanceID] <= 0 && _lifetime_maxs[gl_InstanceID] > 0)
     {
+        // Discard dead particles
         gl_Position = vec4(0.);
         return;
     }
     _varying_uv = _uv;
     float size  = _sizes[gl_InstanceID];
-#ifdef IS_3D
+#ifdef COOLLAB_PARTICLES_3D
     vec3 particle_position = vec3(_positions[3 * gl_InstanceID], _positions[3 * gl_InstanceID + 1], _positions[3 * gl_InstanceID + 2]);
     vec3 camera_right      = vec3(cool_camera_view[0][0], cool_camera_view[1][0], cool_camera_view[2][0]);
     vec3 camera_up         = vec3(cool_camera_view[0][1], cool_camera_view[1][1], cool_camera_view[2][1]);

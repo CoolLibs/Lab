@@ -11,6 +11,7 @@ $Particle main()
     if (coollab_context.particle.lifetime <= 0.0)
     {
         coollab_context.particle.lifetime = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.id, coollab_context.particle.position.xy));
+        coollab_context.particle.lifetime_max = coollab_context.particle.lifetime;
 
         float random = hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id));
 
