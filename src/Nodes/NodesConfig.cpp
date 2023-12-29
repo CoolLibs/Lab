@@ -153,9 +153,11 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
 
     if (node.is_particle_initializer())
     {
-        auto& particles_count = node.particles_count().value();
-        if (ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &particles_count))
+        if (node.particles_count().has_value())
+            ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &node.particles_count().value());
+        else
         {
+            assert(false);
         }
     }
 
@@ -301,7 +303,7 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
         || is_curve(signature)
         // Shape 3D
         || is_shape_3D(signature)
-        // Particle that doesn't need the main pin
+        // Particle nodes that are not Particle Modifiers
         || (signature.from == PrimitiveType::Particle2D && signature.to != PrimitiveType::Particle2D)
         || (signature.from == PrimitiveType::Particle3D && signature.to != PrimitiveType::Particle3D);
 }
@@ -310,9 +312,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
 
-    auto signature = def.signature();
-
-    bool const needs_main_pin = !doesnt_need_main_pin(signature);
+    bool const needs_main_pin = !doesnt_need_main_pin(def.signature());
 
     auto node = Node{
         {def.name(), cat_id.category_name},
@@ -321,7 +321,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     };
     auto const node_category_config = _get_node_category_config(cat_id.category_name);
 
-    if (is_particle_initializer(signature))
+    if (is_particle_initializer(def.signature()))
     {
         node.particles_count() = std::make_optional<size_t>(1000);
     }
