@@ -11,7 +11,9 @@ $vec main($Particle particle)
     float r      = sqrt(random.z);
     float theta  = 2 * PI * random.x;
     $$if(IS_3D);
-    float omega = 2 * PI * random.y;
+    float ry    = random.y * 2 - 1;
+    ry          = (1 - sqrt(abs(ry))) * sign(ry);
+    float omega = PI / 2 * ry;
     return 'Radius' * r * vec3(cos(theta) * cos(omega), sin(theta) * cos(omega), sin(omega)) + 'Position';
     $$else;
     return 'Radius' * r * vec2(cos(theta), sin(theta)) + 'Position';

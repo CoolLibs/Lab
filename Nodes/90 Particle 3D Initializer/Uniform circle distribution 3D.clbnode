@@ -18,7 +18,9 @@ vec3 main(Particle3D particle)
     float r      = sqrt(random.z);
     float theta  = 2 * PI * random.x;
     ;
-    float omega = 2 * PI * random.y;
+    float ry    = random.y * 2 - 1;
+    ry          = (1 - sqrt(abs(ry))) * sign(ry);
+    float omega = PI / 2 * ry;
     return 'Radius' * r * vec3(cos(theta) * cos(omega), sin(theta) * cos(omega), sin(omega)) + 'Position';
     ;
 }

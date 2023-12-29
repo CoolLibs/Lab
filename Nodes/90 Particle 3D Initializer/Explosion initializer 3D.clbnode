@@ -23,7 +23,9 @@ Particle3D main()
         float theta                       = 2 * PI * random.x;
 
         ;
-        float omega     = 2 * PI * random.y;
+        float ry    = random.y * 2 - 1;
+        ry          = (1 - sqrt(abs(ry))) * sign(ry);
+        float omega = PI / 2 * ry;
         vec3  direction = (cos(theta) * cos(omega) * vec3(1, 0, 0) + sin(theta) * cos(omega) * vec3(0, 1, 0) + sin(omega) * vec3(0, 0, 1));
         ;
 
