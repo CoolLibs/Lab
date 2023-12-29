@@ -34,3 +34,4 @@ auto do_load(NodesCategoryConfig& config, std::filesystem::path const& path) -> 
 } // namespace Lab
 
 CEREAL_REGISTER_TYPE(Lab::Module_Compositing); // NOLINT
+CEREAL_REGISTER_TYPE(Lab::Module_Particles); // NOLINT
