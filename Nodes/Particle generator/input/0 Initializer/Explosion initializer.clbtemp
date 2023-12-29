@@ -11,21 +11,17 @@ $Particle main()
     if (coollab_context.particle.lifetime <= 0.0)
     {
         coollab_context.particle.lifetime = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.id, coollab_context.particle.position.xy));
-        vec3  random                      = hash_0_to_1_3D_to_3D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id)).xyz;
-        float theta                       = 2 * PI * random.x;
+
+        float random = hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id));
 
         $$if(IS_3D);
-        float rz        = pow(random.z, 1. / 3.);
-        float ry        = random.y * 2 - 1;
-        float ry2       = sqrt(1 - ry * ry);
-        vec3  direction = vec3(cos(theta) * ry2, sin(theta) * ry2, ry);
+        vec3 point = random_point_on_sphere(random);
         $$else;
-        float rz        = sqrt(random.z);
-        vec2  direction = vec2(cos(theta), sin(theta));
+        vec2 point = random_point_on_disk(random);
         $$endif;
 
-        coollab_context.particle.position = rz * 'Radius' * direction;
-        coollab_context.particle.velocity = 'Strength' * direction;
+        coollab_context.particle.position = 'Radius' * point;
+        coollab_context.particle.velocity = 'Strength' * point;
         coollab_context.particle.size     = 'Starting size';
     }
 
