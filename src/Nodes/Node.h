@@ -1,7 +1,6 @@
 #pragma once
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Nodes/Pin.h>
-#include <cereal/details/helpers.hpp>
 #include <cereal/types/optional.hpp>
 #include <optional>
 #include <string_view>
@@ -57,7 +56,7 @@ public:
 
     auto is_particle_initializer() const -> bool;
     auto particles_count() -> std::optional<size_t>& { return _particles_count; }
-    auto particles_count() const -> std::optional<size_t> const& { return _particles_count; }
+    auto particles_count() const -> std::optional<size_t> { return _particles_count; }
     void set_particles_count(std::optional<size_t> particles_count) { _particles_count = particles_count; }
 
 private:
@@ -70,7 +69,7 @@ private:
     size_t                       _number_of_main_input_pins{};
     size_t                       _number_of_function_inputs{};
 
-    std::optional<size_t> _particles_count{}; // HACK Only used in the case of a particle initializer node
+    std::optional<size_t> _particles_count{}; // HACK Only used in the case of a Particle Initializer node
 
 private:
     friend class cereal::access;
