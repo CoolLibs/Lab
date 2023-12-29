@@ -19,11 +19,11 @@ Particle2D main()
     {
         coollab_context.particle.lifetime = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.id, coollab_context.particle.position.xy));
         vec3  random                      = hash_0_to_1_3D_to_3D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id)).xyz;
-        float r                           = sqrt(random.z);
         float theta                       = 2 * PI * random.x;
 
         ;
-        vec2 direction = (cos(theta) * vec2(1, 0) + sin(theta) * vec2(0, 1));
+        float r         = sqrt(random.z);
+        vec2  direction = (cos(theta) * vec2(1, 0) + sin(theta) * vec2(0, 1));
         ;
 
         coollab_context.particle.position = r * 'Radius' * direction;

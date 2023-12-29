@@ -19,13 +19,13 @@ Particle3D main()
     {
         coollab_context.particle.lifetime = 'Lifetime' * hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.id, coollab_context.particle.position.xy));
         vec3  random                      = hash_0_to_1_3D_to_3D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id)).xyz;
-        float r                           = sqrt(random.z);
         float theta                       = 2 * PI * random.x;
 
         ;
-        float ry    = random.y * 2 - 1;
-        ry          = (1 - sqrt(abs(ry))) * sign(ry);
-        float omega = PI / 2 * ry;
+        float r         = pow(random.z, 1. / 3.);
+        float ry        = random.y * 2 - 1;
+        ry              = (1 - sqrt(abs(ry))) * sign(ry);
+        float omega     = PI / 2 * ry;
         vec3  direction = (cos(theta) * cos(omega) * vec3(1, 0, 0) + sin(theta) * cos(omega) * vec3(0, 1, 0) + sin(omega) * vec3(0, 0, 1));
         ;
 
