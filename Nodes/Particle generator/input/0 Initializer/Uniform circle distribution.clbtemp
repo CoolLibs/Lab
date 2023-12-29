@@ -6,14 +6,15 @@ INPUT float 'Radius';
 
 $vec main($Particle particle)
 {
-    float seed   = rand_xorshift_0_to_1('Seed' + _time);
-    vec3  random = hash_0_to_1_3D_to_3D(seed * vec3(particle.position.x, _delta_time, particle.id)).xyz;
-    float r      = sqrt(random.z);
-    float theta  = 2 * PI * random.x;
+    float seed = rand_xorshift_0_to_1('Seed' + _time);
+
+    float random = hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id));
+
     $$if(IS_3D);
-    float omega = 2 * PI * random.y;
-    return 'Radius' * r * vec3(cos(theta) * cos(omega), sin(theta) * cos(omega), sin(omega)) + 'Position';
+    vec3 point = random_point_on_sphere(random);
     $$else;
-    return 'Radius' * r * vec2(cos(theta), sin(theta)) + 'Position';
+    vec2 point = random_point_on_disk(random);
     $$endif;
+
+    return 'Radius' * point;
 }

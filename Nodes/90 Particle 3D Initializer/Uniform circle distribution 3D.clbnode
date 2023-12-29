@@ -13,12 +13,13 @@ INPUT float 'Radius';
 
 vec3 main(Particle3D particle)
 {
-    float seed   = rand_xorshift_0_to_1('Seed' + _time);
-    vec3  random = hash_0_to_1_3D_to_3D(seed * vec3(particle.position.x, _delta_time, particle.id)).xyz;
-    float r      = sqrt(random.z);
-    float theta  = 2 * PI * random.x;
+    float seed = rand_xorshift_0_to_1('Seed' + _time);
+
+    float random = hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id));
+
     ;
-    float omega = 2 * PI * random.y;
-    return 'Radius' * r * vec3(cos(theta) * cos(omega), sin(theta) * cos(omega), sin(omega)) + 'Position';
+    vec3 point = random_point_on_sphere(random);
     ;
+
+    return 'Radius' * point;
 }
