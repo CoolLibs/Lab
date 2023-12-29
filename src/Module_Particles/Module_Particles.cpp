@@ -60,8 +60,8 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         else
         {
             assert(dimension == 2 || dimension == 3);
-            std::string init   = (dimension == 3 ? "#define IS_3D\n" : "") + *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp");
-            std::string vertex = std::string("#version 430\n") + (dimension == 3 ? "#define IS_3D\n" : "") + *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert");
+            std::string init   = (dimension == 3 ? "#define COOLLAB_PARTICLES_3D\n" : "") + *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp");
+            std::string vertex = std::string("#version 430\n") + (dimension == 3 ? "#define COOLLAB_PARTICLES_3D\n" : "") + *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert");
 
             _particle_system = Cool::ParticleSystem{
                 dimension,

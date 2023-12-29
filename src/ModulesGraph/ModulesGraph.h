@@ -63,9 +63,6 @@ public:
 
     auto all_inputs() const -> Cool::AllInputRefsToConst;
 
-    auto compositing_module() const -> Module_Compositing const& { return _compositing_module; } // TODO(Modules) Remove
-    auto compositing_module() -> Module_Compositing& { return _compositing_module; }             // TODO(Modules) Remove
-
     void on_time_reset();
 
 private:
