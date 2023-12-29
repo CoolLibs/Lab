@@ -42,7 +42,7 @@ auto miscellaneous() -> Cool::Color
 
 auto particle_2D() -> Cool::Color
 {
-    return Cool::Color::from_srgb({0.25f, 0.25f, 0.75f});
+    return Cool::Color::from_srgb({0.202f, 0.202f, 0.667f});
 }
 
 auto particle_3D() -> Cool::Color

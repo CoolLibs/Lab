@@ -51,7 +51,7 @@ def all_node_kinds():
         NodeKind(
             name_in_code="particle_2D",
             user_facing_name="Particle 2D",
-            color_srgb="0.25f,0.25f,0.75f",
+            color_srgb="0.202f,0.202f,0.667f",
         ),
         NodeKind(
             name_in_code="particle_3D",
@@ -108,7 +108,7 @@ def imgui_node_kind_dropdown():
     def code(kind: NodeKind):
         return f"{kind.user_facing_name}"
 
-    string = "\\0\"\"".join(map(code, all_node_kinds())) + "\\0\\0"
+    string = '\\0""'.join(map(code, all_node_kinds())) + "\\0\\0"
 
     return f"""
     int tmp = static_cast<int>(*node_kind);
