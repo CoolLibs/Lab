@@ -1,4 +1,4 @@
-#include "helpers.h"
+#include "valid_glsl.h"
 
 namespace Lab {
 

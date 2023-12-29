@@ -16,8 +16,8 @@
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeDefinition.h"
-#include "helpers.h"
 #include "input_to_primitive_type.h"
+#include "valid_glsl.h"
 
 namespace Lab {
 
@@ -117,19 +117,6 @@ static auto desired_function_name(
         "name"_a      = definition.name(), // NB: We don't have to worry about the uniqueness of that name because we append an ID anyway
         "signature"_a = to_string(signature),
         "id"_a        = to_string(id.underlying_uuid())
-    )
-    );
-}
-
-auto module_texture_name(NodeDefinition const& definition, Cool::NodeId const& id) -> std::string
-{
-    using fmt::literals::operator""_a;
-    return valid_glsl(fmt::format(
-        FMT_COMPILE(
-            R"STR(texture_{name}{id})STR"
-        ),
-        "name"_a = definition.name(),
-        "id"_a   = to_string(id.underlying_uuid())
     )
     );
 }

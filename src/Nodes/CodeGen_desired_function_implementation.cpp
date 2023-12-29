@@ -6,8 +6,8 @@
 #include "CodeGen_implicit_conversion.h"
 #include "FunctionSignature.h"
 #include "PrimitiveType.h"
-#include "helpers.h"
 #include "tl/expected.hpp"
+#include "valid_glsl.h"
 
 namespace Lab {
 
