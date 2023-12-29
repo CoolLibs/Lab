@@ -316,6 +316,15 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
     }
 }
 
+void ModulesGraph::on_audio_changed(UpdateContext_Ref update_ctx)
+{
+    if (_compositing_module.depends_on_audio()
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [](auto const& module_node) { return module_node->module.depends_on_audio(); }))
+    {
+        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on audio
+    }
+}
+
 void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const
 {
     ui.window({.name = "Nodes Registry"}, [&]() {

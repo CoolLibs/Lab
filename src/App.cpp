@@ -153,8 +153,7 @@ void App::update()
         _project.exporter.is_exporting() /* force_sync_time */
     );
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
-        if (_project.modules_graph->compositing_module().depends_on_audio())
-            trigger_rerender();
+        _project.modules_graph->on_audio_changed(update_context());
     });
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
