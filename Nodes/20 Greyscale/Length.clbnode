@@ -1,8 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT UV 'UV';
-
-float main(UV uv)
+float main(vec2 Vec2)
 {
-    return length('UV');
+    return length(Vec2);
 }
