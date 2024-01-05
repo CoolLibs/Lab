@@ -168,7 +168,10 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
 
     for (size_t i = 0; i < current_arity; ++i)
     {
-        res += fmt::format("{}({}({}))", transforms_names[i], implicit_conversion, argument_name(i, desired_arity));
+        if (desired_arity > 0)
+            res += fmt::format("{}({}({}))", transforms_names[i], implicit_conversion, argument_name(i, desired_arity));
+        else
+            res += fmt::format("{}()", transforms_names[i]);
         if (i != current_arity - 1)
             res += ", ";
     }
