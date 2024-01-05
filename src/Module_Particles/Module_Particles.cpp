@@ -126,6 +126,8 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
     _particle_system->simulation_shader().bind();
     shader_set_uniforms(_particle_system->simulation_shader(), input_provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
     _particle_system->update();
+#else
+    std::ignore = input_provider;
 #endif
 }
 
