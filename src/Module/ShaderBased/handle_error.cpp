@@ -6,10 +6,10 @@
 
 namespace Lab {
 
-void handle_error(Cool::OptionalErrorMessage const& maybe_err, std::string name, Cool::MessageSender& _shader_compilation_error)
+void handle_error(Cool::OptionalErrorMessage const& maybe_err, std::string const& module_name, Cool::MessageSender& message_sender)
 {
-    maybe_err.send_error_if_any(_shader_compilation_error, [&](const std::string& msg) {
-        return make_shader_compilation_error_message(name, "", msg);
+    maybe_err.send_error_if_any(message_sender, [&](std::string const& msg) {
+        return make_shader_compilation_error_message(module_name, "", msg);
     });
 }
 
