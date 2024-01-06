@@ -3,9 +3,9 @@ build/
 .vscode/
 .DS_Store
 .cache
-src/Module_Nodes/__pycache__
 website/.docusaurus
 website/node_modules
 gitignored
 User data
 .venv
+**/__pycache__/
