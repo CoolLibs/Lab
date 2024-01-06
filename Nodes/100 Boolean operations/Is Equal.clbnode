@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-bool main(float a, float b)
+bool main(float A, float B)
 {
-  return a == b;
+    return A == B;
 }

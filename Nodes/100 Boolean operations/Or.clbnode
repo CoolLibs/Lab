@@ -1,4 +1,6 @@
-bool main(bool b1, bool b2)
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+bool main(bool B1, bool B2)
 {
-  return b || b2;
+    return B1 || B2;
 }
