@@ -37,7 +37,7 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "Fraction of time when Min value is active",
+                                "Name": "Duration of Min",
                                 "Value": 0.5,
                                 "Metadata": {
                                     "Bounds": {
