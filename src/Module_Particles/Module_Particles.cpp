@@ -145,9 +145,12 @@ void Module_Particles::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* updat
 {
 }
 
-void Module_Particles::imgui_show_generated_shader_code() const
+void Module_Particles::imgui_show_generated_shader_code()
 {
-    Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35});
+    if (Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+    {
+        set_simulation_shader_code(_shader_code, false, _particle_system->dimension());
+    }
 }
 
 auto Module_Particles::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
