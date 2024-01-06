@@ -1,7 +1,7 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT UV->float 'Image';
-INPUT int 'Resolution';
+INPUT float 'Resolution';
 INPUT float 'Subdivision threshold';
 INPUT int 'Max subdivisions';
 INPUT float 'Roundness';
