@@ -43,10 +43,11 @@ private:
     void compute_dependencies();
     void update_particles_count_ifn(UpdateContext_Ref);
     auto desired_particles_count() const -> size_t;
+    void log_simulation_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:
     mutable std::string         _shader_code{};
-    mutable Cool::MessageSender _shader_compilation_error{};
+    mutable Cool::MessageSender _simulation_shader_error_sender{};
     bool                        _needs_to_update_particles{true};
 
     ModuleShaderDependencyFlags _dependencies; // TODO(Particles) Two dependencies, one for each shader

@@ -13,7 +13,6 @@
 #include "Cool/Particles/ParticleSystem.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/set_uniform.h"
-#include "Module/ShaderBased/handle_error.h"
 #include "Nodes/Node.h"
 #include "generate_simulation_shader_code.h"
 #include "glm/fwd.hpp"
@@ -43,12 +42,12 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
 {
     if (!shader_code)
     {
-        handle_error(Cool::OptionalErrorMessage{shader_code.error()}, name(), _shader_compilation_error);
+        log_simulation_shader_error(shader_code.error());
         return;
     }
 
     _shader_code = *shader_code;
-    _shader_compilation_error.clear();
+    _simulation_shader_error_sender.clear();
 
     // TODO(Particles) Don't recreate the particle system every time, just change the shader but keep the current position and velocity of the particles
     try
@@ -80,7 +79,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
     }
     catch (Cool::Exception const& e)
     {
-        handle_error(e.error_message(), name(), _shader_compilation_error);
+        log_simulation_shader_error(e.error_message());
         return;
     }
 }
@@ -96,6 +95,11 @@ auto Module_Particles::desired_particles_count() const -> size_t
     if (!maybe_node)
         return default_particles_count;
     return maybe_node->particles_count().value_or(default_particles_count);
+}
+
+void Module_Particles::log_simulation_shader_error(Cool::OptionalErrorMessage const& maybe_err) const
+{
+    log_module_error(maybe_err, _simulation_shader_error_sender);
 }
 
 void Module_Particles::update_particles_count_ifn(UpdateContext_Ref update_context)

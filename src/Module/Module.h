@@ -2,6 +2,7 @@
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Dependencies/InputProvider_Ref.h>
+#include <Cool/Log/OptionalErrorMessage.h>
 #include <img/src/Size.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
@@ -61,6 +62,9 @@ public:
     };
 
     [[nodiscard]] auto needs_to_rerender_flag() const { return _needs_to_rerender_flag; }
+
+protected:
+    void log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
 
 private:
     virtual void render(RenderParams) = 0;

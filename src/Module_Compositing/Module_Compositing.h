@@ -53,11 +53,12 @@ private:
     void render(RenderParams) override;
     void render_impl(RenderParams);
     void compute_dependencies(); // We don't want to rerender when audio / time changes if we don't depend on them. Also, audio features are costly to compute, so we only set these uniforms in the shader if we actually need them.
+    void log_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:
     mutable std::string              _shader_code{};
     mutable Cool::FullscreenPipeline _pipeline{};
-    mutable Cool::MessageSender      _shader_compilation_error{};
+    mutable Cool::MessageSender      _shader_error_sender{};
     Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
 
     ModuleShaderDependencyFlags _dependencies;
