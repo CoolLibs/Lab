@@ -1,27 +1,18 @@
-// Reference : https://www.shadertoy.com/view/3sSSW1
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT UV->sRGB_PremultipliedA 'Image';
-INPUT float 'Size';
+INPUT UV->Oklab_PremultipliedA 'Image';
+INPUT float 'Strength';
+INPUT int 'Quality'; /// The higher the number the smoother the result, but it will start to get laggy if set too high.
 
-sRGB_PremultipliedA main(UV uv)
+Oklab_PremultipliedA main(UV uv)
 {
-    vec4 color = 'Image'(uv);
-
-    float radial_iter = 16.0;
-    float quality     = 4.0;
-    vec2  iResolution = vec2(1024);
-
-    vec2 radius = 'Size' / iResolution.xy;
-
-    for (float d = 0.0; d < PI; d += PI / radial_iter)
+    vec4 color = vec4(0.);
+    for (int i = 0; i < 'Quality'; i++)
     {
-        for (float i = 1.0 / quality; i <= 1.0; i += 1.0 / quality)
-        {
-            color += 'Image'(uv + vec2(cos(d), sin(d)) * radius * i);
-        }
+        // Uniform points on a disk based on http://blog.marmakoide.org/?p=1
+        float radius = sqrt(i / float('Quality' - 1));
+        float angle  = 2.39996323 * i;
+        color += 'Image'(uv + 'Strength' * vec2_from_polar(radius, angle));
     }
-
-    color /= quality * radial_iter - 15.0;
-
-    return color;
+    return color / 'Quality';
 }
