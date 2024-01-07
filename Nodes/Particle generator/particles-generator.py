@@ -5,41 +5,46 @@ import shutil
 import sys, os
 import re
 
+
 @dataclass
 class MacroVariable:
     name: str
 
+
 @dataclass
 class MacroFunction:
     name: str
-    params: list[str|MacroVariable|MacroFunction]
+    params: list[str | MacroVariable | MacroFunction]
+
 
 @dataclass
 class Macro:
     at: int
     len: int
-    macro: MacroVariable|MacroFunction
+    macro: MacroVariable | MacroFunction
+
 
 def split_params(param_string: str):
     params: list[str] = []
     bracket_level = 0
-    current_param = ''
+    current_param = ""
     for char in param_string:
-        if char == '(':
+        if char == "(":
             bracket_level += 1
-        elif char == ')':
+        elif char == ")":
             bracket_level -= 1
-        elif char == ',' and bracket_level == 0:
+        elif char == "," and bracket_level == 0:
             params.append(current_param.strip())
-            current_param = ''
+            current_param = ""
             continue
         current_param = current_param + char
     if current_param:
         params.append(current_param.strip())
     return params
 
+
 def parse_macro(macro_string: str):
-    if macro_string[0] == '$':
+    if macro_string[0] == "$":
         macro_string = macro_string[1:]
     if "(" not in macro_string:
         return MacroVariable(macro_string.strip())
@@ -50,8 +55,10 @@ def parse_macro(macro_string: str):
     params = [p.strip() for p in params]
     return MacroFunction(func_name, params)
 
+
 def is_name_compatible(char: str):
-    return char.isalnum() or char == '_'
+    return char.isalnum() or char == "_"
+
 
 def get_macro_string(line: str):
     bracket_level = 0
@@ -59,31 +66,32 @@ def get_macro_string(line: str):
     is_function = False
     i = 0
     for char in line:
-        if not (is_name or is_function) and char != ' ':
+        if not (is_name or is_function) and char != " ":
             i -= 1
             break
-        if not (is_name_compatible(char) or char == '$'):
+        if not (is_name_compatible(char) or char == "$"):
             is_name = False
-        if not is_function and char == ')':
+        if not is_function and char == ")":
             break
         i += 1
-        if char == '(':
+        if char == "(":
             bracket_level += 1
             is_function = True
-        if char == ')':
+        if char == ")":
             bracket_level -= 1
             if bracket_level == 0:
                 break
     return line[0:i]
 
+
 def get_macros_alt(line: str):
-    if '$' not in line:
+    if "$" not in line:
         return line
-    macros: list[MacroVariable|MacroFunction] = []
+    macros: list[MacroVariable | MacroFunction] = []
     i = 0
     while i < len(line):
         char = line[i]
-        if char == '$':
+        if char == "$":
             at = i
             macro_string = get_macro_string(line[i:])
             i += len(macro_string)
@@ -100,10 +108,12 @@ def get_macros_alt(line: str):
             i += 1
     return macros
 
+
 def get_macros(line: str) -> list[Macro]:
-    if '$' not in line:
+    if "$" not in line:
         return
     return get_macros_alt(line)
+
 
 def print_macros(text: str):
     macros = get_macros(text)
@@ -117,17 +127,18 @@ def print_macros(text: str):
                 macro_i += 1
         except:
             pass
-        if text[i] == ' ':
-            sys.stdout.write('␣')
+        if text[i] == " ":
+            sys.stdout.write("␣")
         else:
             sys.stdout.write(text[i])
 
-def extract_snippets(text: str) -> list[str|MacroVariable|MacroFunction]:
+
+def extract_snippets(text: str) -> list[str | MacroVariable | MacroFunction]:
     macros = get_macros(text)
     last_index = 0
     snippets = []
     for macro in macros:
-        extract = text[last_index:macro.at]
+        extract = text[last_index : macro.at]
         last_index = macro.at + macro.len
         snippets.append(extract)
         snippets.append(macro.macro)
@@ -135,36 +146,41 @@ def extract_snippets(text: str) -> list[str|MacroVariable|MacroFunction]:
     snippets.append(extract)
     return snippets
 
+
 def extract_signature(inp: str) -> tuple[str, list[str]]:
-    name , param_string = inp.split("(", 1)
+    name, param_string = inp.split("(", 1)
     param_string = param_string[:-1]
     params = [p.strip() for p in param_string.split(",")]
     return (name, params)
 
+
 def convert_function(macro: MacroFunction, inp: str, out: str, func: str):
-    name_in , params_in = extract_signature(inp)
-    name_out , params_out = extract_signature(out)
+    name_in, params_in = extract_signature(inp)
+    name_out, params_out = extract_signature(out)
     params_output = []
     for i in range(len(macro.params)):
         param = macro.params[i]
         if params_in[i] not in params_out:
-            func = re.sub(r'\b'+params_in[i]+r'\b', param, func)
+            func = re.sub(r"\b" + params_in[i] + r"\b", param, func)
             continue
         params_output.append(param)
     for i, p in enumerate(params_out):
         if len(params_output) == i:
             params_output.append(p)
-    return f"{macro.name}({", ".join(params_output)})" , name_out ,func
+    return f"{macro.name}({", ".join(params_output)})", name_out, func
+
 
 def parse_snippets(
-        snippets: list[str|MacroVariable|MacroFunction], 
-        variables: dict[str,str] = {},
-        functions: dict[str,list[str]] = {},
-        defines: list[str] = []
-    ):
+    snippets: list[str | MacroVariable | MacroFunction],
+    variables: dict[str, str] = {},
+    functions: dict[str, list[str]] = {},
+    defines: list[str] = [],
+):
     output = ""
     output_functions = ""
-    f_names = [[extract_signature(f)[0],len(extract_signature(f)[1])] for f in functions]
+    f_names = [
+        [extract_signature(f)[0], len(extract_signature(f)[1])] for f in functions
+    ]
     used_signatures = {}
     define_stack = []
     is_off_define = False
@@ -198,31 +214,42 @@ def parse_snippets(
             else:
                 signature = f"{snip.name}({", ".join(snip.params)})"
                 if signature in used_signatures:
-                    call , name , function = used_signatures[signature]
+                    call, name, function = used_signatures[signature]
                     output += call
                 else:
                     snip_name = [snip.name, len(snip.params)]
                     try:
                         f_index = f_names.index(snip_name)
-                        call , name , function = convert_function(
+                        call, name, function = convert_function(
                             snip,
                             list(functions.keys())[f_index],
                             list(functions.values())[f_index][0],
-                            list(functions.values())[f_index][1]
+                            list(functions.values())[f_index][1],
                         )
                         if len(function) > 0:
-                            sig_hash = str(int(hashlib.sha1(signature.encode("utf-8")).hexdigest(), 16) % (10 ** 8))
+                            sig_hash = str(
+                                int(
+                                    hashlib.sha1(signature.encode("utf-8")).hexdigest(),
+                                    16,
+                                )
+                                % (10**8)
+                            )
                         else:
                             sig_hash = ""
-                        call = re.sub(r'\b'+snip.name+r'\b', f"{name}{sig_hash}", call)
-                        function = re.sub(r'\b'+snip.name+r'\b', f"{name}{sig_hash}", function)
+                        call = re.sub(
+                            r"\b" + snip.name + r"\b", f"{name}{sig_hash}", call
+                        )
+                        function = re.sub(
+                            r"\b" + snip.name + r"\b", f"{name}{sig_hash}", function
+                        )
                         output += call
                         output_functions += function
-                        used_signatures[signature] = (call, name , function)
+                        used_signatures[signature] = (call, name, function)
                     except:
                         print(f"WARNING: {snip.name} is not a valid macro function")
     output = output_functions + "\n" + output
     return output
+
 
 VARIABLES_2D = {
     "vec": "vec2",
@@ -231,18 +258,20 @@ VARIABLES_2D = {
     "UV": "UV",
     "Point2D": "Point2D",
     "Direction": "Direction2D",
-    "Particle": "Particle2D"
+    "Particle": "Particle2D",
 }
 FUNCTIONS_2D = {
-    "vec(a)"            : ("vec2(a)", ""),
-    "vec(a, b)"         : ("vec2(a, b)", ""),
-    "vec(a, b, c)"      : ("vec2(a, b)", ""),
-    "vec(a, b, c, d)"   : ("vec2(a, b)", ""),
-    "vec23(a)"          : ("vec2(a)", ""),
-    "vec23(a, b, c)"    : ("vec2(a, b)", ""),
-    "vec34(a)"          : ("vec3(a)", ""),
-    "vec34(a, b, c, d)" : ("vec3(a, b, c)", ""),
-    "gradient(p, shape)": ("gradient(p)", """
+    "vec(a)": ("vec2(a)", ""),
+    "vec(a, b)": ("vec2(a, b)", ""),
+    "vec(a, b, c)": ("vec2(a, b)", ""),
+    "vec(a, b, c, d)": ("vec2(a, b)", ""),
+    "vec23(a)": ("vec2(a)", ""),
+    "vec23(a, b, c)": ("vec2(a, b)", ""),
+    "vec34(a)": ("vec3(a)", ""),
+    "vec34(a, b, c, d)": ("vec3(a, b, c)", ""),
+    "gradient(p, shape)": (
+        "gradient(p)",
+        """
 vec2 gradient(vec2 p)
 {
     float h = 0.001;
@@ -252,11 +281,10 @@ vec2 gradient(vec2 p)
            )
            / (2. * h);
 }
-"""),
+""",
+    ),
 }
-DEFINES_2D = [
-    "IS_2D"
-]
+DEFINES_2D = ["IS_2D"]
 
 VARIABLES_3D = {
     "vec": "vec3",
@@ -265,18 +293,20 @@ VARIABLES_3D = {
     "UV": "vec3",
     "Point2D": "vec3",
     "Direction": "vec3",
-    "Particle": "Particle3D"
+    "Particle": "Particle3D",
 }
 FUNCTIONS_3D = {
-    "vec(a)"            : ("vec3(a)", ""),
-    "vec(a, b)"         : ("vec3(a, b, 0)", ""),
-    "vec(a, b, c)"      : ("vec3(a, b, c)", ""),
-    "vec(a, b, c, d)"   : ("vec3(a, b, c)", ""),
-    "vec23(a)"          : ("vec3(a)", ""),
-    "vec23(a, b, c)"    : ("vec3(a, b, c)", ""),
-    "vec34(a)"          : ("vec4(a)", ""),
-    "vec34(a, b, c, d)" : ("vec4(a, b, c, d)", ""),
-    "gradient(p, shape)": ("gradient(p)", """
+    "vec(a)": ("vec3(a)", ""),
+    "vec(a, b)": ("vec3(a, b, 0)", ""),
+    "vec(a, b, c)": ("vec3(a, b, c)", ""),
+    "vec(a, b, c, d)": ("vec3(a, b, c)", ""),
+    "vec23(a)": ("vec3(a)", ""),
+    "vec23(a, b, c)": ("vec3(a, b, c)", ""),
+    "vec34(a)": ("vec4(a)", ""),
+    "vec34(a, b, c, d)": ("vec4(a, b, c, d)", ""),
+    "gradient(p, shape)": (
+        "gradient(p)",
+        """
 vec3 gradient(vec3 p)
 {
     float h = 0.001;
@@ -287,17 +317,21 @@ vec3 gradient(vec3 p)
            )
            / (2. * h);
 }
-""")
+""",
+    ),
 }
-DEFINES_3D = [
-    "IS_3D"
-]
+DEFINES_3D = ["IS_3D"]
+
 
 def read_and_parse(file: os.DirEntry[str]):
     f_in = open(file.path)
     content = f_in.read()
-    PARSED_2D = parse_snippets(extract_snippets(content), VARIABLES_2D, FUNCTIONS_2D, DEFINES_2D)
-    PARSED_3D = parse_snippets(extract_snippets(content), VARIABLES_3D, FUNCTIONS_3D, DEFINES_3D)
+    PARSED_2D = parse_snippets(
+        extract_snippets(content), VARIABLES_2D, FUNCTIONS_2D, DEFINES_2D
+    )
+    PARSED_3D = parse_snippets(
+        extract_snippets(content), VARIABLES_3D, FUNCTIONS_3D, DEFINES_3D
+    )
     WARNING = f"""\
 /* -----------------------------------------------------------------------------
  * This file was automatically generated by a Python script.
@@ -308,7 +342,7 @@ def read_and_parse(file: os.DirEntry[str]):
 """
     PARSED_2D = WARNING + PARSED_2D
     PARSED_3D = WARNING + PARSED_3D
-    return PARSED_2D , PARSED_3D
+    return PARSED_2D, PARSED_3D
 
 
 INPUT = os.path.join(os.path.dirname(__file__), "input")
@@ -324,7 +358,7 @@ for dir in os.scandir(INPUT):
     split = dir.name.split(" ", 1)
     if len(split) == 1:
         split.append("")
-    index , name = split
+    index, name = split
     DIRNAME_2D = f"8{index} Particle 2D {name}".strip()
     DIRNAME_3D = f"9{index} Particle 3D {name}".strip()
     PATH_2D = os.path.join(OUTPUT, DIRNAME_2D)
@@ -339,7 +373,7 @@ for dir in os.scandir(INPUT):
         name = file.name.replace(".clbtemp", "")
         FILE_2D = os.path.join(PATH_2D, f"{name} 2D.clbnode")
         FILE_3D = os.path.join(PATH_3D, f"{name} 3D.clbnode")
-        PARSED_2D , PARSED_3D = read_and_parse(file)
+        PARSED_2D, PARSED_3D = read_and_parse(file)
         f_2d = open(FILE_2D, "w+")
         f_3d = open(FILE_3D, "w+")
         f_2d.write(PARSED_2D)
@@ -348,7 +382,9 @@ for dir in os.scandir(INPUT):
         f_3d.close()
 
 if os.path.split(NODES_FOLDER)[-1] != "Nodes":
-    print("Stopping there because this script's directory is not in the Nodes directory")
+    print(
+        "Stopping there because this script's directory is not in the Nodes directory"
+    )
     exit()
 
 for dir in os.scandir(OUTPUT):
