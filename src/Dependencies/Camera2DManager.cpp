@@ -32,7 +32,7 @@ void hook_camera2D_events(
             if (!ImGui::GetIO().KeyAlt) // Use ALT to zoom relative to the center of the view
             {
                 auto const mouse_pos_in_view_space  = event.position;
-                auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix() * glm::vec3{mouse_pos_in_view_space, 1.f}};
+                auto const mouse_pos_in_world_space = glm::vec2{camera.transform_matrix(1.f) * glm::vec3{mouse_pos_in_view_space, 1.f}};
                 auto const rotated_mouse_in_ws      = glm::rotate(mouse_pos_in_world_space, -camera.rotation.as_radians());
 
                 camera.translation = camera.translation / zoom_variation + rotated_mouse_in_ws * (1.f - 1.f / zoom_variation);
