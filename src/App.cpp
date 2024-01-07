@@ -278,7 +278,7 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
     _project.modules_graph->render(
         render_target,
         Module::RenderParams{
-            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, delta_time, _project.camera2D.value().transform_matrix(aspect_ratio)),
+            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, delta_time, _project.camera2D.value().transform_matrix()),
             input_factory(),
             is_dirty__functor(),
             set_clean__functor(),

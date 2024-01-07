@@ -5,7 +5,9 @@ layout(location = 1) in vec2 _uv;
 out vec2      _varying_uv;
 flat out uint _particle_index;
 
+#ifdef COOLLAB_PARTICLES_3D
 uniform mat4 cool_camera_view;
+#endif
 uniform mat4 transform_matrix;
 
 layout(std430, binding = 0) buffer _positions_buffer

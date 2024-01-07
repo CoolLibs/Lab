@@ -1,10 +1,12 @@
 #include "Module_Particles.h"
 #include <Module/ShaderBased/shader_set_uniforms.h>
 #include <imgui.h>
+#include <glm/gtx/matrix_transform_2d.hpp>
 #include "Cool/Camera/Camera.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/DebugOptions/DebugOptions.h"
+#include "Cool/Dependencies/Input.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Exception/Exception.h"
 #include "Cool/File/File.h"
@@ -172,16 +174,15 @@ void Module_Particles::render(RenderParams in)
 #ifndef __APPLE__
     shader_set_uniforms(_particle_system->render_shader(), in.provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
 
-    auto const camera_2D_mat3 = glm::inverse(in.provider(Cool::Input_Camera2D{}));
-    auto const camera_2D_mat4 = glm::mat4(
-        glm::vec4(camera_2D_mat3[0], 0.f),
-        glm::vec4(camera_2D_mat3[1], 0.f),
-        glm::vec4(0.f),
-        glm::vec4(camera_2D_mat3[2][0], camera_2D_mat3[2][1], 0.f, 1.f)
-    );
+    auto const camera_2D_mat3 = glm::inverse(glm::scale(in.provider(Cool::Input_Camera2D{}), glm::vec2{in.provider(Cool::Input_AspectRatio{}), 1.f}));
+    auto const camera_2D_mat4 = glm::mat4{
+        glm::vec4{camera_2D_mat3[0], 0.f},
+        glm::vec4{camera_2D_mat3[1], 0.f},
+        glm::vec4{0.f},
+        glm::vec4{camera_2D_mat3[2][0], camera_2D_mat3[2][1], 0.f, 1.f}
+    };
     auto const& camera_3D = in.provider(*_camera_input);
 
-    _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());
     if (_particle_system->dimension() == 2)
     {
         _particle_system->render_shader().set_uniform("transform_matrix", camera_2D_mat4);
@@ -190,6 +191,7 @@ void Module_Particles::render(RenderParams in)
     {
         auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.f);
         _particle_system->render_shader().set_uniform("transform_matrix", full_camera_3D);
+        _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());
     }
     _particle_system->render();
 #endif
