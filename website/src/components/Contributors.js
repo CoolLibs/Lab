@@ -129,7 +129,7 @@ export default ({}) => {
         <Contributor
           name="Marianne Kerckhove"
           github_name="Maria30"
-          link="https://github.com/Maria30"
+          link="www.mariannekerckhove.com"
           roles={["Programmer (Particles)"]}
         />,
         <Contributor
