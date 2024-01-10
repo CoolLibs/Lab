@@ -541,7 +541,7 @@ auto gen_desired_function(
     );
 }
 
-static auto make_node_read_from_texture() -> Node
+static auto make_node_that_reads_module_texture() -> Node
 {
     return Node{
         Cool::NodeDefinitionIdentifier{
@@ -552,7 +552,7 @@ static auto make_node_read_from_texture() -> Node
     };
 }
 
-static auto make_node_definition_read_from_texture(std::string const& texture_name) -> NodeDefinition
+static auto make_node_definition_that_reads_module_texture(std::string const& texture_name) -> NodeDefinition
 {
     using fmt::literals::operator""_a;
 
@@ -602,14 +602,14 @@ auto gen_desired_function(
             node.get().definition_name()
         ));
 
-    auto const maybe_texture_name = maybe_generate_module(id, *node_definition);
+    auto const maybe_module_texture_name = maybe_generate_module(id, *node_definition);
 
     auto new_node            = Node{};
     auto new_node_definition = NodeDefinition{};
-    if (maybe_texture_name.has_value()) // We need to replace the current node with a fake node that reads an image from the given texture
+    if (maybe_module_texture_name.has_value()) // We need to replace the current node with a fake node that reads an image from the given texture
     {
-        new_node            = make_node_read_from_texture();
-        new_node_definition = make_node_definition_read_from_texture(maybe_texture_name.value());
+        new_node            = make_node_that_reads_module_texture();
+        new_node_definition = make_node_definition_that_reads_module_texture(maybe_module_texture_name.value());
         node_definition     = &new_node_definition;
         node                = new_node; // Make the reference wrapper point to our new node
     }
