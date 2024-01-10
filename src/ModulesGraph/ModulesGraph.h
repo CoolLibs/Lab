@@ -26,7 +26,6 @@ struct ModulesGraphNode {
     Cool::RenderTarget render_target{};
 
 private:
-    // TODO(Particles) Think about how we serialize this
     friend class cereal::access;
     template<class Archive>
     void serialize(Archive& archive)
@@ -46,15 +45,17 @@ public:
 
     void update(UpdateContext_Ref);
     void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
+
     void trigger_rerender_all(Cool::SetDirty_Ref);
 
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
-    auto               graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }               // TODO(Modules) Is this needed?
-    auto               regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; } // TODO(Modules) Is this needed?
-    auto               nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
+    [[nodiscard]] auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
+    [[nodiscard]] auto regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; }
+    [[nodiscard]] auto nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     /// Function called once on every frame where the time has changed.
     void on_time_changed(UpdateContext_Ref);
+    void on_time_reset();
     /// Function called once on every frame where the audio has changed.
     void on_audio_changed(UpdateContext_Ref);
 
@@ -62,8 +63,6 @@ public:
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);
 
     auto all_inputs() const -> Cool::AllInputRefsToConst;
-
-    void on_time_reset();
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
