@@ -9,12 +9,10 @@ static auto gen_all_output_indices_declarations(Cool::NodesGraph const& graph)
     -> std::string
 {
     std::stringstream res{};
-
     graph.for_each_node<Node>([&](Node const& node) {
         for (size_t i = 1; i < node.output_pins().size(); ++i)
             res << fmt::format("float {};\n", make_valid_output_index_name(node.output_pins()[i]));
     });
-
     return res.str();
 }
 
