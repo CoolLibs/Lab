@@ -1,5 +1,4 @@
 #include "Module_Particles.h"
-#include <Module/ShaderBased/shader_set_uniforms.h>
 #include <imgui.h>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include "Cool/Camera/Camera.h"
@@ -15,6 +14,7 @@
 #include "Cool/Particles/ParticleSystem.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/set_uniform.h"
+#include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 #include "Nodes/Node.h"
 #include "generate_simulation_shader_code.h"
 #include "glm/fwd.hpp"
@@ -130,7 +130,7 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
     _particle_system->simulation_shader().bind();
-    shader_set_uniforms(_particle_system->simulation_shader(), input_provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
     _particle_system->update();
 #else
     std::ignore = input_provider;
@@ -166,7 +166,7 @@ void Module_Particles::render(RenderParams in)
     }
 
 #ifndef __APPLE__
-    shader_set_uniforms(_particle_system->render_shader(), in.provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
 
     auto const camera_2D_mat3 = glm::inverse(glm::scale(in.provider(Cool::Input_Camera2D{}), glm::vec2{in.provider(Cool::Input_AspectRatio{}), 1.f}));
     auto const camera_2D_mat4 = glm::mat4{

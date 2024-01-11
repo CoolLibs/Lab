@@ -8,13 +8,13 @@
 
 namespace Lab {
 
-auto shader_set_uniforms(
+void set_uniforms_for_shader_based_module(
     Cool::OpenGL::Shader const&,
     Cool::InputProvider_Ref,
     ModuleShaderDependencyFlags const&,
     Cool::DoubleBufferedRenderTarget const&,
     Cool::Input<Cool::Camera> const&,
     Cool::NodesGraph const&
-) -> void;
+);
 
 } // namespace Lab

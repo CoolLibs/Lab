@@ -1,4 +1,4 @@
-#include "shader_set_uniforms.h"
+#include "set_uniforms_for_shader_based_module.h"
 #include <variant>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
@@ -75,7 +75,7 @@ static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const
     }
 }
 
-auto shader_set_uniforms(
+auto set_uniforms_for_shader_based_module(
     Cool::OpenGL::Shader const&             shader,
     Cool::InputProvider_Ref                 provider,
     ModuleShaderDependencyFlags const&      dependencies,

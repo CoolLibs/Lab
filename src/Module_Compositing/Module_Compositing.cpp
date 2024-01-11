@@ -1,5 +1,5 @@
 #include "Module_Compositing.h"
-#include <Module/ShaderBased/shader_set_uniforms.h>
+#include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 
 namespace Lab {
 
@@ -57,11 +57,6 @@ void Module_Compositing::imgui_show_generated_shader_code(Ui_Ref ui)
     }
 }
 
-auto Module_Compositing::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
-{
-    return Module::needs_to_rerender(check_dirty);
-};
-
 void Module_Compositing::set_render_target_size(img::Size const& size)
 {
     _feedback_double_buffer.write_target().set_size(size);
@@ -70,6 +65,8 @@ void Module_Compositing::set_render_target_size(img::Size const& size)
 
 void Module_Compositing::render(RenderParams in)
 {
+    // TODO(Performance) Render only once and then copy to the _feedback_double_buffer ?
+    // TODO(Performance) Only render on the _feedback_double_buffer when someone depends on it
     // Render on the normal render target
     render_impl(in);
 
@@ -85,7 +82,7 @@ void Module_Compositing::render_impl(RenderParams in)
     if (!_pipeline.shader())
         return;
 
-    shader_set_uniforms(*_pipeline.shader(), in.provider, _dependencies, _feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(*_pipeline.shader(), in.provider, _dependencies, _feedback_double_buffer, *_camera_input, *_nodes_graph);
     _pipeline.draw();
 }
 

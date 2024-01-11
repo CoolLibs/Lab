@@ -23,7 +23,6 @@ public:
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     void imgui_show_generated_shader_code(Ui_Ref ui);
-    auto needs_to_rerender(Cool::IsDirty_Ref) const -> bool override;
 
     void reset_shader();
     void on_time_reset();
