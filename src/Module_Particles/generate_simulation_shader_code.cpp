@@ -70,15 +70,15 @@ struct CoollabContext
                 R"glsl(
 void cool_main()
 {{
-    uint     gid = gl_GlobalInvocationID.x;
+    uint gid = gl_GlobalInvocationID.x;
     Particle{N}D particle;
     particle.position     = {position_b2v};
     particle.velocity     = {velocity_b2v};
-    particle.acceleration = {acceler_zero};
+    particle.acceleration = {vecN_zero};
     particle.size         = _sizes[gid];
     particle.lifetime     = _lifetimes[gid];
     particle.lifetime_max = _lifetime_maxs[gid];
-    particle.color.x      = _colors[gid * 4];
+    particle.color.x      = _colors[gid * 4 + 0];
     particle.color.y      = _colors[gid * 4 + 1];
     particle.color.z      = _colors[gid * 4 + 2];
     particle.color.w      = _colors[gid * 4 + 3];
@@ -95,20 +95,20 @@ void cool_main()
 
     {position_v2b}
     {velocity_v2b}
-    _sizes[gid]              = particle.size;
-    _lifetimes[gid]          = particle.lifetime;
-    _lifetime_maxs[gid]      = particle.lifetime_max;
-    _colors[gid * 4]         = particle.color.x;
-    _colors[gid * 4 + 1]     = particle.color.y;
-    _colors[gid * 4 + 2]     = particle.color.z;
-    _colors[gid * 4 + 3]     = particle.color.w;
+    _sizes[gid]          = particle.size;
+    _lifetimes[gid]      = particle.lifetime;
+    _lifetime_maxs[gid]  = particle.lifetime_max;
+    _colors[gid * 4 + 0] = particle.color.x;
+    _colors[gid * 4 + 1] = particle.color.y;
+    _colors[gid * 4 + 2] = particle.color.z;
+    _colors[gid * 4 + 3] = particle.color.w;
 }})glsl",
                 "main_function_name"_a = main_function_name,
                 "position_b2v"_a       = buffer_to_vec(dimension, "_positions", "gid"),
                 "velocity_b2v"_a       = buffer_to_vec(dimension, "_velocities", "gid"),
                 "position_v2b"_a       = vec_to_buffer(dimension, "_positions", "gid", "particle.position"),
                 "velocity_v2b"_a       = vec_to_buffer(dimension, "_velocities", "gid", "particle.velocity"),
-                "acceler_zero"_a       = vec_zero(dimension),
+                "vecN_zero"_a          = vec_zero(dimension),
                 "N"_a                  = dimension
             );
         },
@@ -121,11 +121,9 @@ void cool_main()
     };
 
     auto const node_definition_callback = [&graph, &initializer_node_id](auto const& node_id, auto const&) {
-        auto maybe_node = graph.try_get_node<Node>(node_id);
-        if (maybe_node != nullptr && maybe_node->is_particle_initializer())
-        {
+        auto const* maybe_node = graph.try_get_node<Node>(node_id);
+        if (maybe_node && maybe_node->is_particle_initializer())
             initializer_node_id = node_id;
-        }
         return std::nullopt;
     };
 
@@ -137,7 +135,7 @@ void cool_main()
         node_definition_callback,
         main_function_signature,
         content,
-        []() { return std::vector<std::string>(); }
+        []() { return std::vector<std::string>{}; }
     );
 }
 
