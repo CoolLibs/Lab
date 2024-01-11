@@ -3,8 +3,6 @@
 #include <Nodes/FunctionSignature.h>
 #include <imgui.h>
 #include <algorithm>
-#include <cstddef>
-#include <iostream>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
@@ -25,7 +23,6 @@ ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::
 void ModulesGraph::update(UpdateContext_Ref update_context)
 {
     _compositing_module.update(update_context);
-
     for (auto& module_node : _particles_module_nodes)
     {
         module_node->module._nodes_graph = &_nodes_editor.graph();
@@ -75,8 +72,6 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 
 void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params)
 {
-    // TODO(Modules) Rename module.is_dirty() as module.needs_to_render
-    // TODO(Modules) Remove module.is_dirty() from module
     if (!some_module.needs_to_rerender(params.is_dirty))
         return;
     params.set_clean(some_module.needs_to_rerender_flag());
@@ -101,7 +96,6 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
     if (_compositing_module.shader_is_valid())
     {
         _compositing_module.shader().bind();
-
         for (auto const& module_node : _particles_module_nodes)
         {
             _compositing_module.shader().set_uniform_texture(
@@ -113,7 +107,6 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
                 }
             );
         }
-        // Cool::CameraShaderU::set_uniform(_compositing_module.shader(), in.provider(_camera_input), in.provider(Cool::Input_AspectRatio{}));
     }
 
     render_one_module(_compositing_module, render_target, in);
@@ -164,10 +157,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             if (!is_particle(node_definition.signature()))
                 return std::nullopt;
 
-            int const dimension = is_particle_3D(node_definition.signature()) ? 3 : 2;
-
-            auto initializer_node_id = Cool::NodeId();
-
+            int const  dimension              = is_particle_3D(node_definition.signature()) ? 3 : 2;
             auto const texture_name_in_shader = texture_name_for_module(node_definition, particles_root_node_id);
 
             if (std::none_of(
@@ -178,6 +168,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                     }
                 ))
             {
+                auto       initializer_node_id    = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
                 auto const simulation_shader_code = generate_simulation_shader_code(
                     graph,
                     particles_root_node_id,
@@ -188,10 +179,9 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 );
 
                 _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
-                    /*  .module                 =*/Module_Particles(dirty_flag_factory, initializer_node_id),
-                    /*   .texture_name_in_shader = */ texture_name_in_shader
+                    /* .module                 = */ Module_Particles(dirty_flag_factory, initializer_node_id),
+                    /* .texture_name_in_shader = */ texture_name_in_shader
                 ));
-
                 _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, false, dimension);
             }
 
@@ -225,10 +215,9 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
         }
     }
     DebugOptions::show_generated_shader_code([&] {
-        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
-        if (ImGui::BeginTabBar("MyTabBar", tab_bar_flags))
+        if (ImGui::BeginTabBar("Shaders Tabs", ImGuiTabBarFlags_None))
         {
-            if (ImGui::BeginTabItem("Compositing shader"))
+            if (ImGui::BeginTabItem("Compositing"))
             {
                 _compositing_module.imgui_show_generated_shader_code(ui);
                 ImGui::EndTabItem();
@@ -236,7 +225,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
             for (auto const& _particles_module : _particles_module_nodes)
             {
                 ImGui::PushID(&_particles_module);
-                if (ImGui::BeginTabItem("Particle shader"))
+                if (ImGui::BeginTabItem("Particle Simulation"))
                 {
                     _particles_module->module.imgui_show_generated_shader_code();
                     ImGui::EndTabItem();
