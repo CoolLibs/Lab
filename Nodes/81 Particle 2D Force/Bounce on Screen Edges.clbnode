@@ -4,18 +4,18 @@ Particle2D main(Particle2D particle)
 {
     vec3 position = vec3(particle.position, 1.);
     vec3 velocity = vec3(particle.velocity, 0.);
-    
+
     position = _camera2D_inverse * position;
     velocity = _camera2D_inverse * velocity;
 
-    if (position.x > 1.)
+    if (position.x > _aspect_ratio)
     {
-        position.x = 1.;
+        position.x = _aspect_ratio;
         velocity.x = -velocity.x;
     }
-    else if (position.x < -1.)
+    else if (position.x < -_aspect_ratio)
     {
-        position.x = -1.;
+        position.x = -_aspect_ratio;
         velocity.x = -velocity.x;
     }
     if (position.y > 1.)
@@ -32,7 +32,7 @@ Particle2D main(Particle2D particle)
     position = _camera2D * position;
     velocity = _camera2D * velocity;
 
-    particle.position = position.xy/position.z;
+    particle.position = position.xy / position.z;
     particle.velocity = velocity.xy;
 
     return particle;
