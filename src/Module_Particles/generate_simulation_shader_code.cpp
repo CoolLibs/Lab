@@ -1,8 +1,8 @@
 #include "generate_simulation_shader_code.h"
 #include <Nodes/PrimitiveType.h>
 #include <optional>
-#include "Module/ShaderBased/shader_boilerplate.h"
-#include "fmt/compile.h"
+#include "Module/ShaderBased/generate_shader_code.h"
+#include "Nodes/Node.h"
 #include "microcode_generator.h"
 
 namespace Lab {
@@ -17,7 +17,7 @@ auto generate_simulation_shader_code(
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
-    auto const content = ShaderContent{
+    auto const content = ShaderCodeBits{
         .version     = "",
         .before_main = fmt::format(FMT_COMPILE(R"glsl(
 layout(std430, binding = 0) buffer _positions_buffer

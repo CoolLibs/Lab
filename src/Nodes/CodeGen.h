@@ -8,8 +8,7 @@
 
 namespace Lab {
 
-auto make_valid_output_index_name(Cool::OutputPin const& pin)
-    -> std::string;
+auto make_valid_output_index_name(Cool::OutputPin const& pin) -> std::string;
 
 /// Creates a function with the `desired_signature` from the node connected to `pin`,
 /// or a default function if nothing is connected to `pin` and `fallback_to_a_default_function` is true.

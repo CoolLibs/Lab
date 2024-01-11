@@ -1,5 +1,5 @@
 #include "generate_compositing_shader_code.h"
-#include "Module/ShaderBased/shader_boilerplate.h"
+#include "Module/ShaderBased/generate_shader_code.h"
 
 namespace Lab {
 
@@ -9,11 +9,11 @@ auto generate_compositing_shader_code(
     Cool::GetNodeDefinition_Ref<NodeDefinition>      get_node_definition,
     Cool::InputProvider_Ref                          input_provider,
     MaybeGenerateModule const&                       maybe_generate_module,
-    std::function<std::vector<std::string>()> const& get_textures_names
+    std::function<std::vector<std::string>()> const& get_module_textures_names
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
-    auto const content = ShaderContent{
+    auto const content = ShaderCodeBits{
         .version     = "#version 410",
         .before_main = R"glsl(
 out vec4 out_Color;
@@ -52,7 +52,7 @@ void main()
         maybe_generate_module,
         signature,
         content,
-        get_textures_names
+        get_module_textures_names
     );
 }
 

@@ -1,5 +1,7 @@
-#include "shader_boilerplate.h"
+#include "generate_shader_code.h"
 #include "Cool/String/String.h"
+#include "Nodes/CodeGen.h"
+#include "Nodes/Node.h"
 
 namespace Lab {
 
@@ -39,8 +41,8 @@ auto generate_shader_code(
     Cool::InputProvider_Ref                          input_provider,
     MaybeGenerateModule const&                       maybe_generate_module,
     FunctionSignature const&                         signature,
-    ShaderContent const&                             content,
-    std::function<std::vector<std::string>()> const& get_textures_names
+    ShaderCodeBits const&                            content,
+    std::function<std::vector<std::string>()> const& get_module_textures_names
 )
     -> tl::expected<std::string, std::string>
 {
@@ -55,11 +57,11 @@ auto generate_shader_code(
     if (!main_function_name)
         return tl::make_unexpected(fmt::format("Failed to generate shader code:\n{}", main_function_name.error()));
 
-    std::string textures_uniforms;
-    auto const  tex_names = get_textures_names();
-    for (auto const& name : tex_names)
+    std::string modules_textures_uniforms;
     {
-        textures_uniforms += fmt::format("uniform sampler2D {};\n", name);
+        auto const tex_names = get_module_textures_names();
+        for (auto const& name : tex_names)
+            modules_textures_uniforms += fmt::format("uniform sampler2D {};\n", name);
     }
 
     using fmt::literals::operator""_a;
@@ -76,7 +78,7 @@ uniform mat3      _camera2D;
 uniform mat3      _camera2D_inverse;
 uniform sampler2D _previous_frame_texture;
 uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
-{textures_uniforms}
+{modules_textures_uniforms}
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
 #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
@@ -98,7 +100,7 @@ vec2 to_view_space(vec2 uv)
 {main_function}
         )glsl"),
         "in_version"_a                  = content.version,
-        "textures_uniforms"_a           = textures_uniforms,
+        "modules_textures_uniforms"_a   = modules_textures_uniforms,
         "in_before_main"_a              = content.before_main,
         "output_indices_declarations"_a = gen_all_output_indices_declarations(graph),
         "helper_functions"_a            = inject_context_argument_in_all_functions(context.code(), context.function_names()),

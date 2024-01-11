@@ -12,8 +12,8 @@ auto generate_compositing_shader_code(
     Cool::NodeId const& root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>,
     Cool::InputProvider_Ref,
-    MaybeGenerateModule const&                       maybe_generate_module,
-    std::function<std::vector<std::string>()> const& get_textures_names
+    MaybeGenerateModule const&,
+    std::function<std::vector<std::string>()> const& get_module_textures_names
 ) -> tl::expected<std::string, std::string>;
 
 } // namespace Lab

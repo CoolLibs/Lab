@@ -134,8 +134,7 @@ auto valid_property_name(std::string const& name, reg::AnyId const& property_def
     );
 }
 
-auto make_valid_output_index_name(Cool::OutputPin const& pin)
-    -> std::string
+auto make_valid_output_index_name(Cool::OutputPin const& pin) -> std::string
 {
     using fmt::literals::operator""_a;
     return fmt::format(

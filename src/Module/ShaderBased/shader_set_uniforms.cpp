@@ -7,7 +7,6 @@
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Nodes/Node.h"
-#include "shader_boilerplate.h"
 
 namespace Lab {
 
