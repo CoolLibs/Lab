@@ -11,6 +11,11 @@
 
 namespace Lab {
 
+auto valid_property_name(
+    std::string const& name,
+    reg::AnyId const&  property_default_variable_id
+) -> std::string;
+
 template<typename T>
 static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const& shader, Cool::InputProvider_Ref input_provider)
 {

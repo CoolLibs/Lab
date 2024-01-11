@@ -10,20 +10,19 @@ auto generate_compositing_shader_code(
     Cool::InputProvider_Ref                          input_provider,
     MaybeGenerateModule const&                       maybe_generate_module,
     std::function<std::vector<std::string>()> const& get_textures_names
-)
-    -> tl::expected<std::string, std::string>
+) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
-    ShaderContent content{
-        .version            = "#version 410",
-        .before_main        = R"glsl(
+    auto const content = ShaderContent{
+        .version     = "#version 410",
+        .before_main = R"glsl(
 out vec4 out_Color;
 struct CoollabContext
 {
     vec2 uv;
 };
         )glsl",
-        .make_main_function = [](std::string const& main_function_name) {
+        .make_main   = [](std::string const& main_function_name) {
             return fmt::format(FMT_COMPILE(R"glsl(
 void main()
 {{
@@ -35,11 +34,11 @@ void main()
     out_Color = {main_function_name}(coollab_context, uv);
 }}
                 )glsl"),
-                               "main_function_name"_a = main_function_name);
+                                 "main_function_name"_a = main_function_name);
         },
     };
 
-    FunctionSignature signature{
+    auto const signature = FunctionSignature{
         .from  = PrimitiveType::UV,
         .to    = PrimitiveType::sRGB_StraightA, // We output sRGB and straight alpha because this is what the rest of the world expects most of the time.
         .arity = 1,

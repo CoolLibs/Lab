@@ -15,9 +15,4 @@ auto generate_simulation_shader_code(
     int dimension
 ) -> tl::expected<std::string, std::string>;
 
-auto valid_property_name(
-    std::string const& name,
-    reg::AnyId const&  property_default_variable_id
-) -> std::string;
-
 } // namespace Lab

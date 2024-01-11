@@ -16,9 +16,4 @@ auto generate_compositing_shader_code(
     std::function<std::vector<std::string>()> const& get_textures_names
 ) -> tl::expected<std::string, std::string>;
 
-auto valid_property_name(
-    std::string const& name,
-    reg::AnyId const&  property_default_variable_id
-) -> std::string;
-
 } // namespace Lab

@@ -16,7 +16,7 @@ using MakeShaderMain = std::function<std::string(std::string const& main_functio
 struct ShaderContent {
     std::string    version;
     std::string    before_main;
-    MakeShaderMain make_main_function;
+    MakeShaderMain make_main;
 };
 
 auto generate_shader_code(
@@ -29,10 +29,5 @@ auto generate_shader_code(
     ShaderContent const&,
     std::function<std::vector<std::string>()> const& get_textures_names
 ) -> tl::expected<std::string, std::string>;
-
-auto valid_property_name(
-    std::string const& name,
-    reg::AnyId const&  property_default_variable_id
-) -> std::string;
 
 } // namespace Lab

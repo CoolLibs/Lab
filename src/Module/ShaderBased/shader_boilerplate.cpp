@@ -102,7 +102,7 @@ vec2 to_view_space(vec2 uv)
         "in_before_main"_a              = content.before_main,
         "output_indices_declarations"_a = gen_all_output_indices_declarations(graph),
         "helper_functions"_a            = inject_context_argument_in_all_functions(context.code(), context.function_names()),
-        "main_function"_a               = content.make_main_function(*main_function_name)
+        "main_function"_a               = content.make_main(*main_function_name)
     );
 }
 

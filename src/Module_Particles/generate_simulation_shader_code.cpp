@@ -17,9 +17,9 @@ auto generate_simulation_shader_code(
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
-    ShaderContent content{
-        .version            = "",
-        .before_main        = fmt::format(FMT_COMPILE(R"glsl(
+    auto const content = ShaderContent{
+        .version     = "",
+        .before_main = fmt::format(FMT_COMPILE(R"glsl(
 layout(std430, binding = 0) buffer _positions_buffer
 {{
     float _positions[];
@@ -64,8 +64,8 @@ struct CoollabContext
 }};
 
 )glsl"),
-                                          "N"_a = dimension),
-        .make_main_function = [&](std::string const& main_function_name) {
+                                   "N"_a = dimension),
+        .make_main   = [&](std::string const& main_function_name) {
             return fmt::format(
                 R"glsl(
 void cool_main()
@@ -114,13 +114,13 @@ void cool_main()
         },
     };
 
-    FunctionSignature const main_function_signature{
+    auto const main_function_signature = FunctionSignature{
         .from  = primitive_type_particle(dimension),
         .to    = primitive_type_particle(dimension),
         .arity = 1,
     };
 
-    auto node_definition_callback = [&graph, &initializer_node_id](auto const& node_id, auto const&) {
+    auto const node_definition_callback = [&graph, &initializer_node_id](auto const& node_id, auto const&) {
         auto maybe_node = graph.try_get_node<Node>(node_id);
         if (maybe_node != nullptr && maybe_node->is_particle_initializer())
         {
