@@ -11,17 +11,12 @@
 
 namespace Lab {
 
-using ShaderMainMaker = std::function<
-    std::string(
-        std::string const& main_function_name
-    )>;
+using MakeShaderMain = std::function<std::string(std::string const& main_function_name)>;
 
 struct ShaderContent {
-    std::string     version;
-    std::string     uniforms;
-    std::string     includes;
-    std::string     structuration;
-    ShaderMainMaker main;
+    std::string    version;
+    std::string    before_main;
+    MakeShaderMain make_main_function;
 };
 
 auto generate_shader_code(

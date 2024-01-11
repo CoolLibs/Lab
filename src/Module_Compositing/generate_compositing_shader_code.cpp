@@ -15,34 +15,27 @@ auto generate_compositing_shader_code(
 {
     using fmt::literals::operator""_a;
     ShaderContent content{
-        .version       = "#version 410",
-        .uniforms      = R"glsl(
-            out vec4 out_Color;
+        .version            = "#version 410",
+        .before_main        = R"glsl(
+out vec4 out_Color;
+struct CoollabContext
+{
+    vec2 uv;
+};
         )glsl",
-        .includes      = R"glsl()glsl",
-        .structuration = R"glsl(
-            struct CoollabContext
-            {
-                vec2 uv;
-            };
-        )glsl",
-        .main          = [](
-                    std::string const& main_function_name
-                ) -> std::string {
-            return fmt::format(
-                FMT_COMPILE(R"glsl(
-                    void main()
-                    {{
-                        vec2 uv = normalized_uv();
-                        vec3 tmp = _camera2D * vec3(uv, 1.);
-                        uv = tmp.xy / tmp.z;
-                        CoollabContext coollab_context;
-                        coollab_context.uv = uv;
-                        out_Color = {main_function_name}(coollab_context, uv);
-                    }}
+        .make_main_function = [](std::string const& main_function_name) {
+            return fmt::format(FMT_COMPILE(R"glsl(
+void main()
+{{
+    vec2 uv = normalized_uv();
+    vec3 tmp = _camera2D * vec3(uv, 1.);
+    uv = tmp.xy / tmp.z;
+    CoollabContext coollab_context;
+    coollab_context.uv = uv;
+    out_Color = {main_function_name}(coollab_context, uv);
+}}
                 )glsl"),
-                "main_function_name"_a = main_function_name
-            );
+                               "main_function_name"_a = main_function_name);
         },
     };
 

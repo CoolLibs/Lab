@@ -4,37 +4,74 @@
 #include "Module/ShaderBased/shader_boilerplate.h"
 #include "fmt/compile.h"
 #include "microcode_generator.h"
-#include "shader_code_constants.h"
 
 namespace Lab {
 
-auto constexpr structuration_template = FMT_COMPILE(R"glsl(
-{buffers}
-struct Particle{n}D
+auto generate_simulation_shader_code(
+    Cool::NodesGraph const&                     graph,
+    Cool::NodeId const&                         root_node_id,
+    Cool::NodeId&                               initializer_node_id,
+    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+    Cool::InputProvider_Ref                     input_provider,
+    int                                         dimension
+) -> tl::expected<std::string, std::string>
+{
+    using fmt::literals::operator""_a;
+    ShaderContent content{
+        .version            = "",
+        .before_main        = fmt::format(FMT_COMPILE(R"glsl(
+layout(std430, binding = 0) buffer _positions_buffer
 {{
-    vec{n} position;
-    vec{n} velocity;
-    vec{n} acceleration;
-    float size;
-    float lifetime;
-    float lifetime_max;
-    vec4 color;
-    uint id;
+    float _positions[];
+}};
+layout(std430, binding = 1) buffer _velocities_buffer
+{{
+    float _velocities[];
+}};
+layout(std430, binding = 2) buffer _sizes_buffer
+{{
+    float _sizes[];
+}};
+layout(std430, binding = 3) buffer _lifetimes_buffer
+{{
+    float _lifetimes[];
+}};
+layout(std430, binding = 4) buffer _lifetime_maxs_buffer
+{{
+    float _lifetime_maxs[];
+}};
+layout(std430, binding = 5) buffer _colors_buffer
+{{
+    float _colors[];
+}};
+
+struct Particle{N}D
+{{
+    vec{N} position;
+    vec{N} velocity;
+    vec{N} acceleration;
+    float  size;
+    float  lifetime;
+    float  lifetime_max;
+    vec4   color;
+    uint   id;
 }};
 
 struct CoollabContext
 {{
     vec2 uv;
-    Particle{n}D particle;
+    Particle{N}D particle;
 }};
 
-)glsl");
-
-auto constexpr main_template = FMT_COMPILE(R"glsl(
+)glsl"),
+                                          "N"_a = dimension),
+        .make_main_function = [&](std::string const& main_function_name) {
+            return fmt::format(
+                R"glsl(
 void cool_main()
 {{
     uint     gid = gl_GlobalInvocationID.x;
-    Particle{n}D particle;
+    Particle{N}D particle;
     particle.position     = {position_b2v};
     particle.velocity     = {velocity_b2v};
     particle.acceleration = {acceler_zero};
@@ -65,43 +102,14 @@ void cool_main()
     _colors[gid * 4 + 1]     = particle.color.y;
     _colors[gid * 4 + 2]     = particle.color.z;
     _colors[gid * 4 + 3]     = particle.color.w;
-}}
-)glsl");
-
-//
-
-auto generate_simulation_shader_code(
-    Cool::NodesGraph const&                     graph,
-    Cool::NodeId const&                         root_node_id,
-    Cool::NodeId&                               initializer_node_id,
-    Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Cool::InputProvider_Ref                     input_provider,
-    int                                         dimension
-)
-    -> tl::expected<std::string, std::string>
-{
-    using fmt::literals::operator""_a;
-    ShaderContent content{
-        .version       = version,
-        .uniforms      = uniforms,
-        .includes      = includes,
-        .structuration = fmt::format(
-            structuration_template,
-            "buffers"_a = buffers,
-            "n"_a       = dimension
-        ),
-        .main = [&](
-                    std::string const& main_function_name
-                ) -> std::string {
-            return fmt::format(
-                main_template,
+}})glsl",
                 "main_function_name"_a = main_function_name,
                 "position_b2v"_a       = buffer_to_vec(dimension, "_positions", "gid"),
                 "velocity_b2v"_a       = buffer_to_vec(dimension, "_velocities", "gid"),
                 "position_v2b"_a       = vec_to_buffer(dimension, "_positions", "gid", "particle.position"),
                 "velocity_v2b"_a       = vec_to_buffer(dimension, "_velocities", "gid", "particle.velocity"),
                 "acceler_zero"_a       = vec_zero(dimension),
-                "n"_a                  = dimension
+                "N"_a                  = dimension
             );
         },
     };
