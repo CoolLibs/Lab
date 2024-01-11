@@ -76,7 +76,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
             };
 
             // TODO(Particles): compute_dependencies (parent class with Compositing ?)
-            compute_dependencies();
+            _dependencies.compute_dependencies(_shader_code);
         }
     }
     catch (Cool::Exception const& e)
@@ -135,12 +135,6 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
 #else
     std::ignore = input_provider;
 #endif
-}
-
-void Module_Particles::compute_dependencies()
-{
-    auto const code = Cool::String::remove_comments(_shader_code);
-    _dependencies.compute_dependencies(code);
 }
 
 void Module_Particles::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* update_ctx */) const

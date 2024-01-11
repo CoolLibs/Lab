@@ -1,16 +1,5 @@
 #include "Module_Compositing.h"
-#include <Cool/Nodes/GetNodeDefinition_Ref.h>
-#include <Cool/String/String.h>
-#include <Dependencies/UpdateContext_Ref.h>
 #include <Module/ShaderBased/shader_set_uniforms.h>
-#include <Nodes/Node.h>
-#include <Nodes/NodeDefinition.h>
-#include <imgui.h>
-#include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
-#include "Cool/ColorSpaces/ColorSpace.h"
-#include "Cool/Gpu/TextureLibrary_FromFile.h"
-#include "Cool/StrongTypes/set_uniform.h"
-#include "generate_compositing_shader_code.h"
 
 namespace Lab {
 
@@ -44,17 +33,10 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
         return;
     }
 
-    _shader_code = *shader_code;
-
+    _shader_code         = *shader_code;
     auto const maybe_err = _pipeline.compile(_shader_code);
     log_shader_error(maybe_err);
-    compute_dependencies();
-}
-
-void Module_Compositing::compute_dependencies()
-{
-    auto const code = Cool::String::remove_comments(_shader_code);
-    _dependencies.compute_dependencies(code);
+    _dependencies.compute_dependencies(_shader_code);
 }
 
 void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& maybe_err) const
@@ -66,13 +48,11 @@ void Module_Compositing::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* upd
 {
 }
 
-void Module_Compositing::imgui_show_generated_shader_code(Ui_Ref ui) const
+void Module_Compositing::imgui_show_generated_shader_code(Ui_Ref ui)
 {
     if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
     {
-        const auto maybe_err = _pipeline.compile(_shader_code);
-        log_shader_error(maybe_err);
-
+        set_shader_code(_shader_code);
         ui.dirty_setter()(needs_to_rerender_flag());
     }
 }

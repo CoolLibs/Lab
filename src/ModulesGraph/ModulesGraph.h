@@ -1,4 +1,5 @@
 #pragma once
+#include "Cool/Nodes/Editor.h"
 #include "Cool/View/GizmoManager.h"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Particles/Module_Particles.h"
@@ -78,7 +79,7 @@ private:
     Cool::DirtyFlag           _rerender_all_flag{};
     Cool::Input<Cool::Camera> _camera_input{}; // TODO(Modules) Does it belong here?
 
-    Module_Compositing                             _compositing_module{};
+    mutable Module_Compositing                     _compositing_module{};
     std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)
 
 private:

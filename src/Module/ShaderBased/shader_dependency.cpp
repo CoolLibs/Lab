@@ -20,8 +20,9 @@ auto ModuleShaderDependencyFlags::reset() -> void
     depends_on_audio_waveform = false;
     depends_on_audio_spectrum = false;
 }
-auto ModuleShaderDependencyFlags::compute_dependencies(std::string const& shader_code) -> void
+auto ModuleShaderDependencyFlags::compute_dependencies(std::string shader_code) -> void
 {
+    shader_code               = Cool::String::remove_comments(shader_code);
     depends_on_time           = contains_two_or_more("_time", shader_code);
     depends_on_audio_volume   = contains_two_or_more("_audio_volume", shader_code);
     depends_on_audio_waveform = contains_two_or_more("_audio_waveform", shader_code);

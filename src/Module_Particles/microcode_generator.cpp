@@ -58,8 +58,7 @@ auto vec_to_buffer(int dimension, std::string const& buffer_name, std::string co
 auto vec_zero(int dimension) -> std::string
 {
     assert(2 <= dimension && dimension <= 4);
-    using fmt::literals::operator""_a;
-    return fmt::format("vec{n}(0.)", "n"_a = dimension);
+    return fmt::format("vec{}(0.)", dimension);
 }
 
 }; // namespace Lab

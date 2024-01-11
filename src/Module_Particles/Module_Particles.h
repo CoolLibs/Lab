@@ -34,13 +34,12 @@ public:
     void on_time_reset();
 
     [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }
-    [[nodiscard]] auto depends_on_audio() const -> bool { return _dependencies.depends_on_audio_volume || _dependencies.depends_on_audio_waveform || _dependencies.depends_on_audio_spectrum; }
+    [[nodiscard]] auto depends_on_audio() const -> bool { return _dependencies.depends_on_audio(); }
 
 private:
     void render(RenderParams) override;
     void update_particles(Cool::InputProvider_Ref);
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
-    void compute_dependencies();
     void update_particles_count_ifn(UpdateContext_Ref);
     auto desired_particles_count() const -> size_t;
     void log_simulation_shader_error(Cool::OptionalErrorMessage const&) const;
