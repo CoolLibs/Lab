@@ -50,7 +50,7 @@ void Module_Compositing::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* upd
 
 void Module_Compositing::imgui_show_generated_shader_code(Ui_Ref ui)
 {
-    if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{ImGui::GetWindowWidth() - 10, ImGui::GetWindowSize().y - 35}))
+    if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{-1.f, -1.f}))
     {
         set_shader_code(_shader_code);
         ui.dirty_setter()(needs_to_rerender_flag());
