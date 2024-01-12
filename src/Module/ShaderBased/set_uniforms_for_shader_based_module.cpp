@@ -1,22 +1,17 @@
 #include "set_uniforms_for_shader_based_module.h"
-#include <variant>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
-#include "Cool/Dependencies/Input.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Nodes/Node.h"
 
 namespace Lab {
 
-auto valid_property_name(
-    std::string const& name,
-    reg::AnyId const&  property_default_variable_id
-) -> std::string;
+auto valid_property_name(std::string const& name, reg::AnyId const& property_default_variable_id) -> std::string;
 
 template<typename T>
-static void send_uniform(Cool::Input<T> const& input, Cool::OpenGL::Shader const& shader, Cool::InputProvider_Ref input_provider)
+static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T> const& input, Cool::InputProvider_Ref input_provider)
 {
     auto const value = [&] {
         if constexpr (std::is_same_v<T, Cool::Color>)
@@ -91,7 +86,6 @@ auto set_uniforms_for_shader_based_module(
     shader.set_uniform("_aspect_ratio", provider(Cool::Input_AspectRatio{}));
     shader.set_uniform("_inverse_aspect_ratio", 1.f / provider(Cool::Input_AspectRatio{}));
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
-
     shader.set_uniform("_time", provider(Cool::Input_Time{}));
     shader.set_uniform("_delta_time", provider(Cool::Input_DeltaTime{}));
 
@@ -116,7 +110,7 @@ auto set_uniforms_for_shader_based_module(
         for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {
-                send_uniform(value_input, shader, provider);
+                set_uniform(shader, value_input, provider);
             },
                        value_input);
         }

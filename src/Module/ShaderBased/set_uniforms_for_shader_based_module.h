@@ -1,9 +1,8 @@
 #pragma once
-
+#include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Gpu/OpenGL/Shader.h"
 #include "Cool/Nodes/NodesGraph.h"
-#include "Module/Module.h"
 #include "shader_dependency.h"
 
 namespace Lab {
