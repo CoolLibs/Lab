@@ -7,7 +7,7 @@
 #include "Cool/Nodes/NodesGraph.h"
 #include "Cool/Particles/ParticleSystem.h"
 #include "Module/Module.h"
-#include "Module/ShaderBased/shader_dependency.h"
+#include "Module/ModuleDependencies.h"
 
 namespace Lab {
 class Module_Particles : public Module {
@@ -33,8 +33,8 @@ public:
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
     void on_time_reset();
 
-    [[nodiscard]] auto depends_on_time() const -> bool { return _dependencies.depends_on_time; }
-    [[nodiscard]] auto depends_on_audio() const -> bool { return _dependencies.depends_on_audio(); }
+    [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on.time; }
+    [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on.audio(); }
 
 private:
     void render(RenderParams) override;
@@ -45,12 +45,10 @@ private:
     void log_simulation_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:
-    mutable std::string         _shader_code{};
-    mutable Cool::MessageSender _simulation_shader_error_sender{};
-    bool                        _needs_to_update_particles{true};
-
-    ModuleShaderDependencyFlags _dependencies; // TODO(Particles) Two dependencies, one for each shader
-
+    mutable std::string                         _shader_code{};
+    mutable Cool::MessageSender                 _simulation_shader_error_sender{};
+    bool                                        _needs_to_update_particles{true};
+    ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader
     Cool::NodeId                                _initializer_id{};
     mutable std::optional<Cool::ParticleSystem> _particle_system;
 

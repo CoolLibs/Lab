@@ -17,7 +17,7 @@ void Module_Compositing::reset_shader()
     _pipeline.reset();            // Make sure the shader will be empty if the compilation fails.
     _shader_error_sender.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
     _shader_code = "";
-    _dependencies.reset();
+    _depends_on  = {};
 }
 
 void Module_Compositing::on_time_reset()
@@ -36,7 +36,7 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     _shader_code         = *shader_code;
     auto const maybe_err = _pipeline.compile(_shader_code);
     log_shader_error(maybe_err);
-    _dependencies.compute_dependencies(_shader_code);
+    _depends_on = compute_dependencies(_shader_code);
 }
 
 void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& maybe_err) const
@@ -82,7 +82,7 @@ void Module_Compositing::render_impl(RenderParams in)
     if (!_pipeline.shader())
         return;
 
-    set_uniforms_for_shader_based_module(*_pipeline.shader(), in.provider, _dependencies, _feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(*_pipeline.shader(), in.provider, _depends_on, _feedback_double_buffer, *_camera_input, *_nodes_graph);
     _pipeline.draw();
 }
 

@@ -76,7 +76,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
             };
 
             // TODO(Particles): compute_dependencies (parent class with Compositing ?)
-            _dependencies.compute_dependencies(_shader_code);
+            _depends_on = compute_dependencies(_shader_code);
         }
     }
     catch (Cool::Exception const& e)
@@ -130,7 +130,7 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
     _particle_system->simulation_shader().bind();
-    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
     _particle_system->update();
 #else
     std::ignore = input_provider;
@@ -164,7 +164,7 @@ void Module_Particles::render(RenderParams in)
     }
 
 #ifndef __APPLE__
-    set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _dependencies, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
 
     auto const camera_2D_mat3 = glm::inverse(glm::scale(in.provider(Cool::Input_Camera2D{}), glm::vec2{in.provider(Cool::Input_AspectRatio{}), 1.f}));
     auto const camera_2D_mat4 = glm::mat4{

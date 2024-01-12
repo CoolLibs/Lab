@@ -73,7 +73,7 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T> const
 auto set_uniforms_for_shader_based_module(
     Cool::OpenGL::Shader const&             shader,
     Cool::InputProvider_Ref                 provider,
-    ModuleShaderDependencyFlags const&      dependencies,
+    ModuleDependencies const&               depends_on,
     Cool::DoubleBufferedRenderTarget const& feedback_double_buffer,
     Cool::Input<Cool::Camera> const&        camera_input,
     Cool::NodesGraph const&                 nodes_graph
@@ -89,11 +89,11 @@ auto set_uniforms_for_shader_based_module(
     shader.set_uniform("_time", provider(Cool::Input_Time{}));
     shader.set_uniform("_delta_time", provider(Cool::Input_DeltaTime{}));
 
-    if (dependencies.depends_on_audio_volume)
+    if (depends_on.audio_volume)
         shader.set_uniform("_audio_volume", provider(Cool::Input_Audio{}).volume());
-    if (dependencies.depends_on_audio_waveform)
+    if (depends_on.audio_waveform)
         shader.set_uniform_texture1D("_audio_waveform", provider(Cool::Input_Audio{}).waveform_texture().id());
-    if (dependencies.depends_on_audio_spectrum)
+    if (depends_on.audio_spectrum)
         shader.set_uniform_texture1D("_audio_spectrum", provider(Cool::Input_Audio{}).spectrum_texture().id());
 
     shader.set_uniform_texture(
