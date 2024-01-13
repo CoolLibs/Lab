@@ -1,37 +1,32 @@
 #include "Module_Particles.h"
-#include <imgui.h>
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include "Cool/Camera/Camera.h"
-#include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
-#include "Cool/ColorSpaces/ColorSpace.h"
-#include "Cool/DebugOptions/DebugOptions.h"
+// #include "Cool/DebugOptions/DebugOptions.h"
 #include "Cool/Dependencies/Input.h"
 #include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Exception/Exception.h"
 #include "Cool/File/File.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Log/ToUser.h"
-#include "Cool/Particles/ParticleSystem.h"
-#include "Cool/String/String.h"
-#include "Cool/StrongTypes/set_uniform.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 #include "Nodes/Node.h"
-#include "generate_simulation_shader_code.h"
-#include "glm/fwd.hpp"
 
 namespace Lab {
 
 Module_Particles::Module_Particles()
 {
 #ifdef __APPLE__
-    Cool::Log::ToUser::error("Particles", "Particles are not supported on macOS for now.");
+    Cool::Log::ToUser::error("Particles", "Particles are not supported on MacOS for now.");
 #endif
 }
 
-Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId initilizer_id)
+Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId const& initializer_node_id)
     : Module{"Particles", dirty_flag_factory}
-    , _initializer_id(initilizer_id)
+    , _initializer_node_id{initializer_node_id}
 {
+#ifdef __APPLE__
+    Cool::Log::ToUser::error("Particles", "Particles are not supported on macOS for now.");
+#endif
 }
 
 void Module_Particles::on_time_reset()
@@ -93,7 +88,7 @@ auto Module_Particles::desired_particles_count() const -> size_t
     if (!_nodes_graph)
         return default_particles_count;
 
-    auto const* maybe_node = _nodes_graph->try_get_node<Node>(_initializer_id);
+    auto const* maybe_node = _nodes_graph->try_get_node<Node>(_initializer_node_id);
     if (!maybe_node)
         return default_particles_count;
     return maybe_node->particles_count().value_or(default_particles_count);

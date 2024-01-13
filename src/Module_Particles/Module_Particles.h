@@ -1,6 +1,4 @@
 #pragma once
-#include <cstddef>
-#include <optional>
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
@@ -13,7 +11,7 @@ namespace Lab {
 class Module_Particles : public Module {
 public:
     Module_Particles();
-    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::NodeId);
+    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::NodeId const& initializer_node_id);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
     Module_Particles(Module_Particles&&) noexcept                    = default;
@@ -22,7 +20,7 @@ public:
 
     Cool::NodesGraph const*                 _nodes_graph{};          // TODO(Particles) Remove
     Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer; // TODO(Particles) Remove
-    Cool::Input<Cool::Camera> const*        _camera_input;
+    Cool::Input<Cool::Camera> const*        _camera_input;           // TODO(Particles) Remove
 
     void update(UpdateContext_Ref) override;
     void request_particles_to_update() { _needs_to_update_particles = true; }
@@ -45,12 +43,12 @@ private:
     void log_simulation_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:
-    mutable std::string                         _shader_code{};
-    mutable Cool::MessageSender                 _simulation_shader_error_sender{};
-    bool                                        _needs_to_update_particles{true};
-    ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader
-    Cool::NodeId                                _initializer_id{};
     mutable std::optional<Cool::ParticleSystem> _particle_system;
+    ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
+    Cool::NodeId                                _initializer_node_id{};
+    bool                                        _needs_to_update_particles{true};
+    mutable Cool::MessageSender                 _simulation_shader_error_sender{};
+    mutable std::string                         _shader_code{};
 
 private:
     // Serialization
