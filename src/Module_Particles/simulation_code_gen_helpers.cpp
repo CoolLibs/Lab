@@ -1,9 +1,4 @@
-#include "microcode_generator.h"
-#include <fmt/compile.h>
-#include <array>
-#include <cassert>
-#include <string>
-#include "fmt/core.h"
+#include "simulation_code_gen_helpers.h"
 
 namespace Lab {
 

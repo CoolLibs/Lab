@@ -1,6 +1,5 @@
-#include "microcode_generator.h"
 #if LAB_ENABLE_TESTS
-
+#include "simulation_code_gen_helpers.h"
 #include "doctest/doctest.h"
 
 TEST_CASE("buffer_to_vec")
