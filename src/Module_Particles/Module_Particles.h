@@ -26,7 +26,6 @@ public:
     void request_particles_to_update() { _needs_to_update_particles = true; }
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     void imgui_show_generated_shader_code();
-    auto needs_to_rerender(Cool::IsDirty_Ref) const -> bool override;
 
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
     void on_time_reset();

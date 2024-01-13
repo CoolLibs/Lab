@@ -1,13 +1,5 @@
 #include "Module_Particles.h"
 #include <glm/gtx/matrix_transform_2d.hpp>
-#include "Cool/Camera/Camera.h"
-// #include "Cool/DebugOptions/DebugOptions.h"
-#include "Cool/Dependencies/Input.h"
-#include "Cool/Dependencies/InputProvider_Ref.h"
-#include "Cool/Exception/Exception.h"
-#include "Cool/File/File.h"
-#include "Cool/Log/OptionalErrorMessage.h"
-#include "Cool/Log/ToUser.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 #include "Nodes/Node.h"
 
@@ -46,22 +38,24 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         else
         {
             assert(dimension == 2 || dimension == 3);
-            std::string init   = (dimension == 3 ? "#define COOLLAB_PARTICLES_3D\n" : "") + *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp");
-            std::string vertex = std::string("#version 430\n") + (dimension == 3 ? "#define COOLLAB_PARTICLES_3D\n" : "") + *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert");
-
             _particle_system = Cool::ParticleSystem{
                 dimension,
                 Cool::ParticlesShadersCode{
                     .simulation = *shader_code,
-                    .init       = init,
-                    .vertex     = vertex,
-                    .fragment   = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
+                    .init       = fmt::format(
+                        "{}{}",
+                        dimension == 3 ? "#define COOLLAB_PARTICLES_3D\n" : "",
+                        *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp")
+                    ),
+                    .vertex = fmt::format(
+                        "#version 430\n{}{}",
+                        dimension == 3 ? "#define COOLLAB_PARTICLES_3D\n" : "",
+                        *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert")
+                    ),
+                    .fragment = *Cool::File::to_string(Cool::Path::root() / "res/Particles/fragment.frag"),
                 },
                 desired_particles_count()
             };
-
-            // TODO(Particles): compute_dependencies (parent class with Compositing ?)
-            _depends_on = compute_dependencies(_shader_code);
         }
     }
     catch (Cool::Exception const& e)
@@ -69,6 +63,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         log_simulation_shader_error(e.error_message());
         return;
     }
+    _depends_on = compute_dependencies(_shader_code);
 }
 
 auto Module_Particles::desired_particles_count() const -> size_t
@@ -78,7 +73,7 @@ auto Module_Particles::desired_particles_count() const -> size_t
     if (!_nodes_graph)
         return default_particles_count;
 
-    auto const* maybe_node = _nodes_graph->try_get_node<Node>(_initializer_node_id);
+    auto const* const maybe_node = _nodes_graph->try_get_node<Node>(_initializer_node_id);
     if (!maybe_node)
         return default_particles_count;
     return maybe_node->particles_count().value_or(default_particles_count);
@@ -112,7 +107,7 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
 
 #if !defined(COOL_PARTICLES_DISABLED_REASON)
     if (DebugOptions::log_when_updating_particles())
-        Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
+        Cool::Log::ToUser::info(name(), "Updated particles");
 
     _particle_system->simulation_shader().bind();
     set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
@@ -128,14 +123,11 @@ void Module_Particles::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* updat
 
 void Module_Particles::imgui_show_generated_shader_code()
 {
-    if (Cool::ImGuiExtras::input_text_multiline("##Particles shader code", &_shader_code, ImVec2{-1.f, -1.f}))
+    if (!_particle_system)
+        return;
+    if (Cool::ImGuiExtras::input_text_multiline("##Particles simulation", &_shader_code, ImVec2{-1.f, -1.f}))
         set_simulation_shader_code(_shader_code, false, _particle_system->dimension());
 }
-
-auto Module_Particles::needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
-{
-    return Module::needs_to_rerender(check_dirty);
-};
 
 void Module_Particles::render(RenderParams in)
 {
@@ -158,7 +150,6 @@ void Module_Particles::render(RenderParams in)
         glm::vec4{0.f},
         glm::vec4{camera_2D_mat3[2][0], camera_2D_mat3[2][1], 0.f, 1.f}
     };
-    auto const& camera_3D = in.provider(*_camera_input);
 
     if (_particle_system->dimension() == 2)
     {
@@ -166,6 +157,7 @@ void Module_Particles::render(RenderParams in)
     }
     else if (_particle_system->dimension() == 3)
     {
+        auto const camera_3D      = in.provider(*_camera_input);
         auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.f);
         _particle_system->render_shader().set_uniform("transform_matrix", full_camera_3D);
         _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());
