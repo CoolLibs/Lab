@@ -10,7 +10,7 @@
 namespace Lab {
 class Module_Particles : public Module {
 public:
-    Module_Particles();
+    Module_Particles() = default;
     explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::NodeId const& initializer_node_id);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
@@ -18,9 +18,9 @@ public:
     auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
     ~Module_Particles() override                                     = default;
 
-    Cool::NodesGraph const*                 _nodes_graph{};          // TODO(Particles) Remove
-    Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer; // TODO(Particles) Remove
-    Cool::Input<Cool::Camera> const*        _camera_input;           // TODO(Particles) Remove
+    Cool::NodesGraph const*                 _nodes_graph{};            // TODO(Particles) Remove
+    Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer{}; // TODO(Particles) Remove
+    Cool::Input<Cool::Camera> const*        _camera_input{};           // TODO(Particles) Remove
 
     void update(UpdateContext_Ref) override;
     void request_particles_to_update() { _needs_to_update_particles = true; }

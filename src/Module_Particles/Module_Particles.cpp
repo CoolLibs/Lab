@@ -13,20 +13,10 @@
 
 namespace Lab {
 
-Module_Particles::Module_Particles()
-{
-#ifdef __APPLE__
-    Cool::Log::ToUser::error("Particles", "Particles are not supported on MacOS for now.");
-#endif
-}
-
 Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId const& initializer_node_id)
     : Module{"Particles", dirty_flag_factory}
     , _initializer_node_id{initializer_node_id}
 {
-#ifdef __APPLE__
-    Cool::Log::ToUser::error("Particles", "Particles are not supported on macOS for now.");
-#endif
 }
 
 void Module_Particles::on_time_reset()
@@ -120,7 +110,7 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
     if (!_particle_system)
         return;
 
-#ifndef __APPLE__
+#if !defined(COOL_PARTICLES_DISABLED_REASON)
     if (DebugOptions::log_when_updating_particles())
         Cool::Log::ToUser::info(name() + " Updating particles", "Particles updated");
 
@@ -158,7 +148,7 @@ void Module_Particles::render(RenderParams in)
         _needs_to_update_particles = false;
     }
 
-#ifndef __APPLE__
+#if !defined(COOL_PARTICLES_DISABLED_REASON)
     set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
 
     auto const camera_2D_mat3 = glm::inverse(glm::scale(in.provider(Cool::Input_Camera2D{}), glm::vec2{in.provider(Cool::Input_AspectRatio{}), 1.f}));
