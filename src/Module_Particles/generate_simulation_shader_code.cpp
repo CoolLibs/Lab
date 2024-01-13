@@ -74,7 +74,7 @@ void cool_main()
     Particle{N}D particle;
     particle.position     = {position_b2v};
     particle.velocity     = {velocity_b2v};
-    particle.acceleration = {vecN_zero};
+    particle.acceleration = vec{N}(0.);
     particle.size         = _sizes[gid];
     particle.lifetime     = _lifetimes[gid];
     particle.lifetime_max = _lifetime_maxs[gid];
@@ -108,7 +108,6 @@ void cool_main()
                 "velocity_b2v"_a       = buffer_to_vec(dimension, "_velocities", "gid"),
                 "position_v2b"_a       = vec_to_buffer(dimension, "_positions", "gid", "particle.position"),
                 "velocity_v2b"_a       = vec_to_buffer(dimension, "_velocities", "gid", "particle.velocity"),
-                "vecN_zero"_a          = vec_zero(dimension),
                 "N"_a                  = dimension
             );
         },

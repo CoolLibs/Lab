@@ -21,11 +21,4 @@ _positions[gid * 3 + 2] = particle.position.z;
 )");
 }
 
-TEST_CASE("vec_zero")
-{
-    CHECK(Lab::vec_zero(2) == "vec2(0.)");
-    CHECK(Lab::vec_zero(3) == "vec3(0.)");
-    CHECK(Lab::vec_zero(4) == "vec4(0.)");
-}
-
 #endif

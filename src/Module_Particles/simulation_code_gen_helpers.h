@@ -2,8 +2,7 @@
 
 namespace Lab {
 
-auto buffer_to_vec(int dimension, std::string const& buffer_name, std::string const& id_name) -> std::string;
-auto vec_to_buffer(int dimension, std::string const& buffer_name, std::string const& id_name, std::string const& vec_name) -> std::string;
-auto vec_zero(int dimension) -> std::string;
+auto buffer_to_vec(int dimension, std::string_view buffer_name, std::string_view idx_name) -> std::string;
+auto vec_to_buffer(int dimension, std::string_view buffer_name, std::string_view idx_name, std::string_view vec_name) -> std::string;
 
 }; // namespace Lab
