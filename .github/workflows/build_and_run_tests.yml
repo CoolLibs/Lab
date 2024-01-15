@@ -71,7 +71,7 @@ jobs:
       - name: Build
         uses: lukka/run-cmake@v3
         with:
-          cmakeListsTxtPath: ${{ github.workspace }}/tests/CMakeLists.txt
+          cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
           cmakeAppendedArgs: -D WARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D CMAKE_BUILD_TYPE=${{ matrix.build_type }} ${{ matrix.config.compiler }} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
           buildWithCMakeArgs: --config ${{ matrix.build_type }} --target ${{env.target}}
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
