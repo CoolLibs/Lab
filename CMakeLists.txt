@@ -103,8 +103,12 @@ Lab_copy_folder("res")
 Lab_copy_folder("User data Default")
 Lab_copy_folder("Nodes")
 
-if(MSVC)
-    target_compile_options(Coollab-Properties INTERFACE /bigobj) # We use too many templates apparently so we need this flag O:)
+if(WIN32)
+    if(MSVC)
+        target_compile_options(Coollab-Properties INTERFACE /bigobj) # We use too many templates apparently so we need this flag O:)
+    else()
+        target_compile_options(Coollab-Properties INTERFACE -Wa -mbig-obj) # We use too many templates apparently so we need this flag O:)
+    endif()
 endif()
 
 # ---------------------
