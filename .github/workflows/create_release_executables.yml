@@ -20,21 +20,21 @@ jobs:
               os: windows-latest,
               cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang,
               cpack_generator: NSIS,
-              installer_path: build\Coollab-Windows.exe,
+              installer_name: Coollab-Windows.exe,
             }
           - {
               name: Linux,
               os: ubuntu-latest,
               cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++,
               cpack_generator: STGZ,
-              installer_path: "${{github.workspace}}/build/Coollab-Linux.sh",
+              installer_name: Coollab-Linux.sh,
             }
           - {
               name: MacOS,
               os: macos-latest,
               cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
               cpack_generator: Bundle,
-              installer_path: "${{github.workspace}}/build/Coollab-Mac.dmg",
+              installer_name: Coollab-Mac.dmg,
             }
 
     steps:
@@ -81,4 +81,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{matrix.config.installer_path}}
+          files: ${{github.workspace}}/build/${{matrix.config.installer_name}}
