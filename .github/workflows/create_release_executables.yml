@@ -81,4 +81,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{runner.os.name != 'Windows' && github.workspace || ''}}/build/${{matrix.config.installer_name}}
+          files: ${{runner.os.name != 'Windows' && github.workspace || ''}}build/${{matrix.config.installer_name}}
