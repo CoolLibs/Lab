@@ -28,14 +28,14 @@ jobs:
           - {
               name: Linux,
               os: ubuntu-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++,
               cpack_generator: STGZ,
               installer_name: Coollab-Linux.sh,
             }
           - {
               name: MacOS,
               os: macos-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
+              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
               cpack_generator: Bundle,
               installer_name: Coollab-Mac.dmg,
             }
@@ -71,7 +71,7 @@ jobs:
         with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: ${{github.workspace}}/${{env.cmakelists_folder}}/CMakeLists.txt
-          cmakeAppendedArgs: ${{env.cmake_configure_args}} -D CPACK_GENERATOR=${{matrix.config.cpack_generator}} -D CMAKE_BUILD_TYPE=Release ${{matrix.config.cmake_configure_args}} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmakeAppendedArgs: ${{env.cmake_configure_args}} -D CPACK_GENERATOR=${{matrix.config.cpack_generator}} -G Ninja -D CMAKE_BUILD_TYPE=Release ${{matrix.config.cmake_configure_args}} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
           buildWithCMakeArgs: --config Release --target ${{env.cmake_target}}
           cmakeBuildType: Release
           buildDirectory: ${{github.workspace}}/build
