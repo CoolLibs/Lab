@@ -59,7 +59,7 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           cd vcpkg
           .\bootstrap-vcpkg.bat
-          export VCPKG_ROOT=$PWD
+          set VCPKG_ROOT=$PWD
         shell: pwsh
 
       - name: Install OpenSSL
