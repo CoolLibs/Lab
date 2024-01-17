@@ -53,9 +53,20 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1.13.0
 
-      - name: Install Windows dependencies
+      - name: Install vcpkg
         if: runner.os == 'Windows'
-        run: choco install openssl
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          cd vcpkg
+          .\bootstrap-vcpkg.bat
+          export VCPKG_ROOT=$PWD
+        shell: pwsh
+
+      - name: Install OpenSSL
+        if: runner.os == 'Windows'
+        run: |
+          .\vcpkg\vcpkg install openssl
+        shell: pwsh
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
