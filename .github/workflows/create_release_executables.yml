@@ -1,10 +1,9 @@
 name: Create release executables
 
 on:
-    push:
-      branches: [main]
-      tags:
-        - '.+'
+  push:
+    tags:
+      - '*'
 
 env:
   cmake_configure_args: -D WARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D COOLLAB_REQUIRE_ALL_FEATURES=ON
