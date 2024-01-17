@@ -18,7 +18,7 @@ jobs:
           - {
               name: Windows,
               os: windows-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang,
+              cmake_configure_args: -T ClangCL,
               cpack_generator: NSIS,
               installer_name: Coollab-Windows.exe,
             }
@@ -45,10 +45,6 @@ jobs:
       - uses: mjp41/workaround8649@c8550b715ccdc17f89c8d5c28d7a48eeff9c94a8 # Temporary workaround for Linux Clang not working atm. See https://github.com/actions/runner-images/issues/8659
         with:
           os: ${{ matrix.config.os }}
-
-      - name: Set up MSVC # NOTE: required to find clang.exe when using the Ninja generator. And we need to use Ninja in order for ccache to be able to cache stuff on Windows.
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1.13.0
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
