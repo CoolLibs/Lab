@@ -1,6 +1,10 @@
 name: Create release executables
 
-on: workflow_dispatch
+on:
+    push:
+      branches: [main]
+      tags:
+        - '*'
 
 env:
   cmake_configure_args: -D WARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D COOLLAB_REQUIRE_ALL_FEATURES=ON
@@ -57,7 +61,7 @@ jobs:
       - name: ccache
         uses: hendrikmuhs/ccache-action@main
         with:
-          key: ${{matrix.config.name}}
+          key: ${{matrix.config.name}} Clang-Release # Key name should match the one used in build_and_run_tests.yml so that we can reuse its cache.
 
       - name: Build
         uses: lukka/run-cmake@v3
