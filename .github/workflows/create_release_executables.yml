@@ -21,7 +21,7 @@ jobs:
           - {
               name: Windows,
               os: windows-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang,
               cpack_generator: NSIS,
               installer_name: Coollab-Windows.exe,
             }
@@ -53,9 +53,9 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1.13.0
 
-    #   - name: Install Windows dependencies
-    #     if: runner.os == 'Windows'
-    #     run: choco install openssl
+      - name: Install Windows dependencies
+        if: runner.os == 'Windows'
+        run: choco install openssl.light
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
