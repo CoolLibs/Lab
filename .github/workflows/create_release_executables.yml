@@ -21,21 +21,21 @@ jobs:
           - {
               name: Windows,
               os: windows-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang,
+              cmake_configure_args: -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl,
               cpack_generator: NSIS,
               installer_name: Coollab-Windows.exe,
             }
           - {
               name: Linux,
               os: ubuntu-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja,
               cpack_generator: STGZ,
               installer_name: Coollab-Linux.sh,
             }
           - {
               name: MacOS,
               os: macos-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
+              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
               cpack_generator: Bundle,
               installer_name: Coollab-Mac.dmg,
             }
@@ -48,25 +48,6 @@ jobs:
       - uses: mjp41/workaround8649@c8550b715ccdc17f89c8d5c28d7a48eeff9c94a8 # Temporary workaround for Linux Clang not working atm. See https://github.com/actions/runner-images/issues/8659
         with:
           os: ${{ matrix.config.os }}
-
-      - name: Set up MSVC # NOTE: required to find clang.exe when using the Ninja generator. And we need to use Ninja in order for ccache to be able to cache stuff on Windows.
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1.13.0
-
-      - name: Install vcpkg
-        if: runner.os == 'Windows'
-        run: |
-          git clone https://github.com/microsoft/vcpkg.git
-          cd vcpkg
-          .\bootstrap-vcpkg.bat
-          set VCPKG_ROOT=$PWD
-        shell: pwsh
-
-      - name: Install OpenSSL
-        if: runner.os == 'Windows'
-        run: |
-          .\vcpkg\vcpkg install openssl
-        shell: pwsh
 
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
@@ -86,7 +67,7 @@ jobs:
         with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: ${{github.workspace}}/${{env.cmakelists_folder}}/CMakeLists.txt
-          cmakeAppendedArgs: ${{env.cmake_configure_args}} -D CPACK_GENERATOR=${{matrix.config.cpack_generator}} -G Ninja -D CMAKE_BUILD_TYPE=Release ${{matrix.config.cmake_configure_args}} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmakeAppendedArgs: ${{env.cmake_configure_args}} -D CPACK_GENERATOR=${{matrix.config.cpack_generator}} -D CMAKE_BUILD_TYPE=Release ${{matrix.config.cmake_configure_args}} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
           buildWithCMakeArgs: --config Release --target ${{env.cmake_target}}
           cmakeBuildType: Release
           buildDirectory: ${{github.workspace}}/build
