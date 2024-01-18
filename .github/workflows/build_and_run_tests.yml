@@ -3,269 +3,86 @@ name: Build and run tests
 on:
   push:
     branches: [main]
-
   pull_request:
     branches: [main]
 
 env:
-  EXE-TARGET: Coollab
-  TESTS-TARGET: Tests-Coollab
+  cmake_configure_args: -D WARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D COOLLAB_REQUIRE_ALL_FEATURES=ON
+  cmakelists_folder: "."
+  cmake_target: Tests-Coollab
 
 jobs:
-  #-----------------------------------------------------------------------------------------------
-  Windows_MSVC_Debug:
-    name: Windows MSVC Debug
-    runs-on: windows-latest
+  build-and-run-tests:
+    name: ${{matrix.config.name}} ${{matrix.build_type}}
+    runs-on: ${{matrix.config.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {
+              name: Windows MSVC,
+              os: windows-latest,
+              cmake_configure_args: -D CMAKE_C_COMPILER=cl CMAKE_CXX_COMPILER=cl,
+            }
+          - {
+              name: Windows Clang,
+              os: windows-latest,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang,
+            }
+          - {
+              name: Linux Clang,
+              os: ubuntu-latest,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++,
+            }
+          - {
+              name: Linux GCC,
+              os: ubuntu-latest,
+              cmake_configure_args: -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++,
+            }
+          - {
+              name: MacOS Clang,
+              os: macos-latest,
+              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
+            }
+        build_type:
+          - Debug
+          - Release
+
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl -D COOLLAB_REQUIRE_ALL_FEATURES=ON
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}.exe
-
-  #-----------------------------------------------------------------------------------------------
-  Windows_MSVC_Release:
-    name: Windows MSVC Release
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
+      - uses: mjp41/workaround8649@c8550b715ccdc17f89c8d5c28d7a48eeff9c94a8 # Temporary workaround for Linux Clang not working atm. See https://github.com/actions/runner-images/issues/8659
         with:
-          submodules: recursive
+          os: ${{ matrix.config.os }}
 
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_C_COMPILER=cl -D CMAKE_CXX_COMPILER=cl -D COOLLAB_REQUIRE_ALL_FEATURES=ON
+      - name: Set up MSVC # NOTE: required to find cl.exe and clang.exe when using the Ninja generator. And we need to use Ninja in order for ccache to be able to cache stuff on Windows.
+        if: runner.os == 'Windows' && matrix.config.name != 'Windows GCC'
+        uses: ilammy/msvc-dev-cmd@v1.13.0
 
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.EXE-TARGET}}
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev
+          sudo apt-get install -y libssl-dev
+          sudo apt-get install -y libpulse-dev libasound2-dev
 
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}.exe
-
-  #-----------------------------------------------------------------------------------------------
-  Windows_Clang_Debug:
-    name: Windows Clang Debug
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@main
         with:
-          submodules: recursive
+          key: ${{matrix.config.name}}-${{matrix.build_type}}
 
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL -D COOLLAB_REQUIRE_ALL_FEATURES=ON
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}\build --config Debug --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}\build\bin\Debug\${{env.TESTS-TARGET}}.exe
-
-  #-----------------------------------------------------------------------------------------------
-  Windows_Clang_Release:
-    name: Windows Clang Release
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
+      - name: Build
+        uses: lukka/run-cmake@v3
         with:
-          submodules: recursive
+          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+          cmakeListsTxtPath: ${{github.workspace}}/${{env.cmakelists_folder}}/CMakeLists.txt
+          cmakeAppendedArgs: ${{env.cmake_configure_args}} -G Ninja -D CMAKE_BUILD_TYPE=${{matrix.build_type}} ${{matrix.config.cmake_configure_args}} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+          buildWithCMakeArgs: --config ${{matrix.build_type}} --target ${{env.cmake_target}}
+          cmakeBuildType: ${{matrix.build_type}}
+          buildDirectory: ${{github.workspace}}/build
 
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}\build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -T ClangCL -D COOLLAB_REQUIRE_ALL_FEATURES=ON
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}\build --config Release --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}\build\bin\Release\${{env.TESTS-TARGET}}.exe
-
-  #-----------------------------------------------------------------------------------------------
-  Linux_GCC_Debug:
-    name: Linux GCC Debug
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Update apt-get
-        run: sudo apt-get update -y
-
-      - name: Install glfw dependencies
-        run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev
-
-      - name: Install OpenSSL
-        run: sudo apt-get install libssl-dev
-
-      - name: Install audio libraries
-        run: sudo apt install libpulse-dev libasound2-dev
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}/build/bin/${{env.TESTS-TARGET}}
-
-  #-----------------------------------------------------------------------------------------------
-  Linux_GCC_Release:
-    name: Linux GCC Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Update apt-get
-        run: sudo apt-get update -y
-
-      - name: Install glfw dependencies
-        run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev
-
-      - name: Install OpenSSL
-        run: sudo apt-get install libssl-dev
-
-      - name: Install audio libraries
-        run: sudo apt install libpulse-dev libasound2-dev
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=gcc -D CMAKE_CXX_COMPILER=g++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}/build/bin/${{env.TESTS-TARGET}}
-
-  #-----------------------------------------------------------------------------------------------
-  Linux_Clang_Debug:
-    name: Linux Clang Debug
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Update apt-get
-        run: sudo apt-get update -y
-
-      - name: Install glfw dependencies
-        run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev
-
-      - name: Install audio libraries
-        run: sudo apt install libpulse-dev libasound2-dev
-
-      - name: Install OpenSSL
-        run: sudo apt-get install libssl-dev
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}/build/bin/${{env.TESTS-TARGET}}
-
-  #-----------------------------------------------------------------------------------------------
-  Linux_Clang_Release:
-    name: Linux Clang Release
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Update apt-get
-        run: sudo apt-get update -y
-
-      - name: Install glfw dependencies
-        run: sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev
-
-      - name: Install audio libraries
-        run: sudo apt install libpulse-dev libasound2-dev
-
-      - name: Install OpenSSL
-        run: sudo apt-get install libssl-dev
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}/build/bin/${{env.TESTS-TARGET}}
-
-  #-----------------------------------------------------------------------------------------------
-  MacOS_Clang_Debug:
-    name: MacOS Clang Debug
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Debug -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}/build --config Debug --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}/build/bin/${{env.TESTS-TARGET}}
-
-  #-----------------------------------------------------------------------------------------------
-  MacOS_Clang_Release:
-    name: MacOS Clang Release
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-
-      - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DWARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D CMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -D COOLLAB_REQUIRE_ALL_FEATURES=ON -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include
-
-      - name: Build exe
-        run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.EXE-TARGET}}
-
-      - name: Build tests
-        run: cmake --build ${{github.workspace}}/build --config Release --target ${{env.TESTS-TARGET}}
-
-      - name: Run tests
-        run: ${{github.workspace}}/build/bin/${{env.TESTS-TARGET}}
+      - name: Run
+        run: ${{github.workspace}}/build/bin/${{env.cmake_target}}
