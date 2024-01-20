@@ -5,6 +5,10 @@ import shutil
 import sys, os
 import re
 
+# TODO delete generated files that are not used anymore
+# TODO pk c'est parfois $ et parfois $$
+# TODO allow .clbtemp nodes to specify different names for 2D and 3D versions
+
 
 @dataclass
 class MacroVariable:

@@ -9,11 +9,11 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "Gravity",
+                                "Name": "Strength",
                                 "Value": 5.0,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
+                                        "Has min bound": true,
                                         "Min": 0.0,
                                         "Has max bound": false,
                                         "Max": 1.0,

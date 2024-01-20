@@ -63,6 +63,11 @@ struct CoollabContext
     Particle{N}D particle;
 }};
 
+uint particles_count()
+{{
+   return DispatchSize.x;
+}}
+
 )glsl"),
                                    "N"_a = dimension),
         .make_main   = [&](std::string const& main_function_name) {

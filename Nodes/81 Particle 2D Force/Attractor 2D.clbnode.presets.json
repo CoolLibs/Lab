@@ -2,7 +2,7 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "503bb6ed-1095-4fa7-b37f-01bb0086d22a",
+                "first": "a1c5c03c-cd58-47c7-9bd2-2167f4f2093f",
                 "second": {
                     "Name": "Default",
                     "Values": [
@@ -21,7 +21,7 @@
                                         "Use slider": false
                                     }
                                 },
-                                "Default Value": 1.0,
+                                "Default Value": 0.0,
                                 "Default Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,
@@ -37,10 +37,10 @@
                         {
                             "index": 0,
                             "data": {
-                                "Name": "Repulse out",
+                                "Name": "Use outline",
                                 "Value": true,
                                 "Metadata": {},
-                                "Default Value": true,
+                                "Default Value": false,
                                 "Default Metadata": {}
                             }
                         }

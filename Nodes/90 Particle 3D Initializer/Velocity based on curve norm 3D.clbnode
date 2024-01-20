@@ -14,9 +14,7 @@ INPUT Angle 'Orientation';
 
 vec3 main(Particle3D particle)
 {
-    uint particle_count = DispatchSize.x;
-
-    float t = float(particle.id) / float(particle_count - 1);
+    float t = float(particle.id) / float(particles_count() - 1);
 
     return getCurveNormal(particle.position, t);
 }

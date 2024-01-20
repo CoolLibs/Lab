@@ -2,14 +2,42 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "ec6480ee-21de-46ef-bb9e-17c1d774beef",
+                "first": "fc0f4e8c-a2aa-46b5-ba52-cbc7e92d4687",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
+                            "index": 1,
+                            "data": {
+                                "Name": "Seed",
+                                "Value": 0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.019999999552965165,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0,
+                                        "Has max bound": false,
+                                        "Max": 12,
+                                        "Drag speed": 0.019999999552965165,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
                             "index": 2,
                             "data": {
-                                "Name": "Strength",
+                                "Name": "Lifetime",
                                 "Value": 5.0,
                                 "Metadata": {
                                     "Bounds": {
@@ -35,29 +63,21 @@
                             }
                         },
                         {
-                            "index": 5,
+                            "index": 2,
                             "data": {
-                                "Name": "Direction",
-                                "Value": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": -1.0
-                                },
+                                "Name": "Starting size",
+                                "Value": 0.009999999776482582,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
+                                        "Has min bound": true,
                                         "Min": 0.0,
                                         "Has max bound": false,
                                         "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
+                                        "Drag speed": 0.00009999999747378752,
                                         "Use slider": false
                                     }
                                 },
-                                "Default Value": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
+                                "Default Value": 0.009999999776482582,
                                 "Default Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,

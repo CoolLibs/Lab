@@ -5,7 +5,7 @@
  * -----------------------------------------------------------------------------
  */
 
-vec2 gradient40868221(vec2 p)
+vec2 gradient35515471(vec2 p)
 {
     float h = 0.001;
     return vec2(
@@ -19,15 +19,17 @@ vec2 gradient40868221(vec2 p)
 
 INPUT UV->SignedDistance 'Shape';
 INPUT float 'Force';
-INPUT bool 'Repulse out';
+INPUT bool 'Use outline';
 
-Particle2D main(Particle2D particle)
+Particle2D main(Particle2D Particle)
 {
-    float force = 'Force';
-    if ('Shape'(particle.position) < 0)
-    {
-        force *= 'Repulse out' ? -1. : 0;
-    }
-    particle.acceleration += gradient40868221(particle.position) * force;
-    return particle;
+    if (!'Use outline' && 'Force' > 0 && 'Shape'(Particle.position) < 0)
+        return Particle;
+
+    Particle.acceleration += 'Force'
+                             * gradient35515471(Particle.position)
+                             * ('Use outline'
+                                    ? sign('Shape'(Particle.position))
+                                    : 1.);
+    return Particle;
 }

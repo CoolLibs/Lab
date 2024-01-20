@@ -1,38 +1,44 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-$Particle main($Particle particle)
+$$if(IS_2D);
+INPUT vec2 'Size';
+$$else;
+INPUT vec3 'Size';
+$$endif;
+
+$Particle main($Particle Particle)
 {
-    if (particle.position.x > 1.)
+    if (Particle.position.x > 'Size'.x)
     {
-        particle.position.x = 1.;
-        particle.velocity.x = -particle.velocity.x;
+        Particle.position.x = 'Size'.x;
+        Particle.velocity.x *= -1.;
     }
-    else if (particle.position.x < -1.)
+    else if (Particle.position.x < -'Size'.x)
     {
-        particle.position.x = -1.;
-        particle.velocity.x = -particle.velocity.x;
+        Particle.position.x = -'Size'.x;
+        Particle.velocity.x *= -1.;
     }
-    if (particle.position.y > 1.)
+    if (Particle.position.y > 'Size'.y)
     {
-        particle.position.y = 1.;
-        particle.velocity.y = -particle.velocity.y;
+        Particle.position.y = 'Size'.y;
+        Particle.velocity.y *= -1.;
     }
-    else if (particle.position.y < -1.)
+    else if (Particle.position.y < -'Size'.y)
     {
-        particle.position.y = -1.;
-        particle.velocity.y = -particle.velocity.y;
+        Particle.position.y = -'Size'.y;
+        Particle.velocity.y *= -1.;
     }
     $$if(IS_3D);
-    if (particle.position.z > 1.)
+    if (Particle.position.z > 'Size'.z)
     {
-        particle.position.z = 1.;
-        particle.velocity.z = -particle.velocity.z;
+        Particle.position.z = 'Size'.z;
+        Particle.velocity.z *= -1.;
     }
-    else if (particle.position.z < -1.)
+    else if (Particle.position.z < -'Size'.z)
     {
-        particle.position.z = -1.;
-        particle.velocity.z = -particle.velocity.z;
+        Particle.position.z = -'Size'.z;
+        Particle.velocity.z *= -1.;
     }
     $$endif;
-    return particle;
+    return Particle;
 }

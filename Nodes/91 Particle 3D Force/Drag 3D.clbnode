@@ -7,12 +7,10 @@
 
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float 'Density';
+INPUT float 'Strength';
 
-Particle3D main(Particle3D particle)
+Particle3D main(Particle3D Particle)
 {
-    float amplitude = length(particle.velocity);
-    vec3 direction = amplitude == 0 ? vec3(0) : normalize(particle.velocity);
-    particle.acceleration -= direction * amplitude * amplitude * 'Density';
-    return particle;
+    Particle.acceleration -= Particle.velocity * 'Strength';
+    return Particle;
 }

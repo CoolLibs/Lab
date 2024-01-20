@@ -7,16 +7,15 @@
 
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float 'Seed';
 INPUT vec2 'Position';
 INPUT vec2 'Size';
+INPUT float 'Seed';
 
 vec2 main(Particle2D particle)
 {
-    float seed = rand_xorshift_0_to_1('Seed' + _time);
     ;
-    vec2 random = hash_0_to_1_3D_to_3D(seed * vec3(_time, _delta_time, particle.id)).xy;
+    vec2 random = hash_0_to_1_3D_to_2D(vec3('Seed', particle.id, _time));
     ;
 
-    return 'Position' + 'Size' * (random - vec2(0.5));
+    return 'Position' + 'Size' * (random - 0.5);
 }

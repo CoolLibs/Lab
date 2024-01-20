@@ -6,8 +6,6 @@ INPUT float 'Radius';
 
 $vec main($Particle particle)
 {
-    float seed = rand_xorshift_0_to_1('Seed' + _time);
-
     float random = hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id));
 
     $$if(IS_3D);

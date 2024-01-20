@@ -2,26 +2,34 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "c9f271b3-07e4-4f85-b748-8c15012bff98",
+                "first": "5480863d-49e3-44ff-b2f6-085975c31724",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
-                            "index": 2,
+                            "index": 5,
                             "data": {
-                                "Name": "Force",
-                                "Value": 3.0,
+                                "Name": "Size",
+                                "Value": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
+                                        "Has min bound": true,
                                         "Min": 0.0,
                                         "Has max bound": false,
                                         "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
+                                        "Drag speed": 0.004999999888241291,
                                         "Use slider": false
                                     }
                                 },
-                                "Default Value": 1.0,
+                                "Default Value": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
                                 "Default Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,
@@ -32,16 +40,6 @@
                                         "Use slider": false
                                     }
                                 }
-                            }
-                        },
-                        {
-                            "index": 0,
-                            "data": {
-                                "Name": "Use outline",
-                                "Value": true,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
                             }
                         }
                     ]

@@ -23,13 +23,15 @@ vec4 rayMarching(Particle2D particle, bool is_distance_absolute)
 
     for (; i < 'Iterations'; i++)
     {
-        vec2  velocity = particle.velocity * _delta_time;
-        vec2  point    = particle.position + normalize(velocity) * t;
+        vec2 velocity = particle.velocity * _delta_time;
+        vec2 point    = particle.position + normalize(velocity) * t;
 
-        if(is_distance_absolute) d = abs('Shape'(point)) - particle.size;
-        else d = 'Shape'(point) - particle.size; // TODO(Particles) Handle filled shapes
+        if (is_distance_absolute)
+            d = abs('Shape'(point)) - particle.size;
+        else
+            d = 'Shape'(point)-particle.size; // TODO(Particles) Handle filled shapes
 
-        t += d * 'Fix Artefacts'; 
+        t += d * 'Fix Artefacts';
 
         if (d < SURF_DIST * 0.99999999)
         {
@@ -51,18 +53,20 @@ vec4 rayMarching2(Particle2D particle, bool is_distance_absolute)
 
     for (; i < 'Iterations'; i++)
     {
-        vec2  velocity = particle.velocity * _delta_time;
-        vec2  point    = particle.position + normalize(velocity) * t;
+        vec2 velocity = particle.velocity * _delta_time;
+        vec2 point    = particle.position + normalize(velocity) * t;
 
-        if(is_distance_absolute) d = abs('Shape'(point)) - particle.size;
-        else d = 'Shape'(point) - particle.size; // TODO(Particles) Handle filled shapes
+        if (is_distance_absolute)
+            d = abs('Shape'(point)) - particle.size;
+        else
+            d = 'Shape'(point)-particle.size; // TODO(Particles) Handle filled shapes
 
-        t += d * 'Fix Artefacts'; 
+        t += d * 'Fix Artefacts';
 
         if (d < SURF_DIST * 0.99999999)
         {
-            if (t > 0) return vec4(point, 1., t);
-            }
+            if (t > 0)
+                return vec4(point, 1., t);
         }
     }
     return vec4(-1.);
@@ -70,19 +74,23 @@ vec4 rayMarching2(Particle2D particle, bool is_distance_absolute)
 
 vec2 set_length(vec2 vector, float new_length)
 {
-    return normalize(vector) * new_length;
+    float len = length(vector);
+    if (len < 0.000001)
+        return vec2(new_length, 0.);
+    return vector / len * new_length;
 }
 
 Particle2D main(Particle2D particle)
 {
     // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
-    
+
     // Must be between 0 and 1 (exclusive of 1). The greater the value, the more precise the collision, but it also increases the likelihood of leaks.
     const float offset_from_side = 0.5;
 
     float distance = 'Shape'(particle.position);
-    
-    if (distance > 0.) {
+
+    if (distance > 0.)
+    {
         vec4  intersection    = rayMarching(particle, true);
         int   compteur        = 0;
         float original_length = length(particle.velocity);
@@ -101,14 +109,11 @@ Particle2D main(Particle2D particle)
         }
 
         particle.velocity = set_length(particle.velocity, original_length);
-
-        return particle;
     }
-
-    else {
+    else
+    {
         vec4 intersection = rayMarching2(particle, true);
         particle.position = mix(particle.position, intersection.xy, -offset_from_side);
-
-        return particle;
     }
+    return particle;
 }

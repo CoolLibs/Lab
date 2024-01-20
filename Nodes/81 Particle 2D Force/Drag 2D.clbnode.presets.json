@@ -2,18 +2,18 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "e0e1a0f6-946c-4b36-a880-0fed7d21e7e4",
+                "first": "6b9ef418-41c3-4203-8883-9d8cdc60659f",
                 "second": {
-                    "Name": "default",
+                    "Name": "Default",
                     "Values": [
                         {
                             "index": 2,
                             "data": {
-                                "Name": "Density",
-                                "Value": 0.5,
+                                "Name": "Strength",
+                                "Value": 5.0,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
+                                        "Has min bound": true,
                                         "Min": 0.0,
                                         "Has max bound": false,
                                         "Max": 1.0,
@@ -21,7 +21,7 @@
                                         "Use slider": false
                                     }
                                 },
-                                "Default Value": 0.5,
+                                "Default Value": 5.0,
                                 "Default Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,

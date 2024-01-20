@@ -7,11 +7,11 @@
 
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float 'Gravity';
+INPUT float 'Strength';
 INPUT vec3 'Direction';
 
-Particle3D main(Particle3D particle)
+Particle3D main(Particle3D Particle)
 {
-    particle.acceleration += (length('Direction') == 0 ? vec3(0) : normalize('Direction')) * 'Gravity';
-    return particle;
+    Particle.acceleration += 'Direction' * 'Strength';
+    return Particle;
 }
