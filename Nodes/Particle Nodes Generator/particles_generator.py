@@ -339,6 +339,13 @@ vec3 gradient(vec3 p)
         ),
     }
 
+def defines_2D():
+    return ["IS_2D"]
+
+
+def defines_3D():
+    return["IS_3D"]
+
 
 def variables_replacements_2D():
     return {key: value.Dim2 for key, value in variables_replacements().items()}
@@ -356,9 +363,6 @@ def functions_replacements_3D():
     return {key: value.Dim3 for key, value in functions_replacements().items()}
 
 
-DEFINES_2D = ["IS_2D"]
-
-DEFINES_3D = ["IS_3D"]
 
 
 def read_and_parse(file: os.DirEntry[str]):
@@ -368,13 +372,13 @@ def read_and_parse(file: os.DirEntry[str]):
         extract_snippets(content),
         variables_replacements_2D(),
         functions_replacements_2D(),
-        DEFINES_2D,
+        defines_2D(),
     )
     PARSED_3D = parse_snippets(
         extract_snippets(content),
         variables_replacements_3D(),
         functions_replacements_3D(),
-        DEFINES_3D,
+        defines_3D(),
     )
     file_path = os.path.relpath(
         file, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
