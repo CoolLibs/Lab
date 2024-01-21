@@ -9,9 +9,9 @@
 
 INPUT UV->SignedDistance 'Shape';
 
-bool main(Particle2D particle)
+bool main(Particle2D Particle)
 {
-    float distance = 'Shape'(particle.position);
+    float distance = 'Shape'(Particle.position);
     if (distance < 0)
     {
         return false;

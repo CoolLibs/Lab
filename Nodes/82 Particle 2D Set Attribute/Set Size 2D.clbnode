@@ -9,8 +9,8 @@
 
 INPUT float 'Size';
 
-Particle2D main(Particle2D particle)
+Particle2D main(Particle2D Particle)
 {
-    particle.size = 'Size';
-    return particle;
+    Particle.size = 'Size';
+    return Particle;
 }

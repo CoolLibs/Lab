@@ -10,18 +10,18 @@
 INPUT bool 'isRelative';
 INPUT bool 'isDecreasing';
 
-float main(Particle3D particle)
+float main(Particle3D Particle)
 {
     if ('isRelative')
     {
         if ('isDecreasing')
-            return particle.lifetime / particle.lifetime_max;
-        return 1. - particle.lifetime / particle.lifetime_max;
+            return Particle.lifetime / Particle.lifetime_max;
+        return 1. - Particle.lifetime / Particle.lifetime_max;
     }
     else
     {
         if ('isDecreasing')
-            return particle.lifetime;
-        return particle.lifetime_max - particle.lifetime;
+            return Particle.lifetime;
+        return Particle.lifetime_max - Particle.lifetime;
     }
 }

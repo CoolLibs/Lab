@@ -9,8 +9,8 @@
 
 INPUT vec3 'Force';
 
-Particle3D main(Particle3D particle)
+Particle3D main(Particle3D Particle)
 {
-    particle.acceleration += 'Force';
-    return particle;
+    Particle.acceleration += 'Force';
+    return Particle;
 }

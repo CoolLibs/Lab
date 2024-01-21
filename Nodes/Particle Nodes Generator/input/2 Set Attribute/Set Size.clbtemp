@@ -2,8 +2,8 @@
 
 INPUT float 'Size';
 
-$Particle main($Particle particle)
+$Particle main($Particle Particle)
 {
-    particle.size = 'Size';
-    return particle;
+    Particle.size = 'Size';
+    return Particle;
 }

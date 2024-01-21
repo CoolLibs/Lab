@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-float main($Particle particle)
+float main($Particle Particle)
 {
-    return float(particle.index) / (DispatchSize.x - 1);
+    return float(Particle.index) / (DispatchSize.x - 1);
 }

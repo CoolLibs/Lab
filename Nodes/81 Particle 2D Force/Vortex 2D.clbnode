@@ -12,10 +12,10 @@ INPUT float 'Strength';
 INPUT Point2D 'Center';
 ;
 
-Particle2D main(Particle2D particle)
+Particle2D main(Particle2D Particle)
 {
-    vec2 position = particle.position - 'Center';
+    vec2 position = Particle.position - 'Center';
     vec2 tangent  = normalize(vec2(-position.y, position.x));
-    particle.acceleration += 'Strength' * tangent;
-    return particle;
+    Particle.acceleration += 'Strength' * tangent;
+    return Particle;
 }

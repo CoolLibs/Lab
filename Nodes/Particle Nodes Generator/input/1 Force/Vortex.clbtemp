@@ -7,10 +7,10 @@ $$else;
 INPUT vec3 'Center';
 $$endif;
 
-$Particle main($Particle particle)
+$Particle main($Particle Particle)
 {
-    $vec position = particle.position - 'Center';
+    $vec position = Particle.position - 'Center';
     $vec tangent  = normalize($vec(-position.y, position.x));
-    particle.acceleration += 'Strength' * tangent;
-    return particle;
+    Particle.acceleration += 'Strength' * tangent;
+    return Particle;
 }

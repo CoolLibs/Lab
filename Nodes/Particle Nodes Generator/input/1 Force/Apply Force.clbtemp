@@ -2,8 +2,8 @@
 
 INPUT $vec 'Force';
 
-$Particle main($Particle particle)
+$Particle main($Particle Particle)
 {
-    particle.acceleration += 'Force';
-    return particle;
+    Particle.acceleration += 'Force';
+    return Particle;
 }

@@ -2,12 +2,12 @@
 
 INPUT sRGB_StraightA 'Color';
 
-$Particle main($Particle particle)
+$Particle main($Particle Particle)
 {
-    particle.color = 'Color';
-    // particle.color.x = 1.0f;
-    // particle.color.y = 0;
-    // particle.color.z = 1.0f;
-    // particle.color.w = 1.0f;
-    return particle;
+    Particle.color = 'Color';
+    // Particle.color.x = 1.0f;
+    // Particle.color.y = 0;
+    // Particle.color.z = 1.0f;
+    // Particle.color.w = 1.0f;
+    return Particle;
 }

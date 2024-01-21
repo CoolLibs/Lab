@@ -7,7 +7,7 @@
 
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-vec2 main(Particle2D particle)
+vec2 main(Particle2D Particle)
 {
-    return particle.velocity;
+    return Particle.velocity;
 }

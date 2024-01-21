@@ -2,12 +2,12 @@
 
 INPUT bool 'Condition';
 
-$Particle main($Particle particle)
+$Particle main($Particle Particle)
 {
     if ('Condition')
     {
-        particle.lifetime = -1.;
-        particle.lifetime_max = 1.; // To be sure that the shader vertex won't show the particles
+        Particle.lifetime     = -1.;
+        Particle.lifetime_max = 1.; // To be sure that the shader vertex won't show the particles
     }
-    return particle;
+    return Particle;
 }

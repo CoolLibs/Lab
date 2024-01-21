@@ -12,10 +12,10 @@ INPUT float 'Strength';
 INPUT vec3 'Center';
 ;
 
-Particle3D main(Particle3D particle)
+Particle3D main(Particle3D Particle)
 {
-    vec3 position = particle.position - 'Center';
+    vec3 position = Particle.position - 'Center';
     vec3 tangent  = normalize(vec3(-position.y, position.x, 0));
-    particle.acceleration += 'Strength' * tangent;
-    return particle;
+    Particle.acceleration += 'Strength' * tangent;
+    return Particle;
 }
