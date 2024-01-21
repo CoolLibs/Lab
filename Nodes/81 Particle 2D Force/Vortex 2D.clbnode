@@ -7,20 +7,23 @@
 
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT Angle 'Angle';
-INPUT float 'Strength';
+INPUT float 'Turns per second';
+// TODO INPUT Center;
 
 Particle2D main(Particle2D particle)
 {
-    vec2 trans_pos          = vec2(-particle.position.y, particle.position.x);
-    vec2 non_normalized_dir = 2 * cos('Angle') * particle.position + sin('Angle') * trans_pos;
-    if (length(non_normalized_dir) > 0.0001)
-    {
-        particle.acceleration += 'Strength' * normalize(non_normalized_dir) / length(non_normalized_dir);
-    }
-    if (length(particle.position) > 1)
-    {
-        particle.acceleration -= normalize(particle.position);
-    }
+    // vec2 tangent = normalize(vec2(-particle.position.y, particle.position.x));
+    vec2 length_angle = Cool_polar_coordinates(particle.position);
+    length_angle.y += 'Turns per second' * _delta_time;
+    vec2 new_position = vec2_from_polar(length_angle.x, length_angle.y);
+    particle.position = new_position;
+    // if (length(non_normalized_dir) > 0.0001)
+    // {
+    //     particle.acceleration += 'Strength' * normalize(non_normalized_dir);
+    // }
+    // if (length(particle.position) > 1)
+    // {
+    //     particle.acceleration -= normalize(particle.position);
+    // }
     return particle;
 }

@@ -14,7 +14,7 @@ INPUT bool 'Invert';
 
 vec2 main(Particle2D particle)
 {
-    float t = float(particle.id) / float(particles_count() - 1);
+    float t = float(particle.index) / float(particles_count() - 1);
 
     return getCurveNormal(particle.position, t);
 }

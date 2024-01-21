@@ -9,7 +9,7 @@ $$endif;
 
 $vec main($Particle particle)
 {
-    float t = float(particle.id) / float(particles_count() - 1);
+    float t = float(particle.index) / float(particles_count() - 1);
 
     return getCurveNormal(particle.position, t);
 }

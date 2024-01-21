@@ -11,7 +11,7 @@ INPUT float->vec3 'Curve';
 
 vec3 main(Particle3D particle)
 {
-    float t = float(particle.id) / float(particles_count() - 1);
+    float t = float(particle.index) / float(particles_count() - 1);
 
     return 'Curve'(t);
 }

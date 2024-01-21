@@ -14,7 +14,7 @@ INPUT float 'Seed';
 vec3 main(Particle3D particle)
 {
     ;
-    vec3 random = hash_0_to_1_3D_to_3D(vec3('Seed', particle.id, _time));
+    vec3 random = hash_0_to_1_3D_to_3D(vec3('Seed', particle.index, _time));
     ;
 
     return 'Position' + 'Size' * (random - 0.5);

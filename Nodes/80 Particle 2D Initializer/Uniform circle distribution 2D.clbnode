@@ -13,7 +13,7 @@ INPUT float 'Radius';
 
 vec2 main(Particle2D particle)
 {
-    float random = hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.id));
+    float random = hash_0_to_1_3D_to_1D(vec3(coollab_context.particle.position.x, _delta_time, coollab_context.particle.index));
 
     ;
     vec2 point = random_point_on_disk(random);

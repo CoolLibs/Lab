@@ -2,5 +2,5 @@
 
 float main($Particle particle)
 {
-    return float(particle.id) / (DispatchSize.x - 1);
+    return float(particle.index) / (DispatchSize.x - 1);
 }

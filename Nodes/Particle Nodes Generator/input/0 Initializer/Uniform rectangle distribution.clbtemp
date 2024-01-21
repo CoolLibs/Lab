@@ -7,9 +7,9 @@ INPUT float 'Seed';
 $vec main($Particle particle)
 {
     $$if(IS_2D);
-    vec2 random = hash_0_to_1_3D_to_2D(vec3('Seed', particle.id, _time));
+    vec2 random = hash_0_to_1_3D_to_2D(vec3('Seed', particle.index, _time));
     $$else;
-    vec3 random = hash_0_to_1_3D_to_3D(vec3('Seed', particle.id, _time));
+    vec3 random = hash_0_to_1_3D_to_3D(vec3('Seed', particle.index, _time));
     $$endif;
 
     return 'Position' + 'Size' * (random - 0.5);

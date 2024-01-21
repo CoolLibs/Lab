@@ -54,7 +54,7 @@ struct Particle{N}D
     float  lifetime;
     float  lifetime_max;
     vec4   color;
-    uint   id;
+    uint   index;
 }};
 
 struct CoollabContext
@@ -87,7 +87,7 @@ void cool_main()
     particle.color.y      = _colors[gid * 4 + 1];
     particle.color.z      = _colors[gid * 4 + 2];
     particle.color.w      = _colors[gid * 4 + 3];
-    particle.id           = gid;
+    particle.index        = gid;
 
     CoollabContext coollab_context;
     coollab_context.uv = particle.position.xy;
