@@ -4,10 +4,107 @@ import hashlib
 import shutil
 import sys, os
 import re
+from typing import Any
 
 # TODO delete generated files that are not used anymore
 # TODO pk c'est parfois $ et parfois $$
 # TODO allow .clbtemp nodes to specify different names for 2D and 3D versions
+
+
+@dataclass
+class Replacement:
+    Dim2: Any
+    Dim3: Any
+
+
+def variables_replacements():
+    return {
+        "vec": Replacement(
+            Dim2="vec2",
+            Dim3="vec3",
+        ),
+        "vec34": Replacement(
+            Dim2="vec3",
+            Dim3="vec4",
+        ),
+        "UV": Replacement(
+            Dim2="UV",
+            Dim3="vec3",
+        ),
+        "Point2D": Replacement(
+            Dim2="Point2D",
+            Dim3="vec3",
+        ),
+        "Direction": Replacement(
+            Dim2="Direction2D",
+            Dim3="vec3",
+        ),
+        "Particle": Replacement(
+            Dim2="Particle2D",
+            Dim3="Particle3D",
+        ),
+    }
+
+
+def functions_replacements():
+    return {
+        "vec(a)": Replacement(
+            Dim2=("vec2(a)", ""),
+            Dim3=("vec3(a)", ""),
+        ),
+        "vec(a, b)": Replacement(
+            Dim2=("vec2(a, b)", ""),
+            Dim3=("vec3(a, b, 0)", ""),
+        ),
+        "vec(a, b, c)": Replacement(
+            Dim2=("vec2(a, b)", ""),
+            Dim3=("vec3(a, b, c)", ""),
+        ),
+        "vec34(a)": Replacement(
+            Dim2=("vec3(a)", ""),
+            Dim3=("vec4(a)", ""),
+        ),
+        "gradient(p, shape)": Replacement(
+            Dim2=(
+                "gradient(p)",
+                """
+vec2 gradient(vec2 p)
+{
+    float h = 0.001;
+    return vec2(
+        shape(p - vec2(h, 0)) - shape(p + vec2(h, 0)),
+        shape(p - vec2(0, h)) - shape(p + vec2(0, h))
+    ) / (2. * h);
+}
+    """,
+            ),
+            Dim3=(
+                "gradient(p)",
+                """
+vec3 gradient(vec3 p)
+{
+    float h = 0.001;
+    return vec3(
+        shape(p - vec3(h, 0, 0)) - shape(p + vec3(h, 0, 0)),
+        shape(p - vec3(0, h, 0)) - shape(p + vec3(0, h, 0)),
+        shape(p - vec3(0, 0, h)) - shape(p + vec3(0, 0, h))
+    ) / (2. * h);
+}
+""",
+            ),
+        ),
+    }
+
+
+def defines_2D():
+    return ["IS_2D"]
+
+
+def defines_3D():
+    return ["IS_3D"]
+
+
+###
 
 
 @dataclass
@@ -255,98 +352,6 @@ def parse_snippets(
     return output
 
 
-@dataclass
-class Replacement:
-    Dim2: any
-    Dim3: any
-
-
-def variables_replacements():
-    return {
-        "vec": Replacement(
-            Dim2="vec2",
-            Dim3="vec3",
-        ),
-        "vec34": Replacement(
-            Dim2="vec3",
-            Dim3="vec4",
-        ),
-        "UV": Replacement(
-            Dim2="UV",
-            Dim3="vec3",
-        ),
-        "Point2D": Replacement(
-            Dim2="Point2D",
-            Dim3="vec3",
-        ),
-        "Direction": Replacement(
-            Dim2="Direction2D",
-            Dim3="vec3",
-        ),
-        "Particle": Replacement(
-            Dim2="Particle2D",
-            Dim3="Particle3D",
-        ),
-    }
-
-
-def functions_replacements():
-    return {
-        "vec(a)": Replacement(
-            Dim2=("vec2(a)", ""),
-            Dim3=("vec3(a)", ""),
-        ),
-        "vec(a, b)": Replacement(
-            Dim2=("vec2(a, b)", ""),
-            Dim3=("vec3(a, b, 0)", ""),
-        ),
-        "vec(a, b, c)": Replacement(
-            Dim2=("vec2(a, b)", ""),
-            Dim3=("vec3(a, b, c)", ""),
-        ),
-        "vec34(a)": Replacement(
-            Dim2=("vec3(a)", ""),
-            Dim3=("vec4(a)", ""),
-        ),
-        "gradient(p, shape)": Replacement(
-            Dim2=(
-                "gradient(p)",
-                """
-vec2 gradient(vec2 p)
-{
-    float h = 0.001;
-    return vec2(
-        shape(p - vec2(h, 0)) - shape(p + vec2(h, 0)),
-        shape(p - vec2(0, h)) - shape(p + vec2(0, h))
-    ) / (2. * h);
-}
-    """,
-            ),
-            Dim3=(
-                "gradient(p)",
-                """
-vec3 gradient(vec3 p)
-{
-    float h = 0.001;
-    return vec3(
-        shape(p - vec3(h, 0, 0)) - shape(p + vec3(h, 0, 0)),
-        shape(p - vec3(0, h, 0)) - shape(p + vec3(0, h, 0)),
-        shape(p - vec3(0, 0, h)) - shape(p + vec3(0, 0, h))
-    ) / (2. * h);
-}
-""",
-            ),
-        ),
-    }
-
-def defines_2D():
-    return ["IS_2D"]
-
-
-def defines_3D():
-    return["IS_3D"]
-
-
 def variables_replacements_2D():
     return {key: value.Dim2 for key, value in variables_replacements().items()}
 
@@ -361,8 +366,6 @@ def functions_replacements_2D():
 
 def functions_replacements_3D():
     return {key: value.Dim3 for key, value in functions_replacements().items()}
-
-
 
 
 def read_and_parse(file: os.DirEntry[str]):
