@@ -3,9 +3,7 @@
 Particle2D main(Particle2D Particle)
 {
     vec3 position = vec3(Particle.position, 1.);
-    vec3 velocity = vec3(Particle.velocity, 0.);
-
-    position = _camera2D_inverse * position;
+    position      = _camera2D_inverse * position;
 
     if (position.x > _aspect_ratio)
         position.x = -_aspect_ratio;
