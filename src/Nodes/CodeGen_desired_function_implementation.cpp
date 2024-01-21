@@ -4,6 +4,7 @@
 #include "CodeGenContext.h"
 #include "CodeGen_default_function.h"
 #include "CodeGen_implicit_conversion.h"
+#include "Cool/String/String.h"
 #include "FunctionSignature.h"
 #include "PrimitiveType.h"
 #include "tl/expected.hpp"
@@ -168,10 +169,10 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
 
     for (size_t i = 0; i < current_arity; ++i)
     {
-        if (desired_arity > 0)
-            res += fmt::format("{}({}({}))", transforms_names[i], implicit_conversion, argument_name(i, desired_arity));
-        else
+        if (Cool::String::contains(transforms_names[i], "Voidto")) // HACK to detect which functions don't need parameters
             res += fmt::format("{}()", transforms_names[i]);
+        else
+            res += fmt::format("{}({}({}))", transforms_names[i], implicit_conversion, argument_name(i, desired_arity));
         if (i != current_arity - 1)
             res += ", ";
     }
