@@ -153,8 +153,7 @@ def parse_macro(macro_string: str):
     func_name = func_name.strip()
     param_string = param_string[:-1]
     params = split_params(param_string)
-    params = [p.strip() for p in params]
-    return MacroFunction(func_name, params)
+    return MacroFunction(func_name, [p.strip() for p in params])
 
 
 def is_name_compatible(char: str):
@@ -212,7 +211,7 @@ def get_macros_alt(line: str):
 
 def get_macros(line: str) -> list[Macro]:
     if "$" not in line:
-        return
+        return []
     return get_macros_alt(line)
 
 
