@@ -352,36 +352,38 @@ def parse_snippets(
     return output
 
 
-def variables_replacements_2D():
-    return {key: value.Dim2 for key, value in variables_replacements().items()}
+def get_variables_replacements(dimension: str):
+    if dimension == "2D":
+        return {key: value.Dim2 for key, value in variables_replacements().items()}
+    if dimension == "3D":
+        return {key: value.Dim3 for key, value in variables_replacements().items()}
+    raise Exception(f"Invalid dimension: '{dimension}'")
 
 
-def variables_replacements_3D():
-    return {key: value.Dim3 for key, value in variables_replacements().items()}
+def get_functions_replacements(dimension: str):
+    if dimension == "2D":
+        return {key: value.Dim2 for key, value in functions_replacements().items()}
+    if dimension == "3D":
+        return {key: value.Dim3 for key, value in functions_replacements().items()}
+    raise Exception(f"Invalid dimension: '{dimension}'")
 
 
-def functions_replacements_2D():
-    return {key: value.Dim2 for key, value in functions_replacements().items()}
+def get_defines(dimension: str):
+    if dimension == "2D":
+        return defines_2D()
+    if dimension == "3D":
+        return defines_3D()
+    raise Exception(f"Invalid dimension: '{dimension}'")
 
 
-def functions_replacements_3D():
-    return {key: value.Dim3 for key, value in functions_replacements().items()}
-
-
-def read_and_parse(file: os.DirEntry[str]):
+def read_and_parse(file: os.DirEntry[str], dimension: str):
     f_in = open(file.path)
     content = f_in.read()
     PARSED_2D = parse_snippets(
         extract_snippets(content),
-        variables_replacements_2D(),
-        functions_replacements_2D(),
-        defines_2D(),
-    )
-    PARSED_3D = parse_snippets(
-        extract_snippets(content),
-        variables_replacements_3D(),
-        functions_replacements_3D(),
-        defines_3D(),
+        get_variables_replacements(dimension),
+        get_functions_replacements(dimension),
+        get_defines(dimension),
     )
     file_path = os.path.relpath(
         file, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -396,14 +398,12 @@ def read_and_parse(file: os.DirEntry[str]):
  */\n\
 """
     PARSED_2D = WARNING + PARSED_2D
-    PARSED_3D = WARNING + PARSED_3D
-    return PARSED_2D, PARSED_3D
+    return PARSED_2D
 
 
-def main():
+def create_files(dimension: str, category_number: str):
     input_folder = os.path.dirname(__file__)
     nodes_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
     for dir in os.scandir(input_folder):
         if not dir.is_dir():
             continue
@@ -411,25 +411,23 @@ def main():
         if len(split) == 1:
             split.append("")
         index, name = split
-        DIRNAME_2D = f"8{index} Particle 2D {name}".strip()
-        DIRNAME_3D = f"9{index} Particle 3D {name}".strip()
-        PATH_2D = os.path.join(nodes_folder, DIRNAME_2D)
-        PATH_3D = os.path.join(nodes_folder, DIRNAME_3D)
-        if not os.path.exists(PATH_2D):
-            os.mkdir(PATH_2D)
-        if not os.path.exists(PATH_3D):
-            os.mkdir(PATH_3D)
+        dirname = f"{category_number}{index} Particle {dimension} {name}".strip()
+        path = os.path.join(nodes_folder, dirname)
+        if not os.path.exists(path):
+            os.mkdir(path)
         for file in os.scandir(dir.path):
             if not file.name.endswith(".clbtemp"):
                 continue
             name = file.name.replace(".clbtemp", "")
-            FILE_2D = os.path.join(PATH_2D, f"{name} 2D.clbnode")
-            FILE_3D = os.path.join(PATH_3D, f"{name} 3D.clbnode")
-            PARSED_2D, PARSED_3D = read_and_parse(file)
-            with open(FILE_2D, "w") as file:
-                file.write(PARSED_2D)
-            with open(FILE_3D, "w") as file:
-                file.write(PARSED_3D)
+            file_path = os.path.join(path, f"{name} {dimension}.clbnode")
+            parsed = read_and_parse(file, dimension)
+            with open(file_path, "w") as output_file:
+                output_file.write(parsed)
+
+
+def main():
+    create_files("2D", "8")
+    create_files("3D", "9")
 
 
 if __name__ == "__main__":
