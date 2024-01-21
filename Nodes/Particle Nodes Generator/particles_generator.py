@@ -257,8 +257,8 @@ def parse_snippets(
 
 @dataclass
 class Replacement:
-    Dim2: str
-    Dim3: str
+    Dim2: any
+    Dim3: any
 
 
 def variables_replacements():
@@ -290,64 +290,74 @@ def variables_replacements():
     }
 
 
+def functions_replacements():
+    return {
+        "vec(a)": Replacement(
+            Dim2=("vec2(a)", ""),
+            Dim3=("vec3(a)", ""),
+        ),
+        "vec(a, b)": Replacement(
+            Dim2=("vec2(a, b)", ""),
+            Dim3=("vec3(a, b, 0)", ""),
+        ),
+        "vec(a, b, c)": Replacement(
+            Dim2=("vec2(a, b)", ""),
+            Dim3=("vec3(a, b, c)", ""),
+        ),
+        "vec34(a)": Replacement(
+            Dim2=("vec3(a)", ""),
+            Dim3=("vec4(a)", ""),
+        ),
+        "gradient(p, shape)": Replacement(
+            Dim2=(
+                "gradient(p)",
+                """
+vec2 gradient(vec2 p)
+{
+    float h = 0.001;
+    return vec2(
+        shape(p - vec2(h, 0)) - shape(p + vec2(h, 0)),
+        shape(p - vec2(0, h)) - shape(p + vec2(0, h))
+    ) / (2. * h);
+}
+    """,
+            ),
+            Dim3=(
+                "gradient(p)",
+                """
+vec3 gradient(vec3 p)
+{
+    float h = 0.001;
+    return vec3(
+        shape(p - vec3(h, 0, 0)) - shape(p + vec3(h, 0, 0)),
+        shape(p - vec3(0, h, 0)) - shape(p + vec3(0, h, 0)),
+        shape(p - vec3(0, 0, h)) - shape(p + vec3(0, 0, h))
+    ) / (2. * h);
+}
+""",
+            ),
+        ),
+    }
+
+
 def variables_replacements_2D():
     return {key: value.Dim2 for key, value in variables_replacements().items()}
+
 
 def variables_replacements_3D():
     return {key: value.Dim3 for key, value in variables_replacements().items()}
 
 
-FUNCTIONS_2D = {
-    "vec(a)": ("vec2(a)", ""),
-    "vec(a, b)": ("vec2(a, b)", ""),
-    "vec(a, b, c)": ("vec2(a, b)", ""),
-    "vec(a, b, c, d)": ("vec2(a, b)", ""),
-    "vec23(a)": ("vec2(a)", ""),
-    "vec23(a, b, c)": ("vec2(a, b)", ""),
-    "vec34(a)": ("vec3(a)", ""),
-    "vec34(a, b, c, d)": ("vec3(a, b, c)", ""),
-    "gradient(p, shape)": (
-        "gradient(p)",
-        """
-vec2 gradient(vec2 p)
-{
-    float h = 0.001;
-    return vec2(
-               shape(p - vec2(h, 0)) - shape(p + vec2(h, 0)),
-               shape(p - vec2(0, h)) - shape(p + vec2(0, h))
-           )
-           / (2. * h);
-}
-""",
-    ),
-}
+def functions_replacements_2D():
+    return {key: value.Dim2 for key, value in functions_replacements().items()}
+
+
+def functions_replacements_3D():
+    return {key: value.Dim3 for key, value in functions_replacements().items()}
+
+
 DEFINES_2D = ["IS_2D"]
 
-FUNCTIONS_3D = {
-    "vec(a)": ("vec3(a)", ""),
-    "vec(a, b)": ("vec3(a, b, 0)", ""),
-    "vec(a, b, c)": ("vec3(a, b, c)", ""),
-    "vec(a, b, c, d)": ("vec3(a, b, c)", ""),
-    "vec23(a)": ("vec3(a)", ""),
-    "vec23(a, b, c)": ("vec3(a, b, c)", ""),
-    "vec34(a)": ("vec4(a)", ""),
-    "vec34(a, b, c, d)": ("vec4(a, b, c, d)", ""),
-    "gradient(p, shape)": (
-        "gradient(p)",
-        """
-vec3 gradient(vec3 p)
-{
-    float h = 0.001;
-    return vec3(
-               shape(p - vec3(h, 0, 0)) - shape(p + vec3(h, 0, 0)),
-               shape(p - vec3(0, h, 0)) - shape(p + vec3(0, h, 0)),
-               shape(p - vec3(0, 0, h)) - shape(p + vec3(0, 0, h))
-           )
-           / (2. * h);
-}
-""",
-    ),
-}
 DEFINES_3D = ["IS_3D"]
 
 
@@ -355,10 +365,16 @@ def read_and_parse(file: os.DirEntry[str]):
     f_in = open(file.path)
     content = f_in.read()
     PARSED_2D = parse_snippets(
-        extract_snippets(content), variables_replacements_2D(), FUNCTIONS_2D, DEFINES_2D
+        extract_snippets(content),
+        variables_replacements_2D(),
+        functions_replacements_2D(),
+        DEFINES_2D,
     )
     PARSED_3D = parse_snippets(
-        extract_snippets(content), variables_replacements_3D(), FUNCTIONS_3D, DEFINES_3D
+        extract_snippets(content),
+        variables_replacements_3D(),
+        functions_replacements_3D(),
+        DEFINES_3D,
     )
     file_path = os.path.relpath(
         file, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

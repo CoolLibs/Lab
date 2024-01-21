@@ -9,11 +9,10 @@ vec3 gradient35515471(vec3 p)
 {
     float h = 0.001;
     return vec3(
-               'Shape'(p - vec3(h, 0, 0)) - 'Shape'(p + vec3(h, 0, 0)),
-               'Shape'(p - vec3(0, h, 0)) - 'Shape'(p + vec3(0, h, 0)),
-               'Shape'(p - vec3(0, 0, h)) - 'Shape'(p + vec3(0, 0, h))
-           )
-           / (2. * h);
+        'Shape'(p - vec3(h, 0, 0)) - 'Shape'(p + vec3(h, 0, 0)),
+        'Shape'(p - vec3(0, h, 0)) - 'Shape'(p + vec3(0, h, 0)),
+        'Shape'(p - vec3(0, 0, h)) - 'Shape'(p + vec3(0, 0, h))
+    ) / (2. * h);
 }
 
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
