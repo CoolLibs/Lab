@@ -404,22 +404,23 @@ def read_and_parse(file: os.DirEntry[str], dimension: str):
 def create_files(dimension: str, category_number: str):
     input_folder = os.path.dirname(__file__)
     nodes_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    for dir in os.scandir(input_folder):
-        if not dir.is_dir():
+    for input_dir in os.scandir(input_folder):
+        if not input_dir.is_dir():
             continue
-        split = dir.name.split(" ", 1)
+        split = input_dir.name.split(" ", 1)
         if len(split) == 1:
             split.append("")
         index, name = split
-        dirname = f"{category_number}{index} Particle {dimension} {name}".strip()
-        path = os.path.join(nodes_folder, dirname)
-        if not os.path.exists(path):
-            os.mkdir(path)
-        for file in os.scandir(dir.path):
+        output_dir_path = os.path.join(
+            nodes_folder, f"{category_number}{index} Particle {dimension} {name}"
+        )
+        if not os.path.exists(output_dir_path):
+            os.mkdir(output_dir_path)
+        for file in os.scandir(input_dir.path):
             if not file.name.endswith(".clbtemp"):
                 continue
             name = file.name.replace(".clbtemp", "")
-            file_path = os.path.join(path, f"{name} {dimension}.clbnode")
+            file_path = os.path.join(output_dir_path, f"{name} {dimension}.clbnode")
             parsed = read_and_parse(file, dimension)
             with open(file_path, "w") as output_file:
                 output_file.write(parsed)
