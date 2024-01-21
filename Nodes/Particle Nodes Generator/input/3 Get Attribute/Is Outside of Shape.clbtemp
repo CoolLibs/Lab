@@ -4,10 +4,5 @@ INPUT $UV->SignedDistance 'Shape';
 
 bool main($Particle Particle)
 {
-    float distance = 'Shape'(Particle.position);
-    if (distance < 0)
-    {
-        return false;
-    }
-    return true;
+    return 'Shape'(Particle.position) > 0;
 }

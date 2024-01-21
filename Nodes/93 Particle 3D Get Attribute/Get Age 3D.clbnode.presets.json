@@ -2,27 +2,27 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "08400072-0099-44ff-8554-290af9fdf062",
+                "first": "e095d171-9881-4cdd-9f0e-6654a5af2eb3",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
                             "index": 0,
                             "data": {
-                                "Name": "isRelative",
+                                "Name": "Is Relative",
                                 "Value": true,
                                 "Metadata": {},
-                                "Default Value": false,
+                                "Default Value": true,
                                 "Default Metadata": {}
                             }
                         },
                         {
                             "index": 0,
                             "data": {
-                                "Name": "isDecreasing",
-                                "Value": false,
+                                "Name": "Is Increasing",
+                                "Value": true,
                                 "Metadata": {},
-                                "Default Value": false,
+                                "Default Value": true,
                                 "Default Metadata": {}
                             }
                         }

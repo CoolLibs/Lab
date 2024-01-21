@@ -1,5 +1,4 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
-
 INPUT bool 'Condition';
 
 $Particle main($Particle Particle)
@@ -7,7 +6,7 @@ $Particle main($Particle Particle)
     if ('Condition')
     {
         Particle.lifetime     = -1.;
-        Particle.lifetime_max = 1.; // To be sure that the shader vertex won't show the particles
+        Particle.lifetime_max = 1.; // To be sure that the vertex shader won't show the particles
     }
     return Particle;
 }

@@ -2,24 +2,14 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "febbc352-1a87-4b83-9c29-369d73a41d19",
+                "first": "ef0f4cb7-f234-4d99-8149-1c8be451cc52",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
                             "index": 0,
                             "data": {
-                                "Name": "isRelative",
-                                "Value": true,
-                                "Metadata": {},
-                                "Default Value": true,
-                                "Default Metadata": {}
-                            }
-                        },
-                        {
-                            "index": 0,
-                            "data": {
-                                "Name": "isDecreasing",
+                                "Name": "Condition",
                                 "Value": false,
                                 "Metadata": {},
                                 "Default Value": false,

@@ -1,6 +1,6 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-float main($Particle Particle)
+$vec main($Particle Particle)
 {
-    return float(Particle.index) / (DispatchSize.x - 1);
+    return Particle.position;
 }
