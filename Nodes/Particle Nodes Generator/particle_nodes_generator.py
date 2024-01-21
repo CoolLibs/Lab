@@ -401,10 +401,10 @@ def read_and_parse(file: os.DirEntry[str]):
 
 
 def main():
-    INPUT = os.path.dirname(__file__)
-    NODES_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    input_folder = os.path.dirname(__file__)
+    nodes_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
-    for dir in os.scandir(INPUT):
+    for dir in os.scandir(input_folder):
         if not dir.is_dir():
             continue
         split = dir.name.split(" ", 1)
@@ -413,8 +413,8 @@ def main():
         index, name = split
         DIRNAME_2D = f"8{index} Particle 2D {name}".strip()
         DIRNAME_3D = f"9{index} Particle 3D {name}".strip()
-        PATH_2D = os.path.join(NODES_FOLDER, DIRNAME_2D)
-        PATH_3D = os.path.join(NODES_FOLDER, DIRNAME_3D)
+        PATH_2D = os.path.join(nodes_folder, DIRNAME_2D)
+        PATH_3D = os.path.join(nodes_folder, DIRNAME_3D)
         if not os.path.exists(PATH_2D):
             os.mkdir(PATH_2D)
         if not os.path.exists(PATH_3D):
@@ -426,12 +426,10 @@ def main():
             FILE_2D = os.path.join(PATH_2D, f"{name} 2D.clbnode")
             FILE_3D = os.path.join(PATH_3D, f"{name} 3D.clbnode")
             PARSED_2D, PARSED_3D = read_and_parse(file)
-            f_2d = open(FILE_2D, "w+")
-            f_3d = open(FILE_3D, "w+")
-            f_2d.write(PARSED_2D)
-            f_3d.write(PARSED_3D)
-            f_2d.close()
-            f_3d.close()
+            with open(FILE_2D, "w") as file:
+                file.write(PARSED_2D)
+            with open(FILE_3D, "w") as file:
+                file.write(PARSED_3D)
 
 
 if __name__ == "__main__":
