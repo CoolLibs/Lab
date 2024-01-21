@@ -1,51 +1,42 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT UV->SignedDistance 'Shape';
+INPUT $UV->SignedDistance 'Shape';
 INPUT int 'Iterations';
 INPUT float 'Fix Artefacts';
 
 #include "_ROOT_FOLDER_/res/collision.glsl"
 
-vec2 gradient(vec2 p)
-{
-    float h = 0.001;
-    return vec2(
-               'Shape'(p - vec2(h, 0)) - 'Shape'(p + vec2(h, 0)),
-               'Shape'(p - vec2(0, h)) - 'Shape'(p + vec2(0, h))
-           )
-           / (2. * h);
-}
-
-vec2 set_length(vec2 vector, float new_length)
+$vec set_length($vec vector, float new_length)
 {
     float len = length(vector);
     if (len < 0.000001)
-        return vec2(new_length, 0.);
+        return $vec(new_length, 0.);
     return vector / len * new_length;
 }
 
-IntersectionResult2D intersect_with_shape(Particle2D particle, bool limit_intersection)
+$IntersectionResult intersect_with_shape($Particle particle, bool limit_intersection)
 {
     const float SURF_DIST = 0.0000001;
     float       t         = 0.;
 
+    const $vec ZERO = $vec(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
     for (int i = 0; i < 'Iterations'; i++)
     {
-        vec2  velocity = particle.velocity * _delta_time;
-        vec2  point    = particle.position + set_length(velocity, 1.) * t;
+        $vec  velocity = particle.velocity * _delta_time;
+        $vec  point    = particle.position + set_length(velocity, 1.) * t;
         float d        = abs('Shape'(point));
         t += d * (1. - 'Fix Artefacts');
 
         if (limit_intersection && t > length(velocity))
-            return IntersectionResult2D(false, vec2(0.), 0.);
+            return $IntersectionResult(false, ZERO, 0.);
 
         if (d < SURF_DIST && t > 0)
-            return IntersectionResult2D(true, point, t);
+            return $IntersectionResult(true, point, t);
     }
-    return IntersectionResult2D(false, vec2(0.), 0.);
+    return $IntersectionResult(false, ZERO, 0.);
 }
 
-Particle2D main(Particle2D Particle)
+$Particle main($Particle Particle)
 {
     // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
 
@@ -56,19 +47,19 @@ Particle2D main(Particle2D Particle)
 
     if (distance < 0.)
     {
-        IntersectionResult2D intersection = intersect_with_shape(Particle, false);
+        $IntersectionResult intersection = intersect_with_shape(Particle, false);
         Particle.position += set_length(Particle.velocity, intersection.distance_along_ray + Particle.size);
     }
     else
     {
-        IntersectionResult2D intersection = intersect_with_shape(Particle, true);
+        $IntersectionResult intersection = intersect_with_shape(Particle, true);
         // float                original_length = length(Particle.velocity);
 
         // int compteur = 0;
         // while (intersection.has_intersected && compteur < 100)
         if (intersection.has_intersected)
         {
-            vec2 shape_normal = normalize(gradient(intersection.intersection_point));
+            $vec shape_normal = normalize($gradient(intersection.intersection_point, 'Shape'));
             Particle.position = intersection.intersection_point;
 
             // float vel_length = length(Particle.velocity);
