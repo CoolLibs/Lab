@@ -39,11 +39,13 @@ vec2 unnormalize_uv(vec2 uv)
     return unnormalize_uv_with_aspect_ratio(uv, _aspect_ratio);
 }
 
-#ifndef COOL_COMPUTE_SHADER
 /// Returns 1 when x is negative, 0 when x is positive, with a small transition around 0 to apply antialiasing.
 float antialised_step(float x)
 {
+#ifndef COOL_COMPUTE_SHADER
     float m = 0.75 * fwidth(x);
     return smoothstep(m, -m, x);
-}
+#else
+    return step(0., x);
 #endif
+}

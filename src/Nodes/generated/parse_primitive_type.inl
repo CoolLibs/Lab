@@ -80,6 +80,14 @@ if (str == "RayMarchRes")
 {
     return PrimitiveType::RayMarchRes;
 }
+if (str == "IntersectionResult2D")
+{
+    return PrimitiveType::IntersectionResult2D;
+}
+if (str == "IntersectionResult3D")
+{
+    return PrimitiveType::IntersectionResult3D;
+}
 if (str == "Oklab")
 {
     return PrimitiveType::Oklab;

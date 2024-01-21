@@ -1,0 +1,42 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "e68b7adc-dcc5-4463-a2de-a0c014923daf",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Max Velocity",
+                                "Value": 0.20000000298023225,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.20000000298023225,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

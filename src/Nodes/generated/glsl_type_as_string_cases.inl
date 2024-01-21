@@ -24,6 +24,8 @@ case PrimitiveType::Particle2D: return "/*Particle2D*/ Particle2D";
 case PrimitiveType::Particle3D: return "/*Particle3D*/ Particle3D";
 case PrimitiveType::Void: return "/*Void*/ void";
 case PrimitiveType::RayMarchRes: return "/*RayMarchRes*/ RayMarchRes";
+case PrimitiveType::IntersectionResult2D: return "/*IntersectionResult2D*/ IntersectionResult2D";
+case PrimitiveType::IntersectionResult3D: return "/*IntersectionResult3D*/ IntersectionResult3D";
 case PrimitiveType::Oklab: return "/*Oklab*/ vec3";
 case PrimitiveType::Oklab_PremultipliedA: return "/*Oklab_PremultipliedA*/ vec4";
 case PrimitiveType::Oklab_StraightA: return "/*Oklab_StraightA*/ vec4";

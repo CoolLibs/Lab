@@ -2,59 +2,41 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "02b13bfe-12fd-4036-84a2-94d4438e3893",
+                "first": "021992ef-2729-45be-a118-4ab1ff11c041",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
-                            "index": 2,
+                            "index": 4,
                             "data": {
-                                "Name": "Strength",
-                                "Value": 2.0,
-                                "Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 2.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            "index": 3,
-                            "data": {
-                                "Name": "Center",
+                                "Name": "Force",
                                 "Value": {
-                                    "Point2D": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    }
+                                    "x": 0.33000001311302187,
+                                    "y": 0.0
                                 },
                                 "Metadata": {
-                                    "Drag speed": 0.00009999999747378752
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
                                 },
                                 "Default Value": {
-                                    "Point2D": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    }
+                                    "x": 0.33000001311302187,
+                                    "y": 0.0
                                 },
                                 "Default Metadata": {
-                                    "Drag speed": 0.00009999999747378752
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
                                 }
                             }
                         }
