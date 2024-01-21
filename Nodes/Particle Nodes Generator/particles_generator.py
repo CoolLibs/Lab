@@ -401,7 +401,7 @@ def read_and_parse(file: os.DirEntry[str]):
 
 
 def main():
-    INPUT = os.path.join(os.path.dirname(__file__), "input")
+    INPUT = os.path.dirname(__file__)
     NODES_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
     for dir in os.scandir(INPUT):
