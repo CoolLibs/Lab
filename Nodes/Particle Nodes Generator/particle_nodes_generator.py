@@ -312,7 +312,7 @@ def parse_snippets(
                 output += variables[snip.name]
             else:
                 output += snip.name
-                print(f"WARNING: {snip.name} is not a valid macro variable")
+                raise Exception(f"{snip.name} is not a valid macro variable")
             continue
         if type(snip) is MacroFunction:
             if snip.name == "$if":
@@ -354,7 +354,7 @@ def parse_snippets(
                         output_functions += function
                         used_signatures[signature] = (call, name, function)
                     except:
-                        print(f"WARNING: {snip.name} is not a valid macro function")
+                        raise Exception(f"{snip.name} is not a valid macro function")
     output = output_functions + "\n" + output
     return output
 
