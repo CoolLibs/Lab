@@ -45,41 +45,41 @@ IntersectionResult2D intersect_with_shape(Particle2D particle, bool limit_inters
     return IntersectionResult2D(false, vec2(0.), 0.);
 }
 
-Particle2D main(Particle2D particle)
+Particle2D main(Particle2D Particle)
 {
     // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
 
     // Must be between 0 and 1 (exclusive of 1). The greater the value, the more precise the collision, but it also increases the likelihood of leaks.
     // const float offset_from_side = 0.5;
 
-    float distance = 'Shape'(particle.position);
+    float distance = 'Shape'(Particle.position);
 
     if (distance < 0.)
     {
-        IntersectionResult2D intersection = intersect_with_shape(particle, false);
-        particle.position += set_length(particle.velocity, intersection.distance_along_ray + particle.size);
+        IntersectionResult2D intersection = intersect_with_shape(Particle, false);
+        Particle.position += set_length(Particle.velocity, intersection.distance_along_ray + Particle.size);
     }
     else
     {
-        IntersectionResult2D intersection = intersect_with_shape(particle, true);
-        // float                original_length = length(particle.velocity);
+        IntersectionResult2D intersection = intersect_with_shape(Particle, true);
+        // float                original_length = length(Particle.velocity);
 
         // int compteur = 0;
         // while (intersection.has_intersected && compteur < 100)
         if (intersection.has_intersected)
         {
             vec2 shape_normal = normalize(gradient(intersection.intersection_point));
-            particle.position = intersection.intersection_point;
+            Particle.position = intersection.intersection_point;
 
-            // float vel_length = length(particle.velocity);
-            // particle.velocity *= 1 - intersection.distance_along_ray * offset_from_side / vel_length;
-            particle.velocity = reflect(particle.velocity, shape_normal);
+            // float vel_length = length(Particle.velocity);
+            // Particle.velocity *= 1 - intersection.distance_along_ray * offset_from_side / vel_length;
+            Particle.velocity = reflect(Particle.velocity, shape_normal);
 
-            // intersection = intersect_with_shape(particle, true);
+            // intersection = intersect_with_shape(Particle, true);
             // compteur++;
         }
 
-        // particle.velocity = set_length(particle.velocity, original_length);
+        // Particle.velocity = set_length(Particle.velocity, original_length);
     }
-    return particle;
+    return Particle;
 }
