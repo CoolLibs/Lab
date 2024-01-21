@@ -255,15 +255,48 @@ def parse_snippets(
     return output
 
 
-VARIABLES_2D = {
-    "vec": "vec2",
-    "vec23": "vec2",
-    "vec34": "vec3",
-    "UV": "UV",
-    "Point2D": "Point2D",
-    "Direction": "Direction2D",
-    "Particle": "Particle2D",
-}
+@dataclass
+class Replacement:
+    Dim2: str
+    Dim3: str
+
+
+def variables_replacements():
+    return {
+        "vec": Replacement(
+            Dim2="vec2",
+            Dim3="vec3",
+        ),
+        "vec34": Replacement(
+            Dim2="vec3",
+            Dim3="vec4",
+        ),
+        "UV": Replacement(
+            Dim2="UV",
+            Dim3="vec3",
+        ),
+        "Point2D": Replacement(
+            Dim2="Point2D",
+            Dim3="vec3",
+        ),
+        "Direction": Replacement(
+            Dim2="Direction2D",
+            Dim3="vec3",
+        ),
+        "Particle": Replacement(
+            Dim2="Particle2D",
+            Dim3="Particle3D",
+        ),
+    }
+
+
+def variables_replacements_2D():
+    return {key: value.Dim2 for key, value in variables_replacements().items()}
+
+def variables_replacements_3D():
+    return {key: value.Dim3 for key, value in variables_replacements().items()}
+
+
 FUNCTIONS_2D = {
     "vec(a)": ("vec2(a)", ""),
     "vec(a, b)": ("vec2(a, b)", ""),
@@ -290,15 +323,6 @@ vec2 gradient(vec2 p)
 }
 DEFINES_2D = ["IS_2D"]
 
-VARIABLES_3D = {
-    "vec": "vec3",
-    "vec23": "vec3",
-    "vec34": "vec4",
-    "UV": "vec3",
-    "Point2D": "vec3",
-    "Direction": "vec3",
-    "Particle": "Particle3D",
-}
 FUNCTIONS_3D = {
     "vec(a)": ("vec3(a)", ""),
     "vec(a, b)": ("vec3(a, b, 0)", ""),
@@ -331,10 +355,10 @@ def read_and_parse(file: os.DirEntry[str]):
     f_in = open(file.path)
     content = f_in.read()
     PARSED_2D = parse_snippets(
-        extract_snippets(content), VARIABLES_2D, FUNCTIONS_2D, DEFINES_2D
+        extract_snippets(content), variables_replacements_2D(), FUNCTIONS_2D, DEFINES_2D
     )
     PARSED_3D = parse_snippets(
-        extract_snippets(content), VARIABLES_3D, FUNCTIONS_3D, DEFINES_3D
+        extract_snippets(content), variables_replacements_3D(), FUNCTIONS_3D, DEFINES_3D
     )
     file_path = os.path.relpath(
         file, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
