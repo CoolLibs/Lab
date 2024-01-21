@@ -402,11 +402,7 @@ def read_and_parse(file: os.DirEntry[str]):
 
 def main():
     INPUT = os.path.join(os.path.dirname(__file__), "input")
-    OUTPUT = os.path.join(os.path.dirname(__file__), "output")
     NODES_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
-    if not os.path.exists(OUTPUT):
-        os.mkdir(OUTPUT)
 
     for dir in os.scandir(INPUT):
         if not dir.is_dir():
@@ -417,8 +413,8 @@ def main():
         index, name = split
         DIRNAME_2D = f"8{index} Particle 2D {name}".strip()
         DIRNAME_3D = f"9{index} Particle 3D {name}".strip()
-        PATH_2D = os.path.join(OUTPUT, DIRNAME_2D)
-        PATH_3D = os.path.join(OUTPUT, DIRNAME_3D)
+        PATH_2D = os.path.join(NODES_FOLDER, DIRNAME_2D)
+        PATH_3D = os.path.join(NODES_FOLDER, DIRNAME_3D)
         if not os.path.exists(PATH_2D):
             os.mkdir(PATH_2D)
         if not os.path.exists(PATH_3D):
@@ -436,21 +432,6 @@ def main():
             f_3d.write(PARSED_3D)
             f_2d.close()
             f_3d.close()
-
-    if os.path.split(NODES_FOLDER)[-1] != "Nodes":
-        print(
-            "Stopping there because this script's directory is not in the Nodes directory"
-        )
-        exit()
-
-    for dir in os.scandir(OUTPUT):
-        destination = os.path.join(NODES_FOLDER, dir.name)
-        if not os.path.exists(destination):
-            os.mkdir(destination)
-        for file in os.scandir(dir.path):
-            shutil.move(file.path, os.path.join(destination, file.name))
-        os.rmdir(dir.path)
-    os.rmdir(OUTPUT)
 
 
 if __name__ == "__main__":
