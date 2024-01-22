@@ -62,7 +62,7 @@
                             "index": 1,
                             "data": {
                                 "Name": "Seed",
-                                "Value": 0,
+                                "Value": 2,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,
