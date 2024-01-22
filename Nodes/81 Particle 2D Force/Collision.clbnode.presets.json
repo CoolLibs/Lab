@@ -2,26 +2,26 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "17d73239-759a-4d28-b45c-0eca7f421072",
+                "first": "b0cc90bb-09a5-4a06-bbb9-a5887cd0d144",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
                             "index": 1,
                             "data": {
-                                "Name": "Iterations",
-                                "Value": 100,
+                                "Name": "Iterations (Collision Quality)",
+                                "Value": 20,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0,
+                                        "Has min bound": true,
+                                        "Min": 2,
                                         "Has max bound": false,
                                         "Max": 12,
                                         "Drag speed": 0.019999999552965165,
                                         "Use slider": false
                                     }
                                 },
-                                "Default Value": 100,
+                                "Default Value": 20,
                                 "Default Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,
@@ -37,8 +37,8 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "Fix Artefacts",
-                                "Value": 0.800000011920929,
+                                "Name": "Fix Shape Artifacts",
+                                "Value": 0.0,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": false,
@@ -46,7 +46,7 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": true
                                     }
                                 },
                                 "Default Value": 0.0,

@@ -16,7 +16,7 @@ $vec set_length($vec vector, float new_length)
 
 $IntersectionResult intersect_with_shape($Particle particle, bool particle_is_outside)
 {
-    const float SURF_DIST = 0.0000001;
+    const float SURF_DIST = 0.001;
     float       t         = 0.;
 
     const $vec ZERO     = $vec(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro

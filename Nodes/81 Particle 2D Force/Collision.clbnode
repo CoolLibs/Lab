@@ -33,7 +33,7 @@ vec2 set_length(vec2 vector, float new_length)
 
 IntersectionResult2D intersect_with_shape(Particle2D particle, bool particle_is_outside)
 {
-    const float SURF_DIST = 0.0000001;
+    const float SURF_DIST = 0.001;
     float       t         = 0.;
 
     const vec2 ZERO     = vec2(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
