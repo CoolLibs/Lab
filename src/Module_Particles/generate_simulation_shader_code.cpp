@@ -20,6 +20,8 @@ auto generate_simulation_shader_code(
     auto const content = ShaderCodeBits{
         .version     = "",
         .before_main = fmt::format(FMT_COMPILE(R"glsl(
+#define COOLLAB_PARTICLES_{N}D
+
 uniform bool _force_init_particles;
 
 layout(std430, binding = 0) buffer _positions_buffer
@@ -96,12 +98,12 @@ void cool_main()
     particle.lifetime -= _delta_time;
     if (particle.needs_init)
     {{ // Default initialization
-#ifdef COOLLAB_PARTICLES_3D
-        particle.position = hash_0_to_1_2D_to_3D(vec2(gid, 0)) * 2. - 1.;
-        particle.velocity = hash_0_to_1_2D_to_3D(vec2(gid, 1)) * 2. - 1.;
-#else
+#ifdef COOLLAB_PARTICLES_2D
         particle.position = hash_0_to_1_2D_to_2D(vec2(gid, 0)) * 2. - 1.;
         particle.velocity = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2. - 1.;
+#else
+        particle.position = hash_0_to_1_2D_to_3D(vec2(gid, 0)) * 2. - 1.;
+        particle.velocity = hash_0_to_1_2D_to_3D(vec2(gid, 1)) * 2. - 1.;
 #endif
         particle.size  = 0.01;
         particle.color = vec4(1.0);
