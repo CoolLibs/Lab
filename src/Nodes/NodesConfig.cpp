@@ -151,15 +151,8 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         ImGui::SetItemTooltip("%s", "Open audio config to select which audio file to play, or which input device (e.g. microphone) to use.");
     }
 
-    if (node.is_particle_initializer())
-    {
-        if (node.particles_count().has_value())
-            ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &node.particles_count().value());
-        else
-        {
-            assert(false);
-        }
-    }
+    if (node.particles_count().has_value())
+        ImGui::DragScalar("Particles Count", ImGuiDataType_U64, &node.particles_count().value());
 
     for (size_t i = 0; i < node.value_inputs().size(); ++i)
     {
@@ -308,6 +301,11 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
         || (signature.from == PrimitiveType::Particle3D && signature.to != PrimitiveType::Particle3D);
 }
 
+static auto wants_to_store_particles_count(NodeDefinition const& def) -> bool
+{
+    return Cool::String::contains(def.name(), "Init Particles Count"); // HACK to force only a node named "Init Particles Count" to display the particles count.
+}
+
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
@@ -321,10 +319,8 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     };
     auto const node_category_config = _get_node_category_config(cat_id.category_name);
 
-    if (is_particle_initializer(def.signature()))
-    {
+    if (wants_to_store_particles_count(def))
         node.particles_count() = std::make_optional<size_t>(1000);
-    }
 
     if (needs_main_pin)
     {

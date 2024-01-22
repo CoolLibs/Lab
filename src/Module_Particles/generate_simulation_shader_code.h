@@ -9,7 +9,7 @@ namespace Lab {
 auto generate_simulation_shader_code(
     Cool::NodesGraph const&,
     Cool::NodeId const& root_node_id,
-    Cool::NodeId&       initializer_node_id,
+    Cool::NodeId&       id_of_node_storing_particles_count,
     Cool::GetNodeDefinition_Ref<NodeDefinition>,
     Cool::InputProvider_Ref,
     int dimension

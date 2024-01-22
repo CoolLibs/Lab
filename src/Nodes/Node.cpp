@@ -15,11 +15,6 @@ auto Node::is_audio_node() const -> bool
     return Cool::String::contains(_id_names.definition_name, "Audio");
 }
 
-auto Node::is_particle_initializer() const -> bool
-{
-    return _particles_count.has_value();
-}
-
 } // namespace Lab
 
 #include <Cool/Nodes/REGISTER_NODE_TYPE.h>

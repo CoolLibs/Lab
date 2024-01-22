@@ -168,18 +168,18 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                     }
                 ))
             {
-                auto       initializer_node_id    = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
-                auto const simulation_shader_code = generate_simulation_shader_code(
+                auto       id_of_node_storing_particles_count = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
+                auto const simulation_shader_code             = generate_simulation_shader_code(
                     graph,
                     particles_root_node_id,
-                    initializer_node_id,
+                    id_of_node_storing_particles_count,
                     get_node_def,
                     ctx.hacky_input_provider(),
                     dimension
                 );
 
                 _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
-                    /* .module                 = */ Module_Particles(dirty_flag_factory, initializer_node_id),
+                    /* .module                 = */ Module_Particles(dirty_flag_factory, id_of_node_storing_particles_count),
                     /* .texture_name_in_shader = */ texture_name_in_shader
                 ));
                 _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, false, dimension);

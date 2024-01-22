@@ -11,7 +11,7 @@ namespace Lab {
 class Module_Particles : public Module {
 public:
     Module_Particles() = default;
-    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::NodeId const& initializer_node_id);
+    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::NodeId const& id_of_node_storing_particles_count);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
     Module_Particles(Module_Particles&&) noexcept                    = default;
@@ -44,7 +44,7 @@ private:
 private:
     mutable std::optional<Cool::ParticleSystem> _particle_system;
     ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
-    Cool::NodeId                                _initializer_node_id{};
+    Cool::NodeId                                _id_of_node_storing_particles_count{};
     bool                                        _needs_to_update_particles{true};
     mutable Cool::MessageSender                 _simulation_shader_error_sender{};
     mutable std::string                         _shader_code{};

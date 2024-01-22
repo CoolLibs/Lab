@@ -1,0 +1,14 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Size Min';
+INPUT float 'Size Max';
+INPUT int 'Seed';
+
+$Particle main($Particle Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    Particle.size = mix('Size Min', 'Size Max', hash_0_to_1_3D_to_1D(vec3(Particle.index, _time, 'Seed')));
+    return Particle;
+}

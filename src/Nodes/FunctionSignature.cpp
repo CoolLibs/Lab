@@ -63,36 +63,6 @@ auto is_shape_3D(FunctionSignature signature) -> bool
     return signature == shape_3D_signature();
 }
 
-auto particle_2D_initializer_signature() -> FunctionSignature
-{
-    return FunctionSignature{
-        .from  = PrimitiveType::Void,
-        .to    = PrimitiveType::Particle2D,
-        .arity = 0,
-    };
-}
-auto particle_3D_initializer_signature() -> FunctionSignature
-{
-    return FunctionSignature{
-        .from  = PrimitiveType::Void,
-        .to    = PrimitiveType::Particle3D,
-        .arity = 0,
-    };
-}
-auto is_particle_2D_initializer(FunctionSignature signature) -> bool
-{
-    return signature == particle_2D_initializer_signature();
-}
-auto is_particle_3D_initializer(FunctionSignature signature) -> bool
-{
-    return signature == particle_3D_initializer_signature();
-}
-auto is_particle_initializer(FunctionSignature signature) -> bool
-{
-    return is_particle_2D_initializer(signature)
-           || is_particle_3D_initializer(signature);
-}
-
 auto particle_2D_signature() -> FunctionSignature
 {
     return FunctionSignature{
@@ -111,13 +81,11 @@ auto particle_3D_signature() -> FunctionSignature
 }
 auto is_particle_2D(FunctionSignature signature) -> bool
 {
-    return signature == particle_2D_signature()
-           || is_particle_2D_initializer(signature);
+    return signature == particle_2D_signature();
 }
 auto is_particle_3D(FunctionSignature signature) -> bool
 {
-    return signature == particle_3D_signature()
-           || is_particle_3D_initializer(signature);
+    return signature == particle_3D_signature();
 }
 auto is_particle(FunctionSignature signature) -> bool
 {

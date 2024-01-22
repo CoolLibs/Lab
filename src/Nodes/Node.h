@@ -54,7 +54,6 @@ public:
 
     auto is_audio_node() const -> bool;
 
-    auto is_particle_initializer() const -> bool;
     auto particles_count() -> std::optional<size_t>& { return _particles_count; }
     auto particles_count() const -> std::optional<size_t> { return _particles_count; }
     void set_particles_count(std::optional<size_t> particles_count) { _particles_count = particles_count; }

@@ -10,7 +10,7 @@ namespace Lab {
 auto generate_simulation_shader_code(
     Cool::NodesGraph const&                     graph,
     Cool::NodeId const&                         root_node_id,
-    Cool::NodeId&                               initializer_node_id,
+    Cool::NodeId&                               id_of_node_storing_particles_count,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     Cool::InputProvider_Ref                     input_provider,
     int                                         dimension
@@ -55,6 +55,7 @@ struct Particle{N}D
     float  lifetime_max;
     vec4   color;
     uint   index;
+    bool   needs_init;
 }};
 
 struct CoollabContext
@@ -88,6 +89,9 @@ void cool_main()
     particle.color.z      = _colors[gid * 4 + 2];
     particle.color.w      = _colors[gid * 4 + 3];
     particle.index        = gid;
+
+    particle.needs_init = particle.lifetime >= 0. && particle.lifetime - _delta_time < 0.;
+    particle.lifetime -= _delta_time;
 
     CoollabContext coollab_context;
     coollab_context.uv = particle.position.xy;
@@ -124,10 +128,10 @@ void cool_main()
         .arity = 1,
     };
 
-    auto const node_definition_callback = [&graph, &initializer_node_id](auto const& node_id, auto const&) {
+    auto const node_definition_callback = [&graph, &id_of_node_storing_particles_count](auto const& node_id, auto const&) {
         auto const* maybe_node = graph.try_get_node<Node>(node_id);
-        if (maybe_node && maybe_node->is_particle_initializer())
-            initializer_node_id = node_id;
+        if (maybe_node && maybe_node->particles_count().has_value())
+            id_of_node_storing_particles_count = node_id;
         return std::nullopt;
     };
 

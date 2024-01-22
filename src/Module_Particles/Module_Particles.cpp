@@ -5,9 +5,9 @@
 
 namespace Lab {
 
-Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId const& initializer_node_id)
+Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId const& id_of_node_storing_particles_count)
     : Module{"Particles", dirty_flag_factory}
-    , _initializer_node_id{initializer_node_id}
+    , _id_of_node_storing_particles_count{id_of_node_storing_particles_count}
 {
 }
 
@@ -73,7 +73,7 @@ auto Module_Particles::desired_particles_count() const -> size_t
     if (!_nodes_graph)
         return default_particles_count;
 
-    auto const* const maybe_node = _nodes_graph->try_get_node<Node>(_initializer_node_id);
+    auto const* const maybe_node = _nodes_graph->try_get_node<Node>(_id_of_node_storing_particles_count);
     if (!maybe_node)
         return default_particles_count;
     return maybe_node->particles_count().value_or(default_particles_count);

@@ -31,7 +31,7 @@ def variables_replacements():
             Dim2="UV",
             Dim3="vec3",
         ),
-        "Point2D": Replacement(
+        "Point": Replacement(
             Dim2="Point2D",
             Dim3="vec3",
         ),
