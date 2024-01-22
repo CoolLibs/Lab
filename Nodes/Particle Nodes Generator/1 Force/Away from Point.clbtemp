@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT $Point 'Point';
+INPUT float 'Strength';
+
+$Particle main($Particle Particle)
+{
+    Particle.acceleration += normalize(Particle.position - 'Point') * 'Strength';
+    return Particle;
+}
