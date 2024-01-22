@@ -1,0 +1,19 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT int 'Seed';
+
+Particle2D main(Particle2D Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    vec3 position = vec3(
+        hash_0_to_1_3D_to_2D(vec3(Particle.index, _time, 'Seed')) * 2. - 1.,
+        1.
+    );
+    position.x *= _aspect_ratio;
+    position = _camera2D * position;
+
+    Particle.position = position.xy / position.z;
+    return Particle;
+}
