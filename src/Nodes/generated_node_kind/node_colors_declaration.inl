@@ -13,3 +13,4 @@ auto modifier_2D() -> Cool::Color;
 auto miscellaneous() -> Cool::Color;
 auto particle_2D() -> Cool::Color;
 auto particle_3D() -> Cool::Color;
+auto curve_3D() -> Cool::Color;

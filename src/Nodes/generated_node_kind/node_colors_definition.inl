@@ -49,3 +49,8 @@ auto particle_3D() -> Cool::Color
 {
     return Cool::Color::from_srgb({0.5f, 0.25f, 0.75f});
 }
+
+auto curve_3D() -> Cool::Color
+{
+    return Cool::Color::from_srgb({0.503f, 0.121f, 0.511f});
+}

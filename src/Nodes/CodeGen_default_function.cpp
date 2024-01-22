@@ -227,6 +227,22 @@ vec2 default_curve/*coollabdef*/(float t)
 
     {
         auto const func = maybe_generate_default(
+            FunctionSignature{PrimitiveType::Float, PrimitiveType::Vec3},
+            "default_curve_3D", R"STR(
+vec3 default_curve_3D/*coollabdef*/(float t)
+{
+    float angle = TAU * t;
+    return vec3(cos(angle), sin(angle), 0.);
+}
+)STR",
+            signature, context
+        );
+        if (func)
+            return *func;
+    }
+
+    {
+        auto const func = maybe_generate_default(
             FunctionSignature{.from = PrimitiveType::Oklab_PremultipliedA, .to = PrimitiveType::Oklab_PremultipliedA, .arity = 2},
             "default_blend_mode", R"STR(
 vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)

@@ -240,6 +240,66 @@ float {}/*coollabdef*/(vec2 uv)
     return gen_desired_function_implementation(shape_2D_signature(), desired, shape_func_name, node, node_id, context, maybe_generate_module);
 }
 
+static auto gen_implicit_curve_renderer_3D(
+    FunctionSignature          desired,
+    std::string_view           base_function_name,
+    Node const&                node,
+    Cool::NodeId const&        node_id,
+    CodeGenContext&            context,
+    MaybeGenerateModule const& maybe_generate_module
+) -> tl::expected<std::string, std::string>
+{
+    auto const curve_func_name = gen_desired_function(curve_3D_signature(), node, node_id, context, maybe_generate_module);
+    if (!curve_func_name)
+        return tl::make_unexpected(curve_func_name.error());
+    auto const shape_func_name = fmt::format("curveRenderer3D{}", valid_glsl(std::string{base_function_name}));
+    // Push helper function
+    context.push_function(Function{
+        .name       = "Coollab_sdSegment3D",
+        .definition = R"STR(
+// https://iquilezles.org/articles/distfunctions/
+float Coollab_sdSegment3D/*coollabdef*/(vec3 p, vec3 a, vec3 b, float thickness)
+{{
+    vec3  pa = p - a, ba = b - a;
+    float h = saturate(dot(pa, ba) / dot(ba, ba));
+    return length(pa - ba * h) - thickness;
+}}
+        )STR",
+    });
+    // Push actual renderer
+    context.push_function(Function{
+        .name       = shape_func_name,
+        .definition = fmt::format(R"STR(
+float {}/*coollabdef*/(vec3 pos)
+{{
+    const int NB_SEGMENTS = 300;
+    const float THICKNESS = 0.01;
+
+    float dist_to_curve = FLT_MAX;
+    vec3  previous_position; // Will be filled during the first iteration of the loop
+
+    for (int i = 0; i <= NB_SEGMENTS; i++)
+    {{
+        float t = i / float(NB_SEGMENTS); // 0 to 1
+
+        vec3 current_position = {}(t);
+        if (i != 0) // During the first iteration we don't yet have two points to draw a segment between
+        {{
+            float segment = Coollab_sdSegment3D(pos, previous_position, current_position, THICKNESS);
+            dist_to_curve = min(dist_to_curve, segment);
+        }}
+
+        previous_position = current_position;
+    }}
+
+    return dist_to_curve;
+}}
+)STR",
+                                  shape_func_name, *curve_func_name),
+    });
+    return gen_desired_function_implementation(shape_3D_signature(), desired, shape_func_name, node, node_id, context, maybe_generate_module);
+}
+
 static auto gen_implicit_shape_3D_renderer(
     FunctionSignature          desired,
     std::string_view           base_function_name,
@@ -313,6 +373,8 @@ auto gen_desired_function_implementation(
 
     if (is_curve(current) && !is_curve(desired))
         return gen_implicit_curve_renderer(desired, base_function_name, node, node_id, context, maybe_generate_module);
+    if (is_curve_3D(current) && !is_curve_3D(desired))
+        return gen_implicit_curve_renderer_3D(desired, base_function_name, node, node_id, context, maybe_generate_module);
     if (is_shape_3D(current) && !is_shape_3D(desired))
         return gen_implicit_shape_3D_renderer(desired, base_function_name, node, node_id, context, maybe_generate_module);
 

@@ -37,6 +37,19 @@ auto is_curve(FunctionSignature signature) -> bool
     return signature == curve_signature();
 }
 
+auto curve_3D_signature() -> FunctionSignature
+{
+    return FunctionSignature{
+        .from  = PrimitiveType::Float,
+        .to    = PrimitiveType::Vec3,
+        .arity = 1,
+    };
+}
+auto is_curve_3D(FunctionSignature signature) -> bool
+{
+    return signature == curve_3D_signature();
+}
+
 auto shape_2D_signature() -> FunctionSignature
 {
     return FunctionSignature{

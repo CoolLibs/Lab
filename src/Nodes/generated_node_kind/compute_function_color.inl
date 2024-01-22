@@ -28,3 +28,6 @@ if (is_particle_2D(signature))
 
 if (is_particle_3D(signature))
     return NodeColor::particle_3D();
+
+if (is_curve_3D(signature))
+    return NodeColor::curve_3D();

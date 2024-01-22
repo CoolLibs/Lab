@@ -294,6 +294,7 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
         (signature.from == PrimitiveType::UV && signature.to != PrimitiveType::UV)
         // Curve
         || is_curve(signature)
+        || is_curve_3D(signature)
         // Shape 3D
         || is_shape_3D(signature)
         // Particle nodes that are not Particle Modifiers

@@ -15,7 +15,8 @@ bool b   = ImGui::Combo(label, &tmp,
                           "2D Modifier\0"
                           "Miscellaneous\0"
                           "Particle 2D\0"
-                          "Particle 3D\0\0");
+                          "Particle 3D\0"
+                          "Curve 3D\0\0");
 if (b)
     *node_kind = static_cast<NodeKind>(tmp);
 return b;

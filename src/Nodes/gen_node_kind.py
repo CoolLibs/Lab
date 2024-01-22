@@ -58,6 +58,11 @@ def all_node_kinds():
             user_facing_name="Particle 3D",
             color_srgb="0.5f,0.25f,0.75f",
         ),
+        NodeKind(
+            name_in_code="curve_3D",
+            user_facing_name="Curve 3D",
+            color_srgb="0.503f, 0.121f, 0.511f",
+        ),
     ]
 
 

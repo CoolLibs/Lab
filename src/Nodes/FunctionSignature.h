@@ -39,6 +39,9 @@ auto make_complete_function_signature(MainFunctionSignature const& signature)
 auto curve_signature() -> FunctionSignature;
 auto is_curve(FunctionSignature) -> bool;
 
+auto curve_3D_signature() -> FunctionSignature;
+auto is_curve_3D(FunctionSignature) -> bool;
+
 auto shape_2D_signature() -> FunctionSignature;
 auto is_shape_2D(FunctionSignature) -> bool;
 
