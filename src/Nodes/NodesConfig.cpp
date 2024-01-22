@@ -440,7 +440,8 @@ void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node,
     auto  node     = make_node({definition, out_node.category_name()});
 
     node.set_name(out_node.name());
-    node.set_particles_count(out_node.particles_count());
+    if (node.particles_count().has_value() && out_node.particles_count().has_value())
+        node.set_particles_count(out_node.particles_count());
 
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs());
 
