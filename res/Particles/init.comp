@@ -1,20 +1,5 @@
 #include "_COOL_RES_/shaders/rand.glsl"
 
-layout(std430, binding = 0) buffer _positions_buffer
-{
-    float _positions[];
-};
-
-layout(std430, binding = 1) buffer _velocities_buffer
-{
-    float _velocities[];
-};
-
-layout(std430, binding = 2) buffer _sizes_buffer
-{
-    float _sizes[];
-};
-
 layout(std430, binding = 3) buffer _lifetimes_buffer
 {
     float _lifetimes[];
@@ -25,63 +10,9 @@ layout(std430, binding = 4) buffer _lifetime_maxs_buffer
     float _lifetime_maxs[];
 };
 
-layout(std430, binding = 5) buffer _colors_buffer
-{
-    float _colors[];
-};
-
-#ifdef COOLLAB_PARTICLES_3D
-#define ParticleND Particle3D
-#define vecN       vec3
-#else // 2D
-#define ParticleND Particle2D
-#define vecN       vec2
-#endif
-
-struct ParticleND {
-    vecN  position;
-    vecN  velocity;
-    float size;
-    float lifetime;
-    float lifetime_max;
-    vec4  color;
-};
-
 void cool_main()
 {
-    uint gid = gl_GlobalInvocationID.x;
-#ifdef COOLLAB_PARTICLES_3D
-    Particle3D particle;
-    particle.position = hash_0_to_1_2D_to_3D(vec2(gid, 0)) * 2. - 1.;
-    particle.velocity = hash_0_to_1_2D_to_3D(vec2(gid, 1)) * 2. - 1.;
-#else
-    Particle2D particle;
-    particle.position = hash_0_to_1_2D_to_2D(vec2(gid, 0)) * 2. - 1.;
-    particle.velocity = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2. - 1.;
-#endif
-    particle.size         = 0.01;
-    particle.lifetime     = 0.0;
-    particle.lifetime_max = 0.0;
-    particle.color        = vec4(1.0);
-
-#ifdef COOLLAB_PARTICLES_3D
-    _positions[gid * 3 + 0]  = particle.position.x;
-    _positions[gid * 3 + 1]  = particle.position.y;
-    _positions[gid * 3 + 2]  = particle.position.z;
-    _velocities[gid * 3 + 0] = particle.velocity.x;
-    _velocities[gid * 3 + 1] = particle.velocity.y;
-    _velocities[gid * 3 + 2] = particle.velocity.z;
-#else
-    _positions[gid * 2 + 0]  = particle.position.x;
-    _positions[gid * 2 + 1]  = particle.position.y;
-    _velocities[gid * 2 + 0] = particle.velocity.x;
-    _velocities[gid * 2 + 1] = particle.velocity.y;
-#endif
-    _sizes[gid]          = particle.size;
-    _lifetimes[gid]      = particle.lifetime;
-    _lifetime_maxs[gid]  = particle.lifetime_max;
-    _colors[gid * 4 + 0] = particle.color.x;
-    _colors[gid * 4 + 1] = particle.color.y;
-    _colors[gid * 4 + 2] = particle.color.z;
-    _colors[gid * 4 + 3] = particle.color.w;
+    uint gid            = gl_GlobalInvocationID.x;
+    _lifetimes[gid]     = 0.;
+    _lifetime_maxs[gid] = 0.;
 }

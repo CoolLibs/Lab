@@ -20,6 +20,8 @@ auto generate_simulation_shader_code(
     auto const content = ShaderCodeBits{
         .version     = "",
         .before_main = fmt::format(FMT_COMPILE(R"glsl(
+uniform bool _force_init_particles;
+
 layout(std430, binding = 0) buffer _positions_buffer
 {{
     float _positions[];
@@ -90,8 +92,20 @@ void cool_main()
     particle.color.w      = _colors[gid * 4 + 3];
     particle.index        = gid;
 
-    particle.needs_init = particle.lifetime >= 0. && particle.lifetime - _delta_time < 0.;
+    particle.needs_init = _force_init_particles || (particle.lifetime >= 0. && particle.lifetime - _delta_time < 0.);
     particle.lifetime -= _delta_time;
+    if (particle.needs_init)
+    {{ // Default initialization
+#ifdef COOLLAB_PARTICLES_3D
+        particle.position = hash_0_to_1_2D_to_3D(vec2(gid, 0)) * 2. - 1.;
+        particle.velocity = hash_0_to_1_2D_to_3D(vec2(gid, 1)) * 2. - 1.;
+#else
+        particle.position = hash_0_to_1_2D_to_2D(vec2(gid, 0)) * 2. - 1.;
+        particle.velocity = hash_0_to_1_2D_to_2D(vec2(gid, 1)) * 2. - 1.;
+#endif
+        particle.size  = 0.01;
+        particle.color = vec4(1.0);
+    }}
 
     CoollabContext coollab_context;
     coollab_context.uv = particle.position.xy;

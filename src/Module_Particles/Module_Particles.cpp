@@ -14,7 +14,7 @@ Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory
 void Module_Particles::on_time_reset()
 {
     if (_particle_system.has_value())
-        _particle_system->reset();
+        request_particles_to_reset();
 }
 
 void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool /* for_testing_nodes */, int dimension)
@@ -64,6 +64,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         return;
     }
     _depends_on = compute_dependencies(_shader_code);
+    request_particles_to_reset();
 }
 
 auto Module_Particles::desired_particles_count() const -> size_t
@@ -84,7 +85,7 @@ void Module_Particles::log_simulation_shader_error(Cool::OptionalErrorMessage co
     log_module_error(maybe_err, _simulation_shader_error_sender);
 }
 
-void Module_Particles::update_particles_count_ifn(UpdateContext_Ref update_context)
+void Module_Particles::update_particles_count_ifn()
 {
     if (!_particle_system)
         return;
@@ -92,12 +93,19 @@ void Module_Particles::update_particles_count_ifn(UpdateContext_Ref update_conte
     if (particles_count == _particle_system->particles_count())
         return;
     _particle_system->set_particles_count(particles_count); // TODO(History) Change through command
-    update_context.set_dirty(needs_to_rerender_flag());
+    request_particles_to_reset();
 }
 
-void Module_Particles::update(UpdateContext_Ref update_context)
+void Module_Particles::request_particles_to_reset()
 {
-    update_particles_count_ifn(update_context);
+    _particle_system->reset();
+    request_particles_to_update();
+    _force_init_particles = true;
+}
+
+void Module_Particles::update(UpdateContext_Ref)
+{
+    update_particles_count_ifn();
 }
 
 void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
@@ -110,8 +118,11 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
         Cool::Log::ToUser::info(name(), "Updated particles");
 
     _particle_system->simulation_shader().bind();
+    _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);
     set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
     _particle_system->update();
+    _force_init_particles      = false;
+    _needs_to_update_particles = false;
 #else
     std::ignore = input_provider;
 #endif
@@ -135,10 +146,7 @@ void Module_Particles::render(RenderParams in)
         return;
 
     if (_needs_to_update_particles)
-    {
         update_particles(in.provider);
-        _needs_to_update_particles = false;
-    }
 
 #if !defined(COOL_PARTICLES_DISABLED_REASON)
     set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
