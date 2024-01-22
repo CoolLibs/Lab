@@ -18,8 +18,8 @@ vec2 gradient91529481(vec2 p)
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT UV->SignedDistance 'Shape';
-INPUT int 'Iterations';
-INPUT float 'Fix Artefacts';
+INPUT int 'Iterations (Collision Quality)';
+INPUT float 'Fix Shape Artifacts';
 
 #include "_ROOT_FOLDER_/res/collision.glsl"
 
@@ -31,20 +31,20 @@ vec2 set_length(vec2 vector, float new_length)
     return vector / len * new_length;
 }
 
-IntersectionResult2D intersect_with_shape(Particle2D particle, bool limit_intersection)
+IntersectionResult2D intersect_with_shape(Particle2D particle, bool particle_is_outside)
 {
     const float SURF_DIST = 0.0000001;
     float       t         = 0.;
 
-    const vec2 ZERO = vec2(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
-    for (int i = 0; i < 'Iterations'; i++)
+    const vec2 ZERO     = vec2(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
+    vec2 velocity = particle.velocity * _delta_time;
+    for (int i = 0; i < 'Iterations (Collision Quality)'; i++)
     {
-        vec2 velocity = particle.velocity * _delta_time;
-        vec2 point    = particle.position + set_length(velocity, 1.) * t;
-        float d        = abs('Shape'(point));
-        t += d * (1. - 'Fix Artefacts');
+        vec2 point = particle.position + set_length(velocity, 1.) * t;
+        float d     = abs('Shape'(point) - (particle_is_outside ? particle.size : 0.));
+        t += d * (1. - 'Fix Shape Artifacts');
 
-        if (limit_intersection && t > length(velocity))
+        if (particle_is_outside && t > length(velocity))
             return IntersectionResult2D(false, ZERO, 0.);
 
         if (d < SURF_DIST && t > 0)
@@ -60,7 +60,7 @@ Particle2D main(Particle2D Particle)
     // Must be between 0 and 1 (exclusive of 1). The greater the value, the more precise the collision, but it also increases the likelihood of leaks.
     // const float offset_from_side = 0.5;
 
-    float distance = 'Shape'(Particle.position);
+    float distance = 'Shape'(Particle.position) - Particle.size;
 
     if (distance < 0.)
     {
