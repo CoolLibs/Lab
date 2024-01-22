@@ -10,6 +10,9 @@ $$endif;
 
 $Particle main($Particle Particle)
 {
+    if (!Particle.needs_init)
+        return Particle;
+
     float t = float(Particle.index) / float(particles_count() - 1);
 
     const float epsilon = 0.00001;

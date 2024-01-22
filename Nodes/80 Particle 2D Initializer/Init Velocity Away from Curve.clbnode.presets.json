@@ -1,0 +1,52 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "47434445-3a5c-4ac4-a9a0-a654fb7daf75",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Speed",
+                                "Value": 0.5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Invert",
+                                "Value": false,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

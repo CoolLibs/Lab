@@ -21,6 +21,6 @@ Particle2D main(Particle2D Particle)
     vec2 random = hash_0_to_1_3D_to_2D(vec3(Particle.index, _time, 'Seed'));
     ;
 
-    Particle.position = 'Position' + 'Radii' * (random - 0.5) * 2.;
+    Particle.position = 'Center' + 'Radii' * (random - 0.5) * 2.;
     return Particle;
 }

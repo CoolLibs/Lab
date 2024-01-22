@@ -16,6 +16,9 @@ INPUT bool 'Invert';
 
 Particle2D main(Particle2D Particle)
 {
+    if (!Particle.needs_init)
+        return Particle;
+
     float t = float(Particle.index) / float(particles_count() - 1);
 
     const float epsilon = 0.00001;

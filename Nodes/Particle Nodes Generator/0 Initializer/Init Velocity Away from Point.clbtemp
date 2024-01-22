@@ -5,6 +5,9 @@ INPUT float 'Speed';
 
 $Particle main($Particle Particle)
 {
+    if (!Particle.needs_init)
+        return Particle;
+
     Particle.velocity = normalize(Particle.position - 'Point') * 'Speed';
     return Particle;
 }

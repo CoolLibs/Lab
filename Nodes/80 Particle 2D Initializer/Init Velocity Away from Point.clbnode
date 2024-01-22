@@ -13,6 +13,9 @@ INPUT float 'Speed';
 
 Particle2D main(Particle2D Particle)
 {
+    if (!Particle.needs_init)
+        return Particle;
+
     Particle.velocity = normalize(Particle.position - 'Point') * 'Speed';
     return Particle;
 }
