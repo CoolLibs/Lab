@@ -2,7 +2,7 @@
 
 INPUT float->$UV 'Curve';
 INPUT float 'Speed';
-$$if(IS_2D);
+$$if(2D);
 INPUT bool 'Invert';
 $$else;
 INPUT Angle 'Orientation';
@@ -18,7 +18,7 @@ $Particle main($Particle Particle)
     const float epsilon = 0.00001;
     $vec        tangent = normalize('Curve'(t + epsilon) - 'Curve'(t - epsilon));
 
-    $$if(IS_2D);
+    $$if(2D);
 
     vec2 normal = vec2(tangent.y, -tangent.x);
     if ('Invert')

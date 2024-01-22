@@ -105,11 +105,11 @@ vec3 gradient(vec3 p)
 
 
 def defines_2D():
-    return ["IS_2D"]
+    return ["2D"]
 
 
 def defines_3D():
-    return ["IS_3D"]
+    return ["3D"]
 
 
 ###

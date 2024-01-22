@@ -9,7 +9,7 @@ $Particle main($Particle Particle)
     if (!Particle.needs_init)
         return Particle;
 
-    $$if(IS_2D);
+    $$if(2D);
     vec2 random = hash_0_to_1_3D_to_2D(vec3(Particle.index, _time, 'Seed'));
     $$else;
     vec3 random = hash_0_to_1_3D_to_3D(vec3(Particle.index, _time, 'Seed'));

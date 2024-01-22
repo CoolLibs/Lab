@@ -10,7 +10,7 @@ $Particle main($Particle Particle)
         return Particle;
 
     float random = hash_0_to_1_3D_to_1D(vec3(Particle.index, _time, 'Seed'));
-    $$if(IS_2D);
+    $$if(2D);
     vec2 point = random_point_on_disk(random);
     $$else;
     vec3 point = random_point_on_sphere(random);
