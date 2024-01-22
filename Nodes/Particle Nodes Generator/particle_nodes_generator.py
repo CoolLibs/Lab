@@ -428,7 +428,7 @@ def create_files(dimension: str, category_number: str):
             if not file.name.endswith(".clbtemp"):
                 continue
             name = file.name.replace(".clbtemp", "")
-            file_path = os.path.join(output_dir_path, f"{name} {dimension}.clbnode")
+            file_path = os.path.join(output_dir_path, f"{name}.clbnode")
             file_content = create_output_file_content(file, dimension)
             with open(file_path, "w") as output_file:
                 output_file.write(file_content)
