@@ -1,7 +1,8 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT $UV->SignedDistance 'Shape';
-INPUT int 'Iterations (Collision Quality)';
+INPUT int 'Quality';
+INPUT int 'Fix narrow shapes';
 INPUT float 'Fix Shape Artifacts';
 
 #include "_ROOT_FOLDER_/res/collision.glsl"
@@ -14,14 +15,13 @@ $vec set_length($vec vector, float new_length)
     return vector / len * new_length;
 }
 
-$IntersectionResult intersect_with_shape($Particle particle, bool particle_is_outside)
+$IntersectionResult intersect_with_shape($Particle particle, bool particle_is_outside, float surface_distance)
 {
-    const float SURF_DIST = 0.001;
-    float       t         = 0.;
+    float t = 0.;
 
     const $vec ZERO     = $vec(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
     $vec       velocity = particle.velocity * _delta_time;
-    for (int i = 0; i < 'Iterations (Collision Quality)'; i++)
+    for (int i = 0; i < 'Quality'; i++)
     {
         $vec  point = particle.position + set_length(velocity, 1.) * t;
         float d     = abs('Shape'(point) - (particle_is_outside ? particle.size : 0.));
@@ -30,7 +30,7 @@ $IntersectionResult intersect_with_shape($Particle particle, bool particle_is_ou
         if (particle_is_outside && t > length(velocity))
             return $IntersectionResult(false, ZERO, 0.);
 
-        if (d < SURF_DIST && t > 0)
+        if (d < surface_distance && t > 0)
             return $IntersectionResult(true, point, t);
     }
     return $IntersectionResult(false, ZERO, 0.);
@@ -38,39 +38,31 @@ $IntersectionResult intersect_with_shape($Particle particle, bool particle_is_ou
 
 $Particle main($Particle Particle)
 {
-    // TODO(Particles) Y a des fuites dans les collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
+    // TODO(Particles) There are leaks in collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
 
-    // Must be between 0 and 1 (exclusive of 1). The greater the value, the more precise the collision, but it also increases the likelihood of leaks.
-    // const float offset_from_side = 0.5;
+    const float SURF_DIST = 0.001;
 
     float distance = 'Shape'(Particle.position) - Particle.size;
 
     if (distance < 0.)
     {
-        $IntersectionResult intersection = intersect_with_shape(Particle, false);
+        $IntersectionResult intersection = intersect_with_shape(Particle, false, SURF_DIST);
         Particle.position += set_length(Particle.velocity, intersection.distance_along_ray + Particle.size);
     }
     else
     {
-        $IntersectionResult intersection = intersect_with_shape(Particle, true);
-        // float                original_length = length(Particle.velocity);
-
-        // int compteur = 0;
-        // while (intersection.has_intersected && compteur < 100)
-        if (intersection.has_intersected)
+        $IntersectionResult intersection = intersect_with_shape(Particle, true, SURF_DIST);
+        for (int i = 0; i < 'Fix narrow shapes'; ++i)
         {
-            $vec shape_normal = normalize($gradient(intersection.intersection_point, 'Shape'));
-            Particle.position = intersection.intersection_point;
+            if (!intersection.has_intersected)
+                break;
 
-            // float vel_length = length(Particle.velocity);
-            // Particle.velocity *= 1 - intersection.distance_along_ray * offset_from_side / vel_length;
+            $vec shape_normal = normalize($gradient(intersection.intersection_point, 'Shape'));
+            Particle.position = intersection.intersection_point - shape_normal * SURF_DIST * 1.1; // We must offset from the surface by an amout > SURF_DIST otherwise we would detect a collision immediately.
             Particle.velocity = reflect(Particle.velocity, shape_normal);
 
-            // intersection = intersect_with_shape(Particle, true);
-            // compteur++;
+            intersection = intersect_with_shape(Particle, true, SURF_DIST);
         }
-
-        // Particle.velocity = set_length(Particle.velocity, original_length);
     }
     return Particle;
 }
