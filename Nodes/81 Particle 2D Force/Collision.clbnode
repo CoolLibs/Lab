@@ -37,7 +37,7 @@ IntersectionResult2D intersect_with_shape(Particle2D particle, bool particle_is_
     float t = 0.;
 
     const vec2 ZERO     = vec2(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
-    vec2 velocity = particle.velocity * _delta_time;
+    vec2 velocity = (particle.velocity + particle.acceleration * _delta_time) * _delta_time;
     for (int i = 0; i < 'Quality'; i++)
     {
         vec2 point = particle.position + set_length(velocity, 1.) * t;

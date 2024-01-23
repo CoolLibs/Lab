@@ -20,7 +20,7 @@ $IntersectionResult intersect_with_shape($Particle particle, bool particle_is_ou
     float t = 0.;
 
     const $vec ZERO     = $vec(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
-    $vec       velocity = particle.velocity * _delta_time;
+    $vec       velocity = (particle.velocity + particle.acceleration * _delta_time) * _delta_time;
     for (int i = 0; i < 'Quality'; i++)
     {
         $vec  point = particle.position + set_length(velocity, 1.) * t;
