@@ -15,7 +15,8 @@
 
 ## 🐣beta-11 WIP
 
-- ✨ Added particles! This a very promising prototype that you can already use today. An important overhaul of the system will come at some point in the future. (NB: Unfortunately particles are not currently available on MacOS, and will not be for a very long while).
+- ✨ Added particles! This a very promising prototype that you can already use today. An important overhaul of the system will come at some point in a (probably distant) future. (NB: Unfortunately particles are not currently available on MacOS, and will not be for a very long while).
+![Particles](https://github.com/CoolLibs/Lab/assets/45451201/7a8da2ef-df37-44fe-bf93-6cd37638c9f6)
 - ✨ Improved the randomness of our Random and Noise nodes.
 - ✨ Prevented mouse from getting blocked on the screen edges while dragging a widget or the camera. Instead the mouse wraps around.
 - ✨ Prevented mouse from getting blocked on the screen edges while dragging a node or a link or a selection rectangle in the nodes view. Instead the canvas starts translating as expected.
@@ -25,7 +26,7 @@
 - ✨ Added A4/A3/A2/A1 aspect ratio (when selecting the size of the View and the exported images).
 - 🐛 Fixed crash on Windows when an image export took longer than 2 seconds.
 - 🐛 Fixed freeze on Linux when exporting a video.
-- 🐛 Fixed: we won't request use of your microphone unless we actually need it (e.g. as soon as you start using it as audio input in Coollab).
+- 🐛 Fixed: we won't request use of your microphone unless we actually need it (e.g. as soon as you start using it as an audio input in Coollab).
 
 ## 🐣beta-10
 
