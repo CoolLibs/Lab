@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-11 WIP](#beta-11-wip)
+- [🐣beta-11](#beta-11)
 - [🐣beta-10](#beta-10)
 - [🐣beta-9](#beta-9)
 - [🐣beta-8](#beta-8)
@@ -13,7 +13,7 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-11 WIP
+## 🐣beta-11
 
 - ✨ Added particles! This a very promising prototype that you can already use today. An important overhaul of the system will come at some point in a (probably distant) future. (NB: Unfortunately particles are not currently available on MacOS, and will not be for a very long while).
 ![Particles](https://github.com/CoolLibs/Lab/assets/45451201/7a8da2ef-df37-44fe-bf93-6cd37638c9f6)
