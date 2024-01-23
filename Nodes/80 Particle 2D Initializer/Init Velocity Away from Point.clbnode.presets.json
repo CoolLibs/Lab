@@ -37,11 +37,11 @@
                                 "Value": 0.5,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": true,
+                                        "Has min bound": false,
                                         "Min": 0.0,
                                         "Has max bound": false,
                                         "Max": 1.0,
-                                        "Drag speed": 0.0010000000474974514,
+                                        "Drag speed": 0.003000000026077032,
                                         "Use slider": false
                                     }
                                 },
