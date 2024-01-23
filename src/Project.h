@@ -8,7 +8,7 @@
 #include "Cool/Time/Clock_Realtime.h"
 #include "Dependencies/CameraManager.h"
 #include "Dump/coollab_version.h"
-#include "Module_Nodes/Module_Nodes.h"
+#include "ModulesGraph/ModulesGraph.h"
 
 namespace Lab {
 
@@ -22,7 +22,7 @@ struct Project {
     Cool::ImageSizeConstraint      view_constraint;
     Cool::DirtyRegistry            dirty_registry; // Before the modules because it is used to create them
     History                        history{};
-    std::unique_ptr<Module_Nodes>  nodes_module;
+    std::unique_ptr<ModulesGraph>  modules_graph; // TODO(Modules) Can't we avoid the unique_ptr?
     bool                           is_first_frame{true};
     bool                           is_camera_2D_editable_in_view{true};
     Cool::Exporter                 exporter;
@@ -53,7 +53,7 @@ private:
             cereal::make_nvp("Camera Manager", camera_manager),
             cereal::make_nvp("Camera 2D", camera2D),
             cereal::make_nvp("Is camera 2D editable in view", is_camera_2D_editable_in_view),
-            cereal::make_nvp("Nodes Module", nodes_module),
+            cereal::make_nvp("Modules Graph", modules_graph),
             cereal::make_nvp("Variable Registries", variable_registries),
             cereal::make_nvp("History", history),
             cereal::make_nvp("Dirty Registry", dirty_registry),

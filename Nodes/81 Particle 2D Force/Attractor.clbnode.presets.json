@@ -1,0 +1,52 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "a1c5c03c-cd58-47c7-9bd2-2167f4f2093f",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Force",
+                                "Value": 1.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.0,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Use outline",
+                                "Value": true,
+                                "Metadata": {},
+                                "Default Value": false,
+                                "Default Metadata": {}
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

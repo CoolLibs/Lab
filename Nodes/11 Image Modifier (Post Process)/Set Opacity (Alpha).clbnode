@@ -2,8 +2,7 @@
 
 INPUT float 'Opacity';
 
-Oklab_StraightA main(Oklab_StraightA Image)
+Oklab_PremultipliedA main(Oklab_PremultipliedA Image)
 {
-    Image.a = 'Opacity';
-    return Image;
+    return Image * 'Opacity';
 }

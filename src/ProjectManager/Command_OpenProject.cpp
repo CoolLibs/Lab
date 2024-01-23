@@ -1,6 +1,7 @@
 #include "Command_OpenProject.h"
 #include <ProjectManager/internal_utils.h>
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
+#include "Cool/Log/Debug.h"
 #include "Project.h"
 #include "Serialization/SProject.h"
 #include "internal_utils.h"
@@ -14,7 +15,8 @@ void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
     if (error)
     {
         error.send_error_if_any(
-            [&](std::string const& /* message */) {
+            [&](std::string const& message) {
+                Cool::Log::Debug::error_without_breakpoint("Loading Project failed", message);
                 return Cool::Message{
                     .category = "Loading Project failed",
                     .message  = fmt::format(

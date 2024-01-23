@@ -1,0 +1,68 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT $UV->SignedDistance 'Shape';
+INPUT int 'Quality';
+INPUT int 'Fix narrow shapes';
+INPUT float 'Fix Shape Artifacts';
+
+#include "_ROOT_FOLDER_/res/collision.glsl"
+
+$vec set_length($vec vector, float new_length)
+{
+    float len = length(vector);
+    if (len < 0.000001)
+        return $vec(new_length, 0.);
+    return vector / len * new_length;
+}
+
+$IntersectionResult intersect_with_shape($Particle particle, bool particle_is_outside, float surface_distance)
+{
+    float t = 0.;
+
+    const $vec ZERO     = $vec(0.); // HACK to work around a bug in particle_nodes_generator.py that prevents us to use a macro as a parameter of another macro
+    $vec       velocity = (particle.velocity + particle.acceleration * _delta_time) * _delta_time;
+    for (int i = 0; i < 'Quality'; i++)
+    {
+        $vec  point = particle.position + set_length(velocity, 1.) * t;
+        float d     = abs('Shape'(point) - (particle_is_outside ? particle.size : 0.));
+        t += d * (1. - 'Fix Shape Artifacts');
+
+        if (particle_is_outside && t > length(velocity))
+            return $IntersectionResult(false, ZERO, 0.);
+
+        if (d < surface_distance && t > 0)
+            return $IntersectionResult(true, point, t);
+    }
+    return $IntersectionResult(false, ZERO, 0.);
+}
+
+$Particle main($Particle Particle)
+{
+    // TODO(Particles) There are leaks in collisions. Ideally this effect would be applied after the velocity has been updated and before the position has been updated.
+
+    const float SURF_DIST = 0.001;
+
+    float distance = 'Shape'(Particle.position) - Particle.size;
+
+    if (distance < 0.)
+    {
+        $IntersectionResult intersection = intersect_with_shape(Particle, false, SURF_DIST);
+        Particle.position += set_length(Particle.velocity, intersection.distance_along_ray + Particle.size);
+    }
+    else
+    {
+        $IntersectionResult intersection = intersect_with_shape(Particle, true, SURF_DIST);
+        for (int i = 0; i < 'Fix narrow shapes'; ++i)
+        {
+            if (!intersection.has_intersected)
+                break;
+
+            $vec shape_normal = normalize($gradient(intersection.intersection_point, 'Shape'));
+            Particle.position = intersection.intersection_point - shape_normal * SURF_DIST * 1.1; // We must offset from the surface by an amout > SURF_DIST otherwise we would detect a collision immediately.
+            Particle.velocity = reflect(Particle.velocity, shape_normal);
+
+            intersection = intersect_with_shape(Particle, true, SURF_DIST);
+        }
+    }
+    return Particle;
+}

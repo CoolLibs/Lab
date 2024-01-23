@@ -1,0 +1,12 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->sRGB_StraightA 'Image';
+
+Particle2D main(Particle2D Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    Particle.color = 'Image'(Particle.position);
+    return Particle;
+}

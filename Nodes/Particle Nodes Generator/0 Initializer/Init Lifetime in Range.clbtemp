@@ -1,0 +1,15 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Lifetime Min';
+INPUT float 'Lifetime Max';
+INPUT int 'Seed';
+
+$Particle main($Particle Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    Particle.lifetime     = mix('Lifetime Min', 'Lifetime Max', hash_0_to_1_3D_to_1D(vec3(Particle.index, _time, 'Seed')));
+    Particle.lifetime_max = Particle.lifetime;
+    return Particle;
+}

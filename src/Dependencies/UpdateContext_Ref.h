@@ -10,7 +10,8 @@ class UpdateContext_Ref {
 public:
     void set_clean(Cool::DirtyFlag const& dirty_flag) { _data.set_clean(dirty_flag); }
     void set_dirty(Cool::DirtyFlag const& dirty_flag) { _data.set_dirty(dirty_flag); }
-    auto input_provider() const { return _data.input_provider; }
+    auto dirty_setter() const { return _data.set_dirty; }
+    auto hacky_input_provider() const { return _data.input_provider; } // HACK some values like time, aspect ratio and camera are not set properly in this input provider!!! Should only be used for the code generation, where we need to inject the values of some inputs (like MathExpression) at code-generation time.
     auto ui() const { return _data.ui; }
     auto nodes_library() const -> auto& { return _data.nodes_library.get(); }
 

@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT sRGB_StraightA 'Color';
+
+$Particle main($Particle Particle)
+{
+    Particle.color = 'Color';
+    return Particle;
+}

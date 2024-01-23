@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT $Point 'Point';
+INPUT float 'Speed';
+
+$Particle main($Particle Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    Particle.velocity = normalize(Particle.position - 'Point') * 'Speed';
+    return Particle;
+}

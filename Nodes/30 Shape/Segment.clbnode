@@ -1,10 +1,14 @@
-INPUT vec2 'a';
-INPUT vec2 'b';
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+// Inspired by https://iquilezles.org/articles/distfunctions2d/
 
-// inspired by https://iquilezles.org/articles/distfunctions2d/
+INPUT Point2D 'Point 1';
+INPUT Point2D 'Point 2';
+INPUT float 'Thickness';
+
 SignedDistance main(UV uv)
 {
-    vec2  pa = uv - 'a', ba = 'b' - 'a';
-    float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-    return length(pa - ba * h);
+    vec2  pa = uv - 'Point 1';
+    vec2  ba = 'Point 2' - 'Point 1';
+    float h  = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+    return length(pa - ba * h) - 'Thickness';
 }

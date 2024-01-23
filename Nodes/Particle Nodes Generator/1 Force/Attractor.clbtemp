@@ -1,0 +1,18 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT $UV->SignedDistance 'Shape';
+INPUT float 'Force';
+INPUT bool 'Use outline';
+
+$Particle main($Particle Particle)
+{
+    if (!'Use outline' && 'Force' > 0 && 'Shape'(Particle.position) < 0)
+        return Particle;
+
+    Particle.acceleration += 'Force'
+                             * $gradient(Particle.position, 'Shape')
+                             * ('Use outline'
+                                    ? sign('Shape'(Particle.position))
+                                    : 1.);
+    return Particle;
+}

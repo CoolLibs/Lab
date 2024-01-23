@@ -1,0 +1,42 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "fa831134-a781-489b-a5a5-89e220734d46",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 8,
+                            "data": {
+                                "Name": "Color",
+                                "Value": {
+                                    "sRGB, Straight alpha": {
+                                        "x": 0.7397360801696777,
+                                        "y": 0.5922958850860596,
+                                        "z": 0.9711750149726868,
+                                        "w": 1.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Is HDR": false
+                                },
+                                "Default Value": {
+                                    "sRGB, Straight alpha": {
+                                        "x": 0.7397360801696777,
+                                        "y": 0.5922958850860596,
+                                        "z": 0.9711750149726868,
+                                        "w": 1.0
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Is HDR": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

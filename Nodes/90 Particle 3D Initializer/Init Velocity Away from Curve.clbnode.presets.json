@@ -1,0 +1,68 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "3f6f554d-e1ac-4e1f-840a-3029c4339a2c",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Speed",
+                                "Value": 0.5,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false
+                                    }
+                                },
+                                "Default Value": 0.5,
+                                "Default Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 11,
+                            "data": {
+                                "Name": "Orientation",
+                                "Value": {
+                                    "Radians": {
+                                        "Radians": 0.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
+                                },
+                                "Default Value": {
+                                    "Radians": {
+                                        "Radians": 0.0
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

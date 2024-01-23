@@ -1,0 +1,20 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT $vec 'Radii';
+INPUT $Point 'Center';
+INPUT int 'Seed';
+
+$Particle main($Particle Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    $$if(2D);
+    vec2 random = hash_0_to_1_3D_to_2D(vec3(Particle.index, _time, 'Seed'));
+    $$else;
+    vec3 random = hash_0_to_1_3D_to_3D(vec3(Particle.index, _time, 'Seed'));
+    $$endif;
+
+    Particle.position = 'Center' + 'Radii' * (random - 0.5) * 2.;
+    return Particle;
+}

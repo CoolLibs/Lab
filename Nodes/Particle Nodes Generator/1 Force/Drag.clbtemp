@@ -1,0 +1,9 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Strength';
+
+$Particle main($Particle Particle)
+{
+    Particle.acceleration -= Particle.velocity * 'Strength';
+    return Particle;
+}

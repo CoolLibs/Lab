@@ -1,0 +1,11 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Max Speed';
+
+$Particle main($Particle Particle)
+{
+    float velocity = length(Particle.velocity);
+    if (velocity > 'Max Speed' && velocity != 0.)
+        Particle.velocity = normalize(Particle.velocity) * 'Max Speed';
+    return Particle;
+}

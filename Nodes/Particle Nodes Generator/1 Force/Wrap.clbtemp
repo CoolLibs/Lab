@@ -1,0 +1,27 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+$$if(2D);
+INPUT vec2 'Size';
+$$else;
+INPUT vec3 'Size';
+$$endif;
+
+$Particle
+    main($Particle Particle)
+{
+    if (Particle.position.x > 'Size'.x)
+        Particle.position.x = -'Size'.x;
+    else if (Particle.position.x < -'Size'.x)
+        Particle.position.x = 'Size'.x;
+    if (Particle.position.y > 'Size'.y)
+        Particle.position.y = -'Size'.y;
+    else if (Particle.position.y < -'Size'.y)
+        Particle.position.y = 'Size'.y;
+    $$if(3D);
+    if (Particle.position.z > 'Size'.z)
+        Particle.position.z = -'Size'.z;
+    else if (Particle.position.z < -'Size'.z)
+        Particle.position.z = 'Size'.z;
+    $$endif;
+    return Particle;
+}

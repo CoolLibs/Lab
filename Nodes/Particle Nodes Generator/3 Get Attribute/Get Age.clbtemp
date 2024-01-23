@@ -1,0 +1,24 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT bool 'Is Relative';
+INPUT bool 'Is Increasing';
+
+float main($Particle Particle)
+{
+    float age = Particle.lifetime_max - Particle.lifetime;
+
+    if ('Is Relative')
+    {
+        if ('Is Increasing')
+            return age / Particle.lifetime_max;
+        else
+            return 1. - age / Particle.lifetime_max;
+    }
+    else
+    {
+        if ('Is Increasing')
+            return age;
+        else
+            return Particle.lifetime;
+    }
+}

@@ -1,0 +1,16 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Strength';
+$$if(2D);
+INPUT Point2D 'Center';
+$$else;
+INPUT vec3 'Center';
+$$endif;
+
+$Particle main($Particle Particle)
+{
+    $vec position = Particle.position - 'Center';
+    $vec tangent  = normalize($vec(-position.y, position.x));
+    Particle.acceleration += 'Strength' * tangent;
+    return Particle;
+}

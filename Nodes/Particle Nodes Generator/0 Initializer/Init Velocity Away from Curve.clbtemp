@@ -1,0 +1,35 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float->$UV 'Curve';
+INPUT float 'Speed';
+$$if(2D);
+INPUT bool 'Invert';
+$$else;
+INPUT Angle 'Orientation';
+$$endif;
+
+$Particle main($Particle Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    float t = float(Particle.index) / float(particles_count() - 1);
+
+    const float epsilon = 0.00001;
+    $vec        tangent = normalize('Curve'(t + epsilon) - 'Curve'(t - epsilon));
+
+    $$if(2D);
+
+    vec2 normal = vec2(tangent.y, -tangent.x);
+    if ('Invert')
+        normal *= -1;
+
+    $$else;
+
+    vec3 normal = rotation_around_axis(vec3(tangent.y, -tangent.x, 0.), tangent, 'Orientation');
+
+    $$endif;
+
+    Particle.velocity = normal * 'Speed';
+    return Particle;
+}

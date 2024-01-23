@@ -32,6 +32,7 @@ public:
     [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
     [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return instance().show_nodes_and_links_registries; }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
+    [[nodiscard]] static auto log_when_updating_particles() -> bool& { return instance().log_when_updating_particles; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
     [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return instance().log_when_parsing_node_definition; }
     [[nodiscard]] static auto log_when_executing_a_command() -> bool& { return instance().log_when_executing_a_command; }
@@ -82,6 +83,7 @@ private:
         bool show_commands_and_registries_debug_windows{false};
         bool show_nodes_and_links_registries{false};
         bool log_when_rendering{false};
+        bool log_when_updating_particles{false};
         bool log_when_compiling_nodes{false};
         bool log_when_parsing_node_definition{false};
         bool log_when_executing_a_command{false};
@@ -104,6 +106,7 @@ private:
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
+                cereal::make_nvp("Log when updating particles", log_when_updating_particles),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
@@ -118,6 +121,7 @@ private:
                 cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
                 cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
+                cereal::make_nvp("Log when updating particles", log_when_updating_particles),
                 cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
                 cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
                 cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
@@ -139,6 +143,7 @@ private:
         instance().show_commands_and_registries_debug_windows = false;
         instance().show_nodes_and_links_registries            = false;
         instance().log_when_rendering                         = false;
+        instance().log_when_updating_particles                = false;
         instance().log_when_compiling_nodes                   = false;
         instance().log_when_parsing_node_definition           = false;
         instance().log_when_executing_a_command               = false;
@@ -208,6 +213,11 @@ private:
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
             Cool::ImGuiExtras::toggle("Log when rendering", &instance().log_when_rendering);
+        }
+
+        if (wafl::similarity_match({filter, "Log when updating particles"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Log when updating particles", &instance().log_when_updating_particles);
         }
 
         if (wafl::similarity_match({filter, "Log when compiling nodes"}) >= wafl::Matches::Strongly)
@@ -293,6 +303,12 @@ private:
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
             instance().log_when_rendering = !instance().log_when_rendering;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Log when updating particles"}) >= wafl::Matches::Strongly)
+        {
+            instance().log_when_updating_particles = !instance().log_when_updating_particles;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 

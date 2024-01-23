@@ -1,0 +1,18 @@
+#include "_COOL_RES_/shaders/rand.glsl"
+
+layout(std430, binding = 3) buffer _lifetimes_buffer
+{
+    float _lifetimes[];
+};
+
+layout(std430, binding = 4) buffer _lifetime_maxs_buffer
+{
+    float _lifetime_maxs[];
+};
+
+void cool_main()
+{
+    uint gid            = gl_GlobalInvocationID.x;
+    _lifetimes[gid]     = 0.;
+    _lifetime_maxs[gid] = 0.;
+}

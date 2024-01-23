@@ -13,6 +13,7 @@
 #include <Cool/Variables/TestVariables.h>
 #include <Cool/Webcam/TextureLibrary_FromWebcam.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
+#include <ModulesGraph/ModulesGraph.h>
 #include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/Command_PackageProjectInto.h>
 #include <ProjectManager/utils.h>
@@ -40,7 +41,6 @@
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
-#include "Module_is0/Module_is0.h"
 #include "ProjectManager/Command_NewProject.h"
 #include "ProjectManager/Command_OpenBackupProject.h"
 #include "Tips/Tips.h"
@@ -57,7 +57,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
           .is_closable = true,
           .start_open  = false,
       })}
-    , _nodes_view{views.make_view<Cool::ForwardingOrRenderView>(
+    , _preview_view{views.make_view<Cool::ForwardingOrRenderView>(
           _output_view,
           Cool::ViewCreationParams{
               .name        = Cool::icon_fmt("View", ICOMOON_IMAGE),
@@ -69,12 +69,12 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
 
-    _project.camera_manager.hook_events(_nodes_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.hook_events(_preview_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
     Cool::midi_manager().set_additional_midi_callback([&]() {
         trigger_rerender();
     });
     hook_camera2D_events(
-        _nodes_view.mouse_events(),
+        _preview_view.mouse_events(),
         _project.camera2D.value(),
         [this]() { trigger_rerender(); },
         [this]() { return !_project.is_camera_2D_editable_in_view; }
@@ -99,14 +99,14 @@ void App::on_shutdown()
 
 void App::compile_all_is0_nodes()
 {
-    // for (const auto& node_template : _project.nodes_module->nodes_templates())
+    // for (const auto& node_template : _project.modules_graph->compositing_module().nodes_templates())
     // {
-    //     _project.nodes_module->remove_all_nodes();
+    //     _project.modules_graph->compositing_module().remove_all_nodes();
     //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
-    //     _project.nodes_module->add_node(NodeFactoryU::node_from_template(node_template));
-    //     _project.nodes_module->recompile(update_context(), true);
+    //     _project.modules_graph->compositing_module().add_node(NodeFactoryU::node_from_template(node_template));
+    //     _project.modules_graph->compositing_module().recompile(update_context(), true);
     // }
-    // _project.nodes_module->remove_all_nodes();
+    // _project.modules_graph->compositing_module().remove_all_nodes();
 }
 
 void App::set_everybody_dirty()
@@ -114,6 +114,16 @@ void App::set_everybody_dirty()
     std::unique_lock lock{_project.dirty_registry.mutex()};
     for (auto& [_, is_dirty] : _project.dirty_registry)
         is_dirty.is_dirty = true;
+}
+
+void App::on_time_changed()
+{
+    _project.modules_graph->on_time_changed(update_context());
+}
+
+void App::on_time_reset()
+{
+    _project.modules_graph->on_time_reset();
 }
 
 void App::update()
@@ -143,14 +153,13 @@ void App::update()
         _project.exporter.is_exporting() /* force_sync_time */
     );
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
-        if (_project.nodes_module->depends_on_audio())
-            trigger_rerender();
+        _project.modules_graph->on_audio_changed(update_context());
     });
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(update_context(), _project.nodes_module->regenerate_code_flag(), _project.nodes_module->graph(), _project.nodes_module->nodes_config(ui(), _nodes_library_manager.library()));
-        _project.nodes_module->update(update_context());
+        _nodes_library_manager.update(update_context(), _project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _nodes_library_manager.library()));
+        _project.modules_graph->update(update_context());
         // _custom_shader_module->update(update_context());
         check_inputs();
     }
@@ -159,7 +168,7 @@ void App::update()
     {
         _project.clock.update();
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_project.clock.time());
+        polaroid().render(_project.clock.time(), _project.clock.delta_time());
     }
     else
     {
@@ -167,12 +176,6 @@ void App::update()
         _project.exporter.update(polaroid());
     }
 
-    if (_last_time != _project.clock.time())
-    {
-        _last_time = _project.clock.time();
-        if (_project.nodes_module->depends_on_time())
-            trigger_rerender();
-    }
     // if (_custom_shader_view.render_target.needs_resizing())
     // {
     // set_dirty_flag()(_custom_shader_module->dirty_flag());
@@ -206,15 +209,15 @@ void App::update()
     }
 }
 
-void App::trigger_rerender()
+void App::trigger_rerender() // TODO(Modules) Sometimes we don't need to call this, but only rerender a specific module instead
 {
-    set_dirty_flag()(_project.nodes_module->dirty_flag());
+    _project.modules_graph->trigger_rerender_all(set_dirty_flag());
 }
 
 auto App::all_inputs() -> Cool::AllInputRefsToConst
 {
     // auto vec  = _custom_shader_module->all_inputs();
-    auto vec2 = _project.nodes_module->all_inputs();
+    auto vec2 = _project.modules_graph->all_inputs();
     // for (const auto& x : vec2)
     // {
     //     vec.push_back(x);
@@ -227,16 +230,22 @@ auto App::render_view() -> Cool::RenderView&
 {
     if (_output_view.is_open())
         return _output_view;
-    return _nodes_view;
+    return _preview_view;
 }
 
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = render_view().render_target(),
-        .render_fn     = [this](Cool::RenderTarget& render_target, float time) {
-            render(render_target, time);
-        }};
+        .render_target = render_view().render_target(), // TODO(Modules) Each module should have its own render target that it renders on. The views shouldn't have a render target, but receive the one of the top-most module by reference.
+        .render_fn     = [this](Cool::RenderTarget& render_target, float time, float delta_time) {
+            if (_last_time != time)
+            {
+                _last_time = time;
+                on_time_changed();
+            }
+            render(render_target, time, delta_time);
+        }
+    };
 }
 
 auto App::inputs_are_allowed() const -> bool
@@ -257,50 +266,28 @@ static void imgui_window_console()
 #endif
 }
 
-void App::render_one_module(Module& some_module, Cool::RenderTarget& render_target, float time)
-{
-    render_target.render([&]() {
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        const auto aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
-        some_module.do_rendering(
-            Module::RenderParams{
-                input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, _project.camera2D.value().transform_matrix()),
-                input_factory(),
-                is_dirty__functor(),
-                set_clean__functor(),
-                _project.variable_registries,
-                render_target.desired_size(),
-            },
-            update_context()
-        );
-    });
-    if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(some_module.name() + " Rendering", "Rendered");
-}
-
-void App::render_nodes(Cool::RenderTarget& render_target, float time, img::Size size)
-{
-    if (render_target.needs_resizing())
-        trigger_rerender();
-
-    if (!_project.nodes_module->is_dirty(is_dirty__functor()))
-        return;
-
-    render_target.set_size(size);
-    render_one_module(*_project.nodes_module, render_target, time);
-}
-
 // void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
 // {
 // _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target().get().texture_id());
 // render_one_module(*_custom_shader_module, render_target, time);
 // }
 
-void App::render(Cool::RenderTarget& render_target, float time)
+void App::render(Cool::RenderTarget& render_target, float time, float delta_time)
 {
-    render_nodes(render_view().render_target(), time, render_target.desired_size());
-    // render_custom_shader(render_target, time);
+    auto const aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
+    _project.modules_graph->render(
+        render_target,
+        Module::RenderParams{
+            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, delta_time, _project.camera2D.value().transform_matrix()),
+            input_factory(),
+            is_dirty__functor(),
+            set_clean__functor(),
+            _project.variable_registries,
+            render_target.desired_size(),
+        },
+        update_context(),
+        dirty_flag_factory()
+    );
 }
 
 void App::imgui_commands_and_registries_debug_windows()
@@ -361,19 +348,19 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.nodes_module->submit_gizmos(_nodes_view.gizmos_manager(), update_context());
+    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context());
     _output_view.imgui_window({
         .on_open  = [&]() { trigger_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { trigger_rerender(); }, // as our render target, we need to rerender.
     });
-    _nodes_view.imgui_window({
+    _preview_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
             if (_project.exporter.is_exporting())
                 return false;
             bool b = false;
 
-            bool const align_buttons_vertically = _nodes_view.has_vertical_margins()
+            bool const align_buttons_vertically = _preview_view.has_vertical_margins()
                                                   || (!_project.view_constraint.wants_to_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             int buttons_order{0};
@@ -412,6 +399,7 @@ void App::imgui_window_exporter()
     _project.exporter.imgui_windows({
         .polaroid          = polaroid(),
         .time              = _project.clock.time(),
+        .delta_time        = _project.clock.delta_time(),
         .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
             auto folder_path = exported_image_path;
             folder_path.replace_extension(); // Give project folder the same name as the image.
@@ -420,6 +408,7 @@ void App::imgui_window_exporter()
             });
             //
         },
+        .on_video_export_start                      = [&]() { on_time_reset(); },
         .widgets_in_window_video_export_in_progress = [&]() {
             ImGui::NewLine();
             ImGui::SeparatorText(Cool::icon_fmt("Did you know?", ICOMOON_BUBBLE).c_str());
@@ -441,10 +430,9 @@ void App::imgui_windows()
 void App::imgui_windows_only_when_inputs_are_allowed()
 {
     const auto the_ui = ui();
-    // _custom_shader_module->imgui_windows(the_ui);
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-    Cool::ClockU::imgui_timeline(_project.clock);
+    Cool::ClockU::imgui_timeline(_project.clock, /* on_time_reset = */ [&]() { on_time_reset(); });
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
@@ -459,11 +447,11 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.nodes_module->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
+    _project.modules_graph->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_project.clock.time(), size);
+        the_polaroid.render(_project.clock.time(), _project.clock.delta_time(), size);
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
@@ -483,7 +471,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     }
     if (DebugOptions::show_nodes_and_links_registries())
     {
-        _project.nodes_module->debug_show_nodes_and_links_registries_windows(ui());
+        _project.modules_graph->debug_show_nodes_and_links_registries_windows(ui());
     }
 
     Cool::DebugOptions::texture_library_debug_view([&] {

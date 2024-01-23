@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Lifetime';
+
+$Particle main($Particle Particle)
+{
+    if (!Particle.needs_init)
+        return Particle;
+
+    Particle.lifetime     = 'Lifetime';
+    Particle.lifetime_max = Particle.lifetime;
+    return Particle;
+}

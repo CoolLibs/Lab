@@ -4,13 +4,10 @@
 /// compilation by A LOT. So we want to avoid recompiling
 /// this file as much as possible.
 ///
-
 #include <cereal/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
-#include "Module_Nodes/Module_Nodes.h"
 #include "SNodesCategoryConfig.h"
 #include "SProject.h"
-
 //
 #include "cereal/archives/json.hpp"
 
@@ -36,4 +33,5 @@ auto do_load(NodesCategoryConfig& config, std::filesystem::path const& path) -> 
 
 } // namespace Lab
 
-CEREAL_REGISTER_TYPE(Lab::Module_Nodes); // NOLINT
+CEREAL_REGISTER_TYPE(Lab::Module_Compositing); // NOLINT
+CEREAL_REGISTER_TYPE(Lab::Module_Particles); // NOLINT

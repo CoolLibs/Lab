@@ -7,6 +7,32 @@
                     "Name": "Default",
                     "Values": [
                         {
+                            "index": 11,
+                            "data": {
+                                "Name": "Angle",
+                                "Value": {
+                                    "Radians": {
+                                        "Radians": 0.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
+                                },
+                                "Default Value": {
+                                    "Radians": {
+                                        "Radians": 0.0
+                                    }
+                                },
+                                "Default Metadata": {
+                                    "Number of snaps": 24,
+                                    "Snaps offset (in radians)": 0.0,
+                                    "Always snap": false
+                                }
+                            }
+                        },
+                        {
                             "index": 2,
                             "data": {
                                 "Name": "Scale",

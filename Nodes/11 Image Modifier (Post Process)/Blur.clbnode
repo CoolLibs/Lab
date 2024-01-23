@@ -1,0 +1,18 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->Oklab_PremultipliedA 'Image';
+INPUT float 'Strength';
+INPUT int 'Quality'; /// The higher the number the smoother the result, but it will start to get laggy if set too high.
+
+Oklab_PremultipliedA main(UV uv)
+{
+    vec4 color = vec4(0.);
+    for (int i = 0; i < 'Quality'; i++)
+    {
+        // Uniform points on a disk based on http://blog.marmakoide.org/?p=1
+        float radius = sqrt(i / float('Quality' - 1));
+        float angle  = 2.39996323 * i;
+        color += 'Image'(uv + 'Strength' * vec2_from_polar(radius, angle));
+    }
+    return color / 'Quality';
+}

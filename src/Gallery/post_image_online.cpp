@@ -13,9 +13,9 @@
 static auto escape(std::string str) -> std::string
 {
     // First, escape the backslashes so that we don't later escape backslashes that are actually meant to escape something.
-    Cool::String::replace_all(str, "\\", "\\\\");
-    Cool::String::replace_all(str, "=", "\\=");
-    Cool::String::replace_all(str, "|", "\\|");
+    Cool::String::replace_all_inplace(str, "\\", "\\\\");
+    Cool::String::replace_all_inplace(str, "=", "\\=");
+    Cool::String::replace_all_inplace(str, "|", "\\|");
 
     return str;
 }

@@ -1,0 +1,7 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+$Particle main($Particle Particle)
+{
+    // No need to do anything. The"Particles count" slider is hardcoded to be added on any node named "Init Particles Count".
+    return Particle;
+}
