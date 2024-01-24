@@ -444,6 +444,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::WebcamsConfigs::instance().imgui_window();
     // Midi
     Cool::midi_manager().imgui_window_config();
+    // OSC
+    Cool::osc_manager().imgui_window_config();
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
@@ -604,6 +606,8 @@ void App::commands_menu()
             Cool::WebcamsConfigs::instance().open_imgui_window();
         if (ImGui::Selectable(ICOMOON_EQUALIZER2 " Open MIDI config"))
             Cool::midi_manager().open_config_window();
+        if (ImGui::Selectable(ICOMOON_CONNECTION " Open OSC config"))
+            Cool::osc_manager().open_config_window();
         if (ImGui::Selectable(ICOMOON_MUSIC " Open Audio config"))
             _project.audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
