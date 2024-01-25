@@ -2,6 +2,7 @@
 #include <ProjectManager/utils.h>
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
+#include "Cool/OSC/OSCManager.h"
 #include "FileExtension.h"
 #include "Project.h"
 #include "RecentlyOpened.h"
@@ -48,11 +49,13 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     set_current_project_path(ctx, project_path);
     ctx.project().is_first_frame = true;
     ctx.project().clock.set_playing(is_playing);
+    Cool::osc_manager().set_port(ctx.project().osc_port); // HACK(OSC See below) Use the port saved on the project
 }
 
 auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
 {
-    bool const success = do_save(ctx.project(), path);
+    ctx.project().osc_port = Cool::osc_manager().get_port(); // HACK(OSC See above) Set the port so that it will be saved in the project file
+    bool const success     = do_save(ctx.project(), path);
     if (success)
     {
         if (!ctx.project_path().has_value() && path != Path::untitled_project())

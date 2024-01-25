@@ -27,6 +27,7 @@ struct Project {
     bool                           is_camera_2D_editable_in_view{true};
     Cool::Exporter                 exporter;
     Cool::AudioManager             audio;
+    int                            osc_port{-1};
 
     std::string debug_info_coollab_version{}; // Only used to generate an error message when deserialization fails.
 
@@ -57,7 +58,8 @@ private:
             cereal::make_nvp("Variable Registries", variable_registries),
             cereal::make_nvp("History", history),
             cereal::make_nvp("Dirty Registry", dirty_registry),
-            cereal::make_nvp("Audio", audio)
+            cereal::make_nvp("Audio", audio),
+            cereal::make_nvp("OSC Port", osc_port)
         );
     }
 };
