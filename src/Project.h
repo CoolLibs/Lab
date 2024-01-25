@@ -4,6 +4,7 @@
 #include "Cool/Dependencies/VariableRegistries.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
+#include "Cool/OSC/OSCConnectionEndpoint.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
 #include "Dependencies/CameraManager.h"
@@ -27,7 +28,7 @@ struct Project {
     bool                           is_camera_2D_editable_in_view{true};
     Cool::Exporter                 exporter;
     Cool::AudioManager             audio;
-    int                            osc_port{-1};
+    Cool::OSCConnectionEndpoint    osc_endpoint{};
 
     std::string debug_info_coollab_version{}; // Only used to generate an error message when deserialization fails.
 
@@ -59,7 +60,7 @@ private:
             cereal::make_nvp("History", history),
             cereal::make_nvp("Dirty Registry", dirty_registry),
             cereal::make_nvp("Audio", audio),
-            cereal::make_nvp("OSC Port", osc_port)
+            cereal::make_nvp("OSC Endpoint", osc_endpoint)
         );
     }
 };
