@@ -32,6 +32,8 @@
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Midi/MidiManager.h"
+#include "Cool/OSC/OSCChannel.h"
+#include "Cool/OSC/OSCManager.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
 #include "Cool/View/View.h"
@@ -69,14 +71,14 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
 
-    _project.camera_manager.hook_events(_preview_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.hook_events(_preview_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { request_rerender(); });
     Cool::midi_manager().set_additional_midi_callback([&]() {
-        trigger_rerender();
+        request_rerender();
     });
     hook_camera2D_events(
         _preview_view.mouse_events(),
         _project.camera2D.value(),
-        [this]() { trigger_rerender(); },
+        [this]() { request_rerender(); },
         [this]() { return !_project.is_camera_2D_editable_in_view; }
     );
 
@@ -156,6 +158,11 @@ void App::update()
         _project.modules_graph->on_audio_changed(update_context());
     });
 
+    _project.modules_graph->update_dependencies_from_nodes_graph(update_context()); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC, so that we can check each time to see which channel they are currently using.
+    Cool::osc_manager().for_each_channel_that_has_changed([&](Cool::OSCChannel const& osc_channel) {
+        _project.modules_graph->on_osc_channel_changed(osc_channel, update_context());
+    });
+
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
         _nodes_library_manager.update(update_context(), _project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _nodes_library_manager.library()));
@@ -172,7 +179,7 @@ void App::update()
     }
     else
     {
-        trigger_rerender();
+        request_rerender();
         _project.exporter.update(polaroid());
     }
 
@@ -209,7 +216,7 @@ void App::update()
     }
 }
 
-void App::trigger_rerender() // TODO(Modules) Sometimes we don't need to call this, but only rerender a specific module instead
+void App::request_rerender() // TODO(Modules) Sometimes we don't need to call this, but only rerender a specific module instead
 {
     _project.modules_graph->trigger_rerender_all(set_dirty_flag());
 }
@@ -324,7 +331,7 @@ void App::imgui_window_cameras()
     Cool::ImGuiExtras::toggle("Editable in view", &_project.is_camera_2D_editable_in_view);
     Cool::ImGuiExtras::help_marker(help_text);
     if (imgui_widget(_project.camera2D))
-        trigger_rerender();
+        request_rerender();
     ImGui::PopID();
 
     ImGui::NewLine();
@@ -333,7 +340,7 @@ void App::imgui_window_cameras()
     Cool::ImGuiExtras::separator_text("3D Camera");
     Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_manager.is_editable_in_view());
     Cool::ImGuiExtras::help_marker(help_text);
-    _project.camera_manager.imgui(_project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.imgui(_project.variable_registries, command_executor(), [this]() { request_rerender(); });
     ImGui::PopID();
 }
 
@@ -350,8 +357,8 @@ void App::imgui_window_view()
 
     _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context());
     _output_view.imgui_window({
-        .on_open  = [&]() { trigger_rerender(); }, // When we switch between using the _output_view and the _nodes_view
-        .on_close = [&]() { trigger_rerender(); }, // as our render target, we need to rerender.
+        .on_open  = [&]() { request_rerender(); }, // When we switch between using the _output_view and the _nodes_view
+        .on_close = [&]() { request_rerender(); }, // as our render target, we need to rerender.
     });
     _preview_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
@@ -653,7 +660,7 @@ void App::imgui_menus()
 void App::reset_cameras()
 {
     _project.camera2D.value() = {}; // TODO(JF) Store this command in history
-    _project.camera_manager.reset_camera(_project.variable_registries, command_executor(), [this]() { trigger_rerender(); });
+    _project.camera_manager.reset_camera(_project.variable_registries, command_executor(), [this]() { request_rerender(); });
 }
 
 void App::check_inputs()

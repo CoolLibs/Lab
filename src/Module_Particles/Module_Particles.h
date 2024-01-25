@@ -1,4 +1,5 @@
 #pragma once
+#include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
@@ -35,8 +36,8 @@ public:
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
     void on_time_reset();
 
-    [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on.time; }
-    [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on.audio(); }
+    [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
+    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph, Cool::InputProvider_Ref input_provider) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph, input_provider); }
 
 private:
     void render(RenderParams) override;

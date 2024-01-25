@@ -30,8 +30,8 @@ public:
     void set_render_target_size(img::Size const& size);
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code);
 
-    [[nodiscard]] auto depends_on_time() const -> bool { return _depends_on.time; }
-    [[nodiscard]] auto depends_on_audio() const -> bool { return _depends_on.audio(); }
+    [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
+    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph, Cool::InputProvider_Ref input_provider) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph, input_provider); }
 
     auto shader_is_valid() const -> bool { return _pipeline.shader().has_value(); } // TODO(Modules) Remove
     auto shader() -> auto const& { return *_pipeline.shader(); }                    // TODO(Modules) Remove

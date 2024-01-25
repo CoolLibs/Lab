@@ -1,5 +1,7 @@
 #pragma once
+#include <Dependencies/UpdateContext_Ref.h>
 #include "Cool/Nodes/Editor.h"
+#include "Cool/OSC/OSCChannel.h"
 #include "Cool/View/GizmoManager.h"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Particles/Module_Particles.h"
@@ -59,6 +61,10 @@ public:
     void on_time_reset();
     /// Function called once on every frame where the audio has changed.
     void on_audio_changed(UpdateContext_Ref);
+    /// Function called once on every frame for each OSC channel that has changed.
+    void on_osc_channel_changed(Cool::OSCChannel const&, UpdateContext_Ref update_ctx);
+
+    void update_dependencies_from_nodes_graph(UpdateContext_Ref);
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);
