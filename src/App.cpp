@@ -602,7 +602,7 @@ void App::commands_menu()
     {
         if (ImGui::Selectable(ICOMOON_BUBBLE " Show all the tips"))
             _tips_manager.open_all_tips_window();
-        if (ImGui::Selectable(ICOMOON_VIDEO_CAMERA " Open webcams config"))
+        if (ImGui::Selectable(ICOMOON_VIDEO_CAMERA " Open Webcams config"))
             Cool::WebcamsConfigs::instance().open_imgui_window();
         if (ImGui::Selectable(ICOMOON_EQUALIZER2 " Open MIDI config"))
             Cool::midi_manager().open_config_window();
