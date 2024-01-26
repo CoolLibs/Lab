@@ -36,7 +36,7 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     _shader_code         = *shader_code;
     auto const maybe_err = _pipeline.compile(_shader_code);
     log_shader_error(maybe_err);
-    _depends_on = compute_dependencies(_shader_code);
+    update_dependencies_from_shader_code(_depends_on, _shader_code);
 }
 
 void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& maybe_err) const

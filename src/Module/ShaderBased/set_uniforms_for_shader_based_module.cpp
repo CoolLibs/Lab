@@ -2,6 +2,7 @@
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
+#include "Cool/Exception/Exception.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Nodes/Node.h"
@@ -40,11 +41,33 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T> const
         }
     }();
 
-    Cool::set_uniform(
-        shader,
-        valid_property_name(input.name(), input._default_variable_id.raw()),
-        value
-    );
+    try
+    {
+        Cool::set_uniform(
+            shader,
+            valid_property_name(input.name(), input._default_variable_id.raw()),
+            value
+        );
+        input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
+            Cool::Log::ToUser::console().remove(variable.message_id);
+        });
+    }
+    catch (Cool::Exception const& e)
+    {
+        input_provider.variable_registries().of<Cool::Variable<T>>().with_mutable_ref(input._default_variable_id.raw(), [&](Cool::Variable<T>& variable) {
+            e.error_message().send_error_if_any(
+                variable.message_id,
+                [&](std::string const& msg) {
+                    return Cool::Message{
+                        .category = "Invalid node parameter",
+                        .message  = msg,
+                        .severity = Cool::MessageSeverity::Error,
+                    };
+                },
+                Cool::Log::ToUser::console()
+            );
+        });
+    }
 
     // HACK to send an error message whenever a Texture variable has an invalid path
     if constexpr (std::is_base_of_v<Cool::TextureDescriptor, T>)
@@ -106,7 +129,7 @@ auto set_uniforms_for_shader_based_module(
     );
     Cool::CameraShaderU::set_uniform(shader, provider(camera_input), provider(Cool::Input_AspectRatio{}));
 
-    nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Nodes) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
+    nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
         for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {

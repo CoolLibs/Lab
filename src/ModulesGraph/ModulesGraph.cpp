@@ -311,7 +311,7 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
     {
         node->module.request_particles_to_update();
     }
-    if (_compositing_module.depends_on_time()
+    if (_compositing_module.depends_on().time
         || !_particles_module_nodes.empty())
     {
         trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on time
@@ -320,11 +320,27 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
 
 void ModulesGraph::on_audio_changed(UpdateContext_Ref update_ctx)
 {
-    if (_compositing_module.depends_on_audio()
-        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [](auto const& module_node) { return module_node->module.depends_on_audio(); }))
+    if (_compositing_module.depends_on().audio()
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [](auto const& module_node) { return module_node->module.depends_on().audio(); }))
     {
         trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on audio
     }
+}
+
+void ModulesGraph::on_osc_channel_changed(Cool::OSCChannel const& osc_channel, UpdateContext_Ref update_ctx)
+{
+    if (_compositing_module.depends_on().osc_channel(osc_channel)
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().osc_channel(osc_channel); }))
+    {
+        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on this OSC channel
+    }
+}
+
+void ModulesGraph::update_dependencies_from_nodes_graph(UpdateContext_Ref ctx)
+{
+    _compositing_module.update_dependencies_from_nodes_graph(_nodes_editor.graph(), ctx.hacky_input_provider());
+    for (auto const& module_node : _particles_module_nodes)
+        module_node->module.update_dependencies_from_nodes_graph(_nodes_editor.graph(), ctx.hacky_input_provider());
 }
 
 void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const

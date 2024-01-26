@@ -24,6 +24,7 @@
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/Midi/MidiChannel.h"
 #include "Cool/Midi/MidiManager.h"
+#include "Cool/OSC/OSCManager.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
@@ -48,7 +49,7 @@ public:
     void on_shutdown() override;
 
     void update() override;
-    void trigger_rerender() override;
+    void request_rerender() override;
     bool inputs_are_allowed() const override;
     bool wants_to_show_menu_bar() const override;
 
@@ -139,7 +140,8 @@ private:
             cereal::make_nvp("Tips", app._tips_manager),
             cereal::make_nvp("Output view", app._output_view),
             cereal::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
-            cereal::make_nvp("MIDI config", Cool::midi_manager())
+            cereal::make_nvp("MIDI config", Cool::midi_manager()),
+            cereal::make_nvp("OSC config", Cool::osc_manager())
         );
     }
     template<class Archive>
