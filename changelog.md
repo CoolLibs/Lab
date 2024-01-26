@@ -16,6 +16,8 @@
 
 ## 🐣beta-12 WIP
 
+- ✨ Added OSC support! You can now control Coollab through OSC messages from your smartphone or another software on your computer! Just use the "OSC" node and select which channel's value you want to use.
+
 ## 🐣beta-11
 
 - ✨ Added particles! This a very promising prototype that you can already use today. An important overhaul of the system will come at some point in a (probably distant) future. (NB: Unfortunately particles are not currently available on MacOS, and will not be for a very long while).
