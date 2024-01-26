@@ -450,9 +450,9 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
     // Midi
-    Cool::midi_manager().imgui_window_config();
+    Cool::midi_manager().imgui_window();
     // OSC
-    Cool::osc_manager().imgui_window_config();
+    Cool::osc_manager().imgui_window();
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
