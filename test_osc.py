@@ -15,4 +15,4 @@ if __name__ == "__main__":
         client.send_message("a", sin(val / 100) * 0.5 + 0.5)
         for name in ["/filter", "bob", "/lol"]:
             client.send_message(name, sin(val))
-            # time.sleep(0.1)
+            time.sleep(0.1)
