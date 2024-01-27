@@ -17,6 +17,7 @@
 ## 🐣beta-12 WIP
 
 - ✨ Added OSC support! You can now control Coollab through OSC messages from your smartphone or another software on your computer! Just use the "OSC" node and select which channel's value you want to use.
+- 🐛 Fixed a bug that caused the Nodes window to zoom out a bit each time you opened Coollab.
 
 ## 🐣beta-11
 
