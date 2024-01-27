@@ -72,9 +72,6 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_manager.hook_events(_preview_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { request_rerender(); });
-    Cool::midi_manager().set_additional_midi_callback([&]() {
-        request_rerender();
-    });
     hook_camera2D_events(
         _preview_view.mouse_events(),
         _project.camera2D.value(),
@@ -158,9 +155,12 @@ void App::update()
         _project.modules_graph->on_audio_changed(update_context());
     });
 
-    _project.modules_graph->update_dependencies_from_nodes_graph(update_context()); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC, so that we can check each time to see which channel they are currently using.
+    _project.modules_graph->update_dependencies_from_nodes_graph(update_context()); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC or Midi, so that we can check each time to see which channel they are currently using.
     Cool::osc_manager().for_each_channel_that_has_changed([&](Cool::OSCChannel const& osc_channel) {
         _project.modules_graph->on_osc_channel_changed(osc_channel, update_context());
+    });
+    Cool::midi_manager().for_each_channel_that_has_changed([&](Cool::MidiChannel const& midi_channel) {
+        _project.modules_graph->on_midi_channel_changed(midi_channel, update_context());
     });
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)

@@ -336,6 +336,15 @@ void ModulesGraph::on_osc_channel_changed(Cool::OSCChannel const& osc_channel, U
     }
 }
 
+void ModulesGraph::on_midi_channel_changed(Cool::MidiChannel const& midi_channel, UpdateContext_Ref update_ctx)
+{
+    if (_compositing_module.depends_on().midi_channel(midi_channel)
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().midi_channel(midi_channel); }))
+    {
+        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on this Midi channel
+    }
+}
+
 void ModulesGraph::update_dependencies_from_nodes_graph(UpdateContext_Ref ctx)
 {
     _compositing_module.update_dependencies_from_nodes_graph(_nodes_editor.graph(), ctx.hacky_input_provider());

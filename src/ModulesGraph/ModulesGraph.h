@@ -63,6 +63,8 @@ public:
     void on_audio_changed(UpdateContext_Ref);
     /// Function called once on every frame for each OSC channel that has changed.
     void on_osc_channel_changed(Cool::OSCChannel const&, UpdateContext_Ref update_ctx);
+    /// Function called once on every frame for each Midi channel that has changed.
+    void on_midi_channel_changed(Cool::MidiChannel const&, UpdateContext_Ref update_ctx);
 
     void update_dependencies_from_nodes_graph(UpdateContext_Ref);
 
