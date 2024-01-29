@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-12 WIP](#beta-12-wip)
+- [🐣beta-12](#beta-12)
 - [🐣beta-11](#beta-11)
 - [🐣beta-10](#beta-10)
 - [🐣beta-9](#beta-9)
@@ -14,9 +14,10 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-12 WIP
+## 🐣beta-12
 
 - ✨ Added OSC support! You can now control Coollab through OSC messages from your smartphone or another software on your computer! Just use the "OSC" node and select which channel's value you want to use.
+![OSC](https://github.com/CoolLibs/Lab/assets/45451201/9e0b1284-97fd-4c4e-8ba5-0909ada8b242)
 - ⚡ Improved performance when using Midi input.
 - 🐛 Fixed a rare crash when using Midi input.
 - 🐛 Fixed a bug that caused the Nodes window to zoom out a bit each time you opened Coollab.
