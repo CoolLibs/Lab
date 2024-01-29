@@ -1,9 +1,11 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT float 'Min';
-INPUT float 'Max';
+INPUT float 'From Min';
+INPUT float 'From Max';
+INPUT float 'To Min';
+INPUT float 'To Max';
 
 float main(float x)
 {
-    return x * ('Max' - 'Min') + 'Min';
+    return mix('To Min', 'To Max', (x - 'From Min') / ('From Max' - 'From Min'));
 }
