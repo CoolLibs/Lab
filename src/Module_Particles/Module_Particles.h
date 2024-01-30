@@ -1,5 +1,4 @@
 #pragma once
-#include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
@@ -40,7 +39,7 @@ public:
 
 private:
     void render(RenderParams) override;
-    void update_particles(Cool::InputProvider_Ref);
+    void update_particles(InputProvider_Ref);
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void update_particles_count_ifn();
     auto desired_particles_count() const -> size_t;

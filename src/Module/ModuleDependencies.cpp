@@ -1,5 +1,4 @@
 #include "ModuleDependencies.h"
-#include "Cool/Dependencies/InputProvider_Ref.h"
 #include "Cool/String/String.h"
 #include "Nodes/Node.h"
 

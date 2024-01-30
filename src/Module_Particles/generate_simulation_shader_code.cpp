@@ -1,6 +1,5 @@
 #include "generate_simulation_shader_code.h"
 #include <Nodes/PrimitiveType.h>
-#include <optional>
 #include "Module/ShaderBased/generate_shader_code.h"
 #include "Nodes/Node.h"
 #include "simulation_code_gen_helpers.h"
@@ -12,7 +11,6 @@ auto generate_simulation_shader_code(
     Cool::NodeId const&                         root_node_id,
     Cool::NodeId&                               id_of_node_storing_particles_count,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
-    Cool::InputProvider_Ref                     input_provider,
     int                                         dimension
 ) -> tl::expected<std::string, std::string>
 {
@@ -155,7 +153,6 @@ void cool_main()
         graph,
         root_node_id,
         get_node_definition,
-        input_provider,
         node_definition_callback,
         main_function_signature,
         content,

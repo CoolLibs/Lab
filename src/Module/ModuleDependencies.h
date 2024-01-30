@@ -1,6 +1,6 @@
 #pragma once
 #include <set>
-#include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Cool/Midi/MidiChannel.h"
 #include "Cool/Nodes/NodesGraph.h"
 #include "Cool/OSC/OSCChannel.h"
 

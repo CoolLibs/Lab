@@ -1,7 +1,7 @@
 #pragma once
 #include <Cool/Dependencies/Input.h>
-#include <Cool/Dependencies/InputProvider_Ref.h>
 #include <Cool/Log/OptionalErrorMessage.h>
+#include <Dependencies/InputProvider_Ref.h>
 #include <img/src/Size.h>
 #include <cereal/types/polymorphic.hpp>
 #include <glm/glm.hpp>
@@ -9,6 +9,7 @@
 #include "Dependencies/History.h"
 #include "Dependencies/Ui.h"
 #include "Dependencies/UpdateContext_Ref.h"
+
 
 namespace Lab {
 
@@ -20,8 +21,8 @@ namespace Lab {
 class Module {
 public:
     struct RenderParams {
-        Cool::InputProvider_Ref provider;
-        img::Size               render_target_size; // TODO(Variables) Move to InputProvider?
+        InputProvider_Ref provider;
+        img::Size         render_target_size; // TODO(Variables) Move to InputProvider?
     };
 
     Module()                                 = default;

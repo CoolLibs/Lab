@@ -1,6 +1,6 @@
 #pragma once
-#include <Cool/Dependencies/InputProvider_Ref.h>
 #include "Cool/Nodes/NodesLibrary.h"
+#include "InputProvider_Ref.h"
 #include "Ui.h"
 
 namespace Lab {
@@ -12,7 +12,7 @@ public:
     auto nodes_library() const -> auto& { return _data.nodes_library.get(); }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        Cool::InputProvider_Ref                    input_provider;
+        InputProvider_Ref                          input_provider;
         Ui_Ref                                     ui;
         std::reference_wrapper<Cool::NodesLibrary> nodes_library;
     };
