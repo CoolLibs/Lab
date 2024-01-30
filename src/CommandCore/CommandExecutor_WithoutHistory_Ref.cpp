@@ -1,4 +1,5 @@
 #include "CommandExecutor_WithoutHistory_Ref.h"
+#include <Cool/Log/ToUser.h>
 #include "CommandExecutionContext_Ref.h"
 
 namespace Lab {

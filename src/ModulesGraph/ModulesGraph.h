@@ -2,6 +2,7 @@
 #include <Dependencies/UpdateContext_Ref.h>
 #include "Cool/Nodes/Editor.h"
 #include "Cool/OSC/OSCChannel.h"
+#include "Cool/Variables/Variable.h"
 #include "Cool/View/GizmoManager.h"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Particles/Module_Particles.h"
@@ -44,12 +45,11 @@ private:
 class ModulesGraph {
 public:
     ModulesGraph() = default;
-    ModulesGraph(Cool::DirtyFlagFactory_Ref, Cool::InputFactory_Ref);
 
     void update(UpdateContext_Ref);
-    void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
+    void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref);
 
-    void trigger_rerender_all(Cool::SetDirty_Ref);
+    void request_rerender_all();
 
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
     [[nodiscard]] auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
@@ -57,24 +57,22 @@ public:
     [[nodiscard]] auto nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     /// Function called once on every frame where the time has changed.
-    void on_time_changed(UpdateContext_Ref);
+    void on_time_changed();
     void on_time_reset();
     /// Function called once on every frame where the audio has changed.
-    void on_audio_changed(UpdateContext_Ref);
+    void on_audio_changed();
     /// Function called once on every frame for each OSC channel that has changed.
-    void on_osc_channel_changed(Cool::OSCChannel const&, UpdateContext_Ref update_ctx);
+    void on_osc_channel_changed(Cool::OSCChannel const&);
     /// Function called once on every frame for each Midi channel that has changed.
-    void on_midi_channel_changed(Cool::MidiChannel const&, UpdateContext_Ref update_ctx);
+    void on_midi_channel_changed(Cool::MidiChannel const&);
 
-    void update_dependencies_from_nodes_graph(UpdateContext_Ref);
+    void update_dependencies_from_nodes_graph();
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);
 
-    auto all_inputs() const -> Cool::AllInputRefsToConst;
-
 private:
-    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref, Cool::DirtyFlagFactory_Ref dirty_flag_factory);
+    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref);
     void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params);
     void render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams params);
     void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, Module::RenderParams params);
@@ -85,7 +83,7 @@ private:
     mutable Cool::NodeId      _node_we_might_want_to_restore_as_main_node_id{};
     Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
     Cool::DirtyFlag           _rerender_all_flag{};
-    Cool::Input<Cool::Camera> _camera_input{}; // TODO(Modules) Does it belong here?
+    Cool::Input<Cool::Camera> _camera_input{Cool::Variable<Cool::Camera>{{"Camera"}}, _rerender_all_flag}; // TODO(Modules) Move this to the project, like the Camera2D
 
     mutable Module_Compositing                     _compositing_module{};
     std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)

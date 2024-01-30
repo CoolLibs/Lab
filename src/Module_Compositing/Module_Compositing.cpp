@@ -3,8 +3,8 @@
 
 namespace Lab {
 
-Module_Compositing::Module_Compositing(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
-    : Module{"Compositing", dirty_flag_factory}
+Module_Compositing::Module_Compositing()
+    : Module{"Compositing"}
 {
 }
 
@@ -37,6 +37,7 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     auto const maybe_err = _pipeline.compile(_shader_code);
     log_shader_error(maybe_err);
     update_dependencies_from_shader_code(_depends_on, _shader_code);
+    needs_to_rerender_flag().set_dirty();
 }
 
 void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& maybe_err) const
@@ -48,12 +49,11 @@ void Module_Compositing::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* upd
 {
 }
 
-void Module_Compositing::imgui_show_generated_shader_code(Ui_Ref ui)
+void Module_Compositing::imgui_show_generated_shader_code()
 {
     if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{-1.f, -1.f}))
     {
         set_shader_code(_shader_code);
-        ui.dirty_setter()(needs_to_rerender_flag());
     }
 }
 

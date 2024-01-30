@@ -1,6 +1,6 @@
 #pragma once
-
-#include <Cool/Dependencies/VariableId.h>
+#include <Cool/Dependencies/Input.h>
+#include <Cool/StrongTypes/Gradient.h>
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/MakeReversibleCommandContext_Ref.h"
@@ -10,20 +10,27 @@ namespace Lab {
 namespace internal {
 
 template<typename T>
-void set_value_default_impl(CommandExecutionContext_Ref const& ctx, const Cool::VariableId<T>& id, const T& value)
+void set_value(Cool::Input<T>& input, T const& value)
 {
-    bool use_secondary_flag{false};
-    ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
-        if constexpr (std::is_same_v<T, Cool::Gradient>)
+    if constexpr (std::is_same_v<T, Cool::Gradient>)
+    {
+        // Request shader code generation only if the number of marks has changed, or the wrap mode or interpolation mode has changed.
+        if (input.value().value.gradient().get_marks().size() != value.value.gradient().get_marks().size()
+            || input.value().wrap_mode != value.wrap_mode
+            || input.value().value.gradient().interpolation_mode() != value.value.gradient().interpolation_mode())
         {
-            // Request shader code generation only if the number of marks has changed, or the wrap mode or interpolation mode has changed.
-            use_secondary_flag = variable.value().value.gradient().get_marks().size() != value.value.gradient().get_marks().size()
-                                 || variable.value().wrap_mode != value.wrap_mode
-                                 || variable.value().value.gradient().interpolation_mode() != value.value.gradient().interpolation_mode();
+            input._secondary_dirty_flag.set_dirty();
         }
-        variable.value() = value;
-    });
-    ctx.set_dirty(id, use_secondary_flag);
+        else
+        {
+            input._dirty_flag.set_dirty();
+        }
+    }
+    else
+    {
+        input._dirty_flag.set_dirty();
+    }
+    input.value() = value;
 }
 
 } // namespace internal
@@ -33,25 +40,25 @@ struct ReversibleCommand_SetVariable;
 
 template<typename T>
 struct Command_SetVariable {
-    Cool::VariableId<T> id{};
-    T                   value{};
+    mutable Cool::Input<T> input;
+    T                      value{};
 
-    void execute(CommandExecutionContext_Ref const& ctx) const
+    void execute(CommandExecutionContext_Ref const&) const
     {
-        internal::set_value_default_impl(ctx, id, value);
+        internal::set_value(input, value);
     }
 
     auto to_string() const -> std::string
     {
-        return "Set " + reg::to_string(id) + " to " + Cool::stringify(value);
+        return fmt::format("Set {} to {}", input.id(), Cool::stringify(value));
     }
 
-    auto make_reversible(MakeReversibleCommandContext_Ref const& ctx) const
+    auto make_reversible(MakeReversibleCommandContext_Ref const&) const
         -> ReversibleCommand_SetVariable<T>
     {
         return ReversibleCommand_SetVariable<T>{
             .forward_command = *this,
-            .old_value       = ctx.registries().get(id)->value(), // If the id isn't found in the registry this will crash, but this is what we want because this should never happen: it is a mistake to try to create a command for a variable that doesn't exist
+            .old_value       = input.value(),
         };
     }
 };
@@ -66,30 +73,25 @@ struct ReversibleCommand_SetVariable {
         forward_command.execute(ctx);
     }
 
-    void revert(CommandExecutionContext_Ref const& ctx) const
+    void revert(CommandExecutionContext_Ref const&) const
     {
-        internal::set_value_default_impl(ctx, forward_command.id, old_value);
+        internal::set_value(forward_command.input, old_value);
     }
 
     auto to_string() const -> std::string
     {
-        return "Set " + reg::to_string(forward_command.id) + " from " + Cool::stringify(old_value)
-               + " to " + Cool::stringify(forward_command.value);
+        return fmt::format("Set {} from {} to {}", forward_command.input.id(), Cool::stringify(old_value), Cool::stringify(forward_command.value));
     }
 
     auto merge(ReversibleCommand_SetVariable<T> const& previous) const -> std::optional<ReversibleCommand_SetVariable<T>>
     {
-        if (previous.forward_command.id == forward_command.id)
-        {
-            return ReversibleCommand_SetVariable<T>{
-                .forward_command = forward_command,
-                .old_value       = previous.old_value,
-            };
-        }
-        else
-        {
-            return {};
-        }
+        if (previous.forward_command.input.id() != forward_command.input.id())
+            return std::nullopt;
+
+        return ReversibleCommand_SetVariable<T>{
+            .forward_command = forward_command,
+            .old_value       = previous.old_value,
+        };
     };
 };
 
@@ -101,7 +103,7 @@ template<class Archive, typename T>
 void serialize(Archive& archive, Lab::Command_SetVariable<T>& command)
 {
     archive(
-        cereal::make_nvp("Id", command.id),
+        cereal::make_nvp("Input", command.input),
         cereal::make_nvp("Value", command.value)
     );
 }
@@ -110,8 +112,7 @@ template<class Archive, typename T>
 void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
 {
     archive(
-        cereal::make_nvp("Id", command.forward_command.id),
-        cereal::make_nvp("Value", command.forward_command.value),
+        cereal::make_nvp("Forward", command.forward_command),
         cereal::make_nvp("Old value", command.old_value)
     );
 }

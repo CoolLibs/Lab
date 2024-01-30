@@ -5,8 +5,8 @@
 
 namespace Lab {
 
-Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId const& id_of_node_storing_particles_count)
-    : Module{"Particles", dirty_flag_factory}
+Module_Particles::Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count)
+    : Module{"Particles"}
     , _id_of_node_storing_particles_count{id_of_node_storing_particles_count}
 {
 }
@@ -165,7 +165,7 @@ void Module_Particles::render(RenderParams in)
     }
     else if (_particle_system->dimension() == 3)
     {
-        auto const camera_3D      = in.provider(*_camera_input);
+        auto const camera_3D      = _camera_input->value();
         auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.f);
         _particle_system->render_shader().set_uniform("transform_matrix", full_camera_3D);
         _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());

@@ -12,14 +12,6 @@
 
 namespace Lab {
 
-ModulesGraph::ModulesGraph(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::InputFactory_Ref input_factory)
-    : _regenerate_code_flag{dirty_flag_factory.make()}
-    , _rerender_all_flag{dirty_flag_factory.make()}
-    , _camera_input{input_factory.make<Cool::Camera>(Cool::InputDefinition<Cool::Camera>{.name = "Camera"}, _rerender_all_flag)} // TODO(Modules) Move this to the project, like the Camera2D
-    , _compositing_module{dirty_flag_factory}
-{
-}
-
 void ModulesGraph::update(UpdateContext_Ref update_context)
 {
     _compositing_module.update(update_context);
@@ -30,23 +22,23 @@ void ModulesGraph::update(UpdateContext_Ref update_context)
     }
 }
 
-void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
+void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
 {
     if (render_target.needs_resizing())
-        trigger_rerender_all(update_ctx.dirty_setter());
-    if (in.is_dirty(_rerender_all_flag))
+        request_rerender_all();
+    if (_rerender_all_flag.is_dirty())
     {
-        trigger_rerender_all(update_ctx.dirty_setter());
-        in.set_clean(_rerender_all_flag);
+        request_rerender_all();
+        _rerender_all_flag.set_clean();
     }
 
-    if (in.is_dirty(_regenerate_code_flag))
+    if (_regenerate_code_flag.is_dirty())
     {
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Modules Graph", "Compiled");
-        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx, dirty_flag_factory);
-        trigger_rerender_all(update_ctx.dirty_setter());
-        in.set_clean(_regenerate_code_flag);
+        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx);
+        request_rerender_all();
+        _regenerate_code_flag.set_clean();
     }
 
     for (auto& module_node : _particles_module_nodes)
@@ -59,8 +51,8 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
         module_node->module._nodes_graph            = &_nodes_editor.graph();
         module_node->module._camera_input           = &_camera_input;
         module_node->module._feedback_double_buffer = &_compositing_module.feedback_double_buffer();
-        if (module_node->module.needs_to_rerender(in.is_dirty))
-            update_ctx.set_dirty(_compositing_module.needs_to_rerender_flag());
+        if (module_node->module.needs_to_rerender())
+            _compositing_module.needs_to_rerender_flag().set_dirty(); // Because compositing module depends on particles module
     }
     _compositing_module._nodes_graph  = &_nodes_editor.graph();
     _compositing_module._camera_input = &_camera_input;
@@ -72,9 +64,9 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
 
 void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params)
 {
-    if (!some_module.needs_to_rerender(params.is_dirty))
+    if (!some_module.needs_to_rerender())
         return;
-    params.set_clean(some_module.needs_to_rerender_flag());
+    some_module.needs_to_rerender_flag().set_clean();
 
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
@@ -112,11 +104,11 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
     render_one_module(_compositing_module, render_target, in);
 }
 
-void ModulesGraph::trigger_rerender_all(Cool::SetDirty_Ref set_dirty)
+void ModulesGraph::request_rerender_all()
 {
-    set_dirty(_compositing_module.needs_to_rerender_flag());
+    _compositing_module.needs_to_rerender_flag().set_dirty();
     for (auto& node : _particles_module_nodes)
-        set_dirty(node->module.needs_to_rerender_flag());
+        node->module.needs_to_rerender_flag().set_dirty();
 }
 
 void ModulesGraph::on_time_reset()
@@ -139,7 +131,7 @@ static auto texture_name_for_module(NodeDefinition const& definition, Cool::Node
     );
 }
 
-void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
+void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx)
 {
     _particles_module_nodes.clear();
     _compositing_module.reset_shader();
@@ -179,7 +171,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 );
 
                 _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
-                    /* .module                 = */ Module_Particles(dirty_flag_factory, id_of_node_storing_particles_count),
+                    /* .module                 = */ Module_Particles(id_of_node_storing_particles_count),
                     /* .texture_name_in_shader = */ texture_name_in_shader
                 ));
                 _particles_module_nodes.back()->module.set_simulation_shader_code(simulation_shader_code, false, dimension);
@@ -210,16 +202,14 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
-        {
-            ui.set_dirty(_regenerate_code_flag);
-        }
+            _regenerate_code_flag.set_dirty();
     }
     DebugOptions::show_generated_shader_code([&] {
         if (ImGui::BeginTabBar("Shaders Tabs", ImGuiTabBarFlags_None))
         {
             if (ImGui::BeginTabItem("Compositing"))
             {
-                _compositing_module.imgui_show_generated_shader_code(ui);
+                _compositing_module.imgui_show_generated_shader_code();
                 ImGui::EndTabItem();
             }
             for (auto const& _particles_module : _particles_module_nodes)
@@ -240,22 +230,17 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
 static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
 {
     auto const cam_transform = ctx.hacky_input_provider()(Cool::Input_Camera2D{});
-    auto const id            = input._default_variable_id.raw();
     return Cool::Gizmo_Point2D{
-        .get_position = [=]() {
-            auto const var = ctx.hacky_input_provider().variable_registries().get(id);
-            if (!var)
-                return Cool::ViewCoordinates{0.f};
-            return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{var->value().value, 1.f}}}; },
+        .get_position = [=]() { return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{input.value().value, 1.f}}}; },
         .set_position = [=](Cool::ViewCoordinates pos) {
                 auto const world_pos = glm::vec2{cam_transform * glm::vec3{pos, 1.f}};
                 ctx.ui().command_executor().execute(
-                        Command_SetVariable<Cool::Point2D>{.id = id, .value = Cool::Point2D{world_pos}}
+                        Command_SetVariable<Cool::Point2D>{.input = input, .value = Cool::Point2D{world_pos}}
                         ); },
         .on_drag_stop = [=]() { ctx.ui().command_executor().execute(
                                     Command_FinishedEditingVariable{}
                                 ); },
-        .id           = id,
+        .id           = input.id(),
     };
 }
 
@@ -272,26 +257,9 @@ void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref c
     });
 }
 
-auto ModulesGraph::all_inputs() const -> Cool::AllInputRefsToConst
-{
-    Cool::AllInputRefsToConst inputs;
-
-    inputs.push_back(Cool::AnyInputRefToConst{_camera_input});
-
-    _nodes_editor.graph().for_each_node<Node>([&](Node const& node) {
-        for (auto const& input : node.value_inputs())
-        {
-            inputs.push_back(std::visit([](auto&& input) { return Cool::AnyInputRefToConst{input}; }, input));
-        }
-    });
-
-    return inputs;
-}
-
 auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
 {
     return NodesConfig{
-        ui.input_factory(),
         Cool::GetNodeDefinition_Ref<NodeDefinition>{nodes_library},
         Cool::GetMutableNodeDefinition_Ref<NodeDefinition>{nodes_library},
         Cool::GetNodeCategoryConfig_Ref{nodes_library},
@@ -305,7 +273,7 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
     };
 }
 
-void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
+void ModulesGraph::on_time_changed()
 {
     for (auto& node : _particles_module_nodes)
     {
@@ -314,42 +282,42 @@ void ModulesGraph::on_time_changed(UpdateContext_Ref update_ctx)
     if (_compositing_module.depends_on().time
         || !_particles_module_nodes.empty())
     {
-        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on time
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on time
     }
 }
 
-void ModulesGraph::on_audio_changed(UpdateContext_Ref update_ctx)
+void ModulesGraph::on_audio_changed()
 {
     if (_compositing_module.depends_on().audio()
         || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [](auto const& module_node) { return module_node->module.depends_on().audio(); }))
     {
-        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on audio
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on audio
     }
 }
 
-void ModulesGraph::on_osc_channel_changed(Cool::OSCChannel const& osc_channel, UpdateContext_Ref update_ctx)
+void ModulesGraph::on_osc_channel_changed(Cool::OSCChannel const& osc_channel)
 {
     if (_compositing_module.depends_on().osc_channel(osc_channel)
         || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().osc_channel(osc_channel); }))
     {
-        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on this OSC channel
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this OSC channel
     }
 }
 
-void ModulesGraph::on_midi_channel_changed(Cool::MidiChannel const& midi_channel, UpdateContext_Ref update_ctx)
+void ModulesGraph::on_midi_channel_changed(Cool::MidiChannel const& midi_channel)
 {
     if (_compositing_module.depends_on().midi_channel(midi_channel)
         || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().midi_channel(midi_channel); }))
     {
-        trigger_rerender_all(update_ctx.dirty_setter()); // TODO(Modules) Only rerender the modules that depend on this Midi channel
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this Midi channel
     }
 }
 
-void ModulesGraph::update_dependencies_from_nodes_graph(UpdateContext_Ref ctx)
+void ModulesGraph::update_dependencies_from_nodes_graph()
 {
-    _compositing_module.update_dependencies_from_nodes_graph(_nodes_editor.graph(), ctx.hacky_input_provider());
+    _compositing_module.update_dependencies_from_nodes_graph(_nodes_editor.graph());
     for (auto const& module_node : _particles_module_nodes)
-        module_node->module.update_dependencies_from_nodes_graph(_nodes_editor.graph(), ctx.hacky_input_provider());
+        module_node->module.update_dependencies_from_nodes_graph(_nodes_editor.graph());
 }
 
 void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const

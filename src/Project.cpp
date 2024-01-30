@@ -3,8 +3,7 @@
 namespace Lab {
 
 Project::Project()
-    : camera_manager{variable_registries.of<Cool::Variable<Cool::Camera>>().create_shared({})}
-    , modules_graph{std::make_unique<ModulesGraph>(dirty_flag_factory(), input_factory())}
+    : camera_manager{{}}
 {
 }
 

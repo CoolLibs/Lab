@@ -10,8 +10,7 @@ namespace Lab {
 
 class Module_Compositing : public Module {
 public:
-    Module_Compositing() = default;
-    explicit Module_Compositing(Cool::DirtyFlagFactory_Ref);
+    Module_Compositing();
     Module_Compositing(Module_Compositing const&)                    = delete;
     auto operator=(Module_Compositing const&) -> Module_Compositing& = delete;
     // Module_Compositing(Module_Compositing&&) noexcept                    = default; // TODO(Modules)
@@ -22,7 +21,7 @@ public:
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
-    void imgui_show_generated_shader_code(Ui_Ref ui);
+    void imgui_show_generated_shader_code();
 
     void reset_shader();
     void on_time_reset();
@@ -31,7 +30,7 @@ public:
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code);
 
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
-    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph, Cool::InputProvider_Ref input_provider) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph, input_provider); }
+    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
     auto shader_is_valid() const -> bool { return _pipeline.shader().has_value(); } // TODO(Modules) Remove
     auto shader() -> auto const& { return *_pipeline.shader(); }                    // TODO(Modules) Remove

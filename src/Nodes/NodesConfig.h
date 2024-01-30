@@ -1,5 +1,4 @@
 #pragma once
-#include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Audio/AudioManager.h"
@@ -17,7 +16,6 @@ namespace Lab {
 class NodesConfig {
 public:
     NodesConfig(
-        Cool::InputFactory_Ref                             input_factory,
         Cool::GetNodeDefinition_Ref<NodeDefinition>        get_node_definition,
         Cool::GetMutableNodeDefinition_Ref<NodeDefinition> get_mutable_node_definition,
         Cool::GetNodeCategoryConfig_Ref                    get_node_category_config,
@@ -29,8 +27,7 @@ public:
         Cool::NodesGraph const&                            graph,
         Cool::AudioManager&                                audio_manager
     )
-        : _input_factory{input_factory}
-        , _get_node_definition{get_node_definition}
+        : _get_node_definition{get_node_definition}
         , _get_mutable_node_definition{get_mutable_node_definition}
         , _get_node_category_config{get_node_category_config}
         , _ui{ui}
@@ -62,7 +59,6 @@ private:
     void set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node_id = false);
 
 private:
-    Cool::InputFactory_Ref                             _input_factory;
     Cool::GetNodeDefinition_Ref<NodeDefinition>        _get_node_definition;
     Cool::GetMutableNodeDefinition_Ref<NodeDefinition> _get_mutable_node_definition;
     Cool::GetNodeCategoryConfig_Ref                    _get_node_category_config;

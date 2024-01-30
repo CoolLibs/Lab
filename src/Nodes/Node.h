@@ -1,4 +1,5 @@
 #pragma once
+#include <Cool/Dependencies/AnyInput.h>
 #include <Cool/Dependencies/Input.h>
 #include <Cool/Nodes/Pin.h>
 #include <cereal/types/optional.hpp>

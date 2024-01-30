@@ -9,6 +9,9 @@
 #include "Cool/Nodes/utilities/drawing.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/Color.h"
+#include "Cool/Variables/Settings.h"
+#include "Cool/Variables/Settings_Ref.h"
+#include "Cool/Variables/Variable.h"
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeColor.h"
@@ -18,49 +21,32 @@
 
 namespace Lab {
 
-// TODO(JF) Remove
-static auto settings_from_inputs(
-    const std::vector<Cool::AnyInput>& inputs,
-    const Cool::VariableRegistries&    registry
-) -> std::vector<Cool::AnyVariable>
+// TODO(Variables) Remove
+static auto settings_from_inputs(std::vector<Cool::AnyInput> const& inputs) -> Cool::Settings
 {
-    std::vector<Cool::AnyVariable> settings;
+    auto settings = Cool::Settings{};
     settings.reserve(inputs.size());
-    for (const auto& input : inputs)
+    for (auto const& input : inputs)
     {
-        const auto maybe_variable = std::visit([&](auto&& input) -> std::optional<Cool::AnyVariable> {
-            const auto maybe_variable = registry.get(input._default_variable_id.raw());
-            if (maybe_variable)
-            {
-                return Cool::AnyVariable{*maybe_variable};
-            }
-            else
-            {
-                return std::nullopt;
-            }
+        std::visit([&](auto&& input) {
+            settings.push_back(input.variable_data());
         },
-                                               input);
-        if (maybe_variable)
-        {
-            settings.push_back(*maybe_variable);
-        }
+                   input);
     }
     return settings;
 }
 
-// TODO(JF) Remove
 template<typename T>
-auto get_concrete_variable(const Cool::Input<T>&, const Cool::AnyVariable& var) -> Cool::Variable<T>
+static auto get_concrete_variable_data(Cool::AnyVariableData const& var, Cool::Input<T> const&) -> Cool::VariableData<T>
 {
-    return std::get<Cool::Variable<T>>(var);
+    return std::get<Cool::VariableData<T>>(var);
 }
 
 // TODO(JF) Remove
 static void apply_settings_to_inputs(
-    const std::vector<Cool::AnyVariable>& settings,
-    std::vector<Cool::AnyInput>&          inputs,
-    Cool::VariableRegistries&             registry,
-    std::string_view                      node_name
+    Cool::Settings const&        settings,
+    std::vector<Cool::AnyInput>& inputs,
+    std::string_view             node_name
 )
 {
     try
@@ -68,10 +54,7 @@ static void apply_settings_to_inputs(
         for (size_t i = 0; i < inputs.size(); ++i)
         {
             std::visit([&](auto&& input) {
-                registry.set(
-                    input._default_variable_id.raw(),
-                    get_concrete_variable(input, settings.at(i))
-                );
+                *input._variable = Cool::Variable{get_concrete_variable_data(settings.at(i), input)};
             },
                        inputs.at(i));
         }
@@ -175,14 +158,14 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     {
         ImGui::NewLine();
         // Get the variables from the inputs
-        auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
+        auto settings = settings_from_inputs(node.value_inputs());
         // Apply
         bool const has_changed = def->imgui_presets(settings);
         // Apply back the variables to the inputs' default variables
-        apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
+        apply_settings_to_inputs(settings, node.value_inputs(), to_string(node));
 
         if (has_changed)
-            _ui.set_dirty(_regenerate_code_flag); // TODO(JF) We could simply rerender instead of regenerate if none of the properties require code generation
+            _regenerate_code_flag.set_dirty(); // TODO(Modules) We could simply rerender instead of regenerate if none of the properties require code generation
     }
 }
 
@@ -233,7 +216,7 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
-    _ui.set_dirty(_regenerate_code_flag);
+    _regenerate_code_flag.set_dirty();
     _node_we_might_want_to_restore_as_main_node_id = {};
 
     // Don't change main node if we are dragging a link backward.
@@ -250,7 +233,7 @@ void NodesConfig::set_main_node_id(Cool::NodeId const& id, bool keep_node_we_mig
     if (!keep_node_we_might_want_to_restore_as_main_node)
         _node_we_might_want_to_restore_as_main_node_id = {};
     _main_node_id = id;
-    _ui.set_dirty(_regenerate_code_flag);
+    _regenerate_code_flag.set_dirty();
 }
 
 void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link, Cool::LinkId const&)
@@ -337,20 +320,24 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
 
     for (auto const& value_input_def : def.value_inputs())
     {
-        node.value_inputs().push_back(_input_factory.make(
-            value_input_def,
-            Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
-            _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+        node.value_inputs().push_back(std::visit(
+            [&](auto&& value_input_def)
+                -> Cool::AnyInput { return Cool::Input{
+                                        value_input_def,
+                                        Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
+                                        _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+                                    }; },
+            value_input_def
         ));
         node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
     }
 
     // Get the variables from the inputs
-    auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
+    auto settings = settings_from_inputs(node.value_inputs());
     // Apply
     def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
+    apply_settings_to_inputs(settings, node.value_inputs(), to_string(node));
 
     for (auto const& output_index_name : def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});

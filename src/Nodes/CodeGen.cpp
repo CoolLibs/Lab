@@ -18,6 +18,7 @@
 #include "NodeDefinition.h"
 #include "input_to_primitive_type.h"
 #include "valid_glsl.h"
+#include "valid_input_name.h"
 
 namespace Lab {
 
@@ -121,19 +122,6 @@ static auto desired_function_name(
     );
 }
 
-auto valid_property_name(std::string const& name, reg::AnyId const& property_default_variable_id) // We use a unique id per property to make sure they don't clash with anything. For example if the node was called Zoom and its property was also called Zoom, both the function and the uniform variable would get the same name.
-    -> std::string
-{
-    using fmt::literals::operator""_a;
-    return fmt::format(
-        FMT_COMPILE(
-            "{name}{id}"
-        ),
-        "name"_a = valid_glsl(name),
-        "id"_a   = valid_glsl(to_string(property_default_variable_id.underlying_uuid()))
-    );
-}
-
 auto make_valid_output_index_name(Cool::OutputPin const& pin) -> std::string
 {
     using fmt::literals::operator""_a;
@@ -195,14 +183,11 @@ static auto gen_value_inputs(
         {
             res.code += Cool::gen_input_shader_code(
                             prop,
-                            context.input_provider(),
                             std::visit([](auto&& prop) { return fmt::format("'{}'", prop.name()); }, prop) // Re-add single quotes around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
                         )
                         + '\n';
 
-            res.real_names.push_back(std::visit(
-                [](auto&& prop) { return valid_property_name(prop.name(), prop._default_variable_id.raw()); }, prop
-            ));
+            res.real_names.push_back(valid_input_name(prop));
         }
 
         property_index++;

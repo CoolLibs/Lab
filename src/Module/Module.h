@@ -1,6 +1,5 @@
 #pragma once
 #include <Cool/Dependencies/Input.h>
-#include <Cool/Dependencies/InputFactory_Ref.h>
 #include <Cool/Dependencies/InputProvider_Ref.h>
 #include <Cool/Log/OptionalErrorMessage.h>
 #include <img/src/Size.h>
@@ -21,12 +20,8 @@ namespace Lab {
 class Module {
 public:
     struct RenderParams {
-        Cool::InputProvider_Ref                          provider;
-        Cool::InputFactory_Ref                           input_factory;
-        Cool::IsDirty_Ref                                is_dirty;
-        Cool::SetClean_Ref                               set_clean;
-        std::reference_wrapper<Cool::VariableRegistries> variable_registries;
-        img::Size                                        render_target_size;
+        Cool::InputProvider_Ref provider;
+        img::Size               render_target_size; // TODO(Variables) Move to InputProvider?
     };
 
     Module()                                 = default;
@@ -40,9 +35,8 @@ protected:
 public:
     virtual ~Module() = default;
 
-    Module(std::string_view name, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
+    Module(std::string_view name)
         : _name{name}
-        , _needs_to_rerender_flag{dirty_flag_factory.make()}
     {
     }
 
@@ -51,17 +45,17 @@ public:
     void do_rendering(RenderParams params)
     {
         render(params);
-        params.set_clean(_needs_to_rerender_flag);
+        _needs_to_rerender_flag.set_clean();
     }
     virtual void imgui_windows(Ui_Ref, UpdateContext_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
     virtual void update(UpdateContext_Ref){};
 
-    [[nodiscard]] virtual auto needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
+    [[nodiscard]] virtual auto needs_to_rerender() const -> bool
     {
-        return check_dirty(_needs_to_rerender_flag);
+        return _needs_to_rerender_flag.is_dirty();
     };
 
-    [[nodiscard]] auto needs_to_rerender_flag() const { return _needs_to_rerender_flag; }
+    [[nodiscard]] auto needs_to_rerender_flag() const -> Cool::DirtyFlag const& { return _needs_to_rerender_flag; }
 
 protected:
     void log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;

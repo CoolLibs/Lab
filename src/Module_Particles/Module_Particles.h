@@ -12,7 +12,7 @@ namespace Lab {
 class Module_Particles : public Module {
 public:
     Module_Particles() = default;
-    explicit Module_Particles(Cool::DirtyFlagFactory_Ref, Cool::NodeId const& id_of_node_storing_particles_count);
+    explicit Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
     Module_Particles(Module_Particles&&) noexcept                    = default;
@@ -28,16 +28,16 @@ public:
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
     void imgui_show_generated_shader_code();
 
-    [[nodiscard]] auto needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool override
+    [[nodiscard]] auto needs_to_rerender() const -> bool override
     {
-        return Module::needs_to_rerender(check_dirty) || _needs_to_update_particles;
+        return Module::needs_to_rerender() || _needs_to_update_particles;
     };
 
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
     void on_time_reset();
 
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
-    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph, Cool::InputProvider_Ref input_provider) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph, input_provider); }
+    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
     void render(RenderParams) override;

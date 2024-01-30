@@ -1,6 +1,5 @@
 #pragma once
-
-#include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/AnyInput.h>
 #include "PrimitiveType.h"
 
 namespace Lab {

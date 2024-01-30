@@ -51,8 +51,8 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
-            name_in_code="show_commands_and_registries_debug_windows",
-            name_in_ui="Commands and Registries windows",
+            name_in_code="show_commands_debug_windows",
+            name_in_ui="Commands windows",
             available_in_release=True,
         ),
         DebugOption(
