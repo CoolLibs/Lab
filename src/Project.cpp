@@ -3,7 +3,10 @@
 namespace Lab {
 
 Project::Project()
-    : camera_manager{{}}
+    : camera_manager{Cool::Input<Cool::Camera>{
+        Cool::InputDefinition<Cool::Camera>{.name = "3D Camera"},
+        modules_graph->rerender_all_flag(),
+    }}
 {
 }
 

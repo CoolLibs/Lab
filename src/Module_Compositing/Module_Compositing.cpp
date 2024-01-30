@@ -82,7 +82,7 @@ void Module_Compositing::render_impl(RenderParams in)
     if (!_pipeline.shader())
         return;
 
-    set_uniforms_for_shader_based_module(*_pipeline.shader(), in.provider, _depends_on, _feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(*_pipeline.shader(), in.provider, _depends_on, _feedback_double_buffer, *_nodes_graph);
     _pipeline.draw();
 }
 

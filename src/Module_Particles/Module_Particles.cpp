@@ -119,7 +119,7 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
 
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);
-    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _depends_on, *_feedback_double_buffer, *_nodes_graph);
     _particle_system->update();
     _force_init_particles      = false;
     _needs_to_update_particles = false;
@@ -149,7 +149,7 @@ void Module_Particles::render(RenderParams in)
         update_particles(in.provider);
 
 #if !defined(COOL_PARTICLES_DISABLED_REASON)
-    set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _depends_on, *_feedback_double_buffer, *_nodes_graph);
 
     auto const camera_2D_mat3 = glm::inverse(glm::scale(in.provider(Cool::Input_Camera2D{}), glm::vec2{in.provider(Cool::Input_AspectRatio{}), 1.f}));
     auto const camera_2D_mat4 = glm::mat4{
@@ -165,7 +165,7 @@ void Module_Particles::render(RenderParams in)
     }
     else if (_particle_system->dimension() == 3)
     {
-        auto const camera_3D      = _camera_input->value();
+        auto const camera_3D      = in.provider(Cool::Input_Camera3D{});
         auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.f);
         _particle_system->render_shader().set_uniform("transform_matrix", full_camera_3D);
         _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());

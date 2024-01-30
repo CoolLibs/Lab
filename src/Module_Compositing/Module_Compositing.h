@@ -16,8 +16,7 @@ public:
     // Module_Compositing(Module_Compositing&&) noexcept                    = default; // TODO(Modules)
     // auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default; // TODO(Modules)
 
-    Cool::NodesGraph const*          _nodes_graph; // TODO(Modules) Remove
-    Cool::Input<Cool::Camera> const* _camera_input;
+    Cool::NodesGraph const* _nodes_graph; // TODO(Modules) Remove
 
     void update(UpdateContext_Ref) override;
     void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;

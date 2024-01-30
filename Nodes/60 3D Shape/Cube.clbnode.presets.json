@@ -9,7 +9,7 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "Radius",
+                                "Name": "Size",
                                 "Value": 1.0,
                                 "Metadata": {
                                     "Bounds": {

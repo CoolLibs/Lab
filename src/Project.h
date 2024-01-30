@@ -15,12 +15,12 @@ namespace Lab {
 struct Project {
     Project();
 
-    CameraManager                  camera_manager; // First because modules need the camera input when they get created
-    Cool::Variable<Cool::Camera2D> camera2D{{"Camera 2D"}};
+    std::unique_ptr<ModulesGraph>  modules_graph{std::make_unique<ModulesGraph>()}; // TODO(Modules) Can't we avoid the unique_ptr?
+    CameraManager                  camera_manager;                                  // Must be after modules_graph because we reference a DirtyFlag from it
+    Cool::Variable<Cool::Camera2D> camera2D{{"2D Camera"}};
     Cool::Clock_Realtime           clock;
     Cool::ImageSizeConstraint      view_constraint;
     History                        history{};
-    std::unique_ptr<ModulesGraph>  modules_graph{std::make_unique<ModulesGraph>()}; // TODO(Modules) Can't we avoid the unique_ptr?
     bool                           is_camera_2D_editable_in_view{true};
     Cool::Exporter                 exporter;
     Cool::AudioManager             audio;

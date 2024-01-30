@@ -12,7 +12,6 @@ void set_uniforms_for_shader_based_module(
     Cool::InputProvider_Ref,
     ModuleDependencies const&,
     Cool::DoubleBufferedRenderTarget const&,
-    Cool::Input<Cool::Camera> const&,
     Cool::NodesGraph const&
 );
 

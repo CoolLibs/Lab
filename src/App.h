@@ -73,7 +73,7 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio, float height, float time, float delta_time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{render_target_aspect_ratio, height, time, delta_time, cam2D, _project.audio}; }
+    auto input_provider                             (float render_target_aspect_ratio, float height, float time, float delta_time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{render_target_aspect_ratio, height, time, delta_time, cam2D, _project.camera_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor(), _project.audio}; }
     auto update_context                             () { return UpdateContext_Ref{{input_provider(0.f, 0.f, -100000.f, 0.f, _project.camera2D.value().transform_matrix() /* HACK: Dummy values, they should not be needed. Currently this is only used by shader code generation to inject of very specific types like Gradient */), ui(), _nodes_library_manager.library()}}; }
     // clang-format on

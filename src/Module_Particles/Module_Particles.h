@@ -21,7 +21,6 @@ public:
 
     Cool::NodesGraph const*                 _nodes_graph{};            // TODO(Particles) Remove
     Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer{}; // TODO(Particles) Remove
-    Cool::Input<Cool::Camera> const*        _camera_input{};           // TODO(Particles) Remove
 
     void update(UpdateContext_Ref) override;
     void request_particles_to_update() { _needs_to_update_particles = true; }

@@ -18,6 +18,8 @@ public:
         : _camera_input{camera_input}
     {}
 
+    auto camera() const -> Cool::Camera const& { return _camera_input.value(); }
+
     void hook_events(
         Cool::MouseEventDispatcher<Cool::ViewCoordinates>&,
         CommandExecutor const&,

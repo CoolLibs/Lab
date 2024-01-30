@@ -91,7 +91,6 @@ auto set_uniforms_for_shader_based_module(
     Cool::InputProvider_Ref                 provider,
     ModuleDependencies const&               depends_on,
     Cool::DoubleBufferedRenderTarget const& feedback_double_buffer,
-    Cool::Input<Cool::Camera> const&        camera_input,
     Cool::NodesGraph const&                 nodes_graph
 ) -> void
 {
@@ -120,7 +119,7 @@ auto set_uniforms_for_shader_based_module(
             .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
         }
     );
-    Cool::CameraShaderU::set_uniform(shader, camera_input.value(), provider(Cool::Input_AspectRatio{}));
+    Cool::CameraShaderU::set_uniform(shader, provider(Cool::Input_Camera3D{}), provider(Cool::Input_AspectRatio{}));
 
     nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
         for (auto const& value_input : node.value_inputs())
