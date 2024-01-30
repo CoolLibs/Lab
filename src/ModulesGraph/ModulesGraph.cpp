@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
+#include "Cool/StrongTypes/Camera2D.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "Nodes/valid_glsl.h"
@@ -223,13 +224,12 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     });
 }
 
-static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx) -> Cool::Gizmo_Point2D
+static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx, Cool::Camera2D const& cam_2D) -> Cool::Gizmo_Point2D
 {
-    auto const cam_transform = ctx.hacky_input_provider()(Input_Camera2D{});
     return Cool::Gizmo_Point2D{
-        .get_position = [=]() { return Cool::ViewCoordinates{glm::vec2{glm::inverse(cam_transform) * glm::vec3{input.value().value, 1.f}}}; },
+        .get_position = [=]() { return Cool::ViewCoordinates{glm::vec2{cam_2D.view_matrix() * glm::vec3{input.value().value, 1.f}}}; },
         .set_position = [=](Cool::ViewCoordinates pos) {
-                auto const world_pos = glm::vec2{cam_transform * glm::vec3{pos, 1.f}};
+                auto const world_pos = glm::vec2{cam_2D.transform_matrix() * glm::vec3{pos, 1.f}};
                 ctx.ui().command_executor().execute(
                         Command_SetVariable<Cool::Point2D>{.input = input, .value = Cool::Point2D{world_pos}}
                         ); },
@@ -240,14 +240,14 @@ static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Re
     };
 }
 
-void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx)
+void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx, Cool::Camera2D const& cam_2D)
 {
     _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
         for (auto const& input : node.downcast<Node>().value_inputs())
         {
             if (auto const* point_2D_input = std::get_if<Cool::Input<Cool::Point2D>>(&input))
             {
-                gizmos.push(make_gizmo(*point_2D_input, ctx));
+                gizmos.push(make_gizmo(*point_2D_input, ctx, cam_2D));
             }
         }
     });

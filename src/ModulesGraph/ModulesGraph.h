@@ -70,7 +70,7 @@ public:
     void update_dependencies_from_nodes_graph();
 
     void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
-    void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref);
+    void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref, Cool::Camera2D const&);
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref);

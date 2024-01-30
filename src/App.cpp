@@ -310,7 +310,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context());
+    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context(), _project.camera2D.value());
     _output_view.imgui_window({
         .on_open  = [&]() { request_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { request_rerender(); }, // as our render target, we need to rerender.
