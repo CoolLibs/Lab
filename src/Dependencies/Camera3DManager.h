@@ -11,41 +11,31 @@ namespace Lab {
 class CommandExecutionContext_Ref;
 class CommandExecutor;
 
-class CameraManager {
+class Camera3DManager {
 public:
-    CameraManager() = default;
-    explicit CameraManager(Cool::Input<Cool::Camera> const& camera_input)
-        : _camera_input{camera_input}
+    Camera3DManager() = default;
+    Camera3DManager(std::string variable_name, Cool::DirtyFlag const& dirty_flag)
+        : _camera_input{Cool::InputDefinition<Cool::Camera>{.name = std::move(variable_name)}, dirty_flag}
     {}
 
-    auto camera() const -> Cool::Camera const& { return _camera_input.value(); }
+    auto               camera() const -> Cool::Camera const& { return _camera_input.value(); }
+    [[nodiscard]] auto is_editable_in_view() -> bool& { return _is_editable_in_view; }
 
     void hook_events(
         Cool::MouseEventDispatcher<Cool::ViewCoordinates>&,
-        CommandExecutor const&,
-        std::function<void()> const& on_change
+        CommandExecutor const&
     );
 
-    // [[nodiscard]] auto id() const -> Cool::SharedVariableId<Cool::Camera> { return _camera_id; }
-    [[nodiscard]] auto is_editable_in_view() -> bool& { return _is_editable_in_view; }
-
-    void imgui(
-        CommandExecutor const&,
-        std::function<void()> const& on_change
-    );
+    void imgui(CommandExecutor const&);
 
     [[nodiscard]] auto get_zoom() const -> float { return _view_controller.get_distance_to_orbit_center(); }
     void               set_zoom(float zoom, CommandExecutionContext_Ref const& ctx);
 
-    void reset_camera(
-        CommandExecutor const&,
-        std::function<void()> const& on_change
-    );
+    void reset_camera(CommandExecutor const&);
 
 private:
     void maybe_update_camera(
         CommandExecutor const&,
-        std::function<void()> const& on_change,
         std::function<bool(Cool::Camera&)> const&
     );
 

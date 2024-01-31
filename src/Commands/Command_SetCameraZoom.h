@@ -1,6 +1,4 @@
 #pragma once
-
-#include "Dependencies/CameraManager.h"
-
+#include "Dependencies/Camera3DManager.h"
 //
 #include "generated2/Command_SetCameraZoom.inl"

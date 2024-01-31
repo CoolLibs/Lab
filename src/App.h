@@ -67,13 +67,13 @@ private:
     void check_inputs__timeline();
 
     // clang-format off
-    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_manager}}; }
-    auto command_execution_context                  () ->CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager}}; }
+    auto command_execution_context                  () ->CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_3D_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio, float height, float time, float delta_time) { return InputProvider_Ref{render_target_aspect_ratio, height, time, delta_time, _project.camera2D.value().transform_matrix(), _project.camera_manager.camera(), _project.audio}; }
+    auto input_provider                             (float render_target_aspect_ratio, float height, float time, float delta_time) { return InputProvider_Ref{render_target_aspect_ratio, height, time, delta_time, _project.camera_2D_manager.camera().transform_matrix(), _project.camera_3D_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor(), _project.audio}; }
     auto update_context                             () { return UpdateContext_Ref{{ui(), _nodes_library_manager.library()}}; }
     // clang-format on

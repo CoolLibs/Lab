@@ -71,13 +71,8 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
 
-    _project.camera_manager.hook_events(_preview_view.mouse_events(), command_executor(), [this]() { request_rerender(); });
-    hook_camera2D_events(
-        _preview_view.mouse_events(),
-        _project.camera2D.value(),
-        [this]() { request_rerender(); },
-        [this]() { return !_project.is_camera_2D_editable_in_view; }
-    );
+    _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
+    _project.camera_2D_manager.hook_events(_preview_view.mouse_events());
 
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
@@ -283,19 +278,18 @@ void App::imgui_window_cameras()
 
     ImGui::PushID("##2D");
     Cool::ImGuiExtras::separator_text("2D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_project.is_camera_2D_editable_in_view);
+    Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_2D_manager.is_editable_in_view());
     Cool::ImGuiExtras::help_marker(help_text);
-    if (imgui_widget(_project.camera2D))
-        request_rerender();
+    _project.camera_2D_manager.imgui();
     ImGui::PopID();
 
     ImGui::NewLine();
 
     ImGui::PushID("##3D");
     Cool::ImGuiExtras::separator_text("3D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_manager.is_editable_in_view());
+    Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_3D_manager.is_editable_in_view()); // TODO(Variables) Move this to camera_3D_manager.imgui()
     Cool::ImGuiExtras::help_marker(help_text);
-    _project.camera_manager.imgui(command_executor(), [this]() { request_rerender(); });
+    _project.camera_3D_manager.imgui(command_executor());
     ImGui::PopID();
 }
 
@@ -310,7 +304,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context(), _project.camera2D.value());
+    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context(), _project.camera_2D_manager.camera());
     _output_view.imgui_window({
         .on_open  = [&]() { request_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { request_rerender(); }, // as our render target, we need to rerender.
@@ -344,13 +338,13 @@ void App::imgui_window_view()
             ImGui::SetItemTooltip("%s", _wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Toggle 2D / 3D cameras
-            if (Cool::ImGuiExtras::floating_button(_project.is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
+            if (Cool::ImGuiExtras::floating_button(_project.camera_2D_manager.is_editable_in_view() ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
             {
-                _project.is_camera_2D_editable_in_view        = !_project.is_camera_2D_editable_in_view;
-                _project.camera_manager.is_editable_in_view() = !_project.is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
+                _project.camera_2D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view();
+                _project.camera_3D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view(); // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            ImGui::SetItemTooltip("%s", _project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
+            ImGui::SetItemTooltip("%s", _project.camera_2D_manager.is_editable_in_view() ? "2D camera is active" : "3D camera is active");
             return b;
         },
     });
@@ -614,8 +608,8 @@ void App::imgui_menus()
 
 void App::reset_cameras()
 {
-    _project.camera2D.value() = {}; // TODO(JF) Store this command in history
-    _project.camera_manager.reset_camera(command_executor(), [this]() { request_rerender(); });
+    _project.camera_2D_manager.camera() = {}; // TODO(Commands) Store this command in history
+    _project.camera_3D_manager.reset_camera(command_executor());
 }
 
 void App::check_inputs()

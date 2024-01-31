@@ -1,4 +1,4 @@
-#include "CameraManager.h"
+#include "Camera3DManager.h"
 #include <Cool/Camera/ViewController_OrbitalU.h>
 #include <Cool/Dependencies/DirtyFlag.h>
 #include <Cool/ImGui/IcoMoonCodepoints.h>
@@ -12,15 +12,14 @@
 
 namespace Lab {
 
-void CameraManager::hook_events(
+void Camera3DManager::hook_events(
     Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
-    CommandExecutor const&                             executor,
-    std::function<void()> const&                       on_change // TODO(Variables) Shouldn't be needed if we set the DirtyFlag of the CameraInput properly
+    CommandExecutor const&                             executor
 )
 {
     events
         .scroll_event()
-        .subscribe([this, executor, on_change](auto const& event) {
+        .subscribe([this, executor](auto const& event) {
             if (!_is_editable_in_view)
                 return;
 
@@ -32,47 +31,44 @@ void CameraManager::hook_events(
                 _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
                 executor.execute(Command_SetCameraZoom{zoom});
                 executor.execute(Command_FinishedEditingVariable{});
-                on_change();
+                _camera_input._dirty_flag.set_dirty();
             }
         });
     events
         .drag()
         .subscribe({
-            .on_start  = [this, executor, on_change](auto const&) {
+            .on_start  = [this, executor](auto const&) {
                 if (!_is_editable_in_view)
                     return false;
 
-                maybe_update_camera( executor, on_change, [&](Cool::Camera& camera) {
+                maybe_update_camera( executor,  [&](Cool::Camera& camera) {
                     return _view_controller.on_drag_start(camera);
                 });
                 return true; },
-            .on_update = [this, executor, on_change](auto const&) {
+            .on_update = [this, executor](auto const&) {
                 //
-                maybe_update_camera(executor, on_change, [&](Cool::Camera& camera) {
+                maybe_update_camera(executor, [&](Cool::Camera& camera) {
                     return _view_controller.on_drag(camera, ImGui::GetIO().MouseDelta); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
                 });
                 ImGui::WrapMousePos(ImGuiAxesMask_All);
                 //
             },
-            .on_stop = [this, executor, on_change](auto&&) {
-                maybe_update_camera( executor, on_change, [&](Cool::Camera& camera) {
+            .on_stop = [this, executor](auto&&) {
+                maybe_update_camera( executor,  [&](Cool::Camera& camera) {
                     return _view_controller.on_drag_stop(camera);
                 });
                 executor.execute(Command_FinishedEditingVariable{}); },
         });
 }
 
-void CameraManager::imgui(
-    CommandExecutor const&       executor,
-    std::function<void()> const& on_change
-)
+void Camera3DManager::imgui(CommandExecutor const& executor)
 {
-    maybe_update_camera(executor, on_change, [&](Cool::Camera& camera) {
+    maybe_update_camera(executor, [&](Cool::Camera& camera) {
         return _view_controller.ImGui(camera);
     });
     if (ImGui::Button(Cool::icon_fmt("Look at the origin", ICOMOON_RADIO_CHECKED).c_str()))
     {
-        maybe_update_camera(executor, on_change, [&](Cool::Camera& camera) {
+        maybe_update_camera(executor, [&](Cool::Camera& camera) {
             _view_controller.set_orbit_center({0, 0, 0}, camera);
             return true;
         });
@@ -80,9 +76,9 @@ void CameraManager::imgui(
     }
     if (ImGui::Button(Cool::icon_fmt("Reset Camera", ICOMOON_TARGET).c_str()))
     {
-        reset_camera(executor, on_change);
+        reset_camera(executor);
     }
-    maybe_update_camera(executor, on_change, [&](Cool::Camera& camera) {
+    maybe_update_camera(executor, [&](Cool::Camera& camera) {
         return Cool::imgui(camera.projection());
     });
     if (ImGui::IsItemDeactivatedAfterEdit())
@@ -91,9 +87,8 @@ void CameraManager::imgui(
     }
 }
 
-void CameraManager::maybe_update_camera(
+void Camera3DManager::maybe_update_camera(
     CommandExecutor const&                    executor,
-    std::function<void()> const&              on_change,
     std::function<bool(Cool::Camera&)> const& fun
 )
 {
@@ -101,22 +96,19 @@ void CameraManager::maybe_update_camera(
     if (fun(camera))
     {
         executor.execute(Command_SetVariable<Cool::Camera>{_camera_input, camera});
-        on_change(); // TODO(Variables) Why do we need that if Camera has the right DirtyFlag that tells the App to rerender?
+        _camera_input._dirty_flag.set_dirty();
     }
 }
 
-void CameraManager::set_zoom(float zoom, CommandExecutionContext_Ref const&)
+void Camera3DManager::set_zoom(float zoom, CommandExecutionContext_Ref const&)
 {
     Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, _camera_input.value(), zoom);
     _camera_input._dirty_flag.set_dirty();
 }
 
-void CameraManager::reset_camera(
-    CommandExecutor const&       executor,
-    std::function<void()> const& on_change
-)
+void Camera3DManager::reset_camera(CommandExecutor const& executor)
 {
-    maybe_update_camera(executor, on_change, [&](Cool::Camera& camera) {
+    maybe_update_camera(executor, [&](Cool::Camera& camera) {
         Cool::ViewController_OrbitalU::reset_transform(_view_controller, camera);
         return true;
     });
