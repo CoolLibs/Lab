@@ -6,14 +6,16 @@
 namespace Lab {
 
 struct SystemValues {
-    float                                            render_target_aspect_ratio{}; // TODO(Variables) Remove, this is redundant with render_target_size
     img::Size                                        render_target_size{};
-    float                                            height{}; // TODO(Variables) Remove, this is redundant with render_target_size
     float                                            time{};
     float                                            delta_time{};
-    glm::mat3                                        camera2D{};
+    glm::mat3                                        camera2D{}; // TODO(Variables) Pass full Camera2D
     Cool::Camera                                     camera3D{};
     std::reference_wrapper<Cool::AudioManager const> audio_manager;
+
+    auto height() const -> float { return static_cast<float>(render_target_size.height()); }
+    auto aspect_ratio() const -> float { return img::SizeU::aspect_ratio(render_target_size); }
+    auto inverse_aspect_ratio() const -> float { return img::SizeU::aspect_ratio(render_target_size); }
 };
 
 } // namespace Lab
