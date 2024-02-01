@@ -1,9 +1,9 @@
 #include "CodeGen.h"
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
-#include <Cool/InputParser/InputParser.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
+#include <Cool/Variables/gen_input_shader_code.h>
 #include <Nodes/PrimitiveType.h>
 #include <fmt/core.h>
 #include <optional>
@@ -181,10 +181,10 @@ static auto gen_value_inputs(
         }
         else
         {
-            res.code += Cool::gen_input_shader_code(
-                            prop,
-                            std::visit([](auto&& prop) { return fmt::format("'{}'", prop.name()); }, prop) // Re-add single quotes around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
-                        )
+            res.code += std::visit([](auto&& prop) { return Cool::gen_input_shader_code(
+                                                         prop.value(),
+                                                         fmt::format("'{}'", prop.name()) // Re-add single quotes around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
+                                                     ); }, prop)
                         + '\n';
 
             res.real_names.push_back(valid_input_name(prop));
