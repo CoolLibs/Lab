@@ -2,7 +2,6 @@
 #include <Dependencies/UpdateContext_Ref.h>
 #include "Cool/Nodes/Editor.h"
 #include "Cool/OSC/OSCChannel.h"
-#include "Cool/Variables/Variable.h"
 #include "Cool/View/GizmoManager.h"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Particles/Module_Particles.h"
@@ -47,7 +46,7 @@ public:
     ModulesGraph() = default;
 
     void update(UpdateContext_Ref);
-    void render(Cool::RenderTarget&, Module::RenderParams, UpdateContext_Ref);
+    void render(Cool::RenderTarget&, SystemValues const&, UpdateContext_Ref);
 
     void request_rerender_all();
 
@@ -74,9 +73,9 @@ public:
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref);
-    void render_one_module(Module&, Cool::RenderTarget&, Module::RenderParams params);
-    void render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams params);
-    void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, Module::RenderParams params);
+    void render_one_module(Module&, Cool::RenderTarget&, SystemValues const& system_values);
+    void render_compositing_module(Cool::RenderTarget& render_target, SystemValues const& system_values);
+    void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, SystemValues const& system_values);
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};

@@ -1,6 +1,5 @@
 #pragma once
 #include "Cool/Nodes/NodesLibrary.h"
-#include "InputProvider_Ref.h"
 #include "Ui.h"
 
 namespace Lab {

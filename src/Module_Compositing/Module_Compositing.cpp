@@ -63,26 +63,26 @@ void Module_Compositing::set_render_target_size(img::Size const& size)
     _feedback_double_buffer.set_read_target_size_immediately(size);
 }
 
-void Module_Compositing::render(RenderParams in)
+void Module_Compositing::render(SystemValues const& system_values)
 {
     // TODO(Performance) Render only once and then copy to the _feedback_double_buffer ?
     // TODO(Performance) Only render on the _feedback_double_buffer when someone depends on it
     // Render on the normal render target
-    render_impl(in);
+    render_impl(system_values);
 
     // Render on the feedback texture
     _feedback_double_buffer.write_target().render([&]() {
-        render_impl(in);
+        render_impl(system_values);
     });
     _feedback_double_buffer.swap_buffers();
 }
 
-void Module_Compositing::render_impl(RenderParams in)
+void Module_Compositing::render_impl(SystemValues const& system_values)
 {
     if (!_pipeline.shader())
         return;
 
-    set_uniforms_for_shader_based_module(*_pipeline.shader(), in.provider, _depends_on, _feedback_double_buffer, *_nodes_graph);
+    set_uniforms_for_shader_based_module(*_pipeline.shader(), system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
     _pipeline.draw();
 }
 

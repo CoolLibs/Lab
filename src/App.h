@@ -73,7 +73,7 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio, float height, float time, float delta_time) { return InputProvider_Ref{render_target_aspect_ratio, height, time, delta_time, _project.camera_2D_manager.camera().transform_matrix(), _project.camera_3D_manager.camera(), _project.audio}; }
+    auto system_values                              (float render_target_aspect_ratio, img::Size rt_size, float height, float time, float delta_time) { return SystemValues{render_target_aspect_ratio, rt_size, height, time, delta_time, _project.camera_2D_manager.camera().transform_matrix(), _project.camera_3D_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor(), _project.audio}; }
     auto update_context                             () { return UpdateContext_Ref{{ui(), _nodes_library_manager.library()}}; }
     // clang-format on

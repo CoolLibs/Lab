@@ -254,10 +254,7 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
     auto const aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
     _project.modules_graph->render(
         render_target,
-        Module::RenderParams{
-            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, delta_time),
-            render_target.desired_size(),
-        },
+        system_values(aspect_ratio, render_target.desired_size(), static_cast<float>(render_target.desired_size().height()), time, delta_time),
         update_context()
     );
 }

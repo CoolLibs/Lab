@@ -23,7 +23,7 @@ void ModulesGraph::update(UpdateContext_Ref update_context)
     }
 }
 
-void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParams in, UpdateContext_Ref update_ctx)
+void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const& system_values, UpdateContext_Ref update_ctx)
 {
     if (render_target.needs_resizing())
         request_rerender_all();
@@ -57,11 +57,11 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     _compositing_module._nodes_graph = &_nodes_editor.graph();
     // TODO(Modules) Render in the order of dependency between the modules
     for (auto& node : _particles_module_nodes)
-        render_particle_module(node->module, node->render_target, in);
-    render_compositing_module(render_target, in);
+        render_particle_module(node->module, node->render_target, system_values);
+    render_compositing_module(render_target, system_values);
 }
 
-void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params)
+void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, SystemValues const& system_values)
 {
     if (!some_module.needs_to_rerender())
         return;
@@ -70,19 +70,19 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        some_module.do_rendering(params);
+        some_module.do_rendering(system_values);
     });
 
     if (DebugOptions::log_when_rendering())
         Cool::Log::ToUser::info(some_module.name() + " Module", "Rendered");
 }
 
-void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, Module::RenderParams in)
+void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, SystemValues const& system_values)
 {
-    render_one_module(module, render_target, in);
+    render_one_module(module, render_target, system_values);
 }
 
-void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, Module::RenderParams in)
+void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, SystemValues const& system_values)
 {
     if (_compositing_module.shader_is_valid())
     {
@@ -100,7 +100,7 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
         }
     }
 
-    render_one_module(_compositing_module, render_target, in);
+    render_one_module(_compositing_module, render_target, system_values);
 }
 
 void ModulesGraph::request_rerender_all()

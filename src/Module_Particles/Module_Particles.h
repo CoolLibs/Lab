@@ -38,8 +38,8 @@ public:
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
-    void render(RenderParams) override;
-    void update_particles(InputProvider_Ref);
+    void render(SystemValues const&) override;
+    void update_particles(SystemValues const&);
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void update_particles_count_ifn();
     auto desired_particles_count() const -> size_t;
