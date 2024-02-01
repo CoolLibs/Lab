@@ -29,14 +29,13 @@ def register_set_variable_commands():
 """
 
 
-# TODO(Variables)
-# def register_set_variable_metadata_commands():
-#     out = "\n"
-#     for variable_type in generator_variables.all_variable_types():
-#         out += (
-#             f"LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<{variable_type}>)\n"
-#         )
-#     return out
+def register_set_variable_metadata_commands():
+    out = "\n"
+    for variable_type in generator_variables.all_variable_types():
+        out += (
+            f"LAB_REGISTER_COMMAND(Lab::Command_SetVariableMetadata<{variable_type}>)\n"
+        )
+    return out
 
 
 if __name__ == "__main__":
@@ -56,6 +55,6 @@ if __name__ == "__main__":
         folder="generated",
         files=[
             register_set_variable_commands,
-            # register_set_variable_metadata_commands,
+            register_set_variable_metadata_commands,
         ],
     )

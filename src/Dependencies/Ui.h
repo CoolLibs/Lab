@@ -38,8 +38,8 @@ public:
     void widget(Cool::Input<T>& input)
     {
         ImGui::PushID(&input);
-        auto const prev_value = input.value();
-        // const auto prev_metadata = variable.metadata();
+        auto const prev_value    = input.value();
+        auto const prev_metadata = input._variable->metadata();
         input._variable->imgui(
             {
                 .on_value_changed =
@@ -52,12 +52,11 @@ public:
 
                 .on_metadata_changed =
                     [&]() {
-                        // TODO(Variables) ?
-                        // const auto new_metadata = variable.metadata();
-                        // variable.metadata()       = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
-                        // _command_executor.execute(
-                        //         Command_SetVariableMetadata<T>{.id = id, .metadata = new_metadata}
-                        //     );
+                        auto const new_metadata     = input._variable->metadata();
+                        input._variable->metadata() = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
+                        _command_executor.execute(
+                            Command_SetVariableMetadata<T>{.input = input, .metadata = new_metadata}
+                        );
                     },
 
                 .on_value_editing_finished =

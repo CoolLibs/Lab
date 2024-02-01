@@ -3,7 +3,7 @@
 INPUT float 'Size';
 INPUT float 'Thickness';
 INPUT float 'Fraction';
-
+// TODO(Variables) Some 3D nodes have invalid param name in their presets
 SignedDistance main(vec3 pos)
 {
     float cut = ('Fraction' * 2. - 1.) * 'Size';
