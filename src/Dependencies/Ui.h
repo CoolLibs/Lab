@@ -40,8 +40,7 @@ public:
         ImGui::PushID(&input);
         auto const prev_value = input.value();
         // const auto prev_metadata = variable.metadata();
-        Cool::imgui(
-            *input._variable,
+        input._variable->imgui(
             {
                 .on_value_changed =
                     [&]() {
