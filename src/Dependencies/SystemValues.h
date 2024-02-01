@@ -2,6 +2,7 @@
 #include <functional> // For std::reference_wrapper
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Camera/Camera.h"
+#include "Cool/StrongTypes/Camera2D.h"
 
 namespace Lab {
 
@@ -9,8 +10,8 @@ struct SystemValues {
     img::Size                                        render_target_size{};
     float                                            time{};
     float                                            delta_time{};
-    glm::mat3                                        camera2D{}; // TODO(Variables) Pass full Camera2D
-    Cool::Camera                                     camera3D{};
+    Cool::Camera2D                                   camera_2D{};
+    Cool::Camera                                     camera_3D{};
     std::reference_wrapper<Cool::AudioManager const> audio_manager;
 
     auto height() const -> float { return static_cast<float>(render_target_size.height()); }

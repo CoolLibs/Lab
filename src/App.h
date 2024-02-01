@@ -68,12 +68,12 @@ private:
 
     // clang-format off
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager}}; }
-    auto command_execution_context                  () ->CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_3D_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_3D_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto system_values                              (img::Size render_target_size, float time, float delta_time) { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera().transform_matrix(), _project.camera_3D_manager.camera(), _project.audio}; }
+    auto system_values                              (img::Size render_target_size, float time, float delta_time) { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor(), _project.audio}; }
     auto update_context                             () { return UpdateContext_Ref{{ui(), _nodes_library_manager.library()}}; }
     // clang-format on
