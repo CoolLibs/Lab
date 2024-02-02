@@ -274,7 +274,8 @@ void App::imgui_window_cameras()
 
     ImGui::PushID("##2D");
     Cool::ImGuiExtras::separator_text("2D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_2D_manager.is_editable_in_view());
+    if (Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_2D_manager.is_editable_in_view()))
+        _project.camera_3D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view();
     Cool::ImGuiExtras::help_marker(help_text);
     _project.camera_2D_manager.imgui();
     ImGui::PopID();
@@ -283,7 +284,8 @@ void App::imgui_window_cameras()
 
     ImGui::PushID("##3D");
     Cool::ImGuiExtras::separator_text("3D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_3D_manager.is_editable_in_view()); // TODO(Variables) Move this to camera_3D_manager.imgui()
+    if (Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_3D_manager.is_editable_in_view()))
+        _project.camera_2D_manager.is_editable_in_view() = !_project.camera_3D_manager.is_editable_in_view();
     Cool::ImGuiExtras::help_marker(help_text);
     _project.camera_3D_manager.imgui(command_executor());
     ImGui::PopID();
