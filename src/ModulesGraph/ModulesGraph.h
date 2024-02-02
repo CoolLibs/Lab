@@ -52,8 +52,8 @@ public:
 
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
     [[nodiscard]] auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
-    [[nodiscard]] auto regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; } // TODO(Variables) Pass by copy?
-    [[nodiscard]] auto rerender_all_flag() -> Cool::DirtyFlag { return _rerender_all_flag; }
+    [[nodiscard]] auto regenerate_code_flag() -> Cool::DirtyFlag& { return _regenerate_code_flag; }
+    [[nodiscard]] auto rerender_all_flag() -> Cool::DirtyFlag& { return _rerender_all_flag; }
     [[nodiscard]] auto nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     /// Function called once on every frame where the time has changed.
