@@ -1,6 +1,5 @@
 #pragma once
 #include <CommandCore/CommandExecutor_TopLevel.h>
-#include <Cool/Dependencies/SetVariableDirty_Ref.h>
 #include "ConcreteCommand.h"
 #include "Cool/Window/Window.h"
 #include "Dependencies/History.h"
