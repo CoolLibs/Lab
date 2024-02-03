@@ -32,7 +32,7 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
             }
             _camera.value().zoom *= zoom_variation;
 
-            _camera._dirty_flag.set_dirty();
+            _camera.dirty_flag().set_dirty();
         });
 
     events
@@ -41,7 +41,7 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
             .on_start  = [&](auto&&) { return _is_editable_in_view; },
             .on_update = [&](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
                 _camera.value().translation -= event.delta / _camera.value().zoom;
-                _camera._dirty_flag.set_dirty();
+                _camera.dirty_flag().set_dirty();
                 ImGui::WrapMousePos(ImGuiAxesMask_All);
                 //
             },
@@ -53,8 +53,8 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
 
 void Camera2DManager::imgui()
 {
-    if (imgui_widget(*_camera._variable)) // TODO(Variables) Just use the usual imgui() for Inputs (from the Ui class ?)
-        _camera._dirty_flag.set_dirty();
+    if (imgui_widget(_camera.variable())) // TODO(Variables) Just use the usual imgui() for Inputs (from the Ui class ?)
+        _camera.dirty_flag().set_dirty();
 }
 
 } // namespace Lab

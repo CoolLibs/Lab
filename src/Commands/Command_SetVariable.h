@@ -10,27 +10,27 @@ namespace Lab {
 namespace internal {
 
 template<typename T>
-void set_value(Cool::Input<T>& input, T const& value)
+void set_value(Cool::InputStrongRef<T> const& input, T const& value)
 {
     if constexpr (std::is_same_v<T, Cool::Gradient>)
     {
         // Request shader code generation only if the number of marks has changed, or the wrap mode or interpolation mode has changed.
-        if (input.value().value.gradient().get_marks().size() != value.value.gradient().get_marks().size()
-            || input.value().wrap_mode != value.wrap_mode
-            || input.value().value.gradient().interpolation_mode() != value.value.gradient().interpolation_mode())
+        if (input.variable->value().value.gradient().get_marks().size() != value.value.gradient().get_marks().size()
+            || input.variable->value().wrap_mode != value.wrap_mode
+            || input.variable->value().value.gradient().interpolation_mode() != value.value.gradient().interpolation_mode())
         {
-            input._secondary_dirty_flag.set_dirty();
+            input.secondary_dirty_flag.set_dirty();
         }
         else
         {
-            input._dirty_flag.set_dirty();
+            input.dirty_flag.set_dirty();
         }
     }
     else
     {
-        input._dirty_flag.set_dirty();
+        input.dirty_flag.set_dirty();
     }
-    input.value() = value;
+    input.variable->value() = value;
 }
 
 } // namespace internal
@@ -40,8 +40,8 @@ struct ReversibleCommand_SetVariable;
 
 template<typename T>
 struct Command_SetVariable {
-    mutable Cool::Input<T> input;
-    T                      value{};
+    Cool::InputStrongRef<T> input;
+    T                       value{};
 
     void execute(CommandExecutionContext_Ref const&) const
     {
@@ -58,7 +58,7 @@ struct Command_SetVariable {
     {
         return ReversibleCommand_SetVariable<T>{
             .forward_command = *this,
-            .old_value       = input.value(),
+            .old_value       = input.variable->value(),
         };
     }
 };

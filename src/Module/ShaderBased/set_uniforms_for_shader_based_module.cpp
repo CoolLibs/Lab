@@ -11,27 +11,27 @@
 namespace Lab {
 
 template<typename T>
-static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T> const& input)
+static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T>& input)
 {
     auto const value = [&] {
         if constexpr (std::is_same_v<T, Cool::Color>)
         {
             auto const col = input.value();
-            switch (static_cast<Cool::ColorSpace>(input._desired_color_space))
+            switch (static_cast<Cool::ColorSpace>(input.get_ref().desired_color_space))
             {
 #include "Cool/ColorSpaces/generated/convert_col_as.inl"
             default:
-                throw std::runtime_error{fmt::format("Unknown color space value for {}: {}.", input.name(), input._desired_color_space)};
+                throw std::runtime_error{fmt::format("Unknown color space value for {}: {}.", input.name(), input.get_ref().desired_color_space)};
             }
         }
         else if constexpr (std::is_same_v<T, Cool::ColorAndAlpha>)
         {
             auto const col = input.value();
-            switch (static_cast<Cool::ColorAndAlphaSpace>(input._desired_color_space))
+            switch (static_cast<Cool::ColorAndAlphaSpace>(input.get_ref().desired_color_space))
             {
 #include "Cool/ColorSpaces/generated/convert_col_and_alpha_as.inl"
             default:
-                throw std::runtime_error{fmt::format("Unknown color and alpha space value for {}: {}.", input.name(), input._desired_color_space)};
+                throw std::runtime_error{fmt::format("Unknown color and alpha space value for {}: {}.", input.name(), input.get_ref().desired_color_space)};
             }
         }
         else
@@ -47,12 +47,12 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T> const
             valid_input_name(input),
             value
         );
-        Cool::Log::ToUser::console().remove(input._message_id);
+        Cool::Log::ToUser::console().remove(input.message_id());
     }
     catch (Cool::Exception const& e)
     {
         e.error_message().send_error_if_any(
-            input._message_id,
+            input.message_id(),
             [&](std::string const& msg) {
                 return Cool::Message{
                     .category = "Invalid node parameter",
@@ -71,7 +71,7 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T> const
         if (err)
         {
             Cool::Log::ToUser::console().send(
-                input._message_id,
+                input.message_id(),
                 Cool::Message{
                     .category = "Missing Texture",
                     .message  = err.value(),
@@ -81,7 +81,7 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T> const
         }
         else
         {
-            Cool::Log::ToUser::console().remove(input._message_id);
+            Cool::Log::ToUser::console().remove(input.message_id());
         }
     }
 }
@@ -91,7 +91,7 @@ auto set_uniforms_for_shader_based_module(
     SystemValues const&                     system_values,
     ModuleDependencies const&               depends_on,
     Cool::DoubleBufferedRenderTarget const& feedback_double_buffer,
-    Cool::NodesGraph const&                 nodes_graph
+    Cool::NodesGraph&                       nodes_graph
 ) -> void
 {
     shader.bind();
@@ -121,8 +121,8 @@ auto set_uniforms_for_shader_based_module(
     );
     Cool::CameraShaderU::set_uniform(shader, system_values.camera_3D, system_values.aspect_ratio());
 
-    nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
-        for (auto const& value_input : node.value_inputs())
+    nodes_graph.for_each_node<Node>([&](Node& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
+        for (auto& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {
                 set_uniform(shader, value_input);

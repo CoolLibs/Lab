@@ -39,23 +39,23 @@ public:
     {
         ImGui::PushID(&input);
         auto const prev_value    = input.value();
-        auto const prev_metadata = input._variable->metadata();
-        input._variable->imgui(
+        auto const prev_metadata = input.variable().metadata();
+        input.variable().imgui(
             {
                 .on_value_changed =
                     [&]() {
                         const auto new_value =  input.value();
                          input.value()       = prev_value; // To make sure the reversible command that will be created sees the correct previous value.
                         _command_executor.execute(
-                                Command_SetVariable<T>{.input =  input, .value = new_value,}
+                                Command_SetVariable<T>{.input = input.get_ref(), .value = new_value,}
                             ); },
 
                 .on_metadata_changed =
                     [&]() {
-                        auto const new_metadata     = input._variable->metadata();
-                        input._variable->metadata() = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
+                        auto const new_metadata     = input.variable().metadata();
+                        input.variable().metadata() = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
                         _command_executor.execute(
-                            Command_SetVariableMetadata<T>{.input = input, .metadata = new_metadata}
+                            Command_SetVariableMetadata<T>{.input = input.get_ref(), .metadata = new_metadata}
                         );
                     },
 
@@ -65,8 +65,8 @@ public:
                             ); },
             }
         );
-        if (input._description)
-            Cool::ImGuiExtras::help_marker(input._description->c_str());
+        if (input.description())
+            Cool::ImGuiExtras::help_marker(input.description()->c_str());
         ImGui::PopID();
     }
 

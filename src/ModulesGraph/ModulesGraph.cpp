@@ -231,7 +231,7 @@ static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Re
         .set_position = [=](Cool::ViewCoordinates pos) {
                 auto const world_pos = glm::vec2{cam_2D.transform_matrix() * glm::vec3{pos, 1.f}};
                 ctx.ui().command_executor().execute(
-                        Command_SetVariable<Cool::Point2D>{.input = input, .value = Cool::Point2D{world_pos}}
+                        Command_SetVariable<Cool::Point2D>{.input = input.get_ref(), .value = Cool::Point2D{world_pos}}
                         ); },
         .on_drag_stop = [=]() { ctx.ui().command_executor().execute(
                                     Command_FinishedEditingVariable{}

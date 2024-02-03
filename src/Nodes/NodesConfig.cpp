@@ -54,7 +54,7 @@ static void apply_settings_to_inputs(
         for (size_t i = 0; i < inputs.size(); ++i)
         {
             std::visit([&](auto&& input) {
-                *input._variable = Cool::Variable{get_concrete_variable_data(settings.at(i), input)};
+                input.variable() = Cool::Variable{get_concrete_variable_data(settings.at(i), input)};
             },
                        inputs.at(i));
         }
@@ -373,11 +373,11 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         auto const it = iterator_to_same_input(input, new_inputs);
         if (it != new_inputs.end())
         {
-            auto       description         = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
-            auto const desired_color_space = std::visit([](auto&& input) { return input._desired_color_space; }, *it);    // Keep the new desired_color_space
+            auto       description         = std::visit([](auto&& input) { return std::move(input.description()); }, *it);      // Keep the new description
+            auto const desired_color_space = std::visit([](auto&& input) { return input.get_ref().desired_color_space; }, *it); // Keep the new desired_color_space
             *it                            = std::move(input);
-            std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
-            std::visit([&](auto&& it) { it._desired_color_space = desired_color_space; }, *it);
+            std::visit([&](auto&& it) mutable { it.description() = std::move(description); }, *it);
+            std::visit([&](auto&& it) { it.get_ref().desired_color_space = desired_color_space; }, *it);
         }
     }
 }

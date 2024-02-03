@@ -5,12 +5,12 @@ namespace Lab {
 
 template<typename T>
 struct Command_SetVariableMetadata {
-    Cool::Input<T>            input{};
+    Cool::InputStrongRef<T>   input{};
     Cool::VariableMetadata<T> metadata{};
 
     void execute(CommandExecutionContext_Ref const&) const
     {
-        input._variable->metadata() = metadata;
+        input.variable->metadata() = metadata;
     }
 
     auto to_string() const -> std::string

@@ -761,9 +761,9 @@ def check_that_each_primitive_type_corresponds_to_a_different_input_type():
 
 def check_color_space(type):
     if type[0] == "Cool::Color":
-        return f"&& std::get<Cool::Input<{type[0]}>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::{type[1]})"
+        return f"&& std::get<Cool::Input<{type[0]}>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorSpace::{type[1]})"
     elif type[0] == "Cool::ColorAndAlpha":
-        return f"&& std::get<Cool::Input<{type[0]}>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::{type[1]})"
+        return f"&& std::get<Cool::Input<{type[0]}>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::{type[1]})"
     else:
         return ""
 

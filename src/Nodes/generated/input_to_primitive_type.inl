@@ -44,38 +44,38 @@ if (std::holds_alternative<Cool::Input<Cool::Hue>>(input))
 if (std::holds_alternative<Cool::Input<Cool::Direction2D>>(input))
     return PrimitiveType::Direction2D;
 
-if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::Oklab))
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorSpace::Oklab))
     return PrimitiveType::Oklab;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Oklab_PremultipliedA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Oklab_PremultipliedA))
     return PrimitiveType::Oklab_PremultipliedA;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Oklab_StraightA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Oklab_StraightA))
     return PrimitiveType::Oklab_StraightA;
 
-if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::LinearRGB))
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorSpace::LinearRGB))
     return PrimitiveType::LinearRGB;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_PremultipliedA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_PremultipliedA))
     return PrimitiveType::LinearRGB_PremultipliedA;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_StraightA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::LinearRGB_StraightA))
     return PrimitiveType::LinearRGB_StraightA;
 
-if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::sRGB))
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorSpace::sRGB))
     return PrimitiveType::sRGB;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_PremultipliedA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_PremultipliedA))
     return PrimitiveType::sRGB_PremultipliedA;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_StraightA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::sRGB_StraightA))
     return PrimitiveType::sRGB_StraightA;
 
-if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::Okhsl))
+if (std::holds_alternative<Cool::Input<Cool::Color>>(input) && std::get<Cool::Input<Cool::Color>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorSpace::Okhsl))
     return PrimitiveType::Okhsl;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Okhsl_PremultipliedA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Okhsl_PremultipliedA))
     return PrimitiveType::Okhsl_PremultipliedA;
 
-if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Okhsl_StraightA))
+if (std::holds_alternative<Cool::Input<Cool::ColorAndAlpha>>(input) && std::get<Cool::Input<Cool::ColorAndAlpha>>(input).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::Okhsl_StraightA))
     return PrimitiveType::Okhsl_StraightA;

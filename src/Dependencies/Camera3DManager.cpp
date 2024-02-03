@@ -31,7 +31,7 @@ void Camera3DManager::hook_events(
                 _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
                 executor.execute(Command_SetCameraZoom{zoom});
                 executor.execute(Command_FinishedEditingVariable{});
-                _camera_input._dirty_flag.set_dirty();
+                _camera_input.dirty_flag().set_dirty();
             }
         });
     events
@@ -95,15 +95,15 @@ void Camera3DManager::maybe_update_camera(
     auto camera = _camera_input.value();
     if (fun(camera))
     {
-        executor.execute(Command_SetVariable<Cool::Camera>{_camera_input, camera});
-        _camera_input._dirty_flag.set_dirty();
+        executor.execute(Command_SetVariable<Cool::Camera>{_camera_input.get_ref(), camera});
+        _camera_input.dirty_flag().set_dirty();
     }
 }
 
 void Camera3DManager::set_zoom(float zoom, CommandExecutionContext_Ref const&)
 {
     Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, _camera_input.value(), zoom);
-    _camera_input._dirty_flag.set_dirty();
+    _camera_input.dirty_flag().set_dirty();
 }
 
 void Camera3DManager::reset_camera(CommandExecutor const& executor)

@@ -18,7 +18,7 @@ public:
     auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
     ~Module_Particles() override                                     = default;
 
-    Cool::NodesGraph const*                 _nodes_graph{};            // TODO(Particles) Remove
+    Cool::NodesGraph*                       _nodes_graph{};            // TODO(Particles) Remove
     Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer{}; // TODO(Particles) Remove
 
     void update(UpdateContext_Ref) override;
