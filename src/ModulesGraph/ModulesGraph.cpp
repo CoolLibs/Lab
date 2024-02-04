@@ -68,6 +68,15 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, Module::RenderParam
     for (auto& node : _particles_module_nodes)
         render_particle_module(node->module, node->render_target, in);
     render_compositing_module(render_target, in);
+
+    _meshing_handler.generate_mesh_if_needed(
+        _compositing_module.feedback_double_buffer(),
+        _camera_input,
+        _nodes_editor.graph(),
+        Cool::GetNodeDefinition_Ref<NodeDefinition>{update_ctx.nodes_library()},
+        update_ctx.hacky_input_provider(),
+        _main_node_id
+    );
 }
 
 void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, Module::RenderParams params)
@@ -207,6 +216,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
         _particles_module->module.imgui_windows(ui, update_ctx);
     }
     _compositing_module.imgui_windows(ui, update_ctx);
+    _meshing_handler.imgui_windows(ui, update_ctx);
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))

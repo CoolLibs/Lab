@@ -1,5 +1,6 @@
 #pragma once
 #include <Dependencies/UpdateContext_Ref.h>
+#include <Meshing/Meshing_Handler.h>
 #include "Cool/Nodes/Editor.h"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/View/GizmoManager.h"
@@ -89,6 +90,7 @@ private:
 
     mutable Module_Compositing                     _compositing_module{};
     std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)
+    Meshing_Handler                                _meshing_handler{}; // TODO(Meshing) Move elsewhere
 
 private:
     // Serialization
