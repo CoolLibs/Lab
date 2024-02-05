@@ -17,7 +17,8 @@
 
 ## 🐣beta-13 WIP
 
-- 🐛 Applying a preset can now be undone (CTRL+Z)
+- ✨ Changes to the 2D Camera can now be undone (CTRL+Z)
+- ✨ Applying a preset can now be undone (CTRL+Z)
 
 ## 🐣beta-12
 

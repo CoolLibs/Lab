@@ -3,6 +3,7 @@
 #include "Cool/Dependencies/DirtyFlag.h"
 #include "Cool/Dependencies/Input.h"
 #include "Cool/StrongTypes/Camera2D.h"
+#include "Dependencies/Ui.h"
 
 namespace Lab {
 
@@ -17,9 +18,8 @@ public:
     auto               camera() -> Cool::Camera2D& { return _camera.value(); }
     [[nodiscard]] auto is_editable_in_view() -> bool& { return _is_editable_in_view; }
 
-    void imgui();
-
-    void hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events);
+    void imgui(Ui_Ref);
+    void hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events, CommandExecutor const&);
 
 private:
     Cool::Input<Cool::Camera2D> _camera;

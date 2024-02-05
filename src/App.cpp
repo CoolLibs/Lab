@@ -72,7 +72,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     _project.clock.pause(); // Make sure the new project will be paused.
 
     _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
-    _project.camera_2D_manager.hook_events(_preview_view.mouse_events());
+    _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
 
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
@@ -277,7 +277,7 @@ void App::imgui_window_cameras()
     if (Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_2D_manager.is_editable_in_view()))
         _project.camera_3D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view();
     Cool::ImGuiExtras::help_marker(help_text);
-    _project.camera_2D_manager.imgui();
+    _project.camera_2D_manager.imgui(ui());
     ImGui::PopID();
 
     ImGui::NewLine();
