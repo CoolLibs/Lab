@@ -10,7 +10,7 @@ class Camera2DManager {
 public:
     Camera2DManager() = default;
     Camera2DManager(std::string variable_name, Cool::DirtyFlag const& dirty_flag)
-        : _camera{Cool::InputDefinition<Cool::Camera2D>{.name = std::move(variable_name)}, dirty_flag}
+        : _camera{Cool::InputDefinition<Cool::Camera2D>{{std::move(variable_name)}}, dirty_flag}
     {}
 
     auto               camera() const -> Cool::Camera2D const& { return _camera.value(); }

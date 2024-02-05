@@ -16,6 +16,7 @@
 #include "Cool/Dependencies/InputDefinition.h"
 #include "Cool/Log/Debug.h"
 #include "Cool/StrongTypes/Gradient.h"
+#include "Cool/Variables/Variable.h"
 #include "Cool/type_from_string/type_from_string.h"
 #include "Debug/DebugOptions.h"
 #include "FunctionSignature.h"
@@ -284,7 +285,7 @@ static auto parse_signature(std::vector<std::string> const& words)
 template<typename T>
 static auto make_input_definition(std::string const& name, std::string const& type) -> Cool::AnyInputDefinition
 {
-    auto def = Cool::InputDefinition<T>{.name = name};
+    auto def = Cool::InputDefinition<T>{{name}};
 
     if constexpr (std::is_same_v<T, Cool::Color>)
     {
@@ -412,7 +413,7 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
 template<typename T>
 static void maybe_set_input_description(std::string const& input_name, Cool::InputDefinition<T>& input, std::string const& description)
 {
-    if (input.name == input_name)
+    if (input.var_data.name == input_name)
         input.description = description;
 }
 
@@ -554,19 +555,21 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
         if (fix_artifacts)
         {
             def.input_values.emplace_back(Cool::InputDefinition<float>{
-                .name          = "'Fix Artifacts'",
-                .description   = "Increase the value to fix glitches and holes in the shape. But note that higher values are slower to render.",
-                .default_value = 0.f,
-                .metadata      = Cool::VariableMetadata<float>{
-                         .bounds = {
-                             .min           = 0.f,
-                             .max           = 0.999f,
-                             .has_min_bound = true,
-                             .has_max_bound = true,
-                             .drag_speed    = 0.01f,
-                             .use_slider    = true,
+                .var_data = Cool::VariableData<float>{
+                    .name     = "'Fix Artifacts'",
+                    .value    = 0.f,
+                    .metadata = Cool::VariableMetadata<float>{
+                        .bounds = {
+                            .min           = 0.f,
+                            .max           = 0.999f,
+                            .has_min_bound = true,
+                            .has_max_bound = true,
+                            .drag_speed    = 0.01f,
+                            .use_slider    = true,
+                        },
                     },
                 },
+                .description = "Increase the value to fix glitches and holes in the shape. But note that higher values are slower to render.",
             });
         }
     }

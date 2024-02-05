@@ -388,7 +388,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
                                     }; },
             value_input_def
         ));
-        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
+        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.var_data.name; }, value_input_def)});
     }
 
     // Get the variables from the inputs

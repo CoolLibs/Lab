@@ -15,7 +15,7 @@ class Camera3DManager {
 public:
     Camera3DManager() = default;
     Camera3DManager(std::string variable_name, Cool::DirtyFlag const& dirty_flag)
-        : _camera_input{Cool::InputDefinition<Cool::Camera>{.name = std::move(variable_name)}, dirty_flag}
+        : _camera_input{Cool::InputDefinition<Cool::Camera>{{std::move(variable_name)}}, dirty_flag}
     {}
 
     auto               camera() const -> Cool::Camera const& { return _camera_input.value(); }
