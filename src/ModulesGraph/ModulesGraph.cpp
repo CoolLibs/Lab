@@ -224,30 +224,30 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     });
 }
 
-static auto make_gizmo(Cool::Input<Cool::Point2D> const& input, UpdateContext_Ref ctx, Cool::Camera2D const& cam_2D) -> Cool::Gizmo_Point2D
+static auto make_gizmo(Cool::SharedVariable<Cool::Point2D> const& var, UpdateContext_Ref ctx, Cool::Camera2D const& cam_2D) -> Cool::Gizmo_Point2D
 {
     return Cool::Gizmo_Point2D{
-        .get_position = [=]() { return Cool::ViewCoordinates{glm::vec2{cam_2D.view_matrix() * glm::vec3{input.value().value, 1.f}}}; },
+        .get_position = [=]() { return Cool::ViewCoordinates{glm::vec2{cam_2D.view_matrix() * glm::vec3{var.value().value, 1.f}}}; },
         .set_position = [=](Cool::ViewCoordinates pos) {
                 auto const world_pos = glm::vec2{cam_2D.transform_matrix() * glm::vec3{pos, 1.f}};
                 ctx.ui().command_executor().execute(
-                        Command_SetVariable<Cool::Point2D>{.input = input.get_ref(), .value = Cool::Point2D{world_pos}}
+                        Command_SetVariable<Cool::Point2D>{.var_ref = var.get_ref(), .value = Cool::Point2D{world_pos}}
                         ); },
         .on_drag_stop = [=]() { ctx.ui().command_executor().execute(
                                     Command_FinishedEditingVariable{}
                                 ); },
-        .id           = input.id(),
+        .id           = var.id(),
     };
 }
 
 void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx, Cool::Camera2D const& cam_2D)
 {
     _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
-        for (auto const& input : node.downcast<Node>().value_inputs())
+        for (auto const& var : node.downcast<Node>().value_inputs())
         {
-            if (auto const* point_2D_input = std::get_if<Cool::Input<Cool::Point2D>>(&input))
+            if (auto const* point_2D_var = std::get_if<Cool::SharedVariable<Cool::Point2D>>(&var))
             {
-                gizmos.push(make_gizmo(*point_2D_input, ctx, cam_2D));
+                gizmos.push(make_gizmo(*point_2D_var, ctx, cam_2D));
             }
         }
     });

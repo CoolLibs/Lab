@@ -26,7 +26,7 @@
 namespace Lab {
 
 // TODO(Settings) Remove
-static auto settings_from_inputs(std::vector<Cool::AnyInput> const& inputs) -> Cool::Settings
+static auto settings_from_inputs(std::vector<Cool::AnySharedVariable> const& inputs) -> Cool::Settings
 {
     auto settings = Cool::Settings{};
     settings.reserve(inputs.size());
@@ -42,29 +42,29 @@ static auto settings_from_inputs(std::vector<Cool::AnyInput> const& inputs) -> C
 
 // TODO(Settings) Remove
 template<typename T>
-static auto make_command_set_variable(Cool::AnyVariableData const& var, Cool::Input<T> const& input) -> Command_SetVariable<T>
+static auto make_command_set_variable(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const& var) -> Command_SetVariable<T>
 {
     return Command_SetVariable<T>{
-        .input = input.get_ref(),
-        .value = std::get<Cool::VariableData<T>>(var).value,
+        .var_ref = var.get_ref(),
+        .value   = std::get<Cool::VariableData<T>>(var_data).value,
     };
 }
 // TODO(Settings) Remove
 template<typename T>
-static auto make_command_set_variable_default_value(Cool::AnyVariableData const& var, Cool::Input<T> const& input) -> Command_SetVariableDefaultValue<T>
+static auto make_command_set_variable_default_value(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const& var) -> Command_SetVariableDefaultValue<T>
 {
     return Command_SetVariableDefaultValue<T>{
-        .input         = input.get_ref(),
-        .default_value = std::get<Cool::VariableData<T>>(var).value,
+        .var_ref       = var.get_ref(),
+        .default_value = std::get<Cool::VariableData<T>>(var_data).value,
     };
 }
 
 // TODO(Settings) Remove
 static void apply_settings_to_inputs(
-    Cool::Settings const&        settings,
-    std::vector<Cool::AnyInput>& inputs,
-    std::string_view             node_name,
-    CommandExecutor const&       command_executor
+    Cool::Settings const&                 settings,
+    std::vector<Cool::AnySharedVariable>& inputs,
+    std::string_view                      node_name,
+    CommandExecutor const&                command_executor
 )
 {
     try
@@ -95,16 +95,16 @@ static void apply_settings_to_inputs(
 
 // TODO(Settings) Remove
 template<typename T>
-static auto get_concrete_variable_data(Cool::AnyVariableData const& var, Cool::Input<T> const&) -> Cool::VariableData<T>
+static auto get_concrete_variable_data(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const&) -> Cool::VariableData<T>
 {
-    return std::get<Cool::VariableData<T>>(var);
+    return std::get<Cool::VariableData<T>>(var_data);
 }
 
 // TODO(Settings) Remove
 static void apply_settings_to_inputs_no_history(
-    Cool::Settings const&        settings,
-    std::vector<Cool::AnyInput>& inputs,
-    std::string_view             node_name
+    Cool::Settings const&                 settings,
+    std::vector<Cool::AnySharedVariable>& inputs,
+    std::string_view                      node_name
 )
 {
     try
@@ -381,11 +381,11 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     {
         node.value_inputs().push_back(std::visit(
             [&](auto&& value_input_def)
-                -> Cool::AnyInput { return Cool::Input{
-                                        value_input_def,
-                                        Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
-                                        _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
-                                    }; },
+                -> Cool::AnySharedVariable { return Cool::SharedVariable{
+                                                 value_input_def,
+                                                 Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
+                                                 _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+                                             }; },
             value_input_def
         ));
         node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.var_data.name; }, value_input_def)});
@@ -404,27 +404,27 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     return node;
 }
 
-static auto name(Cool::AnyInput const& input)
+static auto name(Cool::AnySharedVariable const& var)
 {
-    return std::visit(([](auto&& input) { return input.name(); }), input);
+    return std::visit(([](auto&& var) { return var.name(); }), var);
 }
 
-static auto inputs_have_the_same_type_and_name(Cool::AnyInput const& input1, Cool::AnyInput const& input2) -> bool
+static auto inputs_have_the_same_type_and_name(Cool::AnySharedVariable const& var1, Cool::AnySharedVariable const& var2) -> bool
 {
-    return input1.index() == input2.index()
-           && name(input1) == name(input2);
+    return var1.index() == var2.index()
+           && name(var1) == name(var2);
 }
 
-static auto iterator_to_same_input(Cool::AnyInput const& input, std::vector<Cool::AnyInput>& old_inputs)
+static auto iterator_to_same_input(Cool::AnySharedVariable const& input, std::vector<Cool::AnySharedVariable>& old_inputs)
 {
-    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnyInput& other_input) {
+    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnySharedVariable& other_input) {
         return inputs_have_the_same_type_and_name(other_input, input);
     });
 }
 
 static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
-    std::vector<Cool::AnyInput>& old_inputs,
-    std::vector<Cool::AnyInput>& new_inputs
+    std::vector<Cool::AnySharedVariable>& old_inputs,
+    std::vector<Cool::AnySharedVariable>& new_inputs
 )
 {
     for (auto& input : old_inputs)

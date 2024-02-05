@@ -3,7 +3,6 @@
 #include <Cool/Camera/ViewController_OrbitalU.h>
 #include <Dependencies/Ui.h>
 #include <glm/gtx/matrix_transform_2d.hpp>
-#include "Cool/Dependencies/Input.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Input/MouseDragEvents.h"
 #include "Cool/StrongTypes/Camera2D.h"
@@ -41,7 +40,7 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
                 if (chrono.elapsed_more_than(0.5s))
                     executor.execute(Command_FinishedEditingVariable{});
             }
-            executor.execute(Command_SetVariable<Cool::Camera2D>{.input = _camera.get_ref(), .value = new_value});
+            executor.execute(Command_SetVariable<Cool::Camera2D>{.var_ref = _camera.get_ref(), .value = new_value});
         });
 
     events
@@ -51,7 +50,7 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
             .on_update = [&, executor](Cool::MouseDragUpdateEvent<Cool::ViewCoordinates> const& event) {
                 auto new_value = _camera.value();
                 new_value.translation -= event.delta / _camera.value().zoom;
-                executor.execute(Command_SetVariable<Cool::Camera2D>{.input = _camera.get_ref(), .value = new_value});
+                executor.execute(Command_SetVariable<Cool::Camera2D>{.var_ref = _camera.get_ref(), .value = new_value});
 
                 ImGui::WrapMousePos(ImGuiAxesMask_All);
                 //
@@ -64,7 +63,7 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
 
 void Camera2DManager::reset_camera(CommandExecutor const& executor)
 {
-    executor.execute(Command_SetVariable<Cool::Camera2D>{.input = _camera.get_ref(), .value = {}});
+    executor.execute(Command_SetVariable<Cool::Camera2D>{.var_ref = _camera.get_ref(), .value = {}});
     executor.execute(Command_FinishedEditingVariable{});
 }
 

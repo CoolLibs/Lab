@@ -13,10 +13,7 @@
 #include <vector>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
-#include "Cool/Dependencies/InputDefinition.h"
-#include "Cool/Log/Debug.h"
-#include "Cool/StrongTypes/Gradient.h"
-#include "Cool/Variables/Variable.h"
+#include "Cool/Dependencies/SharedVariableDefinition.h"
 #include "Cool/type_from_string/type_from_string.h"
 #include "Debug/DebugOptions.h"
 #include "FunctionSignature.h"
@@ -283,9 +280,9 @@ static auto parse_signature(std::vector<std::string> const& words)
 }
 
 template<typename T>
-static auto make_input_definition(std::string const& name, std::string const& type) -> Cool::AnyInputDefinition
+static auto make_shared_var_definition(std::string const& name, std::string const& type) -> Cool::AnySharedVariableDefinition
 {
-    auto def = Cool::InputDefinition<T>{{name}};
+    auto def = Cool::SharedVariableDefinition<T>{{name}};
 
     if constexpr (std::is_same_v<T, Cool::Color>)
     {
@@ -305,9 +302,9 @@ static auto parse_property(std::string const& type_as_string, std::string const&
     try
     {
         res.input_values.emplace_back(COOL_TFS_EVALUATE_FUNCTION_TEMPLATE(
-            make_input_definition,
+            make_shared_var_definition,
             type_as_string,
-            Cool::AnyInputDefinition,
+            Cool::AnySharedVariableDefinition,
             (name, type_as_string)
         ));
     }
@@ -411,10 +408,10 @@ static auto find_outputs(std::string const& text, NodeDefinition_Data& res)
 }
 
 template<typename T>
-static void maybe_set_input_description(std::string const& input_name, Cool::InputDefinition<T>& input, std::string const& description)
+static void maybe_set_input_description(std::string const& input_name, Cool::SharedVariableDefinition<T>& def, std::string const& description)
 {
-    if (input.var_data.name == input_name)
-        input.description = description;
+    if (def.var_data.name == input_name)
+        def.description = description;
 }
 
 static void set_input_description(NodeDefinition_Data& res, std::string const& input_name, std::string const& input_description)
@@ -554,7 +551,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
             return tl::make_unexpected(*err);
         if (fix_artifacts)
         {
-            def.input_values.emplace_back(Cool::InputDefinition<float>{
+            def.input_values.emplace_back(Cool::SharedVariableDefinition<float>{
                 .var_data = Cool::VariableData<float>{
                     .name     = "'Fix Artifacts'",
                     .value    = 0.f,

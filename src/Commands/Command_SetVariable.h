@@ -1,5 +1,5 @@
 #pragma once
-#include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/SharedVariable.h>
 #include <Cool/StrongTypes/Gradient.h>
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
@@ -10,27 +10,27 @@ namespace Lab {
 namespace internal {
 
 template<typename T>
-void set_value(Cool::InputStrongRef<T> const& input, T const& value)
+void set_value(Cool::SharedVariableStrongRef<T> const& var_ref, T const& value)
 {
     if constexpr (std::is_same_v<T, Cool::Gradient>)
     {
         // Request shader code generation only if the number of marks has changed, or the wrap mode or interpolation mode has changed.
-        if (input.variable->value().value.gradient().get_marks().size() != value.value.gradient().get_marks().size()
-            || input.variable->value().wrap_mode != value.wrap_mode
-            || input.variable->value().value.gradient().interpolation_mode() != value.value.gradient().interpolation_mode())
+        if (var_ref.variable->value().value.gradient().get_marks().size() != value.value.gradient().get_marks().size()
+            || var_ref.variable->value().wrap_mode != value.wrap_mode
+            || var_ref.variable->value().value.gradient().interpolation_mode() != value.value.gradient().interpolation_mode())
         {
-            input.secondary_dirty_flag.set_dirty();
+            var_ref.secondary_dirty_flag.set_dirty();
         }
         else
         {
-            input.dirty_flag.set_dirty();
+            var_ref.dirty_flag.set_dirty();
         }
     }
     else
     {
-        input.dirty_flag.set_dirty();
+        var_ref.dirty_flag.set_dirty();
     }
-    input.variable->value() = value;
+    var_ref.variable->value() = value;
 }
 
 } // namespace internal
@@ -40,17 +40,17 @@ struct ReversibleCommand_SetVariable;
 
 template<typename T>
 struct Command_SetVariable {
-    Cool::InputStrongRef<T> input;
-    T                       value{};
+    Cool::SharedVariableStrongRef<T> var_ref;
+    T                                value{};
 
     void execute(CommandExecutionContext_Ref const&) const
     {
-        internal::set_value(input, value);
+        internal::set_value(var_ref, value);
     }
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {} to {}", input.id(), Cool::stringify(value));
+        return fmt::format("Set {} to {}", var_ref.id(), Cool::stringify(value));
     }
 
     auto make_reversible(MakeReversibleCommandContext_Ref const&) const
@@ -58,7 +58,7 @@ struct Command_SetVariable {
     {
         return ReversibleCommand_SetVariable<T>{
             .forward_command = *this,
-            .old_value       = input.variable->value(),
+            .old_value       = var_ref.variable->value(),
         };
     }
 };
@@ -75,17 +75,17 @@ struct ReversibleCommand_SetVariable {
 
     void revert(CommandExecutionContext_Ref const&) const
     {
-        internal::set_value(forward_command.input, old_value);
+        internal::set_value(forward_command.var_ref, old_value);
     }
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {} from {} to {}", forward_command.input.id(), Cool::stringify(old_value), Cool::stringify(forward_command.value));
+        return fmt::format("Set {} from {} to {}", forward_command.var_ref.id(), Cool::stringify(old_value), Cool::stringify(forward_command.value));
     }
 
     auto merge(ReversibleCommand_SetVariable<T> const& previous) const -> std::optional<ReversibleCommand_SetVariable<T>>
     {
-        if (previous.forward_command.input.id() != forward_command.input.id())
+        if (previous.forward_command.var_ref.id() != forward_command.var_ref.id())
             return std::nullopt;
 
         return ReversibleCommand_SetVariable<T>{
@@ -103,7 +103,7 @@ template<class Archive, typename T>
 void serialize(Archive& archive, Lab::Command_SetVariable<T>& command)
 {
     archive(
-        cereal::make_nvp("Input", command.input),
+        cereal::make_nvp("Variable ref", command.var_ref),
         cereal::make_nvp("Value", command.value)
     );
 }

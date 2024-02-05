@@ -33,12 +33,12 @@ void update_dependencies_from_nodes_graph(ModuleDependencies& dependencies, Cool
         for (auto const& value_input : node.value_inputs())
         {
             {
-                auto const* osc_channel = std::get_if<Cool::Input<Cool::OSCChannel>>(&value_input);
+                auto const* osc_channel = std::get_if<Cool::SharedVariable<Cool::OSCChannel>>(&value_input);
                 if (osc_channel)
                     dependencies.osc_channels.insert(osc_channel->value());
             }
             {
-                auto const* midi_channel = std::get_if<Cool::Input<Cool::MidiChannel>>(&value_input);
+                auto const* midi_channel = std::get_if<Cool::SharedVariable<Cool::MidiChannel>>(&value_input);
                 if (midi_channel)
                     dependencies.midi_channels.insert(midi_channel->value());
             }

@@ -16,9 +16,9 @@
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeDefinition.h"
-#include "input_to_primitive_type.h"
 #include "valid_glsl.h"
 #include "valid_input_name.h"
+#include "variable_to_primitive_type.h"
 
 namespace Lab {
 
@@ -159,7 +159,7 @@ static auto gen_value_inputs(
         {
             if (maybe_node->main_output_pin() == output_pin)
             {
-                auto const property_type = input_to_primitive_type(prop);
+                auto const property_type = variable_to_primitive_type(prop);
                 if (!property_type)
                     return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
 
@@ -197,9 +197,9 @@ static auto gen_value_inputs(
 }
 
 static auto list_all_property_and_input_and_output_names(
-    std::vector<Cool::AnyInput> const&      properties,
-    std::vector<NodeInputDefinition> const& inputs,
-    std::vector<std::string> const&         output_indices_names
+    std::vector<Cool::AnySharedVariable> const& properties,
+    std::vector<NodeInputDefinition> const&     inputs,
+    std::vector<std::string> const&             output_indices_names
 )
     -> std::string
 {
@@ -216,9 +216,9 @@ static auto list_all_property_and_input_and_output_names(
 }
 
 static auto replace_property_names(
-    std::string                        code,
-    std::vector<Cool::AnyInput> const& properties,
-    std::vector<std::string> const&    real_name
+    std::string                                 code,
+    std::vector<Cool::AnySharedVariable> const& properties,
+    std::vector<std::string> const&             real_name
 ) -> std::string
 {
     size_t i{0};

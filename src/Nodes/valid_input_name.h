@@ -1,8 +1,8 @@
 #pragma once
-#include "Cool/Dependencies/AnyInput.h"
+#include "Cool/Dependencies/AnySharedVariable.h"
 
 namespace Lab {
 
-auto valid_input_name(Cool::AnyInput const& input) -> std::string;
+auto valid_input_name(Cool::AnySharedVariable const&) -> std::string;
 
 } // namespace Lab

@@ -23,7 +23,7 @@ void Camera3DManager::hook_events(
             if (!_is_editable_in_view)
                 return;
 
-            auto       camera   = _camera_input.value();
+            auto       camera   = _camera.value();
             auto const old_zoom = _view_controller.get_distance_to_orbit_center();
             if (_view_controller.on_wheel_scroll(camera, event.dy))
             {
@@ -96,17 +96,17 @@ void Camera3DManager::maybe_update_camera(
     std::function<bool(Cool::Camera&)> const& fun
 )
 {
-    auto camera = _camera_input.value();
+    auto camera = _camera.value();
     if (fun(camera))
     {
-        executor.execute(Command_SetVariable<Cool::Camera>{_camera_input.get_ref(), camera});
+        executor.execute(Command_SetVariable<Cool::Camera>{_camera.get_ref(), camera});
     }
 }
 
 void Camera3DManager::set_zoom(float zoom, CommandExecutionContext_Ref const&)
 {
-    Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, _camera_input.value(), zoom);
-    _camera_input.dirty_flag().set_dirty();
+    Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, _camera.value(), zoom);
+    _camera.dirty_flag().set_dirty();
 }
 
 void Camera3DManager::reset_camera(CommandExecutor const& executor)

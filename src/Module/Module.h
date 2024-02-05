@@ -1,12 +1,7 @@
 #pragma once
-#include <Cool/Dependencies/Input.h>
 #include <Cool/Log/OptionalErrorMessage.h>
 #include <Dependencies/SystemValues.h>
-#include <img/src/Size.h>
 #include <cereal/types/polymorphic.hpp>
-#include <glm/glm.hpp>
-#include <stringify/stringify.hpp>
-#include "Dependencies/History.h"
 #include "Dependencies/Ui.h"
 #include "Dependencies/UpdateContext_Ref.h"
 
@@ -30,7 +25,7 @@ protected:
 public:
     virtual ~Module() = default;
 
-    Module(std::string_view name)
+    explicit Module(std::string_view name)
         : _name{name}
     {
     }

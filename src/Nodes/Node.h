@@ -1,6 +1,5 @@
 #pragma once
-#include <Cool/Dependencies/AnyInput.h>
-#include <Cool/Dependencies/Input.h>
+#include <Cool/Dependencies/AnySharedVariable.h>
 #include <Cool/Nodes/Pin.h>
 #include <cereal/types/optional.hpp>
 #include <optional>
@@ -63,11 +62,11 @@ private:
     Cool::NodeDefinitionIdentifier _id_names;
     std::string                    _name{};
 
-    std::vector<Cool::InputPin>  _input_pins{};
-    std::vector<Cool::OutputPin> _output_pins{};
-    std::vector<Cool::AnyInput>  _value_inputs;
-    size_t                       _number_of_main_input_pins{};
-    size_t                       _number_of_function_inputs{};
+    std::vector<Cool::InputPin>          _input_pins{};
+    std::vector<Cool::OutputPin>         _output_pins{};
+    std::vector<Cool::AnySharedVariable> _value_inputs;
+    size_t                               _number_of_main_input_pins{};
+    size_t                               _number_of_function_inputs{};
 
     std::optional<size_t> _particles_count{}; // HACK Only used in the case of a Particle Initializer node
 

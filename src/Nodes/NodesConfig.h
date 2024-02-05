@@ -3,7 +3,6 @@
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Audio/AudioManager.h"
-#include "Cool/Dependencies/Input.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesLibrary.h"

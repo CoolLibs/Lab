@@ -11,32 +11,32 @@
 namespace Lab {
 
 template<typename T>
-static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T>& input)
+static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable<T>& var)
 {
     auto const value = [&] {
         if constexpr (std::is_same_v<T, Cool::Color>)
         {
-            auto const col = input.value();
-            switch (static_cast<Cool::ColorSpace>(input.get_ref().desired_color_space))
+            auto const col = var.value();
+            switch (static_cast<Cool::ColorSpace>(var.get_ref().desired_color_space))
             {
 #include "Cool/ColorSpaces/generated/convert_col_as.inl"
             default:
-                throw std::runtime_error{fmt::format("Unknown color space value for {}: {}.", input.name(), input.get_ref().desired_color_space)};
+                throw std::runtime_error{fmt::format("Unknown color space value for {}: {}.", var.name(), var.get_ref().desired_color_space)};
             }
         }
         else if constexpr (std::is_same_v<T, Cool::ColorAndAlpha>)
         {
-            auto const col = input.value();
-            switch (static_cast<Cool::ColorAndAlphaSpace>(input.get_ref().desired_color_space))
+            auto const col = var.value();
+            switch (static_cast<Cool::ColorAndAlphaSpace>(var.get_ref().desired_color_space))
             {
 #include "Cool/ColorSpaces/generated/convert_col_and_alpha_as.inl"
             default:
-                throw std::runtime_error{fmt::format("Unknown color and alpha space value for {}: {}.", input.name(), input.get_ref().desired_color_space)};
+                throw std::runtime_error{fmt::format("Unknown color and alpha space value for {}: {}.", var.name(), var.get_ref().desired_color_space)};
             }
         }
         else
         {
-            return input.value();
+            return var.value();
         }
     }();
 
@@ -44,15 +44,15 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T>& inpu
     {
         Cool::set_uniform(
             shader,
-            valid_input_name(input),
+            valid_input_name(var),
             value
         );
-        Cool::Log::ToUser::console().remove(input.message_id());
+        Cool::Log::ToUser::console().remove(var.message_id());
     }
     catch (Cool::Exception const& e)
     {
         e.error_message().send_error_if_any(
-            input.message_id(),
+            var.message_id(),
             [&](std::string const& msg) {
                 return Cool::Message{
                     .category = "Invalid node parameter",
@@ -71,7 +71,7 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T>& inpu
         if (err)
         {
             Cool::Log::ToUser::console().send(
-                input.message_id(),
+                var.message_id(),
                 Cool::Message{
                     .category = "Missing Texture",
                     .message  = err.value(),
@@ -81,7 +81,7 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::Input<T>& inpu
         }
         else
         {
-            Cool::Log::ToUser::console().remove(input.message_id());
+            Cool::Log::ToUser::console().remove(var.message_id());
         }
     }
 }
