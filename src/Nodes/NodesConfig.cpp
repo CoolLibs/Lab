@@ -161,11 +161,13 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         auto settings = settings_from_inputs(node.value_inputs());
         // Apply
         bool const has_changed = def->imgui_presets(settings);
-        // Apply back the variables to the inputs' default variables
-        apply_settings_to_inputs(settings, node.value_inputs(), to_string(node));
 
         if (has_changed)
+        {
+            // Apply back the variables to the inputs' default variables
+            apply_settings_to_inputs(settings, node.value_inputs(), to_string(node));
             _regenerate_code_flag.set_dirty(); // TODO(Modules) We could simply rerender instead of regenerate if none of the properties require code generation
+        }
     }
 }
 
