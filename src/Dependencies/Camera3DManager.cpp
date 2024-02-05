@@ -3,12 +3,12 @@
 #include <Cool/Dependencies/DirtyFlag.h>
 #include <Cool/ImGui/IcoMoonCodepoints.h>
 #include <Cool/ImGui/icon_fmt.h>
-#include <memory>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/CommandExecutor.h"
 #include "Commands/Command_FinishedEditingVariable.h"
 #include "Commands/Command_SetCameraZoom.h"
 #include "Commands/Command_SetVariable.h"
+#include "Cool/Utils/Chrono.h"
 
 namespace Lab {
 
@@ -29,9 +29,13 @@ void Camera3DManager::hook_events(
             {
                 auto const zoom = _view_controller.get_distance_to_orbit_center();
                 _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
+
+                { // Don't merge with zooms that happened a while ago
+                    static auto chrono = Cool::Chrono{};
+                    if (chrono.elapsed_more_than(0.5s))
+                        executor.execute(Command_FinishedEditingVariable{});
+                }
                 executor.execute(Command_SetCameraZoom{zoom});
-                executor.execute(Command_FinishedEditingVariable{});
-                _camera_input.dirty_flag().set_dirty();
             }
         });
     events
@@ -96,7 +100,6 @@ void Camera3DManager::maybe_update_camera(
     if (fun(camera))
     {
         executor.execute(Command_SetVariable<Cool::Camera>{_camera_input.get_ref(), camera});
-        _camera_input.dirty_flag().set_dirty();
     }
 }
 

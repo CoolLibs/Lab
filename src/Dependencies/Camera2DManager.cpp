@@ -8,6 +8,7 @@
 #include "Cool/Input/MouseDragEvents.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/UserSettings/UserSettings.h"
+#include "Cool/Utils/Chrono.h"
 #include "glm/gtx/rotate_vector.hpp"
 #include "imgui.h"
 
@@ -35,8 +36,12 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
             }
             new_value.zoom *= zoom_variation;
 
+            { // Don't merge with zooms that happened a while ago
+                static auto chrono = Cool::Chrono{};
+                if (chrono.elapsed_more_than(0.5s))
+                    executor.execute(Command_FinishedEditingVariable{});
+            }
             executor.execute(Command_SetVariable<Cool::Camera2D>{.input = _camera.get_ref(), .value = new_value});
-            executor.execute(Command_FinishedEditingVariable{});
         });
 
     events
