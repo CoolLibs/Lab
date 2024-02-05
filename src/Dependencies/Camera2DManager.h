@@ -20,6 +20,7 @@ public:
 
     void imgui(Ui_Ref);
     void hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events, CommandExecutor const&);
+    void reset_camera(CommandExecutor const&);
 
 private:
     Cool::Input<Cool::Camera2D> _camera;

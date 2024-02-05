@@ -62,6 +62,12 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
     // TODO(Camera2D) rotation when shift+scroll and explanation
 }
 
+void Camera2DManager::reset_camera(CommandExecutor const& executor)
+{
+    executor.execute(Command_SetVariable<Cool::Camera2D>{.input = _camera.get_ref(), .value = {}});
+    executor.execute(Command_FinishedEditingVariable{});
+}
+
 void Camera2DManager::imgui(Ui_Ref ui)
 {
     ui.widget(_camera);

@@ -606,7 +606,7 @@ void App::imgui_menus()
 
 void App::reset_cameras()
 {
-    _project.camera_2D_manager.camera() = {}; // TODO(Commands) Store this command in history
+    _project.camera_2D_manager.reset_camera(command_executor());
     _project.camera_3D_manager.reset_camera(command_executor());
 }
 
