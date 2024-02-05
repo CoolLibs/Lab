@@ -606,8 +606,11 @@ void App::imgui_menus()
 
 void App::reset_cameras()
 {
-    _project.camera_2D_manager.reset_camera(command_executor());
-    _project.camera_3D_manager.reset_camera(command_executor());
+    auto executor = command_executor();
+    executor.wrap_in_commands_group([&]() {
+        _project.camera_2D_manager.reset_camera(executor);
+        _project.camera_3D_manager.reset_camera(executor);
+    });
 }
 
 void App::check_inputs()
