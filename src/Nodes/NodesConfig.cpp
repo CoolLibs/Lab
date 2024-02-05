@@ -1,7 +1,10 @@
 #include "NodesConfig.h"
+#include <Commands/Command_Group.h>
+#include <Commands/Command_SetVariable.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <algorithm>
 #include <string>
+#include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
@@ -36,14 +39,58 @@ static auto settings_from_inputs(std::vector<Cool::AnyInput> const& inputs) -> C
     return settings;
 }
 
+// TODO(Settings) Remove
+template<typename T>
+static auto make_command_set_variable(Cool::AnyVariableData const& var, Cool::Input<T> const& input) -> Command_SetVariable<T>
+{
+    return Command_SetVariable<T>{
+        .input = input.get_ref(),
+        .value = std::get<Cool::VariableData<T>>(var).value,
+    };
+}
+
+// TODO(Settings) Remove
+static void apply_settings_to_inputs(
+    Cool::Settings const&        settings,
+    std::vector<Cool::AnyInput>& inputs,
+    std::string_view             node_name,
+    CommandExecutor const&       command_executor
+)
+{
+    try
+    {
+        auto command = Command_Group{};
+        for (size_t i = 0; i < inputs.size(); ++i)
+        {
+            std::visit([&](auto&& input) {
+                command.commands.push_back(make_command(make_command_set_variable(settings.at(i), input)));
+            },
+                       inputs.at(i));
+        }
+        command_executor.execute(command);
+    }
+    catch (...)
+    {
+        // TODO(Settings) Remove this try-catch once we update presets properly
+        Cool::Log::ToUser::warning(
+            "Presets",
+            fmt::format(
+                "Current preset for node \"{}\" does not match the INPUTs of the shader anymore, it has not been applied fully.",
+                node_name
+            )
+        );
+    }
+}
+
+// TODO(Settings) Remove
 template<typename T>
 static auto get_concrete_variable_data(Cool::AnyVariableData const& var, Cool::Input<T> const&) -> Cool::VariableData<T>
 {
     return std::get<Cool::VariableData<T>>(var);
 }
 
-// TODO(JF) Remove
-static void apply_settings_to_inputs(
+// TODO(Settings) Remove
+static void apply_settings_to_inputs_no_history(
     Cool::Settings const&        settings,
     std::vector<Cool::AnyInput>& inputs,
     std::string_view             node_name
@@ -61,7 +108,7 @@ static void apply_settings_to_inputs(
     }
     catch (...)
     {
-        // TODO(JF) Remove this try-catch once we update presets properly
+        // TODO(Settings) Remove this try-catch once we update presets properly
         Cool::Log::ToUser::warning(
             "Presets",
             fmt::format(
@@ -165,8 +212,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         if (has_changed)
         {
             // Apply back the variables to the inputs' default variables
-            apply_settings_to_inputs(settings, node.value_inputs(), to_string(node));
-            _regenerate_code_flag.set_dirty(); // TODO(Modules) We could simply rerender instead of regenerate if none of the properties require code generation
+            apply_settings_to_inputs(settings, node.value_inputs(), to_string(node), _command_executor);
         }
     }
 }
@@ -339,7 +385,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     // Apply
     def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, node.value_inputs(), to_string(node));
+    apply_settings_to_inputs_no_history(settings, node.value_inputs(), to_string(node));
 
     for (auto const& output_index_name : def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});

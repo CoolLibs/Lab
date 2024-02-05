@@ -10,6 +10,6 @@ namespace Lab {
 /// We use inheritance for our commands because we want plugins to be able to create their own commands,
 /// so we don't know all the commands at compile time and can't use a std::variant.
 
-using Command = std::shared_ptr<const ICommand>;
+using Command = std::shared_ptr<ICommand const>;
 
 } // namespace Lab

@@ -1,4 +1,5 @@
 #pragma once
+#include <CommandCore/CommandExecutor.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Audio/AudioManager.h"
@@ -25,7 +26,8 @@ public:
         Cool::DirtyFlag const&                             rerender_flag,
         Cool::DirtyFlag const&                             regenerate_code_flag,
         Cool::NodesGraph const&                            graph,
-        Cool::AudioManager&                                audio_manager
+        Cool::AudioManager&                                audio_manager,
+        CommandExecutor const&                             command_executor
     )
         : _get_node_definition{get_node_definition}
         , _get_mutable_node_definition{get_mutable_node_definition}
@@ -37,6 +39,7 @@ public:
         , _regenerate_code_flag{regenerate_code_flag}
         , _graph{graph}
         , _audio_manager{audio_manager}
+        , _command_executor{command_executor}
     {}
 
     auto               name(Cool::Node const&) const -> std::string;
@@ -69,6 +72,7 @@ private:
     Cool::DirtyFlag                                    _regenerate_code_flag;
     Cool::NodesGraph const&                            _graph;
     Cool::AudioManager&                                _audio_manager;
+    CommandExecutor                                    _command_executor;
 };
 
 } // namespace Lab

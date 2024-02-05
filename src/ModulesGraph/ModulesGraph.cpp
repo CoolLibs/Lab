@@ -266,6 +266,7 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
         _regenerate_code_flag,
         _nodes_editor.graph(),
         ui.audio_manager(),
+        ui.command_executor(),
     };
 }
 

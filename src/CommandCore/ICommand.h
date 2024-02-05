@@ -13,7 +13,7 @@ public:
 
     virtual void execute(CommandExecutionContext_Ref const&) const                                                      = 0;
     virtual auto to_string() const -> std::string                                                                       = 0;
-    virtual auto try_make_reversible(const MakeReversibleCommandContext_Ref&) const -> std::optional<ReversibleCommand> = 0;
+    virtual auto try_make_reversible(MakeReversibleCommandContext_Ref const&) const -> std::optional<ReversibleCommand> = 0;
 };
 
 } // namespace Lab
