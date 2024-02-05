@@ -1,6 +1,7 @@
 #include "NodesConfig.h"
 #include <Commands/Command_Group.h>
 #include <Commands/Command_SetVariable.h>
+#include <Commands/Command_SetVariableDefaultValue.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <algorithm>
 #include <string>
@@ -24,7 +25,7 @@
 
 namespace Lab {
 
-// TODO(Variables) Remove
+// TODO(Settings) Remove
 static auto settings_from_inputs(std::vector<Cool::AnyInput> const& inputs) -> Cool::Settings
 {
     auto settings = Cool::Settings{};
@@ -48,6 +49,15 @@ static auto make_command_set_variable(Cool::AnyVariableData const& var, Cool::In
         .value = std::get<Cool::VariableData<T>>(var).value,
     };
 }
+// TODO(Settings) Remove
+template<typename T>
+static auto make_command_set_variable_default_value(Cool::AnyVariableData const& var, Cool::Input<T> const& input) -> Command_SetVariableDefaultValue<T>
+{
+    return Command_SetVariableDefaultValue<T>{
+        .input         = input.get_ref(),
+        .default_value = std::get<Cool::VariableData<T>>(var).value,
+    };
+}
 
 // TODO(Settings) Remove
 static void apply_settings_to_inputs(
@@ -64,6 +74,7 @@ static void apply_settings_to_inputs(
         {
             std::visit([&](auto&& input) {
                 command.commands.push_back(make_command(make_command_set_variable(settings.at(i), input)));
+                command.commands.push_back(make_command(make_command_set_variable_default_value(settings.at(i), input)));
             },
                        inputs.at(i));
         }

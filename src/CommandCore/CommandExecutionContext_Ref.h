@@ -29,12 +29,6 @@ public:
     {
         _data.executor.execute(command, *this);
     }
-    // TODO(Variables) Set dirty
-    // template<typename T>
-    // void set_dirty(Cool::VariableId<T> const& id, bool use_secondary_dirty_flag = false) const
-    // {
-    //     _data.set_dirty(id, use_secondary_dirty_flag);
-    // }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
         std::reference_wrapper<App>                                  app;

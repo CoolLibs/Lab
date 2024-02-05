@@ -1,6 +1,7 @@
 # Changelog
 
-- [🐣beta-12 WIP](#beta-12-wip)
+- [🐣beta-13 WIP](#beta-13-wip)
+- [🐣beta-12](#beta-12)
 - [🐣beta-11](#beta-11)
 - [🐣beta-10](#beta-10)
 - [🐣beta-9](#beta-9)
@@ -14,7 +15,11 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-12 WIP
+## 🐣beta-13 WIP
+
+- 🐛 Applying a preset can now be undone (CTRL+Z)
+
+## 🐣beta-12
 
 - ✨ Added OSC support! You can now control Coollab through OSC messages from your smartphone or another software on your computer! Just use the "OSC" node and select which channel's value you want to use.
 - ⚡ Improved performance when using Midi input.
