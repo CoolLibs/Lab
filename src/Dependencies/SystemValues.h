@@ -16,7 +16,7 @@ struct SystemValues {
 
     auto height() const -> float { return static_cast<float>(render_target_size.height()); }
     auto aspect_ratio() const -> float { return img::SizeU::aspect_ratio(render_target_size); }
-    auto inverse_aspect_ratio() const -> float { return img::SizeU::aspect_ratio(render_target_size); }
+    auto inverse_aspect_ratio() const -> float { return img::SizeU::inverse_aspect_ratio(render_target_size); }
 };
 
 } // namespace Lab

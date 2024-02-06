@@ -54,7 +54,7 @@ public:
     [[nodiscard]] auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
     [[nodiscard]] auto regenerate_code_flag() -> Cool::DirtyFlag const& { return _regenerate_code_flag; }
     [[nodiscard]] auto rerender_all_flag() -> Cool::DirtyFlag const& { return _rerender_all_flag; }
-    [[nodiscard]] auto nodes_config(Ui_Ref, Cool::NodesLibrary&) const -> NodesConfig;
+    [[nodiscard]] auto nodes_config(Ui_Ref, Cool::AudioManager&, Cool::NodesLibrary&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     /// Function called once on every frame where the time has changed.
     void on_time_changed();
@@ -68,7 +68,7 @@ public:
 
     void update_dependencies_from_nodes_graph();
 
-    void imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const;
+    void imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, UpdateContext_Ref update_ctx) const;
     void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref, Cool::Camera2D const&);
 
 private:

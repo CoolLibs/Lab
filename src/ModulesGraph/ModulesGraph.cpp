@@ -3,6 +3,7 @@
 #include <Nodes/FunctionSignature.h>
 #include <imgui.h>
 #include <algorithm>
+#include "Cool/Audio/AudioManager.h"
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "Cool/StrongTypes/Camera2D.h"
@@ -189,7 +190,7 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
     _compositing_module.set_shader_code(shader_code);
 }
 
-void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
+void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, UpdateContext_Ref update_ctx) const
 {
     for (auto const& _particles_module : _particles_module_nodes)
     {
@@ -197,7 +198,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, UpdateContext_Ref update_ctx) const
     }
     _compositing_module.imgui_windows(ui, update_ctx);
     {
-        auto cfg = Cool::NodesConfig{nodes_config(ui, update_ctx.nodes_library())};
+        auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, update_ctx.nodes_library())};
         if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
             _regenerate_code_flag.set_dirty();
     }
@@ -253,7 +254,7 @@ void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref c
     });
 }
 
-auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) const -> NodesConfig
+auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary& nodes_library) const -> NodesConfig
 {
     return NodesConfig{
         Cool::GetNodeDefinition_Ref<NodeDefinition>{nodes_library},
@@ -265,7 +266,7 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::NodesLibrary& nodes_library) co
         _rerender_all_flag,
         _regenerate_code_flag,
         _nodes_editor.graph(),
-        ui.audio_manager(),
+        audio_manager,
         ui.command_executor(),
     };
 }

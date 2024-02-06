@@ -1,9 +1,7 @@
 #include "Camera3DManager.h"
 #include <Cool/Camera/ViewController_OrbitalU.h>
-#include <Cool/Dependencies/DirtyFlag.h>
 #include <Cool/ImGui/IcoMoonCodepoints.h>
 #include <Cool/ImGui/icon_fmt.h>
-#include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/CommandExecutor.h"
 #include "Commands/Command_FinishedEditingVariable.h"
 #include "Commands/Command_SetCameraZoom.h"
@@ -96,14 +94,12 @@ void Camera3DManager::maybe_update_camera(
     std::function<bool(Cool::Camera&)> const& fun
 )
 {
-    auto camera = _camera.value();
-    if (fun(camera))
-    {
-        executor.execute(Command_SetVariable<Cool::Camera>{_camera.get_ref(), camera});
-    }
+    auto new_value = _camera.value();
+    if (fun(new_value))
+        executor.execute(Command_SetVariable<Cool::Camera>{_camera.get_ref(), new_value});
 }
 
-void Camera3DManager::set_zoom(float zoom, CommandExecutionContext_Ref const&)
+void Camera3DManager::set_zoom(float zoom)
 {
     Cool::ViewController_OrbitalU::set_distance_to_orbit_center(_view_controller, _camera.value(), zoom);
     _camera.dirty_flag().set_dirty();

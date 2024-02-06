@@ -18,7 +18,8 @@ struct Command_SetCameraZoom {
 
     void execute(CommandExecutionContext_Ref const& ctx) const
     {
-        ctx.camera_manager().set_zoom(value, ctx);
+        ctx.camera_manager().set_zoom(value);
+        std::ignore = ctx;
     }
 
     auto to_string() const -> std::string
@@ -40,7 +41,8 @@ struct ReversibleCommand_SetCameraZoom {
 
     void revert(CommandExecutionContext_Ref const& ctx) const
     {
-        ctx.camera_manager().set_zoom(old_value, ctx);
+        ctx.camera_manager().set_zoom(old_value);
+        std::ignore = ctx;
     }
 
     auto to_string() const -> std::string

@@ -1,4 +1,5 @@
 #pragma once
+#include <Cool/Dependencies/SharedVariable.h>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 
 namespace Lab {

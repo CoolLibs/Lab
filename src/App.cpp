@@ -93,7 +93,7 @@ void App::on_shutdown()
 
 void App::compile_all_is0_nodes()
 {
-    // for (const auto& node_template : _project.modules_graph->compositing_module().nodes_templates())
+    // for (auto const& node_template : _project.modules_graph->compositing_module().nodes_templates())
     // {
     //     _project.modules_graph->compositing_module().remove_all_nodes();
     //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
@@ -147,7 +147,7 @@ void App::update()
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(_project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _nodes_library_manager.library()));
+        _nodes_library_manager.update(_project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
         _project.modules_graph->update(update_context());
         // _custom_shader_module->update(update_context());
         check_inputs();
@@ -260,7 +260,7 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
 
 void App::imgui_commands_debug_windows()
 {
-    const auto the_ui = ui();
+    auto const the_ui = ui();
     the_ui.window({.name = "History"}, [&]() {
         _project.history.imgui_show([](const ReversibleCommand& command) {
             return command_to_string(command);
@@ -383,7 +383,7 @@ void App::imgui_windows()
 
 void App::imgui_windows_only_when_inputs_are_allowed()
 {
-    const auto the_ui = ui();
+    auto const the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
     Cool::ClockU::imgui_timeline(_project.clock, /* on_time_reset = */ [&]() { on_time_reset(); });
@@ -403,7 +403,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.modules_graph->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
+    _project.modules_graph->imgui_windows(the_ui, _project.audio, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
@@ -630,7 +630,7 @@ void App::check_inputs()
 void App::check_inputs__history()
 {
     auto        exec = reversible_command_executor_without_history();
-    const auto& io   = ImGui::GetIO();
+    auto const& io   = ImGui::GetIO();
 
     // Undo
     if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z))

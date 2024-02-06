@@ -74,7 +74,7 @@ private:
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
     auto system_values                              (img::Size render_target_size, float time, float delta_time) { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
-    auto ui                                         () { return Ui_Ref{command_executor(), _project.audio}; }
+    auto ui                                         () { return Ui_Ref{command_executor()}; }
     auto update_context                             () { return UpdateContext_Ref{{ui(), _nodes_library_manager.library()}}; }
     // clang-format on
 

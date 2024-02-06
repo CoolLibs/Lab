@@ -8,7 +8,6 @@
 
 namespace Lab {
 
-class CommandExecutionContext_Ref;
 class CommandExecutor;
 
 class Camera3DManager {
@@ -29,7 +28,7 @@ public:
     void imgui(CommandExecutor const&);
 
     [[nodiscard]] auto get_zoom() const -> float { return _view_controller.get_distance_to_orbit_center(); }
-    void               set_zoom(float zoom, CommandExecutionContext_Ref const& ctx);
+    void               set_zoom(float zoom);
 
     void reset_camera(CommandExecutor const&);
 
