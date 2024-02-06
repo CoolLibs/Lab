@@ -1,15 +1,8 @@
 #pragma once
-#include <Cool/Dependencies/Input.h>
-#include <Cool/Dependencies/InputFactory_Ref.h>
-#include <Cool/Dependencies/InputProvider_Ref.h>
 #include <Cool/Log/OptionalErrorMessage.h>
-#include <img/src/Size.h>
+#include <Dependencies/SystemValues.h>
 #include <cereal/types/polymorphic.hpp>
-#include <glm/glm.hpp>
-#include <stringify/stringify.hpp>
-#include "Dependencies/History.h"
 #include "Dependencies/Ui.h"
-#include "Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {
 
@@ -20,15 +13,6 @@ namespace Lab {
 
 class Module {
 public:
-    struct RenderParams {
-        Cool::InputProvider_Ref                          provider;
-        Cool::InputFactory_Ref                           input_factory;
-        Cool::IsDirty_Ref                                is_dirty;
-        Cool::SetClean_Ref                               set_clean;
-        std::reference_wrapper<Cool::VariableRegistries> variable_registries;
-        img::Size                                        render_target_size;
-    };
-
     Module()                                 = default;
     Module(Module const&)                    = delete;
     auto operator=(Module const&) -> Module& = delete;
@@ -40,34 +24,33 @@ protected:
 public:
     virtual ~Module() = default;
 
-    Module(std::string_view name, Cool::DirtyFlagFactory_Ref dirty_flag_factory)
+    explicit Module(std::string_view name)
         : _name{name}
-        , _needs_to_rerender_flag{dirty_flag_factory.make()}
     {
     }
 
     [[nodiscard]] auto name() const -> const std::string& { return _name; }
 
-    void do_rendering(RenderParams params)
+    void do_rendering(SystemValues const& system_values)
     {
-        render(params);
-        params.set_clean(_needs_to_rerender_flag);
+        render(system_values);
+        _needs_to_rerender_flag.set_clean();
     }
-    virtual void imgui_windows(Ui_Ref, UpdateContext_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
-    virtual void update(UpdateContext_Ref){};
+    virtual void imgui_windows(Ui_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
+    virtual void update(){};
 
-    [[nodiscard]] virtual auto needs_to_rerender(Cool::IsDirty_Ref check_dirty) const -> bool
+    [[nodiscard]] virtual auto needs_to_rerender() const -> bool
     {
-        return check_dirty(_needs_to_rerender_flag);
+        return _needs_to_rerender_flag.is_dirty();
     };
 
-    [[nodiscard]] auto needs_to_rerender_flag() const { return _needs_to_rerender_flag; }
+    [[nodiscard]] auto needs_to_rerender_flag() const -> Cool::DirtyFlag const& { return _needs_to_rerender_flag; }
 
 protected:
     void log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
 
 private:
-    virtual void render(RenderParams) = 0;
+    virtual void render(SystemValues const&) = 0;
 
 private:
     std::string     _name;

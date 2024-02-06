@@ -1,10 +1,7 @@
 #pragma once
-
 #include <Cool/AppManager/IApp.h>
 #include <Cool/DebugOptions/DebugOptions.h>
 #include <Cool/DebugOptions/DebugOptionsManager.h>
-#include <Cool/Dependencies/Dirty.h>
-#include <Cool/Dependencies/VariableRegistries.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
 #include <Cool/Gpu/OpenGL/Texture.h>
@@ -30,9 +27,7 @@
 #include "Cool/View/ForwardingOrRenderView.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
 #include "Debug/DebugOptions.h"
-#include "Dependencies/CameraManager.h"
 #include "Dependencies/History.h"
-#include "Dependencies/UpdateContext_Ref.h"
 #include "Gallery/GalleryPoster.h"
 #include "Project.h"
 
@@ -71,23 +66,14 @@ private:
     void check_inputs__timeline();
 
     // clang-format off
-    auto all_inputs() -> Cool::AllInputRefsToConst;
-    auto set_dirty_flag                             () { return Cool::SetDirty_Ref{_project.dirty_registry}; }
-    auto set_variable_dirty                         () { return Cool::SetVariableDirty_Ref{all_inputs(), set_dirty_flag()}; }
-    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{_project.variable_registries, _project.camera_manager}}; }
-    auto command_execution_context                  () ->CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.variable_registries, _project.camera_manager, set_variable_dirty(), _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager}}; }
+    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_3D_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto input_provider                             (float render_target_aspect_ratio, float height, float time, float delta_time, glm::mat3 const& cam2D) { return Cool::InputProvider_Ref{_project.variable_registries, render_target_aspect_ratio, height, time, delta_time, cam2D, _project.audio}; }
-    auto input_factory                              () { return _project.input_factory(); }
-    auto ui                                         () { return Ui_Ref{_project.variable_registries, command_executor(), set_dirty_flag(), input_factory(), _project.audio}; }
-    auto dirty_flag_factory                         () { return _project.dirty_flag_factory(); }
-    auto is_dirty__functor                          () { return Cool::IsDirty_Ref{_project.dirty_registry}; }
-    auto set_clean__functor                         () { return Cool::SetClean_Ref{_project.dirty_registry}; }
-    auto set_dirty__functor                         () { return Cool::SetDirty_Ref{_project.dirty_registry}; }
-    auto update_context                             () { return UpdateContext_Ref{{set_clean__functor(), set_dirty__functor(), input_provider(0.f, 0.f, -100000.f, 0.f, _project.camera2D.value().transform_matrix() /* HACK: Dummy values, they should not be needed. Currently this is only used by shader code generation to inject of very specific types like Gradient */), ui(), _nodes_library_manager.library()}}; }
+    auto system_values                              (img::Size render_target_size, float time, float delta_time) { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
+    auto ui                                         () { return Ui_Ref{command_executor()}; }
     // clang-format on
 
     Cool::Polaroid polaroid();
@@ -107,10 +93,9 @@ private:
     void imgui_window_view();
     void imgui_window_exporter();
 
-    void imgui_commands_and_registries_debug_windows();
+    void imgui_commands_debug_windows();
 
     void compile_all_is0_nodes();
-    void set_everybody_dirty();
 
 private:
     Cool::Window&                        _main_window;

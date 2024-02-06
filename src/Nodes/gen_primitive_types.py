@@ -761,14 +761,14 @@ def check_that_each_primitive_type_corresponds_to_a_different_input_type():
 
 def check_color_space(type):
     if type[0] == "Cool::Color":
-        return f"&& std::get<Cool::Input<{type[0]}>>(input)._desired_color_space == static_cast<int>(Cool::ColorSpace::{type[1]})"
+        return f"&& std::get<Cool::SharedVariable<{type[0]}>>(var).get_ref().desired_color_space == static_cast<int>(Cool::ColorSpace::{type[1]})"
     elif type[0] == "Cool::ColorAndAlpha":
-        return f"&& std::get<Cool::Input<{type[0]}>>(input)._desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::{type[1]})"
+        return f"&& std::get<Cool::SharedVariable<{type[0]}>>(var).get_ref().desired_color_space == static_cast<int>(Cool::ColorAndAlphaSpace::{type[1]})"
     else:
         return ""
 
 
-def input_to_primitive_type():
+def variable_to_primitive_type():
     from pipe import map, chain
 
     check_that_each_primitive_type_corresponds_to_a_different_input_type()
@@ -780,7 +780,7 @@ def input_to_primitive_type():
         | chain
         | map(
             lambda type: f"""
-if (std::holds_alternative<Cool::Input<{type[0]}>>(input) {check_color_space(type)})
+if (std::holds_alternative<Cool::SharedVariable<{type[0]}>>(var) {check_color_space(type)})
     return PrimitiveType::{type[1]};"""
         )
     )
@@ -881,7 +881,7 @@ if __name__ == "__main__":
             glsl_type_as_string_cases,
             raw_glsl_type_as_string_cases,
             cpp_type_as_string_cases,
-            input_to_primitive_type,
+            variable_to_primitive_type,
             parse_primitive_type,
             string_listing_the_parsed_types,
             implicit_color_conversions,

@@ -1,25 +1,22 @@
 #pragma once
-
-#include <stringify/stringify.hpp>
+#include <Cool/Dependencies/SharedVariable.h>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 
 namespace Lab {
 
 template<typename T>
 struct Command_SetVariableMetadata {
-    Cool::VariableId<T>       id{};
-    Cool::VariableMetadata<T> metadata{};
+    Cool::SharedVariableStrongRef<T> var_ref{};
+    Cool::VariableMetadata<T>        metadata{};
 
-    void execute(CommandExecutionContext_Ref const& ctx) const
+    void execute(CommandExecutionContext_Ref const&) const
     {
-        ctx.registries().with_mutable_ref<Cool::Variable<T>>(id, [&](Cool::Variable<T>& variable) {
-            variable.metadata() = metadata;
-        });
+        var_ref.variable->metadata() = metadata;
     }
 
     auto to_string() const -> std::string
     {
-        return "Set " + reg::to_string(id) + "'s metadata";
+        return "Set " + std::to_string(var_ref.id()) + "'s metadata";
     }
 };
 
@@ -31,7 +28,7 @@ template<class Archive, typename T>
 void serialize(Archive& archive, Lab::Command_SetVariableMetadata<T>& command)
 {
     archive(
-        cereal::make_nvp("Id", command.id),
+        cereal::make_nvp("Variable ref", command.var_ref),
         cereal::make_nvp("Metadata", command.metadata)
     );
 }

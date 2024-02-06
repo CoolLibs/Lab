@@ -1,18 +1,14 @@
 #pragma once
-
-#include <Cool/Dependencies/VariableRegistries.h>
-#include "Dependencies/CameraManager.h"
+#include "Dependencies/Camera3DManager.h"
 
 namespace Lab {
 
 class MakeReversibleCommandContext_Ref {
 public:
-    auto registries() const -> const Cool::VariableRegistries& { return _data.registries; }
-    auto camera_manager() const -> const CameraManager& { return _data.camera_manager; }
+    auto camera_manager() const -> const Camera3DManager& { return _data.camera_3D_manager; }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        std::reference_wrapper<Cool::VariableRegistries> registries;
-        std::reference_wrapper<CameraManager>            camera_manager;
+        std::reference_wrapper<Camera3DManager> camera_3D_manager;
     };
     explicit MakeReversibleCommandContext_Ref(Data data)
         : _data{data} {}

@@ -1,17 +1,12 @@
 #pragma once
 #include <CommandCore/CommandExecutor_TopLevel.h>
-#include <Cool/Dependencies/Dirty.h>
-#include <Cool/Dependencies/SetVariableDirty_Ref.h>
-#include <Cool/Dependencies/VariableId.h>
-#include <Cool/Dependencies/VariableRegistries.h>
-#include <utility>
 #include "ConcreteCommand.h"
 #include "Cool/Window/Window.h"
 #include "Dependencies/History.h"
 
 namespace Lab {
 
-class CameraManager;
+class Camera3DManager;
 class App;
 class RecentlyOpened;
 struct Project;
@@ -23,8 +18,7 @@ class CommandExecutionContext_Ref {
 public:
     [[nodiscard]] auto app() const -> App& { return _data.app; }
     [[nodiscard]] auto history() const -> History const& { return _data.history; }
-    [[nodiscard]] auto registries() const -> Cool::VariableRegistries& { return _data.registries; }
-    [[nodiscard]] auto camera_manager() const -> CameraManager& { return _data.camera_manager; }
+    [[nodiscard]] auto camera_manager() const -> Camera3DManager& { return _data.camera_manager; }
     [[nodiscard]] auto main_window() const -> Cool::Window& { return _data.main_window; }
     [[nodiscard]] auto project() const -> Project& { return _data.project; }
     [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
@@ -35,18 +29,11 @@ public:
     {
         _data.executor.execute(command, *this);
     }
-    template<typename T>
-    void set_dirty(Cool::VariableId<T> const& id, bool use_secondary_dirty_flag = false) const
-    {
-        _data.set_dirty(id, use_secondary_dirty_flag);
-    }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
         std::reference_wrapper<App>                                  app;
         std::reference_wrapper<History const>                        history;
-        std::reference_wrapper<Cool::VariableRegistries>             registries;
-        std::reference_wrapper<CameraManager>                        camera_manager;
-        mutable Cool::SetVariableDirty_Ref                           set_dirty;
+        std::reference_wrapper<Camera3DManager>                      camera_manager;
         std::reference_wrapper<Cool::Window>                         main_window;
         std::reference_wrapper<Project>                              project;
         std::reference_wrapper<std::optional<std::filesystem::path>> project_path;

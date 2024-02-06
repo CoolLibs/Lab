@@ -1,9 +1,9 @@
 #include "CodeGen.h"
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
-#include <Cool/InputParser/InputParser.h>
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/String/String.h>
+#include <Cool/Variables/gen_input_shader_code.h>
 #include <Nodes/PrimitiveType.h>
 #include <fmt/core.h>
 #include <optional>
@@ -16,8 +16,9 @@
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeDefinition.h"
-#include "input_to_primitive_type.h"
 #include "valid_glsl.h"
+#include "valid_input_name.h"
+#include "variable_to_primitive_type.h"
 
 namespace Lab {
 
@@ -121,19 +122,6 @@ static auto desired_function_name(
     );
 }
 
-auto valid_property_name(std::string const& name, reg::AnyId const& property_default_variable_id) // We use a unique id per property to make sure they don't clash with anything. For example if the node was called Zoom and its property was also called Zoom, both the function and the uniform variable would get the same name.
-    -> std::string
-{
-    using fmt::literals::operator""_a;
-    return fmt::format(
-        FMT_COMPILE(
-            "{name}{id}"
-        ),
-        "name"_a = valid_glsl(name),
-        "id"_a   = valid_glsl(to_string(property_default_variable_id.underlying_uuid()))
-    );
-}
-
 auto make_valid_output_index_name(Cool::OutputPin const& pin) -> std::string
 {
     using fmt::literals::operator""_a;
@@ -171,7 +159,7 @@ static auto gen_value_inputs(
         {
             if (maybe_node->main_output_pin() == output_pin)
             {
-                auto const property_type = input_to_primitive_type(prop);
+                auto const property_type = variable_to_primitive_type(prop);
                 if (!property_type)
                     return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
 
@@ -193,16 +181,13 @@ static auto gen_value_inputs(
         }
         else
         {
-            res.code += Cool::gen_input_shader_code(
-                            prop,
-                            context.input_provider(),
-                            std::visit([](auto&& prop) { return fmt::format("'{}'", prop.name()); }, prop) // Re-add single quotes around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
-                        )
+            res.code += std::visit([](auto&& prop) { return Cool::gen_input_shader_code(
+                                                         prop.value(),
+                                                         fmt::format("'{}'", prop.name()) // Re-add single quotes around the name so the names are generated the same as users have used in their function body. This will allow the replacement that comes next to handle everybody uniformly.
+                                                     ); }, prop)
                         + '\n';
 
-            res.real_names.push_back(std::visit(
-                [](auto&& prop) { return valid_property_name(prop.name(), prop._default_variable_id.raw()); }, prop
-            ));
+            res.real_names.push_back(valid_input_name(prop));
         }
 
         property_index++;
@@ -212,9 +197,9 @@ static auto gen_value_inputs(
 }
 
 static auto list_all_property_and_input_and_output_names(
-    std::vector<Cool::AnyInput> const&      properties,
-    std::vector<NodeInputDefinition> const& inputs,
-    std::vector<std::string> const&         output_indices_names
+    std::vector<Cool::AnySharedVariable> const& properties,
+    std::vector<NodeInputDefinition> const&     inputs,
+    std::vector<std::string> const&             output_indices_names
 )
     -> std::string
 {
@@ -231,9 +216,9 @@ static auto list_all_property_and_input_and_output_names(
 }
 
 static auto replace_property_names(
-    std::string                        code,
-    std::vector<Cool::AnyInput> const& properties,
-    std::vector<std::string> const&    real_name
+    std::string                                 code,
+    std::vector<Cool::AnySharedVariable> const& properties,
+    std::vector<std::string> const&             real_name
 ) -> std::string
 {
     size_t i{0};

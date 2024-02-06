@@ -123,7 +123,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
 
 void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
 {
-    if (ImGui::MenuItem("New", "Ctrl+N"))
+    if (ImGui::MenuItem("New", "Ctrl+N")) // TODO(UX) Cmd instead of Ctrl on MacOS
         ctx.execute(Command_NewProject{});
     if (ImGui::MenuItem("Open", "Ctrl+O"))
         dialog_to_open_project(ctx);

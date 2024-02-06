@@ -1,15 +1,40 @@
 #pragma once
-
-#include "Cool/Input/MouseEventDispatcher.h"
+#include <Cool/Input/MouseEventDispatcher.h>
+#include "Cool/Dependencies/SharedVariable.h"
 #include "Cool/StrongTypes/Camera2D.h"
+#include "Dependencies/Ui.h"
 
 namespace Lab {
 
-void hook_camera2D_events(
-    Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events,
-    Cool::Camera2D&                                    camera,
-    std::function<void()>                              on_change,
-    std::function<bool()>                              is_locked_in_view
-);
+class Camera2DManager {
+public:
+    Camera2DManager() = default;
+    Camera2DManager(std::string variable_name, Cool::DirtyFlag const& dirty_flag)
+        : _camera{Cool::Variable<Cool::Camera2D>{{std::move(variable_name)}}, dirty_flag}
+    {}
+
+    auto               camera() const -> Cool::Camera2D const& { return _camera.value(); }
+    [[nodiscard]] auto is_editable_in_view() -> bool& { return _is_editable_in_view; }
+
+    void imgui(Ui_Ref);
+    void hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events, CommandExecutor const&);
+    void reset_camera(CommandExecutor const&);
+
+private:
+    Cool::SharedVariable<Cool::Camera2D> _camera;
+    bool                                 _is_editable_in_view{true};
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Camera", _camera),
+            cereal::make_nvp("Is editable in view", _is_editable_in_view)
+        );
+    }
+};
 
 } // namespace Lab

@@ -71,13 +71,8 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
 
-    _project.camera_manager.hook_events(_preview_view.mouse_events(), _project.variable_registries, command_executor(), [this]() { request_rerender(); });
-    hook_camera2D_events(
-        _preview_view.mouse_events(),
-        _project.camera2D.value(),
-        [this]() { request_rerender(); },
-        [this]() { return !_project.is_camera_2D_editable_in_view; }
-    );
+    _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
+    _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
 
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
@@ -98,7 +93,7 @@ void App::on_shutdown()
 
 void App::compile_all_is0_nodes()
 {
-    // for (const auto& node_template : _project.modules_graph->compositing_module().nodes_templates())
+    // for (auto const& node_template : _project.modules_graph->compositing_module().nodes_templates())
     // {
     //     _project.modules_graph->compositing_module().remove_all_nodes();
     //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
@@ -108,16 +103,9 @@ void App::compile_all_is0_nodes()
     // _project.modules_graph->compositing_module().remove_all_nodes();
 }
 
-void App::set_everybody_dirty()
-{
-    std::unique_lock lock{_project.dirty_registry.mutex()};
-    for (auto& [_, is_dirty] : _project.dirty_registry)
-        is_dirty.is_dirty = true;
-}
-
 void App::on_time_changed()
 {
-    _project.modules_graph->on_time_changed(update_context());
+    _project.modules_graph->on_time_changed();
 }
 
 void App::on_time_reset()
@@ -135,12 +123,6 @@ void App::update()
         _is_first_frame = false;
         initial_project_opening(command_execution_context());
     }
-    // First frame a project is loaded
-    if (_project.is_first_frame)
-    {
-        _project.is_first_frame = false;
-        set_everybody_dirty();
-    }
 
     Cool::user_settings().color_themes.update();
 
@@ -152,22 +134,21 @@ void App::update()
         _project.exporter.is_exporting() /* force_sync_time */
     );
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
-        _project.modules_graph->on_audio_changed(update_context());
+        _project.modules_graph->on_audio_changed();
     });
 
-    _project.modules_graph->update_dependencies_from_nodes_graph(update_context()); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC or Midi, so that we can check each time to see which channel they are currently using.
+    _project.modules_graph->update_dependencies_from_nodes_graph(); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC or Midi, so that we can check each time to see which channel they are currently using.
     Cool::osc_manager().for_each_channel_that_has_changed([&](Cool::OSCChannel const& osc_channel) {
-        _project.modules_graph->on_osc_channel_changed(osc_channel, update_context());
+        _project.modules_graph->on_osc_channel_changed(osc_channel);
     });
     Cool::midi_manager().for_each_channel_that_has_changed([&](Cool::MidiChannel const& midi_channel) {
-        _project.modules_graph->on_midi_channel_changed(midi_channel, update_context());
+        _project.modules_graph->on_midi_channel_changed(midi_channel);
     });
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(update_context(), _project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _nodes_library_manager.library()));
-        _project.modules_graph->update(update_context());
-        // _custom_shader_module->update(update_context());
+        _nodes_library_manager.update(_project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
+        _project.modules_graph->update();
         check_inputs();
     }
 
@@ -218,19 +199,7 @@ void App::update()
 
 void App::request_rerender() // TODO(Modules) Sometimes we don't need to call this, but only rerender a specific module instead
 {
-    _project.modules_graph->trigger_rerender_all(set_dirty_flag());
-}
-
-auto App::all_inputs() -> Cool::AllInputRefsToConst
-{
-    // auto vec  = _custom_shader_module->all_inputs();
-    auto vec2 = _project.modules_graph->all_inputs();
-    // for (const auto& x : vec2)
-    // {
-    //     vec.push_back(x);
-    // }
-    // return vec;
-    return vec2;
+    _project.modules_graph->request_rerender_all();
 }
 
 auto App::render_view() -> Cool::RenderView&
@@ -273,48 +242,18 @@ static void imgui_window_console()
 #endif
 }
 
-// void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
-// {
-// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target().get().texture_id());
-// render_one_module(*_custom_shader_module, render_target, time);
-// }
-
 void App::render(Cool::RenderTarget& render_target, float time, float delta_time)
 {
-    auto const aspect_ratio = img::SizeU::aspect_ratio(render_target.desired_size());
     _project.modules_graph->render(
         render_target,
-        Module::RenderParams{
-            input_provider(aspect_ratio, static_cast<float>(render_target.desired_size().height()), time, delta_time, _project.camera2D.value().transform_matrix()),
-            input_factory(),
-            is_dirty__functor(),
-            set_clean__functor(),
-            _project.variable_registries,
-            render_target.desired_size(),
-        },
-        update_context(),
-        dirty_flag_factory()
+        system_values(render_target.desired_size(), time, delta_time),
+        _nodes_library_manager.library()
     );
 }
 
-void App::imgui_commands_and_registries_debug_windows()
+void App::imgui_commands_debug_windows()
 {
-    const auto the_ui = ui();
-    the_ui.window({.name = "Registry of vec3"}, [&]() {
-        imgui_show(_project.variable_registries.of<Cool::Variable<glm::vec3>>());
-    });
-    the_ui.window({.name = "Registry of float"}, [&]() {
-        imgui_show(_project.variable_registries.of<Cool::Variable<float>>());
-    });
-    the_ui.window({.name = "Registry of int"}, [&]() {
-        imgui_show(_project.variable_registries.of<Cool::Variable<int>>());
-    });
-    the_ui.window({.name = "Registry of Camera"}, [&]() {
-        imgui_show(_project.variable_registries.of<Cool::Variable<Cool::Camera>>());
-    });
-    the_ui.window({.name = "Registry of DirtyFlag"}, [&]() {
-        imgui_show(_project.dirty_registry);
-    });
+    auto const the_ui = ui();
     the_ui.window({.name = "History"}, [&]() {
         _project.history.imgui_show([](const ReversibleCommand& command) {
             return command_to_string(command);
@@ -328,19 +267,20 @@ void App::imgui_window_cameras()
 
     ImGui::PushID("##2D");
     Cool::ImGuiExtras::separator_text("2D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_project.is_camera_2D_editable_in_view);
+    if (Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_2D_manager.is_editable_in_view()))
+        _project.camera_3D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view();
     Cool::ImGuiExtras::help_marker(help_text);
-    if (imgui_widget(_project.camera2D))
-        request_rerender();
+    _project.camera_2D_manager.imgui(ui());
     ImGui::PopID();
 
     ImGui::NewLine();
 
     ImGui::PushID("##3D");
     Cool::ImGuiExtras::separator_text("3D Camera");
-    Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_manager.is_editable_in_view());
+    if (Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_3D_manager.is_editable_in_view()))
+        _project.camera_2D_manager.is_editable_in_view() = !_project.camera_3D_manager.is_editable_in_view();
     Cool::ImGuiExtras::help_marker(help_text);
-    _project.camera_manager.imgui(_project.variable_registries, command_executor(), [this]() { request_rerender(); });
+    _project.camera_3D_manager.imgui(command_executor());
     ImGui::PopID();
 }
 
@@ -355,7 +295,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context());
+    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), command_executor(), _project.camera_2D_manager.camera());
     _output_view.imgui_window({
         .on_open  = [&]() { request_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { request_rerender(); }, // as our render target, we need to rerender.
@@ -389,13 +329,13 @@ void App::imgui_window_view()
             ImGui::SetItemTooltip("%s", _wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Toggle 2D / 3D cameras
-            if (Cool::ImGuiExtras::floating_button(_project.is_camera_2D_editable_in_view ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
+            if (Cool::ImGuiExtras::floating_button(_project.camera_2D_manager.is_editable_in_view() ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
             {
-                _project.is_camera_2D_editable_in_view        = !_project.is_camera_2D_editable_in_view;
-                _project.camera_manager.is_editable_in_view() = !_project.is_camera_2D_editable_in_view; // Only allow one camera active at the same time.
+                _project.camera_2D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view();
+                _project.camera_3D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view(); // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            ImGui::SetItemTooltip("%s", _project.is_camera_2D_editable_in_view ? "2D camera is active" : "3D camera is active");
+            ImGui::SetItemTooltip("%s", _project.camera_2D_manager.is_editable_in_view() ? "2D camera is active" : "3D camera is active");
             return b;
         },
     });
@@ -436,7 +376,7 @@ void App::imgui_windows()
 
 void App::imgui_windows_only_when_inputs_are_allowed()
 {
-    const auto the_ui = ui();
+    auto const the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
     Cool::ClockU::imgui_timeline(_project.clock, /* on_time_reset = */ [&]() { on_time_reset(); });
@@ -456,7 +396,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.modules_graph->imgui_windows(the_ui, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
+    _project.modules_graph->imgui_windows(the_ui, _project.audio, _nodes_library_manager.library()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
@@ -474,9 +414,9 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
         ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
                                                                         // to learn more about Dear ImGui!).
-    if (DebugOptions::show_commands_and_registries_debug_windows())
+    if (DebugOptions::show_commands_debug_windows())
     {
-        imgui_commands_and_registries_debug_windows();
+        imgui_commands_debug_windows();
     }
     if (DebugOptions::show_nodes_and_links_registries())
     {
@@ -659,8 +599,11 @@ void App::imgui_menus()
 
 void App::reset_cameras()
 {
-    _project.camera2D.value() = {}; // TODO(JF) Store this command in history
-    _project.camera_manager.reset_camera(_project.variable_registries, command_executor(), [this]() { request_rerender(); });
+    auto executor = command_executor();
+    executor.wrap_in_commands_group([&]() {
+        _project.camera_2D_manager.reset_camera(executor);
+        _project.camera_3D_manager.reset_camera(executor);
+    });
 }
 
 void App::check_inputs()
@@ -680,10 +623,10 @@ void App::check_inputs()
 void App::check_inputs__history()
 {
     auto        exec = reversible_command_executor_without_history();
-    const auto& io   = ImGui::GetIO();
+    auto const& io   = ImGui::GetIO();
 
     // Undo
-    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z))
+    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z)) // TODO(UX) On MacOS, use command and not Ctrl (and display it as Cmd in the menu )
     {
         _project.history.move_backward(exec);
     }

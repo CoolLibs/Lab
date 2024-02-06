@@ -8,8 +8,8 @@ namespace Lab {
 
 void Command_NewProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
-    auto project                                 = Project{};
-    project.camera_manager.is_editable_in_view() = false;
+    auto project                                    = Project{};
+    project.camera_3D_manager.is_editable_in_view() = false;
     project.clock.pause();
 
     internal_project::set_current_project(ctx, std::move(project), std::nullopt /*project_path*/);

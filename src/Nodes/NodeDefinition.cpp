@@ -20,15 +20,15 @@ auto NodeDefinition::make(NodeDefinition_Data const& data, Cool::PresetsPaths co
     for (auto& prop : def._data.input_values)
     {
         auto const err = std::visit([](auto& prop) -> std::optional<std::string> {
-            if (prop.name.size() < 2 /* Make sure indexing at `prop.name.size() - 1` is safe */
-                || prop.name[0] != '\'' || prop.name[prop.name.size() - 1] != '\'')
+            if (prop.var_data.name.size() < 2 /* Make sure indexing at `prop.name.size() - 1` is safe */
+                || prop.var_data.name[0] != '\'' || prop.var_data.name[prop.var_data.name.size() - 1] != '\'')
             {
                 return fmt::format(
-                    "All the PROPERTY names must start and end with single quotes (').\nName \"{}\" is invalid.", prop.name
+                    "All the PROPERTY names must start and end with single quotes (').\nName \"{}\" is invalid.", prop.var_data.name
                 );
             }
 
-            prop.name = prop.name.substr(1, prop.name.size() - 2);
+            prop.var_data.name = prop.var_data.name.substr(1, prop.var_data.name.size() - 2);
             return std::nullopt;
         },
                                     prop);
