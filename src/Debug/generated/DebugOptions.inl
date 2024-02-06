@@ -29,7 +29,7 @@ public:
         }
     }
     [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
-    [[nodiscard]] static auto show_commands_and_registries_debug_windows() -> bool& { return instance().show_commands_and_registries_debug_windows; }
+    [[nodiscard]] static auto show_commands_debug_windows() -> bool& { return instance().show_commands_debug_windows; }
     [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return instance().show_nodes_and_links_registries; }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_updating_particles() -> bool& { return instance().log_when_updating_particles; }
@@ -80,7 +80,7 @@ private:
         bool copy_info_dump_to_clipboard{false};
         bool show_framerate_window{false};
         bool show_imgui_demo_window{false};
-        bool show_commands_and_registries_debug_windows{false};
+        bool show_commands_debug_windows{false};
         bool show_nodes_and_links_registries{false};
         bool log_when_rendering{false};
         bool log_when_updating_particles{false};
@@ -103,7 +103,7 @@ private:
 #if DEBUG
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
-                cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
+                cereal::make_nvp("Commands windows", show_commands_debug_windows),
                 cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when updating particles", log_when_updating_particles),
@@ -118,7 +118,7 @@ private:
 #else
                 cereal::make_nvp("Framerate window", show_framerate_window),
                 cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
-                cereal::make_nvp("Commands and Registries windows", show_commands_and_registries_debug_windows),
+                cereal::make_nvp("Commands windows", show_commands_debug_windows),
                 cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
                 cereal::make_nvp("Log when rendering", log_when_rendering),
                 cereal::make_nvp("Log when updating particles", log_when_updating_particles),
@@ -138,20 +138,20 @@ private:
 
     static void reset_all()
     {
-        instance().show_framerate_window                      = false;
-        instance().show_imgui_demo_window                     = false;
-        instance().show_commands_and_registries_debug_windows = false;
-        instance().show_nodes_and_links_registries            = false;
-        instance().log_when_rendering                         = false;
-        instance().log_when_updating_particles                = false;
-        instance().log_when_compiling_nodes                   = false;
-        instance().log_when_parsing_node_definition           = false;
-        instance().log_when_executing_a_command               = false;
-        instance().log_project_related_events                 = false;
-        instance().show_generated_shader_code                 = false;
-        instance().test_all_variable_widgets__window          = false;
-        instance().test_shaders_compilation__window           = false;
-        instance().empty_window                               = false;
+        instance().show_framerate_window             = false;
+        instance().show_imgui_demo_window            = false;
+        instance().show_commands_debug_windows       = false;
+        instance().show_nodes_and_links_registries   = false;
+        instance().log_when_rendering                = false;
+        instance().log_when_updating_particles       = false;
+        instance().log_when_compiling_nodes          = false;
+        instance().log_when_parsing_node_definition  = false;
+        instance().log_when_executing_a_command      = false;
+        instance().log_project_related_events        = false;
+        instance().show_generated_shader_code        = false;
+        instance().test_all_variable_widgets__window = false;
+        instance().test_shaders_compilation__window  = false;
+        instance().empty_window                      = false;
     }
 
     static void save_to_file();
@@ -200,9 +200,9 @@ private:
             Cool::ImGuiExtras::toggle("ImGui Demo window", &instance().show_imgui_demo_window);
         }
 
-        if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
+        if (wafl::similarity_match({filter, "Commands windows"}) >= wafl::Matches::Strongly)
         {
-            Cool::ImGuiExtras::toggle("Commands and Registries windows", &instance().show_commands_and_registries_debug_windows);
+            Cool::ImGuiExtras::toggle("Commands windows", &instance().show_commands_debug_windows);
         }
 
         if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
@@ -288,9 +288,9 @@ private:
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
-        if (wafl::similarity_match({filter, "Commands and Registries windows"}) >= wafl::Matches::Strongly)
+        if (wafl::similarity_match({filter, "Commands windows"}) >= wafl::Matches::Strongly)
         {
-            instance().show_commands_and_registries_debug_windows = !instance().show_commands_and_registries_debug_windows;
+            instance().show_commands_debug_windows = !instance().show_commands_debug_windows;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 

@@ -5,8 +5,8 @@
 
 namespace Lab {
 
-Module_Particles::Module_Particles(Cool::DirtyFlagFactory_Ref dirty_flag_factory, Cool::NodeId const& id_of_node_storing_particles_count)
-    : Module{"Particles", dirty_flag_factory}
+Module_Particles::Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count)
+    : Module{"Particles"}
     , _id_of_node_storing_particles_count{id_of_node_storing_particles_count}
 {
 }
@@ -103,12 +103,12 @@ void Module_Particles::request_particles_to_reset()
     _force_init_particles = true;
 }
 
-void Module_Particles::update(UpdateContext_Ref)
+void Module_Particles::update()
 {
     update_particles_count_ifn();
 }
 
-void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
+void Module_Particles::update_particles(SystemValues const& system_values)
 {
     if (!_particle_system)
         return;
@@ -119,16 +119,16 @@ void Module_Particles::update_particles(Cool::InputProvider_Ref input_provider)
 
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);
-    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), input_provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), system_values, _depends_on, *_feedback_double_buffer, *_nodes_graph);
     _particle_system->update();
     _force_init_particles      = false;
     _needs_to_update_particles = false;
 #else
-    std::ignore = input_provider;
+    std::ignore = system_values;
 #endif
 }
 
-void Module_Particles::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* update_ctx */) const
+void Module_Particles::imgui_windows(Ui_Ref) const
 {
 }
 
@@ -140,18 +140,18 @@ void Module_Particles::imgui_show_generated_shader_code()
         set_simulation_shader_code(_shader_code, false, _particle_system->dimension());
 }
 
-void Module_Particles::render(RenderParams in)
+void Module_Particles::render(SystemValues const& system_values)
 {
     if (!_particle_system)
         return;
 
     if (_needs_to_update_particles)
-        update_particles(in.provider);
+        update_particles(system_values);
 
 #if !defined(COOL_PARTICLES_DISABLED_REASON)
-    set_uniforms_for_shader_based_module(_particle_system->render_shader(), in.provider, _depends_on, *_feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->render_shader(), system_values, _depends_on, *_feedback_double_buffer, *_nodes_graph);
 
-    auto const camera_2D_mat3 = glm::inverse(glm::scale(in.provider(Cool::Input_Camera2D{}), glm::vec2{in.provider(Cool::Input_AspectRatio{}), 1.f}));
+    auto const camera_2D_mat3 = glm::inverse(glm::scale(system_values.camera_2D.transform_matrix(), glm::vec2{system_values.aspect_ratio(), 1.f}));
     auto const camera_2D_mat4 = glm::mat4{
         glm::vec4{camera_2D_mat3[0], 0.f},
         glm::vec4{camera_2D_mat3[1], 0.f},
@@ -165,7 +165,7 @@ void Module_Particles::render(RenderParams in)
     }
     else if (_particle_system->dimension() == 3)
     {
-        auto const camera_3D      = in.provider(*_camera_input);
+        auto const camera_3D      = system_values.camera_3D;
         auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.f);
         _particle_system->render_shader().set_uniform("transform_matrix", full_camera_3D);
         _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());

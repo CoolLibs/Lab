@@ -7,7 +7,6 @@ auto generate_compositing_shader_code(
     Cool::NodesGraph const&                          graph,
     Cool::NodeId const&                              root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>      get_node_definition,
-    Cool::InputProvider_Ref                          input_provider,
     MaybeGenerateModule const&                       maybe_generate_module,
     std::function<std::vector<std::string>()> const& get_module_textures_names
 ) -> tl::expected<std::string, std::string>
@@ -48,7 +47,6 @@ void main()
         graph,
         root_node_id,
         get_node_definition,
-        input_provider,
         maybe_generate_module,
         signature,
         content,

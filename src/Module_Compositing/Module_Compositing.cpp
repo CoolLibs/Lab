@@ -3,12 +3,12 @@
 
 namespace Lab {
 
-Module_Compositing::Module_Compositing(Cool::DirtyFlagFactory_Ref dirty_flag_factory)
-    : Module{"Compositing", dirty_flag_factory}
+Module_Compositing::Module_Compositing()
+    : Module{"Compositing"}
 {
 }
 
-void Module_Compositing::update(UpdateContext_Ref)
+void Module_Compositing::update()
 {
 }
 
@@ -37,6 +37,7 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     auto const maybe_err = _pipeline.compile(_shader_code);
     log_shader_error(maybe_err);
     update_dependencies_from_shader_code(_depends_on, _shader_code);
+    needs_to_rerender_flag().set_dirty();
 }
 
 void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& maybe_err) const
@@ -44,16 +45,15 @@ void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& mayb
     log_module_error(maybe_err, _shader_error_sender);
 }
 
-void Module_Compositing::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* update_ctx */) const
+void Module_Compositing::imgui_windows(Ui_Ref) const
 {
 }
 
-void Module_Compositing::imgui_show_generated_shader_code(Ui_Ref ui)
+void Module_Compositing::imgui_show_generated_shader_code()
 {
     if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{-1.f, -1.f}))
     {
         set_shader_code(_shader_code);
-        ui.dirty_setter()(needs_to_rerender_flag());
     }
 }
 
@@ -63,26 +63,26 @@ void Module_Compositing::set_render_target_size(img::Size const& size)
     _feedback_double_buffer.set_read_target_size_immediately(size);
 }
 
-void Module_Compositing::render(RenderParams in)
+void Module_Compositing::render(SystemValues const& system_values)
 {
     // TODO(Performance) Render only once and then copy to the _feedback_double_buffer ?
     // TODO(Performance) Only render on the _feedback_double_buffer when someone depends on it
     // Render on the normal render target
-    render_impl(in);
+    render_impl(system_values);
 
     // Render on the feedback texture
     _feedback_double_buffer.write_target().render([&]() {
-        render_impl(in);
+        render_impl(system_values);
     });
     _feedback_double_buffer.swap_buffers();
 }
 
-void Module_Compositing::render_impl(RenderParams in)
+void Module_Compositing::render_impl(SystemValues const& system_values)
 {
     if (!_pipeline.shader())
         return;
 
-    set_uniforms_for_shader_based_module(*_pipeline.shader(), in.provider, _depends_on, _feedback_double_buffer, *_camera_input, *_nodes_graph);
+    set_uniforms_for_shader_based_module(*_pipeline.shader(), system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
     _pipeline.draw();
 }
 

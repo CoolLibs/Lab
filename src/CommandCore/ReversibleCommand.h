@@ -4,6 +4,6 @@ namespace Lab {
 
 class IReversibleCommand;
 
-using ReversibleCommand = std::shared_ptr<const IReversibleCommand>;
+using ReversibleCommand = std::shared_ptr<IReversibleCommand const>;
 
 } // namespace Lab

@@ -1,7 +1,11 @@
 #include "NodesConfig.h"
+#include <Commands/Command_Group.h>
+#include <Commands/Command_SetVariable.h>
+#include <Commands/Command_SetVariableDefaultValue.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <algorithm>
 #include <string>
+#include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
@@ -9,6 +13,9 @@
 #include "Cool/Nodes/utilities/drawing.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/Color.h"
+#include "Cool/Variables/Settings.h"
+#include "Cool/Variables/Settings_Ref.h"
+#include "Cool/Variables/Variable.h"
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeColor.h"
@@ -18,48 +25,85 @@
 
 namespace Lab {
 
-// TODO(JF) Remove
-static auto settings_from_inputs(
-    const std::vector<Cool::AnyInput>& inputs,
-    const Cool::VariableRegistries&    registry
-) -> std::vector<Cool::AnyVariable>
+// TODO(Settings) Remove
+static auto settings_from_inputs(std::vector<Cool::AnySharedVariable> const& inputs) -> Cool::Settings
 {
-    std::vector<Cool::AnyVariable> settings;
+    auto settings = Cool::Settings{};
     settings.reserve(inputs.size());
-    for (const auto& input : inputs)
+    for (auto const& input : inputs)
     {
-        const auto maybe_variable = std::visit([&](auto&& input) -> std::optional<Cool::AnyVariable> {
-            const auto maybe_variable = registry.get(input._default_variable_id.raw());
-            if (maybe_variable)
-            {
-                return Cool::AnyVariable{*maybe_variable};
-            }
-            else
-            {
-                return std::nullopt;
-            }
+        std::visit([&](auto&& input) {
+            settings.push_back(input.variable_data());
         },
-                                               input);
-        if (maybe_variable)
-        {
-            settings.push_back(*maybe_variable);
-        }
+                   input);
     }
     return settings;
 }
 
-// TODO(JF) Remove
+// TODO(Settings) Remove
 template<typename T>
-auto get_concrete_variable(const Cool::Input<T>&, const Cool::AnyVariable& var) -> Cool::Variable<T>
+static auto make_command_set_variable(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const& var) -> Command_SetVariable<T>
 {
-    return std::get<Cool::Variable<T>>(var);
+    return Command_SetVariable<T>{
+        .var_ref = var.get_ref(),
+        .value   = std::get<Cool::VariableData<T>>(var_data).value,
+    };
+}
+// TODO(Settings) Remove
+template<typename T>
+static auto make_command_set_variable_default_value(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const& var) -> Command_SetVariableDefaultValue<T>
+{
+    return Command_SetVariableDefaultValue<T>{
+        .var_ref       = var.get_ref(),
+        .default_value = std::get<Cool::VariableData<T>>(var_data).value,
+    };
 }
 
-// TODO(JF) Remove
+// TODO(Settings) Remove
 static void apply_settings_to_inputs(
-    const std::vector<Cool::AnyVariable>& settings,
-    std::vector<Cool::AnyInput>&          inputs,
-    Cool::VariableRegistries&             registry,
+    Cool::Settings const&                 settings,
+    std::vector<Cool::AnySharedVariable>& inputs,
+    std::string_view                      node_name,
+    CommandExecutor const&                command_executor
+)
+{
+    auto command = Command_Group{};
+    try
+    {
+        for (size_t i = 0; i < inputs.size(); ++i)
+        {
+            std::visit([&](auto&& input) {
+                command.commands.push_back(make_command(make_command_set_variable(settings.at(i), input)));
+                command.commands.push_back(make_command(make_command_set_variable_default_value(settings.at(i), input)));
+            },
+                       inputs.at(i));
+        }
+    }
+    catch (...)
+    {
+        // TODO(Settings) Remove this try-catch once we update presets properly
+        Cool::Log::ToUser::warning(
+            "Presets",
+            fmt::format(
+                "Current preset for node \"{}\" does not match the INPUTs of the shader anymore, it has not been applied fully.",
+                node_name
+            )
+        );
+    }
+    command_executor.execute(command);
+}
+
+// TODO(Settings) Remove
+template<typename T>
+static auto get_concrete_variable_data(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const&) -> Cool::VariableData<T>
+{
+    return std::get<Cool::VariableData<T>>(var_data);
+}
+
+// TODO(Settings) Remove
+static void apply_settings_to_inputs_no_history(
+    Cool::Settings const&                 settings,
+    std::vector<Cool::AnySharedVariable>& inputs,
     std::string_view                      node_name
 )
 {
@@ -68,17 +112,14 @@ static void apply_settings_to_inputs(
         for (size_t i = 0; i < inputs.size(); ++i)
         {
             std::visit([&](auto&& input) {
-                registry.set(
-                    input._default_variable_id.raw(),
-                    get_concrete_variable(input, settings.at(i))
-                );
+                input.variable() = Cool::Variable{get_concrete_variable_data(settings.at(i), input)};
             },
                        inputs.at(i));
         }
     }
     catch (...)
     {
-        // TODO(JF) Remove this try-catch once we update presets properly
+        // TODO(Settings) Remove this try-catch once we update presets properly
         Cool::Log::ToUser::warning(
             "Presets",
             fmt::format(
@@ -164,7 +205,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         );
     }
 
-    auto* def = _get_mutable_node_definition(node.id_names());
+    auto const* def = _get_node_definition(node.id_names());
     if (!def)
     {
         ImGui::NewLine();
@@ -175,14 +216,15 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     {
         ImGui::NewLine();
         // Get the variables from the inputs
-        auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
+        auto settings = settings_from_inputs(node.value_inputs());
         // Apply
         bool const has_changed = def->imgui_presets(settings);
-        // Apply back the variables to the inputs' default variables
-        apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
 
         if (has_changed)
-            _ui.set_dirty(_regenerate_code_flag); // TODO(JF) We could simply rerender instead of regenerate if none of the properties require code generation
+        {
+            // Apply back the variables to the inputs' default variables
+            apply_settings_to_inputs(settings, node.value_inputs(), to_string(node), _command_executor);
+        }
     }
 }
 
@@ -233,7 +275,7 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
-    _ui.set_dirty(_regenerate_code_flag);
+    _regenerate_code_flag.set_dirty();
     _node_we_might_want_to_restore_as_main_node_id = {};
 
     // Don't change main node if we are dragging a link backward.
@@ -250,7 +292,7 @@ void NodesConfig::set_main_node_id(Cool::NodeId const& id, bool keep_node_we_mig
     if (!keep_node_we_might_want_to_restore_as_main_node)
         _node_we_might_want_to_restore_as_main_node_id = {};
     _main_node_id = id;
-    _ui.set_dirty(_regenerate_code_flag);
+    _regenerate_code_flag.set_dirty();
 }
 
 void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link, Cool::LinkId const&)
@@ -337,20 +379,24 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
 
     for (auto const& value_input_def : def.value_inputs())
     {
-        node.value_inputs().push_back(_input_factory.make(
-            value_input_def,
-            Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
-            _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+        node.value_inputs().push_back(std::visit(
+            [&](auto&& value_input_def)
+                -> Cool::AnySharedVariable { return Cool::SharedVariable{
+                                                 value_input_def,
+                                                 Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
+                                                 _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+                                             }; },
+            value_input_def
         ));
-        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.name; }, value_input_def)});
+        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.var_data.name; }, value_input_def)});
     }
 
     // Get the variables from the inputs
-    auto settings = settings_from_inputs(node.value_inputs(), _ui.variable_registries());
+    auto settings = settings_from_inputs(node.value_inputs());
     // Apply
     def.presets_manager().apply_first_preset_if_there_is_one(settings);
     // Apply back the variables to the inputs' default variables
-    apply_settings_to_inputs(settings, node.value_inputs(), _ui.variable_registries(), to_string(node));
+    apply_settings_to_inputs_no_history(settings, node.value_inputs(), to_string(node));
 
     for (auto const& output_index_name : def.output_indices())
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
@@ -358,27 +404,27 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     return node;
 }
 
-static auto name(Cool::AnyInput const& input)
+static auto name(Cool::AnySharedVariable const& var)
 {
-    return std::visit(([](auto&& input) { return input.name(); }), input);
+    return std::visit(([](auto&& var) { return var.name(); }), var);
 }
 
-static auto inputs_have_the_same_type_and_name(Cool::AnyInput const& input1, Cool::AnyInput const& input2) -> bool
+static auto inputs_have_the_same_type_and_name(Cool::AnySharedVariable const& var1, Cool::AnySharedVariable const& var2) -> bool
 {
-    return input1.index() == input2.index()
-           && name(input1) == name(input2);
+    return var1.index() == var2.index()
+           && name(var1) == name(var2);
 }
 
-static auto iterator_to_same_input(Cool::AnyInput const& input, std::vector<Cool::AnyInput>& old_inputs)
+static auto iterator_to_same_input(Cool::AnySharedVariable const& input, std::vector<Cool::AnySharedVariable>& old_inputs)
 {
-    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnyInput& other_input) {
+    return std::find_if(old_inputs.begin(), old_inputs.end(), [&](const Cool::AnySharedVariable& other_input) {
         return inputs_have_the_same_type_and_name(other_input, input);
     });
 }
 
 static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
-    std::vector<Cool::AnyInput>& old_inputs,
-    std::vector<Cool::AnyInput>& new_inputs
+    std::vector<Cool::AnySharedVariable>& old_inputs,
+    std::vector<Cool::AnySharedVariable>& new_inputs
 )
 {
     for (auto& input : old_inputs)
@@ -386,11 +432,11 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
         auto const it = iterator_to_same_input(input, new_inputs);
         if (it != new_inputs.end())
         {
-            auto       description         = std::visit([](auto&& input) { return std::move(input._description); }, *it); // Keep the new description
-            auto const desired_color_space = std::visit([](auto&& input) { return input._desired_color_space; }, *it);    // Keep the new desired_color_space
+            auto       description         = std::visit([](auto&& input) { return std::move(input.description()); }, *it);      // Keep the new description
+            auto const desired_color_space = std::visit([](auto&& input) { return input.get_ref().desired_color_space; }, *it); // Keep the new desired_color_space
             *it                            = std::move(input);
-            std::visit([&](auto&& it) mutable { it._description = std::move(description); }, *it);
-            std::visit([&](auto&& it) { it._desired_color_space = desired_color_space; }, *it);
+            std::visit([&](auto&& it) mutable { it.description() = std::move(description); }, *it);
+            std::visit([&](auto&& it) { it.get_ref().desired_color_space = desired_color_space; }, *it);
         }
     }
 }

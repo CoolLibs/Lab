@@ -1,6 +1,6 @@
 #pragma once
 #include <set>
-#include "Cool/Dependencies/InputProvider_Ref.h"
+#include "Cool/Midi/MidiChannel.h"
 #include "Cool/Nodes/NodesGraph.h"
 #include "Cool/OSC/OSCChannel.h"
 
@@ -22,6 +22,6 @@ struct ModuleDependencies {
 };
 
 void update_dependencies_from_shader_code(ModuleDependencies& dependencies, std::string shader_code);
-void update_dependencies_from_nodes_graph(ModuleDependencies& dependencies, Cool::NodesGraph const&, Cool::InputProvider_Ref);
+void update_dependencies_from_nodes_graph(ModuleDependencies& dependencies, Cool::NodesGraph const&);
 
 } // namespace Lab

@@ -117,7 +117,7 @@ def Command_SetCameraZoom():
             user_facing_name="camera zoom",
             data_type="float",
             get_value="ctx.camera_manager().get_zoom()",
-            set_value=lambda value: f"ctx.camera_manager().set_zoom({value}, ctx);",
+            set_value=lambda value: f"ctx.camera_manager().set_zoom({value}); std::ignore = ctx;",
             before_command_declaration="",
             extra_data="",
         )

@@ -1,5 +1,4 @@
 #include "NodeColor.h"
-#include <variant>
 #include "Cool/StrongTypes/Angle.h"
 #include "Cool/StrongTypes/ColorAndAlpha.h"
 #include "Cool/StrongTypes/Direction2D.h"
@@ -20,18 +19,18 @@ auto compute_function_color(FunctionSignature signature) -> Cool::Color
     return NodeColor::miscellaneous();
 }
 
-auto compute_value_input_color(Cool::AnyInputDefinition const& input_def) -> Cool::Color
+auto compute_value_input_color(Cool::AnySharedVariableDefinition const& var_def) -> Cool::Color
 {
-    if (std::holds_alternative<Cool::InputDefinition<Cool::Color>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::ColorAndAlpha>>(input_def))
+    if (std::holds_alternative<Cool::SharedVariableDefinition<Cool::Color>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::ColorAndAlpha>>(var_def))
         return NodeColor::image();
 
-    if (std::holds_alternative<Cool::InputDefinition<float>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<int>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<bool>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::Hue>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::Angle>>(input_def)
-        || std::holds_alternative<Cool::InputDefinition<Cool::Direction2D>>(input_def))
+    if (std::holds_alternative<Cool::SharedVariableDefinition<float>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<int>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<bool>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Hue>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Angle>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Direction2D>>(var_def))
         return NodeColor::greyscale();
 
     return NodeColor::miscellaneous();

@@ -15,11 +15,11 @@ public:
     {
     }
 
-    void execute(CommandExecutionContext_Ref& ctx) const override
+    void execute(CommandExecutionContext_Ref const& ctx) const override
     {
         _concrete_reversible_command.execute(ctx);
     }
-    void revert(CommandExecutionContext_Ref& ctx) const override
+    void revert(CommandExecutionContext_Ref const& ctx) const override
     {
         _concrete_reversible_command.revert(ctx);
     }
@@ -27,7 +27,7 @@ public:
     {
         return _concrete_reversible_command.to_string();
     }
-    auto merge(const IReversibleCommand& previous) const -> std::optional<ReversibleCommand> override
+    auto merge(IReversibleCommand const& previous) const -> std::optional<ReversibleCommand> override
     {
         const auto* const prev =
             dynamic_cast<const PolymorphicReversibleCommand<ConcreteReversibleCommandT>*>(&previous);

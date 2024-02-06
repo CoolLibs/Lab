@@ -47,7 +47,6 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     ctx.project() = std::move(project);
 
     set_current_project_path(ctx, project_path);
-    ctx.project().is_first_frame = true;
     ctx.project().clock.set_playing(is_playing);
     Cool::osc_manager().set_connection_endpoint(ctx.project().osc_endpoint); // HACK(OSC See below) Use the endpoint saved on the project
 }

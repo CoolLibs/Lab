@@ -36,7 +36,6 @@ auto generate_shader_code(
     Cool::NodesGraph const&                          graph,
     Cool::NodeId const&                              root_node_id,
     Cool::GetNodeDefinition_Ref<NodeDefinition>      get_node_definition,
-    Cool::InputProvider_Ref                          input_provider,
     MaybeGenerateModule const&                       maybe_generate_module,
     FunctionSignature const&                         signature,
     ShaderCodeBits const&                            content,
@@ -44,7 +43,7 @@ auto generate_shader_code(
 )
     -> tl::expected<std::string, std::string>
 {
-    auto       context            = CodeGenContext{graph, get_node_definition, input_provider};
+    auto       context            = CodeGenContext{graph, get_node_definition};
     auto const main_function_name = gen_desired_function(
         signature,
         root_node_id,

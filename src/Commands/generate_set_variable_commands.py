@@ -29,6 +29,18 @@ def register_set_variable_commands():
 """
 
 
+def register_set_variable_default_value_commands():
+    commands = ""
+    reversible_commands = ""
+    for variable_type in generator_variables.all_variable_types():
+        commands += f"LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<{variable_type}>)\n"
+        reversible_commands += f"LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<{variable_type}>)\n"
+    return f"""
+{commands}
+{reversible_commands}
+"""
+
+
 def register_set_variable_metadata_commands():
     out = "\n"
     for variable_type in generator_variables.all_variable_types():
@@ -55,6 +67,7 @@ if __name__ == "__main__":
         folder="generated",
         files=[
             register_set_variable_commands,
+            register_set_variable_default_value_commands,
             register_set_variable_metadata_commands,
         ],
     )

@@ -17,6 +17,9 @@
 
 ## 🐣beta-13 WIP
 
+- ✨ Changes to the 2D Camera can now be undone (CTRL+Z)
+- ✨ Applying a preset can now be undone (CTRL+Z)
+
 ## 🐣beta-12
 
 - ✨ Added OSC support! You can now control Coollab through OSC messages from your smartphone or another software on your computer! Just use the "OSC" node and select which channel's value you want to use.
