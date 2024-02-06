@@ -230,16 +230,16 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, C
 static auto make_gizmo(Cool::SharedVariable<Cool::Point2D> const& var, CommandExecutor const& command_executor, Cool::Camera2D const& cam_2D) -> Cool::Gizmo_Point2D
 {
     return Cool::Gizmo_Point2D{
-        .get_position = [=]() { return Cool::ViewCoordinates{glm::vec2{cam_2D.view_matrix() * glm::vec3{var.value().value, 1.f}}}; },
-        .set_position = [=](Cool::ViewCoordinates pos) {
+        .get_position =
+            [=]() { return Cool::ViewCoordinates{glm::vec2{cam_2D.view_matrix() * glm::vec3{var.value().value, 1.f}}}; },
+        .set_position =
+            [=](Cool::ViewCoordinates pos) {
                 auto const world_pos = glm::vec2{cam_2D.transform_matrix() * glm::vec3{pos, 1.f}};
-               command_executor.execute(
-                        Command_SetVariable<Cool::Point2D>{.var_ref = var.get_ref(), .value = Cool::Point2D{world_pos}}
-                        ); },
-        .on_drag_stop = [=]() { command_executor.execute(
-                                    Command_FinishedEditingVariable{}
-                                ); },
-        .id           = var.id(),
+                command_executor.execute(Command_SetVariable<Cool::Point2D>{.var_ref = var.get_ref(), .value = Cool::Point2D{world_pos}});
+            },
+        .on_drag_stop =
+            [=]() { command_executor.execute(Command_FinishedEditingVariable{}); },
+        .id = var.id(),
     };
 }
 

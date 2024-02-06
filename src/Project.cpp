@@ -1,5 +1,4 @@
 #include "Project.h"
-#include "Cool/OSC/OSCConnectionEndpoint.h"
 #include "Cool/OSC/OSCManager.h"
 
 namespace Lab {

@@ -67,9 +67,9 @@ static void apply_settings_to_inputs(
     CommandExecutor const&                command_executor
 )
 {
+    auto command = Command_Group{};
     try
     {
-        auto command = Command_Group{};
         for (size_t i = 0; i < inputs.size(); ++i)
         {
             std::visit([&](auto&& input) {
@@ -78,7 +78,6 @@ static void apply_settings_to_inputs(
             },
                        inputs.at(i));
         }
-        command_executor.execute(command);
     }
     catch (...)
     {
@@ -91,6 +90,7 @@ static void apply_settings_to_inputs(
             )
         );
     }
+    command_executor.execute(command);
 }
 
 // TODO(Settings) Remove
