@@ -626,7 +626,7 @@ void App::check_inputs__history()
     auto const& io   = ImGui::GetIO();
 
     // Undo
-    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z))
+    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z)) // TODO(UX) On MacOS, use command and not Ctrl (and display it as Cmd in the menu )
     {
         _project.history.move_backward(exec);
     }
