@@ -16,7 +16,7 @@ public:
     // Module_Compositing(Module_Compositing&&) noexcept                    = default; // TODO(Modules)
     // auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default; // TODO(Modules)
 
-    Cool::NodesGraph* _nodes_graph; // TODO(Modules) Remove
+    Cool::NodesGraph const* _nodes_graph; // TODO(Modules) Remove
 
     void update() override;
     void imgui_windows(Ui_Ref) const override;

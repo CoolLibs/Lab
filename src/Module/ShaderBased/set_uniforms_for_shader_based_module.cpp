@@ -11,7 +11,7 @@
 namespace Lab {
 
 template<typename T>
-static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable<T>& var)
+static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable<T> const& var)
 {
     auto const value = [&] {
         if constexpr (std::is_same_v<T, Cool::Color>)
@@ -91,7 +91,7 @@ auto set_uniforms_for_shader_based_module(
     SystemValues const&                     system_values,
     ModuleDependencies const&               depends_on,
     Cool::DoubleBufferedRenderTarget const& feedback_double_buffer,
-    Cool::NodesGraph&                       nodes_graph
+    Cool::NodesGraph const&                 nodes_graph
 ) -> void
 {
     shader.bind();
@@ -121,8 +121,8 @@ auto set_uniforms_for_shader_based_module(
     );
     Cool::CameraShaderU::set_uniform(shader, system_values.camera_3D, system_values.aspect_ratio());
 
-    nodes_graph.for_each_node<Node>([&](Node& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
-        for (auto& value_input : node.value_inputs())
+    nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
+        for (auto const& value_input : node.value_inputs())
         {
             std::visit([&](auto&& value_input) {
                 set_uniform(shader, value_input);

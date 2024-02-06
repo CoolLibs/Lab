@@ -12,7 +12,7 @@ void set_uniforms_for_shader_based_module(
     SystemValues const&,
     ModuleDependencies const&,
     Cool::DoubleBufferedRenderTarget const&,
-    Cool::NodesGraph&
+    Cool::NodesGraph const&
 );
 
 } // namespace Lab
