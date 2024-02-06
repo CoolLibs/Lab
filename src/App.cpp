@@ -148,8 +148,7 @@ void App::update()
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
         _nodes_library_manager.update(_project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
-        _project.modules_graph->update(update_context());
-        // _custom_shader_module->update(update_context());
+        _project.modules_graph->update();
         check_inputs();
     }
 
@@ -243,18 +242,12 @@ static void imgui_window_console()
 #endif
 }
 
-// void App::render_custom_shader(Cool::RenderTarget& render_target, float time)
-// {
-// _custom_shader_module->set_image_in_shader("_image", 0, _nodes_view.render_target().get().texture_id());
-// render_one_module(*_custom_shader_module, render_target, time);
-// }
-
 void App::render(Cool::RenderTarget& render_target, float time, float delta_time)
 {
     _project.modules_graph->render(
         render_target,
         system_values(render_target.desired_size(), time, delta_time),
-        update_context()
+        _nodes_library_manager.library()
     );
 }
 
@@ -302,7 +295,7 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), update_context(), _project.camera_2D_manager.camera());
+    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), command_executor(), _project.camera_2D_manager.camera());
     _output_view.imgui_window({
         .on_open  = [&]() { request_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { request_rerender(); }, // as our render target, we need to rerender.
@@ -403,7 +396,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.modules_graph->imgui_windows(the_ui, _project.audio, update_context()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
+    _project.modules_graph->imgui_windows(the_ui, _project.audio, _nodes_library_manager.library()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();

@@ -1,5 +1,4 @@
 #pragma once
-#include <Dependencies/UpdateContext_Ref.h>
 #include "Cool/Nodes/NodesFolderWatcher.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Path/Path.h"

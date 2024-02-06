@@ -8,7 +8,7 @@ Module_Compositing::Module_Compositing()
 {
 }
 
-void Module_Compositing::update(UpdateContext_Ref)
+void Module_Compositing::update()
 {
 }
 
@@ -45,7 +45,7 @@ void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& mayb
     log_module_error(maybe_err, _shader_error_sender);
 }
 
-void Module_Compositing::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* update_ctx */) const
+void Module_Compositing::imgui_windows(Ui_Ref) const
 {
 }
 

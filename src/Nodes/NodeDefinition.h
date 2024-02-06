@@ -49,7 +49,7 @@ public:
     [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
 
     [[nodiscard]] auto presets_manager() const -> auto const& { return *_presets_manager; }
-    auto               imgui_presets(Cool::Settings& settings) -> bool { return _presets_manager->imgui_presets(settings); }
+    auto               imgui_presets(Cool::Settings& settings) const -> bool { return _presets_manager->imgui_presets(settings); }
 
 private:
     NodeDefinition(NodeDefinition_Data const&, Cool::PresetsPaths const&); // Use NodeDefinition::make() to create a NodeDefinition

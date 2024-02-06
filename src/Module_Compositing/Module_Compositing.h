@@ -18,8 +18,8 @@ public:
 
     Cool::NodesGraph* _nodes_graph; // TODO(Modules) Remove
 
-    void update(UpdateContext_Ref) override;
-    void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
+    void update() override;
+    void imgui_windows(Ui_Ref) const override;
     void imgui_show_generated_shader_code();
 
     void reset_shader();

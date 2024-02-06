@@ -1,4 +1,5 @@
 #include "ModulesGraph.h"
+#include <CommandCore/CommandExecutor.h>
 #include <Module_Particles/Module_Particles.h>
 #include <Nodes/FunctionSignature.h>
 #include <imgui.h>
@@ -6,6 +7,7 @@
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
@@ -14,17 +16,17 @@
 
 namespace Lab {
 
-void ModulesGraph::update(UpdateContext_Ref update_context)
+void ModulesGraph::update()
 {
-    _compositing_module.update(update_context);
+    _compositing_module.update();
     for (auto& module_node : _particles_module_nodes)
     {
         module_node->module._nodes_graph = &_nodes_editor.graph();
-        module_node->module.update(update_context);
+        module_node->module.update();
     }
 }
 
-void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const& system_values, UpdateContext_Ref update_ctx)
+void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const& system_values, Cool::NodesLibrary const& nodes_library)
 {
     if (render_target.needs_resizing())
         request_rerender_all();
@@ -38,7 +40,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const&
     {
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Modules Graph", "Compiled");
-        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, update_ctx);
+        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, nodes_library);
         request_rerender_all();
         _regenerate_code_flag.set_clean();
     }
@@ -131,14 +133,14 @@ static auto texture_name_for_module(NodeDefinition const& definition, Cool::Node
     );
 }
 
-void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, UpdateContext_Ref ctx)
+void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, Cool::NodesLibrary const& nodes_library)
 {
     _particles_module_nodes.clear();
     _compositing_module.reset_shader();
 
     if (!graph.try_get_node<Node>(root_node_id))
         return;
-    auto const get_node_def = Cool::GetNodeDefinition_Ref<NodeDefinition>{ctx.nodes_library()};
+    auto const get_node_def = Cool::GetNodeDefinition_Ref<NodeDefinition>{nodes_library};
 
     auto const shader_code = generate_compositing_shader_code(
         graph,
@@ -190,16 +192,16 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
     _compositing_module.set_shader_code(shader_code);
 }
 
-void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, UpdateContext_Ref update_ctx) const
+void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const
 {
     for (auto const& _particles_module : _particles_module_nodes)
     {
-        _particles_module->module.imgui_windows(ui, update_ctx);
+        _particles_module->module.imgui_windows(ui);
     }
-    _compositing_module.imgui_windows(ui, update_ctx);
+    _compositing_module.imgui_windows(ui);
     {
-        auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, update_ctx.nodes_library())};
-        if (_nodes_editor.imgui_windows(cfg, update_ctx.nodes_library()))
+        auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, nodes_library)};
+        if (_nodes_editor.imgui_windows(cfg, nodes_library))
             _regenerate_code_flag.set_dirty();
     }
     DebugOptions::show_generated_shader_code([&] {
@@ -225,40 +227,39 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, U
     });
 }
 
-static auto make_gizmo(Cool::SharedVariable<Cool::Point2D> const& var, UpdateContext_Ref ctx, Cool::Camera2D const& cam_2D) -> Cool::Gizmo_Point2D
+static auto make_gizmo(Cool::SharedVariable<Cool::Point2D> const& var, CommandExecutor const& command_executor, Cool::Camera2D const& cam_2D) -> Cool::Gizmo_Point2D
 {
     return Cool::Gizmo_Point2D{
         .get_position = [=]() { return Cool::ViewCoordinates{glm::vec2{cam_2D.view_matrix() * glm::vec3{var.value().value, 1.f}}}; },
         .set_position = [=](Cool::ViewCoordinates pos) {
                 auto const world_pos = glm::vec2{cam_2D.transform_matrix() * glm::vec3{pos, 1.f}};
-                ctx.ui().command_executor().execute(
+               command_executor.execute(
                         Command_SetVariable<Cool::Point2D>{.var_ref = var.get_ref(), .value = Cool::Point2D{world_pos}}
                         ); },
-        .on_drag_stop = [=]() { ctx.ui().command_executor().execute(
+        .on_drag_stop = [=]() { command_executor.execute(
                                     Command_FinishedEditingVariable{}
                                 ); },
         .id           = var.id(),
     };
 }
 
-void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, UpdateContext_Ref ctx, Cool::Camera2D const& cam_2D)
+void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, CommandExecutor const& command_executor, Cool::Camera2D const& cam_2D)
 {
     _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
         for (auto const& var : node.downcast<Node>().value_inputs())
         {
             if (auto const* point_2D_var = std::get_if<Cool::SharedVariable<Cool::Point2D>>(&var))
             {
-                gizmos.push(make_gizmo(*point_2D_var, ctx, cam_2D));
+                gizmos.push(make_gizmo(*point_2D_var, command_executor, cam_2D));
             }
         }
     });
 }
 
-auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary& nodes_library) const -> NodesConfig
+auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const -> NodesConfig
 {
     return NodesConfig{
         Cool::GetNodeDefinition_Ref<NodeDefinition>{nodes_library},
-        Cool::GetMutableNodeDefinition_Ref<NodeDefinition>{nodes_library},
         Cool::GetNodeCategoryConfig_Ref{nodes_library},
         ui,
         _main_node_id,

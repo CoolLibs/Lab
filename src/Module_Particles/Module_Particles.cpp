@@ -103,7 +103,7 @@ void Module_Particles::request_particles_to_reset()
     _force_init_particles = true;
 }
 
-void Module_Particles::update(UpdateContext_Ref)
+void Module_Particles::update()
 {
     update_particles_count_ifn();
 }
@@ -128,7 +128,7 @@ void Module_Particles::update_particles(SystemValues const& system_values)
 #endif
 }
 
-void Module_Particles::imgui_windows(Ui_Ref /* ui */, UpdateContext_Ref /* update_ctx */) const
+void Module_Particles::imgui_windows(Ui_Ref) const
 {
 }
 

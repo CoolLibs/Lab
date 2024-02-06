@@ -1,5 +1,4 @@
 #pragma once
-#include <Dependencies/UpdateContext_Ref.h>
 #include "Cool/Nodes/Editor.h"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/View/GizmoManager.h"
@@ -45,8 +44,8 @@ class ModulesGraph {
 public:
     ModulesGraph() = default;
 
-    void update(UpdateContext_Ref);
-    void render(Cool::RenderTarget&, SystemValues const&, UpdateContext_Ref);
+    void update();
+    void render(Cool::RenderTarget&, SystemValues const&, Cool::NodesLibrary const&);
 
     void request_rerender_all();
 
@@ -54,7 +53,7 @@ public:
     [[nodiscard]] auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
     [[nodiscard]] auto regenerate_code_flag() -> Cool::DirtyFlag const& { return _regenerate_code_flag; }
     [[nodiscard]] auto rerender_all_flag() -> Cool::DirtyFlag const& { return _rerender_all_flag; }
-    [[nodiscard]] auto nodes_config(Ui_Ref, Cool::AudioManager&, Cool::NodesLibrary&) const -> NodesConfig;
+    [[nodiscard]] auto nodes_config(Ui_Ref, Cool::AudioManager&, Cool::NodesLibrary const&) const -> NodesConfig;
     void               debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const;
     /// Function called once on every frame where the time has changed.
     void on_time_changed();
@@ -68,14 +67,14 @@ public:
 
     void update_dependencies_from_nodes_graph();
 
-    void imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, UpdateContext_Ref update_ctx) const;
-    void submit_gizmos(Cool::GizmoManager&, UpdateContext_Ref, Cool::Camera2D const&);
+    void imgui_windows(Ui_Ref, Cool::AudioManager&, Cool::NodesLibrary const&) const;
+    void submit_gizmos(Cool::GizmoManager&, CommandExecutor const&, Cool::Camera2D const&);
 
 private:
-    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, UpdateContext_Ref);
-    void render_one_module(Module&, Cool::RenderTarget&, SystemValues const& system_values);
-    void render_compositing_module(Cool::RenderTarget& render_target, SystemValues const& system_values);
-    void render_particle_module(Module_Particles&, Cool::RenderTarget& render_target, SystemValues const& system_values);
+    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, Cool::NodesLibrary const&);
+    void render_one_module(Module&, Cool::RenderTarget&, SystemValues const&);
+    void render_compositing_module(Cool::RenderTarget&, SystemValues const&);
+    void render_particle_module(Module_Particles&, Cool::RenderTarget&, SystemValues const&);
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};

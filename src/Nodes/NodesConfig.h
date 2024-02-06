@@ -16,20 +16,18 @@ namespace Lab {
 class NodesConfig {
 public:
     NodesConfig(
-        Cool::GetNodeDefinition_Ref<NodeDefinition>        get_node_definition,
-        Cool::GetMutableNodeDefinition_Ref<NodeDefinition> get_mutable_node_definition,
-        Cool::GetNodeCategoryConfig_Ref                    get_node_category_config,
-        Ui_Ref                                             ui,
-        Cool::NodeId&                                      main_node_id,
-        Cool::NodeId&                                      node_we_might_want_to_restore_as_main_node_id,
-        Cool::DirtyFlag const&                             rerender_flag,
-        Cool::DirtyFlag const&                             regenerate_code_flag,
-        Cool::NodesGraph const&                            graph,
-        Cool::AudioManager&                                audio_manager,
-        CommandExecutor const&                             command_executor
+        Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
+        Cool::GetNodeCategoryConfig_Ref             get_node_category_config,
+        Ui_Ref                                      ui,
+        Cool::NodeId&                               main_node_id,
+        Cool::NodeId&                               node_we_might_want_to_restore_as_main_node_id,
+        Cool::DirtyFlag const&                      rerender_flag,
+        Cool::DirtyFlag const&                      regenerate_code_flag,
+        Cool::NodesGraph const&                     graph,
+        Cool::AudioManager&                         audio_manager,
+        CommandExecutor const&                      command_executor
     )
         : _get_node_definition{get_node_definition}
-        , _get_mutable_node_definition{get_mutable_node_definition}
         , _get_node_category_config{get_node_category_config}
         , _ui{ui}
         , _main_node_id{main_node_id}
@@ -61,17 +59,16 @@ private:
     void set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node_id = false);
 
 private:
-    Cool::GetNodeDefinition_Ref<NodeDefinition>        _get_node_definition;
-    Cool::GetMutableNodeDefinition_Ref<NodeDefinition> _get_mutable_node_definition;
-    Cool::GetNodeCategoryConfig_Ref                    _get_node_category_config;
-    Ui_Ref                                             _ui;
-    Cool::NodeId&                                      _main_node_id;
-    Cool::NodeId&                                      _node_we_might_want_to_restore_as_main_node_id;
-    Cool::DirtyFlag                                    _rerender_flag;
-    Cool::DirtyFlag                                    _regenerate_code_flag;
-    Cool::NodesGraph const&                            _graph;
-    Cool::AudioManager&                                _audio_manager;
-    CommandExecutor                                    _command_executor;
+    Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
+    Cool::GetNodeCategoryConfig_Ref             _get_node_category_config;
+    Ui_Ref                                      _ui;
+    Cool::NodeId&                               _main_node_id;
+    Cool::NodeId&                               _node_we_might_want_to_restore_as_main_node_id;
+    Cool::DirtyFlag                             _rerender_flag;
+    Cool::DirtyFlag                             _regenerate_code_flag;
+    Cool::NodesGraph const&                     _graph;
+    Cool::AudioManager&                         _audio_manager;
+    CommandExecutor                             _command_executor;
 };
 
 } // namespace Lab

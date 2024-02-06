@@ -21,9 +21,9 @@ public:
     Cool::NodesGraph*                       _nodes_graph{};            // TODO(Particles) Remove
     Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer{}; // TODO(Particles) Remove
 
-    void update(UpdateContext_Ref) override;
+    void update() override;
     void request_particles_to_update() { _needs_to_update_particles = true; }
-    void imgui_windows(Ui_Ref, UpdateContext_Ref) const override;
+    void imgui_windows(Ui_Ref) const override;
     void imgui_show_generated_shader_code();
 
     [[nodiscard]] auto needs_to_rerender() const -> bool override

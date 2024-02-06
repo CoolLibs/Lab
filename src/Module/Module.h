@@ -3,7 +3,6 @@
 #include <Dependencies/SystemValues.h>
 #include <cereal/types/polymorphic.hpp>
 #include "Dependencies/Ui.h"
-#include "Dependencies/UpdateContext_Ref.h"
 
 namespace Lab {
 
@@ -37,8 +36,8 @@ public:
         render(system_values);
         _needs_to_rerender_flag.set_clean();
     }
-    virtual void imgui_windows(Ui_Ref, UpdateContext_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
-    virtual void update(UpdateContext_Ref){};
+    virtual void imgui_windows(Ui_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
+    virtual void update(){};
 
     [[nodiscard]] virtual auto needs_to_rerender() const -> bool
     {

@@ -205,7 +205,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
         );
     }
 
-    auto* def = _get_mutable_node_definition(node.id_names());
+    auto const* def = _get_node_definition(node.id_names());
     if (!def)
     {
         ImGui::NewLine();
