@@ -21,7 +21,7 @@ body:
     id: version
     attributes:
       label: Coollab version or commit id
-      placeholder: You can find the Coollab version in the About menu in the top-right of Coollab. If you are a developer working on Coollab, give us the commit id (SHA) instead.
+      placeholder: You can find the Coollab version in the About menu in the top-right of Coollab. If you are a developer working on Coollab, give us the commit id (SHA) and branch instead.
     validations:
       required: true
   - type: textarea
