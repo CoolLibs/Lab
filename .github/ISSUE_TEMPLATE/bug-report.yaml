@@ -28,4 +28,4 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: Please copy-paste any relevant log output if any.
+      description: Copy-paste any relevant log output if any.
