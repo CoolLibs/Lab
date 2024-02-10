@@ -3,13 +3,17 @@
 #include <Commands/Command_SetVariable.h>
 #include <Commands/Command_SetVariableDefaultValue.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
+#include <Cool/Nodes/ed.h>
 #include <algorithm>
+#include <sstream>
 #include <string>
+#include <string_view>
 #include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
+#include "Cool/Nodes/as_ed_id.h"
 #include "Cool/Nodes/utilities/drawing.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/Color.h"
@@ -22,6 +26,8 @@
 #include "NodeDefinition.h"
 #include "PrimitiveType.h"
 #include "imgui.h"
+// Must be included last, otherwise slows down compilation
+#include <cereal/archives/json.hpp> // TODO(CopyPaste) Move to another file to speed up compilation ?
 
 namespace Lab {
 
@@ -198,7 +204,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     for (size_t i = 0; i < node.value_inputs().size(); ++i)
     {
         Cool::ImGuiExtras::disabled_if(
-            value_input_is_connected_to_a_node(i, node, _graph),
+            value_input_is_connected_to_a_node(i, node, graph()),
             "This value is connected to a node in the graph, you cannot edit it here.", [&]() {
                 _ui.widget(node.value_inputs()[i]);
             }
@@ -302,7 +308,7 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
     // - We reach the main node and do nothing
     // - We reach the previous main_node and set this as the main node
 
-    auto next_id = _graph.find_node_containing_pin(link.to_pin_id);
+    auto next_id = graph().find_node_containing_pin(link.to_pin_id);
     if (next_id == _main_node_id)
         return;
     if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
@@ -310,12 +316,12 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
         set_main_node_id(next_id);
         return;
     }
-    auto const* next_node        = _graph.try_get_node<Node>(next_id);
+    auto const* next_node        = graph().try_get_node<Node>(next_id);
     auto        new_main_node_id = Cool::NodeId{};
     while (next_node)
     {
         new_main_node_id = next_id;
-        next_id          = _graph.find_node_connected_to_output_pin(next_node->output_pins()[0].id());
+        next_id          = graph().find_node_connected_to_output_pin(next_node->output_pins()[0].id());
         if (next_id == _main_node_id)
             return;
         if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
@@ -323,7 +329,7 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
             set_main_node_id(next_id);
             return;
         }
-        next_node = _graph.try_get_node<Node>(next_id);
+        next_node = graph().try_get_node<Node>(next_id);
     }
     if (!new_main_node_id.underlying_uuid().is_nil())
         set_main_node_id(new_main_node_id);
@@ -402,6 +408,72 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
 
     return node;
+}
+
+struct NodesAndLinksGroup {
+    std::vector<Node>       nodes;
+    std::vector<Cool::Link> links;
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Nodes", nodes),
+            cereal::make_nvp("Links", links)
+        );
+    }
+};
+
+auto NodesConfig::copy_nodes() const -> std::string
+{
+    auto selection = NodesAndLinksGroup{};
+    _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node) {
+        auto const& node = abstract_node.downcast<Node>();
+        selection.nodes.push_back(node);
+    });
+
+    auto ss = std::stringstream{};
+    {
+        auto archive = cereal::JSONOutputArchive{ss};
+        archive(selection);
+    } // archive actual work happens during its destruction
+    return ss.str();
+}
+
+/// Returns true iff successfully pasted nodes
+auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
+{
+    try
+    {
+        auto selection = NodesAndLinksGroup{};
+        {
+            auto ss      = std::stringstream{std::string{clipboard_content}};
+            auto archive = cereal::JSONInputArchive{ss};
+            archive(selection);
+        } // archive actual work happens during its destruction
+        for (auto node : selection.nodes)
+        {
+            // TODO(CopyPaste) Choose node position (where the mouse cursor is ?)
+            for (auto& pin : node.input_pins())
+                pin.set_id({reg::internal::generate_uuid()});
+            for (auto& pin : node.output_pins())
+                pin.set_id({reg::internal::generate_uuid()});
+            auto const new_node_id    = graph().add_node(node);
+            auto*      new_node       = graph().nodes().get_mutable_ref(new_node_id);
+            auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
+            ed::SelectNode(new_node_id_ed);
+            on_node_created(*new_node, new_node_id, nullptr);
+        }
+        return true;
+    }
+    catch (... /* std::exception const& e */)
+    {
+        // Cool::Log::Debug::warning("Paste nodes", e.what());
+        return false;
+    }
 }
 
 static auto name(Cool::AnySharedVariable const& var)
