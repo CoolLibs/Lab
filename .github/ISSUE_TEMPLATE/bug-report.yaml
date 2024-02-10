@@ -20,7 +20,7 @@ body:
   - type: textarea
     id: version
     attributes:
-      label: Commit id or Coollab version
+      label: Coollab version or commit id
       placeholder: You can find the Coollab version in the About menu in the top-right of Coollab. If you are a developer working on Coollab, give us the commit id (SHA) instead.
     validations:
       required: true
@@ -28,4 +28,4 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: Please copy and paste any relevant log output.
+      description: Please copy-paste any relevant log output if any.
