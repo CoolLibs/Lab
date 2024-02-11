@@ -29,9 +29,8 @@
 #include "NodeColor.h"
 #include "NodeDefinition.h"
 #include "PrimitiveType.h"
+#include "Serialization/SNodesAndLinksGroup.h"
 #include "imgui.h"
-// Must be included last, otherwise slows down compilation
-#include <cereal/archives/json.hpp> // TODO(CopyPaste) Move to another file to speed up compilation ?
 
 namespace Lab {
 
@@ -414,42 +413,6 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     return node;
 }
 
-namespace {
-struct CopiedNodeData {
-    NodeData data{};
-    ImVec2   position{};
-
-private:
-    // Serialization
-    friend class cereal::access;
-    template<class Archive>
-    void serialize(Archive& archive)
-    {
-        archive(
-            cereal::make_nvp("Data", data),
-            cereal::make_nvp("Position", position)
-        );
-    }
-};
-
-struct NodesAndLinksGroup {
-    std::vector<CopiedNodeData> nodes;
-    std::vector<Cool::Link>     links;
-
-private:
-    // Serialization
-    friend class cereal::access;
-    template<class Archive>
-    void serialize(Archive& archive)
-    {
-        archive(
-            cereal::make_nvp("Nodes", nodes),
-            cereal::make_nvp("Links", links)
-        );
-    }
-};
-} // namespace
-
 auto NodesConfig::copy_nodes() const -> std::string
 {
     auto selection     = NodesAndLinksGroup{};
@@ -467,12 +430,7 @@ auto NodesConfig::copy_nodes() const -> std::string
     for (auto& node : selection.nodes)
         node.position -= left_most_pos;
 
-    auto ss = std::stringstream{};
-    {
-        auto archive = cereal::JSONOutputArchive{ss};
-        archive(cereal::make_nvp("Coollab copied nodes, you can paste this in Coollab to paste the nodes.", selection));
-    } // archive actual work happens during its destruction
-    return ss.str();
+    return nodes_and_links_group_to_string(selection);
 }
 
 /// Returns true iff successfully pasted nodes
@@ -480,12 +438,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
 {
     try
     {
-        auto selection = NodesAndLinksGroup{};
-        {
-            auto ss      = std::stringstream{std::string{clipboard_content}};
-            auto archive = cereal::JSONInputArchive{ss};
-            archive(selection);
-        } // archive actual work happens during its destruction
+        auto selection = nodes_and_links_group_from_string(std::string{clipboard_content});
         for (auto const& node_data : selection.nodes)
         {
             auto node = Node{node_data.data.copyable_data};
@@ -502,7 +455,6 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
                 },
                            value_input);
             }
-            // TODO(CopyPaste) Choose node position (where the mouse cursor is ?)
             for (auto& pin : node.input_pins())
             {
                 auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};

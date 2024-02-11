@@ -6,6 +6,7 @@
 ///
 #include <cereal/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
+#include "SNodesAndLinksGroup.h"
 #include "SNodesCategoryConfig.h"
 #include "SProject.h"
 //
@@ -31,7 +32,27 @@ auto do_load(NodesCategoryConfig& config, std::filesystem::path const& path) -> 
     return Cool::Serialization::load<NodesCategoryConfig, cereal::JSONInputArchive>(config, path);
 }
 
+auto nodes_and_links_group_to_string(NodesAndLinksGroup const& selection) -> std::string
+{
+    auto ss = std::stringstream{};
+    {
+        auto archive = cereal::JSONOutputArchive{ss};
+        archive(cereal::make_nvp("Coollab copied nodes, you can paste this in Coollab to paste the nodes.", selection));
+    } // archive actual work happens during its destruction
+    return ss.str();
+}
+auto nodes_and_links_group_from_string(std::string const& string) -> NodesAndLinksGroup
+{
+    auto selection = NodesAndLinksGroup{};
+    {
+        auto ss      = std::stringstream{string};
+        auto archive = cereal::JSONInputArchive{ss};
+        archive(selection);
+    } // archive actual work happens during its destruction
+    return selection;
+}
+
 } // namespace Lab
 
 CEREAL_REGISTER_TYPE(Lab::Module_Compositing); // NOLINT
-CEREAL_REGISTER_TYPE(Lab::Module_Particles); // NOLINT
+CEREAL_REGISTER_TYPE(Lab::Module_Particles);   // NOLINT
