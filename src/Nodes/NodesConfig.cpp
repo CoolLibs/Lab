@@ -535,9 +535,9 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             graph().add_link_unchecked(link);
         return true;
     }
-    catch (... /* std::exception const& e */)
+    catch (std::exception const& e)
     {
-        // Cool::Log::Debug::warning("Paste nodes", e.what());
+        Cool::Log::Debug::warning("Copy-Paste", fmt::format("Failed to paste nodes.\n({})", e.what()));
         return false;
     }
 }
