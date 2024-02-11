@@ -4,6 +4,7 @@
 #include <Commands/Command_SetVariableDefaultValue.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <Cool/Nodes/ed.h>
+#include <imgui-node-editor/imgui_node_editor.h>
 #include <algorithm>
 #include <sstream>
 #include <string>
@@ -413,9 +414,27 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     return node;
 }
 
+namespace {
+struct CopiedNodeData {
+    NodeData data{};
+    ImVec2   position{};
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Data", data),
+            cereal::make_nvp("Position", position)
+        );
+    }
+};
+
 struct NodesAndLinksGroup {
-    std::vector<NodeData>   nodes;
-    std::vector<Cool::Link> links;
+    std::vector<CopiedNodeData> nodes;
+    std::vector<Cool::Link>     links;
 
 private:
     // Serialization
@@ -429,17 +448,24 @@ private:
         );
     }
 };
+} // namespace
 
 auto NodesConfig::copy_nodes() const -> std::string
 {
-    auto selection = NodesAndLinksGroup{};
-    _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node) {
+    auto selection     = NodesAndLinksGroup{};
+    auto left_most_pos = ImVec2{FLT_MAX, FLT_MAX};
+    _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node, Cool::NodeId const& node_id) {
         auto const& node = abstract_node.downcast<Node>();
-        selection.nodes.push_back(node.as_data());
+        auto const  pos  = ed::GetNodePosition(Cool::as_ed_id(node_id));
+        selection.nodes.push_back({node.as_data(), pos});
+        if (pos.x < left_most_pos.x)
+            left_most_pos = pos;
         _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link) {
             selection.links.push_back(link);
         });
     });
+    for (auto& node : selection.nodes)
+        node.position -= left_most_pos;
 
     auto ss = std::stringstream{};
     {
@@ -462,8 +488,8 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
         } // archive actual work happens during its destruction
         for (auto const& node_data : selection.nodes)
         {
-            auto node = Node{node_data.copyable_data};
-            for (auto const& value_input : node_data.value_inputs)
+            auto node = Node{node_data.data.copyable_data};
+            for (auto const& value_input : node_data.data.value_inputs)
             {
                 std::visit([&](auto&& value_input) {
                     node.value_inputs().push_back(Cool::SharedVariable{
@@ -500,6 +526,8 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             auto const new_node_id    = graph().add_node(node);
             auto*      new_node       = graph().nodes().get_mutable_ref(new_node_id);
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
+
+            ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_data.position);
             ed::SelectNode(new_node_id_ed);
             on_node_created(*new_node, new_node_id, nullptr);
         }

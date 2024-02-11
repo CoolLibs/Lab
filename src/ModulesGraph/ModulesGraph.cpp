@@ -245,7 +245,7 @@ static auto make_gizmo(Cool::SharedVariable<Cool::Point2D> const& var, CommandEx
 
 void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, CommandExecutor const& command_executor, Cool::Camera2D const& cam_2D)
 {
-    _nodes_editor.for_each_selected_node([&](Cool::Node const& node) {
+    _nodes_editor.for_each_selected_node([&](Cool::Node const& node, Cool::NodeId const&) {
         for (auto const& var : node.downcast<Node>().value_inputs())
         {
             if (auto const* point_2D_var = std::get_if<Cool::SharedVariable<Cool::Point2D>>(&var))
