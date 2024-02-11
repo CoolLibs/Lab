@@ -1,7 +1,5 @@
 #include "Node.h"
-#include <stdexcept>
 #include "Cool/String/String.h"
-#include "PrimitiveType.h"
 
 namespace Lab {
 
@@ -13,6 +11,14 @@ auto to_string(Node const& node) -> std::string
 auto Node::is_audio_node() const -> bool
 {
     return Cool::String::contains(_d.id_names.definition_name, "Audio");
+}
+
+auto Node::as_data() const -> NodeData
+{
+    auto d = NodeData{_d};
+    for (auto const& input : _value_inputs)
+        d.value_inputs.push_back(std::visit([](auto&& input) -> Cool::AnyVariable { return input.variable(); }, input));
+    return d;
 }
 
 } // namespace Lab

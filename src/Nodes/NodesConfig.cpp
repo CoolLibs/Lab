@@ -10,6 +10,8 @@
 #include <string_view>
 #include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
+#include "Cool/Dependencies/DirtyFlag.h"
+#include "Cool/Dependencies/SharedVariable.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
@@ -456,7 +458,20 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
         } // archive actual work happens during its destruction
         for (auto const& node_data : selection.nodes)
         {
-            auto node = Node{node_data};
+            auto node = Node{node_data.copyable_data};
+            for (auto const& value_input : node_data.value_inputs)
+            {
+                std::visit([&](auto&& value_input) {
+                    node.value_inputs().push_back(Cool::SharedVariable{
+                        // TODO(CopyPaste) Don't duplicate the choice of dirty_flags between here and make_node()
+                        value_input,
+                        Cool::always_requires_shader_code_generation(value_input) ? _regenerate_code_flag : _rerender_flag,
+                        {},                   // TODO(CopyPaste) Copy description ? Probably should move description from SharedVariable to Variable
+                        _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+                    });
+                },
+                           value_input);
+            }
             // TODO(CopyPaste) Choose node position (where the mouse cursor is ?)
             for (auto& pin : node.input_pins())
                 pin.set_id({reg::internal::generate_uuid()});

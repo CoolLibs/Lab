@@ -1,11 +1,9 @@
 #pragma once
 #include <Cool/Dependencies/AnySharedVariable.h>
 #include <Cool/Nodes/Pin.h>
+#include <Cool/Variables/AnyVariable.h>
 #include <cereal/types/optional.hpp>
-#include <optional>
-#include <string_view>
 #include "Cool/Nodes/NodeDefinitionIdentifier.h"
-#include "PrimitiveType.h"
 
 namespace Lab {
 
@@ -38,8 +36,8 @@ private:
 };
 
 struct NodeData {
-    NodeCopyableData                     copyable_data{};
-    std::vector<Cool::AnySharedVariable> value_inputs{};
+    NodeCopyableData               copyable_data{};
+    std::vector<Cool::AnyVariable> value_inputs{};
 
 private:
     friend class cereal::access;
@@ -63,9 +61,8 @@ public:
             .number_of_function_inputs = number_of_function_inputs,
         }
     {}
-    explicit Node(NodeData const& data)
-        : _d{data.copyable_data}
-        , _value_inputs{data.value_inputs}
+    explicit Node(NodeCopyableData const& copyable_data)
+        : _d{copyable_data}
     {}
 
     auto name() const -> std::string { return _d.name; }
@@ -108,7 +105,7 @@ public:
     auto particles_count() const -> std::optional<size_t> { return _d.particles_count; }
     void set_particles_count(std::optional<size_t> particles_count) { _d.particles_count = particles_count; }
 
-    auto as_data() const -> NodeData { return {_d, _value_inputs}; }
+    auto as_data() const -> NodeData;
 
 private:
     NodeCopyableData                     _d{};
