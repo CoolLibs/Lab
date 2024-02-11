@@ -411,7 +411,7 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
 }
 
 struct NodesAndLinksGroup {
-    std::vector<Node>       nodes;
+    std::vector<NodeData>   nodes;
     std::vector<Cool::Link> links;
 
 private:
@@ -432,13 +432,13 @@ auto NodesConfig::copy_nodes() const -> std::string
     auto selection = NodesAndLinksGroup{};
     _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node) {
         auto const& node = abstract_node.downcast<Node>();
-        selection.nodes.push_back(node);
+        selection.nodes.push_back(node.as_data());
     });
 
     auto ss = std::stringstream{};
     {
         auto archive = cereal::JSONOutputArchive{ss};
-        archive(selection);
+        archive(cereal::make_nvp("Coollab copied nodes, you can paste this in Coollab to paste the nodes.", selection));
     } // archive actual work happens during its destruction
     return ss.str();
 }
@@ -454,8 +454,9 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             auto archive = cereal::JSONInputArchive{ss};
             archive(selection);
         } // archive actual work happens during its destruction
-        for (auto node : selection.nodes)
+        for (auto const& node_data : selection.nodes)
         {
+            auto node = Node{node_data};
             // TODO(CopyPaste) Choose node position (where the mouse cursor is ?)
             for (auto& pin : node.input_pins())
                 pin.set_id({reg::internal::generate_uuid()});

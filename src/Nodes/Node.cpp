@@ -12,7 +12,7 @@ auto to_string(Node const& node) -> std::string
 
 auto Node::is_audio_node() const -> bool
 {
-    return Cool::String::contains(_id_names.definition_name, "Audio");
+    return Cool::String::contains(_d.id_names.definition_name, "Audio");
 }
 
 } // namespace Lab
