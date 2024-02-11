@@ -13,6 +13,7 @@
 #include "Cool/Dependencies/DirtyFlag.h"
 #include "Cool/Dependencies/SharedVariable.h"
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Nodes/Link.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
 #include "Cool/Nodes/as_ed_id.h"
@@ -435,6 +436,9 @@ auto NodesConfig::copy_nodes() const -> std::string
     _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node) {
         auto const& node = abstract_node.downcast<Node>();
         selection.nodes.push_back(node.as_data());
+        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link) {
+            selection.links.push_back(link);
+        });
     });
 
     auto ss = std::stringstream{};
@@ -474,15 +478,33 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             }
             // TODO(CopyPaste) Choose node position (where the mouse cursor is ?)
             for (auto& pin : node.input_pins())
-                pin.set_id({reg::internal::generate_uuid()});
+            {
+                auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
+                for (auto& link : selection.links)
+                {
+                    if (link.to_pin_id == pin.id())
+                        link.to_pin_id = new_pin_id;
+                }
+                pin.set_id(new_pin_id);
+            }
             for (auto& pin : node.output_pins())
-                pin.set_id({reg::internal::generate_uuid()});
+            {
+                auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
+                for (auto& link : selection.links)
+                {
+                    if (link.from_pin_id == pin.id())
+                        link.from_pin_id = new_pin_id;
+                }
+                pin.set_id(new_pin_id);
+            }
             auto const new_node_id    = graph().add_node(node);
             auto*      new_node       = graph().nodes().get_mutable_ref(new_node_id);
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
             ed::SelectNode(new_node_id_ed);
             on_node_created(*new_node, new_node_id, nullptr);
         }
+        for (auto const& link : selection.links)
+            graph().add_link_unchecked(link);
         return true;
     }
     catch (... /* std::exception const& e */)
