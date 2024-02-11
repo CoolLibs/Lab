@@ -18,6 +18,7 @@ auto all_tips() -> Cool::Tips
         "You can rotate the 2D camera by holding SHIFT and scrolling the mouse wheel over the \" " ICOMOON_IMAGE "View\".",
         "Right-click on a widget to edit its metadata (range of a slider, etc.).",
         "You can save your own presets for a node if you like the parameters (and metadata) you found. You will find this option at the bottom of the the \" " ICOMOON_EQUALIZER "Inspector\" when a node is selected.",
+        "You can copy your nodes (CTRL+C) and send them as text to a friend, who can then paste them in their instance of Coollab (CTRL+V). You can also paste them in another project of yours.",
         "The undo-history (CTRL+Z / CTRL+Y) is preserved even when you close and re-open Coollab! You can control its size in the \" " ICOMOON_COG "Settings\" menu.",
         R"(You can create your own color themes by going in the "Debug" menu (on the right of the menu bar) and selecting "Color Themes: Editor".)",
 
