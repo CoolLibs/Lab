@@ -164,6 +164,15 @@ void NodesConfig::main_node_toggle(Cool::NodeId const& node_id)
     }
 }
 
+auto NodesConfig::primary_dirty_flag(bool always_requires_shader_code_generation) const -> Cool::DirtyFlag const&
+{
+    return always_requires_shader_code_generation ? _regenerate_code_flag : _rerender_flag;
+}
+auto NodesConfig::secondary_dirty_flag() const -> Cool::DirtyFlag const&
+{
+    return _regenerate_code_flag; // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value()` of Command_SetVariable.h
+}
+
 void NodesConfig::imgui_above_node_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
 {
     main_node_toggle(id);
@@ -392,8 +401,8 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
             [&](auto&& value_input_def)
                 -> Cool::AnySharedVariable { return Cool::SharedVariable{
                                                  value_input_def,
-                                                 Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
-                                                 _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+                                                 primary_dirty_flag(Cool::always_requires_shader_code_generation(value_input_def)),
+                                                 secondary_dirty_flag()
                                              }; },
             value_input_def
         ));
@@ -446,11 +455,10 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             {
                 std::visit([&](auto&& value_input) {
                     node.value_inputs().push_back(Cool::SharedVariable{
-                        // TODO(CopyPaste) Don't duplicate the choice of dirty_flags between here and make_node()
                         value_input,
-                        Cool::always_requires_shader_code_generation(value_input) ? _regenerate_code_flag : _rerender_flag,
-                        {},                   // TODO(CopyPaste) Copy description ? Probably should move description from SharedVariable to Variable
-                        _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+                        primary_dirty_flag(Cool::always_requires_shader_code_generation(value_input)),
+                        {}, // TODO(CopyPaste) Copy description ? Probably should move description from SharedVariable to Variable
+                        secondary_dirty_flag()
                     });
                 },
                            value_input);

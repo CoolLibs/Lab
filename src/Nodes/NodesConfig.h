@@ -3,6 +3,7 @@
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Audio/AudioManager.h"
+#include "Cool/Dependencies/DirtyFlag.h"
 #include "Cool/Nodes/Editor.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
@@ -63,6 +64,8 @@ private:
     void set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node_id = false);
     auto graph() const -> Cool::NodesGraph const& { return _nodes_editor.graph(); }
     auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
+    auto primary_dirty_flag(bool always_requires_shader_code_generation) const -> Cool::DirtyFlag const&;
+    auto secondary_dirty_flag() const -> Cool::DirtyFlag const&;
 
 private:
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
