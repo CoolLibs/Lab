@@ -447,8 +447,10 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
 {
     try
     {
-        bool keep_previously_selected_nodes{false};
-        auto selection = nodes_and_links_group_from_string(std::string{clipboard_content});
+        bool              keep_previously_selected_nodes{false};
+        auto              selection = nodes_and_links_group_from_string(std::string{clipboard_content});
+        std::vector<Node> new_nodes{};
+        // Create all nodes but don't add them to the graph yet, because we need to call update_node_with_new_definition() first, which requires all the links to have been added to the graph. And before adding all the links we must first iterate over all the nodes and update the links with the new pin ids of the nodes.
         for (auto const& node_data : selection.nodes)
         {
             auto node = Node{node_data.data.copyable_data};
@@ -484,9 +486,20 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
                 }
                 pin.set_id(new_pin_id);
             }
+            new_nodes.push_back(node);
+        }
+
+        for (auto const& link : selection.links)
+            graph().add_link_unchecked(link);
+
+        for (size_t i = 0; i < new_nodes.size(); ++i)
+        {
+            auto const& node_data = selection.nodes[i];
+            auto&       node      = new_nodes[i];
+
             auto const* node_def = _get_node_definition(node.id_names());
             if (node_def)
-                // TODO(CopyPaste) do this after all the links have been updated ? I think it checks and removes some links if need be
+                // Must be done after all the links have been added to the graph, because it might remove some that are outdated if some pins have been removed and they had a link connected to them.
                 update_node_with_new_definition(node, *node_def, graph()); // Check if the definition has changed (e.g. new inputs) and also finds description of variables if any.
 
             auto const new_node_id    = graph().add_node(node);
@@ -498,8 +511,6 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             keep_previously_selected_nodes = true;
             on_node_created(*new_node, new_node_id, nullptr);
         }
-        for (auto const& link : selection.links)
-            graph().add_link_unchecked(link);
         return true;
     }
     catch (std::exception const& e)
