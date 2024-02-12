@@ -3,6 +3,8 @@
 #include <Cool/Nodes/NodeId.h>
 #include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Audio/AudioManager.h"
+#include "Cool/Dependencies/DirtyFlag.h"
+#include "Cool/Nodes/Editor.h"
 #include "Cool/Nodes/GetNodeCategoryConfig.h"
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Cool/Nodes/NodesLibrary.h"
@@ -23,7 +25,7 @@ public:
         Cool::NodeId&                               node_we_might_want_to_restore_as_main_node_id,
         Cool::DirtyFlag const&                      rerender_flag,
         Cool::DirtyFlag const&                      regenerate_code_flag,
-        Cool::NodesGraph const&                     graph,
+        Cool::NodesEditor&                          nodes_editor,
         Cool::AudioManager&                         audio_manager,
         CommandExecutor const&                      command_executor
     )
@@ -34,7 +36,7 @@ public:
         , _node_we_might_want_to_restore_as_main_node_id{node_we_might_want_to_restore_as_main_node_id}
         , _rerender_flag{rerender_flag}
         , _regenerate_code_flag{regenerate_code_flag}
-        , _graph{graph}
+        , _nodes_editor{nodes_editor}
         , _audio_manager{audio_manager}
         , _command_executor{command_executor}
     {}
@@ -47,16 +49,24 @@ public:
     void               imgui_in_inspector_below_node_info(Cool::Node&, Cool::NodeId const&);
     [[nodiscard]] auto node_color(Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
     [[nodiscard]] auto pin_color(Cool::Pin const&, size_t pin_index, Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
-    void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     void               on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
     auto               make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
-    void               update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
-    static void        widget_to_rename_node(Cool::Node&);
-    auto               maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
+    void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
+    [[nodiscard]] auto copy_nodes() const -> std::string;
+    /// Returns true iff successfully pasted nodes
+    auto        paste_nodes(std::string_view clipboard_content) -> bool;
+    void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
+    void        update_node_with_new_definition(Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
+    static void widget_to_rename_node(Cool::Node&);
+    auto        maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
 
 private:
     void main_node_toggle(Cool::NodeId const&);
     void set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node_id = false);
+    auto graph() const -> Cool::NodesGraph const& { return _nodes_editor.graph(); }
+    auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
+    auto primary_dirty_flag(bool always_requires_shader_code_generation) const -> Cool::DirtyFlag const&;
+    auto secondary_dirty_flag() const -> Cool::DirtyFlag const&;
 
 private:
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
@@ -66,7 +76,7 @@ private:
     Cool::NodeId&                               _node_we_might_want_to_restore_as_main_node_id;
     Cool::DirtyFlag                             _rerender_flag;
     Cool::DirtyFlag                             _regenerate_code_flag;
-    Cool::NodesGraph const&                     _graph;
+    Cool::NodesEditor&                          _nodes_editor;
     Cool::AudioManager&                         _audio_manager;
     CommandExecutor                             _command_executor;
 };

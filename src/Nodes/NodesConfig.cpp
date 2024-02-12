@@ -3,13 +3,19 @@
 #include <Commands/Command_SetVariable.h>
 #include <Commands/Command_SetVariableDefaultValue.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
+#include <Cool/Nodes/ed.h>
+#include <Nodes/NodesClipboard.h>
 #include <algorithm>
 #include <string>
 #include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
+#include "Cool/Dependencies/DirtyFlag.h"
+#include "Cool/Dependencies/SharedVariable.h"
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/Nodes/Link.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
+#include "Cool/Nodes/as_ed_id.h"
 #include "Cool/Nodes/utilities/drawing.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/Color.h"
@@ -21,6 +27,7 @@
 #include "NodeColor.h"
 #include "NodeDefinition.h"
 #include "PrimitiveType.h"
+#include "Serialization/SNodesClipboard.h"
 #include "imgui.h"
 
 namespace Lab {
@@ -155,6 +162,15 @@ void NodesConfig::main_node_toggle(Cool::NodeId const& node_id)
     }
 }
 
+auto NodesConfig::primary_dirty_flag(bool always_requires_shader_code_generation) const -> Cool::DirtyFlag const&
+{
+    return always_requires_shader_code_generation ? _regenerate_code_flag : _rerender_flag;
+}
+auto NodesConfig::secondary_dirty_flag() const -> Cool::DirtyFlag const&
+{
+    return _regenerate_code_flag; // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value()` of Command_SetVariable.h
+}
+
 void NodesConfig::imgui_above_node_pins(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
 {
     main_node_toggle(id);
@@ -198,7 +214,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     for (size_t i = 0; i < node.value_inputs().size(); ++i)
     {
         Cool::ImGuiExtras::disabled_if(
-            value_input_is_connected_to_a_node(i, node, _graph),
+            value_input_is_connected_to_a_node(i, node, graph()),
             "This value is connected to a node in the graph, you cannot edit it here.", [&]() {
                 _ui.widget(node.value_inputs()[i]);
             }
@@ -275,7 +291,6 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
-    _regenerate_code_flag.set_dirty();
     _node_we_might_want_to_restore_as_main_node_id = {};
 
     // Don't change main node if we are dragging a link backward.
@@ -302,7 +317,7 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
     // - We reach the main node and do nothing
     // - We reach the previous main_node and set this as the main node
 
-    auto next_id = _graph.find_node_containing_pin(link.to_pin_id);
+    auto next_id = graph().find_node_containing_pin(link.to_pin_id);
     if (next_id == _main_node_id)
         return;
     if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
@@ -310,12 +325,12 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
         set_main_node_id(next_id);
         return;
     }
-    auto const* next_node        = _graph.try_get_node<Node>(next_id);
+    auto const* next_node        = graph().try_get_node<Node>(next_id);
     auto        new_main_node_id = Cool::NodeId{};
     while (next_node)
     {
         new_main_node_id = next_id;
-        next_id          = _graph.find_node_connected_to_output_pin(next_node->output_pins()[0].id());
+        next_id          = graph().find_node_connected_to_output_pin(next_node->output_pins()[0].id());
         if (next_id == _main_node_id)
             return;
         if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
@@ -323,7 +338,7 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
             set_main_node_id(next_id);
             return;
         }
-        next_node = _graph.try_get_node<Node>(next_id);
+        next_node = graph().try_get_node<Node>(next_id);
     }
     if (!new_main_node_id.underlying_uuid().is_nil())
         set_main_node_id(new_main_node_id);
@@ -383,8 +398,8 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
             [&](auto&& value_input_def)
                 -> Cool::AnySharedVariable { return Cool::SharedVariable{
                                                  value_input_def,
-                                                 Cool::always_requires_shader_code_generation(value_input_def) ? _regenerate_code_flag : _rerender_flag,
-                                                 _regenerate_code_flag // At the moment only used by Gradient variable when we detect that the number of marks has changed. See `set_value_default_impl()` of Command_SetVariable.h
+                                                 primary_dirty_flag(Cool::always_requires_shader_code_generation(value_input_def)),
+                                                 secondary_dirty_flag()
                                              }; },
             value_input_def
         ));
@@ -402,6 +417,136 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
         node.output_pins().push_back(Cool::OutputPin{output_index_name});
 
     return node;
+}
+
+struct PotentialLink {
+    Cool::Link link;
+    bool       from_copied_node{false};
+    bool       to_copied_node{false};
+};
+
+auto NodesConfig::copy_nodes() const -> std::string
+{
+    auto clipboard       = NodesClipboard{};
+    auto left_most_pos   = ImVec2{FLT_MAX, FLT_MAX};
+    auto potential_links = std::vector<PotentialLink>{};
+
+    _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node, Cool::NodeId const& node_id) {
+        auto const& node = abstract_node.downcast<Node>();
+
+        auto const pos = ed::GetNodePosition(Cool::as_ed_id(node_id));
+        if (pos.x < left_most_pos.x)
+            left_most_pos = pos;
+
+        clipboard.nodes.push_back({node.as_pod(), pos});
+
+        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link, bool is_connected_to_input_pin) {
+            size_t index = potential_links.size();
+            for (size_t i = 0; i < potential_links.size(); ++i)
+            {
+                if (potential_links[i].link == link)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index == potential_links.size())
+                potential_links.push_back({link, false, false});
+
+            if (is_connected_to_input_pin)
+                potential_links[index].to_copied_node = true;
+            else
+                potential_links[index].from_copied_node = true;
+        });
+    });
+
+    for (auto& node : clipboard.nodes)
+        node.position -= left_most_pos;
+
+    for (auto const& potential_link : potential_links)
+    {
+        if (!potential_link.to_copied_node) // Never copy links that are going into a node that is not copied. Otherwise we would need to remove the old link when pasting, because you cannot have two links going into the same node.
+            continue;
+        if (!potential_link.from_copied_node && !ImGui::GetIO().KeyShift) // Only copy links coming from a node not copied if SHIFT is pressed. Both options are valid and can be useful depending on the use case.
+            continue;
+        clipboard.links.push_back(potential_link.link);
+    }
+
+    return string_from_nodes_clipboard(clipboard);
+}
+
+auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
+{
+    try
+    {
+        auto              clipboard = string_to_nodes_clipboard(std::string{clipboard_string});
+        std::vector<Node> new_nodes{};
+        // Create all nodes but don't add them to the graph yet, because we need to call update_node_with_new_definition() first, which requires all the links to have been added to the graph. And before adding all the links we must first iterate over all the nodes and update the links with the new pin ids of the nodes.
+        for (auto const& clipboard_node : clipboard.nodes)
+        {
+            auto node = Node{clipboard_node.node_as_pod.pod_part};
+            for (auto const& value_input : clipboard_node.node_as_pod.value_inputs)
+            {
+                std::visit([&](auto&& value_input) {
+                    node.value_inputs().push_back(Cool::SharedVariable{
+                        value_input,
+                        primary_dirty_flag(Cool::always_requires_shader_code_generation(value_input)),
+                        {}, // description, it will be set by update_node_with_new_definition()
+                        secondary_dirty_flag()
+                    });
+                },
+                           value_input);
+            }
+            for (auto& pin : node.input_pins())
+            {
+                auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
+                for (auto& link : clipboard.links)
+                {
+                    if (link.to_pin_id == pin.id())
+                        link.to_pin_id = new_pin_id;
+                }
+                pin.set_id(new_pin_id);
+            }
+            for (auto& pin : node.output_pins())
+            {
+                auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
+                for (auto& link : clipboard.links)
+                {
+                    if (link.from_pin_id == pin.id())
+                        link.from_pin_id = new_pin_id;
+                }
+                pin.set_id(new_pin_id);
+            }
+            new_nodes.push_back(node);
+        }
+
+        for (auto const& link : clipboard.links)
+            graph().add_link_unchecked(link);
+
+        for (size_t i = 0; i < new_nodes.size(); ++i)
+        {
+            auto const& node_in_clipboard = clipboard.nodes[i];
+            auto&       node              = new_nodes[i];
+
+            auto const* node_def = _get_node_definition(node.id_names());
+            if (node_def)
+                // Must be done after all the links have been added to the graph, because it might remove some that are outdated if some pins have been removed and they had a link connected to them.
+                update_node_with_new_definition(node, *node_def, graph()); // Check if the definition has changed (e.g. new inputs) and also finds description of variables if any.
+
+            auto const new_node_id    = graph().add_node(node);
+            auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
+
+            ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_in_clipboard.position);
+            ed::SelectNode(new_node_id_ed, i > 0 /* keep_previously_selected_nodes */);
+            // on_node_created(*graph().nodes().get_mutable_ref(new_node_id), new_node_id, nullptr); NB: we don't actually do that because we don't want to change the main_node_id
+        }
+        return true;
+    }
+    catch (std::exception const& e)
+    {
+        Cool::Log::Debug::warning("Copy-Paste", fmt::format("Failed to paste nodes.\n({})", e.what()));
+        return false;
+    }
 }
 
 static auto name(Cool::AnySharedVariable const& var)
@@ -482,9 +627,12 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
 
 void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::NodesGraph& graph)
 {
-    auto& out_node = abstract_out_node.downcast<Node>();
-    auto  node     = make_node({definition, out_node.category_name()});
+    update_node_with_new_definition(abstract_out_node.downcast<Node>(), definition, graph);
+}
 
+void NodesConfig::update_node_with_new_definition(Node& out_node, Cool::NodeDefinition const& definition, Cool::NodesGraph& graph)
+{
+    auto node = make_node({definition, out_node.category_name()});
     node.set_name(out_node.name());
     if (node.particles_count().has_value() && out_node.particles_count().has_value())
         node.set_particles_count(out_node.particles_count());
