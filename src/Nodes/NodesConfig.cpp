@@ -5,11 +5,8 @@
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <Cool/Nodes/ed.h>
 #include <Nodes/NodesClipboard.h>
-#include <imgui-node-editor/imgui_node_editor.h>
 #include <algorithm>
-#include <sstream>
 #include <string>
-#include <string_view>
 #include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Dependencies/DirtyFlag.h"
@@ -436,10 +433,13 @@ auto NodesConfig::copy_nodes() const -> std::string
 
     _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node, Cool::NodeId const& node_id) {
         auto const& node = abstract_node.downcast<Node>();
-        auto const  pos  = ed::GetNodePosition(Cool::as_ed_id(node_id));
-        clipboard.nodes.push_back({node.as_pod(), pos});
+
+        auto const pos = ed::GetNodePosition(Cool::as_ed_id(node_id));
         if (pos.x < left_most_pos.x)
             left_most_pos = pos;
+
+        clipboard.nodes.push_back({node.as_pod(), pos});
+
         _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link, bool is_connected_to_input_pin) {
             size_t index = potential_links.size();
             for (size_t i = 0; i < potential_links.size(); ++i)
@@ -475,12 +475,10 @@ auto NodesConfig::copy_nodes() const -> std::string
     return string_from_nodes_clipboard(clipboard);
 }
 
-/// Returns true iff successfully pasted nodes
 auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
 {
     try
     {
-        bool              keep_previously_selected_nodes{false};
         auto              clipboard = string_to_nodes_clipboard(std::string{clipboard_string});
         std::vector<Node> new_nodes{};
         // Create all nodes but don't add them to the graph yet, because we need to call update_node_with_new_definition() first, which requires all the links to have been added to the graph. And before adding all the links we must first iterate over all the nodes and update the links with the new pin ids of the nodes.
@@ -527,8 +525,8 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
 
         for (size_t i = 0; i < new_nodes.size(); ++i)
         {
-            auto const& node_data = clipboard.nodes[i];
-            auto&       node      = new_nodes[i];
+            auto const& node_in_clipboard = clipboard.nodes[i];
+            auto&       node              = new_nodes[i];
 
             auto const* node_def = _get_node_definition(node.id_names());
             if (node_def)
@@ -538,9 +536,8 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
             auto const new_node_id    = graph().add_node(node);
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
 
-            ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_data.position);
-            ed::SelectNode(new_node_id_ed, keep_previously_selected_nodes);
-            keep_previously_selected_nodes = true;
+            ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_in_clipboard.position);
+            ed::SelectNode(new_node_id_ed, i > 0 /* keep_previously_selected_nodes */);
             // on_node_created(*graph().nodes().get_mutable_ref(new_node_id), new_node_id, nullptr); NB: we don't actually do that because we don't want to change the main_node_id
         }
         return true;

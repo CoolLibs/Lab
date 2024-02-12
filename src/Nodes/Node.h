@@ -111,7 +111,7 @@ public:
 private:
     NodePodPart                          _d{};
     std::vector<Cool::AnySharedVariable> _value_inputs;
-    // NB: when adding data to Node, add it to NodePodPart if it is some pod data. Otherwise add it here but you then also need to add it to NodeAsPOD too, and to as_pod(), and to the constructor that takes NodeAsPOD.
+    // NB: when adding data to Node, add it to NodePodPart if it is some pod data. Otherwise add it here but you then also need to add it to NodeAsPOD too, and to as_pod(), and to the constructor that takes NodeAsPOD, and to paste_nodes() of NodesConfig.
 
 private:
     friend class cereal::access;
