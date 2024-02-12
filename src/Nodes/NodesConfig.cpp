@@ -447,6 +447,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
 {
     try
     {
+        bool keep_previously_selected_nodes{false};
         auto selection = nodes_and_links_group_from_string(std::string{clipboard_content});
         for (auto const& node_data : selection.nodes)
         {
@@ -488,7 +489,8 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
 
             ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_data.position);
-            ed::SelectNode(new_node_id_ed);
+            ed::SelectNode(new_node_id_ed, keep_previously_selected_nodes);
+            keep_previously_selected_nodes = true;
             on_node_created(*new_node, new_node_id, nullptr);
         }
         for (auto const& link : selection.links)
