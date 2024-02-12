@@ -422,22 +422,55 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
     return node;
 }
 
+struct PotentialLink {
+    Cool::Link link;
+    bool       from_copied_node{false};
+    bool       to_copied_node{false};
+};
+
 auto NodesConfig::copy_nodes() const -> std::string
 {
-    auto clipboard     = NodesClipboard{};
-    auto left_most_pos = ImVec2{FLT_MAX, FLT_MAX};
+    auto clipboard       = NodesClipboard{};
+    auto left_most_pos   = ImVec2{FLT_MAX, FLT_MAX};
+    auto potential_links = std::vector<PotentialLink>{};
+
     _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node, Cool::NodeId const& node_id) {
         auto const& node = abstract_node.downcast<Node>();
         auto const  pos  = ed::GetNodePosition(Cool::as_ed_id(node_id));
         clipboard.nodes.push_back({node.as_pod(), pos});
         if (pos.x < left_most_pos.x)
             left_most_pos = pos;
-        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link) {
-            clipboard.links.push_back(link);
+        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link, bool is_connected_to_input_pin) {
+            size_t index = potential_links.size();
+            for (size_t i = 0; i < potential_links.size(); ++i)
+            {
+                if (potential_links[i].link == link)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            if (index == potential_links.size())
+                potential_links.push_back({link, false, false});
+
+            if (is_connected_to_input_pin)
+                potential_links[index].to_copied_node = true;
+            else
+                potential_links[index].from_copied_node = true;
         });
     });
+
     for (auto& node : clipboard.nodes)
         node.position -= left_most_pos;
+
+    for (auto const& potential_link : potential_links)
+    {
+        if (!potential_link.to_copied_node) // Never copy links that are going into a node that is not copied. Otherwise we would need to remove the old link when pasting, because you cannot have two links going into the same node.
+            continue;
+        if (!potential_link.from_copied_node && !ImGui::GetIO().KeyShift) // Only copy links coming from a node not copied if SHIFT is pressed. Both options are valid and can be useful depending on the use case.
+            continue;
+        clipboard.links.push_back(potential_link.link);
+    }
 
     return string_from_nodes_clipboard(clipboard);
 }
