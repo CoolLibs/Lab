@@ -536,13 +536,12 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
                 update_node_with_new_definition(node, *node_def, graph()); // Check if the definition has changed (e.g. new inputs) and also finds description of variables if any.
 
             auto const new_node_id    = graph().add_node(node);
-            auto*      new_node       = graph().nodes().get_mutable_ref(new_node_id);
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
 
             ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_data.position);
             ed::SelectNode(new_node_id_ed, keep_previously_selected_nodes);
             keep_previously_selected_nodes = true;
-            on_node_created(*new_node, new_node_id, nullptr); // TODO(CopyPaste) Don't change main_node_id when pasting node
+            // on_node_created(*graph().nodes().get_mutable_ref(new_node_id), new_node_id, nullptr); NB: we don't actually do that because we don't want to change the main_node_id
         }
         return true;
     }
