@@ -294,7 +294,6 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
-    _regenerate_code_flag.set_dirty();
     _node_we_might_want_to_restore_as_main_node_id = {};
 
     // Don't change main node if we are dragging a link backward.
