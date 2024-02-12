@@ -458,7 +458,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
                     node.value_inputs().push_back(Cool::SharedVariable{
                         value_input,
                         primary_dirty_flag(Cool::always_requires_shader_code_generation(value_input)),
-                        {}, // TODO(CopyPaste) Copy description ? Probably should move description from SharedVariable to Variable
+                        {}, // description, it will be set by update_node_with_new_definition()
                         secondary_dirty_flag()
                     });
                 },
@@ -484,6 +484,11 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
                 }
                 pin.set_id(new_pin_id);
             }
+            auto const* node_def = _get_node_definition(node.id_names());
+            if (node_def)
+                // TODO(CopyPaste) do this after all the links have been updated ? I think it checks and removes some links if need be
+                update_node_with_new_definition(node, *node_def, graph()); // Check if the definition has changed (e.g. new inputs) and also finds description of variables if any.
+
             auto const new_node_id    = graph().add_node(node);
             auto*      new_node       = graph().nodes().get_mutable_ref(new_node_id);
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
@@ -582,9 +587,12 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
 
 void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::NodesGraph& graph)
 {
-    auto& out_node = abstract_out_node.downcast<Node>();
-    auto  node     = make_node({definition, out_node.category_name()});
+    update_node_with_new_definition(abstract_out_node.downcast<Node>(), definition, graph);
+}
 
+void NodesConfig::update_node_with_new_definition(Node& out_node, Cool::NodeDefinition const& definition, Cool::NodesGraph& graph)
+{
+    auto node = make_node({definition, out_node.category_name()});
     node.set_name(out_node.name());
     if (node.particles_count().has_value() && out_node.particles_count().has_value())
         node.set_particles_count(out_node.particles_count());

@@ -56,6 +56,7 @@ public:
     /// Returns true iff successfully pasted nodes
     auto        paste_nodes(std::string_view clipboard_content) -> bool;
     void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
+    void        update_node_with_new_definition(Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
     static void widget_to_rename_node(Cool::Node&);
     auto        maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
 
