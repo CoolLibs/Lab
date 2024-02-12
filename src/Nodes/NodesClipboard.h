@@ -4,9 +4,9 @@
 
 namespace Lab {
 
-struct CopiedNodeData {
-    NodeData data{};
-    ImVec2   position{};
+struct NodeInClipboard {
+    NodeAsPOD node_as_pod{};
+    ImVec2    position{};
 
 private:
     // Serialization
@@ -15,15 +15,15 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Data", data),
+            cereal::make_nvp("Node", node_as_pod),
             cereal::make_nvp("Position", position)
         );
     }
 };
 
 struct NodesClipboard {
-    std::vector<CopiedNodeData> nodes;
-    std::vector<Cool::Link>     links;
+    std::vector<NodeInClipboard> nodes;
+    std::vector<Cool::Link>      links;
 
 private:
     // Serialization

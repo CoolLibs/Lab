@@ -430,7 +430,7 @@ auto NodesConfig::copy_nodes() const -> std::string
     _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node, Cool::NodeId const& node_id) {
         auto const& node = abstract_node.downcast<Node>();
         auto const  pos  = ed::GetNodePosition(Cool::as_ed_id(node_id));
-        clipboard.nodes.push_back({node.as_data(), pos});
+        clipboard.nodes.push_back({node.as_pod(), pos});
         if (pos.x < left_most_pos.x)
             left_most_pos = pos;
         _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link) {
@@ -452,10 +452,10 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
         auto              clipboard = string_to_nodes_clipboard(std::string{clipboard_string});
         std::vector<Node> new_nodes{};
         // Create all nodes but don't add them to the graph yet, because we need to call update_node_with_new_definition() first, which requires all the links to have been added to the graph. And before adding all the links we must first iterate over all the nodes and update the links with the new pin ids of the nodes.
-        for (auto const& node_data : clipboard.nodes)
+        for (auto const& clipboard_node : clipboard.nodes)
         {
-            auto node = Node{node_data.data.copyable_data};
-            for (auto const& value_input : node_data.data.value_inputs)
+            auto node = Node{clipboard_node.node_as_pod.pod_part};
+            for (auto const& value_input : clipboard_node.node_as_pod.value_inputs)
             {
                 std::visit([&](auto&& value_input) {
                     node.value_inputs().push_back(Cool::SharedVariable{

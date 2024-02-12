@@ -7,8 +7,8 @@
 
 namespace Lab {
 
-struct NodeCopyableData {
-    Cool::NodeDefinitionIdentifier id_names;
+struct NodePodPart {
+    Cool::NodeDefinitionIdentifier id_names{};
     std::string                    name{};
 
     std::vector<Cool::InputPin>  input_pins{};
@@ -35,8 +35,9 @@ private:
     }
 };
 
-struct NodeData {
-    NodeCopyableData               copyable_data{};
+/// POD representation of a node. Can be copied without copying any reference.
+struct NodeAsPOD {
+    NodePodPart                    pod_part{};
     std::vector<Cool::AnyVariable> value_inputs{};
 
 private:
@@ -45,7 +46,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Copyable data", copyable_data),
+            cereal::make_nvp("POD part", pod_part),
             cereal::make_nvp("Value inputs", value_inputs)
         );
     }
@@ -61,8 +62,8 @@ public:
             .number_of_function_inputs = number_of_function_inputs,
         }
     {}
-    explicit Node(NodeCopyableData const& copyable_data)
-        : _d{copyable_data}
+    explicit Node(NodePodPart const& pod_part)
+        : _d{pod_part}
     {}
 
     auto name() const -> std::string { return _d.name; }
@@ -105,12 +106,12 @@ public:
     auto particles_count() const -> std::optional<size_t> { return _d.particles_count; }
     void set_particles_count(std::optional<size_t> particles_count) { _d.particles_count = particles_count; }
 
-    auto as_data() const -> NodeData;
+    auto as_pod() const -> NodeAsPOD;
 
 private:
-    NodeCopyableData                     _d{};
+    NodePodPart                          _d{};
     std::vector<Cool::AnySharedVariable> _value_inputs;
-    // NB: when adding data to Node, you need to add it to NodeData too, and to as_data(), and to the constructor that takes NodeData
+    // NB: when adding data to Node, add it to NodePodPart if it is some pod data. Otherwise add it here but you then also need to add it to NodeAsPOD too, and to as_pod(), and to the constructor that takes NodeAsPOD.
 
 private:
     friend class cereal::access;
@@ -118,7 +119,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Copyable data", _d),
+            cereal::make_nvp("POD part", _d),
             cereal::make_nvp("Value inputs", _value_inputs)
         );
     }
