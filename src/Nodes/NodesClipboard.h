@@ -21,7 +21,7 @@ private:
     }
 };
 
-struct NodesAndLinksGroup {
+struct NodesClipboard {
     std::vector<CopiedNodeData> nodes;
     std::vector<Cool::Link>     links;
 

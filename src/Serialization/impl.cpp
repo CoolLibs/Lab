@@ -6,8 +6,8 @@
 ///
 #include <cereal/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
-#include "SNodesAndLinksGroup.h"
 #include "SNodesCategoryConfig.h"
+#include "SNodesClipboard.h"
 #include "SProject.h"
 //
 #include "cereal/archives/json.hpp"
@@ -32,24 +32,24 @@ auto do_load(NodesCategoryConfig& config, std::filesystem::path const& path) -> 
     return Cool::Serialization::load<NodesCategoryConfig, cereal::JSONInputArchive>(config, path);
 }
 
-auto nodes_and_links_group_to_string(NodesAndLinksGroup const& selection) -> std::string
+auto string_from_nodes_clipboard(NodesClipboard const& clipboard) -> std::string
 {
     auto ss = std::stringstream{};
     {
         auto archive = cereal::JSONOutputArchive{ss};
-        archive(cereal::make_nvp("Coollab copied nodes, you can paste this in Coollab to paste the nodes.", selection));
+        archive(cereal::make_nvp("Coollab copied nodes, you can paste this in Coollab to paste the nodes.", clipboard));
     } // archive actual work happens during its destruction
     return ss.str();
 }
-auto nodes_and_links_group_from_string(std::string const& string) -> NodesAndLinksGroup
+auto string_to_nodes_clipboard(std::string const& string) -> NodesClipboard
 {
-    auto selection = NodesAndLinksGroup{};
+    auto clipboard = NodesClipboard{};
     {
         auto ss      = std::stringstream{string};
         auto archive = cereal::JSONInputArchive{ss};
-        archive(selection);
+        archive(clipboard);
     } // archive actual work happens during its destruction
-    return selection;
+    return clipboard;
 }
 
 } // namespace Lab

@@ -4,6 +4,7 @@
 #include <Commands/Command_SetVariableDefaultValue.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <Cool/Nodes/ed.h>
+#include <Nodes/NodesClipboard.h>
 #include <imgui-node-editor/imgui_node_editor.h>
 #include <algorithm>
 #include <sstream>
@@ -29,7 +30,7 @@
 #include "NodeColor.h"
 #include "NodeDefinition.h"
 #include "PrimitiveType.h"
-#include "Serialization/SNodesAndLinksGroup.h"
+#include "Serialization/SNodesClipboard.h"
 #include "imgui.h"
 
 namespace Lab {
@@ -424,34 +425,34 @@ auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -
 
 auto NodesConfig::copy_nodes() const -> std::string
 {
-    auto selection     = NodesAndLinksGroup{};
+    auto clipboard     = NodesClipboard{};
     auto left_most_pos = ImVec2{FLT_MAX, FLT_MAX};
     _nodes_editor.for_each_selected_node([&](Cool::Node const& abstract_node, Cool::NodeId const& node_id) {
         auto const& node = abstract_node.downcast<Node>();
         auto const  pos  = ed::GetNodePosition(Cool::as_ed_id(node_id));
-        selection.nodes.push_back({node.as_data(), pos});
+        clipboard.nodes.push_back({node.as_data(), pos});
         if (pos.x < left_most_pos.x)
             left_most_pos = pos;
         _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link) {
-            selection.links.push_back(link);
+            clipboard.links.push_back(link);
         });
     });
-    for (auto& node : selection.nodes)
+    for (auto& node : clipboard.nodes)
         node.position -= left_most_pos;
 
-    return nodes_and_links_group_to_string(selection);
+    return string_from_nodes_clipboard(clipboard);
 }
 
 /// Returns true iff successfully pasted nodes
-auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
+auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
 {
     try
     {
         bool              keep_previously_selected_nodes{false};
-        auto              selection = nodes_and_links_group_from_string(std::string{clipboard_content});
+        auto              clipboard = string_to_nodes_clipboard(std::string{clipboard_string});
         std::vector<Node> new_nodes{};
         // Create all nodes but don't add them to the graph yet, because we need to call update_node_with_new_definition() first, which requires all the links to have been added to the graph. And before adding all the links we must first iterate over all the nodes and update the links with the new pin ids of the nodes.
-        for (auto const& node_data : selection.nodes)
+        for (auto const& node_data : clipboard.nodes)
         {
             auto node = Node{node_data.data.copyable_data};
             for (auto const& value_input : node_data.data.value_inputs)
@@ -469,7 +470,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             for (auto& pin : node.input_pins())
             {
                 auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
-                for (auto& link : selection.links)
+                for (auto& link : clipboard.links)
                 {
                     if (link.to_pin_id == pin.id())
                         link.to_pin_id = new_pin_id;
@@ -479,7 +480,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             for (auto& pin : node.output_pins())
             {
                 auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
-                for (auto& link : selection.links)
+                for (auto& link : clipboard.links)
                 {
                     if (link.from_pin_id == pin.id())
                         link.from_pin_id = new_pin_id;
@@ -489,12 +490,12 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             new_nodes.push_back(node);
         }
 
-        for (auto const& link : selection.links)
+        for (auto const& link : clipboard.links)
             graph().add_link_unchecked(link);
 
         for (size_t i = 0; i < new_nodes.size(); ++i)
         {
-            auto const& node_data = selection.nodes[i];
+            auto const& node_data = clipboard.nodes[i];
             auto&       node      = new_nodes[i];
 
             auto const* node_def = _get_node_definition(node.id_names());
@@ -509,7 +510,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_content) -> bool
             ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_data.position);
             ed::SelectNode(new_node_id_ed, keep_previously_selected_nodes);
             keep_previously_selected_nodes = true;
-            on_node_created(*new_node, new_node_id, nullptr);
+            on_node_created(*new_node, new_node_id, nullptr); // TODO(CopyPaste) Don't change main_node_id when pasting node
         }
         return true;
     }
