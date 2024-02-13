@@ -1,5 +1,6 @@
 #include "NodesConfig.h"
 #include <Commands/Command_Group.h>
+#include <Commands/Command_SetMainNodeId.h>
 #include <Commands/Command_SetVariable.h>
 #include <Commands/Command_SetVariableDefaultValue.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
@@ -306,8 +307,7 @@ void NodesConfig::set_main_node_id(Cool::NodeId const& id, bool keep_node_we_mig
 {
     if (!keep_node_we_might_want_to_restore_as_main_node)
         _node_we_might_want_to_restore_as_main_node_id = {};
-    _main_node_id = id;
-    _regenerate_code_flag.set_dirty();
+    _command_executor.execute(Command_SetMainNodeId{id});
 }
 
 void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link, Cool::LinkId const&)

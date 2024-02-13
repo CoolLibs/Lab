@@ -66,8 +66,8 @@ private:
     void check_inputs__timeline();
 
     // clang-format off
-    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager}}; }
-    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_3D_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager, *_project.modules_graph}}; }
+    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_3D_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects, *_project.modules_graph }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }

@@ -72,7 +72,7 @@ private:
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
     Cool::GetNodeCategoryConfig_Ref             _get_node_category_config;
     Ui_Ref                                      _ui;
-    Cool::NodeId&                               _main_node_id;
+    Cool::NodeId const&                         _main_node_id;
     Cool::NodeId&                               _node_we_might_want_to_restore_as_main_node_id;
     Cool::DirtyFlag                             _rerender_flag;
     Cool::DirtyFlag                             _regenerate_code_flag;

@@ -70,6 +70,14 @@ public:
     void imgui_windows(Ui_Ref, Cool::AudioManager&, Cool::NodesLibrary const&) const;
     void submit_gizmos(Cool::GizmoManager&, CommandExecutor const&, Cool::Camera2D const&);
 
+    auto get_main_node_id() const -> Cool::NodeId const& { return _main_node_id; }
+    /// Should only be used by a command, because this won't store the id in the history
+    void set_main_node_id(Cool::NodeId const& id)
+    {
+        _main_node_id = id;
+        _regenerate_code_flag.set_dirty();
+    }
+
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, Cool::NodesLibrary const&);
     void render_one_module(Module&, Cool::RenderTarget&, SystemValues const&);
