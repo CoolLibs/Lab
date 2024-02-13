@@ -263,7 +263,6 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Co
         Cool::GetNodeCategoryConfig_Ref{nodes_library},
         ui,
         _main_node_id,
-        _node_we_might_want_to_restore_as_main_node_id,
         _rerender_all_flag,
         _regenerate_code_flag,
         _nodes_editor,

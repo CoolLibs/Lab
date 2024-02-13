@@ -86,8 +86,7 @@ private:
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
-    mutable Cool::NodeId      _main_node_id{}; // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
-    mutable Cool::NodeId      _node_we_might_want_to_restore_as_main_node_id{};
+    mutable Cool::NodeId      _main_node_id{};         // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
     Cool::DirtyFlag           _regenerate_code_flag{}; // TODO(Modules) Rename as graph_has_changed_flag
     Cool::DirtyFlag           _rerender_all_flag{};
 

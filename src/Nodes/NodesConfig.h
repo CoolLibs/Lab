@@ -22,7 +22,6 @@ public:
         Cool::GetNodeCategoryConfig_Ref             get_node_category_config,
         Ui_Ref                                      ui,
         Cool::NodeId&                               main_node_id,
-        Cool::NodeId&                               node_we_might_want_to_restore_as_main_node_id,
         Cool::DirtyFlag const&                      rerender_flag,
         Cool::DirtyFlag const&                      regenerate_code_flag,
         Cool::NodesEditor&                          nodes_editor,
@@ -33,7 +32,6 @@ public:
         , _get_node_category_config{get_node_category_config}
         , _ui{ui}
         , _main_node_id{main_node_id}
-        , _node_we_might_want_to_restore_as_main_node_id{node_we_might_want_to_restore_as_main_node_id}
         , _rerender_flag{rerender_flag}
         , _regenerate_code_flag{regenerate_code_flag}
         , _nodes_editor{nodes_editor}
@@ -62,7 +60,7 @@ public:
 
 private:
     void main_node_toggle(Cool::NodeId const&);
-    void set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node_id = false);
+    void set_main_node_id(Cool::NodeId const& id);
     auto graph() const -> Cool::NodesGraph const& { return _nodes_editor.graph(); }
     auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
     auto primary_dirty_flag(bool always_requires_shader_code_generation) const -> Cool::DirtyFlag const&;
@@ -73,7 +71,6 @@ private:
     Cool::GetNodeCategoryConfig_Ref             _get_node_category_config;
     Ui_Ref                                      _ui;
     Cool::NodeId const&                         _main_node_id;
-    Cool::NodeId&                               _node_we_might_want_to_restore_as_main_node_id;
     Cool::DirtyFlag                             _rerender_flag;
     Cool::DirtyFlag                             _regenerate_code_flag;
     Cool::NodesEditor&                          _nodes_editor;

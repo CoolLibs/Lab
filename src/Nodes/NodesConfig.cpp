@@ -292,21 +292,15 @@ auto NodesConfig::pin_color(Cool::Pin const& pin, size_t pin_index, Cool::Node c
 
 void NodesConfig::on_node_created(Cool::Node& /* abstract_node */, Cool::NodeId const& node_id, Cool::Pin const* pin_linked_to_new_node)
 {
-    _node_we_might_want_to_restore_as_main_node_id = {};
-
     // Don't change main node if we are dragging a link backward.
     if (pin_linked_to_new_node && pin_linked_to_new_node->kind() == Cool::PinKind::Input)
         return;
 
-    if (!pin_linked_to_new_node)
-        _node_we_might_want_to_restore_as_main_node_id = _main_node_id; // Keep track, so that if someone has a main node, creates a separate node, and then plugs that node back into the old main node, we will restore it as the main node, even if it itself is plugged into a node.
-    set_main_node_id(node_id, true /*keep_node_we_might_want_to_restore_as_main_node*/);
+    set_main_node_id(node_id);
 }
 
-void NodesConfig::set_main_node_id(Cool::NodeId const& id, bool keep_node_we_might_want_to_restore_as_main_node)
+void NodesConfig::set_main_node_id(Cool::NodeId const& id)
 {
-    if (!keep_node_we_might_want_to_restore_as_main_node)
-        _node_we_might_want_to_restore_as_main_node_id = {};
     _command_executor.execute(Command_SetMainNodeId{id});
 }
 
@@ -320,11 +314,6 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
     auto next_id = graph().find_node_containing_pin(link.to_pin_id);
     if (next_id == _main_node_id)
         return;
-    if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
-    {
-        set_main_node_id(next_id);
-        return;
-    }
     auto const* next_node        = graph().try_get_node<Node>(next_id);
     auto        new_main_node_id = Cool::NodeId{};
     while (next_node)
@@ -333,11 +322,6 @@ void NodesConfig::on_link_created_between_existing_nodes(Cool::Link const& link,
         next_id          = graph().find_node_connected_to_output_pin(next_node->output_pins()[0].id());
         if (next_id == _main_node_id)
             return;
-        if (next_id == _node_we_might_want_to_restore_as_main_node_id && !_node_we_might_want_to_restore_as_main_node_id.underlying_uuid().is_nil())
-        {
-            set_main_node_id(next_id);
-            return;
-        }
         next_node = graph().try_get_node<Node>(next_id);
     }
     if (!new_main_node_id.underlying_uuid().is_nil())
