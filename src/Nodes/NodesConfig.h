@@ -48,7 +48,7 @@ public:
     [[nodiscard]] auto node_color(Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
     [[nodiscard]] auto pin_color(Cool::Pin const&, size_t pin_index, Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
     void               on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
-    auto               make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
+    auto               add_node(Cool::NodeDefinitionAndCategoryName const&) -> Cool::NodeId;
     void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     [[nodiscard]] auto copy_nodes() const -> std::string;
     /// Returns true iff successfully pasted nodes
@@ -59,6 +59,7 @@ public:
     auto        maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
 
 private:
+    auto make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
     void main_node_toggle(Cool::NodeId const&);
     void set_main_node_id(Cool::NodeId const& id);
     auto graph() const -> Cool::NodesGraph const& { return _nodes_editor.graph(); }

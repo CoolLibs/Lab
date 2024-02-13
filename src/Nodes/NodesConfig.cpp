@@ -1,4 +1,5 @@
 #include "NodesConfig.h"
+#include <Commands/Command_AddNode.h>
 #include <Commands/Command_Group.h>
 #include <Commands/Command_SetMainNodeId.h>
 #include <Commands/Command_SetVariable.h>
@@ -7,6 +8,7 @@
 #include <Cool/Nodes/ed.h>
 #include <Nodes/NodesClipboard.h>
 #include <algorithm>
+#include <reg/src/internal/generate_uuid.hpp>
 #include <string>
 #include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
@@ -346,6 +348,13 @@ static auto doesnt_need_main_pin(FunctionSignature const& signature) -> bool
 static auto wants_to_store_particles_count(NodeDefinition const& def) -> bool
 {
     return Cool::String::contains(def.name(), "Init Particles Count"); // HACK to force only a node named "Init Particles Count" to display the particles count.
+}
+
+auto NodesConfig::add_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Cool::NodeId
+{
+    auto const id = Cool::NodeId{reg::internal::generate_uuid()};
+    _command_executor.execute(Command_AddNode{id, make_node(cat_id)});
+    return id;
 }
 
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node

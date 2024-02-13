@@ -328,4 +328,26 @@ void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
     });
 }
 
+auto ModulesGraph::get_main_node_id() const -> Cool::NodeId const&
+{
+    return _main_node_id;
+}
+void ModulesGraph::set_main_node_id(Cool::NodeId const& id)
+{
+    _main_node_id = id;
+    _regenerate_code_flag.set_dirty();
+}
+
+void ModulesGraph::add_node(Cool::NodeId const& id, Node const& node)
+{
+    _nodes_editor.graph().add_node(id, node);
+    _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
+}
+
+void ModulesGraph::remove_node(Cool::NodeId const& id)
+{
+    _nodes_editor.graph().remove_node(id);
+    _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
+}
+
 } // namespace Lab

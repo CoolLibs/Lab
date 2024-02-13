@@ -1,4 +1,5 @@
 #include "Command_SetMainNodeId.h"
+#include <ModulesGraph/ModulesGraph.h>
 #include "CommandCore/LAB_REGISTER_COMMAND.h"
 #include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
 
