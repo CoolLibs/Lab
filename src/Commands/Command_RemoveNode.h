@@ -31,6 +31,7 @@ private:
 
 struct ReversibleCommand_RemoveNode {
     Command_RemoveNode fwd;
+    mutable ImVec2     node_pos{};
 
     void execute(CommandExecutionContext_Ref const& ctx) const;
     void revert(CommandExecutionContext_Ref const& ctx) const;
@@ -44,7 +45,8 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Forward command", fwd)
+            cereal::make_nvp("Forward command", fwd),
+            cereal::make_nvp("Node position", node_pos)
         );
     }
 };
