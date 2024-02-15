@@ -50,6 +50,9 @@ public:
     void               on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
     auto               add_node(Cool::NodeDefinitionAndCategoryName const&) -> Cool::NodeId;
     auto               add_node(Node const&) -> Cool::NodeId;
+    auto               add_link(Cool::Link const&) -> Cool::LinkId;
+    void               remove_node(Cool::NodeId const&, Cool::Node const&);
+    void               remove_link(Cool::LinkId const&, Cool::Link const&);
     void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     [[nodiscard]] auto copy_nodes() const -> std::string;
     /// Returns true iff successfully pasted nodes

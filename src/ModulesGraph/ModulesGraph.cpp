@@ -344,9 +344,21 @@ void ModulesGraph::add_node(Cool::NodeId const& id, Node const& node)
     _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
 }
 
+void ModulesGraph::add_link(Cool::LinkId const& id, Cool::Link const& link)
+{
+    _nodes_editor.graph().add_link(id, link);
+    _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
+}
+
 void ModulesGraph::remove_node(Cool::NodeId const& id)
 {
     _nodes_editor.graph().remove_node(id);
+    _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
+}
+
+void ModulesGraph::remove_link(Cool::LinkId const& id)
+{
+    _nodes_editor.graph().remove_link(id);
     _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
 }
 

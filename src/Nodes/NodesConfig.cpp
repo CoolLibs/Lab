@@ -1,5 +1,8 @@
 #include "NodesConfig.h"
+#include <Commands/Command_AddLink.h>
 #include <Commands/Command_AddNode.h>
+#include <Commands/Command_RemoveLink.h>
+#include <Commands/Command_RemoveNode.h>
 #include <Commands/Command_SetMainNodeId.h>
 #include <Commands/Command_SetVariable.h>
 #include <Commands/Command_SetVariableDefaultValue.h>
@@ -359,6 +362,23 @@ auto NodesConfig::add_node(Node const& node) -> Cool::NodeId
     return id;
 }
 
+auto NodesConfig::add_link(Cool::Link const& link) -> Cool::LinkId
+{
+    auto const id = Cool::LinkId{reg::internal::generate_uuid()};
+    _command_executor.execute(Command_AddLink{id, link});
+    return id;
+}
+
+void NodesConfig::remove_node(Cool::NodeId const& id, Cool::Node const& node)
+{
+    _command_executor.execute(Command_RemoveNode{id, node.downcast<Node>()});
+}
+
+void NodesConfig::remove_link(Cool::LinkId const& id, Cool::Link const& link)
+{
+    _command_executor.execute(Command_RemoveLink{id, link});
+}
+
 auto NodesConfig::make_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Node
 {
     auto const def = cat_id.def.downcast<NodeDefinition>();
@@ -516,7 +536,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
         }
 
         for (auto const& link : clipboard.links)
-            graph().add_link_unchecked(link);
+            add_link(link);
 
         for (size_t i = 0; i < new_nodes.size(); ++i)
         {

@@ -76,7 +76,9 @@ public:
     auto get_main_node_id() const -> Cool::NodeId const&;
     void set_main_node_id(Cool::NodeId const& id);
     void add_node(Cool::NodeId const&, Node const&);
+    void add_link(Cool::LinkId const&, Cool::Link const&);
     void remove_node(Cool::NodeId const&);
+    void remove_link(Cool::LinkId const&);
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, Cool::NodesLibrary const&);
