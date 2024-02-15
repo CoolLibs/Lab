@@ -1,6 +1,5 @@
 #include "NodesConfig.h"
 #include <Commands/Command_AddNode.h>
-#include <Commands/Command_Group.h>
 #include <Commands/Command_SetMainNodeId.h>
 #include <Commands/Command_SetVariable.h>
 #include <Commands/Command_SetVariableDefaultValue.h>
@@ -77,14 +76,13 @@ static void apply_settings_to_inputs(
     CommandExecutor const&                command_executor
 )
 {
-    auto command = Command_Group{};
     try
     {
         for (size_t i = 0; i < inputs.size(); ++i)
         {
             std::visit([&](auto&& input) {
-                command.commands.push_back(make_command(make_command_set_variable(settings.at(i), input)));
-                command.commands.push_back(make_command(make_command_set_variable_default_value(settings.at(i), input)));
+                command_executor.execute(make_command_set_variable(settings.at(i), input));
+                command_executor.execute(make_command_set_variable_default_value(settings.at(i), input));
             },
                        inputs.at(i));
         }
@@ -100,7 +98,6 @@ static void apply_settings_to_inputs(
             )
         );
     }
-    command_executor.execute(command);
 }
 
 // TODO(Settings) Remove
@@ -352,8 +349,13 @@ static auto wants_to_store_particles_count(NodeDefinition const& def) -> bool
 
 auto NodesConfig::add_node(Cool::NodeDefinitionAndCategoryName const& cat_id) -> Cool::NodeId
 {
+    return add_node(make_node(cat_id));
+}
+
+auto NodesConfig::add_node(Node const& node) -> Cool::NodeId
+{
     auto const id = Cool::NodeId{reg::internal::generate_uuid()};
-    _command_executor.execute(Command_AddNode{id, make_node(cat_id)});
+    _command_executor.execute(Command_AddNode{id, node});
     return id;
 }
 
@@ -526,7 +528,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
                 // Must be done after all the links have been added to the graph, because it might remove some that are outdated if some pins have been removed and they had a link connected to them.
                 update_node_with_new_definition(node, *node_def, graph()); // Check if the definition has changed (e.g. new inputs) and also finds description of variables if any.
 
-            auto const new_node_id    = graph().add_node(node);
+            auto const new_node_id    = add_node(node);
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
 
             ed::SetNodePosition(new_node_id_ed, ImGui::GetMousePos() + node_in_clipboard.position);

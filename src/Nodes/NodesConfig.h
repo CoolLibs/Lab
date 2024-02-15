@@ -49,6 +49,7 @@ public:
     [[nodiscard]] auto pin_color(Cool::Pin const&, size_t pin_index, Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
     void               on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);
     auto               add_node(Cool::NodeDefinitionAndCategoryName const&) -> Cool::NodeId;
+    auto               add_node(Node const&) -> Cool::NodeId;
     void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     [[nodiscard]] auto copy_nodes() const -> std::string;
     /// Returns true iff successfully pasted nodes
