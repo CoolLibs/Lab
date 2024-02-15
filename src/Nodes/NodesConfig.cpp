@@ -455,7 +455,7 @@ auto NodesConfig::copy_nodes() const -> std::string
 
         clipboard.nodes.push_back({node.as_pod(), pos});
 
-        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link, bool is_connected_to_input_pin) {
+        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link, Cool::LinkId const&, bool is_connected_to_input_pin) {
             size_t index = potential_links.size();
             for (size_t i = 0; i < potential_links.size(); ++i)
             {
