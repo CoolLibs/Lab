@@ -50,6 +50,7 @@ public:
     void request_rerender_all();
 
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
+    [[nodiscard]] auto graph() const -> Cool::NodesGraph const& { return _nodes_editor.graph(); }
     [[nodiscard]] auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
     [[nodiscard]] auto regenerate_code_flag() -> Cool::DirtyFlag const& { return _regenerate_code_flag; }
     [[nodiscard]] auto rerender_all_flag() -> Cool::DirtyFlag const& { return _rerender_all_flag; }
@@ -79,6 +80,8 @@ public:
     void add_link(Cool::LinkId const&, Cool::Link const&);
     void remove_node(Cool::NodeId const&);
     void remove_link(Cool::LinkId const&);
+    auto try_get_node(Cool::NodeId const&) const -> Node const*;
+    void set_node(Cool::NodeId const&, Node const&);
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, Cool::NodesLibrary const&);

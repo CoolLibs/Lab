@@ -362,4 +362,17 @@ void ModulesGraph::remove_link(Cool::LinkId const& id)
     _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
 }
 
+auto ModulesGraph::try_get_node(Cool::NodeId const& id) const -> Node const*
+{
+    return graph().try_get_node<Node>(id);
+}
+
+void ModulesGraph::set_node(Cool::NodeId const& id, Node const& value)
+{
+    graph().nodes().with_mutable_ref(id, [&](Cool::Node& node) {
+        node.downcast<Node>() = value;
+    });
+    _regenerate_code_flag.set_dirty(); // Important when calling this function from a Command
+}
+
 } // namespace Lab

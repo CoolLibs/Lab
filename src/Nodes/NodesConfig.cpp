@@ -1,6 +1,7 @@
 #include "NodesConfig.h"
 #include <Commands/Command_AddLink.h>
 #include <Commands/Command_AddNode.h>
+#include <Commands/Command_ChangeNodeDefinition.h>
 #include <Commands/Command_RemoveLink.h>
 #include <Commands/Command_RemoveNode.h>
 #include <Commands/Command_SetMainNodeId.h>
@@ -455,7 +456,7 @@ auto NodesConfig::copy_nodes() const -> std::string
 
         clipboard.nodes.push_back({node.as_pod(), pos});
 
-        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::Link const& link, Cool::LinkId const&, bool is_connected_to_input_pin) {
+        _nodes_editor.graph().for_each_link_connected_to_node(abstract_node, [&](Cool::LinkId const&, Cool::Link const& link, bool is_connected_to_input_pin) {
             size_t index = potential_links.size();
             for (size_t i = 0; i < potential_links.size(); ++i)
             {
@@ -546,7 +547,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
             auto const* node_def = _get_node_definition(node.id_names());
             if (node_def)
                 // Must be done after all the links have been added to the graph, because it might remove some that are outdated if some pins have been removed and they had a link connected to them.
-                update_node_with_new_definition(node, *node_def, graph()); // Check if the definition has changed (e.g. new inputs) and also finds description of variables if any.
+                update_node_with_new_definition(node, *node_def); // Check if the definition has changed (e.g. new inputs) and also finds description of variables if any.
 
             auto const new_node_id    = add_node(node);
             auto const new_node_id_ed = Cool::as_ed_id(new_node_id);
@@ -602,7 +603,7 @@ static void keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(
 }
 
 template<typename PinT>
-static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& old_pins, std::function<void(Cool::PinId const&)> remove_links)
+static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& old_pins, std::function<void(Cool::PinId const&)> const& remove_links)
 {
     // Collect indices of pins that don't match any old pins.
     // Start with all the indices of the new input pins
@@ -640,12 +641,25 @@ static void refresh_pins(std::vector<PinT>& new_pins, std::vector<PinT> const& o
     }
 }
 
-void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition, Cool::NodesGraph& graph)
+static void refresh_pins(Node& node, Node const& out_node, std::function<void(Cool::PinId const&)> const& remove_links)
 {
-    update_node_with_new_definition(abstract_out_node.downcast<Node>(), definition, graph);
+    refresh_pins(node.input_pins(), out_node.input_pins(), remove_links);
+    refresh_pins(node.output_pins(), out_node.output_pins(), remove_links);
 }
 
-void NodesConfig::update_node_with_new_definition(Node& out_node, Cool::NodeDefinition const& definition, Cool::NodesGraph& graph)
+void NodesConfig::change_node_definition(Cool::NodeId const& id, Cool::Node& node, Cool::NodeDefinition const& def)
+{
+    auto node_copy = node.downcast<Node>(); // Don't change the original node just yet, it will be done by the command
+    update_node_with_new_definition(node_copy, def, true /*store_links_deletion_in_history*/);
+    _command_executor.execute(Command_ChangeNodeDefinition{id, std::move(node_copy)});
+}
+
+void NodesConfig::update_node_with_new_definition(Cool::Node& abstract_out_node, Cool::NodeDefinition const& definition)
+{
+    update_node_with_new_definition(abstract_out_node.downcast<Node>(), definition);
+}
+
+void NodesConfig::update_node_with_new_definition(Node& out_node, Cool::NodeDefinition const& definition, bool store_links_deletion_in_history)
 {
     auto node = make_node({definition, out_node.category_name()});
     node.set_name(out_node.name());
@@ -654,8 +668,19 @@ void NodesConfig::update_node_with_new_definition(Node& out_node, Cool::NodeDefi
 
     keep_values_of_inputs_that_already_existed_and_destroy_unused_ones(out_node.value_inputs(), node.value_inputs());
 
-    refresh_pins(node.input_pins(), out_node.input_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_going_into(pin_id); });
-    refresh_pins(node.output_pins(), out_node.output_pins(), [&](Cool::PinId const& pin_id) { graph.remove_link_coming_from(pin_id); });
+    if (store_links_deletion_in_history)
+    {
+        auto links_to_remove = std::vector<std::pair<Cool::LinkId, Cool::Link>>{};
+        refresh_pins(node, out_node, [&](Cool::PinId const& pin_id) {
+            graph().for_each_link_connected_to_pin(pin_id, [&](Cool::LinkId const& id, Cool::Link const& link, bool) { links_to_remove.emplace_back(id, link); });
+        });
+        for (auto const& [id, link] : links_to_remove)
+            _command_executor.execute(Command_RemoveLink{id, link});
+    }
+    else
+    {
+        refresh_pins(node, out_node, [&](Cool::PinId const& pin_id) { graph().remove_link_going_into(pin_id); });
+    }
 
     out_node = std::move(node);
 }

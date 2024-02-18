@@ -50,7 +50,7 @@ struct Command_SetVariable {
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {} to {}", var_ref.id(), Cool::stringify(value));
+        return fmt::format("Set {} (id {}) to {}", var_ref.variable->name(), var_ref.id(), Cool::stringify(value));
     }
 
     auto make_reversible(MakeReversibleCommandContext_Ref const&) const
@@ -80,7 +80,7 @@ struct ReversibleCommand_SetVariable {
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {} from {} to {}", forward_command.var_ref.id(), Cool::stringify(old_value), Cool::stringify(forward_command.value));
+        return fmt::format("Set {} (id {}) from {} to {}", forward_command.var_ref.variable->name(), forward_command.var_ref.id(), Cool::stringify(old_value), Cool::stringify(forward_command.value));
     }
 
     auto merge(ReversibleCommand_SetVariable<T> const& previous) const -> std::optional<ReversibleCommand_SetVariable<T>>

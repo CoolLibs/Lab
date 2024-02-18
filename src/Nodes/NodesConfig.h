@@ -57,8 +57,9 @@ public:
     [[nodiscard]] auto copy_nodes() const -> std::string;
     /// Returns true iff successfully pasted nodes
     auto        paste_nodes(std::string_view clipboard_content) -> bool;
-    void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
-    void        update_node_with_new_definition(Node&, Cool::NodeDefinition const&, Cool::NodesGraph&);
+    void        change_node_definition(Cool::NodeId const&, Cool::Node&, Cool::NodeDefinition const&);
+    void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&);
+    void        update_node_with_new_definition(Node&, Cool::NodeDefinition const&, bool store_links_deletion_in_history = false);
     static void widget_to_rename_node(Cool::Node&);
     auto        maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
 
