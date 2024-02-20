@@ -12,6 +12,7 @@ class RecentlyOpened;
 struct Project;
 class ModulesGraph;
 class CommandExecutor;
+class Node;
 
 // This is a class rather than a struct because we want to use methods to access the different members
 // this will make it easier to track down who is using what
@@ -27,6 +28,7 @@ public:
     [[nodiscard]] auto command_executor() const -> CommandExecutor;
     [[nodiscard]] auto recently_opened_projects() const -> RecentlyOpened& { return _data.recently_opened; }
     [[nodiscard]] auto modules_graph() const -> ModulesGraph& { return _data.modules_graph; }
+    void               make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& node) const;
     template<ConcreteCommand ConcreteCommandT>
     void execute(ConcreteCommandT const& command) const
     {

@@ -21,6 +21,7 @@
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/Midi/MidiChannel.h"
 #include "Cool/Midi/MidiManager.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
@@ -53,6 +54,10 @@ public:
 
     void open_image_exporter();
     void open_video_exporter();
+
+    auto project() const -> Project const& { return _project; }
+    auto project() -> Project& { return _project; }
+    auto nodes_library() const -> Cool::NodesLibrary const& { return _nodes_library_manager.library(); }
 
 private:
     void render(Cool::RenderTarget& render_target, float time, float delta_time);

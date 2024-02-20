@@ -6,7 +6,7 @@ namespace Lab {
 class CommandExecutor {
 public:
     explicit CommandExecutor(CommandExecutionContext_Ref ctx)
-        : _ctx{ctx}
+        : _ctx{std::move(ctx)}
     {
     }
 

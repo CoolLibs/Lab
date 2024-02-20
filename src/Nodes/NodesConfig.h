@@ -10,6 +10,7 @@
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Color.h"
 #include "Dependencies/Ui.h"
+#include "ModulesGraph/DirtyFlags.h"
 #include "Node.h"
 #include "NodeDefinition.h"
 
@@ -22,8 +23,7 @@ public:
         Cool::GetNodeCategoryConfig_Ref             get_node_category_config,
         Ui_Ref                                      ui,
         Cool::NodeId&                               main_node_id,
-        Cool::DirtyFlag const&                      rerender_flag,
-        Cool::DirtyFlag const&                      regenerate_code_flag,
+        DirtyFlags const&                           dirty_flags,
         Cool::NodesEditor&                          nodes_editor,
         Cool::AudioManager&                         audio_manager,
         CommandExecutor const&                      command_executor
@@ -32,8 +32,7 @@ public:
         , _get_node_category_config{get_node_category_config}
         , _ui{ui}
         , _main_node_id{main_node_id}
-        , _rerender_flag{rerender_flag}
-        , _regenerate_code_flag{regenerate_code_flag}
+        , _dirty_flags{dirty_flags}
         , _nodes_editor{nodes_editor}
         , _audio_manager{audio_manager}
         , _command_executor{command_executor}
@@ -65,20 +64,18 @@ public:
 
 private:
     auto make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
+    void make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node&);
     void main_node_toggle(Cool::NodeId const&);
     void set_main_node_id(Cool::NodeId const& id);
     auto graph() const -> Cool::NodesGraph const& { return _nodes_editor.graph(); }
     auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
-    auto primary_dirty_flag(bool always_requires_shader_code_generation) const -> Cool::DirtyFlag const&;
-    auto secondary_dirty_flag() const -> Cool::DirtyFlag const&;
 
 private:
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
     Cool::GetNodeCategoryConfig_Ref             _get_node_category_config;
     Ui_Ref                                      _ui;
     Cool::NodeId const&                         _main_node_id;
-    Cool::DirtyFlag                             _rerender_flag;
-    Cool::DirtyFlag                             _regenerate_code_flag;
+    DirtyFlags                                  _dirty_flags;
     Cool::NodesEditor&                          _nodes_editor;
     Cool::AudioManager&                         _audio_manager;
     CommandExecutor                             _command_executor;

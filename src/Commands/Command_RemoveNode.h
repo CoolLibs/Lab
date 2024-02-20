@@ -10,7 +10,7 @@ struct ReversibleCommand_RemoveNode;
 
 struct Command_RemoveNode {
     Cool::NodeId node_id;
-    Node         node;
+    mutable Node node;
 
     void execute(CommandExecutionContext_Ref const& ctx) const;
     auto to_string() const -> std::string;
