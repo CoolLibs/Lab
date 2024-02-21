@@ -49,9 +49,10 @@ public:
                     auto const new_metadata   = var.variable().metadata();
                     var.variable().metadata() = prev_metadata; // To make sure the reversible command that will be created sees the correct previous value.
                     _command_executor.execute(Command_SetVariableMetadata<T>{
-                        .var_ref  = var.get_ref(),
-                        .metadata = new_metadata,
-                    });
+                                                  .var_ref  = var.get_ref(),
+                                                  .metadata = new_metadata,
+                                              },
+                                              false /* store_in_history */);
                 },
 
             .on_value_editing_finished =

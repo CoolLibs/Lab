@@ -30,19 +30,19 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const&
 {
     if (render_target.needs_resizing())
         request_rerender_all();
-    if (_rerender_all_flag.is_dirty())
+    if (rerender_all_flag().is_dirty())
     {
         request_rerender_all();
-        _rerender_all_flag.set_clean();
+        rerender_all_flag().set_clean();
     }
 
-    if (_regenerate_code_flag.is_dirty())
+    if (regenerate_code_flag().is_dirty())
     {
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Modules Graph", "Compiled");
         create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, nodes_library);
         request_rerender_all();
-        _regenerate_code_flag.set_clean();
+        regenerate_code_flag().set_clean();
     }
 
     for (auto& module_node : _particles_module_nodes)
@@ -202,7 +202,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, C
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, nodes_library)};
         if (_nodes_editor.imgui_windows(cfg, nodes_library))
-            _regenerate_code_flag.set_dirty();
+            regenerate_code_flag().set_dirty();
     }
     DebugOptions::show_generated_shader_code([&] {
         if (ImGui::BeginTabBar("Shaders Tabs", ImGuiTabBarFlags_None))
@@ -263,9 +263,7 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Co
         Cool::GetNodeCategoryConfig_Ref{nodes_library},
         ui,
         _main_node_id,
-        _node_we_might_want_to_restore_as_main_node_id,
-        _rerender_all_flag,
-        _regenerate_code_flag,
+        _dirty_flags,
         _nodes_editor,
         audio_manager,
         ui.command_executor(),
@@ -327,6 +325,53 @@ void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) cons
     ui.window({.name = "Links Registry"}, [&]() {
         imgui_show(_nodes_editor.graph().links());
     });
+}
+
+auto ModulesGraph::get_main_node_id() const -> Cool::NodeId const&
+{
+    return _main_node_id;
+}
+void ModulesGraph::set_main_node_id(Cool::NodeId const& id)
+{
+    _main_node_id = id;
+    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+}
+
+void ModulesGraph::add_node(Cool::NodeId const& id, Node const& node)
+{
+    _nodes_editor.graph().add_node(id, node);
+    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+}
+
+void ModulesGraph::add_link(Cool::LinkId const& id, Cool::Link const& link)
+{
+    _nodes_editor.graph().add_link(id, link);
+    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+}
+
+void ModulesGraph::remove_node(Cool::NodeId const& id)
+{
+    _nodes_editor.graph().remove_node(id);
+    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+}
+
+void ModulesGraph::remove_link(Cool::LinkId const& id)
+{
+    _nodes_editor.graph().remove_link(id);
+    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+}
+
+auto ModulesGraph::try_get_node(Cool::NodeId const& id) const -> Node const*
+{
+    return graph().try_get_node<Node>(id);
+}
+
+void ModulesGraph::set_node(Cool::NodeId const& id, Node const& value)
+{
+    graph().nodes().with_mutable_ref(id, [&](Cool::Node& node) {
+        node.downcast<Node>() = value;
+    });
+    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 } // namespace Lab

@@ -10,6 +10,9 @@ class Camera3DManager;
 class App;
 class RecentlyOpened;
 struct Project;
+class ModulesGraph;
+class CommandExecutor;
+class Node;
 
 // This is a class rather than a struct because we want to use methods to access the different members
 // this will make it easier to track down who is using what
@@ -24,10 +27,12 @@ public:
     [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
     [[nodiscard]] auto command_executor() const -> CommandExecutor;
     [[nodiscard]] auto recently_opened_projects() const -> RecentlyOpened& { return _data.recently_opened; }
+    [[nodiscard]] auto modules_graph() const -> ModulesGraph& { return _data.modules_graph; }
+    void               make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& node) const;
     template<ConcreteCommand ConcreteCommandT>
-    void execute(ConcreteCommandT const& command) const
+    void execute(ConcreteCommandT const& command, bool store_in_history = true) const
     {
-        _data.executor.execute(command, *this);
+        _data.executor.execute(command, *this, store_in_history);
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
@@ -39,6 +44,7 @@ public:
         std::reference_wrapper<std::optional<std::filesystem::path>> project_path;
         CommandExecutor_TopLevel                                     executor;
         std::reference_wrapper<RecentlyOpened>                       recently_opened;
+        std::reference_wrapper<ModulesGraph>                         modules_graph;
     };
     explicit CommandExecutionContext_Ref(Data data)
         : _data{std::move(data)}

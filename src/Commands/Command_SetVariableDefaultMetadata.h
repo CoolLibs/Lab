@@ -7,29 +7,29 @@
 namespace Lab {
 
 template<typename T>
-struct ReversibleCommand_SetVariableMetadata;
+struct ReversibleCommand_SetVariableDefaultMetadata;
 
 template<typename T>
-struct Command_SetVariableMetadata {
+struct Command_SetVariableDefaultMetadata {
     Cool::SharedVariableStrongRef<T> var_ref{};
-    Cool::VariableMetadata<T>        metadata{};
+    Cool::VariableMetadata<T>        default_metadata{};
 
     void execute(CommandExecutionContext_Ref const&) const
     {
-        var_ref.variable->metadata() = metadata;
+        var_ref.variable->default_metadata() = default_metadata;
     }
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {}'s metadata", Lab::to_string(var_ref));
+        return fmt::format("Set {}'s default metadata", Lab::to_string(var_ref));
     }
 
     auto make_reversible(MakeReversibleCommandContext_Ref const&) const
-        -> ReversibleCommand_SetVariableMetadata<T>
+        -> ReversibleCommand_SetVariableDefaultMetadata<T>
     {
-        return ReversibleCommand_SetVariableMetadata<T>{
-            .fwd          = *this,
-            .old_metadata = var_ref.variable->metadata(),
+        return ReversibleCommand_SetVariableDefaultMetadata<T>{
+            .fwd                  = *this,
+            .old_default_metadata = var_ref.variable->default_metadata(),
         };
     }
 
@@ -41,15 +41,15 @@ private:
     {
         archive(
             cereal::make_nvp("Variable ref", var_ref),
-            cereal::make_nvp("Metadata", metadata)
+            cereal::make_nvp("Default metadata", default_metadata)
         );
     }
 };
 
 template<typename T>
-struct ReversibleCommand_SetVariableMetadata {
-    Command_SetVariableMetadata<T> fwd{};
-    Cool::VariableMetadata<T>      old_metadata{};
+struct ReversibleCommand_SetVariableDefaultMetadata {
+    Command_SetVariableDefaultMetadata<T> fwd{};
+    Cool::VariableMetadata<T>             old_default_metadata{};
 
     void execute(CommandExecutionContext_Ref const& ctx) const
     {
@@ -58,7 +58,7 @@ struct ReversibleCommand_SetVariableMetadata {
 
     void revert(CommandExecutionContext_Ref const&) const
     {
-        fwd.var_ref.variable->metadata() = old_metadata;
+        fwd.var_ref.variable->default_metadata() = old_default_metadata;
     }
 
     auto to_string() const -> std::string
@@ -66,7 +66,7 @@ struct ReversibleCommand_SetVariableMetadata {
         return fwd.to_string();
     }
 
-    auto merge(ReversibleCommand_SetVariableMetadata<T> const&) const -> std::optional<ReversibleCommand_SetVariableMetadata<T>>
+    auto merge(ReversibleCommand_SetVariableDefaultMetadata<T> const&) const -> std::optional<ReversibleCommand_SetVariableDefaultMetadata<T>>
     {
         return std::nullopt;
     };
@@ -79,7 +79,7 @@ private:
     {
         archive(
             cereal::make_nvp("Forward", fwd),
-            cereal::make_nvp("Old metadata", old_metadata)
+            cereal::make_nvp("Old default metadata", old_default_metadata)
         );
     }
 };

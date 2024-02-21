@@ -17,15 +17,14 @@ struct Command_FinishedEditingVariable {
     {
         return "Finished editing variable";
     }
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive&)
+    {
+    }
 };
 
 } // namespace Lab
-
-namespace cereal {
-
-template<class Archive>
-void serialize(Archive&, Lab::Command_FinishedEditingVariable&)
-{
-}
-
-} // namespace cereal
