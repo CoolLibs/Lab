@@ -2,6 +2,7 @@
 #include <Cool/Dependencies/SharedVariable.h>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/MakeReversibleCommandContext_Ref.h"
+#include "CommandCore/var_ref_to_string.h"
 
 namespace Lab {
 
@@ -20,7 +21,7 @@ struct Command_SetVariableDefaultMetadata {
 
     auto to_string() const -> std::string
     {
-        return "Set " + std::to_string(var_ref.id()) + "'s default metadata";
+        return fmt::format("Set {}'s default metadata", Lab::to_string(var_ref));
     }
 
     auto make_reversible(MakeReversibleCommandContext_Ref const&) const
@@ -30,6 +31,18 @@ struct Command_SetVariableDefaultMetadata {
             .fwd                  = *this,
             .old_default_metadata = var_ref.variable->default_metadata(),
         };
+    }
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Variable ref", var_ref),
+            cereal::make_nvp("Default metadata", default_metadata)
+        );
     }
 };
 
@@ -57,28 +70,18 @@ struct ReversibleCommand_SetVariableDefaultMetadata {
     {
         return std::nullopt;
     };
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Forward", fwd),
+            cereal::make_nvp("Old default metadata", old_default_metadata)
+        );
+    }
 };
 
 } // namespace Lab
-
-namespace cereal {
-
-template<class Archive, typename T>
-void serialize(Archive& archive, Lab::Command_SetVariableDefaultMetadata<T>& command)
-{
-    archive(
-        cereal::make_nvp("Variable ref", command.var_ref),
-        cereal::make_nvp("Default metadata", command.default_metadata)
-    );
-}
-
-template<class Archive, typename T>
-void serialize(Archive& archive, Lab::ReversibleCommand_SetVariableDefaultMetadata<T>& command)
-{
-    archive(
-        cereal::make_nvp("Forward", command.fwd),
-        cereal::make_nvp("Old default metadata", command.old_default_metadata)
-    );
-}
-
-} // namespace cereal

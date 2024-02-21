@@ -4,6 +4,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/MakeReversibleCommandContext_Ref.h"
+#include "CommandCore/var_ref_to_string.h"
 
 namespace Lab {
 
@@ -50,71 +51,73 @@ struct Command_SetVariable {
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {} (id {}) to {}", var_ref.variable->name(), var_ref.id(), Cool::stringify(value));
+        return fmt::format("Set {} to {}", Lab::to_string(var_ref), Cool::stringify(value));
     }
 
     auto make_reversible(MakeReversibleCommandContext_Ref const&) const
         -> ReversibleCommand_SetVariable<T>
     {
         return ReversibleCommand_SetVariable<T>{
-            .forward_command = *this,
-            .old_value       = var_ref.variable->value(),
+            .fwd       = *this,
+            .old_value = var_ref.variable->value(),
         };
+    }
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Variable ref", var_ref),
+            cereal::make_nvp("Value", value)
+        );
     }
 };
 
 template<typename T>
 struct ReversibleCommand_SetVariable {
-    Command_SetVariable<T> forward_command{};
+    Command_SetVariable<T> fwd{};
     T                      old_value{};
 
     void execute(CommandExecutionContext_Ref const& ctx) const
     {
-        forward_command.execute(ctx);
+        fwd.execute(ctx);
     }
 
     void revert(CommandExecutionContext_Ref const&) const
     {
-        internal::set_value(forward_command.var_ref, old_value);
+        internal::set_value(fwd.var_ref, old_value);
     }
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {} (id {}) from {} to {}", forward_command.var_ref.variable->name(), forward_command.var_ref.id(), Cool::stringify(old_value), Cool::stringify(forward_command.value));
+        return fmt::format("Set {} from {} to {}", Lab::to_string(fwd.var_ref), Cool::stringify(old_value), Cool::stringify(fwd.value));
     }
 
     auto merge(ReversibleCommand_SetVariable<T> const& previous) const -> std::optional<ReversibleCommand_SetVariable<T>>
     {
-        if (previous.forward_command.var_ref.id() != forward_command.var_ref.id())
+        if (previous.fwd.var_ref.id() != fwd.var_ref.id())
             return std::nullopt;
 
         return ReversibleCommand_SetVariable<T>{
-            .forward_command = forward_command,
-            .old_value       = previous.old_value,
+            .fwd       = fwd,
+            .old_value = previous.old_value,
         };
     };
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Forward", fwd),
+            cereal::make_nvp("Old value", old_value)
+        );
+    }
 };
 
 } // namespace Lab
-
-namespace cereal {
-
-template<class Archive, typename T>
-void serialize(Archive& archive, Lab::Command_SetVariable<T>& command)
-{
-    archive(
-        cereal::make_nvp("Variable ref", command.var_ref),
-        cereal::make_nvp("Value", command.value)
-    );
-}
-
-template<class Archive, typename T>
-void serialize(Archive& archive, Lab::ReversibleCommand_SetVariable<T>& command)
-{
-    archive(
-        cereal::make_nvp("Forward", command.forward_command),
-        cereal::make_nvp("Old value", command.old_value)
-    );
-}
-
-} // namespace cereal

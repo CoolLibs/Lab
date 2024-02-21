@@ -42,7 +42,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Forward command", fwd),
+            cereal::make_nvp("Forward", fwd),
             cereal::make_nvp("Old main node id", old_main_node_id)
         );
     }

@@ -45,7 +45,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Forward command", fwd),
+            cereal::make_nvp("Forward", fwd),
             cereal::make_nvp("Old value", old_value)
         );
     }

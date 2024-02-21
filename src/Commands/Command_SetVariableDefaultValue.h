@@ -3,6 +3,7 @@
 #include <stringify/stringify.hpp>
 #include "CommandCore/CommandExecutionContext_Ref.h"
 #include "CommandCore/MakeReversibleCommandContext_Ref.h"
+#include "CommandCore/var_ref_to_string.h"
 
 namespace Lab {
 
@@ -21,7 +22,7 @@ struct Command_SetVariableDefaultValue {
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {}'s default value to {}", var_ref.id(), Cool::stringify(default_value));
+        return fmt::format("Set {}'s default value to {}", Lab::to_string(var_ref), Cool::stringify(default_value));
     }
 
     auto make_reversible(MakeReversibleCommandContext_Ref const&) const
@@ -31,6 +32,18 @@ struct Command_SetVariableDefaultValue {
             .fwd               = *this,
             .old_default_value = var_ref.variable->default_value(),
         };
+    }
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Variable ref", var_ref),
+            cereal::make_nvp("Default value", default_value)
+        );
     }
 };
 
@@ -51,35 +64,25 @@ struct ReversibleCommand_SetVariableDefaultValue {
 
     auto to_string() const -> std::string
     {
-        return fmt::format("Set {}'s default value from {} to {}", fwd.var_ref.id(), Cool::stringify(old_default_value), Cool::stringify(fwd.default_value));
+        return fmt::format("Set {}'s default value from {} to {}", Lab::to_string(fwd.var_ref), Cool::stringify(old_default_value), Cool::stringify(fwd.default_value));
     }
 
     auto merge(ReversibleCommand_SetVariableDefaultValue<T> const&) const -> std::optional<ReversibleCommand_SetVariableDefaultValue<T>>
     {
         return std::nullopt;
     };
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("Forward", fwd),
+            cereal::make_nvp("Old default value", old_default_value)
+        );
+    }
 };
 
 } // namespace Lab
-
-namespace cereal {
-
-template<class Archive, typename T>
-void serialize(Archive& archive, Lab::Command_SetVariableDefaultValue<T>& command)
-{
-    archive(
-        cereal::make_nvp("Variable ref", command.var_ref),
-        cereal::make_nvp("Default value", command.default_value)
-    );
-}
-
-template<class Archive, typename T>
-void serialize(Archive& archive, Lab::ReversibleCommand_SetVariableDefaultValue<T>& command)
-{
-    archive(
-        cereal::make_nvp("Forward", command.fwd),
-        cereal::make_nvp("Old default value", command.old_default_value)
-    );
-}
-
-} // namespace cereal
