@@ -30,9 +30,9 @@ public:
     [[nodiscard]] auto modules_graph() const -> ModulesGraph& { return _data.modules_graph; }
     void               make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& node) const;
     template<ConcreteCommand ConcreteCommandT>
-    void execute(ConcreteCommandT const& command) const
+    void execute(ConcreteCommandT const& command, bool store_in_history = true) const
     {
-        _data.executor.execute(command, *this);
+        _data.executor.execute(command, *this, store_in_history);
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically

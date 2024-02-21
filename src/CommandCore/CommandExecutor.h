@@ -11,9 +11,9 @@ public:
     }
 
     template<ConcreteCommand ConcreteCommandT>
-    void execute(ConcreteCommandT&& command) const
+    void execute(ConcreteCommandT&& command, bool store_in_history = true) const
     {
-        _ctx.execute(std::forward<ConcreteCommandT>(command));
+        _ctx.execute(std::forward<ConcreteCommandT>(command), store_in_history);
     }
 
 private:

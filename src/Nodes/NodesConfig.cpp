@@ -6,7 +6,9 @@
 #include <Commands/Command_RemoveNode.h>
 #include <Commands/Command_SetMainNodeId.h>
 #include <Commands/Command_SetVariable.h>
+#include <Commands/Command_SetVariableDefaultMetadata.h>
 #include <Commands/Command_SetVariableDefaultValue.h>
+#include <Commands/Command_SetVariableMetadata.h>
 #include <Cool/Dependencies/always_requires_shader_code_generation.h>
 #include <Cool/Nodes/ed.h>
 #include <Nodes/NodesClipboard.h>
@@ -71,6 +73,24 @@ static auto make_command_set_variable_default_value(Cool::AnyVariableData const&
         .default_value = std::get<Cool::VariableData<T>>(var_data).value,
     };
 }
+// TODO(Settings) Remove
+template<typename T>
+static auto make_command_set_variable_metadata(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const& var) -> Command_SetVariableMetadata<T>
+{
+    return Command_SetVariableMetadata<T>{
+        .var_ref  = var.get_ref(),
+        .metadata = std::get<Cool::VariableData<T>>(var_data).metadata,
+    };
+}
+// TODO(Settings) Remove
+template<typename T>
+static auto make_command_set_variable_default_metadata(Cool::AnyVariableData const& var_data, Cool::SharedVariable<T> const& var) -> Command_SetVariableDefaultMetadata<T>
+{
+    return Command_SetVariableDefaultMetadata<T>{
+        .var_ref          = var.get_ref(),
+        .default_metadata = std::get<Cool::VariableData<T>>(var_data).metadata,
+    };
+}
 
 // TODO(Settings) Remove
 static void apply_settings_to_inputs(
@@ -87,6 +107,8 @@ static void apply_settings_to_inputs(
             std::visit([&](auto&& input) {
                 command_executor.execute(make_command_set_variable(settings.at(i), input));
                 command_executor.execute(make_command_set_variable_default_value(settings.at(i), input));
+                command_executor.execute(make_command_set_variable_metadata(settings.at(i), input));
+                command_executor.execute(make_command_set_variable_default_metadata(settings.at(i), input));
             },
                        inputs.at(i));
         }

@@ -1,0 +1,5 @@
+#include "Command_SetVariableDefaultMetadata.h"
+#include "CommandCore/LAB_REGISTER_COMMAND.h"
+#include "CommandCore/LAB_REGISTER_REVERSIBLE_COMMAND.h"
+//
+#include "generated/register_set_variable_default_metadata_commands.inl"
