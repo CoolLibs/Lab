@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-13 WIP](#beta-13-wip)
+- [🐣beta-13](#beta-13)
 - [🐣beta-12](#beta-12)
 - [🐣beta-11](#beta-11)
 - [🐣beta-10](#beta-10)
@@ -15,10 +15,12 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-13 WIP
+## 🐣beta-13
 
 - ✨ You can now copy-paste nodes! (CTRL+C / CTRL+V) You can even paste them from one project to another, or send them as text to a friend, who can then paste them in their instance of Coollab.
+![](https://github.com/CoolLibs/Lab/assets/45451201/28a9c941-bc9a-49a6-b56f-5dadc2c005d7)
 - ✨ Adding and removing nodes and links can now be undone and redone (CTRL+Z / CTRL+Y)
+![](https://github.com/CoolLibs/Lab/assets/45451201/6e4d7e62-a919-4e71-81cf-76e5cb0b24e5)
 - ✨ Changes to the 2D Camera can now be undone and redone (CTRL+Z / CTRL+Y)
 - ✨ Applying a preset can now be undone and redone (CTRL+Z / CTRL+Y)
 
