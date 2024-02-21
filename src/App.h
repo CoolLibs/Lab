@@ -55,8 +55,6 @@ public:
     void open_image_exporter();
     void open_video_exporter();
 
-    auto project() const -> Project const& { return _project; }
-    auto project() -> Project& { return _project; }
     auto nodes_library() const -> Cool::NodesLibrary const& { return _nodes_library_manager.library(); }
 
 private:

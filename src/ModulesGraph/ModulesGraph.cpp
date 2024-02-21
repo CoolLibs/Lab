@@ -334,7 +334,7 @@ auto ModulesGraph::get_main_node_id() const -> Cool::NodeId const&
 void ModulesGraph::set_main_node_id(Cool::NodeId const& id)
 {
     _main_node_id = id;
-    regenerate_code_flag().set_dirty();
+    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 void ModulesGraph::add_node(Cool::NodeId const& id, Node const& node)
