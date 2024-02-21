@@ -10,8 +10,10 @@ namespace Lab {
 
 void Command_AddNode::execute(CommandExecutionContext_Ref const& ctx) const
 {
-    ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node);
     ctx.modules_graph().add_node(node_id, node);
+    ctx.modules_graph().graph().nodes().with_mutable_ref(node_id, [&](Cool::Node& current_node) {
+        ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(current_node.downcast<Node>());
+    });
 }
 
 auto Command_AddNode::to_string() const -> std::string

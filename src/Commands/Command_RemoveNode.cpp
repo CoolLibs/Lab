@@ -36,8 +36,10 @@ void ReversibleCommand_RemoveNode::execute(CommandExecutionContext_Ref const& ct
 
 void ReversibleCommand_RemoveNode::revert(CommandExecutionContext_Ref const& ctx) const
 {
-    ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(fwd.node);
     ctx.modules_graph().add_node(fwd.node_id, fwd.node);
+    ctx.modules_graph().graph().nodes().with_mutable_ref(fwd.node_id, [&](Cool::Node& current_node) {
+        ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(current_node.downcast<Node>());
+    });
     ed::SetNodePosition(Cool::as_ed_id(fwd.node_id), node_pos);
 }
 

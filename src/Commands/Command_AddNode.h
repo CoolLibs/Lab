@@ -10,7 +10,7 @@ struct ReversibleCommand_AddNode;
 
 struct Command_AddNode {
     Cool::NodeId node_id;
-    mutable Node node;
+    Node         node;
 
     void execute(CommandExecutionContext_Ref const& ctx) const;
     auto to_string() const -> std::string;
