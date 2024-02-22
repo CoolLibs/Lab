@@ -50,7 +50,7 @@ jobs:
           os: ${{ matrix.config.os }}
 
       - name: Set up MSVC # NOTE: required to find cl.exe when using the Ninja generator. And we need to use Ninja in order for ccache to be able to cache stuff with MSVC.
-        if: matrix.config.name == 'Windows MSVC'
+        if: matrix.config.name == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1.13.0
 
       - name: Install Linux dependencies
