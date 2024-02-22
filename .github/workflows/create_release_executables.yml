@@ -21,7 +21,7 @@ jobs:
           - {
               name: Windows,
               os: windows-latest,
-              cmake_configure_args: -T ClangCL,
+              cmake_configure_args: -D CMAKE_C_COMPILER=cl CMAKE_CXX_COMPILER=cl -G Ninja,
               cpack_generator: NSIS,
               installer_name: Coollab-Windows.exe,
             }
