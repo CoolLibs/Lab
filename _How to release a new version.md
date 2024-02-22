@@ -4,6 +4,6 @@
 - On GitHub create a new release. Use a new tag with the same name as the version. As a description, use whatever is in the changelog for the new version. (NB: this will trigger a GitHub Action that will build the installers and put them on [the release page](https://github.com/CoolLibs/Lab/releases/latest))
 - Increment the version number in *CMakeLists.txt* and add "WIP" to it. Also, create a new section in the changelog with the same name as the version and WIP at the end. Then commit with the message "🎉 [beta-1] Started" (make sure to replace with the right version number).
 - Update the message in *website/src/components/_Download.md*.
-- Put the installers to download on our website (download them from [the GitHub page](https://github.com/CoolLibs/Lab/releases/latest) once the the GitHub workflow has finished creating them, and add them in this repo in *website/static* (keep the same names as what is already in the folder)). Commit with the message "🌐 [website] New installers to download".
+- Put the installers to download on our website (download them from [the GitHub page](https://github.com/CoolLibs/Lab/releases/latest) once the the GitHub workflow has finished creating them, and add them in this repo in *website/static* (keep the same names as what is already in the folder)). Commit with the message "🌐 [Website] New installers to download".
 - Make an announcement on our Discord + thank the contributors if any (ptut, interns, etc.)
 - Make a story on our Instagram.
