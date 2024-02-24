@@ -29,7 +29,15 @@ public:
         }
     }
     [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
-    [[nodiscard]] static auto show_history_window() -> bool& { return instance().show_history_window; }
+    static void               show_history_window(std::function<void()> callback)
+    {
+        if (instance().show_history_window)
+        {
+            ImGui::Begin(Cool::icon_fmt("History", ICOMOON_WRENCH).c_str(), &instance().show_history_window, ImGuiWindowFlags_NoFocusOnAppearing);
+            callback();
+            ImGui::End();
+        }
+    }
     [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return instance().show_nodes_and_links_registries; }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_updating_particles() -> bool& { return instance().log_when_updating_particles; }

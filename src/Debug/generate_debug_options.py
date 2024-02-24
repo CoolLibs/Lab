@@ -53,6 +53,8 @@ def all_debug_options():
         DebugOption(
             name_in_code="show_history_window",
             name_in_ui="Show history",
+            window_name="History",
+            kind=Kind.WINDOW,
             available_in_release=True,
         ),
         DebugOption(

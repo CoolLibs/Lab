@@ -253,18 +253,6 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
     );
 }
 
-void App::imgui_show_history_window()
-{
-    auto const the_ui = ui();
-    the_ui.window({.name = "History"}, [&]() {
-        ImGui::PushFont(Cool::Font::monospace());
-        _project.history.imgui_show([](const ReversibleCommand& command) {
-            return command_to_string(command);
-        });
-        ImGui::PopFont();
-    });
-}
-
 void App::imgui_window_cameras()
 {
     static constexpr auto help_text = "When disabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
@@ -422,10 +410,13 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
         ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
                                                                         // to learn more about Dear ImGui!).
-    if (DebugOptions::show_history_window())
-    {
-        imgui_show_history_window();
-    }
+    DebugOptions::show_history_window([&] {
+        ImGui::PushFont(Cool::Font::monospace());
+        _project.history.imgui_show([](ReversibleCommand const& command) {
+            return command_to_string(command);
+        });
+        ImGui::PopFont();
+    });
     if (DebugOptions::show_nodes_and_links_registries())
     {
         _project.modules_graph->debug_show_nodes_and_links_registries_windows(ui());
