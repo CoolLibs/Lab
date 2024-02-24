@@ -51,8 +51,8 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
-            name_in_code="show_commands_debug_windows",
-            name_in_ui="Commands windows",
+            name_in_code="show_history_window",
+            name_in_ui="Show history",
             available_in_release=True,
         ),
         DebugOption(

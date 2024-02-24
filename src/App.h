@@ -96,7 +96,7 @@ private:
     void imgui_window_view();
     void imgui_window_exporter();
 
-    void imgui_commands_debug_windows();
+    void imgui_show_history_window();
 
     void compile_all_is0_nodes();
 

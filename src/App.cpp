@@ -253,13 +253,15 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
     );
 }
 
-void App::imgui_commands_debug_windows()
+void App::imgui_show_history_window()
 {
     auto const the_ui = ui();
     the_ui.window({.name = "History"}, [&]() {
+        ImGui::PushFont(Cool::Font::monospace());
         _project.history.imgui_show([](const ReversibleCommand& command) {
             return command_to_string(command);
         });
+        ImGui::PopFont();
     });
 }
 
@@ -420,9 +422,9 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
         ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
                                                                         // to learn more about Dear ImGui!).
-    if (DebugOptions::show_commands_debug_windows())
+    if (DebugOptions::show_history_window())
     {
-        imgui_commands_debug_windows();
+        imgui_show_history_window();
     }
     if (DebugOptions::show_nodes_and_links_registries())
     {
