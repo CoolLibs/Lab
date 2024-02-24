@@ -158,7 +158,7 @@ void App::update()
     {
         _project.clock.update();
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_project.clock.time(), _project.clock.delta_time());
+        polaroid().render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds());
     }
     else
     {
@@ -347,8 +347,8 @@ void App::imgui_window_exporter()
 {
     _project.exporter.imgui_windows({
         .polaroid          = polaroid(),
-        .time              = _project.clock.time(),
-        .delta_time        = _project.clock.delta_time(),
+        .time              = _project.clock.time_in_seconds(),
+        .delta_time        = _project.clock.delta_time_in_seconds(),
         .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
             auto folder_path = exported_image_path;
             folder_path.replace_extension(); // Give project folder the same name as the image.
@@ -381,7 +381,11 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     auto const the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-    Cool::ClockU::imgui_timeline(_project.clock, /* on_time_reset = */ [&]() { on_time_reset(); });
+    Cool::ClockU::imgui_timeline(
+        _project.clock,
+        /* extra_widgets = */ [&]() { the_ui.widget(_project.clock.time_speed()); },
+        /* on_time_reset = */ [&]() { on_time_reset(); }
+    );
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
@@ -402,7 +406,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_project.clock.time(), _project.clock.delta_time(), size);
+        the_polaroid.render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds(), size);
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
