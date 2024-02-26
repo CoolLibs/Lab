@@ -339,6 +339,7 @@ void App::imgui_window_exporter()
         .polaroid          = polaroid(),
         .time              = _project.clock.time_in_seconds(),
         .delta_time        = _project.clock.delta_time_in_seconds(),
+        .time_speed        = _project.clock.time_speed().value(),
         .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
             auto folder_path = exported_image_path;
             folder_path.replace_extension(); // Give project folder the same name as the image.
