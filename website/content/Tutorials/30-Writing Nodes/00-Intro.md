@@ -1,9 +1,17 @@
 
-Coollab nodes are tiny fragments of shader code written in glsl. If you don't know what that is you can start by [watching tutorials from The Art of Code](https://youtu.be/u5HAYVHsasc).
+Coollab nodes are tiny fragments of shader code written in glsl. If you don't know what this is you can start by [watching tutorials from The Art of Code](https://youtu.be/u5HAYVHsasc).
 
-To create a new node you need to add a new *.clbnode* file in the *Nodes* folder that is next to your Coollab executable. The *Nodes* folder contains several folders representing the different categories of nodes. You can create a new category by simply creating a new folder, but most likely your node will already belong to one of the existing categories.
+To create a new node:
+- Open Coollab's user-data folder. You can do this by using the corresponding <span class="icon-rocket"></span> Command:
+![Open user data folder](img/open_user_data_folder.png)
 
-Here is an example of a very basic node:
+- In the *Nodes* folder add a new file with the *.clbnode* extension.
+>You can also put it in a subfolder of *Nodes* to create a category with the same name as the subfolder. Or you can add it to an existing category of Coollab by naming your subfolder the same as one of Coollab's categories.<br/>
+If you want to sort your categories, you can put numbers at the beginning of their name to force an order. These numbers will not be rendered in the category name.
+
+![Add a node file](img/add_a_node_file.png)
+
+- Open the file and start writing your node! Here is a very basic example that you can just copy-paste into your file:
 ```glsl title="Invert Color.clbnode"
 sRGB main(sRGB Color)
 {
@@ -35,3 +43,9 @@ float main()
     return 'Value';
 }
 ```
+
+Now that this is working, let's 
+
+:::info
+Also consider sending them to us and we might add them to Coollab : TODO link to a github issue template for submitting nodes
+:::
