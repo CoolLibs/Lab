@@ -18,6 +18,9 @@
 
 ## 🐣beta-14 WIP
 
+- ✨ You can now create your own nodes! [Read the tutorial](https://coollab-art.com/Tutorials/Writing%20Nodes/Intro) to learn everything you need to know.
+- 🐛 Fixed: Plugging a link into an input pin that already has a link now removes the old link. (This bug was introduced in the previous version).
+
 ## 🐣beta-13
 
 - ✨ You can now copy-paste nodes! (CTRL+C / CTRL+V) You can even paste them from one project to another, or send them as text to a friend, who can then paste them in their instance of Coollab.

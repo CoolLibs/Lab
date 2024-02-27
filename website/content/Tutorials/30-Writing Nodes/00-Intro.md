@@ -1,4 +1,10 @@
 
+:::info
+Please consider sharing your new nodes with us, and with your permission we might add them to Coollab 💜.<br/>
+
+[Submission link](https://github.com/CoolLibs/Lab/issues/new?assignees=&labels=enhancement&projects=&template=add-node.yaml&title=%5BNew+node%5D+).
+:::
+
 Coollab nodes are tiny fragments of shader code written in glsl. If you don't know what this is you can start by [watching tutorials from The Art of Code](https://youtu.be/u5HAYVHsasc).
 
 To create a new node:
@@ -43,9 +49,3 @@ float main()
     return 'Value';
 }
 ```
-
-Now that this is working, let's 
-
-:::info
-Also consider sending them to us and we might add them to Coollab : TODO link to a github issue template for submitting nodes
-:::
