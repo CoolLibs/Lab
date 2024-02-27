@@ -1,0 +1,31 @@
+name: Add my node
+description: Send us a node you wrote and want us to add to Coollab
+title: "[New node] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: was-is-your-node
+    attributes:
+      label: What does your node do?
+    validations:
+      required: false
+      
+  - type: checkboxes
+    attributes:
+      label: Consent
+      options:
+        - label: I agree for my node to be added to Coollab for all its users.
+          required: true
+
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: The name of your node.
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code
+      description: Please copy-paste the entirety of your .clbnode file here.
+      render: GLSL
