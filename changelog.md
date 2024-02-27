@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-14 WIP](#beta-14-wip)
+- [🐣beta-14](#beta-14)
 - [🐣beta-13](#beta-13)
 - [🐣beta-12](#beta-12)
 - [🐣beta-11](#beta-11)
@@ -16,7 +16,7 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-14 WIP
+## 🐣beta-14
 
 - ✨ You can now create your own nodes! [Read the tutorial](https://coollab-art.com/Tutorials/Writing%20Nodes/Intro) to learn everything you need to know.
 - 🐛 Fixed: Plugging a link into an input pin that already has a link now removes the old link. (This bug was introduced in the previous version).
