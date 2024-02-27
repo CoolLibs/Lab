@@ -49,3 +49,7 @@ float main()
     return 'Value';
 }
 ```
+
+:::tip
+If you want to see more examples, you can check out [all of Coollab's nodes](https://github.com/CoolLibs/Lab/tree/main/Nodes).
+:::
