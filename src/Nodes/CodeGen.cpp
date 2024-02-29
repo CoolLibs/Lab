@@ -542,7 +542,7 @@ static auto make_node_definition_that_reads_module_texture(std::string const& te
     auto const main_function = MainFunction{
         .function = Function{
             .signature_as_string = FunctionSignatureAsString{
-                .return_type    = "/* sRGB_StraightA */ vec3",
+                .return_type    = "/* sRGB_StraightA */ vec4",
                 .name           = "read_module_texture",
                 .arguments_list = "/* UV */ vec2 uv",
             },
