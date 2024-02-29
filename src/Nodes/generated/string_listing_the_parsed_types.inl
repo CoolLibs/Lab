@@ -22,9 +22,6 @@ R"STR(  - bool
   - Direction2D
   - Particle2D
   - Particle3D
-  - RayMarchRes
-  - IntersectionResult2D
-  - IntersectionResult3D
   - Oklab
   - Oklab_PremultipliedA
   - Oklab_StraightA
