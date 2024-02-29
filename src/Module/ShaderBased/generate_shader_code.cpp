@@ -71,8 +71,8 @@ uniform float     _height;
 uniform float     _audio_volume;
 uniform sampler1D _audio_spectrum;
 uniform sampler1D _audio_waveform;
-uniform mat3      _camera2D;
-uniform mat3      _camera2D_inverse;
+uniform mat3      _camera2D_transform;
+uniform mat3      _camera2D_view;
 uniform sampler2D _previous_frame_texture;
 uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 {modules_textures_uniforms}
@@ -87,7 +87,7 @@ uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixb
 
 vec2 to_view_space(vec2 uv)
 {{
-    vec3 p = _camera2D_inverse * vec3(uv, 1.);
+    vec3 p = _camera2D_view * vec3(uv, 1.);
     return p.xy / p.z;
 }}
 

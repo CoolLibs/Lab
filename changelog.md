@@ -19,6 +19,8 @@
 
 ## 🐣beta-15 WIP
 
+- 🐛 Fixed camera movements when using particles
+
 ## 🐣beta-14
 
 - ✨ You can now create your own nodes! [Read the tutorial](https://coollab-art.com/Tutorials/Writing%20Nodes/Intro) to learn everything you need to know.
