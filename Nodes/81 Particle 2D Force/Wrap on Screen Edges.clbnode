@@ -3,7 +3,7 @@
 Particle2D main(Particle2D Particle)
 {
     vec3 position = vec3(Particle.position, 1.);
-    position      = _camera2D_inverse * position;
+    position      = _camera2D_view * position;
 
     if (position.x > _aspect_ratio)
         position.x = -_aspect_ratio;
@@ -14,7 +14,7 @@ Particle2D main(Particle2D Particle)
     else if (position.y < -1.)
         position.y = 1.;
 
-    position          = _camera2D * position;
+    position          = _camera2D_transform * position;
     Particle.position = position.xy / position.z;
     return Particle;
 }
