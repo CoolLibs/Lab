@@ -1,4 +1,5 @@
 #include "CodeGen_implicit_conversion.h"
+#include "FunctionDefinition.h"
 #include "PrimitiveType.h"
 
 namespace Lab {

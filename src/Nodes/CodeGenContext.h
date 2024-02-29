@@ -1,7 +1,7 @@
 #pragma once
 #include <Cool/Nodes/GetNodeDefinition_Ref.h>
 #include <Cool/Nodes/NodesGraph.h>
-#include "Function.h"
+#include "FunctionDefinition.h"
 #include "NodeDefinition.h"
 
 namespace Lab {
@@ -20,7 +20,7 @@ public:
     auto get_node_definition(Cool::NodeDefinitionIdentifier const& id_names) const -> NodeDefinition const* { return _get_node_definition(id_names); }
 
     /// Adds the code of the function to the global code, and returns its name as a convenience.
-    auto push_function(Function const&) -> std::string; // Allows us to add checks like making sure the same function isn't generated twice
+    auto push_function(FunctionDefinition const&) -> std::string; // Allows us to add checks like making sure the same function isn't generated twice
 
     auto code() const -> std::string { return _code; }
 

@@ -12,7 +12,7 @@
 #include "CodeGen_default_function.h"
 #include "CodeGen_desired_function_implementation.h"
 #include "Cool/Nodes/Pin.h"
-#include "Function.h"
+#include "FunctionDefinition.h"
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeDefinition.h"
@@ -22,52 +22,39 @@
 
 namespace Lab {
 
-static auto gen_params(CompleteFunctionSignature const& signature)
-    -> std::string
-{
-    using fmt::literals::operator""_a;
-
-    std::string res{};
-    for (size_t i = 0; i < signature.parameters.size(); ++i)
-    {
-        res += fmt::format(
-            FMT_COMPILE(
-                "{type} {name}"
-            ),
-            "type"_a = glsl_type_as_string(signature.parameters[i].type),
-            "name"_a = signature.parameters[i].name
-        );
-        if (i != signature.parameters.size() - 1)
-            res += ", ";
-    }
-
-    return res;
-}
-
-static auto gen_function_declaration(
-    CompleteFunctionSignature const& signature,
-    std::string_view                 name
-) -> std::string
+static auto gen_function_declaration(FunctionSignatureAsString const& signature, std::string const& unique_name) -> std::string
 {
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
-            R"STR({return_type} {name}/*coollabdef*/({params}))STR"
+            R"STR({return_type} {name}/*coollabdef*/({args}))STR"
         ),
-        "return_type"_a = glsl_type_as_string(signature.output_type),
-        "name"_a        = name,
-        "params"_a      = gen_params(signature)
+        "return_type"_a = signature.return_type,
+        "name"_a        = unique_name, // We don't use signature.name because we need to use a unique name that has been generated for this instance of the function
+        "args"_a        = signature.arguments_list
     );
 }
+// static auto gen_function_declaration(MainFunction const& main) -> std::string
+// {
+//     using fmt::literals::operator""_a;
+//     return fmt::format(
+//         FMT_COMPILE(
+//             R"STR({return_type} {name}/*coollabdef*/({args}))STR"
+//         ),
+//         "return_type"_a = signature.return_type,
+//         "name"_a        = name,
+//         "args"_a        = signature.arguments_list
+//     );
+// }
 
 struct Params_gen_function_definition {
-    CompleteFunctionSignature const& signature{};
-    std::string_view                 name{};
-    std::string_view                 before_function{};
-    std::string_view                 body{};
+    FunctionSignatureAsString signature_as_string{};
+    std::string               unique_name{};
+    std::string               before_function{};
+    std::string               body{};
 };
 
-static auto gen_function_definition(Params_gen_function_definition p)
+static auto gen_function_definition(Params_gen_function_definition const& p)
     -> std::string
 {
     using fmt::literals::operator""_a;
@@ -82,7 +69,7 @@ static auto gen_function_definition(Params_gen_function_definition p)
 )STR"
         ),
         "before_function"_a = p.before_function,
-        "declaration"_a     = gen_function_declaration(p.signature, p.name),
+        "declaration"_a     = gen_function_declaration(p.signature_as_string, p.unique_name),
         "body"_a            = p.body
     )};
 }
@@ -280,13 +267,13 @@ static auto check_there_are_no_single_quotes_left(std::string const& code, std::
     );
 }
 
-static auto replace_helper_functions(std::string code, std::vector<FunctionPieces> const& old_functions, std::vector<std::string> const& new_names)
+static auto replace_helper_functions(std::string code, std::vector<Function> const& old_functions, std::vector<std::string> const& new_names)
     -> std::string
 {
     assert(old_functions.size() == new_names.size());
 
     for (size_t i = 0; i < new_names.size(); ++i)
-        Cool::String::replace_all_words_inplace(code, old_functions[i].name, new_names[i]);
+        Cool::String::replace_all_words_inplace(code, old_functions[i].name(), new_names[i]);
 
     return code;
 }
@@ -337,20 +324,20 @@ struct GeneratedHelperFunctions {
     std::vector<std::string> new_names;
 };
 
-static auto gen_helper_functions(std::vector<FunctionPieces> const& helper_functions, Cool::NodeId const& id)
+static auto gen_helper_functions(std::vector<Function> const& helper_functions, Cool::NodeId const& id)
     -> GeneratedHelperFunctions
 {
     auto res = GeneratedHelperFunctions{};
 
     for (auto const& func : helper_functions)
     {
-        auto const name = valid_glsl(fmt::format("{}{}", func.name, to_string(id.underlying_uuid())));
+        auto const name = valid_glsl(fmt::format("{}{}", func.name(), to_string(id.underlying_uuid())));
         res.new_names.push_back(name);
 
         res.code += gen_function_definition({
-            .signature = func.signature,
-            .name      = name,
-            .body      = func.body,
+            .signature_as_string = func.signature_as_string,
+            .unique_name         = name,
+            .body                = func.body,
         });
         res.code += '\n';
     }
@@ -365,6 +352,34 @@ static auto gen_includes(NodeDefinition const& node_definition)
     for (auto const& path : node_definition.included_files())
         res += fmt::format("#include \"{}\"\n", path.string());
     return res;
+}
+
+static auto make_arguments_list(size_t arity, PrimitiveType type)
+    -> std::string
+{
+    auto res = std::string{};
+
+    for (size_t i = 0; i < arity; ++i)
+    {
+        res += fmt::format("{} in{}", glsl_type_as_string(type), i);
+        if (i != arity - 1)
+            res += ", ";
+    }
+
+    return res;
+}
+
+static auto signature_as_string(FunctionSignature signature, std::string const& arguments_list) -> FunctionSignatureAsString
+{
+    return FunctionSignatureAsString{
+        .return_type    = glsl_type_as_string(signature.to),
+        .name           = "", // Isn't used anyways
+        .arguments_list = arguments_list,
+    };
+}
+static auto signature_as_string(FunctionSignature signature) -> FunctionSignatureAsString
+{
+    return signature_as_string(signature, make_arguments_list(signature.arity, signature.from));
 }
 
 static auto gen_base_function(
@@ -387,20 +402,15 @@ static auto gen_base_function(
 
     // HACK to make sure we are aware that these functions have been generated, used when adding a parameter to all the functions during `inject_context_argument_in_all_functions()`.
     // We don't care about adding them through push_function() because their names will be unique anyways.
-    // And we need them to be defined after properties_code->code
+    // And we need them to be defined after value_inputs_code->code
     for (auto const& helper_func_name : helper_functions.new_names)
-        context.push_function(Function{.name = helper_func_name, .definition = ""});
+        context.push_function(FunctionDefinition{.name = helper_func_name, .definition = ""});
 
     auto func_implementation = gen_function_definition({
-        .signature       = make_complete_function_signature(MainFunctionSignature{
-                  .signature       = node_definition.signature(),
-                  .parameter_names = node_definition.parameter_names(),
-        }),
-        .name            = func_name,
-        .before_function = gen_includes(node_definition) + '\n'
-                           + value_inputs_code->code + '\n'
-                           + helper_functions.code,
-        .body = node_definition.function_body(),
+        .signature_as_string = node_definition.main_function().function.signature_as_string,
+        .unique_name         = func_name,
+        .before_function     = gen_includes(node_definition) + '\n' + value_inputs_code->code + '\n' + helper_functions.code,
+        .body                = node_definition.main_function().function.body,
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its value inputs) so that names don't clash with another instance of the same node.
@@ -418,17 +428,6 @@ static auto gen_base_function(
     context.push_function({.name = func_name, .definition = func_implementation});
 
     return func_name;
-}
-
-static auto make_default_parameter_names(size_t arity)
-    -> std::vector<std::string>
-{
-    auto res = std::vector<std::string>{};
-
-    for (size_t i = 0; i < arity; ++i)
-        res.push_back(fmt::format("in{}", i + 1));
-
-    return res;
 }
 
 static auto gen_output_function(Cool::OutputPin const& pin, CodeGenContext& context)
@@ -540,26 +539,28 @@ static auto make_node_definition_that_reads_module_texture(std::string const& te
 {
     using fmt::literals::operator""_a;
 
-    auto const main_function_signature = MainFunctionSignature{
-        FunctionSignature{
+    auto const main_function = MainFunction{
+        .function = Function{
+            .signature_as_string = FunctionSignatureAsString{
+                .return_type    = "/* sRGB_StraightA */ vec3",
+                .name           = "read_module_texture",
+                .arguments_list = "/* UV */ vec2 uv",
+            },
+            .body = fmt::format(R"glsl(
+                    uv = unnormalize_uv(to_view_space(uv));
+                    return texture({texture_name}, uv);)glsl",
+                                "texture_name"_a = texture_name),
+        },
+        .signature = FunctionSignature{
             .from  = PrimitiveType::UV,
             .to    = PrimitiveType::sRGB_StraightA,
             .arity = 1,
         },
-        std::vector<std::string>{"uv"}
-    };
-    auto const main_function_pieces = MainFunctionPieces{
-        .name      = "read_module_texture",
-        .signature = main_function_signature,
-        .body      = fmt::format(R"glsl(
-uv = unnormalize_uv(to_view_space(uv));
-return texture({texture_name}, uv);
-)glsl",
-                                 "texture_name"_a = texture_name),
+        .argument_names = {"uv"},
     };
     return NodeDefinition::make(
                NodeDefinition_Data{
-                   .main_function    = main_function_pieces,
+                   .main_function    = main_function,
                    .helper_functions = {},
                    .included_files   = {},
                    .input_functions  = {},
@@ -622,13 +623,10 @@ auto gen_desired_function(
 
     auto const func_name       = desired_function_name(*node_definition, id, desired_signature);
     auto const func_definition = gen_function_definition({
-        .signature       = make_complete_function_signature(MainFunctionSignature{
-                  .signature       = desired_signature,
-                  .parameter_names = make_default_parameter_names(desired_signature.arity),
-        }),
-        .name            = func_name,
-        .before_function = "",
-        .body            = *func_body,
+        .signature_as_string = signature_as_string(desired_signature),
+        .unique_name         = func_name,
+        .before_function     = "",
+        .body                = *func_body,
     });
 
     context.push_function({.name = func_name, .definition = func_definition});

@@ -5,7 +5,7 @@
  * -----------------------------------------------------------------------------
  */
 
-static auto gen_Coollab_Angle_from_Float() -> Function
+static auto gen_Coollab_Angle_from_Float() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Angle_from_Float",
@@ -18,7 +18,7 @@ static auto gen_Coollab_Angle_from_Float() -> Function
     };
 }
 
-static auto gen_Coollab_Float_from_Angle() -> Function
+static auto gen_Coollab_Float_from_Angle() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_from_Angle",
@@ -31,7 +31,7 @@ static auto gen_Coollab_Float_from_Angle() -> Function
     };
 }
 
-static auto gen_Coollab_Hue_from_Float() -> Function
+static auto gen_Coollab_Hue_from_Float() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Hue_from_Float",
@@ -44,7 +44,7 @@ static auto gen_Coollab_Hue_from_Float() -> Function
     };
 }
 
-static auto gen_Coollab_Float_from_Hue() -> Function
+static auto gen_Coollab_Float_from_Hue() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_from_Hue",
@@ -57,7 +57,7 @@ static auto gen_Coollab_Float_from_Hue() -> Function
     };
 }
 
-static auto gen_Coollab_Int_from_Float() -> Function
+static auto gen_Coollab_Int_from_Float() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Int_from_Float",
@@ -70,7 +70,7 @@ static auto gen_Coollab_Int_from_Float() -> Function
     };
 }
 
-static auto gen_Coollab_Float_from_Int() -> Function
+static auto gen_Coollab_Float_from_Int() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_from_Int",
@@ -83,7 +83,7 @@ static auto gen_Coollab_Float_from_Int() -> Function
     };
 }
 
-static auto gen_Coollab_Bool_from_Float() -> Function
+static auto gen_Coollab_Bool_from_Float() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Bool_from_Float",
@@ -96,7 +96,7 @@ static auto gen_Coollab_Bool_from_Float() -> Function
     };
 }
 
-static auto gen_Coollab_Float_from_Bool() -> Function
+static auto gen_Coollab_Float_from_Bool() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_from_Bool",
@@ -109,7 +109,7 @@ static auto gen_Coollab_Float_from_Bool() -> Function
     };
 }
 
-static auto gen_Coollab_Direction2D_from_Angle() -> Function
+static auto gen_Coollab_Direction2D_from_Angle() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Direction2D_from_Angle",
@@ -122,7 +122,7 @@ static auto gen_Coollab_Direction2D_from_Angle() -> Function
     };
 }
 
-static auto gen_Coollab_Direction2D_from_Float() -> Function
+static auto gen_Coollab_Direction2D_from_Float() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Direction2D_from_Float",
@@ -136,7 +136,7 @@ static auto gen_Coollab_Direction2D_from_Float() -> Function
     };
 }
 
-static auto gen_Coollab_Angle_from_Direction2D() -> Function
+static auto gen_Coollab_Angle_from_Direction2D() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Angle_from_Direction2D",
@@ -153,7 +153,7 @@ static auto gen_Coollab_Angle_from_Direction2D() -> Function
     };
 }
 
-static auto gen_Coollab_Vec2_from_UV() -> Function
+static auto gen_Coollab_Vec2_from_UV() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Vec2_from_UV",
@@ -166,7 +166,7 @@ static auto gen_Coollab_Vec2_from_UV() -> Function
     };
 }
 
-static auto gen_Coollab_UV_from_Vec2() -> Function
+static auto gen_Coollab_UV_from_Vec2() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_UV_from_Vec2",
@@ -179,7 +179,7 @@ static auto gen_Coollab_UV_from_Vec2() -> Function
     };
 }
 
-static auto gen_Coollab_UV_from_Void() -> Function
+static auto gen_Coollab_UV_from_Void() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_UV_from_Void",
@@ -192,7 +192,7 @@ static auto gen_Coollab_UV_from_Void() -> Function
     };
 }
 
-static auto gen_Coollab_Particle2D_from_Void() -> Function
+static auto gen_Coollab_Particle2D_from_Void() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Particle2D_from_Void",
@@ -205,7 +205,7 @@ static auto gen_Coollab_Particle2D_from_Void() -> Function
     };
 }
 
-static auto gen_Coollab_Particle3D_from_Void() -> Function
+static auto gen_Coollab_Particle3D_from_Void() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Particle3D_from_Void",
@@ -218,7 +218,7 @@ static auto gen_Coollab_Particle3D_from_Void() -> Function
     };
 }
 
-static auto gen_Coollab_Angle_from_Float_StraightA() -> Function
+static auto gen_Coollab_Angle_from_Float_StraightA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Angle_from_Float_StraightA",
@@ -231,7 +231,7 @@ static auto gen_Coollab_Angle_from_Float_StraightA() -> Function
     };
 }
 
-static auto gen_Coollab_Angle_from_Float_PremultipliedA() -> Function
+static auto gen_Coollab_Angle_from_Float_PremultipliedA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Angle_from_Float_PremultipliedA",
@@ -244,7 +244,7 @@ static auto gen_Coollab_Angle_from_Float_PremultipliedA() -> Function
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Angle() -> Function
+static auto gen_Coollab_Float_StraightA_from_Angle() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Angle",
@@ -257,7 +257,7 @@ static auto gen_Coollab_Float_StraightA_from_Angle() -> Function
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Angle() -> Function
+static auto gen_Coollab_Float_PremultipliedA_from_Angle() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Angle",
@@ -270,7 +270,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Angle() -> Function
     };
 }
 
-static auto gen_Coollab_Hue_from_Float_StraightA() -> Function
+static auto gen_Coollab_Hue_from_Float_StraightA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Hue_from_Float_StraightA",
@@ -283,7 +283,7 @@ static auto gen_Coollab_Hue_from_Float_StraightA() -> Function
     };
 }
 
-static auto gen_Coollab_Hue_from_Float_PremultipliedA() -> Function
+static auto gen_Coollab_Hue_from_Float_PremultipliedA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Hue_from_Float_PremultipliedA",
@@ -296,7 +296,7 @@ static auto gen_Coollab_Hue_from_Float_PremultipliedA() -> Function
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Hue() -> Function
+static auto gen_Coollab_Float_StraightA_from_Hue() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Hue",
@@ -309,7 +309,7 @@ static auto gen_Coollab_Float_StraightA_from_Hue() -> Function
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Hue() -> Function
+static auto gen_Coollab_Float_PremultipliedA_from_Hue() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Hue",
@@ -322,7 +322,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Hue() -> Function
     };
 }
 
-static auto gen_Coollab_Int_from_Float_StraightA() -> Function
+static auto gen_Coollab_Int_from_Float_StraightA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Int_from_Float_StraightA",
@@ -335,7 +335,7 @@ static auto gen_Coollab_Int_from_Float_StraightA() -> Function
     };
 }
 
-static auto gen_Coollab_Int_from_Float_PremultipliedA() -> Function
+static auto gen_Coollab_Int_from_Float_PremultipliedA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Int_from_Float_PremultipliedA",
@@ -348,7 +348,7 @@ static auto gen_Coollab_Int_from_Float_PremultipliedA() -> Function
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Int() -> Function
+static auto gen_Coollab_Float_StraightA_from_Int() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Int",
@@ -361,7 +361,7 @@ static auto gen_Coollab_Float_StraightA_from_Int() -> Function
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Int() -> Function
+static auto gen_Coollab_Float_PremultipliedA_from_Int() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Int",
@@ -374,7 +374,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Int() -> Function
     };
 }
 
-static auto gen_Coollab_Bool_from_Float_StraightA() -> Function
+static auto gen_Coollab_Bool_from_Float_StraightA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Bool_from_Float_StraightA",
@@ -387,7 +387,7 @@ static auto gen_Coollab_Bool_from_Float_StraightA() -> Function
     };
 }
 
-static auto gen_Coollab_Bool_from_Float_PremultipliedA() -> Function
+static auto gen_Coollab_Bool_from_Float_PremultipliedA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Bool_from_Float_PremultipliedA",
@@ -400,7 +400,7 @@ static auto gen_Coollab_Bool_from_Float_PremultipliedA() -> Function
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Bool() -> Function
+static auto gen_Coollab_Float_StraightA_from_Bool() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Bool",
@@ -413,7 +413,7 @@ static auto gen_Coollab_Float_StraightA_from_Bool() -> Function
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Bool() -> Function
+static auto gen_Coollab_Float_PremultipliedA_from_Bool() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Bool",
@@ -426,7 +426,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Bool() -> Function
     };
 }
 
-static auto gen_Coollab_Direction2D_from_Float_StraightA() -> Function
+static auto gen_Coollab_Direction2D_from_Float_StraightA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Direction2D_from_Float_StraightA",
@@ -439,7 +439,7 @@ static auto gen_Coollab_Direction2D_from_Float_StraightA() -> Function
     };
 }
 
-static auto gen_Coollab_Direction2D_from_Float_PremultipliedA() -> Function
+static auto gen_Coollab_Direction2D_from_Float_PremultipliedA() -> FunctionDefinition
 {
     return {
         .name       = "Coollab_Direction2D_from_Float_PremultipliedA",

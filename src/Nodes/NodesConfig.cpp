@@ -15,16 +15,16 @@
 #include <algorithm>
 #include <reg/src/internal/generate_uuid.hpp>
 #include <string>
-#include "CommandCore/make_command.h"
+// #include "CommandCore/make_command.h"
 #include "Cool/Audio/AudioManager.h"
-#include "Cool/Dependencies/DirtyFlag.h"
+// #include "Cool/Dependencies/DirtyFlag.h"
 #include "Cool/Dependencies/SharedVariable.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/Link.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Nodes/Pin.h"
 #include "Cool/Nodes/as_ed_id.h"
-#include "Cool/Nodes/utilities/drawing.h"
+// #include "Cool/Nodes/utilities/drawing.h"
 #include "Cool/String/String.h"
 #include "Cool/StrongTypes/Color.h"
 #include "Cool/Variables/Settings.h"
@@ -413,7 +413,7 @@ static auto make_node(Cool::NodeDefinitionAndCategoryName const& cat_id, Cool::G
     {
         for (size_t i = 0; i < def.signature().arity; ++i)
         {
-            node.input_pins().push_back(Cool::InputPin{/*pin_name=*/Cool::String::replace_all(def.main_parameter_names()[i], "_", " ")});
+            node.input_pins().push_back(Cool::InputPin{/*pin_name=*/Cool::String::replace_all(def.main_function().argument_names[i], "_", " ")});
         }
     }
     node.output_pins().emplace_back("OUT");

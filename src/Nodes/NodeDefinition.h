@@ -9,21 +9,26 @@
 
 namespace Lab {
 
-struct FunctionPieces {
-    std::string               name;
-    CompleteFunctionSignature signature;
+struct Function {
+    FunctionSignatureAsString signature_as_string;
     std::string               body;
+
+    auto name() const -> std::string const& { return signature_as_string.name; }
+    auto name() -> std::string& { return signature_as_string.name; }
 };
 
-struct MainFunctionPieces {
-    std::string           name;
-    MainFunctionSignature signature;
-    std::string           body;
+struct MainFunction {
+    Function                 function;
+    FunctionSignature        signature; // For optimisation, we store the FunctionSignature computed from function.signature_as_string
+    std::vector<std::string> argument_names;
+
+    auto name() const -> std::string const& { return function.name(); }
+    auto name() -> std::string& { return function.name(); }
 };
 
 struct NodeDefinition_Data {
-    MainFunctionPieces                 main_function{};
-    std::vector<FunctionPieces>        helper_functions{};
+    MainFunction                       main_function{};
+    std::vector<Function>              helper_functions{};
     std::vector<std::filesystem::path> included_files{};
 
     std::vector<NodeInputDefinition>               input_functions{}; // Things that can only come from a pin
@@ -37,11 +42,9 @@ public:
     static auto make(NodeDefinition_Data const&, Cool::PresetsPaths const&) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
         -> tl::expected<NodeDefinition, std::string>;
 
-    [[nodiscard]] auto name() const -> auto const& { return _data.main_function.name; }
-    [[nodiscard]] auto signature() const -> auto const& { return _data.main_function.signature.signature; }
-    [[nodiscard]] auto main_parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
-    [[nodiscard]] auto parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
-    [[nodiscard]] auto function_body() const -> auto const& { return _data.main_function.body; }
+    [[nodiscard]] auto name() const -> auto const& { return _data.main_function.name(); }
+    [[nodiscard]] auto signature() const -> auto const& { return _data.main_function.signature; }
+    [[nodiscard]] auto main_function() const -> auto const& { return _data.main_function; }
     [[nodiscard]] auto function_inputs() const -> auto const& { return _data.input_functions; }
     [[nodiscard]] auto value_inputs() const -> auto const& { return _data.input_values; }
     [[nodiscard]] auto output_indices() const -> auto const& { return _data.output_indices; }

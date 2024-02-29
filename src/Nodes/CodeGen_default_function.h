@@ -1,6 +1,6 @@
 #pragma once
 #include "CodeGenContext.h"
-#include "Function.h"
+#include "FunctionDefinition.h"
 #include "FunctionSignature.h"
 
 namespace Lab {

@@ -25,122 +25,38 @@
 
 namespace Lab {
 
-static auto parse_primitive_type(std::string const& str)
-    -> tl::expected<PrimitiveType, std::string>
+static auto decompose_signature_string(std::string const& text, size_t end_of_function_declaration)
+    -> tl::expected<FunctionSignatureAsString, std::string>
 {
-#include "generated/parse_primitive_type.inl"
-
-    return tl::make_unexpected(fmt::format(
-        "Unknown type '{}'. The available types are:\n{}",
-        str,
-#include "generated/string_listing_the_parsed_types.inl"
-    ));
-}
-
-static auto parse_parameters(std::string const& parameters_list)
-    -> tl::expected<ParametersList, std::string>
-{
-    auto params = ParametersList{};
-
-    auto const first_type_pos = Cool::String::find_next_word_position(parameters_list, 0);
-    if (!first_type_pos)
-        return params;
-
-    auto const first_type = parse_primitive_type(Cool::String::substring(parameters_list, *first_type_pos));
-    RETURN_IF_UNEXPECTED(first_type);
-
-    auto const first_name_pos = Cool::String::find_next_word_position(parameters_list, first_type_pos->second);
-    if (!first_name_pos)
-        return tl::make_unexpected("Missing parameter name in main function.");
-
-    params.push_back(ParamDesc{
-        .name = Cool::String::substring(parameters_list, *first_name_pos),
-        .type = *first_type,
-    });
-
-    auto type_pos = Cool::String::find_next_word_position(parameters_list, first_name_pos->second);
-    while (type_pos)
-    {
-        auto const type = parse_primitive_type(Cool::String::substring(parameters_list, *type_pos));
-        RETURN_IF_UNEXPECTED(type);
-
-        auto const name_pos = Cool::String::find_next_word_position(parameters_list, type_pos->second);
-        if (!name_pos)
-            return tl::make_unexpected("Missing parameter name.");
-
-        params.push_back(ParamDesc{
-            .name = Cool::String::substring(parameters_list, *name_pos),
-            .type = *type,
-        });
-
-        type_pos = Cool::String::find_next_word_position(parameters_list, name_pos->second);
-    }
-
-    return params;
-}
-
-struct parse_signature_params {
-    std::string const& parameters_list;
-    std::string const& output_type;
-};
-
-static auto parse_signature(parse_signature_params p)
-    -> tl::expected<CompleteFunctionSignature, std::string>
-{
-    auto res = CompleteFunctionSignature{};
-
-    auto const output_type = parse_primitive_type(p.output_type);
-    RETURN_IF_UNEXPECTED(output_type);
-    res.output_type = *output_type;
-
-    auto const parameters = parse_parameters(p.parameters_list);
-    RETURN_IF_UNEXPECTED(parameters);
-    res.parameters = *parameters;
-
-    return res;
-}
-
-struct NameAndSignature {
-    std::string               name;
-    CompleteFunctionSignature signature;
-};
-
-static auto parse_name_and_signature(std::string const& text, size_t end_of_function_declaration)
-    -> tl::expected<NameAndSignature, std::string>
-{
-    auto const params_pos = Cool::String::rfind_matching_pair({
+    auto args_pos = Cool::String::rfind_matching_pair({
         .text    = text,
         .offset  = end_of_function_declaration,
         .opening = '(',
         .closing = ')',
     });
-    if (!params_pos)
-        return tl::make_unexpected("Did not find the parameters of the function. You are missing a parenthesis.");
+    if (!args_pos)
+        return tl::make_unexpected("Did not find the arguments of the function. You are missing a parenthesis.");
+    args_pos->first += 1; // Skip the first parenthesis
 
-    auto const name_pos = Cool::String::find_previous_word_position(text, params_pos->first);
+    auto const name_pos = Cool::String::find_previous_word_position(text, args_pos->first);
     if (!name_pos)
         return tl::make_unexpected("Did not find the name of the function.");
 
-    auto const output_type_pos = Cool::String::find_previous_word_position(text, name_pos->first);
-    if (!output_type_pos)
-        return tl::make_unexpected("Did not find the output type of the function.");
+    auto const return_type_pos = Cool::String::find_previous_word_position(text, name_pos->first);
+    if (!return_type_pos)
+        return tl::make_unexpected("Did not find the return type of the function.");
 
-    auto const signature = parse_signature({
-        .parameters_list = Cool::String::substring(text, *params_pos),
-        .output_type     = Cool::String::substring(text, *output_type_pos),
-    });
-    RETURN_IF_UNEXPECTED(signature);
-
-    return NameAndSignature{
-        .name      = Cool::String::substring(text, *name_pos),
-        .signature = *signature,
+    return FunctionSignatureAsString{
+        .return_type    = Cool::String::substring(text, *return_type_pos),
+        .name           = Cool::String::substring(text, *name_pos),
+        .arguments_list = Cool::String::substring(text, *args_pos),
     };
 }
 
 static auto parse_all_functions(std::string text)
-    -> tl::expected<std::vector<FunctionPieces>, std::string>
+    -> tl::expected<std::vector<Function>, std::string>
 {
-    auto res = std::vector<FunctionPieces>{};
+    auto res = std::vector<Function>{};
 
     auto const get_next_bracket_pos = [&](size_t offset) {
         return Cool::String::find_matching_pair({
@@ -154,14 +70,13 @@ static auto parse_all_functions(std::string text)
     auto brackets_pos = get_next_bracket_pos(0);
     while (brackets_pos)
     {
-        auto function = FunctionPieces{};
+        auto function = Function{};
 
         function.body = Cool::String::substring(text, brackets_pos->first + 1, brackets_pos->second);
 
-        auto const name_and_sig = parse_name_and_signature(text, brackets_pos->first);
-        RETURN_IF_UNEXPECTED(name_and_sig);
-        function.name      = name_and_sig->name;
-        function.signature = name_and_sig->signature;
+        auto const signature_as_string = decompose_signature_string(text, brackets_pos->first);
+        RETURN_IF_UNEXPECTED(signature_as_string);
+        function.signature_as_string = *signature_as_string;
 
         res.push_back(function);
         brackets_pos = get_next_bracket_pos(brackets_pos->second);
@@ -170,53 +85,148 @@ static auto parse_all_functions(std::string text)
     return res;
 }
 
-static auto make_main_function_signature(CompleteFunctionSignature const& signature)
-    -> tl::expected<MainFunctionSignature, std::string>
+static auto parse_primitive_type(std::string const& str) // NOLINT(readability-function-cognitive-complexity)
+    -> tl::expected<PrimitiveType, std::string>
 {
-    auto res = MainFunctionSignature{};
+#include "generated/parse_primitive_type.inl"
 
-    res.signature.to = signature.output_type;
+    return tl::make_unexpected(fmt::format(
+        "Unknown type '{}'. The available types are:\n{}",
+        str,
+#include "generated/string_listing_the_parsed_types.inl"
+    ));
+}
 
-    res.signature.arity = signature.parameters.size();
+struct Argument {
+    PrimitiveType type;
+    std::string   name;
+};
 
-    res.signature.from = signature.parameters.empty()
-                             ? PrimitiveType::Void
-                             : signature.parameters[0].type;
+static auto parse_arguments(std::string const& arguments_list)
+    -> tl::expected<std::vector<Argument>, std::string>
+{
+    auto args = std::vector<Argument>{};
 
-    for (auto const& param : signature.parameters)
+    auto type_pos = Cool::String::find_next_word_position(arguments_list, 0);
+    while (type_pos)
     {
-        if (param.type != res.signature.from)
-            return tl::make_unexpected(fmt::format(
-                "The main function cannot have different parameters types. Found {} and {}.\nIf you need more parameters, consider using an INPUT instead.",
-                cpp_type_as_string(res.signature.from),
-                cpp_type_as_string(param.type)
-            ));
+        auto const type = parse_primitive_type(Cool::String::substring(arguments_list, *type_pos));
+        RETURN_IF_UNEXPECTED(type);
+
+        auto const name_pos = Cool::String::find_next_word_position(arguments_list, type_pos->second);
+        if (!name_pos)
+            return tl::make_unexpected("Missing argument name in main function.");
+
+        args.push_back(Argument{
+            .type = *type,
+            .name = Cool::String::substring(arguments_list, *name_pos),
+        });
+
+        type_pos = Cool::String::find_next_word_position(arguments_list, name_pos->second);
     }
 
-    std::transform(
-        signature.parameters.begin(), signature.parameters.end(),
-        std::back_inserter(res.parameter_names),
-        [](ParamDesc const& param) {
-            return param.name;
-        }
-    );
+    return args;
+}
+
+// static auto parse_function_signature(FunctionSignatureAsString const& as_str)
+//     -> tl::expected<FunctionSignature, std::string>
+// {
+//     auto signature = FunctionSignature{};
+
+//     { // Parse return type
+//         auto const return_type = parse_primitive_type(as_str.return_type);
+//         RETURN_IF_UNEXPECTED(return_type);
+//         signature.to = *return_type;
+//     }
+
+//     { // Parse arguments list
+//         auto const arguments = parse_arguments(as_str.arguments_list);
+//         RETURN_IF_UNEXPECTED(arguments);
+
+//         signature.arity = arguments->size();
+//         signature.from  = arguments->empty()
+//                               ? PrimitiveType::Void
+//                               : (*arguments)[0].type;
+
+//         // Check that we only have one argument type
+//         for (auto const& arg : *arguments)
+//         {
+//             if (arg.type != (*arguments)[0].type)
+//             {
+//                 return tl::make_unexpected(fmt::format(
+//                     "The main function cannot have different arguments types. Found {} and {}.\nIf you need more arguments, consider using an INPUT instead.",
+//                     cpp_type_as_string((*arguments)[0].type),
+//                     cpp_type_as_string(arg.type)
+//                 ));
+//             }
+//         }
+//     }
+
+//     return signature;
+// }
+
+static auto gen_arguments_list(std::vector<Argument> const& args)
+    -> std::string
+{
+    using fmt::literals::operator""_a;
+
+    std::string res{};
+    for (size_t i = 0; i < args.size(); ++i)
+    {
+        res += fmt::format(
+            FMT_COMPILE("{type} {name}"),
+            "type"_a = glsl_type_as_string(args[i].type),
+            "name"_a = args[i].name
+        );
+        if (i != args.size() - 1)
+            res += ", ";
+    }
 
     return res;
 }
 
-static auto make_main_function_pieces(FunctionPieces const& pieces, std::string const& name)
-    -> tl::expected<MainFunctionPieces, std::string>
+static auto make_main_function(Function const& function, std::string const& name)
+    -> tl::expected<MainFunction, std::string>
 {
-    auto res = MainFunctionPieces{};
+    auto main = MainFunction{};
 
-    res.name = name;
-    res.body = pieces.body;
+    main.function                          = function;
+    main.function.signature_as_string.name = name; // Change name, we don't want it to be "main", but the name of the node
 
-    auto const sig = make_main_function_signature(pieces.signature);
-    RETURN_IF_UNEXPECTED(sig);
-    res.signature = *sig;
+    { // Parse return type
+        auto const return_type = parse_primitive_type(function.signature_as_string.return_type);
+        RETURN_IF_UNEXPECTED(return_type);
+        main.signature.to                             = *return_type;
+        main.function.signature_as_string.return_type = glsl_type_as_string(*return_type); // Change the return type to a regular glsl type so that it is valid when copy-pasted into shader code.
+    }
 
-    return res;
+    { // Parse arguments list
+        auto const arguments = parse_arguments(function.signature_as_string.arguments_list);
+        RETURN_IF_UNEXPECTED(arguments);
+
+        main.signature.arity = arguments->size();
+        main.signature.from  = arguments->empty()
+                                   ? PrimitiveType::Void
+                                   : (*arguments)[0].type;
+
+        main.function.signature_as_string.arguments_list = gen_arguments_list(*arguments); // Change arguments list so that it only uses regular glsl types, just like normal helper functions. Otherwise would generate invalid glsl code when generating the code for the function
+
+        for (auto const& arg : *arguments)
+        {
+            main.argument_names.push_back(arg.name);
+            // Check that we only have one argument type
+            if (arg.type != (*arguments)[0].type)
+            {
+                return tl::make_unexpected(fmt::format(
+                    "The main function cannot have different arguments types. Found {} and {}.\nIf you need more arguments, consider using an INPUT instead.",
+                    cpp_type_as_string((*arguments)[0].type),
+                    cpp_type_as_string(arg.type)
+                ));
+            }
+        }
+    }
+
+    return main;
 }
 
 static auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)
@@ -226,13 +236,13 @@ static auto find_main_and_helper_functions(std::filesystem::path const& filepath
     if (!functions)
         return functions.error();
 
-    auto const main_function_it = std::find_if(functions->begin(), functions->end(), [](FunctionPieces const& func) {
-        return func.name == "main";
+    auto const main_function_it = std::find_if(functions->begin(), functions->end(), [](Function const& func) {
+        return func.signature_as_string.name == "main";
     });
     if (main_function_it == functions->end())
         return "Missing a main function.";
 
-    auto const main_function = make_main_function_pieces(*main_function_it, filepath.stem().string());
+    auto const main_function = make_main_function(*main_function_it, filepath.stem().string());
     if (!main_function)
         return main_function.error();
     res.main_function = *main_function;
@@ -243,30 +253,28 @@ static auto find_main_and_helper_functions(std::filesystem::path const& filepath
     return std::nullopt;
 }
 
-static auto parse_signature(std::vector<std::string> const& words)
+static auto parse_input_function_signature(std::vector<std::string> const& type_words)
     -> tl::expected<FunctionSignature, std::string>
 {
-    assert(words.size() >= 2);
+    assert(type_words.size() >= 2);
 
-    auto const output_type = parse_primitive_type(words.back());
-    if (!output_type)
-        return tl::make_unexpected(output_type.error());
+    auto const return_type = parse_primitive_type(type_words.back());
+    RETURN_IF_UNEXPECTED(return_type);
 
-    auto const input_type = parse_primitive_type(words.front());
-    if (!input_type)
-        return tl::make_unexpected(input_type.error());
+    auto const input_type = parse_primitive_type(type_words.front());
+    RETURN_IF_UNEXPECTED(input_type);
 
     // Error checking
     if (input_type == PrimitiveType::Void)
-        return tl::make_unexpected("'Void' is not allowed as an INPUT type.");
-    for (size_t i = 1; i < words.size() - 1; ++i)
+        return tl::make_unexpected("'Void' is not allowed as an argument type for INPUT functions.");
+    for (size_t i = 1; i < type_words.size() - 1; ++i)
     {
-        auto const other_input_type = parse_primitive_type(words[i]);
+        auto const other_input_type = parse_primitive_type(type_words[i]);
         if (!other_input_type)
             return tl::make_unexpected(other_input_type.error());
         if (*input_type != *other_input_type)
             return tl::make_unexpected(fmt::format(
-                "INPUT functions cannot have different parameters types. Found {} and {}.",
+                "INPUT functions cannot have different arguments types. Found {} and {}.",
                 cpp_type_as_string(*input_type),
                 cpp_type_as_string(*other_input_type)
             ));
@@ -274,8 +282,8 @@ static auto parse_signature(std::vector<std::string> const& words)
 
     return FunctionSignature{
         .from  = *input_type,
-        .to    = *output_type,
-        .arity = words.size() - 1,
+        .to    = *return_type,
+        .arity = type_words.size() - 1,
     };
 }
 
@@ -296,7 +304,7 @@ static auto make_shared_var_definition(std::string const& name, std::string cons
     return def;
 }
 
-static auto parse_property(std::string const& type_as_string, std::string const& name, NodeDefinition_Data& res)
+static auto parse_input_value(std::string const& type_as_string, std::string const& name, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
     try
@@ -316,10 +324,10 @@ static auto parse_property(std::string const& type_as_string, std::string const&
     return std::nullopt;
 }
 
-static auto parse_input(std::vector<std::string> const& type_words, std::string const& name, NodeDefinition_Data& res)
+static auto parse_input_function(std::vector<std::string> const& type_words, std::string const& name, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
-    auto const signature = parse_signature(type_words);
+    auto const signature = parse_input_function_signature(type_words);
     if (!signature)
         return signature.error();
 
@@ -384,8 +392,8 @@ static auto find_inputs(std::string const& text, NodeDefinition_Data& res)
         "INPUT",
         [&](std::vector<std::string> const& type_words, std::string const& name) -> std::optional<std::string> {
             return type_words.size() == 1
-                       ? parse_property(type_words[0], name, res)
-                       : parse_input(type_words, name, res);
+                       ? parse_input_value(type_words[0], name, res)
+                       : parse_input_function(type_words, name, res);
         }
     );
 }

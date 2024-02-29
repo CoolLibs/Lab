@@ -158,7 +158,7 @@ static auto argument_name(size_t i, size_t desired_arity)
     if (desired_arity == 0)
         return "";
 
-    return fmt::format("in{}", std::min(i + 1u, desired_arity));
+    return fmt::format("in{}", std::min(i, desired_arity - 1));
 }
 
 static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, size_t current_arity, size_t desired_arity, std::string const& implicit_conversion) -> std::string
@@ -194,7 +194,7 @@ static auto gen_implicit_curve_renderer(
         return tl::make_unexpected(curve_func_name.error());
     auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
     // Push helper function
-    context.push_function(Function{
+    context.push_function(FunctionDefinition{
         .name       = "Coollab_sdSegment",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions2d/
@@ -207,7 +207,7 @@ float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
         )STR",
     });
     // Push actual renderer
-    context.push_function(Function{
+    context.push_function(FunctionDefinition{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
 float {}/*coollabdef*/(vec2 uv)
@@ -254,7 +254,7 @@ static auto gen_implicit_curve_renderer_3D(
         return tl::make_unexpected(curve_func_name.error());
     auto const shape_func_name = fmt::format("curveRenderer3D{}", valid_glsl(std::string{base_function_name}));
     // Push helper function
-    context.push_function(Function{
+    context.push_function(FunctionDefinition{
         .name       = "Coollab_sdSegment3D",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions/
@@ -267,7 +267,7 @@ float Coollab_sdSegment3D/*coollabdef*/(vec3 p, vec3 a, vec3 b, float thickness)
         )STR",
     });
     // Push actual renderer
-    context.push_function(Function{
+    context.push_function(FunctionDefinition{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
 float {}/*coollabdef*/(vec3 pos)
@@ -315,7 +315,7 @@ static auto gen_implicit_shape_3D_renderer(
     if (!shape_3D_func_name)
         return tl::make_unexpected(shape_3D_func_name.error());
     auto const image_func_name = fmt::format("shape3DRenderer{}", valid_glsl(std::string{base_function_name}));
-    context.push_function(Function{
+    context.push_function(FunctionDefinition{
         .name       = image_func_name,
         .definition = fmt::format(
             FMT_COMPILE(R"STR(

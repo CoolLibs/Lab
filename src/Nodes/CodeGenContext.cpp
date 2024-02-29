@@ -12,7 +12,7 @@ auto CodeGenContext::AlreadyGeneratedFunctions::has_already_been_generated(std::
     return std::find(_names.begin(), _names.end(), name) != _names.end();
 }
 
-auto CodeGenContext::push_function(Function const& function) -> std::string
+auto CodeGenContext::push_function(FunctionDefinition const& function) -> std::string
 {
     if (!_already_generated_functions.has_already_been_generated(function.name))
     {
