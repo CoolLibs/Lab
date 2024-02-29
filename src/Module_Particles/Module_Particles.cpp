@@ -151,24 +151,22 @@ void Module_Particles::render(SystemValues const& system_values)
 #if !defined(COOL_PARTICLES_DISABLED_REASON)
     set_uniforms_for_shader_based_module(_particle_system->render_shader(), system_values, _depends_on, *_feedback_double_buffer, *_nodes_graph);
 
-    auto const camera_2D_mat3 = glm::inverse(glm::scale(system_values.camera_2D.transform_matrix(), glm::vec2{system_values.aspect_ratio(), 1.f}));
-    auto const camera_2D_mat4 = glm::mat4{
-        glm::vec4{camera_2D_mat3[0], 0.f},
-        glm::vec4{camera_2D_mat3[1], 0.f},
+    auto const view_proj_matrix_2D_mat3 = system_values.camera_2D_view_projection_matrix();
+    auto const view_proj_matrix_2D_mat4 = glm::mat4{
+        glm::vec4{view_proj_matrix_2D_mat3[0], 0.f},
+        glm::vec4{view_proj_matrix_2D_mat3[1], 0.f},
         glm::vec4{0.f},
-        glm::vec4{camera_2D_mat3[2][0], camera_2D_mat3[2][1], 0.f, 1.f}
+        glm::vec4{view_proj_matrix_2D_mat3[2][0], view_proj_matrix_2D_mat3[2][1], 0.f, view_proj_matrix_2D_mat3[2][2]}
     };
 
     if (_particle_system->dimension() == 2)
     {
-        _particle_system->render_shader().set_uniform("transform_matrix", camera_2D_mat4);
+        _particle_system->render_shader().set_uniform("view_proj_matrix", view_proj_matrix_2D_mat4);
     }
     else if (_particle_system->dimension() == 3)
     {
-        auto const camera_3D      = system_values.camera_3D;
-        auto const full_camera_3D = camera_2D_mat4 * camera_3D.view_projection_matrix(1.f);
-        _particle_system->render_shader().set_uniform("transform_matrix", full_camera_3D);
-        _particle_system->render_shader().set_uniform("cool_camera_view", camera_3D.view_matrix());
+        _particle_system->render_shader().set_uniform("view_proj_matrix", view_proj_matrix_2D_mat4 * system_values.camera_3D.view_projection_matrix(1.f /* The aspect ratio is already taken into account in the camera 2D matrix */));
+        _particle_system->render_shader().set_uniform("cool_camera_view", system_values.camera_3D.view_matrix());
     }
     _particle_system->render();
 #endif
