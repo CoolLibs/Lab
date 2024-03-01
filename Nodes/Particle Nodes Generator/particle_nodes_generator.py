@@ -43,10 +43,6 @@ def variables_replacements():
             Dim2="Particle2D",
             Dim3="Particle3D",
         ),
-        "IntersectionResult": Replacement(
-            Dim2="IntersectionResult2D",
-            Dim3="IntersectionResult3D",
-        ),
     }
 
 
@@ -67,10 +63,6 @@ def functions_replacements():
         "vec34(a)": Replacement(
             Dim2=("vec3(a)", ""),
             Dim3=("vec4(a)", ""),
-        ),
-        "IntersectionResult(a, b, c)": Replacement(
-            Dim2=("IntersectionResult2D(a, b, c)", ""),
-            Dim3=("IntersectionResult3D(a, b, c)", ""),
         ),
         "gradient(p, shape)": Replacement(
             Dim2=(

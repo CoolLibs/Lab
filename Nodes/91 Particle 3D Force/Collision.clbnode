@@ -23,7 +23,11 @@ INPUT int 'Quality';
 INPUT int 'Fix narrow shapes';
 INPUT float 'Fix Shape Artifacts';
 
-#include "_ROOT_FOLDER_/res/collision.glsl"
+struct IntersectionResult {
+    bool  has_intersected;
+    vec3 intersection_point;
+    float distance_along_ray;
+};
 
 vec3 set_length(vec3 vector, float new_length)
 {
@@ -33,7 +37,7 @@ vec3 set_length(vec3 vector, float new_length)
     return vector / len * new_length;
 }
 
-IntersectionResult3D intersect_with_shape(Particle3D particle, bool particle_is_outside, float surface_distance)
+IntersectionResult intersect_with_shape(Particle3D particle, bool particle_is_outside, float surface_distance)
 {
     float t = 0.;
 
@@ -46,12 +50,12 @@ IntersectionResult3D intersect_with_shape(Particle3D particle, bool particle_is_
         t += d * (1. - 'Fix Shape Artifacts');
 
         if (particle_is_outside && t > length(velocity))
-            return IntersectionResult3D(false, ZERO, 0.);
+            return IntersectionResult(false, ZERO, 0.);
 
         if (d < surface_distance && t > 0)
-            return IntersectionResult3D(true, point, t);
+            return IntersectionResult(true, point, t);
     }
-    return IntersectionResult3D(false, ZERO, 0.);
+    return IntersectionResult(false, ZERO, 0.);
 }
 
 Particle3D main(Particle3D Particle)
@@ -64,12 +68,12 @@ Particle3D main(Particle3D Particle)
 
     if (distance < 0.)
     {
-        IntersectionResult3D intersection = intersect_with_shape(Particle, false, SURF_DIST);
+        IntersectionResult intersection = intersect_with_shape(Particle, false, SURF_DIST);
         Particle.position += set_length(Particle.velocity, intersection.distance_along_ray + Particle.size);
     }
     else
     {
-        IntersectionResult3D intersection = intersect_with_shape(Particle, true, SURF_DIST);
+        IntersectionResult intersection = intersect_with_shape(Particle, true, SURF_DIST);
         for (int i = 0; i < 'Fix narrow shapes'; ++i)
         {
             if (!intersection.has_intersected)

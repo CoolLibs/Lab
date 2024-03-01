@@ -1,4 +1,4 @@
-// TODO(JF) Move this to the 3D Renderer node
+// TODO(ImproveNodesParsing) Move this to the 3D Renderer node
 vec3 ssao_big_rand[32] = vec3[](
     vec3(0.656178, 0.785943, 0.0918607),
     vec3(0.0980255, 0.770562, 0.888882),
@@ -33,16 +33,3 @@ vec3 ssao_big_rand[32] = vec3[](
     vec3(0.943968, 0.634449, 0.644398),
     vec3(0.78722, 0.353526, 0.0561541)
 );
-
-// TODO(JF) Move this to the 3D Renderer node
-struct RayMarchRes {
-    float distance;
-    int   iterations_count;
-    vec3  ray_direction;
-    vec3  ray_origin;
-    vec3  hit_position;
-    vec3  normal;
-    float closest_grazed_object;
-    float distance_when_grazing_closest_object;
-    vec3  reflection_color;
-};

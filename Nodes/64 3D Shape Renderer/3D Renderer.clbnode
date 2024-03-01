@@ -75,6 +75,18 @@ INPUT LinearRGB 'Cartoon Edges Color';
 
 #include "_ROOT_FOLDER_/res/3D-renderer.glsl"
 
+struct RayMarchRes {
+    float distance;
+    int   iterations_count;
+    vec3  ray_direction;
+    vec3  ray_origin;
+    vec3  hit_position;
+    vec3  normal;
+    float closest_grazed_object;
+    float distance_when_grazing_closest_object;
+    vec3  reflection_color;
+};
+
 vec3 get_normal(vec3 p)
 {
     float h = 'Blur normals at edges';
