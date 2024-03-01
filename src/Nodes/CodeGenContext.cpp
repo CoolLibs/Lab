@@ -32,7 +32,7 @@ void CodeGenContext::push_struct(Struct const& structeuh)
     if (!_already_generated_structs.has_already_been_generated(structeuh.name))
     {
         _already_generated_structs.push(structeuh.name);
-        _code += fmt::format("struct {}{};", structeuh.name, structeuh.body);
+        _code += fmt::format("struct {}{};\n", structeuh.name, structeuh.body);
     }
     else
     {
