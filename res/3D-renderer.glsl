@@ -1,5 +1,5 @@
-// TODO(ImproveNodesParsing) Move this to the 3D Renderer node
-vec3 ssao_big_rand[32] = vec3[](
+// TODO(NodesParsing) Move this to the 3D Renderer node
+const vec3 ssao_big_rand[32] = vec3[](
     vec3(0.656178, 0.785943, 0.0918607),
     vec3(0.0980255, 0.770562, 0.888882),
     vec3(0.353252, 0.255623, 0.0786767),

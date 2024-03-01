@@ -572,7 +572,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
     }
 
     auto text_without_comments = Cool::String::remove_comments(text);
-    replace_defines_with_their_values(text_without_comments);
+    replace_defines_with_their_values(text_without_comments); // Must be done first, so that the rest of the parsing grabs the correct values
 
     find_includes(text_without_comments, def);
 
