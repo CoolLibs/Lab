@@ -20,6 +20,7 @@
 ## 🐣beta-15 WIP
 
 - 🐛 Fixed camera movements when using particles
+- 🐛 When dragging gizmos, mouse can now wrap around the screen
 
 ## 🐣beta-14
 
