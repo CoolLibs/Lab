@@ -202,11 +202,11 @@ static auto list_all_property_and_input_and_output_names(
     return res;
 }
 
-static auto replace_property_names(
-    std::string                                 code,
+static void replace_property_names(
+    std::string&                                code,
     std::vector<Cool::AnySharedVariable> const& properties,
     std::vector<std::string> const&             real_name
-) -> std::string
+)
 {
     size_t i{0};
     for (auto const& prop : properties)
@@ -217,25 +217,15 @@ static auto replace_property_names(
                    prop);
         i++;
     }
-
-    return code;
 }
 
-static auto replace_input_names(
-    std::string                                         code,
-    std::unordered_map<std::string, std::string> const& real_names
-) -> std::string
+static void replace_input_names(std::string& code, std::unordered_map<std::string, std::string> const& real_names)
 {
     for (auto const& [old_name, new_name] : real_names)
         Cool::String::replace_all_inplace(code, fmt::format("'{}'", old_name), new_name);
-
-    return code;
 }
 
-static auto replace_output_indices_names(
-    std::string code,
-    Node const& node
-) -> std::string
+static void replace_output_indices_names(std::string& code, Node const& node)
 {
     for (size_t i = 1; i < node.output_pins().size(); ++i)
     {
@@ -245,37 +235,21 @@ static auto replace_output_indices_names(
             make_valid_output_index_name(node.output_pins()[i])
         );
     }
-
-    return code;
 }
 
-static auto check_there_are_no_single_quotes_left(std::string const& code, std::string const& input_names_list)
-    -> std::optional<std::string>
-{
-    auto const pos = code.find('\'');
-    if (pos == std::string::npos)
-        return std::nullopt;
-
-    auto const pos2 = code.find('\'', pos + 1);
-    if (pos2 == std::string::npos)
-        return "A single quote (') has no matching closing single quote. Did you make a typo?";
-
-    return fmt::format(
-        "\"{}\" is not an input or output that you declared. Here are all the names you declared:\n{}",
-        Cool::String::substring(code, pos, pos2 + 1),
-        input_names_list
-    );
-}
-
-static auto replace_helper_functions(std::string code, std::vector<Function> const& old_functions, std::vector<std::string> const& new_names)
-    -> std::string
+static void replace_helper_functions(std::string& code, std::vector<Function> const& old_functions, std::vector<std::string> const& new_names)
 {
     assert(old_functions.size() == new_names.size());
 
     for (size_t i = 0; i < new_names.size(); ++i)
         Cool::String::replace_all_words_inplace(code, old_functions[i].name(), new_names[i]);
+}
+static void replace_structs(std::string& code, std::vector<Struct> const& old_structs, std::vector<Struct> const& new_structs)
+{
+    assert(old_structs.size() == new_structs.size());
 
-    return code;
+    for (size_t i = 0; i < new_structs.size(); ++i)
+        Cool::String::replace_all_words_inplace(code, old_structs[i].name, new_structs[i].name);
 }
 
 struct GeneratedInputs {
@@ -345,6 +319,20 @@ static auto gen_helper_functions(std::vector<Function> const& helper_functions, 
     return res;
 }
 
+static auto gen_structs(std::vector<Struct> const& structs, NodeDefinition const& def)
+    -> std::vector<Struct>
+{
+    auto res = std::vector<Struct>{};
+
+    for (auto structeuh : structs)
+    {
+        structeuh.name = valid_glsl(fmt::format("{}{}", structeuh.name, static_cast<void const*>(&def))); // Use address of def as an id because we want all nodes with the same definition to use the same struct, there is no need to have one struct per instance of node of the same definition.
+        res.push_back(std::move(structeuh));
+    }
+
+    return res;
+}
+
 static auto gen_includes(NodeDefinition const& node_definition)
     -> std::string
 {
@@ -382,6 +370,24 @@ static auto signature_as_string(FunctionSignature signature) -> FunctionSignatur
     return signature_as_string(signature, make_arguments_list(signature.arity, signature.from));
 }
 
+static auto check_there_are_no_single_quotes_left(std::string const& code, std::string const& input_names_list)
+    -> std::optional<std::string>
+{
+    auto const pos = code.find('\'');
+    if (pos == std::string::npos)
+        return std::nullopt;
+
+    auto const pos2 = code.find('\'', pos + 1);
+    if (pos2 == std::string::npos)
+        return "A single quote (') has no matching closing single quote. Did you make a typo?";
+
+    return fmt::format(
+        "\"{}\" is not an input or output that you declared. Here are all the names you declared:\n{}",
+        Cool::String::substring(code, pos, pos2 + 1),
+        input_names_list
+    );
+}
+
 static auto gen_base_function(
     Node const&                node,
     NodeDefinition const&      node_definition,
@@ -398,6 +404,7 @@ static auto gen_base_function(
 
     auto const func_name = base_function_name(node_definition, id);
 
+    auto const structs          = gen_structs(node_definition.structs(), node_definition);
     auto const helper_functions = gen_helper_functions(node_definition.helper_functions(), id);
 
     // HACK to make sure we are aware that these functions have been generated, used when adding a parameter to all the functions during `inject_context_argument_in_all_functions()`.
@@ -405,19 +412,22 @@ static auto gen_base_function(
     // And we need them to be defined after value_inputs_code->code
     for (auto const& helper_func_name : helper_functions.new_names)
         context.push_function(FunctionDefinition{.name = helper_func_name, .definition = ""});
+    for (auto const& structe : structs)
+        context.push_struct(structe);
 
     auto func_implementation = gen_function_definition({
         .signature_as_string = node_definition.main_function().function.signature_as_string,
         .unique_name         = func_name,
-        .before_function     = gen_includes(node_definition) + '\n' + value_inputs_code->code + '\n' + helper_functions.code,
+        .before_function     = gen_includes(node_definition) + '\n' + value_inputs_code->code /* + '\n' + structs.code  */ + '\n' + helper_functions.code,
         .body                = node_definition.main_function().function.body,
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its value inputs) so that names don't clash with another instance of the same node.
-    func_implementation = replace_property_names(func_implementation, node.value_inputs(), value_inputs_code->real_names);
-    func_implementation = replace_input_names(func_implementation, function_inputs->real_names);
-    func_implementation = replace_output_indices_names(func_implementation, node);
-    func_implementation = replace_helper_functions(func_implementation, node_definition.helper_functions(), helper_functions.new_names);
+    replace_property_names(func_implementation, node.value_inputs(), value_inputs_code->real_names);
+    replace_input_names(func_implementation, function_inputs->real_names);
+    replace_output_indices_names(func_implementation, node);
+    replace_structs(func_implementation, node_definition.structs(), structs);
+    replace_helper_functions(func_implementation, node_definition.helper_functions(), helper_functions.new_names);
 
     {
         auto const error = check_there_are_no_single_quotes_left(func_implementation, list_all_property_and_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices()));

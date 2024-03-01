@@ -17,6 +17,11 @@ struct Function {
     auto name() -> std::string& { return signature_as_string.name; }
 };
 
+struct Struct {
+    std::string name;
+    std::string body;
+};
+
 struct MainFunction {
     Function                 function;
     FunctionSignature        signature; // For optimisation, we store the FunctionSignature computed from function.signature_as_string
@@ -29,6 +34,7 @@ struct MainFunction {
 struct NodeDefinition_Data {
     MainFunction                       main_function{};
     std::vector<Function>              helper_functions{};
+    std::vector<Struct>                structs{};
     std::vector<std::filesystem::path> included_files{};
 
     std::vector<NodeInputDefinition>               input_functions{}; // Things that can only come from a pin
@@ -49,6 +55,7 @@ public:
     [[nodiscard]] auto value_inputs() const -> auto const& { return _data.input_values; }
     [[nodiscard]] auto output_indices() const -> auto const& { return _data.output_indices; }
     [[nodiscard]] auto helper_functions() const -> auto const& { return _data.helper_functions; }
+    [[nodiscard]] auto structs() const -> auto const& { return _data.structs; }
     [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
 
     [[nodiscard]] auto presets_manager() const -> auto const& { return *_presets_manager; }

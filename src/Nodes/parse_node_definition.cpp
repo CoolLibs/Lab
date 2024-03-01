@@ -53,10 +53,11 @@ static auto decompose_signature_string(std::string const& text, size_t end_of_fu
     };
 }
 
-static auto parse_all_functions(std::string text)
-    -> tl::expected<std::vector<Function>, std::string>
+static auto parse_all_functions_and_structs(std::string text)
+    -> tl::expected<std::pair<std::vector<Function>, std::vector<Struct>>, std::string>
 {
-    auto res = std::vector<Function>{};
+    auto functions = std::vector<Function>{};
+    auto structs   = std::vector<Struct>{};
 
     auto const get_next_bracket_pos = [&](size_t offset) {
         return Cool::String::find_matching_pair({
@@ -70,19 +71,41 @@ static auto parse_all_functions(std::string text)
     auto brackets_pos = get_next_bracket_pos(0);
     while (brackets_pos)
     {
-        auto function = Function{};
+        auto const body = Cool::String::substring(text, brackets_pos->first, brackets_pos->second + 1);
+        // Check if it is a struct or a function
+        auto const struct_name_pos = Cool::String::find_previous_word_position(text, brackets_pos->first);
+        if (!struct_name_pos)
+        {
+            brackets_pos = {};
+            continue;
+        }
+        auto const struct_keyword_pos = Cool::String::find_previous_word_position(text, struct_name_pos->first);
+        // Parse struct
+        if (struct_keyword_pos && Cool::String::substring(text, *struct_keyword_pos) == "struct")
+        {
+            structs.push_back(Struct{
+                .name = Cool::String::substring(text, *struct_name_pos),
+                .body = body,
+            });
+            std::cout << body << '\n';
+        }
+        // Parse function
+        else
+        {
+            auto function = Function{};
 
-        function.body = Cool::String::substring(text, brackets_pos->first + 1, brackets_pos->second);
+            function.body = body;
 
-        auto const signature_as_string = decompose_signature_string(text, brackets_pos->first);
-        RETURN_IF_UNEXPECTED(signature_as_string);
-        function.signature_as_string = *signature_as_string;
+            auto const signature_as_string = decompose_signature_string(text, brackets_pos->first);
+            RETURN_IF_UNEXPECTED(signature_as_string);
+            function.signature_as_string = *signature_as_string;
 
-        res.push_back(function);
+            functions.push_back(function);
+        }
         brackets_pos = get_next_bracket_pos(brackets_pos->second);
     }
 
-    return res;
+    return std::make_pair(functions, structs);
 }
 
 static auto parse_primitive_type(std::string const& str) // NOLINT(readability-function-cognitive-complexity)
@@ -229,26 +252,31 @@ static auto make_main_function(Function const& function, std::string const& name
     return main;
 }
 
-static auto find_main_and_helper_functions(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)
+static auto find_main_and_helper_functions_and_structs(std::filesystem::path const& filepath, std::string const& text, NodeDefinition_Data& res)
     -> std::optional<std::string>
 {
-    auto functions = parse_all_functions(text);
-    if (!functions)
-        return functions.error();
+    auto functions_and_structs = parse_all_functions_and_structs(text);
+    if (!functions_and_structs)
+        return functions_and_structs.error();
 
-    auto const main_function_it = std::find_if(functions->begin(), functions->end(), [](Function const& func) {
-        return func.signature_as_string.name == "main";
-    });
-    if (main_function_it == functions->end())
-        return "Missing a main function.";
+    res.structs = functions_and_structs->second;
+    {
+        auto& functions = functions_and_structs->first;
 
-    auto const main_function = make_main_function(*main_function_it, filepath.stem().string());
-    if (!main_function)
-        return main_function.error();
-    res.main_function = *main_function;
+        auto const main_function_it = std::find_if(functions.begin(), functions.end(), [](Function const& func) {
+            return func.signature_as_string.name == "main";
+        });
+        if (main_function_it == functions.end())
+            return "Missing a main function.";
 
-    functions->erase(main_function_it);
-    res.helper_functions = *functions;
+        auto const main_function = make_main_function(*main_function_it, filepath.stem().string());
+        if (!main_function)
+            return main_function.error();
+        res.main_function = *main_function;
+
+        functions.erase(main_function_it);
+        res.helper_functions = functions;
+    }
 
     return std::nullopt;
 }
@@ -549,7 +577,7 @@ auto parse_node_definition(std::filesystem::path filepath, std::string text)
     find_includes(text_without_comments, def);
 
     {
-        auto const err = find_main_and_helper_functions(filepath, text_without_comments, def);
+        auto const err = find_main_and_helper_functions_and_structs(filepath, text_without_comments, def);
         if (err)
             return tl::make_unexpected(*err);
     }
