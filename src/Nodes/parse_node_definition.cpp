@@ -682,7 +682,8 @@ static auto is_keyword(std::string const& word)
 
 static auto is_word_separator(char c)
 {
-    return Cool::String::default_word_delimiters.find(c) != std::string_view::npos;
+    return Cool::String::default_word_delimiters.find(c) != std::string_view::npos
+           && c != '#';
 }
 
 static auto is_digit(char c) -> bool
@@ -699,6 +700,7 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
     auto scopes_stack = std::vector<ScopeKind>{};
     int  line_number  = 1; // TODO(NodesParsing) For the line number to match, we would need to keep the lines containing special Coollab syntax.
     bool is_in_number = false;
+    bool is_in_macro  = false;
 
     auto const is_in_global_scope = [&]() {
         return scopes_stack.empty();
@@ -707,22 +709,27 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
     for (size_t index = 0; index < text.size(); ++index)
     {
         char const c = text[index];
-        if (c == '\n')
-            line_number += 1;
         if (!is_word_separator(c))
         {
             if (current_word.empty() && is_digit(c))
                 is_in_number = true;
+            if (c == '#')
+                is_in_macro = true;
             current_word += c;
             continue;
         }
 
-        if (is_in_global_scope() && !current_word.empty() && !is_keyword(current_word) && !is_in_number)
+        if (is_in_global_scope() && !current_word.empty() && !is_keyword(current_word) && !is_in_number && !is_in_macro)
         {
             def.names_in_global_scope.push_back(current_word);
         }
         current_word = "";
         is_in_number = false;
+        if (c == '\n')
+        {
+            is_in_macro = false;
+            line_number += 1;
+        }
 
         try
         {
