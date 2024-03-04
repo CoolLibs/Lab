@@ -25,9 +25,10 @@ static void add_alpha_forwarding(NodeDefinition_Data& data)
     // /!\ NB: the following code assumes that the main function has exactly 1 parameter.
 
     // Use "main" as a helper function
+    // TODO(NodesParsing)
     auto const name_of_original_main = valid_glsl(data.main_function.name() + "Original");
-    data.helper_functions.push_back(data.main_function.function);
-    data.helper_functions.back().name() = name_of_original_main;
+    // data.helper_functions.push_back(data.main_function.function);
+    // data.helper_functions.back().name() = name_of_original_main;
     // Redefine "main"
     auto const original_output_type   = data.main_function.signature.to;
     data.main_function.signature.from = with_straight_alpha(data.main_function.signature.from);

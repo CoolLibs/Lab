@@ -11,6 +11,7 @@
 #include "CodeGenContext.h"
 #include "CodeGen_default_function.h"
 #include "CodeGen_desired_function_implementation.h"
+#include "Cool/Expected/RETURN_IF_ERROR.h"
 #include "Cool/Nodes/Pin.h"
 #include "FunctionDefinition.h"
 #include "FunctionSignature.h"
@@ -27,7 +28,7 @@ static auto gen_function_declaration(FunctionSignatureAsString const& signature,
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
-            R"STR({return_type} {name}/*coollabdef*/({args}))STR"
+            R"STR({return_type} {name}(CoollabContext coollab_context, {args}))STR"
         ),
         "return_type"_a = signature.return_type,
         "name"_a        = unique_name, // We don't use signature.name because we need to use a unique name that has been generated for this instance of the function
@@ -148,7 +149,7 @@ static auto gen_value_inputs(
             {
                 auto const property_type = variable_to_primitive_type(prop);
                 if (!property_type)
-                    return tl::make_unexpected("Can't create property with that type"); // TODO(JF) Improve error message
+                    return tl::make_unexpected("Can't create INPUT with that type"); // TODO(JF) Improve error message
 
                 auto const input_func_name = gen_desired_function(
                     {.from = PrimitiveType::Void, .to = *property_type, .arity = 0},
@@ -159,7 +160,7 @@ static auto gen_value_inputs(
                 );
                 RETURN_IF_UNEXPECTED(input_func_name);
 
-                res.real_names.push_back(fmt::format("{}()", *input_func_name)); // Input name will be replaced with a call to the corresponding function
+                res.real_names.push_back(fmt::format("{}(coollab_context)", *input_func_name)); // Input name will be replaced with a call to the corresponding function
             }
             else // We are plugged to an output index
             {
@@ -183,43 +184,43 @@ static auto gen_value_inputs(
     return res;
 }
 
-static auto list_all_property_and_input_and_output_names(
-    std::vector<Cool::AnySharedVariable> const& properties,
-    std::vector<NodeInputDefinition> const&     inputs,
+static auto list_all_input_and_output_names(
+    std::vector<Cool::AnySharedVariable> const& value_inputs,
+    std::vector<NodeInputDefinition> const&     function_inputs,
     std::vector<std::string> const&             output_indices_names
 )
     -> std::string
 {
     std::string res{};
 
-    for (auto const& prop : properties)
-        res += fmt::format("  - '{}'\n", std::visit([](auto&& prop) { return prop.name(); }, prop));
-    for (auto const& input : inputs)
-        res += fmt::format("  - '{}'\n", input.name());
+    for (auto const& value_input : value_inputs)
+        res += fmt::format("  - '{}'\n", std::visit([](auto&& value_input) { return value_input.name(); }, value_input));
+    for (auto const& function_input : function_inputs)
+        res += fmt::format("  - '{}'\n", function_input.name());
     for (auto const& name : output_indices_names)
         res += fmt::format("  - '{}'\n", name);
 
     return res;
 }
 
-static void replace_property_names(
+static void replace_value_inputs_names(
     std::string&                                code,
-    std::vector<Cool::AnySharedVariable> const& properties,
+    std::vector<Cool::AnySharedVariable> const& value_inputs,
     std::vector<std::string> const&             real_name
 )
 {
     size_t i{0};
-    for (auto const& prop : properties)
+    for (auto const& value_input : value_inputs)
     {
-        std::visit([&](auto&& prop) {
-            Cool::String::replace_all_inplace(code, fmt::format("'{}'", prop.name()), real_name[i]);
+        std::visit([&](auto&& value_input) {
+            Cool::String::replace_all_inplace(code, fmt::format("'{}'", value_input.name()), real_name[i]);
         },
-                   prop);
+                   value_input);
         i++;
     }
 }
 
-static void replace_input_names(std::string& code, std::unordered_map<std::string, std::string> const& real_names)
+static void replace_function_inputs_names(std::string& code, std::unordered_map<std::string, std::string> const& real_names)
 {
     for (auto const& [old_name, new_name] : real_names)
         Cool::String::replace_all_inplace(code, fmt::format("'{}'", old_name), new_name);
@@ -237,20 +238,26 @@ static void replace_output_indices_names(std::string& code, Node const& node)
     }
 }
 
-static void replace_helper_functions(std::string& code, std::vector<Function> const& old_functions, std::vector<std::string> const& new_names)
+static void replace_names_in_global_scope(std::string& code, std::vector<std::string> const& names_in_global_scope, std::string const& id)
 {
-    assert(old_functions.size() == new_names.size());
-
-    for (size_t i = 0; i < new_names.size(); ++i)
-        Cool::String::replace_all_words_inplace(code, old_functions[i].name(), new_names[i]);
+    for (auto const& name : names_in_global_scope)
+        Cool::String::replace_all_inplace(code, name, valid_glsl(fmt::format("{}{}", name, id)));
 }
-static void replace_structs(std::string& code, std::vector<Struct> const& old_structs, std::vector<Struct> const& new_structs)
-{
-    assert(old_structs.size() == new_structs.size());
 
-    for (size_t i = 0; i < new_structs.size(); ++i)
-        Cool::String::replace_all_words_inplace(code, old_structs[i].name, new_structs[i].name);
-}
+// static void replace_helper_functions(std::string& code, std::vector<Function> const& old_functions, std::vector<std::string> const& new_names)
+// {
+//     assert(old_functions.size() == new_names.size());
+
+//     for (size_t i = 0; i < new_names.size(); ++i)
+//         Cool::String::replace_all_words_inplace(code, old_functions[i].name(), new_names[i]);
+// }
+// static void replace_structs(std::string& code, std::vector<Struct> const& old_structs, std::vector<Struct> const& new_structs)
+// {
+//     assert(old_structs.size() == new_structs.size());
+
+//     for (size_t i = 0; i < new_structs.size(); ++i)
+//         Cool::String::replace_all_words_inplace(code, old_structs[i].name, new_structs[i].name);
+// }
 
 struct GeneratedInputs {
     std::unordered_map<std::string, std::string> real_names;
@@ -293,54 +300,54 @@ static auto gen_function_inputs(
     return res;
 }
 
-struct GeneratedHelperFunctions {
-    std::string              code;
-    std::vector<std::string> new_names;
-};
+// struct GeneratedHelperFunctions {
+//     std::string              code;
+//     std::vector<std::string> new_names;
+// };
 
-static auto gen_helper_functions(std::vector<Function> const& helper_functions, Cool::NodeId const& id)
-    -> GeneratedHelperFunctions
-{
-    auto res = GeneratedHelperFunctions{};
+// static auto gen_helper_functions(std::vector<Function> const& helper_functions, Cool::NodeId const& id)
+//     -> GeneratedHelperFunctions
+// {
+//     auto res = GeneratedHelperFunctions{};
 
-    for (auto const& func : helper_functions)
-    {
-        auto const name = valid_glsl(fmt::format("{}{}", func.name(), to_string(id.underlying_uuid())));
-        res.new_names.push_back(name);
+//     for (auto const& func : helper_functions)
+//     {
+//         auto const name = valid_glsl(fmt::format("{}{}", func.name(), to_string(id.underlying_uuid())));
+//         res.new_names.push_back(name);
 
-        res.code += gen_function_definition({
-            .signature_as_string = func.signature_as_string,
-            .unique_name         = name,
-            .body                = func.body,
-        });
-        res.code += '\n';
-    }
+//         res.code += gen_function_definition({
+//             .signature_as_string = func.signature_as_string,
+//             .unique_name         = name,
+//             .body                = func.body,
+//         });
+//         res.code += '\n';
+//     }
 
-    return res;
-}
+//     return res;
+// }
 
-static auto gen_structs(std::vector<Struct> const& structs, NodeDefinition const& def)
-    -> std::vector<Struct>
-{
-    auto res = std::vector<Struct>{};
+// static auto gen_structs(std::vector<Struct> const& structs, NodeDefinition const& def)
+//     -> std::vector<Struct>
+// {
+//     auto res = std::vector<Struct>{};
 
-    for (auto structeuh : structs)
-    {
-        structeuh.name = valid_glsl(fmt::format("{}{}", structeuh.name, static_cast<void const*>(&def))); // Use address of def as an id because we want all nodes with the same definition to use the same struct, there is no need to have one struct per instance of node of the same definition.
-        res.push_back(std::move(structeuh));
-    }
+//     for (auto structeuh : structs)
+//     {
+//         structeuh.name = valid_glsl(fmt::format("{}{}", structeuh.name, static_cast<void const*>(&def))); // Use address of def as an id because we want all nodes with the same definition to use the same struct, there is no need to have one struct per instance of node of the same definition.
+//         res.push_back(std::move(structeuh));
+//     }
 
-    return res;
-}
+//     return res;
+// }
 
-static auto gen_includes(NodeDefinition const& node_definition)
-    -> std::string
-{
-    auto res = std::string{};
-    for (auto const& path : node_definition.included_files())
-        res += fmt::format("#include \"{}\"\n", path.string());
-    return res;
-}
+// static auto gen_includes(NodeDefinition const& node_definition)
+//     -> std::string
+// {
+//     auto res = std::string{};
+//     for (auto const& path : node_definition.included_files())
+//         res += fmt::format("#include \"{}\"\n", path.string());
+//     return res;
+// }
 
 static auto make_arguments_list(size_t arity, PrimitiveType type)
     -> std::string
@@ -404,38 +411,33 @@ static auto gen_base_function(
 
     auto const func_name = base_function_name(node_definition, id);
 
-    auto const structs          = gen_structs(node_definition.structs(), node_definition);
-    auto const helper_functions = gen_helper_functions(node_definition.helper_functions(), id);
+    // auto const structs          = gen_structs(node_definition.structs(), node_definition);
+    // auto const helper_functions = gen_helper_functions(node_definition.helper_functions(), id);
 
-    // HACK to make sure we are aware that these functions have been generated, used when adding a parameter to all the functions during `inject_context_argument_in_all_functions()`.
-    // We don't care about adding them through push_function() because their names will be unique anyways.
-    // And we need them to be defined after value_inputs_code->code
-    for (auto const& helper_func_name : helper_functions.new_names)
-        context.push_function(FunctionDefinition{.name = helper_func_name, .definition = ""});
-    for (auto const& structe : structs)
-        context.push_struct(structe);
+    // // HACK to make sure we are aware that these functions have been generated, used when adding a parameter to all the functions during `inject_context_argument_in_all_functions()`.
+    // // We don't care about adding them through push_function() because their names will be unique anyways.
+    // // And we need them to be defined after value_inputs_code->code
+    // for (auto const& helper_func_name : helper_functions.new_names)
+    //     context.push_function(FunctionDefinition{.name = helper_func_name, .definition = ""});
+    // for (auto const& structe : structs)
+    //     context.push_struct(structe);
 
     auto func_implementation = gen_function_definition({
         .signature_as_string = node_definition.main_function().function.signature_as_string,
         .unique_name         = func_name,
-        .before_function     = gen_includes(node_definition) + '\n' + value_inputs_code->code /* + '\n' + structs.code  */ + '\n' + helper_functions.code,
+        .before_function     = value_inputs_code->code + node_definition.helper_glsl_code(),
         .body                = node_definition.main_function().function.body,
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its value inputs) so that names don't clash with another instance of the same node.
-    replace_property_names(func_implementation, node.value_inputs(), value_inputs_code->real_names);
-    replace_input_names(func_implementation, function_inputs->real_names);
+    replace_value_inputs_names(func_implementation, node.value_inputs(), value_inputs_code->real_names);
+    replace_function_inputs_names(func_implementation, function_inputs->real_names);
     replace_output_indices_names(func_implementation, node);
-    replace_structs(func_implementation, node_definition.structs(), structs);
-    replace_helper_functions(func_implementation, node_definition.helper_functions(), helper_functions.new_names);
+    replace_names_in_global_scope(func_implementation, node_definition.names_in_global_scope(), reg::to_string(id));
 
-    {
-        auto const error = check_there_are_no_single_quotes_left(func_implementation, list_all_property_and_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices()));
-        if (error)
-            return tl::make_unexpected(*error);
-    }
+    RETURN_IF_ERROR(check_there_are_no_single_quotes_left(func_implementation, list_all_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices())));
 
-    context.push_function({.name = func_name, .definition = func_implementation});
+    context.push_function({.name = func_name, .definition = func_implementation}); // TODO(NodesParsing) no need to push function, since we know the name is already unique
 
     return func_name;
 }
@@ -450,7 +452,7 @@ static auto gen_output_function(Cool::OutputPin const& pin, CodeGenContext& cont
         .name       = func_name,
         .definition = fmt::format(
             R"STR(
-vec2 {}/*coollabdef*/()
+vec2 {}()
 {{
     return vec2({}, 1.); // Convert float to float_and_alpha
 }}
@@ -570,12 +572,12 @@ static auto make_node_definition_that_reads_module_texture(std::string const& te
     };
     return NodeDefinition::make(
                NodeDefinition_Data{
-                   .main_function    = main_function,
-                   .helper_functions = {},
-                   .included_files   = {},
-                   .input_functions  = {},
-                   .input_values     = {},
-                   .output_indices   = {},
+                   .main_function         = main_function,
+                   .helper_glsl_code      = {},
+                   .names_in_global_scope = {},
+                   .input_functions       = {},
+                   .input_values          = {},
+                   .output_indices        = {},
                },
                {}
     )
@@ -639,7 +641,7 @@ auto gen_desired_function(
         .body                = *func_body,
     });
 
-    context.push_function({.name = func_name, .definition = func_definition});
+    context.push_function({.name = func_name, .definition = func_definition}); // TODO(NodesParsing) no need to push function, since we know the name is already unique
 
     return func_name;
 }

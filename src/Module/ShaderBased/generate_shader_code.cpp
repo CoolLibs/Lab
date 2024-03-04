@@ -16,21 +16,21 @@ static auto gen_all_output_indices_declarations(Cool::NodesGraph const& graph)
     return res.str();
 }
 
-static auto inject_context_argument_in_all_functions(std::string code, std::vector<std::string> const& function_names)
-    -> std::string
-{
-    for (auto const& name : function_names)
-    {
-        Cool::String::replace_all_beginnings_of_words_inplace(code, name + "(", name + "(coollab_context, ");
-        Cool::String::replace_all_beginnings_of_words_inplace(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
-    }
+// static auto inject_context_argument_in_all_functions(std::string code, std::vector<std::string> const& function_names)
+//     -> std::string
+// {
+//     for (auto const& name : function_names)
+//     {
+//         Cool::String::replace_all_beginnings_of_words_inplace(code, name + "(", name + "(coollab_context, ");
+//         Cool::String::replace_all_beginnings_of_words_inplace(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
+//     }
 
-    // Fixup the extra commas for functions that had no arguments initially
-    Cool::String::replace_all_inplace(code, ", )", ")");
-    Cool::String::replace_all_inplace(code, "(coollab_context, ()", "(coollab_context");
+//     // Fixup the extra commas for functions that had no arguments initially
+//     Cool::String::replace_all_inplace(code, ", )", ")");
+//     Cool::String::replace_all_inplace(code, "(coollab_context, ()", "(coollab_context");
 
-    return code;
-}
+//     return code;
+// }
 
 auto generate_shader_code(
     Cool::NodesGraph const&                          graph,
@@ -100,7 +100,7 @@ vec2 to_view_space(vec2 uv)
         "modules_textures_uniforms"_a   = modules_textures_uniforms,
         "in_before_main"_a              = content.before_main,
         "output_indices_declarations"_a = gen_all_output_indices_declarations(graph),
-        "helper_functions"_a            = inject_context_argument_in_all_functions(context.code(), context.function_names()),
+        "helper_functions"_a            = context.code(),
         "main_function"_a               = content.make_main(*main_function_name)
     );
 }

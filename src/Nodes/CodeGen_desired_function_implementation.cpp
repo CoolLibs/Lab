@@ -398,7 +398,7 @@ auto gen_desired_function_implementation(
         return output_transformation_name;
 
     auto const call_base_function = fmt::format(
-        FMT_COMPILE("{base_function}({inputs})"),
+        FMT_COMPILE("{base_function}(coollab_context, {inputs})"),
         "base_function"_a = base_function_name,
         "inputs"_a        = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity, implicit_conversions.input.value_or(""))
     );

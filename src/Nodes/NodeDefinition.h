@@ -17,10 +17,10 @@ struct Function {
     auto name() -> std::string& { return signature_as_string.name; }
 };
 
-struct Struct {
-    std::string name;
-    std::string body;
-};
+// struct Struct {
+//     std::string name;
+//     std::string body;
+// };
 
 struct MainFunction {
     Function                 function;
@@ -32,10 +32,9 @@ struct MainFunction {
 };
 
 struct NodeDefinition_Data {
-    MainFunction                       main_function{};
-    std::vector<Function>              helper_functions{};
-    std::vector<Struct>                structs{};
-    std::vector<std::filesystem::path> included_files{};
+    MainFunction             main_function{};
+    std::string              helper_glsl_code{};
+    std::vector<std::string> names_in_global_scope{};
 
     std::vector<NodeInputDefinition>               input_functions{}; // Things that can only come from a pin
     std::vector<Cool::AnySharedVariableDefinition> input_values{};    // Things that will default to a widget on the node if nothing is plugged into the pin
@@ -54,9 +53,11 @@ public:
     [[nodiscard]] auto function_inputs() const -> auto const& { return _data.input_functions; }
     [[nodiscard]] auto value_inputs() const -> auto const& { return _data.input_values; }
     [[nodiscard]] auto output_indices() const -> auto const& { return _data.output_indices; }
-    [[nodiscard]] auto helper_functions() const -> auto const& { return _data.helper_functions; }
-    [[nodiscard]] auto structs() const -> auto const& { return _data.structs; }
-    [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
+    [[nodiscard]] auto helper_glsl_code() const -> auto const& { return _data.helper_glsl_code; }
+    [[nodiscard]] auto names_in_global_scope() const -> auto const& { return _data.names_in_global_scope; }
+    // [[nodiscard]] auto helper_functions() const -> auto const& { return _data.helper_functions; }
+    // [[nodiscard]] auto structs() const -> auto const& { return _data.structs; }
+    // [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
 
     [[nodiscard]] auto presets_manager() const -> auto const& { return *_presets_manager; }
     auto               imgui_presets(Cool::Settings& settings) const -> bool { return _presets_manager->imgui_presets(settings); }
