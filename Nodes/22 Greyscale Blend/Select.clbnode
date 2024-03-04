@@ -2,7 +2,7 @@
 
 INPUT float 'Greyscale 1';
 INPUT float 'Greyscale 2';
-INPUT bool 'Use First Value'
+INPUT bool 'Use First Value';
 
 float main()
 {
