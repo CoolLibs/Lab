@@ -691,16 +691,16 @@ static auto is_digit(char c) -> bool
     return '0' <= c && c <= '9';
 }
 
-// TODO(NodesParsing) Handle #define
-// TODO(NodesParsing) Handle numbers
+// TODO(NodesParsing) Handle multiline macros
 // TODO(NodesParsing) Add CoollabContext to functions defs and calls (how do we add it in main ??)
 auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data& def) -> std::optional<std::string>
 {
-    auto current_word = ""s;
-    auto scopes_stack = std::vector<ScopeKind>{};
-    int  line_number  = 1; // TODO(NodesParsing) For the line number to match, we would need to keep the lines containing special Coollab syntax.
-    bool is_in_number = false;
-    bool is_in_macro  = false;
+    auto previous_word = ""s;
+    auto current_word  = ""s;
+    auto scopes_stack  = std::vector<ScopeKind>{};
+    int  line_number   = 1; // TODO(NodesParsing) For the line number to match, we would need to keep the lines containing special Coollab syntax.
+    bool is_in_number  = false;
+    bool is_in_macro   = false;
 
     auto const is_in_global_scope = [&]() {
         return scopes_stack.empty();
@@ -719,12 +719,13 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
             continue;
         }
 
-        if (is_in_global_scope() && !current_word.empty() && !is_keyword(current_word) && !is_in_number && !is_in_macro)
+        if (is_in_global_scope() && !current_word.empty() && !is_keyword(current_word) && !is_in_number && (!is_in_macro || previous_word == "#define"))
         {
             def.names_in_global_scope.push_back(current_word);
         }
-        current_word = "";
-        is_in_number = false;
+        previous_word = current_word;
+        current_word  = "";
+        is_in_number  = false;
         if (c == '\n')
         {
             is_in_macro = false;
