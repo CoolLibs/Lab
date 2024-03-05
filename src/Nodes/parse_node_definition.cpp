@@ -273,7 +273,7 @@ static auto find_main_function(std::string& text, NodeDefinition_Data& res, std:
         return "Missing a return type before the main function.";
 
     auto function = Function{};
-    function.body = Cool::String::substring(text, brackets_pos->first, brackets_pos->second + 1);
+    function.body = Cool::String::substring(text, brackets_pos->first + 1, brackets_pos->second - 1);
 
     auto const signature_as_string = decompose_signature_string(text, brackets_pos->first);
     if (!signature_as_string.has_value())
