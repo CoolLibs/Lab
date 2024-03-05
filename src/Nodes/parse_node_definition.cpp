@@ -691,7 +691,6 @@ static auto is_digit(char c) -> bool
     return '0' <= c && c <= '9';
 }
 
-// TODO(NodesParsing) Handle multiline macros
 // TODO(NodesParsing) Add CoollabContext to functions defs and calls (how do we add it in main ??)
 auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data& def) -> std::optional<std::string>
 {
@@ -728,8 +727,9 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
         is_in_number  = false;
         if (c == '\n')
         {
-            is_in_macro = false;
             line_number += 1;
+            if (index == 0 || text[index - 1] != '\\')
+                is_in_macro = false;
         }
 
         try
