@@ -728,7 +728,7 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
         if (is_in_global_scope() && !current_word.empty() && !is_keyword(current_word) && !is_in_number && (!is_in_macro || previous_word == "#define"))
         {
             def.names_in_global_scope.push_back(current_word);
-            is_function_declaration = c == '(';
+            is_function_declaration = c == '(' && !is_in_macro;
         }
         previous_word = current_word;
         current_word  = "";
