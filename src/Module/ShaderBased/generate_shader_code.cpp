@@ -16,21 +16,35 @@ static auto gen_all_output_indices_declarations(Cool::NodesGraph const& graph)
     return res.str();
 }
 
-// static auto inject_context_argument_in_all_functions(std::string code, std::vector<std::string> const& function_names)
-//     -> std::string
-// {
-//     for (auto const& name : function_names)
-//     {
-//         Cool::String::replace_all_beginnings_of_words_inplace(code, name + "(", name + "(coollab_context, ");
-//         Cool::String::replace_all_beginnings_of_words_inplace(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
-//     }
+static void inject_context_argument_in_all_functions(std::string& code)
+{
+    std::cout << code << '\n';
+    static constexpr auto fund_def_id = "/*needs_coollab_context*/("sv;
+    auto                  func_names  = std::set<std::string>{};
+    auto                  pos         = code.find(fund_def_id, 0);
+    while (pos != std::string_view::npos)
+    {
+        auto const func_name = Cool::String::find_previous_word(code, pos);
+        if (!func_name)
+        {
+            assert(false);
+            continue;
+        }
+        func_names.insert(*func_name);
+        // TODO(NodesParsing) Remove /*needs_coollab_context*/
+        static constexpr auto inserted_context = "CoollabContext coollab_context, "sv;
+        code.insert(pos + fund_def_id.size(), inserted_context);
+        // Cool::String::replace_all_beginnings_of_words_inplace(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
+        pos += fund_def_id.size() + inserted_context.size();
+        pos = code.find(fund_def_id, pos);
+    }
+    for (auto const& func_name : func_names)
+        Cool::String::replace_all_beginnings_of_words_inplace(code, func_name + "(", func_name + "(coollab_context, ");
 
-//     // Fixup the extra commas for functions that had no arguments initially
-//     Cool::String::replace_all_inplace(code, ", )", ")");
-//     Cool::String::replace_all_inplace(code, "(coollab_context, ()", "(coollab_context");
-
-//     return code;
-// }
+    // Fixup the extra commas for functions that had no arguments initially
+    Cool::String::replace_all_inplace(code, ", )", ")");
+    Cool::String::replace_all_inplace(code, "(coollab_context, ()", "(coollab_context");
+}
 
 auto generate_shader_code(
     Cool::NodesGraph const&                          graph,
@@ -62,7 +76,7 @@ auto generate_shader_code(
     }
 
     using fmt::literals::operator""_a;
-    return fmt::format(
+    auto code = fmt::format(
         FMT_COMPILE(R"glsl(
 {in_version}
 uniform float     _delta_time;
@@ -103,6 +117,8 @@ vec2 to_view_space(vec2 uv)
         "helper_functions"_a            = context.code(),
         "main_function"_a               = content.make_main(*main_function_name)
     );
+    inject_context_argument_in_all_functions(code);
+    return code;
 }
 
 } // namespace Lab

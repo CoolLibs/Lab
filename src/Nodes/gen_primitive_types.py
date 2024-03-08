@@ -500,7 +500,7 @@ def implicit_color_conversions_impl():
                         return {{
                             .name       = "{function_name}",
                             .definition = R"STR(
-                                {out_vec} {function_name}/*coollabdef*/({in_vec} from)
+                                {out_vec} {function_name}({in_vec} from)
                                 {{
                                     {implementation}
                                 }}
@@ -802,7 +802,7 @@ def def_implicit_conversions():
             {{
                 return {{
                     .name       = "{function_name}",
-                    .definition = R"STR({replace_function_name(conversion.implementation, function_name+"/*coollabdef*/")})STR",
+                    .definition = R"STR({replace_function_name(conversion.implementation, function_name)})STR",
                 }};
             }}
         """

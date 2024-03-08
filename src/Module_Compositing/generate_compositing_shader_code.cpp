@@ -30,7 +30,7 @@ void main()
     uv = tmp.xy / tmp.z;
     CoollabContext coollab_context;
     coollab_context.uv = uv;
-    out_Color = {main_function_name}(coollab_context, uv);
+    out_Color = {main_function_name}(uv);
 }}
                 )glsl"),
                                  "main_function_name"_a = main_function_name);

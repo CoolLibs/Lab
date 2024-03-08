@@ -257,7 +257,7 @@ static auto make_main_function(Function const& function, std::string const& name
 static auto find_main_function(std::string& text, NodeDefinition_Data& res, std::filesystem::path const& filepath)
     -> std::optional<std::string>
 {
-    auto const main_func_pos = Cool::String::find_word("main", text);
+    auto const main_func_pos = Cool::String::find_word("main", text); // TODO(NodesParsing) Problem, e.g. if an INPUT name has main in it ('Some main thing'), of a file name in an include has "main". And its also a problem for when detecting function calls to insert CoollabContext
     if (main_func_pos == std::string_view::npos)
         return "Missing a main function.";
     auto const brackets_pos = Cool::String::find_matching_pair({
@@ -708,6 +708,7 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
     for (size_t index = 0; index < text.size(); ++index)
     {
         char const c = text[index];
+        std::cout << c;
         if (!is_word_separator(c))
         {
             if (current_word.empty() && is_digit(c))
@@ -718,9 +719,16 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
             continue;
         }
 
+        if (current_word == "render_color")
+        {
+            int a = 0;
+        }
+
+        bool is_function_declaration{false};
         if (is_in_global_scope() && !current_word.empty() && !is_keyword(current_word) && !is_in_number && (!is_in_macro || previous_word == "#define"))
         {
             def.names_in_global_scope.push_back(current_word);
+            is_function_declaration = c == '(';
         }
         previous_word = current_word;
         current_word  = "";
@@ -736,9 +744,13 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
         {
             for_each_scope_kind([&](ScopeKind scope) {
                 if (c == opening_char(scope))
+                {
+                    std::cout << "ENTER";
                     scopes_stack.push_back(scope);
+                }
                 if (c == closing_char(scope))
                 {
+                    std::cout << "EXIT";
                     if (scopes_stack.empty())
                         throw fmt::format("Mismatched brackets: found '{}' on line {}, but there is no opening '{}'.", c, line_number, opening_char(scope));
                     if (scopes_stack.back() != scope)
@@ -751,7 +763,14 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
         {
             return msg;
         }
+        if (is_function_declaration)
+        {
+            static constexpr auto fund_def_id = "/*needs_coollab_context*/"sv;
+            text.insert(index, fund_def_id);
+            index += fund_def_id.size();
+        }
     }
+    assert(scopes_stack.empty()); // TODO(NodesParsing) User-facing error
     return {};
 }
 

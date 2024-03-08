@@ -28,7 +28,7 @@ static auto gen_function_declaration(FunctionSignatureAsString const& signature,
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(
-            R"STR({return_type} {name}(CoollabContext coollab_context, {args}))STR"
+            R"STR({return_type} {name}/*needs_coollab_context*/({args}))STR"
         ),
         "return_type"_a = signature.return_type,
         "name"_a        = unique_name, // We don't use signature.name because we need to use a unique name that has been generated for this instance of the function
@@ -40,7 +40,7 @@ static auto gen_function_declaration(FunctionSignatureAsString const& signature,
 //     using fmt::literals::operator""_a;
 //     return fmt::format(
 //         FMT_COMPILE(
-//             R"STR({return_type} {name}/*coollabdef*/({args}))STR"
+//             R"STR({return_type} {name}/*needs_coollab_context*/({args}))STR"
 //         ),
 //         "return_type"_a = signature.return_type,
 //         "name"_a        = name,
@@ -160,7 +160,7 @@ static auto gen_value_inputs(
                 );
                 RETURN_IF_UNEXPECTED(input_func_name);
 
-                res.real_names.push_back(fmt::format("{}(coollab_context)", *input_func_name)); // Input name will be replaced with a call to the corresponding function
+                res.real_names.push_back(fmt::format("{}()", *input_func_name)); // Input name will be replaced with a call to the corresponding function
             }
             else // We are plugged to an output index
             {
@@ -213,7 +213,7 @@ static void replace_value_inputs_names(
     for (auto const& value_input : value_inputs)
     {
         std::visit([&](auto&& value_input) {
-            Cool::String::replace_all_inplace(code, fmt::format("'{}'", value_input.name()), real_name[i]);
+            Cool::String::replace_all_words_inplace(code, fmt::format("'{}'", value_input.name()), real_name[i]);
         },
                    value_input);
         i++;
@@ -241,7 +241,7 @@ static void replace_output_indices_names(std::string& code, Node const& node)
 static void replace_names_in_global_scope(std::string& code, std::vector<std::string> const& names_in_global_scope, std::string const& id)
 {
     for (auto const& name : names_in_global_scope)
-        Cool::String::replace_all_inplace(code, name, valid_glsl(fmt::format("{}{}", name, id)));
+        Cool::String::replace_all_words_inplace(code, name, valid_glsl(fmt::format("{}{}", name, id)));
 }
 
 // static void replace_helper_functions(std::string& code, std::vector<Function> const& old_functions, std::vector<std::string> const& new_names)

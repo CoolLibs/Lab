@@ -198,7 +198,7 @@ static auto gen_implicit_curve_renderer(
         .name       = "Coollab_sdSegment",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions2d/
-float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
+float Coollab_sdSegment(vec2 p, vec2 a, vec2 b, float thickness)
 {{
     vec2  pa = p - a, ba = b - a;
     float h = saturate(dot(pa, ba) / dot(ba, ba));
@@ -210,7 +210,7 @@ float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
     context.push_function(FunctionDefinition{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
-float {}/*coollabdef*/(vec2 uv)
+float {}/*needs_coollab_context*/(vec2 uv)
 {{
     const int NB_SEGMENTS = 300;
     const float THICKNESS = 0.01;
@@ -258,7 +258,7 @@ static auto gen_implicit_curve_renderer_3D(
         .name       = "Coollab_sdSegment3D",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions/
-float Coollab_sdSegment3D/*coollabdef*/(vec3 p, vec3 a, vec3 b, float thickness)
+float Coollab_sdSegment3D(vec3 p, vec3 a, vec3 b, float thickness)
 {{
     vec3  pa = p - a, ba = b - a;
     float h = saturate(dot(pa, ba) / dot(ba, ba));
@@ -270,7 +270,7 @@ float Coollab_sdSegment3D/*coollabdef*/(vec3 p, vec3 a, vec3 b, float thickness)
     context.push_function(FunctionDefinition{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
-float {}/*coollabdef*/(vec3 pos)
+float {}/*needs_coollab_context*/(vec3 pos)
 {{
     const int NB_SEGMENTS = 300;
     const float THICKNESS = 0.01;
@@ -319,7 +319,7 @@ static auto gen_implicit_shape_3D_renderer(
         .name       = image_func_name,
         .definition = fmt::format(
             FMT_COMPILE(R"STR(
-vec4 {image_name}/*coollabdef*/(vec2 uv)
+vec4 {image_name}/*needs_coollab_context*/(vec2 uv)
 {{
     const int MAX_STEPS = 100;
     const float MAX_DIST = 100.;
@@ -398,7 +398,7 @@ auto gen_desired_function_implementation(
         return output_transformation_name;
 
     auto const call_base_function = fmt::format(
-        FMT_COMPILE("{base_function}(coollab_context, {inputs})"),
+        FMT_COMPILE("{base_function}({inputs})"),
         "base_function"_a = base_function_name,
         "inputs"_a        = gen_transformed_inputs(input_transformation_names, current.arity, desired.arity, implicit_conversions.input.value_or(""))
     );
