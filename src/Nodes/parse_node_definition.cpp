@@ -583,7 +583,6 @@ static auto is_digit(char c) -> bool
     return '0' <= c && c <= '9';
 }
 
-// TODO(NodesParsing) Add CoollabContext to functions defs and calls (how do we add it in main ??)
 auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data& def) -> std::optional<std::string>
 {
     auto previous_word = ""s;
