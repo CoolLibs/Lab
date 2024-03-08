@@ -35,18 +35,6 @@ static auto gen_function_declaration(FunctionSignatureAsString const& signature,
         "args"_a        = signature.arguments_list
     );
 }
-// static auto gen_function_declaration(MainFunction const& main) -> std::string
-// {
-//     using fmt::literals::operator""_a;
-//     return fmt::format(
-//         FMT_COMPILE(
-//             R"STR({return_type} {name}/*needs_coollab_context*/({args}))STR"
-//         ),
-//         "return_type"_a = signature.return_type,
-//         "name"_a        = name,
-//         "args"_a        = signature.arguments_list
-//     );
-// }
 
 struct Params_gen_function_definition {
     FunctionSignatureAsString signature_as_string{};
@@ -244,21 +232,6 @@ static void replace_names_in_global_scope(std::string& code, std::vector<std::st
         Cool::String::replace_all_words_inplace(code, name, valid_glsl(fmt::format("{}{}", name, id)));
 }
 
-// static void replace_helper_functions(std::string& code, std::vector<Function> const& old_functions, std::vector<std::string> const& new_names)
-// {
-//     assert(old_functions.size() == new_names.size());
-
-//     for (size_t i = 0; i < new_names.size(); ++i)
-//         Cool::String::replace_all_words_inplace(code, old_functions[i].name(), new_names[i]);
-// }
-// static void replace_structs(std::string& code, std::vector<Struct> const& old_structs, std::vector<Struct> const& new_structs)
-// {
-//     assert(old_structs.size() == new_structs.size());
-
-//     for (size_t i = 0; i < new_structs.size(); ++i)
-//         Cool::String::replace_all_words_inplace(code, old_structs[i].name, new_structs[i].name);
-// }
-
 struct GeneratedInputs {
     std::unordered_map<std::string, std::string> real_names;
 };
@@ -299,55 +272,6 @@ static auto gen_function_inputs(
 
     return res;
 }
-
-// struct GeneratedHelperFunctions {
-//     std::string              code;
-//     std::vector<std::string> new_names;
-// };
-
-// static auto gen_helper_functions(std::vector<Function> const& helper_functions, Cool::NodeId const& id)
-//     -> GeneratedHelperFunctions
-// {
-//     auto res = GeneratedHelperFunctions{};
-
-//     for (auto const& func : helper_functions)
-//     {
-//         auto const name = valid_glsl(fmt::format("{}{}", func.name(), to_string(id.underlying_uuid())));
-//         res.new_names.push_back(name);
-
-//         res.code += gen_function_definition({
-//             .signature_as_string = func.signature_as_string,
-//             .unique_name         = name,
-//             .body                = func.body,
-//         });
-//         res.code += '\n';
-//     }
-
-//     return res;
-// }
-
-// static auto gen_structs(std::vector<Struct> const& structs, NodeDefinition const& def)
-//     -> std::vector<Struct>
-// {
-//     auto res = std::vector<Struct>{};
-
-//     for (auto structeuh : structs)
-//     {
-//         structeuh.name = valid_glsl(fmt::format("{}{}", structeuh.name, static_cast<void const*>(&def))); // Use address of def as an id because we want all nodes with the same definition to use the same struct, there is no need to have one struct per instance of node of the same definition.
-//         res.push_back(std::move(structeuh));
-//     }
-
-//     return res;
-// }
-
-// static auto gen_includes(NodeDefinition const& node_definition)
-//     -> std::string
-// {
-//     auto res = std::string{};
-//     for (auto const& path : node_definition.included_files())
-//         res += fmt::format("#include \"{}\"\n", path.string());
-//     return res;
-// }
 
 static auto make_arguments_list(size_t arity, PrimitiveType type)
     -> std::string
@@ -411,22 +335,11 @@ static auto gen_base_function(
 
     auto const func_name = base_function_name(node_definition, id);
 
-    // auto const structs          = gen_structs(node_definition.structs(), node_definition);
-    // auto const helper_functions = gen_helper_functions(node_definition.helper_functions(), id);
-
-    // // HACK to make sure we are aware that these functions have been generated, used when adding a parameter to all the functions during `inject_context_argument_in_all_functions()`.
-    // // We don't care about adding them through push_function() because their names will be unique anyways.
-    // // And we need them to be defined after value_inputs_code->code
-    // for (auto const& helper_func_name : helper_functions.new_names)
-    //     context.push_function(FunctionDefinition{.name = helper_func_name, .definition = ""});
-    // for (auto const& structe : structs)
-    //     context.push_struct(structe);
-
     auto func_implementation = gen_function_definition({
-        .signature_as_string = node_definition.main_function().function.signature_as_string,
+        .signature_as_string = node_definition.main_function().signature_as_string,
         .unique_name         = func_name,
         .before_function     = value_inputs_code->code + node_definition.helper_glsl_code(),
-        .body                = node_definition.main_function().function.body,
+        .body                = node_definition.main_function().body,
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its value inputs) so that names don't clash with another instance of the same node.
@@ -552,17 +465,15 @@ static auto make_node_definition_that_reads_module_texture(std::string const& te
     using fmt::literals::operator""_a;
 
     auto const main_function = MainFunction{
-        .function = Function{
-            .signature_as_string = FunctionSignatureAsString{
-                .return_type    = "/* sRGB_StraightA */ vec4",
-                .name           = "read_module_texture",
-                .arguments_list = "/* UV */ vec2 uv",
-            },
-            .body = fmt::format(R"glsl(
+        .signature_as_string = FunctionSignatureAsString{
+            .return_type    = "/* sRGB_StraightA */ vec4",
+            .name           = "read_module_texture",
+            .arguments_list = "/* UV */ vec2 uv",
+        },
+        .body      = fmt::format(R"glsl(
                     uv = unnormalize_uv(to_view_space(uv));
                     return texture({texture_name}, uv);)glsl",
-                                "texture_name"_a = texture_name),
-        },
+                                 "texture_name"_a = texture_name),
         .signature = FunctionSignature{
             .from  = PrimitiveType::UV,
             .to    = PrimitiveType::sRGB_StraightA,

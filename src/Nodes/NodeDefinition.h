@@ -9,26 +9,14 @@
 
 namespace Lab {
 
-struct Function {
+struct MainFunction {
     FunctionSignatureAsString signature_as_string;
     std::string               body;
 
-    auto name() const -> std::string const& { return signature_as_string.name; }
-    auto name() -> std::string& { return signature_as_string.name; }
-};
-
-// struct Struct {
-//     std::string name;
-//     std::string body;
-// };
-
-struct MainFunction {
-    Function                 function;
+    auto                     name() const -> std::string const& { return signature_as_string.name; }
+    auto                     name() -> std::string& { return signature_as_string.name; }
     FunctionSignature        signature; // For optimisation, we store the FunctionSignature computed from function.signature_as_string
     std::vector<std::string> argument_names;
-
-    auto name() const -> std::string const& { return function.name(); }
-    auto name() -> std::string& { return function.name(); }
 };
 
 struct NodeDefinition_Data {

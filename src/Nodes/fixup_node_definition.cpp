@@ -41,7 +41,7 @@ static void add_alpha_forwarding(NodeDefinition_Data& data)
         is_greyscale_type(data.main_function.signature.to) ? "greyscale" : "color",
         has_an_alpha_channel(original_output_type) ? "_and_alpha" : ""
     );
-    data.main_function.function.body =
+    data.main_function.body =
         fmt::format(
             FMT_COMPILE("return {func_to_apply_alpha}({original_main}({color}.{color_components}), {color}.{alpha_component});"),
             "func_to_apply_alpha"_a = func_to_apply_alpha,

@@ -3,15 +3,9 @@
 #include <Cool/Expected/RETURN_IF_UNEXPECTED.h>
 #include <Cool/RegExp/RegExp.h>
 #include <Cool/String/String.h>
-#include <algorithm>
 #include <exception>
-#include <filesystem>
-#include <iterator>
-#include <optional>
 #include <sstream>
-#include <string>
 #include <string_view>
-#include <vector>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/SharedVariableDefinition.h"
@@ -54,61 +48,6 @@ static auto decompose_signature_string(std::string const& text, size_t end_of_fu
         .arguments_list = Cool::String::substring(text, *args_pos),
     };
 }
-
-// static auto parse_all_functions_and_structs(std::string text)
-//     -> tl::expected<std::pair<std::vector<Function>, std::vector<Struct>>, std::string>
-// {
-//     auto functions = std::vector<Function>{};
-//     auto structs   = std::vector<Struct>{};
-
-//     auto const get_next_bracket_pos = [&](size_t offset) {
-//         return Cool::String::find_matching_pair({
-//             .text    = text,
-//             .offset  = offset,
-//             .opening = '{',
-//             .closing = '}',
-//         });
-//     };
-
-//     auto brackets_pos = get_next_bracket_pos(0);
-//     while (brackets_pos)
-//     {
-//         auto const body = Cool::String::substring(text, brackets_pos->first, brackets_pos->second + 1);
-//         // Check if it is a struct or a function
-//         auto const struct_name_pos = Cool::String::find_previous_word_position(text, brackets_pos->first);
-//         if (!struct_name_pos)
-//         {
-//             brackets_pos = {};
-//             continue;
-//         }
-//         auto const struct_keyword_pos = Cool::String::find_previous_word_position(text, struct_name_pos->first);
-//         // Parse struct
-//         if (struct_keyword_pos && Cool::String::substring(text, *struct_keyword_pos) == "struct")
-//         {
-//             structs.push_back(Struct{
-//                 .name = Cool::String::substring(text, *struct_name_pos),
-//                 .body = body,
-//             });
-//             std::cout << body << '\n';
-//         }
-//         // Parse function
-//         else
-//         {
-//             auto function = Function{};
-
-//             function.body = body;
-
-//             auto const signature_as_string = decompose_signature_string(text, brackets_pos->first);
-//             RETURN_IF_UNEXPECTED(signature_as_string);
-//             function.signature_as_string = *signature_as_string;
-
-//             functions.push_back(function);
-//         }
-//         brackets_pos = get_next_bracket_pos(brackets_pos->second);
-//     }
-
-//     return std::make_pair(functions, structs);
-// }
 
 static auto parse_primitive_type(std::string const& str) // NOLINT(readability-function-cognitive-complexity)
     -> tl::expected<PrimitiveType, std::string>
@@ -153,43 +92,6 @@ static auto parse_arguments(std::string const& arguments_list)
     return args;
 }
 
-// static auto parse_function_signature(FunctionSignatureAsString const& as_str)
-//     -> tl::expected<FunctionSignature, std::string>
-// {
-//     auto signature = FunctionSignature{};
-
-//     { // Parse return type
-//         auto const return_type = parse_primitive_type(as_str.return_type);
-//         RETURN_IF_UNEXPECTED(return_type);
-//         signature.to = *return_type;
-//     }
-
-//     { // Parse arguments list
-//         auto const arguments = parse_arguments(as_str.arguments_list);
-//         RETURN_IF_UNEXPECTED(arguments);
-
-//         signature.arity = arguments->size();
-//         signature.from  = arguments->empty()
-//                               ? PrimitiveType::Void
-//                               : (*arguments)[0].type;
-
-//         // Check that we only have one argument type
-//         for (auto const& arg : *arguments)
-//         {
-//             if (arg.type != (*arguments)[0].type)
-//             {
-//                 return tl::make_unexpected(fmt::format(
-//                     "The main function cannot have different arguments types. Found {} and {}.\nIf you need more arguments, consider using an INPUT instead.",
-//                     cpp_type_as_string((*arguments)[0].type),
-//                     cpp_type_as_string(arg.type)
-//                 ));
-//             }
-//         }
-//     }
-
-//     return signature;
-// }
-
 static auto gen_arguments_list(std::vector<Argument> const& args)
     -> std::string
 {
@@ -210,23 +112,29 @@ static auto gen_arguments_list(std::vector<Argument> const& args)
     return res;
 }
 
-static auto make_main_function(Function const& function, std::string const& name)
+static auto make_main_function(std::string const& text, std::pair<size_t, size_t> brackets_pos, std::string const& name)
     -> tl::expected<MainFunction, std::string>
 {
     auto main = MainFunction{};
 
-    main.function                          = function;
-    main.function.signature_as_string.name = name; // Change name, we don't want it to be "main", but the name of the node
+    main.body = Cool::String::substring(text, brackets_pos.first + 1, brackets_pos.second - 1);
+
+    auto const signature_as_string = decompose_signature_string(text, brackets_pos.first);
+    if (!signature_as_string.has_value())
+        return tl::make_unexpected(signature_as_string.error());
+    main.signature_as_string = *signature_as_string;
+
+    main.signature_as_string.name = name; // Change name, we don't want it to be "main", but the name of the node
 
     { // Parse return type
-        auto const return_type = parse_primitive_type(function.signature_as_string.return_type);
+        auto const return_type = parse_primitive_type(main.signature_as_string.return_type);
         RETURN_IF_UNEXPECTED(return_type);
-        main.signature.to                             = *return_type;
-        main.function.signature_as_string.return_type = glsl_type_as_string(*return_type); // Change the return type to a regular glsl type so that it is valid when copy-pasted into shader code.
+        main.signature.to                    = *return_type;
+        main.signature_as_string.return_type = glsl_type_as_string(*return_type); // Change the return type to a regular glsl type so that it is valid when copy-pasted into shader code.
     }
 
     { // Parse arguments list
-        auto const arguments = parse_arguments(function.signature_as_string.arguments_list);
+        auto const arguments = parse_arguments(main.signature_as_string.arguments_list);
         RETURN_IF_UNEXPECTED(arguments);
 
         main.signature.arity = arguments->size();
@@ -234,7 +142,7 @@ static auto make_main_function(Function const& function, std::string const& name
                                    ? PrimitiveType::Void
                                    : (*arguments)[0].type;
 
-        main.function.signature_as_string.arguments_list = gen_arguments_list(*arguments); // Change arguments list so that it only uses regular glsl types, just like normal helper functions. Otherwise would generate invalid glsl code when generating the code for the function
+        main.signature_as_string.arguments_list = gen_arguments_list(*arguments); // Change arguments list so that it only uses regular glsl types, just like normal helper functions. Otherwise would generate invalid glsl code when generating the code for the function
 
         for (auto const& arg : *arguments)
         {
@@ -260,6 +168,7 @@ static auto find_main_function(std::string& text, NodeDefinition_Data& res, std:
     auto const main_func_pos = Cool::String::find_word("main", text); // TODO(NodesParsing) Problem, e.g. if an INPUT name has main in it ('Some main thing'), of a file name in an include has "main". And its also a problem for when detecting function calls to insert CoollabContext
     if (main_func_pos == std::string_view::npos)
         return "Missing a main function.";
+
     auto const brackets_pos = Cool::String::find_matching_pair({
         .text    = text,
         .offset  = main_func_pos,
@@ -267,24 +176,16 @@ static auto find_main_function(std::string& text, NodeDefinition_Data& res, std:
         .closing = '}',
     });
     if (!brackets_pos)
-        return "main function has no body.";
-    auto const main_func_type_pos = Cool::String::find_previous_word_position(text, main_func_pos);
-    if (!main_func_type_pos)
-        return "Missing a return type before the main function.";
+        return "Main function has no body.";
 
-    auto function = Function{};
-    function.body = Cool::String::substring(text, brackets_pos->first + 1, brackets_pos->second - 1);
-
-    auto const signature_as_string = decompose_signature_string(text, brackets_pos->first);
-    if (!signature_as_string.has_value())
-        return signature_as_string.error();
-    function.signature_as_string = *signature_as_string;
-
-    auto const main_function = make_main_function(function, filepath.stem().string());
+    auto const main_function = make_main_function(text, *brackets_pos, filepath.stem().string());
     if (!main_function)
         return main_function.error();
     res.main_function = *main_function;
 
+    auto const main_func_type_pos = Cool::String::find_previous_word_position(text, main_func_pos);
+    if (!main_func_type_pos)
+        return "Missing a return type before the main function.";
     Cool::String::remove_substring(text, main_func_type_pos->first, brackets_pos->second + 1);
 
     return std::nullopt;
@@ -573,25 +474,16 @@ static auto parse_special_coollab_syntax_and_remove_it(
     return {};
 }
 
-// class NodeParser{
-//     public:
-//     void
-
-//     private:
-// };
-
 enum class ScopeKind {
     Parenthesis,
     CurlyBracket,
     SquareBracket,
-
-    COUNT,
 };
-
 void for_each_scope_kind(std::function<void(ScopeKind)> const& callback)
 {
-    for (int i = 0; i < static_cast<int>(ScopeKind::COUNT); ++i)
-        callback(static_cast<ScopeKind>(i));
+    callback(ScopeKind::Parenthesis);
+    callback(ScopeKind::CurlyBracket);
+    callback(ScopeKind::SquareBracket);
 }
 
 static auto opening_char(ScopeKind scope) -> char
@@ -708,7 +600,6 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
     for (size_t index = 0; index < text.size(); ++index)
     {
         char const c = text[index];
-        std::cout << c;
         if (!is_word_separator(c))
         {
             if (current_word.empty() && is_digit(c))
@@ -717,11 +608,6 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
                 is_in_macro = true;
             current_word += c;
             continue;
-        }
-
-        if (current_word == "render_color")
-        {
-            int a = 0;
         }
 
         bool is_function_declaration{false};
@@ -745,12 +631,10 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
             for_each_scope_kind([&](ScopeKind scope) {
                 if (c == opening_char(scope))
                 {
-                    std::cout << "ENTER";
                     scopes_stack.push_back(scope);
                 }
                 if (c == closing_char(scope))
                 {
-                    std::cout << "EXIT";
                     if (scopes_stack.empty())
                         throw fmt::format("Mismatched brackets: found '{}' on line {}, but there is no opening '{}'.", c, line_number, opening_char(scope));
                     if (scopes_stack.back() != scope)
