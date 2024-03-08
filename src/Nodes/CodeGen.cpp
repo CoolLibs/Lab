@@ -350,8 +350,7 @@ static auto gen_base_function(
 
     RETURN_IF_ERROR(check_there_are_no_single_quotes_left(func_implementation, list_all_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices())));
 
-    context.push_function({.name = func_name, .definition = func_implementation}); // TODO(NodesParsing) no need to push function, since we know the name is already unique
-
+    context.push_code(func_implementation);
     return func_name;
 }
 
@@ -552,8 +551,7 @@ auto gen_desired_function(
         .body                = *func_body,
     });
 
-    context.push_function({.name = func_name, .definition = func_definition}); // TODO(NodesParsing) no need to push function, since we know the name is already unique
-
+    context.push_code(func_definition);
     return func_name;
 }
 

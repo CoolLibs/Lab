@@ -12,6 +12,11 @@ auto CodeGenContext::AlreadyGeneratedSymbols::has_already_been_generated(std::st
     return std::find(_names.begin(), _names.end(), name) != _names.end();
 }
 
+void CodeGenContext::push_code(std::string const& code)
+{
+    _code += code;
+}
+
 auto CodeGenContext::push_function(FunctionDefinition const& function) -> std::string
 {
     if (!_already_generated_functions.has_already_been_generated(function.name))

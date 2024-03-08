@@ -19,9 +19,10 @@ public:
     auto graph() const -> Cool::NodesGraph const& { return _graph; }
     auto get_node_definition(Cool::NodeDefinitionIdentifier const& id_names) const -> NodeDefinition const* { return _get_node_definition(id_names); }
 
+    /// Adds the code to the global code
+    void push_code(std::string const& code);
     /// Adds the code of the function to the global code, and returns its name as a convenience.
     auto push_function(FunctionDefinition const&) -> std::string; // Allows us to add checks like making sure the same function isn't generated twice
-    // void push_struct(Struct const&);
 
     auto code() const -> std::string { return _code; }
 
