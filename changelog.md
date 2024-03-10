@@ -20,6 +20,8 @@
 ## 🐣beta-15 WIP
 
 - 🐛 Fixed camera movements when using particles
+- 🐛 When dragging gizmos, mouse can now wrap around the screen
+- 🐛 Fixed: When writing your own nodes, they were not detected.
 
 ## 🐣beta-14
 
