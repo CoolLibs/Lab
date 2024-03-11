@@ -194,7 +194,7 @@ static auto gen_implicit_curve_renderer(
         return tl::make_unexpected(curve_func_name.error());
     auto const shape_func_name = fmt::format("curveRenderer{}", valid_glsl(std::string{base_function_name}));
     // Push helper function
-    context.push_function(FunctionDefinition{
+    context.push_function(Function{
         .name       = "Coollab_sdSegment",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions2d/
@@ -207,7 +207,7 @@ float Coollab_sdSegment(vec2 p, vec2 a, vec2 b, float thickness)
         )STR",
     });
     // Push actual renderer
-    context.push_function(FunctionDefinition{
+    context.push_function(Function{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
 float {}/*needs_coollab_context*/(vec2 uv)
@@ -254,7 +254,7 @@ static auto gen_implicit_curve_renderer_3D(
         return tl::make_unexpected(curve_func_name.error());
     auto const shape_func_name = fmt::format("curveRenderer3D{}", valid_glsl(std::string{base_function_name}));
     // Push helper function
-    context.push_function(FunctionDefinition{
+    context.push_function(Function{
         .name       = "Coollab_sdSegment3D",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions/
@@ -267,7 +267,7 @@ float Coollab_sdSegment3D(vec3 p, vec3 a, vec3 b, float thickness)
         )STR",
     });
     // Push actual renderer
-    context.push_function(FunctionDefinition{
+    context.push_function(Function{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
 float {}/*needs_coollab_context*/(vec3 pos)
@@ -315,7 +315,7 @@ static auto gen_implicit_shape_3D_renderer(
     if (!shape_3D_func_name)
         return tl::make_unexpected(shape_3D_func_name.error());
     auto const image_func_name = fmt::format("shape3DRenderer{}", valid_glsl(std::string{base_function_name}));
-    context.push_function(FunctionDefinition{
+    context.push_function(Function{
         .name       = image_func_name,
         .definition = fmt::format(
             FMT_COMPILE(R"STR(

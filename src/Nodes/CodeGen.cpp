@@ -13,7 +13,7 @@
 #include "CodeGen_desired_function_implementation.h"
 #include "Cool/Expected/RETURN_IF_ERROR.h"
 #include "Cool/Nodes/Pin.h"
-#include "FunctionDefinition.h"
+#include "Function.h"
 #include "FunctionSignature.h"
 #include "Node.h"
 #include "NodeDefinition.h"

@@ -5,7 +5,7 @@
  * -----------------------------------------------------------------------------
  */
 
-static auto gen_Coollab_Oklab_StraightA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Oklab",
@@ -21,7 +21,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Oklab",
@@ -37,7 +37,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Oklab_StraightA",
@@ -53,7 +53,7 @@ static auto gen_Coollab_Oklab_from_Oklab_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Oklab_StraightA",
@@ -69,7 +69,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Oklab_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Oklab_PremultipliedA",
@@ -85,7 +85,7 @@ static auto gen_Coollab_Oklab_from_Oklab_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Oklab_PremultipliedA",
@@ -101,7 +101,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Oklab_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Oklab",
@@ -117,7 +117,7 @@ static auto gen_Coollab_LinearRGB_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Oklab",
@@ -133,7 +133,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Oklab",
@@ -149,7 +149,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Oklab_StraightA",
@@ -165,7 +165,7 @@ static auto gen_Coollab_LinearRGB_from_Oklab_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Oklab_StraightA",
@@ -181,7 +181,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA",
@@ -197,7 +197,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA() -> Funct
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Oklab_PremultipliedA",
@@ -213,7 +213,7 @@ static auto gen_Coollab_LinearRGB_from_Oklab_PremultipliedA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA",
@@ -229,7 +229,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA",
@@ -246,7 +246,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA() -> 
     };
 }
 
-static auto gen_Coollab_sRGB_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Oklab",
@@ -262,7 +262,7 @@ static auto gen_Coollab_sRGB_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Oklab",
@@ -278,7 +278,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Oklab",
@@ -294,7 +294,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Oklab_StraightA",
@@ -310,7 +310,7 @@ static auto gen_Coollab_sRGB_from_Oklab_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Oklab_StraightA",
@@ -326,7 +326,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Oklab_StraightA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Oklab_StraightA",
@@ -342,7 +342,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_sRGB_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Oklab_PremultipliedA",
@@ -358,7 +358,7 @@ static auto gen_Coollab_sRGB_from_Oklab_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Oklab_PremultipliedA",
@@ -374,7 +374,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Oklab_PremultipliedA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA",
@@ -391,7 +391,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Oklab",
@@ -407,7 +407,7 @@ static auto gen_Coollab_Okhsl_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Oklab",
@@ -423,7 +423,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Oklab",
@@ -439,7 +439,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Oklab_StraightA",
@@ -455,7 +455,7 @@ static auto gen_Coollab_Okhsl_from_Oklab_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Oklab_StraightA",
@@ -471,7 +471,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Oklab_StraightA() -> FunctionDefini
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA",
@@ -487,7 +487,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Oklab_PremultipliedA",
@@ -503,7 +503,7 @@ static auto gen_Coollab_Okhsl_from_Oklab_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA",
@@ -519,7 +519,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA",
@@ -536,7 +536,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA() -> Func
     };
 }
 
-static auto gen_Coollab_Float_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Oklab",
@@ -552,7 +552,7 @@ static auto gen_Coollab_Float_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Oklab",
@@ -568,7 +568,7 @@ static auto gen_Coollab_Float_StraightA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Oklab() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Oklab() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Oklab",
@@ -584,7 +584,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Oklab() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Oklab_StraightA",
@@ -600,7 +600,7 @@ static auto gen_Coollab_Float_from_Oklab_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Oklab_StraightA",
@@ -616,7 +616,7 @@ static auto gen_Coollab_Float_StraightA_from_Oklab_StraightA() -> FunctionDefini
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Oklab_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Oklab_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Oklab_StraightA",
@@ -632,7 +632,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Oklab_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Float_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Oklab_PremultipliedA",
@@ -648,7 +648,7 @@ static auto gen_Coollab_Float_from_Oklab_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Oklab_PremultipliedA",
@@ -664,7 +664,7 @@ static auto gen_Coollab_Float_StraightA_from_Oklab_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA",
@@ -681,7 +681,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA() -> Func
     };
 }
 
-static auto gen_Coollab_Oklab_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_LinearRGB",
@@ -697,7 +697,7 @@ static auto gen_Coollab_Oklab_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_LinearRGB",
@@ -713,7 +713,7 @@ static auto gen_Coollab_Oklab_StraightA_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_LinearRGB",
@@ -729,7 +729,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Oklab_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_LinearRGB_StraightA",
@@ -745,7 +745,7 @@ static auto gen_Coollab_Oklab_from_LinearRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_LinearRGB_StraightA",
@@ -761,7 +761,7 @@ static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA",
@@ -777,7 +777,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA() -> Funct
     };
 }
 
-static auto gen_Coollab_Oklab_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_LinearRGB_PremultipliedA",
@@ -793,7 +793,7 @@ static auto gen_Coollab_Oklab_from_LinearRGB_PremultipliedA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA",
@@ -809,7 +809,7 @@ static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA",
@@ -826,7 +826,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA() -> 
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_LinearRGB",
@@ -842,7 +842,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB() -> FunctionDefiniti
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_LinearRGB",
@@ -858,7 +858,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB() -> FunctionDef
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_LinearRGB_StraightA",
@@ -874,7 +874,7 @@ static auto gen_Coollab_LinearRGB_from_LinearRGB_StraightA() -> FunctionDefiniti
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA",
@@ -890,7 +890,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA() -> F
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_LinearRGB_PremultipliedA",
@@ -906,7 +906,7 @@ static auto gen_Coollab_LinearRGB_from_LinearRGB_PremultipliedA() -> FunctionDef
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA",
@@ -922,7 +922,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA() -> F
     };
 }
 
-static auto gen_Coollab_sRGB_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_LinearRGB",
@@ -938,7 +938,7 @@ static auto gen_Coollab_sRGB_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_LinearRGB",
@@ -954,7 +954,7 @@ static auto gen_Coollab_sRGB_StraightA_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_LinearRGB",
@@ -970,7 +970,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB() -> FunctionDefiniti
     };
 }
 
-static auto gen_Coollab_sRGB_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_LinearRGB_StraightA",
@@ -986,7 +986,7 @@ static auto gen_Coollab_sRGB_from_LinearRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_LinearRGB_StraightA",
@@ -1002,7 +1002,7 @@ static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_StraightA() -> FunctionDef
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA",
@@ -1018,7 +1018,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA() -> Functi
     };
 }
 
-static auto gen_Coollab_sRGB_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_LinearRGB_PremultipliedA",
@@ -1034,7 +1034,7 @@ static auto gen_Coollab_sRGB_from_LinearRGB_PremultipliedA() -> FunctionDefiniti
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA",
@@ -1050,7 +1050,7 @@ static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA() -> Functi
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA",
@@ -1067,7 +1067,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA() -> F
     };
 }
 
-static auto gen_Coollab_Okhsl_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_LinearRGB",
@@ -1083,7 +1083,7 @@ static auto gen_Coollab_Okhsl_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_LinearRGB",
@@ -1099,7 +1099,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_LinearRGB",
@@ -1115,7 +1115,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Okhsl_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_LinearRGB_StraightA",
@@ -1131,7 +1131,7 @@ static auto gen_Coollab_Okhsl_from_LinearRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_LinearRGB_StraightA",
@@ -1147,7 +1147,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA",
@@ -1163,7 +1163,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA() -> Funct
     };
 }
 
-static auto gen_Coollab_Okhsl_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_LinearRGB_PremultipliedA",
@@ -1179,7 +1179,7 @@ static auto gen_Coollab_Okhsl_from_LinearRGB_PremultipliedA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA",
@@ -1195,7 +1195,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA",
@@ -1212,7 +1212,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA() -> 
     };
 }
 
-static auto gen_Coollab_Float_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Float_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Float_from_LinearRGB",
@@ -1228,7 +1228,7 @@ static auto gen_Coollab_Float_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_LinearRGB",
@@ -1244,7 +1244,7 @@ static auto gen_Coollab_Float_StraightA_from_LinearRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_LinearRGB",
@@ -1260,7 +1260,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Float_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_LinearRGB_StraightA",
@@ -1276,7 +1276,7 @@ static auto gen_Coollab_Float_from_LinearRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_LinearRGB_StraightA",
@@ -1292,7 +1292,7 @@ static auto gen_Coollab_Float_StraightA_from_LinearRGB_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_LinearRGB_StraightA",
@@ -1308,7 +1308,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_StraightA() -> Funct
     };
 }
 
-static auto gen_Coollab_Float_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_LinearRGB_PremultipliedA",
@@ -1324,7 +1324,7 @@ static auto gen_Coollab_Float_from_LinearRGB_PremultipliedA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_LinearRGB_PremultipliedA",
@@ -1340,7 +1340,7 @@ static auto gen_Coollab_Float_StraightA_from_LinearRGB_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA",
@@ -1357,7 +1357,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA() -> 
     };
 }
 
-static auto gen_Coollab_Oklab_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_sRGB",
@@ -1373,7 +1373,7 @@ static auto gen_Coollab_Oklab_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_sRGB",
@@ -1389,7 +1389,7 @@ static auto gen_Coollab_Oklab_StraightA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_sRGB",
@@ -1405,7 +1405,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_sRGB_StraightA",
@@ -1421,7 +1421,7 @@ static auto gen_Coollab_Oklab_from_sRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_sRGB_StraightA",
@@ -1437,7 +1437,7 @@ static auto gen_Coollab_Oklab_StraightA_from_sRGB_StraightA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_sRGB_StraightA",
@@ -1453,7 +1453,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Oklab_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_sRGB_PremultipliedA",
@@ -1469,7 +1469,7 @@ static auto gen_Coollab_Oklab_from_sRGB_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_sRGB_PremultipliedA",
@@ -1485,7 +1485,7 @@ static auto gen_Coollab_Oklab_StraightA_from_sRGB_PremultipliedA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA",
@@ -1502,7 +1502,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_sRGB",
@@ -1518,7 +1518,7 @@ static auto gen_Coollab_LinearRGB_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_sRGB",
@@ -1534,7 +1534,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_sRGB",
@@ -1550,7 +1550,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB() -> FunctionDefiniti
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_sRGB_StraightA",
@@ -1566,7 +1566,7 @@ static auto gen_Coollab_LinearRGB_from_sRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_sRGB_StraightA",
@@ -1582,7 +1582,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_StraightA() -> FunctionDef
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA",
@@ -1598,7 +1598,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA() -> Functi
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_sRGB_PremultipliedA",
@@ -1614,7 +1614,7 @@ static auto gen_Coollab_LinearRGB_from_sRGB_PremultipliedA() -> FunctionDefiniti
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA",
@@ -1630,7 +1630,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA() -> Functi
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA",
@@ -1647,7 +1647,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA() -> F
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_sRGB",
@@ -1663,7 +1663,7 @@ static auto gen_Coollab_sRGB_StraightA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_sRGB",
@@ -1679,7 +1679,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_sRGB_StraightA",
@@ -1695,7 +1695,7 @@ static auto gen_Coollab_sRGB_from_sRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_sRGB_StraightA",
@@ -1711,7 +1711,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB_StraightA() -> FunctionDef
     };
 }
 
-static auto gen_Coollab_sRGB_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_sRGB_PremultipliedA",
@@ -1727,7 +1727,7 @@ static auto gen_Coollab_sRGB_from_sRGB_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_sRGB_PremultipliedA",
@@ -1743,7 +1743,7 @@ static auto gen_Coollab_sRGB_StraightA_from_sRGB_PremultipliedA() -> FunctionDef
     };
 }
 
-static auto gen_Coollab_Okhsl_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_sRGB",
@@ -1759,7 +1759,7 @@ static auto gen_Coollab_Okhsl_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_sRGB",
@@ -1775,7 +1775,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_sRGB",
@@ -1791,7 +1791,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_sRGB_StraightA",
@@ -1807,7 +1807,7 @@ static auto gen_Coollab_Okhsl_from_sRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_sRGB_StraightA",
@@ -1823,7 +1823,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_sRGB_StraightA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA",
@@ -1839,7 +1839,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Okhsl_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_sRGB_PremultipliedA",
@@ -1855,7 +1855,7 @@ static auto gen_Coollab_Okhsl_from_sRGB_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA",
@@ -1871,7 +1871,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA",
@@ -1888,7 +1888,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Float_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Float_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Float_from_sRGB",
@@ -1904,7 +1904,7 @@ static auto gen_Coollab_Float_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_sRGB",
@@ -1920,7 +1920,7 @@ static auto gen_Coollab_Float_StraightA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_sRGB() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_sRGB() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_sRGB",
@@ -1936,7 +1936,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_sRGB() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_sRGB_StraightA",
@@ -1952,7 +1952,7 @@ static auto gen_Coollab_Float_from_sRGB_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_sRGB_StraightA",
@@ -1968,7 +1968,7 @@ static auto gen_Coollab_Float_StraightA_from_sRGB_StraightA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_sRGB_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_sRGB_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_sRGB_StraightA",
@@ -1984,7 +1984,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_sRGB_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Float_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_sRGB_PremultipliedA",
@@ -2000,7 +2000,7 @@ static auto gen_Coollab_Float_from_sRGB_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_sRGB_PremultipliedA",
@@ -2016,7 +2016,7 @@ static auto gen_Coollab_Float_StraightA_from_sRGB_PremultipliedA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA",
@@ -2033,7 +2033,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Oklab_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Okhsl",
@@ -2049,7 +2049,7 @@ static auto gen_Coollab_Oklab_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Okhsl",
@@ -2065,7 +2065,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Okhsl",
@@ -2081,7 +2081,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Okhsl_StraightA",
@@ -2097,7 +2097,7 @@ static auto gen_Coollab_Oklab_from_Okhsl_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Okhsl_StraightA",
@@ -2113,7 +2113,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Okhsl_StraightA() -> FunctionDefini
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA",
@@ -2129,7 +2129,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Oklab_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Okhsl_PremultipliedA",
@@ -2145,7 +2145,7 @@ static auto gen_Coollab_Oklab_from_Okhsl_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA",
@@ -2161,7 +2161,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA",
@@ -2178,7 +2178,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA() -> Func
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Okhsl",
@@ -2194,7 +2194,7 @@ static auto gen_Coollab_LinearRGB_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Okhsl",
@@ -2210,7 +2210,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Okhsl",
@@ -2226,7 +2226,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Okhsl_StraightA",
@@ -2242,7 +2242,7 @@ static auto gen_Coollab_LinearRGB_from_Okhsl_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Okhsl_StraightA",
@@ -2258,7 +2258,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA",
@@ -2274,7 +2274,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA() -> Funct
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Okhsl_PremultipliedA",
@@ -2290,7 +2290,7 @@ static auto gen_Coollab_LinearRGB_from_Okhsl_PremultipliedA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA",
@@ -2306,7 +2306,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA",
@@ -2323,7 +2323,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> 
     };
 }
 
-static auto gen_Coollab_sRGB_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Okhsl",
@@ -2339,7 +2339,7 @@ static auto gen_Coollab_sRGB_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Okhsl",
@@ -2355,7 +2355,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Okhsl",
@@ -2371,7 +2371,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Okhsl_StraightA",
@@ -2387,7 +2387,7 @@ static auto gen_Coollab_sRGB_from_Okhsl_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Okhsl_StraightA",
@@ -2403,7 +2403,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Okhsl_StraightA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA",
@@ -2419,7 +2419,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_sRGB_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Okhsl_PremultipliedA",
@@ -2435,7 +2435,7 @@ static auto gen_Coollab_sRGB_from_Okhsl_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA",
@@ -2451,7 +2451,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA",
@@ -2468,7 +2468,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Okhsl",
@@ -2484,7 +2484,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Okhsl",
@@ -2500,7 +2500,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Okhsl_StraightA",
@@ -2516,7 +2516,7 @@ static auto gen_Coollab_Okhsl_from_Okhsl_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA",
@@ -2532,7 +2532,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Okhsl_PremultipliedA",
@@ -2548,7 +2548,7 @@ static auto gen_Coollab_Okhsl_from_Okhsl_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA",
@@ -2564,7 +2564,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Float_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Okhsl",
@@ -2580,7 +2580,7 @@ static auto gen_Coollab_Float_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Okhsl",
@@ -2596,7 +2596,7 @@ static auto gen_Coollab_Float_StraightA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Okhsl() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Okhsl() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Okhsl",
@@ -2612,7 +2612,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Okhsl() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Okhsl_StraightA",
@@ -2628,7 +2628,7 @@ static auto gen_Coollab_Float_from_Okhsl_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Okhsl_StraightA",
@@ -2644,7 +2644,7 @@ static auto gen_Coollab_Float_StraightA_from_Okhsl_StraightA() -> FunctionDefini
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Okhsl_StraightA",
@@ -2660,7 +2660,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Float_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Okhsl_PremultipliedA",
@@ -2676,7 +2676,7 @@ static auto gen_Coollab_Float_from_Okhsl_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Okhsl_PremultipliedA",
@@ -2692,7 +2692,7 @@ static auto gen_Coollab_Float_StraightA_from_Okhsl_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA",
@@ -2709,7 +2709,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA() -> Func
     };
 }
 
-static auto gen_Coollab_Oklab_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Float",
@@ -2725,7 +2725,7 @@ static auto gen_Coollab_Oklab_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Float",
@@ -2741,7 +2741,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Float",
@@ -2757,7 +2757,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Float_StraightA",
@@ -2773,7 +2773,7 @@ static auto gen_Coollab_Oklab_from_Float_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Float_StraightA",
@@ -2789,7 +2789,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Float_StraightA() -> FunctionDefini
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Float_StraightA",
@@ -2805,7 +2805,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Float_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Oklab_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_from_Float_PremultipliedA",
@@ -2821,7 +2821,7 @@ static auto gen_Coollab_Oklab_from_Float_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Oklab_StraightA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_StraightA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_StraightA_from_Float_PremultipliedA",
@@ -2837,7 +2837,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Float_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA",
@@ -2854,7 +2854,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA() -> Func
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Float() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Float() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Float",
@@ -2870,7 +2870,7 @@ static auto gen_Coollab_LinearRGB_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Float",
@@ -2886,7 +2886,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Float",
@@ -2902,7 +2902,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Float_StraightA",
@@ -2918,7 +2918,7 @@ static auto gen_Coollab_LinearRGB_from_Float_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Float_StraightA",
@@ -2934,7 +2934,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Float_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Float_StraightA",
@@ -2950,7 +2950,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_StraightA() -> Funct
     };
 }
 
-static auto gen_Coollab_LinearRGB_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_from_Float_PremultipliedA",
@@ -2966,7 +2966,7 @@ static auto gen_Coollab_LinearRGB_from_Float_PremultipliedA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_LinearRGB_StraightA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_StraightA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Float_PremultipliedA",
@@ -2982,7 +2982,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Float_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA",
@@ -2999,7 +2999,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA() -> 
     };
 }
 
-static auto gen_Coollab_sRGB_from_Float() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Float() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Float",
@@ -3015,7 +3015,7 @@ static auto gen_Coollab_sRGB_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Float",
@@ -3031,7 +3031,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Float",
@@ -3047,7 +3047,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Float_StraightA",
@@ -3063,7 +3063,7 @@ static auto gen_Coollab_sRGB_from_Float_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Float_StraightA",
@@ -3079,7 +3079,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Float_StraightA() -> FunctionDefinit
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Float_StraightA",
@@ -3095,7 +3095,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Float_StraightA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_sRGB_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_from_Float_PremultipliedA",
@@ -3111,7 +3111,7 @@ static auto gen_Coollab_sRGB_from_Float_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_sRGB_StraightA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_StraightA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_StraightA_from_Float_PremultipliedA",
@@ -3127,7 +3127,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Float_PremultipliedA() -> FunctionDe
     };
 }
 
-static auto gen_Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA",
@@ -3144,7 +3144,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA() -> Funct
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Float",
@@ -3160,7 +3160,7 @@ static auto gen_Coollab_Okhsl_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Float",
@@ -3176,7 +3176,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Float",
@@ -3192,7 +3192,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Float_StraightA",
@@ -3208,7 +3208,7 @@ static auto gen_Coollab_Okhsl_from_Float_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Float_StraightA",
@@ -3224,7 +3224,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Float_StraightA() -> FunctionDefini
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Float_StraightA",
@@ -3240,7 +3240,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Okhsl_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_from_Float_PremultipliedA",
@@ -3256,7 +3256,7 @@ static auto gen_Coollab_Okhsl_from_Float_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Okhsl_StraightA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_StraightA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Float_PremultipliedA",
@@ -3272,7 +3272,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Float_PremultipliedA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA",
@@ -3289,7 +3289,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA() -> Func
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Float",
@@ -3305,7 +3305,7 @@ static auto gen_Coollab_Float_StraightA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Float() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Float() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Float",
@@ -3321,7 +3321,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Float() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Float_StraightA",
@@ -3337,7 +3337,7 @@ static auto gen_Coollab_Float_from_Float_StraightA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_PremultipliedA_from_Float_StraightA() -> FunctionDefinition
+static auto gen_Coollab_Float_PremultipliedA_from_Float_StraightA() -> Function
 {
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Float_StraightA",
@@ -3353,7 +3353,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Float_StraightA() -> FunctionD
     };
 }
 
-static auto gen_Coollab_Float_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_from_Float_PremultipliedA",
@@ -3369,7 +3369,7 @@ static auto gen_Coollab_Float_from_Float_PremultipliedA() -> FunctionDefinition
     };
 }
 
-static auto gen_Coollab_Float_StraightA_from_Float_PremultipliedA() -> FunctionDefinition
+static auto gen_Coollab_Float_StraightA_from_Float_PremultipliedA() -> Function
 {
     return {
         .name       = "Coollab_Float_StraightA_from_Float_PremultipliedA",

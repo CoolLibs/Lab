@@ -2,7 +2,7 @@
 
 namespace Lab {
 
-struct FunctionDefinition {
+struct Function {
     std::string name;
     std::string definition;
 };

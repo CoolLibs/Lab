@@ -495,7 +495,7 @@ def implicit_color_conversions_impl():
                 res[
                     0
                 ] += f"""
-                    static auto gen_{function_name}() -> FunctionDefinition
+                    static auto gen_{function_name}() -> Function
                     {{
                         return {{
                             .name       = "{function_name}",
@@ -798,7 +798,7 @@ def def_implicit_conversions():
     def gen_conversion(conversion: Conversion):
         function_name = f"Coollab_{conversion.to}_from_{conversion.from_}"
         return f"""
-            static auto gen_{function_name}() -> FunctionDefinition
+            static auto gen_{function_name}() -> Function
             {{
                 return {{
                     .name       = "{function_name}",
