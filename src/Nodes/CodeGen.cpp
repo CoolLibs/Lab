@@ -512,7 +512,7 @@ auto gen_desired_function(
         .body                = *func_body,
     });
 
-    context.push_code(func_definition);
+    context.push_function({.name = func_name, .definition = func_definition});
     return func_name;
 }
 

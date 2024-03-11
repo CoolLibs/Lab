@@ -184,7 +184,7 @@ static auto gen_Coollab_UV_from_Void() -> Function
     return {
         .name       = "Coollab_UV_from_Void",
         .definition = R"STR(
-                vec2 Coollab_UV_from_Void()
+                vec2 Coollab_UV_from_Void/*needs_coollab_context*/()
                 {
                     return coollab_context.uv;
                 }
@@ -197,7 +197,7 @@ static auto gen_Coollab_Particle2D_from_Void() -> Function
     return {
         .name       = "Coollab_Particle2D_from_Void",
         .definition = R"STR(
-                Particle2D Coollab_Particle2D_from_Void()
+                Particle2D Coollab_Particle2D_from_Void/*needs_coollab_context*/()
                 {
                     return coollab_context.particle;
                 }
@@ -210,7 +210,7 @@ static auto gen_Coollab_Particle3D_from_Void() -> Function
     return {
         .name       = "Coollab_Particle3D_from_Void",
         .definition = R"STR(
-                Particle3D Coollab_Particle3D_from_Void()
+                Particle3D Coollab_Particle3D_from_Void/*needs_coollab_context*/()
                 {
                     return coollab_context.particle;
                 }
