@@ -71,7 +71,7 @@ auto make_valid_output_index_name(Cool::OutputPin const& pin) -> std::string
     );
 }
 
-struct Properties {
+struct ValueInputs {
     std::string              code;
     std::vector<std::string> real_names;
 };
@@ -80,10 +80,10 @@ static auto gen_value_inputs(
     Node const&                node,
     CodeGenContext&            context,
     MaybeGenerateModule const& maybe_generate_module
-) -> tl::expected<Properties, std::string>
+) -> tl::expected<ValueInputs, std::string>
 {
     using fmt::literals::operator""_a;
-    Properties res{};
+    ValueInputs res{};
 
     size_t property_index{0};
     for (auto const& prop : node.value_inputs())
@@ -98,7 +98,7 @@ static auto gen_value_inputs(
             {
                 auto const property_type = variable_to_primitive_type(prop);
                 if (!property_type)
-                    return tl::make_unexpected("Can't create INPUT with that type"); // TODO(JF) Improve error message
+                    return tl::make_unexpected("Can't create an INPUT with that type"); // TODO(JF) Improve error message
 
                 auto const input_func_name = gen_desired_function(
                     {.from = PrimitiveType::Void, .to = *property_type, .arity = 0},
@@ -162,7 +162,7 @@ static void replace_value_inputs_names(
     for (auto const& value_input : value_inputs)
     {
         std::visit([&](auto&& value_input) {
-            Cool::String::replace_all_words_inplace(code, fmt::format("'{}'", value_input.name()), real_name[i]);
+            Cool::String::replace_all_inplace(code, fmt::format("'{}'", value_input.name()), real_name[i]);
         },
                    value_input);
         i++;
@@ -291,20 +291,20 @@ static auto gen_base_function(
     auto const function_inputs = gen_function_inputs(node, node_definition, context, maybe_generate_module);
     RETURN_IF_UNEXPECTED(function_inputs);
 
-    auto const value_inputs_code = gen_value_inputs(node, context, maybe_generate_module);
-    RETURN_IF_UNEXPECTED(value_inputs_code);
+    auto const value_inputs = gen_value_inputs(node, context, maybe_generate_module);
+    RETURN_IF_UNEXPECTED(value_inputs);
 
     auto const func_name = base_function_name(node_definition, id);
 
     auto func_implementation = gen_function_definition({
         .signature_as_string = node_definition.main_function().signature_as_string,
         .unique_name         = func_name,
-        .before_function     = value_inputs_code->code + node_definition.helper_glsl_code(),
+        .before_function     = value_inputs->code + node_definition.helper_glsl_code(),
         .body                = node_definition.main_function().body,
     });
 
     // Add a "namespace" to all the names that this function has defined globally (like its value inputs) so that names don't clash with another instance of the same node.
-    replace_value_inputs_names(func_implementation, node.value_inputs(), value_inputs_code->real_names);
+    replace_value_inputs_names(func_implementation, node.value_inputs(), value_inputs->real_names);
     replace_function_inputs_names(func_implementation, function_inputs->real_names);
     replace_output_indices_names(func_implementation, node);
     replace_names_in_global_scope(func_implementation, node_definition.names_in_global_scope(), reg::to_string(id));
