@@ -14,7 +14,7 @@ struct MainFunction {
     FunctionSignatureAsString signature_as_string;
     std::vector<std::string>  argument_names; // For optimisation, we store the argument_names
     FunctionSignature         signature;      // and FunctionSignature computed from signature_as_string
-    std::string               body;
+    std::string               body;           /// Does not contain the curly braces
 
     auto name() const -> std::string const& { return signature_as_string.name; }
     auto name() -> std::string& { return signature_as_string.name; }

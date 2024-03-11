@@ -4,12 +4,10 @@
 #include <Cool/RegExp/RegExp.h>
 #include <Cool/String/String.h>
 #include <exception>
-#include <sstream>
 #include <string_view>
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Dependencies/SharedVariableDefinition.h"
-#include "Cool/Variables/PresetManager.h"
 #include "Cool/type_from_string/type_from_string.h"
 #include "Debug/DebugOptions.h"
 #include "FunctionSignature.h"
@@ -31,16 +29,16 @@ static auto decompose_signature_string(std::string const& text, size_t end_of_fu
         .closing = ')',
     });
     if (!args_pos)
-        return tl::make_unexpected("Did not find the arguments of the function. You are missing a parenthesis.");
+        return tl::make_unexpected("Did not find the arguments of the main function. You are missing a parenthesis.");
     args_pos->first += 1; // Skip the first parenthesis
 
     auto const name_pos = Cool::String::find_previous_word_position(text, args_pos->first);
     if (!name_pos)
-        return tl::make_unexpected("Did not find the name of the function.");
+        return tl::make_unexpected("Did not find the name of the main function.");
 
     auto const return_type_pos = Cool::String::find_previous_word_position(text, name_pos->first);
     if (!return_type_pos)
-        return tl::make_unexpected("Did not find the return type of the function.");
+        return tl::make_unexpected("Did not find the return type of the main function.");
 
     return FunctionSignatureAsString{
         .return_type    = Cool::String::substring(text, *return_type_pos),
@@ -120,8 +118,7 @@ static auto make_main_function(std::string const& text, std::pair<size_t, size_t
     main.body = Cool::String::substring(text, brackets_pos.first + 1, brackets_pos.second - 1);
 
     auto const signature_as_string = decompose_signature_string(text, brackets_pos.first);
-    if (!signature_as_string.has_value())
-        return tl::make_unexpected(signature_as_string.error());
+    RETURN_IF_UNEXPECTED(signature_as_string);
     main.signature_as_string = *signature_as_string;
 
     main.signature_as_string.name = name; // Change name, we don't want it to be "main", but the name of the node
@@ -142,7 +139,7 @@ static auto make_main_function(std::string const& text, std::pair<size_t, size_t
                                    ? PrimitiveType::Void
                                    : (*arguments)[0].type;
 
-        main.signature_as_string.arguments_list = gen_arguments_list(*arguments); // Change arguments list so that it only uses regular glsl types, just like normal helper functions. Otherwise would generate invalid glsl code when generating the code for the function
+        main.signature_as_string.arguments_list = gen_arguments_list(*arguments); // Change arguments list so that it only uses regular glsl types, so that it is valid when copy-pasted into shader code.
 
         for (auto const& arg : *arguments)
         {
@@ -165,7 +162,7 @@ static auto make_main_function(std::string const& text, std::pair<size_t, size_t
 static auto find_main_function(std::string& text, NodeDefinition_Data& res, std::filesystem::path const& filepath)
     -> std::optional<std::string>
 {
-    auto const main_func_pos = Cool::String::find_word("main", text); // TODO(NodesParsing) Problem, e.g. if an INPUT name has main in it ('Some main thing'), of a file name in an include has "main". And its also a problem for when detecting function calls to insert CoollabContext
+    auto const main_func_pos = Cool::String::find_word("main", text); // TODO(NodesParsing) Problem, e.g. if an INPUT name has main in it ('Some main thing'), of a file name in an include has "main".
     if (main_func_pos == std::string_view::npos)
         return "Missing a main function.";
 
@@ -461,7 +458,7 @@ static auto parse_special_coollab_syntax_and_remove_it(
 {
     bool const fix_artifacts = text_without_comments.find("CLB_FIX_ARTIFACTS") != std::string::npos;
     if (fix_artifacts)
-        Cool::String::replace_all_inplace(text_without_comments, "CLB_FIX_ARTIFACTS", "(1. - 'Fix Artifacts') * ");
+        Cool::String::replace_all_words_inplace(text_without_comments, "CLB_FIX_ARTIFACTS", "(1. - 'Fix Artifacts') * ");
 
     RETURN_IF_ERR(find_main_function(text_without_comments, def, filepath));
     RETURN_IF_ERR(find_inputs(text_without_comments, def));
@@ -583,12 +580,12 @@ static auto is_digit(char c) -> bool
     return '0' <= c && c <= '9';
 }
 
-auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data& def) -> std::optional<std::string>
+auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data& def) -> std::optional<std::string> // NOLINT(function-cognitive-complexity)
 {
     auto previous_word = ""s;
     auto current_word  = ""s;
     auto scopes_stack  = std::vector<ScopeKind>{};
-    int  line_number   = 1; // TODO(NodesParsing) For the line number to match, we would need to keep the lines containing special Coollab syntax.
+    int  line_number   = 1; // TODO(NodesParsing) For the line number to match, we would need to keep the lines containing special Coollab syntax, and the comments.
     bool is_in_number  = false;
     bool is_in_macro   = false;
 
@@ -635,9 +632,9 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
                 if (c == closing_char(scope))
                 {
                     if (scopes_stack.empty())
-                        throw fmt::format("Mismatched brackets: found '{}' on line {}, but there is no opening '{}'.", c, line_number, opening_char(scope));
+                        throw fmt::format("Mismatched brackets: found '{}' on line {}, but there is no opening '{}'.", c, line_number, opening_char(scope)); // NOLINT(*exception-baseclass)
                     if (scopes_stack.back() != scope)
-                        throw fmt::format("Mismatched brackets: found '{}' on line {}, expected '{}'.", c, line_number, closing_char(scopes_stack.back()));
+                        throw fmt::format("Mismatched brackets: found '{}' on line {}, expected '{}'.", c, line_number, closing_char(scopes_stack.back())); // NOLINT(*exception-baseclass)
                     scopes_stack.pop_back();
                 }
             });
@@ -653,7 +650,9 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
             index += magic_comment.size();
         }
     }
-    assert(scopes_stack.empty()); // TODO(NodesParsing) User-facing error
+
+    if (!scopes_stack.empty())
+        return fmt::format("Mismatched brackets: missing a closing '{}'", closing_char(scopes_stack.back()));
     return {};
 }
 
@@ -683,7 +682,8 @@ auto parse_node_definition(std::filesystem::path const& filepath, std::string co
     auto text_without_comments = Cool::String::remove_comments(text);
     RETURN_IF_ERROR(parse_special_coollab_syntax_and_remove_it(text, text_without_comments, filepath, def)); // Leaves only regular glsl code
     RETURN_IF_ERROR(find_names_declared_in_global_scope(text_without_comments, def));                        // That we can then check for all symbols declared in global scope (functions, structs, constants, #define, etc.)
-    def.helper_glsl_code = text_without_comments;
+
+    def.helper_glsl_code = text_without_comments; // Must be done after it has been modified by parse_special_coollab_syntax_and_remove_it() and find_names_declared_in_global_scope()
     fixup_node_definition(def);
 
     return NodeDefinition::make(def, presets_paths(filepath));
