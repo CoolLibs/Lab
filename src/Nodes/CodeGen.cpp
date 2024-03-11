@@ -311,7 +311,7 @@ static auto gen_base_function(
 
     RETURN_IF_ERROR(check_there_are_no_single_quotes_left(func_implementation, list_all_input_and_output_names(node.value_inputs(), node_definition.function_inputs(), node_definition.output_indices())));
 
-    context.push_code(func_implementation);
+    context.push_function({.name = func_name, .definition = func_implementation});
     return func_name;
 }
 
