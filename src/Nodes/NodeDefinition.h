@@ -12,8 +12,8 @@ namespace Lab {
 
 struct MainFunction {
     FunctionSignatureAsString signature_as_string;
-    std::vector<std::string>  argument_names;
-    FunctionSignature         signature; // For optimisation, we store the FunctionSignature computed from function.signature_as_string
+    std::vector<std::string>  argument_names; // For optimisation, we store the argument_names
+    FunctionSignature         signature;      // and FunctionSignature computed from signature_as_string
     std::string               body;
 
     auto name() const -> std::string const& { return signature_as_string.name; }
@@ -44,9 +44,6 @@ public:
     [[nodiscard]] auto output_indices() const -> auto const& { return _data.output_indices; }
     [[nodiscard]] auto helper_glsl_code() const -> auto const& { return _data.helper_glsl_code; }
     [[nodiscard]] auto names_in_global_scope() const -> auto const& { return _data.names_in_global_scope; }
-    // [[nodiscard]] auto helper_functions() const -> auto const& { return _data.helper_functions; }
-    // [[nodiscard]] auto structs() const -> auto const& { return _data.structs; }
-    // [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
 
     [[nodiscard]] auto presets_manager() const -> auto const& { return *_presets_manager; }
     auto               imgui_presets(Cool::Settings& settings) const -> bool { return _presets_manager->imgui_presets(settings); }
