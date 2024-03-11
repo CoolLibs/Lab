@@ -111,7 +111,7 @@ void cool_main()
     coollab_context.uv = particle.position.xy;
     coollab_context.particle = particle;
 
-    particle = {main_function_name}(particle);
+    particle = {main_function_name}(coollab_context, particle);
 
     particle.velocity += particle.acceleration * _delta_time;
     particle.position += particle.velocity * _delta_time; // TODO(Particles) proper integration method

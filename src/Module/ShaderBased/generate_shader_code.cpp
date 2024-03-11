@@ -75,8 +75,10 @@ auto generate_shader_code(
             modules_textures_uniforms += fmt::format("uniform sampler2D {};\n", name);
     }
 
+    inject_context_argument_in_all_functions(context.code());
+
     using fmt::literals::operator""_a;
-    auto code = fmt::format(
+    return fmt::format(
         FMT_COMPILE(R"glsl(
 {in_version}
 uniform float     _delta_time;
@@ -107,18 +109,16 @@ vec2 to_view_space(vec2 uv)
 
 {in_before_main}
 {output_indices_declarations}
-{helper_functions}
+{helper_code}
 {main_function}
         )glsl"),
         "in_version"_a                  = content.version,
         "modules_textures_uniforms"_a   = modules_textures_uniforms,
         "in_before_main"_a              = content.before_main,
         "output_indices_declarations"_a = gen_all_output_indices_declarations(graph),
-        "helper_functions"_a            = context.code(),
+        "helper_code"_a                 = context.code(),
         "main_function"_a               = content.make_main(*main_function_name)
     );
-    inject_context_argument_in_all_functions(code);
-    return code;
 }
 
 } // namespace Lab

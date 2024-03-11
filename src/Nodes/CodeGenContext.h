@@ -24,7 +24,8 @@ public:
     /// Adds the code of the function to the global code, and returns its name as a convenience.
     auto push_function(Function const&) -> std::string; // Allows us to add checks like making sure the same function isn't generated twice
 
-    auto code() const -> std::string { return _code; }
+    auto code() const -> std::string const& { return _code; }
+    auto code() -> std::string& { return _code; }
 
 private:
     class AlreadyGeneratedFunctions {
