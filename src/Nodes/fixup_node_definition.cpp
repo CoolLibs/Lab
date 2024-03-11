@@ -53,7 +53,6 @@ static void add_alpha_forwarding(NodeDefinition_Data& data)
                 has_an_alpha_channel(original_output_type) ? "_and_alpha" : ""
             ),
             "original_main"_a    = name_of_original_main,
-            "color"_a            = data.main_function.argument_names[0],
             "color_components"_a = is_greyscale_type(data.main_function.signature.from) ? "x" : "rgb",
             "alpha_component"_a  = is_greyscale_type(data.main_function.signature.from) ? "y" : "a"
         );

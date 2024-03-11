@@ -430,16 +430,16 @@ static auto make_node_definition_that_reads_module_texture(std::string const& te
             .name           = "read_module_texture",
             .arguments_list = "/* UV */ vec2 uv",
         },
-        .body      = fmt::format(R"glsl(
+        .argument_names = {"uv"},
+        .signature      = FunctionSignature{
+                 .from  = PrimitiveType::UV,
+                 .to    = PrimitiveType::sRGB_StraightA,
+                 .arity = 1,
+        },
+        .body = fmt::format(R"glsl(
                     uv = unnormalize_uv(to_view_space(uv));
                     return texture({texture_name}, uv);)glsl",
-                                 "texture_name"_a = texture_name),
-        .signature = FunctionSignature{
-            .from  = PrimitiveType::UV,
-            .to    = PrimitiveType::sRGB_StraightA,
-            .arity = 1,
-        },
-        .argument_names = {"uv"},
+                            "texture_name"_a = texture_name),
     };
     return NodeDefinition::make(
                NodeDefinition_Data{

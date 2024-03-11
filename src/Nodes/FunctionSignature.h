@@ -11,36 +11,10 @@ struct FunctionSignature {
     friend auto operator==(FunctionSignature const&, FunctionSignature const&) -> bool = default;
 };
 
-struct FunctionSignatureAsString {
-    std::string return_type;
-    std::string name;
-    std::string arguments_list;
-};
-
-// struct ArgumentDesc {
-//     std::string   name;
-//     PrimitiveType type;
-// };
-
-// using ArgumentsList = std::vector<ArgumentDesc>;
-
-// struct FunctionSignatureWithNames {
-//     PrimitiveType return_type;
-//     ArgumentsList arguments_list;
-// };
-
-// struct MainFunctionSignature {
-//     FunctionSignature        signature;
-//     std::vector<std::string> argument_names;
-// };
-
 inline auto to_string(FunctionSignature signature) -> std::string
 {
     return fmt::format("{}to{}Arity{}", cpp_type_as_string(signature.from), cpp_type_as_string(signature.to), signature.arity);
 }
-
-// auto make_function_signature_with_names(MainFunctionSignature const& signature)
-//     -> FunctionSignatureWithNames;
 
 auto curve_signature() -> FunctionSignature;
 auto is_curve(FunctionSignature) -> bool;

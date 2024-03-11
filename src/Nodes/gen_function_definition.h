@@ -1,5 +1,5 @@
 #pragma once
-#include <Nodes/FunctionSignature.h>
+#include "FunctionSignatureAsString.h"
 
 namespace Lab {
 

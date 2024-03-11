@@ -18,7 +18,6 @@ static auto gen_all_output_indices_declarations(Cool::NodesGraph const& graph)
 
 static void inject_context_argument_in_all_functions(std::string& code)
 {
-    std::cout << code << '\n';
     static constexpr auto fund_def_id = "/*needs_coollab_context*/("sv;
     auto                  func_names  = std::set<std::string>{};
     auto                  pos         = code.find(fund_def_id, 0);
@@ -31,10 +30,8 @@ static void inject_context_argument_in_all_functions(std::string& code)
             continue;
         }
         func_names.insert(*func_name);
-        // TODO(NodesParsing) Remove /*needs_coollab_context*/
         static constexpr auto inserted_context = "CoollabContext coollab_context, "sv;
         code.insert(pos + fund_def_id.size(), inserted_context);
-        // Cool::String::replace_all_beginnings_of_words_inplace(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
         pos += fund_def_id.size() + inserted_context.size();
         pos = code.find(fund_def_id, pos);
     }

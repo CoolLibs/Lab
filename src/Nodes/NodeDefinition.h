@@ -4,6 +4,7 @@
 #include <memory>
 #include "Cool/Variables/PresetManager.h"
 #include "FunctionSignature.h"
+#include "FunctionSignatureAsString.h"
 #include "NodeInputDefinition.h"
 #include "tl/expected.hpp"
 
@@ -11,12 +12,12 @@ namespace Lab {
 
 struct MainFunction {
     FunctionSignatureAsString signature_as_string;
+    std::vector<std::string>  argument_names;
+    FunctionSignature         signature; // For optimisation, we store the FunctionSignature computed from function.signature_as_string
     std::string               body;
 
-    auto                     name() const -> std::string const& { return signature_as_string.name; }
-    auto                     name() -> std::string& { return signature_as_string.name; }
-    FunctionSignature        signature; // For optimisation, we store the FunctionSignature computed from function.signature_as_string
-    std::vector<std::string> argument_names;
+    auto name() const -> std::string const& { return signature_as_string.name; }
+    auto name() -> std::string& { return signature_as_string.name; }
 };
 
 struct NodeDefinition_Data {

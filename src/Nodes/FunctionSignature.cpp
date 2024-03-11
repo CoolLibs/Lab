@@ -3,27 +3,6 @@
 
 namespace Lab {
 
-// auto make_function_signature_with_names(MainFunctionSignature const& signature)
-//     -> FunctionSignatureWithNames
-// {
-//     auto res = FunctionSignatureWithNames{};
-
-//     res.return_type = signature.signature.to;
-
-//     std::transform(
-//         signature.argument_names.begin(), signature.argument_names.end(),
-//         std::back_inserter(res.arguments),
-//         [&](std::string const& name) {
-//             return ArgumentDesc{
-//                 .name = name,
-//                 .type = signature.signature.from,
-//             };
-//         }
-//     );
-
-//     return res;
-// }
-
 auto curve_signature() -> FunctionSignature
 {
     return FunctionSignature{

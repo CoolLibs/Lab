@@ -40,7 +40,6 @@ private:
 private:
     std::string               _code{};
     AlreadyGeneratedFunctions _already_generated_functions{};
-    AlreadyGeneratedFunctions _already_generated_structs{};
 
     Cool::NodesGraph const&                     _graph;
     Cool::GetNodeDefinition_Ref<NodeDefinition> _get_node_definition;
