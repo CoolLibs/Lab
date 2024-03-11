@@ -648,9 +648,9 @@ auto find_names_declared_in_global_scope(std::string& text, NodeDefinition_Data&
         }
         if (is_function_declaration)
         {
-            static constexpr auto fund_def_id = "/*needs_coollab_context*/"sv;
-            text.insert(index, fund_def_id);
-            index += fund_def_id.size();
+            static constexpr auto magic_comment = "/*needs_coollab_context*/"sv;
+            text.insert(index, magic_comment);
+            index += magic_comment.size();
         }
     }
     assert(scopes_stack.empty()); // TODO(NodesParsing) User-facing error

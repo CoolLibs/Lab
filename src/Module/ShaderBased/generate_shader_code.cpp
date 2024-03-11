@@ -18,9 +18,10 @@ static auto gen_all_output_indices_declarations(Cool::NodesGraph const& graph)
 
 static void inject_context_argument_in_all_functions(std::string& code)
 {
-    static constexpr auto fund_def_id = "/*needs_coollab_context*/("sv;
-    auto                  func_names  = std::set<std::string>{};
-    auto                  pos         = code.find(fund_def_id, 0);
+    static constexpr auto magic_comment = "/*needs_coollab_context*/("sv;
+
+    auto func_names = std::set<std::string>{};
+    auto pos        = code.find(magic_comment);
     while (pos != std::string_view::npos)
     {
         auto const func_name = Cool::String::find_previous_word(code, pos);
@@ -29,14 +30,17 @@ static void inject_context_argument_in_all_functions(std::string& code)
             assert(false);
             continue;
         }
+
         func_names.insert(*func_name);
-        static constexpr auto inserted_context = "CoollabContext coollab_context, "sv;
-        code.insert(pos + fund_def_id.size(), inserted_context);
-        pos += fund_def_id.size() + inserted_context.size();
-        pos = code.find(fund_def_id, pos);
+        static constexpr auto ctx_declaration = "CoollabContext coollab_context, "sv;
+        code.insert(pos + magic_comment.size(), ctx_declaration);
+
+        pos += magic_comment.size() + ctx_declaration.size();
+        pos = code.find(magic_comment, pos);
     }
+
     for (auto const& func_name : func_names)
-        Cool::String::replace_all_beginnings_of_words_inplace(code, func_name + "(", func_name + "(coollab_context, ");
+        Cool::String::replace_all_beginnings_of_words_inplace(code, func_name + "(", func_name + "(coollab_context, "); // Will only replace in places where we call the function, and not where we declare the function because there there is our magic comment between the name of the function and the parenthesis.
 
     // Fixup the extra commas for functions that had no arguments initially
     Cool::String::replace_all_inplace(code, ", )", ")");
