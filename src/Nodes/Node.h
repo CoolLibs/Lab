@@ -108,6 +108,8 @@ public:
 
     auto as_pod() const -> NodeAsPOD;
 
+    void clear_all_error_messages();
+
 private:
     NodePodPart                          _d{};
     std::vector<Cool::AnySharedVariable> _value_inputs;
