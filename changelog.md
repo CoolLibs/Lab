@@ -1,6 +1,7 @@
 # Changelog
 
-- [🐣beta-14 WIP](#beta-14-wip)
+- [🐣beta-15 WIP](#beta-15-wip)
+- [🐣beta-14](#beta-14)
 - [🐣beta-13](#beta-13)
 - [🐣beta-12](#beta-12)
 - [🐣beta-11](#beta-11)
@@ -16,7 +17,18 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-14 WIP
+## 🐣beta-15 WIP
+
+- 🐛 Fixed camera movements when using particles
+- 🐛 When dragging gizmos, mouse can now wrap around the screen
+- 🐛 Fixed: When writing your own nodes, they were not detected.
+- 🐛 Fixed a few nodes.
+- 👩‍💻 The syntax for creating your own Coollab nodes is now 100% compatible with regular glsl syntax. You can now write structs, global variables, #define, etc.
+
+## 🐣beta-14
+
+- ✨ You can now create your own nodes! [Read the tutorial](https://coollab-art.com/Tutorials/Writing%20Nodes/Intro) to learn everything you need to know.
+- 🐛 Fixed: Plugging a link into an input pin that already has a link now removes the old link. (This bug was introduced in the previous version).
 
 ## 🐣beta-13
 

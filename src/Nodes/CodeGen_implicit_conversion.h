@@ -1,6 +1,5 @@
 #pragma once
 #include "CodeGenContext.h"
-#include "Function.h"
 #include "FunctionSignature.h"
 #include "PrimitiveType.h"
 

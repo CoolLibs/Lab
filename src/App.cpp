@@ -21,6 +21,7 @@
 #include <chrono>
 #include <cmd/imgui.hpp>
 #include <filesystem>
+#include <open/open.hpp>
 #include <reg/src/internal/generate_uuid.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
@@ -559,6 +560,8 @@ void App::commands_menu()
             _project.audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
             _output_view.open();
+        if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
+            Cool::open(Cool::Path::user_data().string().c_str());
         ImGui::EndMenu();
     }
 }

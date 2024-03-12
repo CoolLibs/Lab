@@ -55,7 +55,7 @@ public:
     void               on_node_created(Cool::Node&, Cool::NodeId const&, Cool::Pin const* pin_linked_to_new_node);
     [[nodiscard]] auto copy_nodes() const -> std::string;
     /// Returns true iff successfully pasted nodes
-    auto        paste_nodes(std::string_view clipboard_content) -> bool;
+    auto        paste_nodes(std::string_view clipboard_string) -> bool;
     void        change_node_definition(Cool::NodeId const&, Cool::Node&, Cool::NodeDefinition const&);
     void        update_node_with_new_definition(Cool::Node&, Cool::NodeDefinition const&);
     void        update_node_with_new_definition(Node&, Cool::NodeDefinition const&, bool store_links_deletion_in_history = false);

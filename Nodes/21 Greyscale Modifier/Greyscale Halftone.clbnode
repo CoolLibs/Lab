@@ -16,5 +16,5 @@ float dot_screen(vec2 uv)
 
 float main(UV uv)
 {
-    return saturate('Greyscale'(uv)*10. - 5. + dot_screen(uv));
+    return saturate('Greyscale'(uv) * 10. - 5. + dot_screen(uv));
 }

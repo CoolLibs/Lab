@@ -7,28 +7,24 @@
                     "Name": "Default",
                     "Values": [
                         {
-                            "index": 7,
+                            "index": 19,
                             "data": {
                                 "Name": "Matrix",
                                 "Value": {
-                                    "sRGB": {
-                                        "x": 0.0,
-                                        "y": 0.0,
-                                        "z": 0.0
-                                    }
+                                    "value0": 1.0,
+                                    "value1": 0.0,
+                                    "value2": 0.0,
+                                    "value3": 1.0
                                 },
                                 "Metadata": {
-                                    "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.0,
-                                        "y": 0.0,
-                                        "z": 0.0
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false
                                     }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         }

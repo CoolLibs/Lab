@@ -12,7 +12,7 @@ Particle2D main(Particle2D Particle)
         1.
     );
     position.x *= _aspect_ratio;
-    position = _camera2D * position;
+    position = _camera2D_transform * position;
 
     Particle.position = position.xy / position.z;
     return Particle;

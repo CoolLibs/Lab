@@ -95,8 +95,8 @@ auto set_uniforms_for_shader_based_module(
 ) -> void
 {
     shader.bind();
-    shader.set_uniform("_camera2D", system_values.camera_2D.transform_matrix());
-    shader.set_uniform("_camera2D_inverse", glm::inverse(system_values.camera_2D.view_matrix()));
+    shader.set_uniform("_camera2D_transform", system_values.camera_2D.transform_matrix());
+    shader.set_uniform("_camera2D_view", system_values.camera_2D.view_matrix());
     shader.set_uniform("_height", system_values.height());
     shader.set_uniform("_aspect_ratio", system_values.aspect_ratio());
     shader.set_uniform("_inverse_aspect_ratio", system_values.inverse_aspect_ratio());

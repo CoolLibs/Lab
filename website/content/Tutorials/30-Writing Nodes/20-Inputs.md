@@ -43,7 +43,7 @@ INPUT Direction2D 'Direction';
 
 sRGB_StraightA main(UV uv)
 {
-    vec4 R = 'Image'(uv + 'Displacement' * 'Direction' );
+    vec4 R = 'Image'(uv + 'Displacement' * 'Direction');
     vec4 G = 'Image'(uv);
     vec4 B = 'Image'(uv - 'Displacement' * 'Direction');
 

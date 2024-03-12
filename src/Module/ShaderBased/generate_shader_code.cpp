@@ -16,20 +16,35 @@ static auto gen_all_output_indices_declarations(Cool::NodesGraph const& graph)
     return res.str();
 }
 
-static auto inject_context_argument_in_all_functions(std::string code, std::vector<std::string> const& function_names)
-    -> std::string
+static void inject_context_argument_in_all_functions(std::string& code)
 {
-    for (auto const& name : function_names)
+    static constexpr auto magic_comment = "/*needs_coollab_context*/("sv;
+
+    auto func_names = std::set<std::string>{};
+    auto pos        = code.find(magic_comment);
+    while (pos != std::string_view::npos)
     {
-        Cool::String::replace_all_beginnings_of_words_inplace(code, name + "(", name + "(coollab_context, ");
-        Cool::String::replace_all_beginnings_of_words_inplace(code, name + "/*coollabdef*/(", name + "(CoollabContext coollab_context, ");
+        auto const func_name = Cool::String::find_previous_word(code, pos);
+        if (!func_name)
+        {
+            assert(false);
+            continue;
+        }
+
+        func_names.insert(*func_name);
+        static constexpr auto ctx_declaration = "CoollabContext coollab_context, "sv;
+        code.insert(pos + magic_comment.size(), ctx_declaration);
+
+        pos += magic_comment.size() + ctx_declaration.size();
+        pos = code.find(magic_comment, pos);
     }
+
+    for (auto const& func_name : func_names)
+        Cool::String::replace_all_beginnings_of_words_inplace(code, func_name + "(", func_name + "(coollab_context, "); // Will only replace in places where we call the function, and not where we declare the function because there there is our magic comment between the name of the function and the parenthesis.
 
     // Fixup the extra commas for functions that had no arguments initially
     Cool::String::replace_all_inplace(code, ", )", ")");
     Cool::String::replace_all_inplace(code, "(coollab_context, ()", "(coollab_context");
-
-    return code;
 }
 
 auto generate_shader_code(
@@ -61,6 +76,8 @@ auto generate_shader_code(
             modules_textures_uniforms += fmt::format("uniform sampler2D {};\n", name);
     }
 
+    inject_context_argument_in_all_functions(context.code());
+
     using fmt::literals::operator""_a;
     return fmt::format(
         FMT_COMPILE(R"glsl(
@@ -71,8 +88,8 @@ uniform float     _height;
 uniform float     _audio_volume;
 uniform sampler1D _audio_spectrum;
 uniform sampler1D _audio_waveform;
-uniform mat3      _camera2D;
-uniform mat3      _camera2D_inverse;
+uniform mat3      _camera2D_transform;
+uniform mat3      _camera2D_view;
 uniform sampler2D _previous_frame_texture;
 uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 {modules_textures_uniforms}
@@ -87,20 +104,20 @@ uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixb
 
 vec2 to_view_space(vec2 uv)
 {{
-    vec3 p = _camera2D_inverse * vec3(uv, 1.);
+    vec3 p = _camera2D_view * vec3(uv, 1.);
     return p.xy / p.z;
 }}
 
 {in_before_main}
 {output_indices_declarations}
-{helper_functions}
+{helper_code}
 {main_function}
         )glsl"),
         "in_version"_a                  = content.version,
         "modules_textures_uniforms"_a   = modules_textures_uniforms,
         "in_before_main"_a              = content.before_main,
         "output_indices_declarations"_a = gen_all_output_indices_declarations(graph),
-        "helper_functions"_a            = inject_context_argument_in_all_functions(context.code(), context.function_names()),
+        "helper_code"_a                 = context.code(),
         "main_function"_a               = content.make_main(*main_function_name)
     );
 }

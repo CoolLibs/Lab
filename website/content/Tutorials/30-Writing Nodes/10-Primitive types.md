@@ -23,7 +23,7 @@ And here are all the remaining types, that are seldom used:
 - `Direction2D` (`vec2` under the hood, guaranteed to be of length 1).
 
 :::info
-It is important to note that these types are purely semantic, and in your code you can just treat them as regular int / float / vec2 / vec3 / vec4.
+It is important to note that these types are purely semantic, and in your code you can just treat them as a regular int / float / vec2 / vec3 / vec4.
 :::
 
 ## Examples
@@ -65,7 +65,7 @@ UV main(float Percentage)
 }
 ```
 
-```glsl title="Mask"
+```glsl title="Mask / Greyscale image"
 float main(UV uv)
 {
     // ...
@@ -79,7 +79,7 @@ Oklab_PremultipliedA main(Oklab_PremultipliedA Over, Oklab_PremultipliedA Under)
 }
 ```
 
-```glsl title="Black & White"
+```glsl title="Conversion to Black & White"
 float main(Oklab Color)
 {
     // ...
@@ -93,14 +93,14 @@ Oklab main(float Greyscale)
 }
 ```
 
-```glsl title="SDF 2D"
+```glsl title="2D SDF"
 SignedDistance main(UV uv)
 {
     // ...
 }
 ```
 
-```glsl title="SDF 3D"
+```glsl title="3D SDF"
 SignedDistance main(vec3 pos)
 {
     // ...

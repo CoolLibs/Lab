@@ -8,7 +8,7 @@ flat out uint _particle_index;
 #ifdef COOLLAB_PARTICLES_3D
 uniform mat4 cool_camera_view;
 #endif
-uniform mat4 transform_matrix;
+uniform mat4 view_proj_matrix;
 
 layout(std430, binding = 0) buffer _positions_buffer
 {
@@ -49,7 +49,7 @@ void main()
     vec3 camera_up         = vec3(0, 1, 0);
 #endif
     float size     = _sizes[gl_InstanceID];
-    vec4  proj_pos = transform_matrix
+    vec4  proj_pos = view_proj_matrix
                     * vec4(
                         particle_position
                             + camera_right * _position.x * size

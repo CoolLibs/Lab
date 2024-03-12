@@ -68,7 +68,7 @@ static auto gen_function_with_implicit_conversions(
         .name       = name,
         .definition = fmt::format(
             FMT_COMPILE(R"STR(
-{output} {name}/*coollabdef*/({inputs_declaration})
+{output} {name}/*needs_coollab_context*/({inputs_declaration})
 {{
     return {output_conversion}({base_name}({converted_inputs}));
 }}
@@ -106,7 +106,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::SignedDistance, PrimitiveType::Float},
             "default_signed_distance_to_float", fmt::format(R"STR(
-    float default_signed_distance_to_float/*coollabdef*/(float sd)
+    float default_signed_distance_to_float(float sd)
     {{
         return {};
     }}
@@ -122,7 +122,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::SignedDistance, PrimitiveType::sRGB},
             "default_signed_distance_to_sRGB", fmt::format(R"STR(
-    vec3 default_signed_distance_to_sRGB/*coollabdef*/(float sd)
+    vec3 default_signed_distance_to_sRGB(float sd)
     {{
         return vec3({});
     }}
@@ -138,7 +138,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::UV, PrimitiveType::SignedDistance},
             "default_shape", R"STR(
-    float default_shape/*coollabdef*/(vec2 uv)
+    float default_shape(vec2 uv)
     {{
         return length(uv) - 0.5;
     }}
@@ -153,9 +153,9 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::Vec3, PrimitiveType::SignedDistance},
             "default_shape_3D", R"STR(
-    float default_shape_3D/*coollabdef*/(vec3 pos)
+    float default_shape_3D(vec3 pos)
     {{
-        return length(pos) - 5.;
+        return length(pos) - 1.;
     }}
     )STR",
             signature, context
@@ -167,7 +167,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::Float, PrimitiveType::Float},
             "default_1D_function", R"STR(
-    float default_1D_function/*coollabdef*/(float x)
+    float default_1D_function(float x)
     {{
         return sin(x*TAU*10.)*0.5+0.5;
     }}
@@ -183,7 +183,7 @@ auto gen_default_function(FunctionSignature signature, CodeGenContext& context)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::UV, PrimitiveType::sRGB},
             "default_image_srgb", R"STR(
-vec3 default_image_srgb/*coollabdef*/(vec2 uv)
+vec3 default_image_srgb(vec2 uv)
 {
     return vec3(saturate(uv), 0.);
 }
@@ -198,7 +198,7 @@ vec3 default_image_srgb/*coollabdef*/(vec2 uv)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::UV, PrimitiveType::Float},
             "default_uv_to_float", R"STR(
-float default_uv_to_float/*coollabdef*/(vec2 uv)
+float default_uv_to_float(vec2 uv)
 {
     return uv.x * 0.5 / _aspect_ratio + 0.5;
 }
@@ -213,7 +213,7 @@ float default_uv_to_float/*coollabdef*/(vec2 uv)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::Float, PrimitiveType::UV},
             "default_curve", R"STR(
-vec2 default_curve/*coollabdef*/(float t)
+vec2 default_curve(float t)
 {
     float angle = TAU * t;
     return vec2(cos(angle), sin(angle));
@@ -229,7 +229,7 @@ vec2 default_curve/*coollabdef*/(float t)
         auto const func = maybe_generate_default(
             FunctionSignature{PrimitiveType::Float, PrimitiveType::Vec3},
             "default_curve_3D", R"STR(
-vec3 default_curve_3D/*coollabdef*/(float t)
+vec3 default_curve_3D(float t)
 {
     float angle = TAU * t;
     return vec3(cos(angle), sin(angle), 0.);
@@ -245,7 +245,7 @@ vec3 default_curve_3D/*coollabdef*/(float t)
         auto const func = maybe_generate_default(
             FunctionSignature{.from = PrimitiveType::Oklab_PremultipliedA, .to = PrimitiveType::Oklab_PremultipliedA, .arity = 2},
             "default_blend_mode", R"STR(
-vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
+vec4 default_blend_mode(vec4 over, vec4 under)
 {
     // This is a over (aka Normal Blend Mode).
     return over + (1. - over.a) * under;
@@ -265,7 +265,7 @@ vec4 default_blend_mode/*coollabdef*/(vec4 over, vec4 under)
             return context.push_function({
                 .name       = "default_uv",
                 .definition = R"STR(
-vec2 default_uv/*coollabdef*/()
+vec2 default_uv/*needs_coollab_context*/()
 {
     return coollab_context.uv;
 }
@@ -277,7 +277,7 @@ vec2 default_uv/*coollabdef*/()
             return context.push_function({
                 .name       = "default_particle_2D",
                 .definition = R"STR(
-Particle2D default_particle_2D/*coollabdef*/()
+Particle2D default_particle_2D/*needs_coollab_context*/()
 {
     return coollab_context.particle;
 }
@@ -289,7 +289,7 @@ Particle2D default_particle_2D/*coollabdef*/()
             return context.push_function({
                 .name       = "default_particle_3D",
                 .definition = R"STR(
-Particle3D default_particle_3D/*coollabdef*/()
+Particle3D default_particle_3D/*needs_coollab_context*/()
 {
     return coollab_context.particle;
 }
@@ -297,12 +297,12 @@ Particle3D default_particle_3D/*coollabdef*/()
             });
         }
         auto const glsl_type = raw_glsl_type_as_string(signature.to);
-        auto const name      = fmt::format("default_constant_{}", glsl_type);
+        auto const name      = fmt::format("default_constant_{}", glsl_type); // Must always contain "default_constant" because of a HACK in gen_transformed_inputs() of CodeGen_desired_function_implementation.cpp
         return context.push_function({
             .name       = name,
             .definition = fmt::format(
                 FMT_COMPILE(R"STR(
-{type} {name}/*coollabdef*/()
+{type} {name}()
 {{
     return {type}(0);
 }}
