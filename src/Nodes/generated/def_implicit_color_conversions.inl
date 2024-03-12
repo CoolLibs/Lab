@@ -10,7 +10,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Oklab() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_StraightA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -26,7 +26,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -42,7 +42,7 @@ static auto gen_Coollab_Oklab_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_premultiply_color(from.xyz, from.a));
@@ -58,7 +58,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -74,7 +74,7 @@ static auto gen_Coollab_Oklab_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -90,7 +90,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_StraightA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_unpremultiply_color(from.xyz, from.a));
@@ -106,7 +106,7 @@ static auto gen_Coollab_LinearRGB_from_Oklab() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Oklab",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Oklab/*coollabdef*/(vec3 from)
+                                vec3 Coollab_LinearRGB_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(from);
@@ -122,7 +122,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Oklab() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(from);
@@ -138,7 +138,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab() -> Function
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(from);
@@ -154,7 +154,7 @@ static auto gen_Coollab_LinearRGB_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(Cool_premultiply_color(from.xyz, from.a));
@@ -170,7 +170,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(from.xyz);
@@ -186,7 +186,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA() -> Funct
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(from.xyz);
@@ -202,7 +202,7 @@ static auto gen_Coollab_LinearRGB_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(from.xyz);
@@ -218,7 +218,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Oklab(Cool_unpremultiply_color(from.xyz, from.a));
@@ -234,7 +234,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA() -> 
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -251,7 +251,7 @@ static auto gen_Coollab_sRGB_from_Oklab() -> Function
     return {
         .name       = "Coollab_sRGB_from_Oklab",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Oklab/*coollabdef*/(vec3 from)
+                                vec3 Coollab_sRGB_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(from);
@@ -267,7 +267,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Oklab() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_StraightA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(from);
@@ -283,7 +283,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(from);
@@ -299,7 +299,7 @@ static auto gen_Coollab_sRGB_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(Cool_premultiply_color(from.xyz, from.a));
@@ -315,7 +315,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_StraightA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(from.xyz);
@@ -331,7 +331,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(from.xyz);
@@ -347,7 +347,7 @@ static auto gen_Coollab_sRGB_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(from.xyz);
@@ -363,7 +363,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_StraightA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Oklab(Cool_unpremultiply_color(from.xyz, from.a));
@@ -379,7 +379,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -396,7 +396,7 @@ static auto gen_Coollab_Okhsl_from_Oklab() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Oklab",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Oklab/*coollabdef*/(vec3 from)
+                                vec3 Coollab_Okhsl_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(from);
@@ -412,7 +412,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Oklab() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_StraightA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(from);
@@ -428,7 +428,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Oklab",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Oklab(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(from);
@@ -444,7 +444,7 @@ static auto gen_Coollab_Okhsl_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(Cool_premultiply_color(from.xyz, from.a));
@@ -460,7 +460,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_StraightA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(from.xyz);
@@ -476,7 +476,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(from.xyz);
@@ -492,7 +492,7 @@ static auto gen_Coollab_Okhsl_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(from.xyz);
@@ -508,7 +508,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_StraightA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Oklab(Cool_unpremultiply_color(from.xyz, from.a));
@@ -524,7 +524,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA() -> Func
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -541,7 +541,7 @@ static auto gen_Coollab_Float_from_Oklab() -> Function
     return {
         .name       = "Coollab_Float_from_Oklab",
         .definition = R"STR(
-                                float Coollab_Float_from_Oklab/*coollabdef*/(vec3 from)
+                                float Coollab_Float_from_Oklab(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(from);
@@ -557,7 +557,7 @@ static auto gen_Coollab_Float_StraightA_from_Oklab() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Oklab",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_StraightA_from_Oklab(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(from);
@@ -573,7 +573,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Oklab() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Oklab",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Oklab/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_PremultipliedA_from_Oklab(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(from);
@@ -589,7 +589,7 @@ static auto gen_Coollab_Float_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Float_from_Oklab_StraightA",
         .definition = R"STR(
-                                float Coollab_Float_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(Cool_premultiply_color(from.xyz, from.a));
@@ -605,7 +605,7 @@ static auto gen_Coollab_Float_StraightA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(from.xyz);
@@ -621,7 +621,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Oklab_StraightA() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Oklab_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Oklab_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_Oklab_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(from.xyz);
@@ -637,7 +637,7 @@ static auto gen_Coollab_Float_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                float Coollab_Float_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(from.xyz);
@@ -653,7 +653,7 @@ static auto gen_Coollab_Float_StraightA_from_Oklab_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Oklab(Cool_unpremultiply_color(from.xyz, from.a));
@@ -669,7 +669,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA() -> Func
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_Oklab_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -686,7 +686,7 @@ static auto gen_Coollab_Oklab_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Oklab_from_LinearRGB",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec3 Coollab_Oklab_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(from);
@@ -702,7 +702,7 @@ static auto gen_Coollab_Oklab_StraightA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_StraightA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(from);
@@ -718,7 +718,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(from);
@@ -734,7 +734,7 @@ static auto gen_Coollab_Oklab_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -750,7 +750,7 @@ static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_StraightA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(from.xyz);
@@ -766,7 +766,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA() -> Funct
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(from.xyz);
@@ -782,7 +782,7 @@ static auto gen_Coollab_Oklab_from_LinearRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(from.xyz);
@@ -798,7 +798,7 @@ static auto gen_Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_StraightA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_LinearRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -814,7 +814,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA() -> 
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -831,7 +831,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -847,7 +847,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -863,7 +863,7 @@ static auto gen_Coollab_LinearRGB_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_premultiply_color(from.xyz, from.a));
@@ -879,7 +879,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA() -> F
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -895,7 +895,7 @@ static auto gen_Coollab_LinearRGB_from_LinearRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -911,7 +911,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA() -> F
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_unpremultiply_color(from.xyz, from.a));
@@ -927,7 +927,7 @@ static auto gen_Coollab_sRGB_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_sRGB_from_LinearRGB",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec3 Coollab_sRGB_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(from);
@@ -943,7 +943,7 @@ static auto gen_Coollab_sRGB_StraightA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_StraightA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(from);
@@ -959,7 +959,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(from);
@@ -975,7 +975,7 @@ static auto gen_Coollab_sRGB_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -991,7 +991,7 @@ static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_StraightA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(from.xyz);
@@ -1007,7 +1007,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA() -> Functi
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(from.xyz);
@@ -1023,7 +1023,7 @@ static auto gen_Coollab_sRGB_from_LinearRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(from.xyz);
@@ -1039,7 +1039,7 @@ static auto gen_Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA() -> Functi
     return {
         .name       = "Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_StraightA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_LinearRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -1055,7 +1055,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA() -> F
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -1072,7 +1072,7 @@ static auto gen_Coollab_Okhsl_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Okhsl_from_LinearRGB",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec3 Coollab_Okhsl_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(from);
@@ -1088,7 +1088,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_StraightA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(from);
@@ -1104,7 +1104,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_LinearRGB",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_LinearRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(from);
@@ -1120,7 +1120,7 @@ static auto gen_Coollab_Okhsl_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -1136,7 +1136,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_StraightA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(from.xyz);
@@ -1152,7 +1152,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA() -> Funct
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(from.xyz);
@@ -1168,7 +1168,7 @@ static auto gen_Coollab_Okhsl_from_LinearRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(from.xyz);
@@ -1184,7 +1184,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_StraightA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_LinearRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -1200,7 +1200,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA() -> 
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -1217,7 +1217,7 @@ static auto gen_Coollab_Float_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Float_from_LinearRGB",
         .definition = R"STR(
-                                float Coollab_Float_from_LinearRGB/*coollabdef*/(vec3 from)
+                                float Coollab_Float_from_LinearRGB(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(from);
@@ -1233,7 +1233,7 @@ static auto gen_Coollab_Float_StraightA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_LinearRGB",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_StraightA_from_LinearRGB(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(from);
@@ -1249,7 +1249,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_LinearRGB",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_LinearRGB/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_PremultipliedA_from_LinearRGB(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(from);
@@ -1265,7 +1265,7 @@ static auto gen_Coollab_Float_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Float_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                float Coollab_Float_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -1281,7 +1281,7 @@ static auto gen_Coollab_Float_StraightA_from_LinearRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(from.xyz);
@@ -1297,7 +1297,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_StraightA() -> Funct
     return {
         .name       = "Coollab_Float_PremultipliedA_from_LinearRGB_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_LinearRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_LinearRGB_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(from.xyz);
@@ -1313,7 +1313,7 @@ static auto gen_Coollab_Float_from_LinearRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                float Coollab_Float_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(from.xyz);
@@ -1329,7 +1329,7 @@ static auto gen_Coollab_Float_StraightA_from_LinearRGB_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_Float_StraightA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_LinearRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -1345,7 +1345,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA() -> 
     return {
         .name       = "Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_LinearRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -1362,7 +1362,7 @@ static auto gen_Coollab_Oklab_from_sRGB() -> Function
     return {
         .name       = "Coollab_Oklab_from_sRGB",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_sRGB/*coollabdef*/(vec3 from)
+                                vec3 Coollab_Oklab_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(from);
@@ -1378,7 +1378,7 @@ static auto gen_Coollab_Oklab_StraightA_from_sRGB() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_StraightA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(from);
@@ -1394,7 +1394,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(from);
@@ -1410,7 +1410,7 @@ static auto gen_Coollab_Oklab_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -1426,7 +1426,7 @@ static auto gen_Coollab_Oklab_StraightA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_StraightA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(from.xyz);
@@ -1442,7 +1442,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(from.xyz);
@@ -1458,7 +1458,7 @@ static auto gen_Coollab_Oklab_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(from.xyz);
@@ -1474,7 +1474,7 @@ static auto gen_Coollab_Oklab_StraightA_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_StraightA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_sRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -1490,7 +1490,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -1507,7 +1507,7 @@ static auto gen_Coollab_LinearRGB_from_sRGB() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_sRGB",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_sRGB/*coollabdef*/(vec3 from)
+                                vec3 Coollab_LinearRGB_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(from);
@@ -1523,7 +1523,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_sRGB() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(from);
@@ -1539,7 +1539,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB() -> Function
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(from);
@@ -1555,7 +1555,7 @@ static auto gen_Coollab_LinearRGB_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -1571,7 +1571,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(from.xyz);
@@ -1587,7 +1587,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA() -> Functi
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(from.xyz);
@@ -1603,7 +1603,7 @@ static auto gen_Coollab_LinearRGB_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(from.xyz);
@@ -1619,7 +1619,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA() -> Functi
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_sRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -1635,7 +1635,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA() -> F
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -1652,7 +1652,7 @@ static auto gen_Coollab_sRGB_StraightA_from_sRGB() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_StraightA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -1668,7 +1668,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -1684,7 +1684,7 @@ static auto gen_Coollab_sRGB_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_premultiply_color(from.xyz, from.a));
@@ -1700,7 +1700,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -1716,7 +1716,7 @@ static auto gen_Coollab_sRGB_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -1732,7 +1732,7 @@ static auto gen_Coollab_sRGB_StraightA_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_StraightA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_unpremultiply_color(from.xyz, from.a));
@@ -1748,7 +1748,7 @@ static auto gen_Coollab_Okhsl_from_sRGB() -> Function
     return {
         .name       = "Coollab_Okhsl_from_sRGB",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_sRGB/*coollabdef*/(vec3 from)
+                                vec3 Coollab_Okhsl_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(from);
@@ -1764,7 +1764,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_sRGB() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_StraightA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(from);
@@ -1780,7 +1780,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_sRGB",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_sRGB(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(from);
@@ -1796,7 +1796,7 @@ static auto gen_Coollab_Okhsl_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -1812,7 +1812,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_StraightA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(from.xyz);
@@ -1828,7 +1828,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(from.xyz);
@@ -1844,7 +1844,7 @@ static auto gen_Coollab_Okhsl_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(from.xyz);
@@ -1860,7 +1860,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_StraightA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_sRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -1876,7 +1876,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -1893,7 +1893,7 @@ static auto gen_Coollab_Float_from_sRGB() -> Function
     return {
         .name       = "Coollab_Float_from_sRGB",
         .definition = R"STR(
-                                float Coollab_Float_from_sRGB/*coollabdef*/(vec3 from)
+                                float Coollab_Float_from_sRGB(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(from);
@@ -1909,7 +1909,7 @@ static auto gen_Coollab_Float_StraightA_from_sRGB() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_sRGB",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_StraightA_from_sRGB(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(from);
@@ -1925,7 +1925,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_sRGB() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_sRGB",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_sRGB/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_PremultipliedA_from_sRGB(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(from);
@@ -1941,7 +1941,7 @@ static auto gen_Coollab_Float_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Float_from_sRGB_StraightA",
         .definition = R"STR(
-                                float Coollab_Float_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(Cool_premultiply_color(from.xyz, from.a));
@@ -1957,7 +1957,7 @@ static auto gen_Coollab_Float_StraightA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(from.xyz);
@@ -1973,7 +1973,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_sRGB_StraightA() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_sRGB_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_sRGB_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_sRGB_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(from.xyz);
@@ -1989,7 +1989,7 @@ static auto gen_Coollab_Float_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                float Coollab_Float_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(from.xyz);
@@ -2005,7 +2005,7 @@ static auto gen_Coollab_Float_StraightA_from_sRGB_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_sRGB(Cool_unpremultiply_color(from.xyz, from.a));
@@ -2021,7 +2021,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_sRGB_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -2038,7 +2038,7 @@ static auto gen_Coollab_Oklab_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Oklab_from_Okhsl",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec3 Coollab_Oklab_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(from);
@@ -2054,7 +2054,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_StraightA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(from);
@@ -2070,7 +2070,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(from);
@@ -2086,7 +2086,7 @@ static auto gen_Coollab_Oklab_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(Cool_premultiply_color(from.xyz, from.a));
@@ -2102,7 +2102,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_StraightA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(from.xyz);
@@ -2118,7 +2118,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(from.xyz);
@@ -2134,7 +2134,7 @@ static auto gen_Coollab_Oklab_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Oklab_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(from.xyz);
@@ -2150,7 +2150,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_StraightA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Okhsl(Cool_unpremultiply_color(from.xyz, from.a));
@@ -2166,7 +2166,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA() -> Func
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -2183,7 +2183,7 @@ static auto gen_Coollab_LinearRGB_from_Okhsl() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Okhsl",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec3 Coollab_LinearRGB_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(from);
@@ -2199,7 +2199,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(from);
@@ -2215,7 +2215,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(from);
@@ -2231,7 +2231,7 @@ static auto gen_Coollab_LinearRGB_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(Cool_premultiply_color(from.xyz, from.a));
@@ -2247,7 +2247,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(from.xyz);
@@ -2263,7 +2263,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA() -> Funct
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(from.xyz);
@@ -2279,7 +2279,7 @@ static auto gen_Coollab_LinearRGB_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_LinearRGB_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(from.xyz);
@@ -2295,7 +2295,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Okhsl(Cool_unpremultiply_color(from.xyz, from.a));
@@ -2311,7 +2311,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> 
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -2328,7 +2328,7 @@ static auto gen_Coollab_sRGB_from_Okhsl() -> Function
     return {
         .name       = "Coollab_sRGB_from_Okhsl",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec3 Coollab_sRGB_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(from);
@@ -2344,7 +2344,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_StraightA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(from);
@@ -2360,7 +2360,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(from);
@@ -2376,7 +2376,7 @@ static auto gen_Coollab_sRGB_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(Cool_premultiply_color(from.xyz, from.a));
@@ -2392,7 +2392,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_StraightA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(from.xyz);
@@ -2408,7 +2408,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(from.xyz);
@@ -2424,7 +2424,7 @@ static auto gen_Coollab_sRGB_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_sRGB_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(from.xyz);
@@ -2440,7 +2440,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_StraightA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Okhsl(Cool_unpremultiply_color(from.xyz, from.a));
@@ -2456,7 +2456,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -2473,7 +2473,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_StraightA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -2489,7 +2489,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Okhsl",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Okhsl(vec3 from)
                                 {
                                     
                         vec3 to = (from);
@@ -2505,7 +2505,7 @@ static auto gen_Coollab_Okhsl_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_premultiply_color(from.xyz, from.a));
@@ -2521,7 +2521,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -2537,7 +2537,7 @@ static auto gen_Coollab_Okhsl_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec3 Coollab_Okhsl_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (from.xyz);
@@ -2553,7 +2553,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec4 Coollab_Okhsl_StraightA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         vec3 to = (Cool_unpremultiply_color(from.xyz, from.a));
@@ -2569,7 +2569,7 @@ static auto gen_Coollab_Float_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Float_from_Okhsl",
         .definition = R"STR(
-                                float Coollab_Float_from_Okhsl/*coollabdef*/(vec3 from)
+                                float Coollab_Float_from_Okhsl(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(from);
@@ -2585,7 +2585,7 @@ static auto gen_Coollab_Float_StraightA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Okhsl",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_StraightA_from_Okhsl(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(from);
@@ -2601,7 +2601,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Okhsl() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Okhsl",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Okhsl/*coollabdef*/(vec3 from)
+                                vec2 Coollab_Float_PremultipliedA_from_Okhsl(vec3 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(from);
@@ -2617,7 +2617,7 @@ static auto gen_Coollab_Float_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Float_from_Okhsl_StraightA",
         .definition = R"STR(
-                                float Coollab_Float_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(Cool_premultiply_color(from.xyz, from.a));
@@ -2633,7 +2633,7 @@ static auto gen_Coollab_Float_StraightA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(from.xyz);
@@ -2649,7 +2649,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_StraightA() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Okhsl_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Okhsl_StraightA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_Okhsl_StraightA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(from.xyz);
@@ -2665,7 +2665,7 @@ static auto gen_Coollab_Float_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                float Coollab_Float_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                float Coollab_Float_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(from.xyz);
@@ -2681,7 +2681,7 @@ static auto gen_Coollab_Float_StraightA_from_Okhsl_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_StraightA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         float to = Cool_Float_from_Okhsl(Cool_unpremultiply_color(from.xyz, from.a));
@@ -2697,7 +2697,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA() -> Func
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA/*coollabdef*/(vec4 from)
+                                vec2 Coollab_Float_PremultipliedA_from_Okhsl_PremultipliedA(vec4 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -2714,7 +2714,7 @@ static auto gen_Coollab_Oklab_from_Float() -> Function
     return {
         .name       = "Coollab_Oklab_from_Float",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Float/*coollabdef*/(float from)
+                                vec3 Coollab_Oklab_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(from);
@@ -2730,7 +2730,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Float() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_Oklab_StraightA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(from);
@@ -2746,7 +2746,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Float() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(from);
@@ -2762,7 +2762,7 @@ static auto gen_Coollab_Oklab_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_from_Float_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_Oklab_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(Cool_premultiply_greyscale(from.x, from.y));
@@ -2778,7 +2778,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Oklab_StraightA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(from.x);
@@ -2794,7 +2794,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(from.x);
@@ -2810,7 +2810,7 @@ static auto gen_Coollab_Oklab_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Oklab_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_Oklab_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(from.x);
@@ -2826,7 +2826,7 @@ static auto gen_Coollab_Oklab_StraightA_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Oklab_StraightA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Oklab_StraightA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Oklab_from_Float(Cool_unpremultiply_greyscale(from.x, from.y));
@@ -2842,7 +2842,7 @@ static auto gen_Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA() -> Func
     return {
         .name       = "Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Oklab_PremultipliedA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -2859,7 +2859,7 @@ static auto gen_Coollab_LinearRGB_from_Float() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Float",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Float/*coollabdef*/(float from)
+                                vec3 Coollab_LinearRGB_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(from);
@@ -2875,7 +2875,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Float() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(from);
@@ -2891,7 +2891,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float() -> Function
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(from);
@@ -2907,7 +2907,7 @@ static auto gen_Coollab_LinearRGB_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Float_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_LinearRGB_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(Cool_premultiply_greyscale(from.x, from.y));
@@ -2923,7 +2923,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(from.x);
@@ -2939,7 +2939,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_StraightA() -> Funct
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(from.x);
@@ -2955,7 +2955,7 @@ static auto gen_Coollab_LinearRGB_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_LinearRGB_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_LinearRGB_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_LinearRGB_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(from.x);
@@ -2971,7 +2971,7 @@ static auto gen_Coollab_LinearRGB_StraightA_from_Float_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_LinearRGB_StraightA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_LinearRGB_StraightA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_LinearRGB_from_Float(Cool_unpremultiply_greyscale(from.x, from.y));
@@ -2987,7 +2987,7 @@ static auto gen_Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA() -> 
     return {
         .name       = "Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_LinearRGB_PremultipliedA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -3004,7 +3004,7 @@ static auto gen_Coollab_sRGB_from_Float() -> Function
     return {
         .name       = "Coollab_sRGB_from_Float",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Float/*coollabdef*/(float from)
+                                vec3 Coollab_sRGB_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(from);
@@ -3020,7 +3020,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Float() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_sRGB_StraightA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(from);
@@ -3036,7 +3036,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Float() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(from);
@@ -3052,7 +3052,7 @@ static auto gen_Coollab_sRGB_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_from_Float_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_sRGB_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(Cool_premultiply_greyscale(from.x, from.y));
@@ -3068,7 +3068,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_sRGB_StraightA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(from.x);
@@ -3084,7 +3084,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(from.x);
@@ -3100,7 +3100,7 @@ static auto gen_Coollab_sRGB_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_sRGB_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_sRGB_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(from.x);
@@ -3116,7 +3116,7 @@ static auto gen_Coollab_sRGB_StraightA_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_sRGB_StraightA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_sRGB_StraightA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_sRGB_from_Float(Cool_unpremultiply_greyscale(from.x, from.y));
@@ -3132,7 +3132,7 @@ static auto gen_Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA() -> Funct
     return {
         .name       = "Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_sRGB_PremultipliedA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -3149,7 +3149,7 @@ static auto gen_Coollab_Okhsl_from_Float() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Float",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Float/*coollabdef*/(float from)
+                                vec3 Coollab_Okhsl_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(from);
@@ -3165,7 +3165,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Float() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_Okhsl_StraightA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(from);
@@ -3181,7 +3181,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Float() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Float",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Float/*coollabdef*/(float from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Float(float from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(from);
@@ -3197,7 +3197,7 @@ static auto gen_Coollab_Okhsl_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Float_StraightA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_Okhsl_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(Cool_premultiply_greyscale(from.x, from.y));
@@ -3213,7 +3213,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Okhsl_StraightA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(from.x);
@@ -3229,7 +3229,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Float_StraightA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(from.x);
@@ -3245,7 +3245,7 @@ static auto gen_Coollab_Okhsl_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec3 Coollab_Okhsl_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec3 Coollab_Okhsl_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(from.x);
@@ -3261,7 +3261,7 @@ static auto gen_Coollab_Okhsl_StraightA_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Okhsl_StraightA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Okhsl_StraightA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         vec3 to = Cool_Okhsl_from_Float(Cool_unpremultiply_greyscale(from.x, from.y));
@@ -3277,7 +3277,7 @@ static auto gen_Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA() -> Func
     return {
         .name       = "Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec4 Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec4 Coollab_Okhsl_PremultipliedA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         // We need to unpremultiply for the color conversion, and re-premultiply afterwards
@@ -3294,7 +3294,7 @@ static auto gen_Coollab_Float_StraightA_from_Float() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Float",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Float/*coollabdef*/(float from)
+                                vec2 Coollab_Float_StraightA_from_Float(float from)
                                 {
                                     
                         float to = (from);
@@ -3310,7 +3310,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Float() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Float",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Float/*coollabdef*/(float from)
+                                vec2 Coollab_Float_PremultipliedA_from_Float(float from)
                                 {
                                     
                         float to = (from);
@@ -3326,7 +3326,7 @@ static auto gen_Coollab_Float_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Float_from_Float_StraightA",
         .definition = R"STR(
-                                float Coollab_Float_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                float Coollab_Float_from_Float_StraightA(vec2 from)
                                 {
                                     
                         float to = (Cool_premultiply_greyscale(from.x, from.y));
@@ -3342,7 +3342,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Float_StraightA",
         .definition = R"STR(
-                                vec2 Coollab_Float_PremultipliedA_from_Float_StraightA/*coollabdef*/(vec2 from)
+                                vec2 Coollab_Float_PremultipliedA_from_Float_StraightA(vec2 from)
                                 {
                                     
                         float to = (from.x);
@@ -3358,7 +3358,7 @@ static auto gen_Coollab_Float_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_from_Float_PremultipliedA",
         .definition = R"STR(
-                                float Coollab_Float_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                float Coollab_Float_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         float to = (from.x);
@@ -3374,7 +3374,7 @@ static auto gen_Coollab_Float_StraightA_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Float_PremultipliedA",
         .definition = R"STR(
-                                vec2 Coollab_Float_StraightA_from_Float_PremultipliedA/*coollabdef*/(vec2 from)
+                                vec2 Coollab_Float_StraightA_from_Float_PremultipliedA(vec2 from)
                                 {
                                     
                         float to = (Cool_unpremultiply_greyscale(from.x, from.y));

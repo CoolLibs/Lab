@@ -351,6 +351,9 @@ void ModulesGraph::add_link(Cool::LinkId const& id, Cool::Link const& link)
 
 void ModulesGraph::remove_node(Cool::NodeId const& id)
 {
+    _nodes_editor.graph().nodes().with_mutable_ref(id, [&](Cool::Node& node) {
+        node.downcast<Node>().clear_all_error_messages();
+    });
     _nodes_editor.graph().remove_node(id);
     regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
 }

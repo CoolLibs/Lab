@@ -48,6 +48,7 @@ private:
 
 private:
     mutable std::optional<Cool::ParticleSystem> _particle_system{};
+    int                                         _particle_system_dimension{};
     ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
     Cool::NodeId                                _id_of_node_storing_particles_count{};
     bool                                        _needs_to_update_particles{true};

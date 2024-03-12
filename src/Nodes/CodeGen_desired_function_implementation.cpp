@@ -158,7 +158,7 @@ static auto argument_name(size_t i, size_t desired_arity)
     if (desired_arity == 0)
         return "";
 
-    return fmt::format("in{}", std::min(i + 1u, desired_arity));
+    return fmt::format("in{}", std::min(i, desired_arity - 1));
 }
 
 static auto gen_transformed_inputs(std::vector<std::string> const& transforms_names, size_t current_arity, size_t desired_arity, std::string const& implicit_conversion) -> std::string
@@ -169,7 +169,7 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
 
     for (size_t i = 0; i < current_arity; ++i)
     {
-        if (Cool::String::contains(transforms_names[i], "Voidto")) // HACK to detect which functions don't need parameters
+        if (Cool::String::contains(transforms_names[i], "Voidto") || Cool::String::contains(transforms_names[i], "default_constant")) // HACK to detect which functions don't need parameters
             res += fmt::format("{}()", transforms_names[i]);
         else
             res += fmt::format("{}({}({}))", transforms_names[i], implicit_conversion, argument_name(i, desired_arity));
@@ -198,7 +198,7 @@ static auto gen_implicit_curve_renderer(
         .name       = "Coollab_sdSegment",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions2d/
-float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
+float Coollab_sdSegment(vec2 p, vec2 a, vec2 b, float thickness)
 {{
     vec2  pa = p - a, ba = b - a;
     float h = saturate(dot(pa, ba) / dot(ba, ba));
@@ -210,7 +210,7 @@ float Coollab_sdSegment/*coollabdef*/(vec2 p, vec2 a, vec2 b, float thickness)
     context.push_function(Function{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
-float {}/*coollabdef*/(vec2 uv)
+float {}/*needs_coollab_context*/(vec2 uv)
 {{
     const int NB_SEGMENTS = 300;
     const float THICKNESS = 0.01;
@@ -258,7 +258,7 @@ static auto gen_implicit_curve_renderer_3D(
         .name       = "Coollab_sdSegment3D",
         .definition = R"STR(
 // https://iquilezles.org/articles/distfunctions/
-float Coollab_sdSegment3D/*coollabdef*/(vec3 p, vec3 a, vec3 b, float thickness)
+float Coollab_sdSegment3D(vec3 p, vec3 a, vec3 b, float thickness)
 {{
     vec3  pa = p - a, ba = b - a;
     float h = saturate(dot(pa, ba) / dot(ba, ba));
@@ -270,7 +270,7 @@ float Coollab_sdSegment3D/*coollabdef*/(vec3 p, vec3 a, vec3 b, float thickness)
     context.push_function(Function{
         .name       = shape_func_name,
         .definition = fmt::format(R"STR(
-float {}/*coollabdef*/(vec3 pos)
+float {}/*needs_coollab_context*/(vec3 pos)
 {{
     const int NB_SEGMENTS = 300;
     const float THICKNESS = 0.01;
@@ -319,7 +319,7 @@ static auto gen_implicit_shape_3D_renderer(
         .name       = image_func_name,
         .definition = fmt::format(
             FMT_COMPILE(R"STR(
-vec4 {image_name}/*coollabdef*/(vec2 uv)
+vec4 {image_name}/*needs_coollab_context*/(vec2 uv)
 {{
     const int MAX_STEPS = 100;
     const float MAX_DIST = 100.;

@@ -1,4 +1,5 @@
 #include "Node.h"
+#include "Cool/Log/ToUser.h"
 #include "Cool/String/String.h"
 
 namespace Lab {
@@ -19,6 +20,12 @@ auto Node::as_pod() const -> NodeAsPOD
     for (auto const& input : _value_inputs)
         pod.value_inputs.push_back(std::visit([](auto&& input) -> Cool::AnyVariable { return input.variable(); }, input));
     return pod;
+}
+
+void Node::clear_all_error_messages()
+{
+    for (auto& input : _value_inputs)
+        std::visit([](auto&& input) { Cool::Log::ToUser::console().remove(input.message_id()); }, input);
 }
 
 } // namespace Lab

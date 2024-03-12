@@ -105,6 +105,7 @@ void cool_main()
 #endif
         particle.size  = 0.01;
         particle.color = vec4(1.0);
+        particle.lifetime_max = -1.; // To be sure that the vertex shader will show the particles
     }}
 
     CoollabContext coollab_context;

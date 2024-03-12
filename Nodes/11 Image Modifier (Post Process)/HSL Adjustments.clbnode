@@ -7,7 +7,7 @@ INPUT float 'L';
 Okhsl main(Okhsl Image)
 {
     Image.x = fract(Image.x + 'Shift');
-    Image.y = Image.y * (-4. * 'S') * ('S' - 1.) + 2. * 'S' * ('S' - 0.5);
-    Image.z = Image.z * (-4. * 'L') * ('L' - 1.) + 2. * 'L' * ('L' - 0.5);
+    Image.y = saturate(Image.y * (-4. * 'S') * ('S' - 1.) + 2. * 'S' * ('S' - 0.5));
+    Image.z = saturate(Image.z * (-4. * 'L') * ('L' - 1.) + 2. * 'L' * ('L' - 0.5));
     return Image;
 }

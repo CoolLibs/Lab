@@ -9,7 +9,7 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "time",
+                                "Name": "Time",
                                 "Value": 0.0,
                                 "Metadata": {
                                     "Bounds": {
@@ -37,7 +37,7 @@
                         {
                             "index": 4,
                             "data": {
-                                "Name": "square size",
+                                "Name": "Square size",
                                 "Value": {
                                     "x": 3.0,
                                     "y": 3.0
@@ -71,7 +71,7 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "strength",
+                                "Name": "Strength",
                                 "Value": 1.0,
                                 "Metadata": {
                                     "Bounds": {
