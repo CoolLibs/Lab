@@ -25,7 +25,8 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         return;
     }
 
-    _shader_code = *shader_code;
+    _shader_code               = *shader_code;
+    _particle_system_dimension = dimension;
     _simulation_shader_error_sender.clear();
 
     // TODO(Particles) Don't recreate the particle system every time, just change the shader but keep the current position and velocity of the particles
@@ -33,6 +34,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
     {
         if (_particle_system.has_value())
         {
+            assert(dimension == _particle_system->dimension());
             _particle_system->set_simulation_shader(_shader_code);
         }
         else
@@ -134,10 +136,8 @@ void Module_Particles::imgui_windows(Ui_Ref) const
 
 void Module_Particles::imgui_show_generated_shader_code()
 {
-    if (!_particle_system)
-        return;
     if (Cool::ImGuiExtras::input_text_multiline("##Particles simulation", &_shader_code, ImVec2{-1.f, -1.f}))
-        set_simulation_shader_code(_shader_code, false, _particle_system->dimension());
+        set_simulation_shader_code(_shader_code, false, _particle_system ? _particle_system->dimension() : _particle_system_dimension);
 }
 
 void Module_Particles::render(SystemValues const& system_values)
