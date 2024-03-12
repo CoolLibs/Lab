@@ -3,7 +3,7 @@
 [**Download Coollab for Linux**](/Coollab-Linux.sh)<br/>
 [**Download Coollab for MacOS**](/Coollab-Mac.dmg)
 
-🌱 **This is the _beta-14_ release** 🌱<br/>
+🌱 **This is the _beta-15_ release** 🌱<br/>
 Coollab is already usable and powerful, but many things are still to be improved.<br/>
 Please share us your feedback [on our Discord](https://discord.gg/QEjqnEy4aT) or at https://github.com/CoolLibs/Lab/issues/new/choose.
 :::
