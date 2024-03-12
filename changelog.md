@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-15 WIP](#beta-15-wip)
+- [🐣beta-15](#beta-15)
 - [🐣beta-14](#beta-14)
 - [🐣beta-13](#beta-13)
 - [🐣beta-12](#beta-12)
@@ -17,9 +17,10 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-15 WIP
+## 🐣beta-15
 
 - ✨ Added a Time Speed on the timeline, which allows you to slow down or speed up your entire animation easily.
+![](https://github.com/CoolLibs/Lab/assets/45451201/53cb9489-8924-4761-86bc-5191a00afa28)
 - 🐛 Fixed camera movements when using particles
 - 🐛 When dragging gizmos, mouse can now wrap around the screen
 - 🐛 Fixed: When writing your own nodes, they were not detected.
