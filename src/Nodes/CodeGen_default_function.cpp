@@ -68,7 +68,7 @@ static auto gen_function_with_implicit_conversions(
         .name       = name,
         .definition = fmt::format(
             FMT_COMPILE(R"STR(
-{output} {name}({inputs_declaration})
+{output} {name}/*needs_coollab_context*/({inputs_declaration})
 {{
     return {output_conversion}({base_name}({converted_inputs}));
 }}
