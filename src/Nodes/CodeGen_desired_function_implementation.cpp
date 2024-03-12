@@ -169,7 +169,7 @@ static auto gen_transformed_inputs(std::vector<std::string> const& transforms_na
 
     for (size_t i = 0; i < current_arity; ++i)
     {
-        if (Cool::String::contains(transforms_names[i], "Voidto")) // HACK to detect which functions don't need parameters
+        if (Cool::String::contains(transforms_names[i], "Voidto") || Cool::String::contains(transforms_names[i], "default_constant")) // HACK to detect which functions don't need parameters
             res += fmt::format("{}()", transforms_names[i]);
         else
             res += fmt::format("{}({}({}))", transforms_names[i], implicit_conversion, argument_name(i, desired_arity));

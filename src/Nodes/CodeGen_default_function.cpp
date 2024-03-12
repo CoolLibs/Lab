@@ -297,7 +297,7 @@ Particle3D default_particle_3D/*needs_coollab_context*/()
             });
         }
         auto const glsl_type = raw_glsl_type_as_string(signature.to);
-        auto const name      = fmt::format("default_constant_{}", glsl_type);
+        auto const name      = fmt::format("default_constant_{}", glsl_type); // Must always contain "default_constant" because of a HACK in gen_transformed_inputs() of CodeGen_desired_function_implementation.cpp
         return context.push_function({
             .name       = name,
             .definition = fmt::format(
