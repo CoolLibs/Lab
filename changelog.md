@@ -22,6 +22,8 @@
 - 🐛 Fixed camera movements when using particles
 - 🐛 When dragging gizmos, mouse can now wrap around the screen
 - 🐛 Fixed: When writing your own nodes, they were not detected.
+- 🐛 Fixed a few nodes.
+- 👩‍💻 The syntax for creating your own Coollab nodes is now 100% compatible with regular glsl syntax. You can now write structs, global variables, #define, etc.
 
 ## 🐣beta-14
 
