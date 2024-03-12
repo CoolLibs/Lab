@@ -28,7 +28,7 @@ public:
     }
 
     template<typename T>
-    void widget(Cool::SharedVariable<T>& var)
+    void widget(Cool::SharedVariable<T>& var) const
     {
         ImGui::PushID(&var);
         auto const prev_value    = var.value();
@@ -63,7 +63,7 @@ public:
         ImGui::PopID();
     }
 
-    void widget(Cool::AnySharedVariable& var)
+    void widget(Cool::AnySharedVariable& var) const
     {
         std::visit([&](auto&& var) { widget(var); }, var);
     }

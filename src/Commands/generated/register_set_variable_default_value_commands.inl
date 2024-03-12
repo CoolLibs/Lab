@@ -29,6 +29,7 @@ LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<glm::mat3>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<glm::mat4>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::MidiChannel>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::OSCChannel>)
+LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::TimeSpeed>)
 
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<bool>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<int>)
@@ -54,3 +55,4 @@ LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<g
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<glm::mat4>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<Cool::MidiChannel>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<Cool::OSCChannel>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<Cool::TimeSpeed>)

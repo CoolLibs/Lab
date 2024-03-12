@@ -159,7 +159,7 @@ void App::update()
     {
         _project.clock.update();
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_project.clock.time(), _project.clock.delta_time());
+        polaroid().render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds());
     }
     else
     {
@@ -254,16 +254,6 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
     );
 }
 
-void App::imgui_commands_debug_windows()
-{
-    auto const the_ui = ui();
-    the_ui.window({.name = "History"}, [&]() {
-        _project.history.imgui_show([](const ReversibleCommand& command) {
-            return command_to_string(command);
-        });
-    });
-}
-
 void App::imgui_window_cameras()
 {
     static constexpr auto help_text = "When disabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
@@ -348,8 +338,9 @@ void App::imgui_window_exporter()
 {
     _project.exporter.imgui_windows({
         .polaroid          = polaroid(),
-        .time              = _project.clock.time(),
-        .delta_time        = _project.clock.delta_time(),
+        .time              = _project.clock.time_in_seconds(),
+        .delta_time        = _project.clock.delta_time_in_seconds(),
+        .time_speed        = _project.clock.time_speed().value(),
         .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
             auto folder_path = exported_image_path;
             folder_path.replace_extension(); // Give project folder the same name as the image.
@@ -382,7 +373,11 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     auto const the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-    Cool::ClockU::imgui_timeline(_project.clock, /* on_time_reset = */ [&]() { on_time_reset(); });
+    Cool::ClockU::imgui_timeline(
+        _project.clock,
+        /* extra_widgets = */ [&]() { the_ui.widget(_project.clock.time_speed()); },
+        /* on_time_reset = */ [&]() { on_time_reset(); }
+    );
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
@@ -403,7 +398,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_project.clock.time(), _project.clock.delta_time(), size);
+        the_polaroid.render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds(), size);
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
@@ -417,10 +412,13 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
         ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
                                                                         // to learn more about Dear ImGui!).
-    if (DebugOptions::show_commands_debug_windows())
-    {
-        imgui_commands_debug_windows();
-    }
+    DebugOptions::show_history_window([&] {
+        ImGui::PushFont(Cool::Font::monospace());
+        _project.history.imgui_show([](ReversibleCommand const& command) {
+            return command_to_string(command);
+        });
+        ImGui::PopFont();
+    });
     if (DebugOptions::show_nodes_and_links_registries())
     {
         _project.modules_graph->debug_show_nodes_and_links_registries_windows(ui());

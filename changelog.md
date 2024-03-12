@@ -19,6 +19,7 @@
 
 ## 🐣beta-15 WIP
 
+- ✨ Added a Time Speed on the timeline, which allows you to slow down or speed up your entire animation easily.
 - 🐛 Fixed camera movements when using particles
 - 🐛 When dragging gizmos, mouse can now wrap around the screen
 - 🐛 Fixed: When writing your own nodes, they were not detected.
