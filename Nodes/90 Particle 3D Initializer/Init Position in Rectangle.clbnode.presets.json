@@ -22,22 +22,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                },
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -58,22 +44,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -90,18 +62,8 @@
                                         "Has max bound": false,
                                         "Max": 12,
                                         "Drag speed": 0.019999999552965165,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 3,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0,
-                                        "Has max bound": false,
-                                        "Max": 12,
-                                        "Drag speed": 0.019999999552965165,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }

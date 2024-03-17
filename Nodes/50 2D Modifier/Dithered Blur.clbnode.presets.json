@@ -18,18 +18,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.05000000074505806,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -46,18 +36,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.00003300000025774352,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }

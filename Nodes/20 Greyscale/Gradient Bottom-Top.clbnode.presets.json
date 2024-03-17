@@ -11,9 +11,7 @@
                             "data": {
                                 "Name": "Flip",
                                 "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         },
                         {
@@ -21,9 +19,7 @@
                             "data": {
                                 "Name": "Centered",
                                 "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         },
                         {
@@ -31,9 +27,7 @@
                             "data": {
                                 "Name": "Clamp",
                                 "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         }
                     ]

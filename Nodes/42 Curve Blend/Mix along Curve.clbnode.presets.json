@@ -11,9 +11,7 @@
                             "data": {
                                 "Name": "Clamp",
                                 "Value": true,
-                                "Metadata": {},
-                                "Default Value": true,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         }
                     ]

@@ -18,7 +18,8 @@
                                         "Has max bound": true,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": true
+                                        "Use slider": true,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -35,7 +36,8 @@
                                         "Has max bound": true,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": true
+                                        "Use slider": true,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -52,7 +54,8 @@
                                         "Has max bound": true,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": true
+                                        "Use slider": true,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -69,7 +72,8 @@
                                         "Has max bound": true,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": true
+                                        "Use slider": true,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }

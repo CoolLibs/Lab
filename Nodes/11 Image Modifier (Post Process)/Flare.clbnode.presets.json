@@ -18,15 +18,6 @@
                                 },
                                 "Metadata": {
                                     "Drag speed": 0.00009999999747378752
-                                },
-                                "Default Value": {
-                                    "Point2D": {
-                                        "x": -0.035999998450279239,
-                                        "y": 0.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Drag speed": 0.00009999999747378752
                                 }
                             }
                         },
@@ -42,18 +33,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.6700000166893005,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -73,18 +54,6 @@
                                     "Number of snaps": 24,
                                     "Snaps offset (in radians)": 0.0,
                                     "Always snap": false
-                                },
-                                "Default Value": {
-                                    "Angle": {
-                                        "Radians": {
-                                            "Radians": 2.7052602767944338
-                                        }
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Number of snaps": 24,
-                                    "Snaps offset (in radians)": 0.0,
-                                    "Always snap": false
                                 }
                             }
                         },
@@ -100,18 +69,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 2.0399999618530275,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -128,18 +87,8 @@
                                         "Has max bound": false,
                                         "Max": 12,
                                         "Drag speed": 0.03999999910593033,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 5,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0,
-                                        "Has max bound": false,
-                                        "Max": 12,
-                                        "Drag speed": 0.03999999910593033,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -156,18 +105,8 @@
                                         "Has max bound": false,
                                         "Max": 12,
                                         "Drag speed": 0.03999999910593033,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 8,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0,
-                                        "Has max bound": false,
-                                        "Max": 12,
-                                        "Drag speed": 0.03999999910593033,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
