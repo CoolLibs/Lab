@@ -22,6 +22,7 @@
 
 - ✨ The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
 - ✨ When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
+- ✨ Some node inputs now have a little info icon next to their pin, explaining what the parameter does in more details.
 - 🐛 Remove incompatible link when creating a link backward from a pin
 
 ## 🐣beta-15

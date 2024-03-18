@@ -62,3 +62,14 @@ INPUT (Oklab_PremultipliedA, Oklab_PremultipliedA)->Oklab_PremultipliedA 'Blend 
 ```
 
 All the possible types for function inputs are the same as for the `main` function (see the [Primitive Types section](10-Primitive%20types.md)).
+
+## Descriptions
+
+You can add a description to your inputs, by using a comment with **3 slashes (`///`)** :
+
+```glsl
+INPUT float 'Progression'; /// When set to 0 you get Curve 1; when set to 1 you get Curve 2.
+```
+
+This will add a "<span class="icon-info"></span>" next to the pin, that will show your description when hovered.
+![Description](img/description.png)

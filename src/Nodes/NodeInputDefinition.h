@@ -15,6 +15,7 @@ public:
     NodeInputDefinition(NodeInputDefinition_Data const&);
 
     auto name() const -> auto const& { return _data.name; }
+    auto description() const -> auto const& { return _data.description; }
     auto signature() const -> auto const& { return _data.signature; }
     void set_description(std::string const& description) { _data.description = description; }
 
