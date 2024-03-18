@@ -9,7 +9,7 @@
                         {
                             "index": 2,
                             "data": {
-                                "Name": "zoom",
+                                "Name": "Zoom",
                                 "Value": 1.0,
                                 "Metadata": {
                                     "Bounds": {
@@ -19,7 +19,7 @@
                                         "Max": 10.0,
                                         "Drag speed": 0.009999999776482582,
                                         "Use slider": false,
-                                        "Is logarithmic": false
+                                        "Is logarithmic": true
                                     }
                                 }
                             }

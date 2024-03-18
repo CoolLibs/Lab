@@ -20,6 +20,8 @@
 
 ## 🐣beta-16 WIP
 
+- ✨ The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
+
 ## 🐣beta-15
 
 - ✨ Added a Time Speed on the timeline, which allows you to slow down or speed up your entire animation easily.
