@@ -18,18 +18,8 @@
                                         "Has max bound": true,
                                         "Max": 1.0,
                                         "Drag speed": 0.006599999964237213,
-                                        "Use slider": true
-                                    }
-                                },
-                                "Default Value": 0.5720000267028809,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": true,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -46,18 +36,8 @@
                                         "Has max bound": false,
                                         "Max": 0.20000000298023225,
                                         "Drag speed": 0.00009999999747378752,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.01899999938905239,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -74,18 +54,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 3.490000009536743,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -95,9 +65,7 @@
                             "data": {
                                 "Name": "Flip every other tile",
                                 "Value": true,
-                                "Metadata": {},
-                                "Default Value": true,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         }
                     ]

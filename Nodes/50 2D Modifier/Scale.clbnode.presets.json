@@ -2,9 +2,9 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "ae55f3d4-2b28-4091-a8ea-238c250ef338",
+                "first": "6d05078b-b07c-4b3c-98b1-1239a6864aff",
                 "second": {
-                    "Name": "default",
+                    "Name": "Default",
                     "Values": [
                         {
                             "index": 2,
@@ -13,23 +13,13 @@
                                 "Value": 1.0,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
+                                        "Has min bound": true,
+                                        "Min": 0.0010000000474974514,
                                         "Has max bound": false,
                                         "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 1.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false,
+                                        "Is logarithmic": true
                                     }
                                 }
                             }
@@ -41,23 +31,13 @@
                                 "Value": 1.0,
                                 "Metadata": {
                                     "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
+                                        "Has min bound": true,
+                                        "Min": 0.0010000000474974514,
                                         "Has max bound": false,
                                         "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 1.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false,
+                                        "Is logarithmic": true
                                     }
                                 }
                             }

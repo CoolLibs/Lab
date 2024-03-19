@@ -18,15 +18,6 @@
                                 },
                                 "Metadata": {
                                     "Drag speed": 0.00009999999747378752
-                                },
-                                "Default Value": {
-                                    "Point2D": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Drag speed": 0.00009999999747378752
                                 }
                             }
                         }

@@ -19,16 +19,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 1.0,
-                                        "y": 0.9998999834060669,
-                                        "z": 0.9998999834060669
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         },
@@ -44,18 +34,8 @@
                                         "Has max bound": true,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": true
-                                    }
-                                },
-                                "Default Value": 0.5,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": true,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }

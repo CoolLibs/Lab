@@ -410,13 +410,13 @@ static auto make_node(Cool::NodeDefinitionAndCategoryName const& cat_id, Cool::G
     {
         for (size_t i = 0; i < def.signature().arity; ++i)
         {
-            node.input_pins().push_back(Cool::InputPin{/*pin_name=*/Cool::String::replace_all(def.main_function().argument_names[i], "_", " ")});
+            node.input_pins().push_back(Cool::InputPin{/*pin_name=*/Cool::String::replace_all(def.main_function().argument_names[i], "_", " "), ""});
         }
     }
-    node.output_pins().emplace_back("OUT");
+    node.output_pins().emplace_back("OUT", "");
 
     for (auto const& function_input : def.function_inputs())
-        node.input_pins().push_back(Cool::InputPin{function_input.name()});
+        node.input_pins().push_back(Cool::InputPin{function_input.name(), function_input.description()});
 
     for (auto const& value_input_def : def.value_inputs())
     {
@@ -429,7 +429,7 @@ static auto make_node(Cool::NodeDefinitionAndCategoryName const& cat_id, Cool::G
                                              }; },
             value_input_def
         ));
-        node.input_pins().push_back(Cool::InputPin{std::visit([](auto&& value_input_def) { return value_input_def.var_data.name; }, value_input_def)});
+        node.input_pins().push_back(std::visit([](auto&& value_input_def) { return Cool::InputPin{value_input_def.var_data.name, value_input_def.description.value_or("")}; }, value_input_def));
     }
 
     // Get the variables from the inputs
@@ -440,7 +440,7 @@ static auto make_node(Cool::NodeDefinitionAndCategoryName const& cat_id, Cool::G
     apply_settings_to_inputs_no_history(settings, node.value_inputs(), to_string(node));
 
     for (auto const& output_index_name : def.output_indices())
-        node.output_pins().push_back(Cool::OutputPin{output_index_name});
+        node.output_pins().push_back(Cool::OutputPin{output_index_name, ""});
 
     return node;
 }

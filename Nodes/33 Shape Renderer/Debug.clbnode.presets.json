@@ -19,16 +19,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.6499999761581421,
-                                        "y": 0.8500000238418579,
-                                        "z": 1.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         },
@@ -45,16 +35,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.8999999761581421,
-                                        "y": 0.6000000238418579,
-                                        "z": 0.30000001192092898
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         },
@@ -70,16 +50,6 @@
                                     }
                                 },
                                 "Metadata": {
-                                    "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.0,
-                                        "y": 0.0,
-                                        "z": 0.0
-                                    }
-                                },
-                                "Default Metadata": {
                                     "Is HDR": false
                                 }
                             }
