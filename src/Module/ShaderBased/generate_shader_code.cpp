@@ -94,7 +94,7 @@ uniform sampler2D _previous_frame_texture;
 uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 {modules_textures_uniforms}
 
-#include "_ROOT_FOLDER_/res/shader-utils.glsl"
+#include "_COOL_RES_/shaders/shader-utils.glsl" 
 #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/rand.glsl"

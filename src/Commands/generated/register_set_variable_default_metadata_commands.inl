@@ -30,6 +30,7 @@ LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultMetadata<glm::mat4>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultMetadata<Cool::MidiChannel>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultMetadata<Cool::OSCChannel>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultMetadata<Cool::TimeSpeed>)
+LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultMetadata<Cool::TextureDescriptor_FromVideoFile>)
 
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultMetadata<bool>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultMetadata<int>)
@@ -56,3 +57,4 @@ LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultMetadat
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultMetadata<Cool::MidiChannel>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultMetadata<Cool::OSCChannel>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultMetadata<Cool::TimeSpeed>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultMetadata<Cool::TextureDescriptor_FromVideoFile>)
