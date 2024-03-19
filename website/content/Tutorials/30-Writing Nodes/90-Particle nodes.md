@@ -8,15 +8,15 @@ Particles can be either 2D or 3D:
 
 ```glsl
 struct Particle2D {
-    vec2   position;
-    vec2   velocity;
-    vec2   acceleration;
-    float  size;
-    float  lifetime;
-    float  lifetime_max;
-    vec4   color;
-    uint   index;
-    bool   needs_init;
+    vec2  position;
+    vec2  velocity;
+    vec2  acceleration;
+    float size;
+    float lifetime;
+    float lifetime_max;
+    vec4  color;
+    uint  index;
+    bool  needs_init;
 };
 ```
 
@@ -25,15 +25,15 @@ struct Particle2D {
 
 ```glsl
 struct Particle3D {
-    vec3   position;
-    vec3   velocity;
-    vec3   acceleration;
-    float  size;
-    float  lifetime;
-    float  lifetime_max;
-    vec4   color;
-    uint   index;
-    bool   needs_init;
+    vec3  position;
+    vec3  velocity;
+    vec3  acceleration;
+    float size;
+    float lifetime;
+    float lifetime_max;
+    vec4  color;
+    uint  index;
+    bool  needs_init;
 };
 ```
 
