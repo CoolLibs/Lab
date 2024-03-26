@@ -1,10 +1,6 @@
 #include "App.h"
-#include <Cool/DebugOptions/TestMessageConsole.h>
-#include <Cool/DebugOptions/TestPresets.h>
-#include <Cool/Gpu/TextureLibrary_FromFile.h>
 #include <Cool/ImGui/Fonts.h>
 #include <Cool/ImGui/icon_fmt.h>
-#include <Cool/ImGui/test_markdown_formatting.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Path/Path.h>
@@ -28,15 +24,14 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Common/Path.h"
+#include "Cool/DebugOptions/debug_options_windows.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
-#include "Cool/Midi/MidiManager.h"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/Tips/TipsManager.h"
-#include "Cool/Tips/test_tips.h"
 #include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
@@ -424,9 +419,6 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         _project.modules_graph->debug_show_nodes_and_links_registries_windows(ui());
     }
 
-    Cool::DebugOptions::texture_library_debug_view([&] {
-        Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
-    });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {
         if (ImGui::Button("Compile everything"))
@@ -441,38 +433,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
             compile_all_is0_nodes();
         }
     });
-
-    Cool::DebugOptions::test_message_console__window([]() {
-        static auto test_message_console = Cool::TestMessageConsole{};
-        test_message_console.imgui(
-            Cool::Log::ToUser::console()
-        );
-    });
-
-    Cool::DebugOptions::test_presets__window([]() {
-        static auto test_presets = TestPresets{};
-        test_presets.imgui();
-    });
-
-    Cool::DebugOptions::test_markdown_formatting_window([]() {
-        Cool::test_markdown_formatting();
-    });
-
-    Cool::DebugOptions::emulate_midi_keyboard([]() {
-        Cool::midi_manager().imgui_emulate_midi_keyboard();
-    });
-
-    Cool::DebugOptions::test_tips([this]() {
-        test_tips(_tips_manager);
-    });
-
-    Cool::DebugOptions::color_themes_advanced_config_window([&]() {
-        Cool::user_settings().color_themes.imgui_advanced_config();
-    });
-
-    Cool::DebugOptions::color_themes_editor([&]() {
-        Cool::user_settings().color_themes.imgui_basic_theme_editor();
-    });
+    Cool::debug_options_windows(_tips_manager);
     DebugOptions::empty_window([] {});
 }
 
