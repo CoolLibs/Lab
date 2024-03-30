@@ -1,0 +1,47 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+INPUT UV->sRGB_StraightA 'Image';
+INPUT float 'Tile Size';
+// INPUT int 'Nb Squares';
+INPUT float 'Offset Amplitude';
+INPUT UV->float 'Proba Appear';
+INPUT float 'Border';
+
+vec4 square(vec2 center, vec2 id, vec2 size, vec2 uv)
+{
+    if (hash_0_to_1_2D_to_1D(id + 1.) > 'Proba Appear'(center))
+        return vec4(0.);
+
+    uv += (hash_0_to_1_2D_to_2D(id) * 2. - 1.) * 'Offset Amplitude';
+
+    if (abs(uv.x - center.x) > size.x
+        || abs(uv.y - center.y) > size.y)
+    {
+        if (abs(uv.x - center.x) < size.x + 'Border'
+            && abs(uv.y - center.y) < size.y + 'Border')
+        {
+            return vec4(0., 0., 0., 1.);
+        }
+        return vec4(0.);
+    }
+    return 'Image'(uv);
+}
+
+sRGB_StraightA main(UV uv)
+{
+    if ('Tile Size' < 0.05)
+        return vec4(1.);
+    vec4 color = vec4(0.);
+    for (float x = -_aspect_ratio; x < _aspect_ratio; x += 'Tile Size')
+    // for (int i = 0; i < 2 * _aspect_ratio / 'Tile Size'; ++i)
+    {
+        // float x = i * 'Tile Size' - _aspect_ratio;
+        for (float y = -1.; y < 1.; y += 'Tile Size')
+        // for (int j = 0; j < 2 / 'Tile Size'; ++j)
+        {
+            // float y = j * 'Tile Size' - 1.;
+            if (color.a < 0.1)
+                color = square(vec2(x, y), vec2(x, y), vec2('Tile Size' * 0.5), uv);
+        }
+    }
+    return color;
+}
