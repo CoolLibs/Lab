@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT bool 'Flip';
+INPUT bool 'Centered';
+INPUT bool 'Clamp';
+
+float main(UV uv)
+{
+    uv.x /= _aspect_ratio;
+    if (uv.x > uv.y)
+        return 1.;
+    return 0.;
+}
