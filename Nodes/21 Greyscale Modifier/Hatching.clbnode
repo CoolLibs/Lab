@@ -1,19 +1,32 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
 INPUT UV->float 'Greyscale';
-INPUT UV->sRGB 'Hatching 1';
-INPUT UV->sRGB 'Hatching 2';
-INPUT UV->sRGB 'Hatching 3';
+INPUT UV->float 'Hatching 1';
+INPUT UV->float 'Hatching 2';
+INPUT UV->float 'Hatching 3';
+INPUT UV->float 'Hatching 4';
+INPUT UV->float 'Hatching 5';
 
-sRGB main(UV uv)
+float main(UV uv)
 {
-    float level = floor('Greyscale'(uv) * 4.);
-    vec3  res   = vec3(1.);
-    if (level < 3)
+    int level = int(floor('Greyscale'(uv) * 5.));
+    // return vec3(level) / 5.;
+    float res = 1.;
+    if (level == 4)
+    {
+        res *= 'Hatching 5'(uv);
+        return res;
+    }
+    if (level == 3)
+    {
+        res *= 'Hatching 4'(uv);
+        return res;
+    }
+    if (level == 2)
         res *= 'Hatching 1'(uv);
-    if (level < 2)
+    if (level == 1)
         res *= 'Hatching 2'(uv);
-    if (level < 1)
+    if (level == 0)
         res *= 'Hatching 3'(uv);
 
     return res;
