@@ -5,6 +5,7 @@ INPUT int 'Nb Squares';
 INPUT float 'Offset Amplitude';
 INPUT UV->float 'Proba Appear';
 INPUT float 'Border';
+INPUT int 'Seed';
 
 vec4 square(vec2 center, int id, vec2 size, vec2 uv)
 {
@@ -33,7 +34,7 @@ sRGB_StraightA main(UV uv)
     vec4 color = vec4(0.);
     for (int i = 0; i < 'Nb Squares'; ++i)
     {
-        vec2 pos = (hash_0_to_1_1D_to_2D(i) * 2. - 1.) * vec2(_aspect_ratio, 1.);
+        vec2 pos = (hash_0_to_1_2D_to_2D(vec2(i, 'Seed')) * 2. - 1.) * vec2(_aspect_ratio, 1.);
         if (color.a < 0.1)
             color = square(pos, i, vec2('Tile Size' * 0.5), uv);
     }

@@ -1,6 +1,7 @@
 INPUT UV->sRGB_StraightA 'Image 1';
 INPUT UV->sRGB_StraightA 'Image 2';
 INPUT UV->sRGB_StraightA 'Image 3';
+INPUT UV->sRGB_StraightA 'Image 4';
 
 INPUT float 'Border';
 INPUT int 'Nb borders';
@@ -79,8 +80,8 @@ sRGB_StraightA main(UV uv)
     Res   voro = voronoi(uv, 'Randomness');
     float id   = fract(hash_0_to_1_3D_to_1D(vec3(voro.cell_idx, 'Image Seed')));
     float id2  = fract(hash_0_to_1_3D_to_1D(vec3(voro.closest_cell_idx, 'Image Seed')));
-    int   iid  = int(floor(id * 3));
-    int   iid2 = int(floor(id2 * 3));
+    int   iid  = int(floor(id * 4));
+    int   iid2 = int(floor(id2 * 4));
     // return vec4(vec3(id), 1.);
     vec4 color;
     if (iid == 0)
@@ -89,6 +90,8 @@ sRGB_StraightA main(UV uv)
         color = 'Image 2'(uv);
     if (iid == 2)
         color = 'Image 3'(uv);
+    if (iid == 3)
+        color = 'Image 4'(uv);
 
     if (iid != iid2)
     {

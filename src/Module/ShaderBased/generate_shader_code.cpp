@@ -47,6 +47,11 @@ static void inject_context_argument_in_all_functions(std::string& code)
     Cool::String::replace_all_inplace(code, "(coollab_context, ()", "(coollab_context");
 }
 
+static void remove_extra_parentheses(std::string& code)
+{
+    Cool::String::replace_all_inplace(code, "(())", "()");
+}
+
 auto generate_shader_code(
     Cool::NodesGraph const&                          graph,
     Cool::NodeId const&                              root_node_id,
@@ -77,6 +82,7 @@ auto generate_shader_code(
     }
 
     inject_context_argument_in_all_functions(context.code());
+    remove_extra_parentheses(context.code());
 
     using fmt::literals::operator""_a;
     return fmt::format(
