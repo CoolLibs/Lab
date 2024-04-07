@@ -3,7 +3,7 @@
 #include <Cool/Nodes/NodesGraph.h>
 #include <Module/ModuleDependencies.h>
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
-#include "Cool/Gpu/FullscreenPipeline.h"
+#include "Cool/WebGPU/FullscreenPipeline.h"
 #include "Module/Module.h"
 
 namespace Lab {
@@ -31,8 +31,8 @@ public:
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
-    auto shader_is_valid() const -> bool { return _pipeline.shader().has_value(); } // TODO(Modules) Remove
-    auto shader() -> auto const& { return *_pipeline.shader(); }                    // TODO(Modules) Remove
+    auto shader_is_valid() const -> bool { return _pipeline.has_value(); } // TODO(Modules) Remove
+    // auto shader() -> auto const& { return *_pipeline.shader(); }                    // TODO(Modules) Remove
     auto feedback_double_buffer() const -> Cool::DoubleBufferedRenderTarget const& { return _feedback_double_buffer; }
 
 private:
@@ -41,11 +41,11 @@ private:
     void log_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:
-    mutable std::string              _shader_code{};
-    mutable Cool::FullscreenPipeline _pipeline{};
-    mutable Cool::MessageSender      _shader_error_sender{};
-    Cool::DoubleBufferedRenderTarget _feedback_double_buffer{};
-    mutable ModuleDependencies       _depends_on{};
+    mutable std::string                             _shader_code{};
+    mutable std::optional<Cool::FullscreenPipeline> _pipeline{};
+    mutable Cool::MessageSender                     _shader_error_sender{};
+    Cool::DoubleBufferedRenderTarget                _feedback_double_buffer{};
+    mutable ModuleDependencies                      _depends_on{};
 
 private:
     // Serialization

@@ -24,6 +24,7 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Common/Path.h"
+#include "Cool/Backend/Window.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -48,13 +49,12 @@
 
 namespace Lab {
 
-App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
-    : _main_window{windows.main_window()}
-    , _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
-          .name        = Cool::icon_fmt("Output", ICOMOON_IMAGE),
-          .is_closable = true,
-          .start_open  = false,
-      })}
+App::App(Cool::ViewsManager& views)
+    : _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
+        .name        = Cool::icon_fmt("Output", ICOMOON_IMAGE),
+        .is_closable = true,
+        .start_open  = false,
+    })}
     , _preview_view{views.make_view<Cool::ForwardingOrRenderView>(
           _output_view,
           Cool::ViewCreationParams{
@@ -311,7 +311,7 @@ void App::imgui_window_view()
             if (Cool::ImGuiExtras::floating_button(_wants_view_in_fullscreen ? ICOMOON_SHRINK : ICOMOON_ENLARGE, buttons_order++, align_buttons_vertically))
             {
                 _wants_view_in_fullscreen = !_wants_view_in_fullscreen;
-                _main_window.set_fullscreen(_wants_view_in_fullscreen);
+                Cool::window().set_fullscreen(_wants_view_in_fullscreen);
             }
             b |= ImGui::IsItemActive();
             ImGui::SetItemTooltip("%s", _wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
@@ -402,7 +402,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
 
     DebugOptions::show_framerate_window([&] {
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-        _main_window.imgui_cap_framerate();
+        Cool::window().imgui_cap_framerate();
     });
     if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
         ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code

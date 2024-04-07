@@ -70,9 +70,9 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
         return;
     some_module.needs_to_rerender_flag().set_clean();
 
-    render_target.render([&]() {
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT);
+    render_target.render([&](auto&& render_pass) {
+        // glClearColor(0.f, 0.f, 0.f, 0.f);
+        // glClear(GL_COLOR_BUFFER_BIT);
         some_module.do_rendering(system_values);
     });
 
@@ -89,18 +89,19 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
 {
     if (_compositing_module.shader_is_valid())
     {
-        _compositing_module.shader().bind();
-        for (auto const& module_node : _particles_module_nodes)
-        {
-            _compositing_module.shader().set_uniform_texture(
-                module_node->texture_name_in_shader,
-                module_node->render_target.get().texture_id(),
-                Cool::TextureSamplerDescriptor{
-                    .repeat_mode        = Cool::TextureRepeatMode::None,
-                    .interpolation_mode = glpp::Interpolation::Linear,
-                }
-            );
-        }
+        // TODO(WebGPU)
+        // _compositing_module.shader().bind();
+        // for (auto const& module_node : _particles_module_nodes)
+        // {
+        //     _compositing_module.shader().set_uniform_texture(
+        //         module_node->texture_name_in_shader,
+        //         module_node->render_target.get().texture_id(),
+        //         Cool::TextureSamplerDescriptor{
+        //             .repeat_mode        = Cool::TextureRepeatMode::None,
+        //             .interpolation_mode = glpp::Interpolation::Linear,
+        //         }
+        //     );
+        // }
     }
 
     render_one_module(_compositing_module, render_target, system_values);

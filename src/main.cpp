@@ -23,10 +23,10 @@ auto main(int argc, char** argv) -> int
     Cool::Path::initialize<PathsConfig>();
 
     Cool::run<Lab::App>({
-        .windows_configs   = {Cool::WindowConfig{
-              .title                  = "", // This is set when we load a project.
-              .maximize_on_startup_if = true,
-        }},
+        .window_config = {
+            .title                  = "", // This is set when we load a project.
+            .maximize_on_startup_if = true,
+        },
         .imgui_ini_version = 3,
     });
 }

@@ -40,21 +40,21 @@ public:
 private:
     void render(SystemValues const&) override;
     void update_particles(SystemValues const&);
-    auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
+    // auto create_particle_system() const -> std::optional<Cool::ParticleSystem>; // TODO(WebGPU)
     void update_particles_count_ifn();
     auto desired_particles_count() const -> size_t;
     void log_simulation_shader_error(Cool::OptionalErrorMessage const&) const;
     void request_particles_to_reset();
 
 private:
-    mutable std::optional<Cool::ParticleSystem> _particle_system{};
-    int                                         _particle_system_dimension{};
-    ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
-    Cool::NodeId                                _id_of_node_storing_particles_count{};
-    bool                                        _needs_to_update_particles{true};
-    bool                                        _force_init_particles{true};
-    mutable Cool::MessageSender                 _simulation_shader_error_sender{};
-    mutable std::string                         _shader_code{};
+    // mutable std::optional<Cool::ParticleSystem> _particle_system{};
+    int                         _particle_system_dimension{};
+    ModuleDependencies          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
+    Cool::NodeId                _id_of_node_storing_particles_count{};
+    bool                        _needs_to_update_particles{true};
+    bool                        _force_init_particles{true};
+    mutable Cool::MessageSender _simulation_shader_error_sender{};
+    mutable std::string         _shader_code{};
 
 private:
     // Serialization

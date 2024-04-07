@@ -4,13 +4,11 @@
 #include <Cool/DebugOptions/DebugOptionsManager.h>
 #include <Cool/Exporter/Exporter.h>
 #include <Cool/Exporter/internal/Polaroid.h>
-#include <Cool/Gpu/OpenGL/Texture.h>
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
 #include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
-#include <Cool/Window/WindowManager.h>
 #include <Nodes/NodesLibraryManager.h>
 #include <ProjectManager/Command_SaveProject.h>
 #include <ProjectManager/RecentlyOpened.h>
@@ -40,7 +38,7 @@ using DebugOptionsManager = Cool::DebugOptionsManager<
 
 class App : public Cool::IApp {
 public:
-    explicit App(Cool::WindowManager& windows, Cool::ViewsManager& views);
+    explicit App(Cool::ViewsManager& views);
     ~App();
     void on_shutdown() override;
 
@@ -70,7 +68,7 @@ private:
 
     // clang-format off
     auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager, *_project.modules_graph}}; }
-    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
@@ -99,7 +97,6 @@ private:
     void compile_all_is0_nodes();
 
 private:
-    Cool::Window&                        _main_window;
     Cool::RenderView&                    _output_view;
     Cool::ForwardingOrRenderView&        _preview_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};

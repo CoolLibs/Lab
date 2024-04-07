@@ -1,4 +1,5 @@
 #include "Module_Compositing.h"
+#include "Cool/WebGPU/FullscreenPipeline.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 
 namespace Lab {
@@ -33,9 +34,9 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
         return;
     }
 
-    _shader_code         = *shader_code;
-    auto const maybe_err = _pipeline.compile(_shader_code);
-    log_shader_error(maybe_err);
+    _shader_code = *shader_code;
+    // /* auto const maybe_err = */ _pipeline = Cool::FullscreenPipeline{{.label = "TODO(WebGPU)", .wgsl_code = _shader_code}};
+    // log_shader_error(maybe_err); // TODO(WebGPU)
     update_dependencies_from_shader_code(_depends_on, _shader_code);
     needs_to_rerender_flag().set_dirty();
 }
@@ -71,19 +72,20 @@ void Module_Compositing::render(SystemValues const& system_values)
     render_impl(system_values);
 
     // Render on the feedback texture
-    _feedback_double_buffer.write_target().render([&]() {
-        render_impl(system_values);
-    });
+    // TODO(WebGPU)
+    // _feedback_double_buffer.write_target().render([&]() {
+    //     render_impl(system_values);
+    // });
     _feedback_double_buffer.swap_buffers();
 }
 
 void Module_Compositing::render_impl(SystemValues const& system_values)
 {
-    if (!_pipeline.shader())
+    if (!_pipeline.has_value())
         return;
 
-    set_uniforms_for_shader_based_module(*_pipeline.shader(), system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
-    _pipeline.draw();
+    // set_uniforms_for_shader_based_module(*_pipeline.shader(), system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
+    // _pipeline.draw();
 }
 
 } // namespace Lab

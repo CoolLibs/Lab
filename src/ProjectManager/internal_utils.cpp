@@ -2,6 +2,7 @@
 #include <ProjectManager/utils.h>
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
+#include "Cool/Backend/Window.h"
 #include "Cool/OSC/OSCManager.h"
 #include "FileExtension.h"
 #include "Project.h"
@@ -11,10 +12,10 @@
 
 namespace Lab::internal_project {
 
-static void set_window_title(CommandExecutionContext_Ref const& ctx, std::optional<std::filesystem::path> const& path)
+static void set_window_title(std::optional<std::filesystem::path> const& path)
 {
     glfwSetWindowTitle(
-        ctx.main_window().glfw(),
+        Cool::window().glfw(),
         fmt::format(
             "Coollab [{}]",
             path.has_value()
@@ -33,7 +34,7 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optio
         path = std::nullopt;
     }
     Cool::Path::project_folder() = path ? std::make_optional(Cool::File::without_file_name(*path)) : std::nullopt;
-    set_window_title(ctx, path);
+    set_window_title(path);
     if (path)
         ctx.recently_opened_projects().on_project_opened(*path);
     ctx.project_path() = path;

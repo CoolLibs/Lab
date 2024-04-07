@@ -1,7 +1,6 @@
 #pragma once
 #include <CommandCore/CommandExecutor_TopLevel.h>
 #include "ConcreteCommand.h"
-#include "Cool/Window/Window.h"
 #include "Dependencies/History.h"
 
 namespace Lab {
@@ -22,7 +21,6 @@ public:
     [[nodiscard]] auto app() const -> App& { return _data.app; }
     [[nodiscard]] auto history() const -> History const&;
     [[nodiscard]] auto camera_manager() const -> Camera3DManager&;
-    [[nodiscard]] auto main_window() const -> Cool::Window& { return _data.main_window; }
     [[nodiscard]] auto project() const -> Project& { return _data.project; }
     [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
     [[nodiscard]] auto command_executor() const -> CommandExecutor;
@@ -37,7 +35,6 @@ public:
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
         std::reference_wrapper<App>                                  app;
-        std::reference_wrapper<Cool::Window>                         main_window;
         std::reference_wrapper<Project>                              project;
         std::reference_wrapper<std::optional<std::filesystem::path>> project_path;
         CommandExecutor_TopLevel                                     executor;
