@@ -70,10 +70,10 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
         return;
     some_module.needs_to_rerender_flag().set_clean();
 
-    render_target.render(Cool::AlphaSpace::Straight /*TODO(WebGPU) shouldn't we output Premultiplied now that this is supported?*/, [&](auto&& render_pass) {
+    render_target.render(Cool::AlphaSpace::Straight /*TODO(WebGPU) shouldn't we output Premultiplied now that this is supported?*/, [&](wgpu::RenderPassEncoder render_pass) {
         // glClearColor(0.f, 0.f, 0.f, 0.f);
         // glClear(GL_COLOR_BUFFER_BIT);
-        some_module.do_rendering(system_values);
+        some_module.do_rendering(render_pass, system_values);
     });
 
     if (DebugOptions::log_when_rendering())

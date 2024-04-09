@@ -31,9 +31,9 @@ public:
 
     [[nodiscard]] auto name() const -> const std::string& { return _name; }
 
-    void do_rendering(SystemValues const& system_values)
+    void do_rendering(wgpu::RenderPassEncoder render_pass, SystemValues const& system_values)
     {
-        render(system_values);
+        render(render_pass, system_values);
         _needs_to_rerender_flag.set_clean();
     }
     virtual void imgui_windows(Ui_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
@@ -50,7 +50,7 @@ protected:
     void log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
 
 private:
-    virtual void render(SystemValues const&) = 0;
+    virtual void render(wgpu::RenderPassEncoder, SystemValues const&) = 0;
 
 private:
     std::string     _name;

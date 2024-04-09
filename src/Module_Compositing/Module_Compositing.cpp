@@ -35,7 +35,8 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     }
 
     _shader_code = *shader_code;
-    // /* auto const maybe_err = */ _pipeline = Cool::FullscreenPipeline{{.label = "TODO(WebGPU)", .wgsl_code = _shader_code}};
+    std::cout << _shader_code << '\n';
+    /* auto const maybe_err = */ _pipeline = Cool::FullscreenPipeline{{.label = "TODO(WebGPU)", .wgsl_code = Cool::transpile_glsl_to_wgsl(_shader_code)}};
     // log_shader_error(maybe_err); // TODO(WebGPU)
     update_dependencies_from_shader_code(_depends_on, _shader_code);
     needs_to_rerender_flag().set_dirty();
@@ -64,12 +65,12 @@ void Module_Compositing::set_render_target_size(img::Size const& size)
     _feedback_double_buffer.set_read_target_size_immediately(size);
 }
 
-void Module_Compositing::render(SystemValues const& system_values)
+void Module_Compositing::render(wgpu::RenderPassEncoder render_pass, SystemValues const& system_values)
 {
     // TODO(Performance) Render only once and then copy to the _feedback_double_buffer ?
     // TODO(Performance) Only render on the _feedback_double_buffer when someone depends on it
     // Render on the normal render target
-    render_impl(system_values);
+    render_impl(render_pass, system_values);
 
     // Render on the feedback texture
     // TODO(WebGPU)
@@ -79,13 +80,14 @@ void Module_Compositing::render(SystemValues const& system_values)
     _feedback_double_buffer.swap_buffers();
 }
 
-void Module_Compositing::render_impl(SystemValues const& system_values)
+void Module_Compositing::render_impl(wgpu::RenderPassEncoder render_pass, SystemValues const& system_values)
 {
     if (!_pipeline.has_value())
         return;
 
     // set_uniforms_for_shader_based_module(*_pipeline.shader(), system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
-    // _pipeline.draw();
+    _pipeline->set_uniforms(system_values.aspect_ratio());
+    _pipeline->draw(render_pass);
 }
 
 } // namespace Lab

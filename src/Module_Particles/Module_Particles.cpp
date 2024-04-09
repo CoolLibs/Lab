@@ -141,7 +141,7 @@ void Module_Particles::imgui_show_generated_shader_code()
     //     set_simulation_shader_code(_shader_code, false, _particle_system ? _particle_system->dimension() : _particle_system_dimension);
 }
 
-void Module_Particles::render(SystemValues const& system_values)
+void Module_Particles::render(wgpu::RenderPassEncoder render_pass, SystemValues const& system_values)
 {
     //     if (!_particle_system)
     //         return;

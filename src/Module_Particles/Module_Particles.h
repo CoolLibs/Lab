@@ -38,7 +38,7 @@ public:
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
-    void render(SystemValues const&) override;
+    void render(wgpu::RenderPassEncoder render_pass, SystemValues const&) override;
     void update_particles(SystemValues const&);
     // auto create_particle_system() const -> std::optional<Cool::ParticleSystem>; // TODO(WebGPU)
     void update_particles_count_ifn();

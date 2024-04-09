@@ -62,6 +62,7 @@ auto generate_shader_code(
     std::function<std::vector<std::string>()> const& get_module_textures_names
 )
     -> tl::expected<std::string, std::string>
+// TODO(WebGPU) reintroduce #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 {
     auto       context            = CodeGenContext{graph, get_node_definition};
     auto const main_function_name = gen_desired_function(
@@ -77,8 +78,9 @@ auto generate_shader_code(
     std::string modules_textures_uniforms;
     {
         auto const tex_names = get_module_textures_names();
-        for (auto const& name : tex_names)
-            modules_textures_uniforms += fmt::format("uniform sampler2D {};\n", name);
+        // TODO(WebGPU)
+        // for (auto const& name : tex_names)
+        //     modules_textures_uniforms += fmt::format("uniform sampler2D {};\n", name);
     }
 
     inject_context_argument_in_all_functions(context.code());
@@ -92,16 +94,17 @@ uniform float     _delta_time;
 uniform float     _time;
 uniform float     _height;
 uniform float     _audio_volume;
-uniform sampler1D _audio_spectrum;
-uniform sampler1D _audio_waveform;
+        // TODO(WebGPU)
+// uniform sampler1D _audio_spectrum;
+// uniform sampler1D _audio_waveform;
 uniform mat3      _camera2D_transform;
 uniform mat3      _camera2D_view;
-uniform sampler2D _previous_frame_texture;
-uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
+        // TODO(WebGPU)
+// uniform sampler2D _previous_frame_texture;
+// uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 {modules_textures_uniforms}
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
-#include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/rand.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"

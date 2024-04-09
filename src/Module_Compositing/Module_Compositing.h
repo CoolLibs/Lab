@@ -36,8 +36,8 @@ public:
     auto feedback_double_buffer() const -> Cool::DoubleBufferedRenderTarget const& { return _feedback_double_buffer; }
 
 private:
-    void render(SystemValues const&) override;
-    void render_impl(SystemValues const&);
+    void render(wgpu::RenderPassEncoder render_pass, SystemValues const&) override;
+    void render_impl(wgpu::RenderPassEncoder render_pass, SystemValues const&);
     void log_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:

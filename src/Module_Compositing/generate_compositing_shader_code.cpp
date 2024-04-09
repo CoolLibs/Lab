@@ -15,7 +15,7 @@ auto generate_compositing_shader_code(
     auto const content = ShaderCodeBits{
         .version     = "#version 410",
         .before_main = R"glsl(
-out vec4 out_Color;
+layout(location = 0) out vec4 out_Color;
 struct CoollabContext
 {
     vec2 uv;
@@ -25,7 +25,7 @@ struct CoollabContext
             return fmt::format(FMT_COMPILE(R"glsl(
 void main()
 {{
-    vec2 uv = normalized_uv();
+    vec2 uv = _uv; // TODO(WebGPU) normalized_uv();
     vec3 tmp = _camera2D_transform * vec3(uv, 1.);
     uv = tmp.xy / tmp.z;
     CoollabContext coollab_context;
