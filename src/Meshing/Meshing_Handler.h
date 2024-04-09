@@ -15,6 +15,8 @@ namespace Lab {
 
 class Meshing_Handler {
 public:
+
+    Meshing_Handler();
     void imgui_windows(Ui_Ref const&) const;
 
     void set_sampling_count(unsigned int sampling_count);

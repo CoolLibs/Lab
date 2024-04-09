@@ -81,6 +81,12 @@ void cool_main()
     );
 }
 
+Meshing_Handler::Meshing_Handler()
+{
+    bind_SSBO();
+    _signed_distance_field.upload_data(get_ssbo_size(), nullptr);
+}
+
 void Meshing_Handler::imgui_windows(Ui_Ref const&) const
 {
     ImGui::Begin("Meshing");
