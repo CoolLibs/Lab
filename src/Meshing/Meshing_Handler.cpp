@@ -36,13 +36,18 @@ uniform float _step_size;
 uniform vec3 _box_size;
 
 layout(std430, binding = 0) buffer _signed_distance_field_buffer
-{{
+{
     float _signed_distance_field[];
-}};
+};
+
+struct CoollabContext
+{
+    vec2 uv;
+};
         )glsl",
         .make_main   = [](std::string const& main_function_name) {
             return fmt::format(FMT_COMPILE(R"glsl(
-void main()
+void cool_main()
 {{
     uint gid = gl_GlobalInvocationID.x +
         gl_GlobalInvocationID.y * DispatchSize.x + 
