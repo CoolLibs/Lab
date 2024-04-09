@@ -16,6 +16,7 @@ public:
 private:
     Cool::NodesLibrary       _nodes_library{};
     Cool::NodesFolderWatcher _nodes_folder_watcher{Cool::Path::root() / "Nodes", ".clbnode"};
+    Cool::NodesFolderWatcher _user_nodes_folder_watcher{Cool::Path::user_data() / "Nodes", ".clbnode"};
 };
 
 } // namespace Lab

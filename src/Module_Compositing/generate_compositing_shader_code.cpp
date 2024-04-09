@@ -26,7 +26,7 @@ struct CoollabContext
 void main()
 {{
     vec2 uv = normalized_uv();
-    vec3 tmp = _camera2D * vec3(uv, 1.);
+    vec3 tmp = _camera2D_transform * vec3(uv, 1.);
     uv = tmp.xy / tmp.z;
     CoollabContext coollab_context;
     coollab_context.uv = uv;

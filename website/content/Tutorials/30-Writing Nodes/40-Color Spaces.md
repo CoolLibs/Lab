@@ -1,5 +1,5 @@
 
-There exist quite a few different color spaces and alpha spaces. They all have a reason to be and address a different aspect of the complex problem that is color representation. Understanding the differences between these spaces is essential to determine which space will be better suited for the node you want to implement.
+There exist quite a few different color spaces and alpha spaces. They all have their use cases and each address a different aspect of the complex problem that is color representation. Understanding the differences between these spaces is essential to determine which space will be better suited for the node you want to implement.
 
 ## Color Spaces
 
@@ -20,7 +20,7 @@ In this space the euclidean distance between the `vec3`s accurately represents t
 
 The first component stores the lightness, a number between 0 and 1.<br/>
 The second and third components store chromaticity information. They don't have a specific range.
-For more information, see https://bottosson.github.io/posts/oklab/
+For more information see https://bottosson.github.io/posts/oklab/
 
 ### Okhsl
 
@@ -56,4 +56,4 @@ Premultiplied alpha is when the color components have been multiplied by the alp
 
 ### Straight
 
-Straight alpha is what most people know. This is what is used in our UI and what any imported image will most likely use. **Effects will hardly ever need to use it though** because it doesn't work quite as good as premultiplied alpha.
+Straight alpha is what most people know. This is what is used in our UI and what any imported image will most likely use. **Effects won't use it quite as often as Premultiplied alpha**.

@@ -19,16 +19,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 1.0,
-                                        "y": 0.0,
-                                        "z": 0.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         },
@@ -45,16 +35,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.004000000189989805,
-                                        "y": 1.0,
-                                        "z": 0.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         },
@@ -70,16 +50,6 @@
                                     }
                                 },
                                 "Metadata": {
-                                    "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.0,
-                                        "y": 0.0,
-                                        "z": 1.0
-                                    }
-                                },
-                                "Default Metadata": {
                                     "Is HDR": false
                                 }
                             }
@@ -105,16 +75,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.0,
-                                        "y": 0.005553983151912689,
-                                        "z": 0.23489588499069215
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         },
@@ -131,16 +91,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.7420876622200012,
-                                        "y": 0.655882716178894,
-                                        "z": 0.597000002861023
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         },
@@ -156,16 +106,6 @@
                                     }
                                 },
                                 "Metadata": {
-                                    "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB": {
-                                        "x": 0.00009999999747378752,
-                                        "y": 0.0000999905532808043,
-                                        "z": 0.00009998999303206801
-                                    }
-                                },
-                                "Default Metadata": {
                                     "Is HDR": false
                                 }
                             }

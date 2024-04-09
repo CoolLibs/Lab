@@ -1,10 +1,6 @@
 #include "App.h"
-#include <Cool/DebugOptions/TestMessageConsole.h>
-#include <Cool/DebugOptions/TestPresets.h>
-#include <Cool/Gpu/TextureLibrary_FromFile.h>
 #include <Cool/ImGui/Fonts.h>
 #include <Cool/ImGui/icon_fmt.h>
-#include <Cool/ImGui/test_markdown_formatting.h>
 #include <Cool/Input/Input.h>
 #include <Cool/Log/ToUser.h>
 #include <Cool/Path/Path.h>
@@ -21,21 +17,21 @@
 #include <chrono>
 #include <cmd/imgui.hpp>
 #include <filesystem>
+#include <open/open.hpp>
 #include <reg/src/internal/generate_uuid.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Common/Path.h"
+#include "Cool/DebugOptions/debug_options_windows.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
-#include "Cool/Midi/MidiManager.h"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/Tips/TipsManager.h"
-#include "Cool/Tips/test_tips.h"
 #include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
@@ -115,6 +111,8 @@ void App::on_time_reset()
 
 void App::update()
 {
+    _project.history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
+
     // First frame the exe is open
     // Since the construction of an App might be in two steps (constructor, and then deserialization)
     // we do our actual construction logic here, to make sure it is done once and only once.
@@ -156,7 +154,7 @@ void App::update()
     {
         _project.clock.update();
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_project.clock.time(), _project.clock.delta_time());
+        polaroid().render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds());
     }
     else
     {
@@ -251,16 +249,6 @@ void App::render(Cool::RenderTarget& render_target, float time, float delta_time
     );
 }
 
-void App::imgui_commands_debug_windows()
-{
-    auto const the_ui = ui();
-    the_ui.window({.name = "History"}, [&]() {
-        _project.history.imgui_show([](const ReversibleCommand& command) {
-            return command_to_string(command);
-        });
-    });
-}
-
 void App::imgui_window_cameras()
 {
     static constexpr auto help_text = "When disabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
@@ -345,8 +333,9 @@ void App::imgui_window_exporter()
 {
     _project.exporter.imgui_windows({
         .polaroid          = polaroid(),
-        .time              = _project.clock.time(),
-        .delta_time        = _project.clock.delta_time(),
+        .time              = _project.clock.time_in_seconds(),
+        .delta_time        = _project.clock.delta_time_in_seconds(),
+        .time_speed        = _project.clock.time_speed().value(),
         .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
             auto folder_path = exported_image_path;
             folder_path.replace_extension(); // Give project folder the same name as the image.
@@ -379,7 +368,11 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     auto const the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
-    Cool::ClockU::imgui_timeline(_project.clock, /* on_time_reset = */ [&]() { on_time_reset(); });
+    Cool::ClockU::imgui_timeline(
+        _project.clock,
+        /* extra_widgets = */ [&]() { the_ui.widget(_project.clock.time_speed()); },
+        /* on_time_reset = */ [&]() { on_time_reset(); }
+    );
     ImGui::End();
     // Cameras
     ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
@@ -400,7 +393,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_project.clock.time(), _project.clock.delta_time(), size);
+        the_polaroid.render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds(), size);
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
@@ -414,18 +407,18 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
         ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
                                                                         // to learn more about Dear ImGui!).
-    if (DebugOptions::show_commands_debug_windows())
-    {
-        imgui_commands_debug_windows();
-    }
+    DebugOptions::show_history_window([&] {
+        ImGui::PushFont(Cool::Font::monospace());
+        _project.history.imgui_show([](ReversibleCommand const& command) {
+            return command_to_string(command);
+        });
+        ImGui::PopFont();
+    });
     if (DebugOptions::show_nodes_and_links_registries())
     {
         _project.modules_graph->debug_show_nodes_and_links_registries_windows(ui());
     }
 
-    Cool::DebugOptions::texture_library_debug_view([&] {
-        Cool::TextureLibrary_FromFile::instance().imgui_debug_view();
-    });
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {
         if (ImGui::Button("Compile everything"))
@@ -440,38 +433,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
             compile_all_is0_nodes();
         }
     });
-
-    Cool::DebugOptions::test_message_console__window([]() {
-        static auto test_message_console = Cool::TestMessageConsole{};
-        test_message_console.imgui(
-            Cool::Log::ToUser::console()
-        );
-    });
-
-    Cool::DebugOptions::test_presets__window([]() {
-        static auto test_presets = TestPresets{};
-        test_presets.imgui();
-    });
-
-    Cool::DebugOptions::test_markdown_formatting_window([]() {
-        Cool::test_markdown_formatting();
-    });
-
-    Cool::DebugOptions::emulate_midi_keyboard([]() {
-        Cool::midi_manager().imgui_emulate_midi_keyboard();
-    });
-
-    Cool::DebugOptions::test_tips([this]() {
-        test_tips(_tips_manager);
-    });
-
-    Cool::DebugOptions::color_themes_advanced_config_window([&]() {
-        Cool::user_settings().color_themes.imgui_advanced_config();
-    });
-
-    Cool::DebugOptions::color_themes_editor([&]() {
-        Cool::user_settings().color_themes.imgui_basic_theme_editor();
-    });
+    Cool::debug_options_windows(_tips_manager);
     DebugOptions::empty_window([] {});
 }
 
@@ -559,6 +521,8 @@ void App::commands_menu()
             _project.audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
             _output_view.open();
+        if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
+            Cool::open(Cool::Path::user_data().string().c_str());
         ImGui::EndMenu();
     }
 }
@@ -600,10 +564,8 @@ void App::imgui_menus()
 void App::reset_cameras()
 {
     auto executor = command_executor();
-    executor.wrap_in_commands_group([&]() {
-        _project.camera_2D_manager.reset_camera(executor);
-        _project.camera_3D_manager.reset_camera(executor);
-    });
+    _project.camera_2D_manager.reset_camera(executor);
+    _project.camera_3D_manager.reset_camera(executor);
 }
 
 void App::check_inputs()

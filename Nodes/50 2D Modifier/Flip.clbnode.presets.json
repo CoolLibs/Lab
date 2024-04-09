@@ -11,9 +11,7 @@
                             "data": {
                                 "Name": "Horizontal",
                                 "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         },
                         {
@@ -21,9 +19,7 @@
                             "data": {
                                 "Name": "Vertical",
                                 "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         }
                     ]

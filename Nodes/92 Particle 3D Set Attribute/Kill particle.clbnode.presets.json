@@ -10,10 +10,16 @@
                             "index": 0,
                             "data": {
                                 "Name": "Condition",
-                                "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Value": true,
+                                "Metadata": {}
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Respawn after death",
+                                "Value": true,
+                                "Metadata": {}
                             }
                         }
                     ]

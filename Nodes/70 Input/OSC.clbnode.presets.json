@@ -11,13 +11,9 @@
                             "data": {
                                 "Name": "Channel Name",
                                 "Value": {
-                                    "Route": ""
+                                    "Name": ""
                                 },
-                                "Metadata": {},
-                                "Default Value": {
-                                    "Route": ""
-                                },
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         }
                     ]

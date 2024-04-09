@@ -11,9 +11,7 @@
                             "data": {
                                 "Name": "Flip",
                                 "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         },
                         {
@@ -28,18 +26,8 @@
                                         "Has max bound": true,
                                         "Max": 0.9990000128746033,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": true
-                                    }
-                                },
-                                "Default Value": 0.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": true,
-                                        "Min": 0.0,
-                                        "Has max bound": true,
-                                        "Max": 0.9990000128746033,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": true
+                                        "Use slider": true,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }

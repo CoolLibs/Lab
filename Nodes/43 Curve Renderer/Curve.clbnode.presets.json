@@ -18,18 +18,8 @@
                                         "Has max bound": false,
                                         "Max": 12,
                                         "Drag speed": 0.09000000357627869,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 100,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0,
-                                        "Has max bound": false,
-                                        "Max": 12,
-                                        "Drag speed": 0.03999999910593033,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -46,18 +36,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.00040099999750964344,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -67,9 +47,7 @@
                             "data": {
                                 "Name": "Trail",
                                 "Value": false,
-                                "Metadata": {},
-                                "Default Value": false,
-                                "Default Metadata": {}
+                                "Metadata": {}
                             }
                         }
                     ]

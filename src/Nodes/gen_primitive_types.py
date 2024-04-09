@@ -173,27 +173,6 @@ def all_primitive_types():
             glsl="void",
             parsed_from=None,
         ),
-        PrimitiveType(  # TODO(JF) Remove this once helper functions can use whatever type they want.
-            cpp="RayMarchRes",
-            user_facing_name="RayMarchRes",
-            corresponding_input_types=[],
-            glsl="RayMarchRes",
-            parsed_from="RayMarchRes",
-        ),
-        PrimitiveType(  # TODO(JF) Remove this once helper functions can use whatever type they want.
-            cpp="IntersectionResult2D",
-            user_facing_name="Intersection Result 2D",
-            corresponding_input_types=[],
-            glsl="IntersectionResult2D",
-            parsed_from="IntersectionResult2D",
-        ),
-        PrimitiveType(  # TODO(JF) Remove this once helper functions can use whatever type they want.
-            cpp="IntersectionResult3D",
-            user_facing_name="Intersection Result 3D",
-            corresponding_input_types=[],
-            glsl="IntersectionResult3D",
-            parsed_from="IntersectionResult3D",
-        ),
     ]
 
     res.extend(primitive_types_for_color_spaces())
@@ -343,7 +322,7 @@ def all_conversions():
                 from_="Void",
                 to="UV",
                 implementation="""
-                vec2 FUNCTION_NAME()
+                vec2 FUNCTION_NAME/*needs_coollab_context*/()
                 {
                     return coollab_context.uv;
                 }
@@ -353,7 +332,7 @@ def all_conversions():
                 from_="Void",
                 to="Particle2D",
                 implementation="""
-                Particle2D FUNCTION_NAME()
+                Particle2D FUNCTION_NAME/*needs_coollab_context*/()
                 {
                     return coollab_context.particle;
                 }
@@ -363,7 +342,7 @@ def all_conversions():
                 from_="Void",
                 to="Particle3D",
                 implementation="""
-                Particle3D FUNCTION_NAME()
+                Particle3D FUNCTION_NAME/*needs_coollab_context*/()
                 {
                     return coollab_context.particle;
                 }
@@ -521,7 +500,7 @@ def implicit_color_conversions_impl():
                         return {{
                             .name       = "{function_name}",
                             .definition = R"STR(
-                                {out_vec} {function_name}/*coollabdef*/({in_vec} from)
+                                {out_vec} {function_name}({in_vec} from)
                                 {{
                                     {implementation}
                                 }}
@@ -823,7 +802,7 @@ def def_implicit_conversions():
             {{
                 return {{
                     .name       = "{function_name}",
-                    .definition = R"STR({replace_function_name(conversion.implementation, function_name+"/*coollabdef*/")})STR",
+                    .definition = R"STR({replace_function_name(conversion.implementation, function_name)})STR",
                 }};
             }}
         """

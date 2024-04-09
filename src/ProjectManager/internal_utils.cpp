@@ -45,6 +45,8 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
+    for (auto& [_, node] : ctx.project().modules_graph->graph().nodes())
+        ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node.downcast<Node>());
 
     set_current_project_path(ctx, project_path);
     ctx.project().clock.set_playing(is_playing);

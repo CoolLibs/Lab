@@ -20,17 +20,6 @@
                                 },
                                 "Metadata": {
                                     "Is HDR": false
-                                },
-                                "Default Value": {
-                                    "sRGB, Straight alpha": {
-                                        "x": 1.0,
-                                        "y": 0.41183000802993777,
-                                        "z": 0.7742249965667725,
-                                        "w": 1.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Is HDR": false
                                 }
                             }
                         }

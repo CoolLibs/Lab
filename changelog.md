@@ -1,6 +1,9 @@
 # Changelog
 
-- [🐣beta-13 WIP](#beta-13-wip)
+- [🐣beta-16 WIP](#beta-16-wip)
+- [🐣beta-15](#beta-15)
+- [🐣beta-14](#beta-14)
+- [🐣beta-13](#beta-13)
 - [🐣beta-12](#beta-12)
 - [🐣beta-11](#beta-11)
 - [🐣beta-10](#beta-10)
@@ -15,10 +18,42 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-13 WIP
+## 🐣beta-16 WIP
 
-- ✨ Changes to the 2D Camera can now be undone (CTRL+Z)
-- ✨ Applying a preset can now be undone (CTRL+Z)
+- ✨ The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
+- ✨ When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
+- ✨ Some node inputs now have a little info icon next to their pin, explaining what the parameter does in more details.
+- 🤏 Random nodes now use an Integer as a Seed, instead of any decimal number.
+- 🤏 Use logarithmic drag for camera zoom (makes it smoother).
+- 🤏 Improved Angle widget.
+- 🤏 Improved final image size calculations based on desired aspect ratio.
+- 🐛 Fixed image generation failure in some rare cases.
+- 🐛 Fixed a crash when loading a project that was made in an older version of Coollab and that used a node that had been updated in Coollab.
+- 🐛 Remove incompatible link when creating a link backward from a pin.
+
+## 🐣beta-15
+
+- ✨ Added a Time Speed on the timeline, which allows you to slow down or speed up your entire animation easily.
+![](https://github.com/CoolLibs/Lab/assets/45451201/53cb9489-8924-4761-86bc-5191a00afa28)
+- 🐛 Fixed camera movements when using particles
+- 🐛 When dragging gizmos, mouse can now wrap around the screen
+- 🐛 Fixed: When writing your own nodes, they were not detected.
+- 🐛 Fixed a few nodes.
+- 👩‍💻 The syntax for creating your own Coollab nodes is now 100% compatible with regular glsl syntax. You can now write structs, global variables, #define, etc.
+
+## 🐣beta-14
+
+- ✨ You can now create your own nodes! [Read the tutorial](https://coollab-art.com/Tutorials/Writing%20Nodes/Intro) to learn everything you need to know.
+- 🐛 Fixed: Plugging a link into an input pin that already has a link now removes the old link. (This bug was introduced in the previous version).
+
+## 🐣beta-13
+
+- ✨ You can now copy-paste nodes! (CTRL+C / CTRL+V) You can even paste them from one project to another, or send them as text to a friend, who can then paste them in their instance of Coollab.
+![](https://github.com/CoolLibs/Lab/assets/45451201/28a9c941-bc9a-49a6-b56f-5dadc2c005d7)
+- ✨ Adding and removing nodes and links can now be undone and redone (CTRL+Z / CTRL+Y)
+![](https://github.com/CoolLibs/Lab/assets/45451201/6e4d7e62-a919-4e71-81cf-76e5cb0b24e5)
+- ✨ Changes to the 2D Camera can now be undone and redone (CTRL+Z / CTRL+Y)
+- ✨ Applying a preset can now be undone and redone (CTRL+Z / CTRL+Y)
 
 ## 🐣beta-12
 

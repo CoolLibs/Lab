@@ -1,26 +1,12 @@
 name: Feature Suggestion
 description: Tell us how we could improve Coollab
 title: "[Feature] "
-labels: ["enhancement", "triage"]
+labels: ["enhancement"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this feature suggestion!
-  - type: input
-    id: contact
-    attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
-    validations:
-      required: false
   - type: textarea
     id: what-is-your-suggestion
     attributes:
       label: What is your suggestion?
       description: Tell us how we could improve Coollab
-      placeholder: It would be nice if ...
-      value: "It would be nice if ..."
     validations:
       required: true

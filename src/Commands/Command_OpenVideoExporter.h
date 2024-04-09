@@ -13,15 +13,14 @@ struct Command_OpenVideoExporter {
     {
         return "Open Video Exporter Window";
     }
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive&)
+    {
+    }
 };
 
 } // namespace Lab
-
-namespace cereal {
-
-template<class Archive>
-void serialize(Archive&, Lab::Command_OpenVideoExporter&)
-{
-}
-
-} // namespace cereal

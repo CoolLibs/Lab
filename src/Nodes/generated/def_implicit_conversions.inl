@@ -10,7 +10,7 @@ static auto gen_Coollab_Angle_from_Float() -> Function
     return {
         .name       = "Coollab_Angle_from_Float",
         .definition = R"STR(
-                float Coollab_Angle_from_Float/*coollabdef*/(float x)
+                float Coollab_Angle_from_Float(float x)
                 {
                     return x * TAU;
                 }
@@ -23,7 +23,7 @@ static auto gen_Coollab_Float_from_Angle() -> Function
     return {
         .name       = "Coollab_Float_from_Angle",
         .definition = R"STR(
-                float Coollab_Float_from_Angle/*coollabdef*/(float angle)
+                float Coollab_Float_from_Angle(float angle)
                 {
                     return angle / TAU;
                 }
@@ -36,7 +36,7 @@ static auto gen_Coollab_Hue_from_Float() -> Function
     return {
         .name       = "Coollab_Hue_from_Float",
         .definition = R"STR(
-                float Coollab_Hue_from_Float/*coollabdef*/(float x)
+                float Coollab_Hue_from_Float(float x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
@@ -49,7 +49,7 @@ static auto gen_Coollab_Float_from_Hue() -> Function
     return {
         .name       = "Coollab_Float_from_Hue",
         .definition = R"STR(
-                float Coollab_Float_from_Hue/*coollabdef*/(float x)
+                float Coollab_Float_from_Hue(float x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
@@ -62,7 +62,7 @@ static auto gen_Coollab_Int_from_Float() -> Function
     return {
         .name       = "Coollab_Int_from_Float",
         .definition = R"STR(
-                int Coollab_Int_from_Float/*coollabdef*/(float x)
+                int Coollab_Int_from_Float(float x)
                 {
                     return int(floor(x));
                 }
@@ -75,7 +75,7 @@ static auto gen_Coollab_Float_from_Int() -> Function
     return {
         .name       = "Coollab_Float_from_Int",
         .definition = R"STR(
-                float Coollab_Float_from_Int/*coollabdef*/(int x)
+                float Coollab_Float_from_Int(int x)
                 {
                     return float(x);
                 }
@@ -88,7 +88,7 @@ static auto gen_Coollab_Bool_from_Float() -> Function
     return {
         .name       = "Coollab_Bool_from_Float",
         .definition = R"STR(
-                bool Coollab_Bool_from_Float/*coollabdef*/(float x)
+                bool Coollab_Bool_from_Float(float x)
                 {
                     return x > 0.5;
                 }
@@ -101,7 +101,7 @@ static auto gen_Coollab_Float_from_Bool() -> Function
     return {
         .name       = "Coollab_Float_from_Bool",
         .definition = R"STR(
-                float Coollab_Float_from_Bool/*coollabdef*/(bool b)
+                float Coollab_Float_from_Bool(bool b)
                 {
                     return b ? 1. : 0.;
                 }
@@ -114,7 +114,7 @@ static auto gen_Coollab_Direction2D_from_Angle() -> Function
     return {
         .name       = "Coollab_Direction2D_from_Angle",
         .definition = R"STR(
-                vec2 Coollab_Direction2D_from_Angle/*coollabdef*/(float angle)
+                vec2 Coollab_Direction2D_from_Angle(float angle)
                 {
                     return vec2(cos(angle), sin(angle));
                 }
@@ -127,7 +127,7 @@ static auto gen_Coollab_Direction2D_from_Float() -> Function
     return {
         .name       = "Coollab_Direction2D_from_Float",
         .definition = R"STR(
-                vec2 Coollab_Direction2D_from_Float/*coollabdef*/(float x)
+                vec2 Coollab_Direction2D_from_Float(float x)
                 {
                     float angle = x * TAU;
                     return vec2(cos(angle), sin(angle));
@@ -141,7 +141,7 @@ static auto gen_Coollab_Angle_from_Direction2D() -> Function
     return {
         .name       = "Coollab_Angle_from_Direction2D",
         .definition = R"STR(
-                float Coollab_Angle_from_Direction2D/*coollabdef*/(vec2 dir)
+                float Coollab_Angle_from_Direction2D(vec2 dir)
                 {
                     return dir.x != 0.f
                                 ? atan(dir.y, dir.x)
@@ -158,7 +158,7 @@ static auto gen_Coollab_Vec2_from_UV() -> Function
     return {
         .name       = "Coollab_Vec2_from_UV",
         .definition = R"STR(
-                vec2 Coollab_Vec2_from_UV/*coollabdef*/(vec2 x)
+                vec2 Coollab_Vec2_from_UV(vec2 x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
@@ -171,7 +171,7 @@ static auto gen_Coollab_UV_from_Vec2() -> Function
     return {
         .name       = "Coollab_UV_from_Vec2",
         .definition = R"STR(
-                vec2 Coollab_UV_from_Vec2/*coollabdef*/(vec2 x)
+                vec2 Coollab_UV_from_Vec2(vec2 x)
                 {
                     return x; // No need to do anything for this conversion, the difference is purely semantic.
                 }
@@ -184,7 +184,7 @@ static auto gen_Coollab_UV_from_Void() -> Function
     return {
         .name       = "Coollab_UV_from_Void",
         .definition = R"STR(
-                vec2 Coollab_UV_from_Void/*coollabdef*/()
+                vec2 Coollab_UV_from_Void/*needs_coollab_context*/()
                 {
                     return coollab_context.uv;
                 }
@@ -197,7 +197,7 @@ static auto gen_Coollab_Particle2D_from_Void() -> Function
     return {
         .name       = "Coollab_Particle2D_from_Void",
         .definition = R"STR(
-                Particle2D Coollab_Particle2D_from_Void/*coollabdef*/()
+                Particle2D Coollab_Particle2D_from_Void/*needs_coollab_context*/()
                 {
                     return coollab_context.particle;
                 }
@@ -210,7 +210,7 @@ static auto gen_Coollab_Particle3D_from_Void() -> Function
     return {
         .name       = "Coollab_Particle3D_from_Void",
         .definition = R"STR(
-                Particle3D Coollab_Particle3D_from_Void/*coollabdef*/()
+                Particle3D Coollab_Particle3D_from_Void/*needs_coollab_context*/()
                 {
                     return coollab_context.particle;
                 }
@@ -223,7 +223,7 @@ static auto gen_Coollab_Angle_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Angle_from_Float_StraightA",
         .definition = R"STR(
-                        float Coollab_Angle_from_Float_StraightA/*coollabdef*/(vec2 x)
+                        float Coollab_Angle_from_Float_StraightA(vec2 x)
                         {
                             return Coollab_Angle_from_Float(Coollab_Float_from_Float_StraightA(x));
                         }
@@ -236,7 +236,7 @@ static auto gen_Coollab_Angle_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Angle_from_Float_PremultipliedA",
         .definition = R"STR(
-                        float Coollab_Angle_from_Float_PremultipliedA/*coollabdef*/(vec2 x)
+                        float Coollab_Angle_from_Float_PremultipliedA(vec2 x)
                         {
                             return Coollab_Angle_from_Float(Coollab_Float_from_Float_PremultipliedA(x));
                         }
@@ -249,7 +249,7 @@ static auto gen_Coollab_Float_StraightA_from_Angle() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Angle",
         .definition = R"STR(
-                        vec2 Coollab_Float_StraightA_from_Angle/*coollabdef*/(float x)
+                        vec2 Coollab_Float_StraightA_from_Angle(float x)
                         {
                             return Coollab_Float_StraightA_from_Float(Coollab_Float_from_Angle(x));
                         }
@@ -262,7 +262,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Angle() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Angle",
         .definition = R"STR(
-                        vec2 Coollab_Float_PremultipliedA_from_Angle/*coollabdef*/(float x)
+                        vec2 Coollab_Float_PremultipliedA_from_Angle(float x)
                         {
                             return Coollab_Float_PremultipliedA_from_Float(Coollab_Float_from_Angle(x));
                         }
@@ -275,7 +275,7 @@ static auto gen_Coollab_Hue_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Hue_from_Float_StraightA",
         .definition = R"STR(
-                        float Coollab_Hue_from_Float_StraightA/*coollabdef*/(vec2 x)
+                        float Coollab_Hue_from_Float_StraightA(vec2 x)
                         {
                             return Coollab_Hue_from_Float(Coollab_Float_from_Float_StraightA(x));
                         }
@@ -288,7 +288,7 @@ static auto gen_Coollab_Hue_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Hue_from_Float_PremultipliedA",
         .definition = R"STR(
-                        float Coollab_Hue_from_Float_PremultipliedA/*coollabdef*/(vec2 x)
+                        float Coollab_Hue_from_Float_PremultipliedA(vec2 x)
                         {
                             return Coollab_Hue_from_Float(Coollab_Float_from_Float_PremultipliedA(x));
                         }
@@ -301,7 +301,7 @@ static auto gen_Coollab_Float_StraightA_from_Hue() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Hue",
         .definition = R"STR(
-                        vec2 Coollab_Float_StraightA_from_Hue/*coollabdef*/(float x)
+                        vec2 Coollab_Float_StraightA_from_Hue(float x)
                         {
                             return Coollab_Float_StraightA_from_Float(Coollab_Float_from_Hue(x));
                         }
@@ -314,7 +314,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Hue() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Hue",
         .definition = R"STR(
-                        vec2 Coollab_Float_PremultipliedA_from_Hue/*coollabdef*/(float x)
+                        vec2 Coollab_Float_PremultipliedA_from_Hue(float x)
                         {
                             return Coollab_Float_PremultipliedA_from_Float(Coollab_Float_from_Hue(x));
                         }
@@ -327,7 +327,7 @@ static auto gen_Coollab_Int_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Int_from_Float_StraightA",
         .definition = R"STR(
-                        int Coollab_Int_from_Float_StraightA/*coollabdef*/(vec2 x)
+                        int Coollab_Int_from_Float_StraightA(vec2 x)
                         {
                             return Coollab_Int_from_Float(Coollab_Float_from_Float_StraightA(x));
                         }
@@ -340,7 +340,7 @@ static auto gen_Coollab_Int_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Int_from_Float_PremultipliedA",
         .definition = R"STR(
-                        int Coollab_Int_from_Float_PremultipliedA/*coollabdef*/(vec2 x)
+                        int Coollab_Int_from_Float_PremultipliedA(vec2 x)
                         {
                             return Coollab_Int_from_Float(Coollab_Float_from_Float_PremultipliedA(x));
                         }
@@ -353,7 +353,7 @@ static auto gen_Coollab_Float_StraightA_from_Int() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Int",
         .definition = R"STR(
-                        vec2 Coollab_Float_StraightA_from_Int/*coollabdef*/(int x)
+                        vec2 Coollab_Float_StraightA_from_Int(int x)
                         {
                             return Coollab_Float_StraightA_from_Float(Coollab_Float_from_Int(x));
                         }
@@ -366,7 +366,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Int() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Int",
         .definition = R"STR(
-                        vec2 Coollab_Float_PremultipliedA_from_Int/*coollabdef*/(int x)
+                        vec2 Coollab_Float_PremultipliedA_from_Int(int x)
                         {
                             return Coollab_Float_PremultipliedA_from_Float(Coollab_Float_from_Int(x));
                         }
@@ -379,7 +379,7 @@ static auto gen_Coollab_Bool_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Bool_from_Float_StraightA",
         .definition = R"STR(
-                        bool Coollab_Bool_from_Float_StraightA/*coollabdef*/(vec2 x)
+                        bool Coollab_Bool_from_Float_StraightA(vec2 x)
                         {
                             return Coollab_Bool_from_Float(Coollab_Float_from_Float_StraightA(x));
                         }
@@ -392,7 +392,7 @@ static auto gen_Coollab_Bool_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Bool_from_Float_PremultipliedA",
         .definition = R"STR(
-                        bool Coollab_Bool_from_Float_PremultipliedA/*coollabdef*/(vec2 x)
+                        bool Coollab_Bool_from_Float_PremultipliedA(vec2 x)
                         {
                             return Coollab_Bool_from_Float(Coollab_Float_from_Float_PremultipliedA(x));
                         }
@@ -405,7 +405,7 @@ static auto gen_Coollab_Float_StraightA_from_Bool() -> Function
     return {
         .name       = "Coollab_Float_StraightA_from_Bool",
         .definition = R"STR(
-                        vec2 Coollab_Float_StraightA_from_Bool/*coollabdef*/(bool x)
+                        vec2 Coollab_Float_StraightA_from_Bool(bool x)
                         {
                             return Coollab_Float_StraightA_from_Float(Coollab_Float_from_Bool(x));
                         }
@@ -418,7 +418,7 @@ static auto gen_Coollab_Float_PremultipliedA_from_Bool() -> Function
     return {
         .name       = "Coollab_Float_PremultipliedA_from_Bool",
         .definition = R"STR(
-                        vec2 Coollab_Float_PremultipliedA_from_Bool/*coollabdef*/(bool x)
+                        vec2 Coollab_Float_PremultipliedA_from_Bool(bool x)
                         {
                             return Coollab_Float_PremultipliedA_from_Float(Coollab_Float_from_Bool(x));
                         }
@@ -431,7 +431,7 @@ static auto gen_Coollab_Direction2D_from_Float_StraightA() -> Function
     return {
         .name       = "Coollab_Direction2D_from_Float_StraightA",
         .definition = R"STR(
-                        vec2 Coollab_Direction2D_from_Float_StraightA/*coollabdef*/(vec2 x)
+                        vec2 Coollab_Direction2D_from_Float_StraightA(vec2 x)
                         {
                             return Coollab_Direction2D_from_Float(Coollab_Float_from_Float_StraightA(x));
                         }
@@ -444,7 +444,7 @@ static auto gen_Coollab_Direction2D_from_Float_PremultipliedA() -> Function
     return {
         .name       = "Coollab_Direction2D_from_Float_PremultipliedA",
         .definition = R"STR(
-                        vec2 Coollab_Direction2D_from_Float_PremultipliedA/*coollabdef*/(vec2 x)
+                        vec2 Coollab_Direction2D_from_Float_PremultipliedA(vec2 x)
                         {
                             return Coollab_Direction2D_from_Float(Coollab_Float_from_Float_PremultipliedA(x));
                         }

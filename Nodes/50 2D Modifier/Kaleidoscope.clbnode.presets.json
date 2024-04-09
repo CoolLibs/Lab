@@ -18,18 +18,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.0,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -46,18 +36,8 @@
                                         "Has max bound": false,
                                         "Max": 12,
                                         "Drag speed": 0.019999999552965165,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 5,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0,
-                                        "Has max bound": false,
-                                        "Max": 12,
-                                        "Drag speed": 0.03999999910593033,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }
@@ -72,16 +52,6 @@
                                     }
                                 },
                                 "Metadata": {
-                                    "Number of snaps": 24,
-                                    "Snaps offset (in radians)": 0.0,
-                                    "Always snap": false
-                                },
-                                "Default Value": {
-                                    "Radians": {
-                                        "Radians": 0.0
-                                    }
-                                },
-                                "Default Metadata": {
                                     "Number of snaps": 24,
                                     "Snaps offset (in radians)": 0.0,
                                     "Always snap": false

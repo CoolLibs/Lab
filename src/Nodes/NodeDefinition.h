@@ -4,27 +4,26 @@
 #include <memory>
 #include "Cool/Variables/PresetManager.h"
 #include "FunctionSignature.h"
+#include "FunctionSignatureAsString.h"
 #include "NodeInputDefinition.h"
 #include "tl/expected.hpp"
 
 namespace Lab {
 
-struct FunctionPieces {
-    std::string               name;
-    CompleteFunctionSignature signature;
-    std::string               body;
-};
+struct MainFunction {
+    FunctionSignatureAsString signature_as_string;
+    std::vector<std::string>  argument_names; // For optimisation, we store the argument_names
+    FunctionSignature         signature;      // and FunctionSignature computed from signature_as_string
+    std::string               body;           /// Does not contain the curly braces
 
-struct MainFunctionPieces {
-    std::string           name;
-    MainFunctionSignature signature;
-    std::string           body;
+    auto name() const -> std::string const& { return signature_as_string.name; }
+    auto name() -> std::string& { return signature_as_string.name; }
 };
 
 struct NodeDefinition_Data {
-    MainFunctionPieces                 main_function{};
-    std::vector<FunctionPieces>        helper_functions{};
-    std::vector<std::filesystem::path> included_files{};
+    MainFunction             main_function{};
+    std::string              helper_glsl_code{};
+    std::vector<std::string> names_in_global_scope{};
 
     std::vector<NodeInputDefinition>               input_functions{}; // Things that can only come from a pin
     std::vector<Cool::AnySharedVariableDefinition> input_values{};    // Things that will default to a widget on the node if nothing is plugged into the pin
@@ -37,16 +36,14 @@ public:
     static auto make(NodeDefinition_Data const&, Cool::PresetsPaths const&) // Use this instead of the constructor because it is not guaranteed that we will successfully create a NodeDefinition from the data.
         -> tl::expected<NodeDefinition, std::string>;
 
-    [[nodiscard]] auto name() const -> auto const& { return _data.main_function.name; }
-    [[nodiscard]] auto signature() const -> auto const& { return _data.main_function.signature.signature; }
-    [[nodiscard]] auto main_parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
-    [[nodiscard]] auto parameter_names() const -> auto const& { return _data.main_function.signature.parameter_names; }
-    [[nodiscard]] auto function_body() const -> auto const& { return _data.main_function.body; }
+    [[nodiscard]] auto name() const -> auto const& { return _data.main_function.name(); }
+    [[nodiscard]] auto signature() const -> auto const& { return _data.main_function.signature; }
+    [[nodiscard]] auto main_function() const -> auto const& { return _data.main_function; }
     [[nodiscard]] auto function_inputs() const -> auto const& { return _data.input_functions; }
     [[nodiscard]] auto value_inputs() const -> auto const& { return _data.input_values; }
     [[nodiscard]] auto output_indices() const -> auto const& { return _data.output_indices; }
-    [[nodiscard]] auto helper_functions() const -> auto const& { return _data.helper_functions; }
-    [[nodiscard]] auto included_files() const -> auto const& { return _data.included_files; }
+    [[nodiscard]] auto helper_glsl_code() const -> auto const& { return _data.helper_glsl_code; }
+    [[nodiscard]] auto names_in_global_scope() const -> auto const& { return _data.names_in_global_scope; }
 
     [[nodiscard]] auto presets_manager() const -> auto const& { return *_presets_manager; }
     auto               imgui_presets(Cool::Settings& settings) const -> bool { return _presets_manager->imgui_presets(settings); }

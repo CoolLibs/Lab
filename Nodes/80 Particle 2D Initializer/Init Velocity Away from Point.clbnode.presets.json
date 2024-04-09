@@ -18,15 +18,6 @@
                                 },
                                 "Metadata": {
                                     "Drag speed": 0.00009999999747378752
-                                },
-                                "Default Value": {
-                                    "Point2D": {
-                                        "x": 0.0,
-                                        "y": 0.0
-                                    }
-                                },
-                                "Default Metadata": {
-                                    "Drag speed": 0.00009999999747378752
                                 }
                             }
                         },
@@ -42,18 +33,8 @@
                                         "Has max bound": false,
                                         "Max": 1.0,
                                         "Drag speed": 0.003000000026077032,
-                                        "Use slider": false
-                                    }
-                                },
-                                "Default Value": 0.5,
-                                "Default Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false
+                                        "Use slider": false,
+                                        "Is logarithmic": false
                                     }
                                 }
                             }

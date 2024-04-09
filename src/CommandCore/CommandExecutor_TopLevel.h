@@ -23,12 +23,12 @@ public:
 
     /// To simplify the life of users so they don't need to call make_command()
     template<ConcreteCommand ConcreteCommandT>
-    void execute(ConcreteCommandT&& command, CommandExecutionContext_Ref const& ctx) const
+    void execute(ConcreteCommandT&& command, CommandExecutionContext_Ref const& ctx, bool store_in_history = true) const
     {
-        execute(make_command(std::forward<ConcreteCommandT>(command)), ctx);
+        execute(make_command(std::forward<ConcreteCommandT>(command)), ctx, store_in_history);
     }
 
-    void execute(const Command& command, CommandExecutionContext_Ref const& ctx) const;
+    void execute(const Command& command, CommandExecutionContext_Ref const& ctx, bool store_in_history = true) const;
 
 private:
     mutable CommandExecutor_WithoutHistory_Ref _sub_executor;

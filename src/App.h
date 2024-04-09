@@ -21,6 +21,7 @@
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/Midi/MidiChannel.h"
 #include "Cool/Midi/MidiManager.h"
+#include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
@@ -54,6 +55,8 @@ public:
     void open_image_exporter();
     void open_video_exporter();
 
+    auto nodes_library() const -> Cool::NodesLibrary const& { return _nodes_library_manager.library(); }
+
 private:
     void render(Cool::RenderTarget& render_target, float time, float delta_time);
     void on_time_changed();
@@ -66,8 +69,8 @@ private:
     void check_inputs__timeline();
 
     // clang-format off
-    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager}}; }
-    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project.history, _project.camera_3D_manager, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager, *_project.modules_graph}}; }
+    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
@@ -92,8 +95,6 @@ private:
     void imgui_window_cameras();
     void imgui_window_view();
     void imgui_window_exporter();
-
-    void imgui_commands_debug_windows();
 
     void compile_all_is0_nodes();
 
