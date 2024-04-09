@@ -33,7 +33,7 @@ static auto generate_meshing_shader_code(
         .version     = "",
         .before_main = R"glsl(
 uniform float _step_size;
-uniform vec3 _box_size;
+uniform float _box_size;
 
 layout(std430, binding = 0) buffer _signed_distance_field_buffer
 {
@@ -53,7 +53,7 @@ void cool_main()
         gl_GlobalInvocationID.y * DispatchSize.x + 
         gl_GlobalInvocationID.z * DispatchSize.y * DispatchSize.y;
 
-    vec3 pos = -_box_size/2. + vec3(gl_GlobalInvocationID)*_step_size;
+    vec3 pos = vec3(-_box_size/2. + gl_GlobalInvocationID*_step_size);
 
     CoollabContext dummy_coollab_context;
     dummy_coollab_context.uv = vec2(0);
@@ -152,8 +152,8 @@ void Meshing_Handler::compute_mesh(
     }
 
     // TODO(Meshing) expose those parameters
-    const glm::vec3 boxSize           = glm::vec3(2.f);
-    const float     meshing_step_size = 0.2f;
+    const float boxSize           = 2.f;
+    const float meshing_step_size = boxSize / static_cast<float>(_sampling_count.x-1);
 
     meshing_compute_shader->bind();
     bind_SSBO();
