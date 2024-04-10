@@ -3,7 +3,7 @@
 #include <Cool/Nodes/NodesGraph.h>
 #include <Module/ModuleDependencies.h>
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
-#include "Cool/WebGPU/FullscreenPipeline.h"
+#include "Cool/WebGPU/FullscreenPipelineGLSL.h"
 #include "Module/Module.h"
 
 namespace Lab {
@@ -41,11 +41,11 @@ private:
     void log_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:
-    mutable std::string                             _shader_code{};
-    mutable std::optional<Cool::FullscreenPipeline> _pipeline{};
-    mutable Cool::MessageSender                     _shader_error_sender{};
-    Cool::DoubleBufferedRenderTarget                _feedback_double_buffer{};
-    mutable ModuleDependencies                      _depends_on{};
+    mutable std::string                                 _shader_code{};
+    mutable std::optional<Cool::FullscreenPipelineGLSL> _pipeline{};
+    mutable Cool::MessageSender                         _shader_error_sender{};
+    Cool::DoubleBufferedRenderTarget                    _feedback_double_buffer{};
+    mutable ModuleDependencies                          _depends_on{};
 
 private:
     // Serialization

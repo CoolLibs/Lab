@@ -1,5 +1,5 @@
 #include "Module_Compositing.h"
-#include "Cool/WebGPU/FullscreenPipeline.h"
+#include "Cool/WebGPU/FullscreenPipelineGLSL.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 
 namespace Lab {
@@ -36,7 +36,7 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
 
     _shader_code = *shader_code;
     std::cout << _shader_code << '\n';
-    /* auto const maybe_err = */ _pipeline = Cool::FullscreenPipeline{{.label = "TODO(WebGPU)", .wgsl_code = Cool::transpile_glsl_to_wgsl(_shader_code)}};
+    /* auto const maybe_err = */ _pipeline = Cool::make_fullscreen_pipeline_glsl({.label = "TODO(WebGPU)", .code = _shader_code}).value();
     // log_shader_error(maybe_err); // TODO(WebGPU)
     update_dependencies_from_shader_code(_depends_on, _shader_code);
     needs_to_rerender_flag().set_dirty();
@@ -85,8 +85,8 @@ void Module_Compositing::render_impl(wgpu::RenderPassEncoder render_pass, System
     if (!_pipeline.has_value())
         return;
 
-    // set_uniforms_for_shader_based_module(*_pipeline.shader(), system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
-    _pipeline->set_uniforms(system_values.aspect_ratio());
+    set_uniforms_for_shader_based_module(*_pipeline, system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
+    _pipeline->set_aspect_ratio_uniform(system_values.aspect_ratio());
     _pipeline->draw(render_pass);
 }
 
