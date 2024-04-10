@@ -7,6 +7,8 @@
 #include "Cool/Nodes/GetNodeDefinition_Ref.h"
 #include "Module/ShaderBased/generate_shader_code.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
+#include "marching_cube.hpp"
+#include "meshing_io.hpp"
 
 namespace Lab {
 
@@ -58,6 +60,7 @@ void cool_main()
     CoollabContext dummy_coollab_context;
     dummy_coollab_context.uv = vec2(0);
     _signed_distance_field[gid] = {main_function_name}(dummy_coollab_context, pos);
+    // _signed_distance_field[gid] = pos.x;
 }}
                 )glsl"),
                                  "main_function_name"_a = main_function_name);
@@ -153,7 +156,7 @@ void Meshing_Handler::compute_mesh(
 
     // TODO(Meshing) expose those parameters
     const float boxSize           = 2.f;
-    const float meshing_step_size = boxSize / static_cast<float>(_sampling_count.x-1);
+    const float meshing_step_size = boxSize / static_cast<float>(_sampling_count.x - 1);
 
     meshing_compute_shader->bind();
     bind_SSBO();
@@ -165,18 +168,21 @@ void Meshing_Handler::compute_mesh(
     meshing_compute_shader->compute(_sampling_count);
 
     // CPU get data back
-    std::vector<float> v{};
-    v.resize(get_ssbo_size());
+    std::vector<float> sdf_sampling{};
+    sdf_sampling.resize(get_ssbo_size());
 
     // need mutable keyword to call download_data in const function
-    _signed_distance_field.download_data(v);
+    _signed_distance_field.download_data(sdf_sampling);
 
     // test print data
-    for (size_t i = 0; i < v.size(); i++)
-    {
-        std::string s = "v[" + std::to_string(i) + "] = " + std::to_string(v[i]);
-        Cool::Log::Debug::info("Meshing", s);
-    }
+    // for (size_t i = 0; i < sdf_sampling.size(); i++)
+    // {
+    //     std::string s = "v[" + std::to_string(i) + "] = " + std::to_string(sdf_sampling[i]);
+    //     Cool::Log::Debug::info("Meshing", s);
+    // }
+
+    auto mesh{Meshing::mesh_from_sdf_sampling(sdf_sampling, boxSize, meshing_step_size, _sampling_count.x)};
+    write_to_ply(mesh, "mesh.ply");
 }
 
 } // namespace Lab

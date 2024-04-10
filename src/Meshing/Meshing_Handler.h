@@ -15,7 +15,6 @@ namespace Lab {
 
 class Meshing_Handler {
 public:
-
     Meshing_Handler();
     void imgui_windows(Ui_Ref const&) const;
 
