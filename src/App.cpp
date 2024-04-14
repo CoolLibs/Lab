@@ -37,6 +37,7 @@
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/Tips/test_tips.h"
+#include "Cool/Video/hack_get_global_time_in_seconds.h"
 #include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
@@ -136,6 +137,7 @@ void App::update()
             : _project.clock,
         _project.exporter.is_exporting() /* force_sync_time */
     );
+    Cool::hack_get_global_time_in_seconds() = _project.clock.time_in_seconds();
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
         _project.modules_graph->on_audio_changed();
     });
