@@ -1,0 +1,6 @@
+INPUT Video 'Video';
+
+sRGB_StraightA main(UV uv)
+{
+    return sample_opencv_texture('Video', uv);
+}

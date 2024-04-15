@@ -245,6 +245,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     else if (!node.value_inputs().empty())
     {
         ImGui::NewLine();
+        ImGui::SeparatorText("Presets");
         // Get the variables from the inputs
         auto settings = settings_from_inputs(node.value_inputs());
         // Apply
