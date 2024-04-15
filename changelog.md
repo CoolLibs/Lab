@@ -20,9 +20,11 @@
 
 ## 🐣beta-16 WIP
 
-- ✨ The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
-- ✨ When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
-- ✨ Some node inputs now have a little info icon next to their pin, explaining what the parameter does in more details.
+- ✨ You can now import video files! Using the "Video & GIF" node.
+- 🤏 The time in the timeline is now nicely formatted (as "3m 43s 512ms"). You can also input it like that (by CTRL+clicking on the timeline), as any combination of millisecond (ms) / second (s) / minute (m) / hour (h) / day (d) / week (w). For example "3m43".
+- 🤏 The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
+- 🤏 When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
+- 🤏 Some node inputs now have a little info icon next to their pin, explaining what the parameter does in more details.
 - 🐛 Remove incompatible link when creating a link backward from a pin
 
 ## 🐣beta-15
