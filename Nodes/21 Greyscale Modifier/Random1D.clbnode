@@ -1,5 +1,5 @@
 
-INPUT float 'Seed';
+INPUT int 'Seed';
 
 float main(float X)
 {
