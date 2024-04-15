@@ -20,7 +20,7 @@
 
 ## 🐣beta-16 WIP
 
-- ✨ You can now import video files! Using the "Video & GIF" node.
+- ✨ You can now import video files! Using the "Video from File" node.
 - 🤏 The time in the timeline is now nicely formatted (as "3m 43s 512ms"). You can also input it like that (by CTRL+clicking on the timeline), as any combination of millisecond (ms) / second (s) / minute (m) / hour (h) / day (d) / week (w). For example "3m43".
 - 🤏 The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
 - 🤏 When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
