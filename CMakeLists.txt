@@ -79,7 +79,7 @@ else()
 endif()
 
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
-install(FILES "LICENSE.txt" DESTINATION "license")
+install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
