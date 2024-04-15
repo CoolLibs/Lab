@@ -44,7 +44,7 @@ void update_dependencies_from_nodes_graph(ModuleDependencies& dependencies, Cool
                     dependencies.midi_channels.insert(midi_channel->value());
             }
             {
-                auto const* video_file = std::get_if<Cool::SharedVariable<Cool::TextureDescriptor_FromVideoFile>>(&value_input);
+                auto const* video_file = std::get_if<Cool::SharedVariable<Cool::TextureDescriptor_VideoFile>>(&value_input);
                 if (video_file)
                     dependencies.time = true;
             }
