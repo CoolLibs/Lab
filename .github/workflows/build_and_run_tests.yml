@@ -85,4 +85,4 @@ jobs:
           buildDirectory: ${{github.workspace}}/build
 
       - name: Run
-        run: ${{github.workspace}}/bin/${{matrix.config.name == 'Windows Clang' && matrix.build_type || ''}}${{matrix.config.name == 'Windows Clang' && '/' || ''}}${{env.cmake_target}}
+        run: ${{github.workspace}}/bin/${{matrix.build_type}}/${{env.cmake_target}}
