@@ -132,7 +132,8 @@ void App::update()
             : _project.clock,
         _project.exporter.is_exporting() /* force_sync_time */
     );
-    Cool::hack_get_global_time_in_seconds() = _project.clock.time_in_seconds();
+    Cool::hack_get_global_time_in_seconds()           = _project.clock.time_in_seconds();
+    Cool::hack_get_is_dragging_time_in_the_timeline() = _project.clock.is_being_forced_to_not_respect_realtime();
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
         _project.modules_graph->on_audio_changed();
     });
