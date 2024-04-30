@@ -71,6 +71,8 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
     _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
 
+    ffmpeg::set_fast_seeking_callback([&]() { request_rerender(); });
+
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
     // });
