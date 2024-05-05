@@ -64,7 +64,9 @@ jobs:
 
       - name: Install MacOS dependencies
         if: runner.os == 'MacOS'
-        run: brew install ffmpeg
+        run: |
+          brew install ffmpeg
+          brew install openssl@3
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@main
