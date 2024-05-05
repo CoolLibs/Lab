@@ -64,20 +64,20 @@ set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, lik
 # Set the path to OpenSSL library directory
 set(OPENSSL_USE_STATIC_LIBS TRUE)
 
-if(COOLLAB_REQUIRE_ALL_FEATURES)
-    find_package(OpenSSL REQUIRED)
-else()
-    find_package(OpenSSL)
-endif()
+# if(COOLLAB_REQUIRE_ALL_FEATURES)
+# find_package(OpenSSL REQUIRED)
+# else()
+# find_package(OpenSSL)
+# endif()
 
-if(OpenSSL_FOUND)
-    message("[Coollab] Found OpenSSL.")
-    target_link_libraries(Coollab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
-    target_compile_definitions(Coollab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
-else()
-    message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
-endif()
+# if(OpenSSL_FOUND)
+# message("[Coollab] Found OpenSSL.")
+# target_link_libraries(Coollab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
+# target_compile_definitions(Coollab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
+# else()
+message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
 
+# endif()
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
 install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 
