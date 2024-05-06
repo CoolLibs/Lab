@@ -64,11 +64,17 @@ set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, lik
 # Set the path to OpenSSL library directory
 set(OPENSSL_USE_STATIC_LIBS TRUE)
 
-# if(COOLLAB_REQUIRE_ALL_FEATURES)
-# find_package(OpenSSL REQUIRED)
-# else()
-# find_package(OpenSSL)
-# endif()
+if(NOT APPLE) # Disabled on Mac for now, because brew installs versions 3.3 now, which isn't compatible with cpp-httplib
+    find_package(OpenSSL 3)
+
+    if(NOT OpenSSL_FOUND)
+        if(COOLLAB_REQUIRE_ALL_FEATURES)
+            find_package(OpenSSL 1.1.1 REQUIRED)
+        else()
+            find_package(OpenSSL 1.1.1)
+        endif()
+    endif()
+endif()
 
 # if(OpenSSL_FOUND)
 # message("[Coollab] Found OpenSSL.")
