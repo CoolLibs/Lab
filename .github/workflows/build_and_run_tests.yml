@@ -42,7 +42,7 @@ jobs:
           - {
               name: MacOS Clang,
               os: macos-12, # 13 and 14 run on M1 chips, and we get a linker error when using them
-              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -G Ninja -D OPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl@3.0 -D OPENSSL_INCLUDE_DIR=/opt/homebrew/opt/openssl@3.0/include,
+              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
             }
         build_type:
           - Debug
@@ -68,16 +68,6 @@ jobs:
           sudo apt-get install -y libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev mesa-common-dev build-essential libgtk-3-dev
           sudo apt-get install -y libssl-dev
           sudo apt-get install -y libpulse-dev libasound2-dev
-
-      - name: Install Windows dependencies
-        if: runner.os == 'Windows'
-        run: |
-          choco install openssl --version=3.2.1
-
-      - name: Install MacOS dependencies
-        if: runner.os == 'MacOS'
-        run: |
-          brew install openssl@3.0
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@main
