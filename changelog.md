@@ -21,7 +21,12 @@
 
 ## 🐣beta-17 WIP
 
-- Greatly improved video import : we now support videos with transparency, and GIFs. Moving around in the timeline has also been greatly sped up while a video is loaded.
+TODO gif exploding head
+
+- ✨ Greatly improved video import: we now support videos with transparency, and GIFs
+- ⚡ The performance of playing a video has been greatly improved
+- 🐛 Video import now also works on Linux and MacOS
+- 🐛 Many bug fixes around the video import and playback
 
 ## 🐣beta-16
 
