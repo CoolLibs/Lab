@@ -46,7 +46,6 @@ public:
 
     void update() override;
     void request_rerender() override;
-    void request_rerender_thread_safe();
     bool inputs_are_allowed() const override;
     bool wants_to_show_menu_bar() const override;
 
@@ -114,7 +113,6 @@ private:
     NodesLibraryManager                  _nodes_library_manager{};
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
-    std::atomic<bool>                    _wants_to_request_rerender{false};
 
 private:
     // Serialization

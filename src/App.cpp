@@ -44,7 +44,6 @@
 #include "ProjectManager/Command_OpenBackupProject.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
-#include "easy_ffmpeg/set_fast_seeking_callback.hpp"
 #include "img/img.hpp"
 #include "imgui.h"
 
@@ -71,8 +70,6 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
 
     _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
     _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
-
-    ffmpeg::set_fast_seeking_callback([&]() { request_rerender_thread_safe(); });
 
     // serv::init([](std::string_view request) {
     //     Cool::Log::Debug::info("Scripting", "{}", request);
@@ -117,11 +114,6 @@ void App::update()
 {
     _project.history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
 
-    if (_wants_to_request_rerender.load())
-    {
-        request_rerender();
-        _wants_to_request_rerender.store(false);
-    }
     // First frame the exe is open
     // Since the construction of an App might be in two steps (constructor, and then deserialization)
     // we do our actual construction logic here, to make sure it is done once and only once.
@@ -135,13 +127,11 @@ void App::update()
 
     _project.audio.set_force_mute(_project.exporter.is_exporting());
     _project.audio.sync_with_clock(
-        _project.exporter.is_exporting()
-            ? _project.exporter.clock()
-            : _project.clock,
+        _project.current_clock(),
         _project.exporter.is_exporting() /* force_sync_time */
     );
-    Cool::hack_get_global_time_in_seconds()           = _project.clock.time_in_seconds();
-    Cool::hack_get_is_dragging_time_in_the_timeline() = _project.clock.is_being_forced_to_not_respect_realtime();
+    Cool::hack_get_global_time_in_seconds() = _project.current_clock().time_in_seconds();
+    Cool::hack_get_is_exporting()           = _project.exporter.is_exporting();
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
         _project.modules_graph->on_audio_changed();
     });
@@ -209,11 +199,6 @@ void App::update()
 void App::request_rerender() // TODO(Modules) Sometimes we don't need to call this, but only rerender a specific module instead
 {
     _project.modules_graph->request_rerender_all();
-}
-
-void App::request_rerender_thread_safe()
-{
-    _wants_to_request_rerender.store(true);
 }
 
 auto App::render_view() -> Cool::RenderView&

@@ -76,14 +76,14 @@ if(NOT APPLE) # Disabled on Mac for now, because brew installs versions 3.3 now,
     endif()
 endif()
 
-# if(OpenSSL_FOUND)
-# message("[Coollab] Found OpenSSL.")
-# target_link_libraries(Coollab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
-# target_compile_definitions(Coollab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
-# else()
-message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
+if(OpenSSL_FOUND)
+    message("[Coollab] Found OpenSSL.")
+    target_link_libraries(Coollab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
+    target_compile_definitions(Coollab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
+else()
+    message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
+endif()
 
-# endif()
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
 install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 

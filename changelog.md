@@ -21,6 +21,8 @@
 
 ## 🐣beta-17 WIP
 
+- Greatly improved video import : we now support videos with transparency, and GIFs. Moving around in the timeline has also been greatly sped up while a video is loaded.
+
 ## 🐣beta-16
 
 - ✨ You can now import video files! Using the "Video from File" node.
