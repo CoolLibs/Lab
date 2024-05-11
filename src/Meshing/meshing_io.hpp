@@ -5,6 +5,6 @@
 
 namespace Meshing {
 
-void write_to_ply(Mesh const& mesh, std::string_view root_relative_path);
+void write_to_ply(Mesh const& mesh, std::filesystem::path const& path);
 
 } // namespace Meshing
