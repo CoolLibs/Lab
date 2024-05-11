@@ -37,7 +37,7 @@ public:
         , _audio_manager{audio_manager}
         , _command_executor{command_executor}
     {}
-
+    void               node_context_menu(Cool::Node&, Cool::NodeId const&);
     auto               name(Cool::Node const&) const -> std::string;
     auto               category_name(Cool::Node const&) const -> std::string;
     void               imgui_above_node_pins(Cool::Node&, Cool::NodeId const&);
