@@ -30,6 +30,7 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/History.h"
 #include "Gallery/GalleryPoster.h"
+#include "Meshing/Meshing_Handler.h"
 #include "Project.h"
 
 namespace Lab {
@@ -54,6 +55,7 @@ public:
 
     void open_image_exporter();
     void open_video_exporter();
+    void open_meshing_window_for_node(Cool::NodeId const& node_id);
 
     auto nodes_library() const -> Cool::NodesLibrary const& { return _nodes_library_manager.library(); }
 
@@ -95,6 +97,7 @@ private:
     void imgui_window_cameras();
     void imgui_window_view();
     void imgui_window_exporter();
+    void imgui_window_meshing();
 
     void compile_all_is0_nodes();
 
@@ -113,6 +116,7 @@ private:
     NodesLibraryManager                  _nodes_library_manager{};
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
+    Meshing_Handler                      _meshing_handler{};
 
 private:
     // Serialization

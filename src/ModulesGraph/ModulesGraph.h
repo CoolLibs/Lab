@@ -85,6 +85,7 @@ public:
     void remove_link(Cool::LinkId const&);
     auto try_get_node(Cool::NodeId const&) const -> Node const*;
     void set_node(Cool::NodeId const&, Node const&);
+    auto compositing_module() const -> Module_Compositing const& { return _compositing_module; }
 
 private:
     void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, Cool::NodesLibrary const&);
@@ -99,7 +100,6 @@ private:
 
     mutable Module_Compositing                     _compositing_module{};
     std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)
-    Meshing_Handler                                _meshing_handler{}; // TODO(Meshing) Move elsewhere
 
 private:
     // Serialization
