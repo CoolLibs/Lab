@@ -1,8 +1,42 @@
 #include "meshing_io.hpp"
 #include <Cool/Path/Path.h>
+#include <array>
 #include <fstream>
 
 namespace Meshing {
+
+auto enum_name(MeshExportFormat const& export_format) -> std::string
+{
+    switch (export_format)
+    {
+    case MeshExportFormat::PLY: return "PLY";
+    }
+    throw std::runtime_error("Unknown MeshExportFormat");
+}
+
+// TODO: move in Cool::ImGuiExtras and generalize for enums (using magic_enum)
+void imgui_combo(MeshExportFormat& export_format)
+{
+    static const std::array<const char*, 1> items{"PLY"};
+    unsigned int                            item_current{static_cast<unsigned int>(export_format)};
+    if (ImGui::BeginCombo("Export Format", items[item_current]))
+    {
+        for (unsigned int i{0}; i < items.size(); i++)
+        {
+            bool const is_selected{(item_current == i)};
+            if (ImGui::Selectable(items[i], is_selected))
+            {
+                item_current = i;
+            }
+            if (is_selected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+    export_format = static_cast<MeshExportFormat>(item_current);
+}
 
 void write_to_ply(Mesh const& mesh, std::filesystem::path const& path)
 {
