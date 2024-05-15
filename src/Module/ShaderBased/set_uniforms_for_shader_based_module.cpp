@@ -4,6 +4,7 @@
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Exception/Exception.h"
 #include "Cool/Gpu/TextureLibrary_FromFile.h"
+#include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
@@ -98,6 +99,7 @@ auto set_uniforms_for_shader_based_module(
     shader.set_uniform("_camera2D_transform", system_values.camera_2D.transform_matrix());
     shader.set_uniform("_camera2D_view", system_values.camera_2D.view_matrix());
     shader.set_uniform("_height", system_values.height());
+    shader.set_uniform("_last_midi_button_pressed", Cool::midi_manager().last_button_pressed());
     shader.set_uniform("_aspect_ratio", system_values.aspect_ratio());
     shader.set_uniform("_inverse_aspect_ratio", system_values.inverse_aspect_ratio());
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_FromFile::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());

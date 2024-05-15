@@ -91,6 +91,7 @@ auto generate_shader_code(
 uniform float     _delta_time;
 uniform float     _time;
 uniform float     _height;
+uniform int       _last_midi_button_pressed;
 uniform float     _audio_volume;
 uniform sampler1D _audio_spectrum;
 uniform sampler1D _audio_waveform;

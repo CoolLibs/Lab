@@ -143,6 +143,8 @@ void App::update()
     Cool::midi_manager().for_each_channel_that_has_changed([&](Cool::MidiChannel const& midi_channel) {
         _project.modules_graph->on_midi_channel_changed(midi_channel);
     });
+    if (Cool::midi_manager().last_button_pressed_has_changed())
+        _project.modules_graph->on_last_midi_button_pressed_changed();
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {

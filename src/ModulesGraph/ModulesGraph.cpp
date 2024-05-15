@@ -310,6 +310,15 @@ void ModulesGraph::on_midi_channel_changed(Cool::MidiChannel const& midi_channel
     }
 }
 
+void ModulesGraph::on_last_midi_button_pressed_changed()
+{
+    if (_compositing_module.depends_on().last_midi_button_pressed
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().last_midi_button_pressed; }))
+    {
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this last_midi_button_pressed
+    }
+}
+
 void ModulesGraph::update_dependencies_from_nodes_graph()
 {
     _compositing_module.update_dependencies_from_nodes_graph(_nodes_editor.graph());

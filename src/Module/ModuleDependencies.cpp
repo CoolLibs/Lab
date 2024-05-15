@@ -20,6 +20,7 @@ void update_dependencies_from_shader_code(ModuleDependencies& dependencies, std:
     shader_code = Cool::String::remove_comments(shader_code);
 
     dependencies.time |= contains_two_or_more("_time", shader_code);
+    dependencies.last_midi_button_pressed |= contains_two_or_more("_last_midi_button_pressed", shader_code);
     dependencies.audio_volume |= contains_two_or_more("_audio_volume", shader_code);
     dependencies.audio_waveform |= contains_two_or_more("_audio_waveform", shader_code);
     dependencies.audio_spectrum |= contains_two_or_more("_audio_spectrum", shader_code);
