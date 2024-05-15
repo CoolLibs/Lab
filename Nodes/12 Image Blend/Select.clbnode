@@ -1,0 +1,10 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->Oklab_PremultipliedA 'Image 1';
+INPUT UV->Oklab_PremultipliedA 'Image 2';
+INPUT bool 'Use First Value';
+
+Oklab_PremultipliedA main(UV uv)
+{
+    return 'Use First Value' ? 'Image 1'(uv) : 'Image 2'(uv);
+}
