@@ -27,6 +27,7 @@ TODO gif exploding head
 - ⚡ The performance of playing a video has been greatly improved
 - 🐛 Video import now also works on Linux and MacOS
 - 🐛 Many bug fixes around the video import and playback
+- ✨ Improved MIDI
 
 ## 🐣beta-16
 
