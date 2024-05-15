@@ -3,6 +3,7 @@
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
+#include "Cool/Midi/MidiManager.h"
 #include "Cool/OSC/OSCConnectionEndpoint.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
@@ -50,7 +51,8 @@ private:
             cereal::make_nvp("Modules Graph", modules_graph),
             cereal::make_nvp("History", history),
             cereal::make_nvp("Audio", audio),
-            cereal::make_nvp("OSC Endpoint", osc_endpoint)
+            cereal::make_nvp("OSC Endpoint", osc_endpoint),
+            cereal::make_nvp("MIDI Channels", Cool::midi_manager().all_values())
         );
     }
 };
