@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-17 WIP](#beta-17-wip)
+- [🐣beta-17](#beta-17)
 - [🐣beta-16](#beta-16)
 - [🐣beta-15](#beta-15)
 - [🐣beta-14](#beta-14)
@@ -19,15 +19,20 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-17 WIP
-
-TODO gif exploding head
+## 🐣beta-17
 
 - ✨ Greatly improved video import: we now support videos with transparency, and GIFs
+![](https://github.com/CoolLibs/Lab/assets/45451201/e5005eff-5b16-41ef-a4b1-74a46c481edc)
 - ⚡ The performance of playing a video has been greatly improved
 - 🐛 Video import now also works on Linux and MacOS
 - 🐛 Many bug fixes around the video import and playback
-- ✨ Improved MIDI
+- ✨ Improved MIDI support: buttons now have several modes (toggle, selector, pressed)
+![](https://github.com/CoolLibs/Lab/assets/45451201/7826e34f-9210-4002-a145-385bf4107f29)
+- 🟦 MIDI nodes: Added "Last MIDI button pressed", and you can now change the Min and Max output values of the "MIDI" node
+- 🟦 Nodes: Added "Select" and "Multi-Select" which can typically be used in combination with MIDI buttons, to switch between various images / effects
+![](https://github.com/CoolLibs/Lab/assets/45451201/c1692212-a6ea-4d2f-8e7d-4bc4f1c3f887)
+- ✨ When exporting a video, if the output folder already contains frames from a previous export you now have 4 options, and by default we will prompt you to create a new folder
+![](https://github.com/CoolLibs/Lab/assets/45451201/e5840829-21d5-4734-a388-5fd905dec17d)
 
 ## 🐣beta-16
 
