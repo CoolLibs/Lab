@@ -127,12 +127,11 @@ void App::update()
 
     _project.audio.set_force_mute(_project.exporter.is_exporting());
     _project.audio.sync_with_clock(
-        _project.exporter.is_exporting()
-            ? _project.exporter.clock()
-            : _project.clock,
+        _project.current_clock(),
         _project.exporter.is_exporting() /* force_sync_time */
     );
-    Cool::hack_get_global_time_in_seconds() = _project.clock.time_in_seconds();
+    Cool::hack_get_global_time_in_seconds() = _project.current_clock().time_in_seconds();
+    Cool::hack_get_is_exporting()           = _project.exporter.is_exporting();
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
         _project.modules_graph->on_audio_changed();
     });

@@ -28,6 +28,7 @@ struct Project {
     std::string debug_info_coollab_version{}; // Only used to generate an error message when deserialization fails.
 
     [[nodiscard]] auto is_empty() const -> bool;
+    [[nodiscard]] auto current_clock() const -> Cool::Clock const& { return exporter.is_exporting() ? exporter.clock() : clock; }
 
 private:
     // Serialization

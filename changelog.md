@@ -21,6 +21,14 @@
 
 ## 🐣beta-17 WIP
 
+TODO gif exploding head
+
+- ✨ Greatly improved video import: we now support videos with transparency, and GIFs
+- ⚡ The performance of playing a video has been greatly improved
+- 🐛 Video import now also works on Linux and MacOS
+- 🐛 Many bug fixes around the video import and playback
+- ✨ Improved MIDI
+
 ## 🐣beta-16
 
 - ✨ You can now import video files! Using the "Video from File" node.
