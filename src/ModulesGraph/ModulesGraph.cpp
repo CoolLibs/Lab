@@ -28,6 +28,11 @@ void ModulesGraph::update()
 
 void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const& system_values, Cool::NodesLibrary const& nodes_library)
 {
+    if (_compositing_module.depends_on().time_since_last_midi_button_pressed
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().time_since_last_midi_button_pressed; }))
+    {
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this
+    }
     if (render_target.needs_resizing())
         request_rerender_all();
     if (rerender_all_flag().is_dirty())

@@ -11,6 +11,7 @@ namespace Lab {
 struct ModuleDependencies {
     bool                        time{false};
     bool                        last_midi_button_pressed{false};
+    bool                        time_since_last_midi_button_pressed{false};
     bool                        audio_volume{false};
     bool                        audio_waveform{false};
     bool                        audio_spectrum{false};
