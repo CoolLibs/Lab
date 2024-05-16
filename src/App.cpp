@@ -52,9 +52,10 @@ namespace Lab {
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
     , _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
-          .name        = Cool::icon_fmt("Output", ICOMOON_IMAGE),
-          .is_closable = true,
-          .start_open  = false,
+          .name           = Cool::icon_fmt("Output", ICOMOON_IMAGE),
+          .is_output_view = true,
+          .is_closable    = true,
+          .start_open     = false,
       })}
     , _preview_view{views.make_view<Cool::ForwardingOrRenderView>(
           _output_view,
@@ -523,7 +524,7 @@ void App::commands_menu()
         if (ImGui::Selectable(ICOMOON_MUSIC " Open Audio config"))
             _project.audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
-            _output_view.open();
+            _output_view.toggle_open_close();
         if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
             Cool::open(Cool::Path::user_data().string().c_str());
         ImGui::EndMenu();

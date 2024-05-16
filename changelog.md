@@ -22,6 +22,8 @@
 
 ## 🐣beta-18 WIP
 
+- ✨ The Output window now doesn't have a title bar by default 
+
 ## 🐣beta-17
 
 - ✨ Greatly improved video import: we now support videos with transparency, and GIFs
