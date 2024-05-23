@@ -1,6 +1,6 @@
 #include "ModuleDependencies.h"
-#include "Cool/Gpu/TextureDescriptor.h"
 #include "Cool/String/String.h"
+#include "Cool/TextureSource/TextureDescriptor.h"
 #include "Nodes/Node.h"
 
 namespace Lab {

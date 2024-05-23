@@ -3,11 +3,12 @@
 #include "Cool/ColorSpaces/ColorAndAlphaSpace.h"
 #include "Cool/ColorSpaces/ColorSpace.h"
 #include "Cool/Exception/Exception.h"
-#include "Cool/Gpu/TextureLibrary_Image.h"
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
+#include "Cool/TextureSource/TextureLibrary_Image.h"
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
+
 
 namespace Lab {
 
