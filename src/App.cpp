@@ -524,7 +524,10 @@ void App::commands_menu()
         if (ImGui::Selectable(ICOMOON_MUSIC " Open Audio config"))
             _project.audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
+        {
             _output_view.toggle_open_close();
+            _project.view_constraint.should_control_aspect_ratio(false);
+        }
         if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
             Cool::open(Cool::Path::user_data().string().c_str());
         ImGui::EndMenu();
