@@ -9,7 +9,6 @@
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
 
-
 namespace Lab {
 
 template<typename T>
@@ -102,12 +101,12 @@ auto set_uniforms_for_shader_based_module(
     shader.set_uniform("_height", system_values.height());
     shader.set_uniform("_last_midi_button_pressed", Cool::midi_manager().all_values().last_button_pressed());
     shader.set_uniform("_last_last_midi_button_pressed", Cool::midi_manager().all_values().last_last_button_pressed());
-    shader.set_uniform("_time_since_last_midi_button_pressed", Cool::midi_manager().all_values().time_since_last_button_pressed_in_seconds());
+    shader.set_uniform("_time_since_last_midi_button_pressed", Cool::midi_manager().all_values().time_since_last_button_pressed().as_seconds_float());
     shader.set_uniform("_aspect_ratio", system_values.aspect_ratio());
     shader.set_uniform("_inverse_aspect_ratio", system_values.inverse_aspect_ratio());
     shader.set_uniform_texture("mixbox_lut", Cool::TextureLibrary_Image::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
-    shader.set_uniform("_time", system_values.time);
-    shader.set_uniform("_delta_time", system_values.delta_time);
+    shader.set_uniform("_time", system_values.time.as_seconds_float());
+    shader.set_uniform("_delta_time", system_values.delta_time.as_seconds_float());
 
     if (depends_on.audio_volume)
         shader.set_uniform("_audio_volume", system_values.audio_manager.get().volume());

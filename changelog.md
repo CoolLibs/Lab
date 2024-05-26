@@ -22,7 +22,8 @@
 
 ## 🐣beta-18 WIP
 
-- ✨ The Output Window can now easily be turned fullscreen with F10
+- ✨ Every time input is now nicely formatted like "1h 27m 53s"
+- ✨ The Output Window can now easily be turned fullscreen with <kbd>F10</kbd>
 - ✨ When opening the Output Window, the aspect ratio automatically adapts to it
 - ✨ The Output Window now doesn't have a title bar
 - 🟦 Nodes: Added "MIDI Multi-Select with Transition" 

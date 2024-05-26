@@ -8,8 +8,8 @@ namespace Lab {
 
 struct SystemValues {
     img::Size                                        render_target_size{};
-    float                                            time{};
-    float                                            delta_time{};
+    Cool::Time                                       time{};
+    Cool::Time                                       delta_time{};
     Cool::Camera2D                                   camera_2D{};
     Cool::Camera                                     camera_3D{};
     std::reference_wrapper<Cool::AudioManager const> audio_manager;
