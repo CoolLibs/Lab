@@ -2,43 +2,38 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "ad4617b6-e088-40bb-8b02-b9d31a4f72fc",
+                "first": "188ffcb7-94a6-4633-9c1e-b90124993356",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
-                            "index": 2,
+                            "index": 24,
                             "data": {
                                 "Name": "Speed",
                                 "Value": 1.0,
                                 "Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false,
-                                        "Is logarithmic": false
-                                    }
+                                    "Min": 0.0,
+                                    "Max": 1.0,
+                                    "Has min bound": false,
+                                    "Has max bound": false,
+                                    "Drag speed": 0.0010000000474974514
                                 }
                             }
                         },
                         {
-                            "index": 2,
+                            "index": 26,
                             "data": {
                                 "Name": "Offset",
-                                "Value": 0.0,
+                                "Value": {
+                                    "Nanoseconds": 0
+                                },
                                 "Metadata": {
-                                    "Bounds": {
-                                        "Has min bound": false,
-                                        "Min": 0.0,
-                                        "Has max bound": false,
-                                        "Max": 1.0,
-                                        "Drag speed": 0.009999999776482582,
-                                        "Use slider": false,
-                                        "Is logarithmic": false
-                                    }
+                                    "Min": 0.0,
+                                    "Max": 10.0,
+                                    "Has min bound": false,
+                                    "Has max bound": false,
+                                    "Drag speed": 0.009999999776482582,
+                                    "Show milliseconds": true
                                 }
                             }
                         }

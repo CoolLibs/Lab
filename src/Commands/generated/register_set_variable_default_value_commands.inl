@@ -31,6 +31,7 @@ LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::MidiChannel>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::OSCChannel>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::TimeSpeed>)
 LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::TextureDescriptor_Video>)
+LAB_REGISTER_COMMAND(Lab::Command_SetVariableDefaultValue<Cool::Time>)
 
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<bool>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<int>)
@@ -58,3 +59,4 @@ LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<C
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<Cool::OSCChannel>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<Cool::TimeSpeed>)
 LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<Cool::TextureDescriptor_Video>)
+LAB_REGISTER_REVERSIBLE_COMMAND(Lab::ReversibleCommand_SetVariableDefaultValue<Cool::Time>)
