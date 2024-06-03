@@ -1,0 +1,6 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+float main()
+{
+    return _time_since_last_midi_button_pressed;
+}

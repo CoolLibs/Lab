@@ -91,6 +91,9 @@ auto generate_shader_code(
 uniform float     _delta_time;
 uniform float     _time;
 uniform float     _height;
+uniform int       _last_midi_button_pressed;
+uniform int       _last_last_midi_button_pressed;
+uniform float     _time_since_last_midi_button_pressed;
 uniform float     _audio_volume;
 uniform sampler1D _audio_spectrum;
 uniform sampler1D _audio_waveform;
@@ -100,7 +103,7 @@ uniform sampler2D _previous_frame_texture;
 uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 {modules_textures_uniforms}
 
-#include "_ROOT_FOLDER_/res/shader-utils.glsl"
+#include "_COOL_RES_/shaders/shader-utils.glsl" 
 #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/rand.glsl"

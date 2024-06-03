@@ -9,11 +9,48 @@
                         {
                             "index": 22,
                             "data": {
-                                "Name": "Channel Index",
+                                "Name": "Channel",
                                 "Value": {
-                                    "Index": 0
+                                    "Index": 0,
+                                    "Kind": 0
                                 },
                                 "Metadata": {}
+                            }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Min",
+                                "Value": 0.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false,
+                                        "Is logarithmic": false
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Max",
+                                "Value": 1.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": false,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.009999999776482582,
+                                        "Use slider": false,
+                                        "Is logarithmic": false
+                                    }
+                                }
                             }
                         }
                     ]

@@ -1,5 +1,6 @@
 #include "ModuleDependencies.h"
 #include "Cool/String/String.h"
+#include "Cool/TextureSource/TextureDescriptor.h"
 #include "Nodes/Node.h"
 
 namespace Lab {
@@ -18,10 +19,14 @@ void update_dependencies_from_shader_code(ModuleDependencies& dependencies, std:
 {
     shader_code = Cool::String::remove_comments(shader_code);
 
-    dependencies.time           = contains_two_or_more("_time", shader_code);
-    dependencies.audio_volume   = contains_two_or_more("_audio_volume", shader_code);
-    dependencies.audio_waveform = contains_two_or_more("_audio_waveform", shader_code);
-    dependencies.audio_spectrum = contains_two_or_more("_audio_spectrum", shader_code);
+    dependencies.time |= contains_two_or_more("_time", shader_code)
+                         || contains_two_or_more("_previous_frame_texture", shader_code);
+    dependencies.last_midi_button_pressed |= contains_two_or_more("_last_midi_button_pressed", shader_code)
+                                             || contains_two_or_more("_last_last_midi_button_pressed", shader_code);
+    dependencies.time_since_last_midi_button_pressed |= contains_two_or_more("_time_since_last_midi_button_pressed", shader_code);
+    dependencies.audio_volume |= contains_two_or_more("_audio_volume", shader_code);
+    dependencies.audio_waveform |= contains_two_or_more("_audio_waveform", shader_code);
+    dependencies.audio_spectrum |= contains_two_or_more("_audio_spectrum", shader_code);
 }
 
 void update_dependencies_from_nodes_graph(ModuleDependencies& dependencies, Cool::NodesGraph const& graph)
@@ -41,6 +46,11 @@ void update_dependencies_from_nodes_graph(ModuleDependencies& dependencies, Cool
                 auto const* midi_channel = std::get_if<Cool::SharedVariable<Cool::MidiChannel>>(&value_input);
                 if (midi_channel)
                     dependencies.midi_channels.insert(midi_channel->value());
+            }
+            {
+                auto const* video_file = std::get_if<Cool::SharedVariable<Cool::TextureDescriptor_Video>>(&value_input);
+                if (video_file)
+                    dependencies.time = true;
             }
         }
     });

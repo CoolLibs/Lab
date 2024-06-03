@@ -1,0 +1,46 @@
+// https://www.youtube.com/watch?v=il_Qg9AqQkE
+
+INPUT Point2D 'Center';
+INPUT float 'Size';
+INPUT Angle 'Angle';
+INPUT int 'Iterations';
+INPUT float 'Mask';
+
+vec2 u(float angle)
+{
+    return vec2(sin(angle), cos(angle));
+}
+
+UV main(UV Image)
+{
+    vec2 out_uv = Image - 'Center';
+    out_uv /= 'Size';
+
+    out_uv.x            = abs(out_uv.x);
+    float fractal_angle = (5. / 6.) * PI;
+    out_uv.y += tan(fractal_angle) * 0.5;
+
+    vec2  u_line = u(fractal_angle);
+    float d      = dot(out_uv - vec2(0.5, 0), u_line);
+    out_uv -= u_line * max(0., d) * 2.;
+
+    u_line = u('Angle');
+    out_uv.x += 0.5;
+
+    float scale = 3.;
+    for (int i = 0; i < 'Iterations'; i++)
+    {
+        out_uv *= scale;
+        out_uv.x -= scale / 2.;
+        out_uv.x = abs(out_uv.x);
+        out_uv.x -= 0.5;
+        out_uv -= u_line * min(0., dot(out_uv, u_line)) * 2.;
+    }
+
+    d = length(out_uv - vec2(clamp(out_uv.x, -1., 1.), 0.));
+    out_uv /= (pow(scale, float('Iterations')));
+    out_uv *= 'Size';
+    out_uv += 'Center';
+
+    return mix(Image, out_uv, 'Mask');
+}

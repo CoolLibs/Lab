@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(Coollab)
-set(COOLLAB_VERSION "beta-16 WIP")
+set(COOLLAB_VERSION "beta-18 WIP")
 add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
@@ -10,8 +10,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
 target_compile_features(Coollab-Properties INTERFACE cxx_std_20)
 
 # Set the folder where the executable is created
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Needed for OpenCV to copy some DLLs in this folder
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 # Set warning level
 if(MSVC)
@@ -63,10 +64,16 @@ set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, lik
 # Set the path to OpenSSL library directory
 set(OPENSSL_USE_STATIC_LIBS TRUE)
 
-if(COOLLAB_REQUIRE_ALL_FEATURES)
-    find_package(OpenSSL REQUIRED)
-else()
-    find_package(OpenSSL)
+if(NOT APPLE) # Disabled on Mac for now, because brew installs versions 3.3 now, which isn't compatible with cpp-httplib
+    find_package(OpenSSL 3)
+
+    if(NOT OpenSSL_FOUND)
+        if(COOLLAB_REQUIRE_ALL_FEATURES)
+            find_package(OpenSSL 1.1.1 REQUIRED)
+        else()
+            find_package(OpenSSL 1.1.1)
+        endif()
+    endif()
 endif()
 
 if(OpenSSL_FOUND)
@@ -78,7 +85,7 @@ else()
 endif()
 
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
-install(FILES "LICENSE.txt" DESTINATION "license")
+install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
