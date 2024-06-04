@@ -38,6 +38,19 @@ void imgui_combo(MeshExportFormat& export_format)
     export_format = static_cast<MeshExportFormat>(item_current);
 }
 
+void write_to_file(Mesh const& mesh, std::filesystem::path const& path, MeshExportFormat const& export_format)
+{
+    switch (export_format)
+    {
+    case MeshExportFormat::PLY:
+        write_to_ply(mesh, path);
+        break;
+
+    default:
+        throw std::runtime_error("Unknown MeshExportFormat");
+    }
+}
+
 void write_to_ply(Mesh const& mesh, std::filesystem::path const& path)
 {
     std::ofstream outputFile{};
