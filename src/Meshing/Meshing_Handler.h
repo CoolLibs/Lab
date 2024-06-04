@@ -25,13 +25,9 @@ struct meshing_imgui_window_Params {
 
 class Meshing_Handler {
 public:
-    Meshing_Handler();
-
     void imgui_window(meshing_imgui_window_Params const& meshing_imgui_params);
 
     void open_meshing_window(Cool::NodeId const& node_id);
-
-    void update_buffer_size();
 
     void compute_mesh(
         Cool::DoubleBufferedRenderTarget const&     feedback_double_buffer,
@@ -40,19 +36,15 @@ public:
         SystemValues const&                         system_values,
         Cool::NodeId const&                         main_node_id,
         std::filesystem::path const&                path
-    );
+    ) const;
 
 private:
-    inline void               bind_SSBO() { _signed_distance_field.bind(); }
-    [[nodiscard]] inline auto get_ssbo_size() const -> unsigned int { return glm::compMul(_meshing_params.sampling_count); }
-
 private:
     std::unique_ptr<MeshingGui> _gui{std::make_unique<MeshingGui>()};
     Meshing::MeshingParams      _meshing_params{};
     Cool::NodeId                _target_node_id{};
 
-    Cool::SSBO<float> _signed_distance_field{0};
-    size_t            _ssbo_size{0};
+    unsigned int _ssbo_binding{0};
 };
 
 } // namespace Lab

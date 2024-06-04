@@ -13,6 +13,11 @@
 
 namespace Lab {
 
+static auto ssbo_size_from_sampling_count(Meshing::MeshingParams const& meshing_params) -> unsigned int
+{
+    return glm::compMul(meshing_params.sampling_count);
+}
+
 static auto generate_compute_shader(std::string const& shader_code) -> tl::expected<Cool::OpenGL::ComputeShader, Cool::OptionalErrorMessage>
 {
     try
@@ -85,12 +90,6 @@ void cool_main()
     );
 }
 
-Meshing_Handler::Meshing_Handler()
-{
-    bind_SSBO();
-    _signed_distance_field.upload_data(get_ssbo_size(), nullptr);
-}
-
 void Meshing_Handler::imgui_window(meshing_imgui_window_Params const& meshing_imgui_params)
 {
     _gui->imgui_window(_meshing_params, [&](std::filesystem::path const& path) {
@@ -111,17 +110,6 @@ void Meshing_Handler::open_meshing_window(Cool::NodeId const& node_id)
     _gui->open_window();
 }
 
-void Meshing_Handler::update_buffer_size()
-{
-    const size_t& ssbo_size{get_ssbo_size()};
-    if (_ssbo_size != ssbo_size)
-    {
-        _ssbo_size = ssbo_size;
-        bind_SSBO();
-        _signed_distance_field.upload_data(_ssbo_size, nullptr);
-    }
-}
-
 void Meshing_Handler::compute_mesh(
     Cool::DoubleBufferedRenderTarget const&     feedback_double_buffer,
     Cool::NodesGraph const&                     nodes_graph,
@@ -129,7 +117,7 @@ void Meshing_Handler::compute_mesh(
     SystemValues const&                         system_values,
     Cool::NodeId const&                         node_id,
     std::filesystem::path const&                path
-)
+) const
 {
     if constexpr (COOL_OPENGL_VERSION < 430)
     {
@@ -137,7 +125,10 @@ void Meshing_Handler::compute_mesh(
         return;
     }
 
-    update_buffer_size();
+    Cool::SSBO<float> signed_distance_field_ssbo{_ssbo_binding};
+    signed_distance_field_ssbo.bind();
+    const size_t ssbo_size{ssbo_size_from_sampling_count(_meshing_params)};
+    signed_distance_field_ssbo.upload_data(ssbo_size, nullptr);
 
     auto shader_code{generate_meshing_shader_code(nodes_graph, node_id, get_node_definition)};
 
@@ -161,7 +152,6 @@ void Meshing_Handler::compute_mesh(
     const float meshing_step_size = boxSize / static_cast<float>(_meshing_params.sampling_count.x - 1);
 
     meshing_compute_shader->bind();
-    bind_SSBO();
     meshing_compute_shader->set_uniform("_box_size", boxSize);
     meshing_compute_shader->set_uniform("_step_size", meshing_step_size);
 
@@ -171,10 +161,9 @@ void Meshing_Handler::compute_mesh(
 
     // CPU get data back
     std::vector<float> sdf_sampling{};
-    sdf_sampling.resize(_ssbo_size);
+    sdf_sampling.resize(ssbo_size);
 
-    // need mutable keyword to call download_data in const function
-    _signed_distance_field.download_data(sdf_sampling);
+    signed_distance_field_ssbo.download_data(sdf_sampling);
 
     // test print data
     // for (size_t i = 0; i < sdf_sampling.size(); i++)
