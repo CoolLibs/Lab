@@ -1,6 +1,8 @@
 #include "Meshing_Handler.h"
 #include <Cool/Nodes/NodesGraph.h>
 #include <fmt/format.h>
+#include <Meshing/meshing_types.hpp>
+#include <optional>
 #include "Cool/Gpu/OpenGL/ComputeShader.h"
 #include "Cool/Log/Debug.h"
 #include "Cool/Log/OptionalErrorMessage.h"
@@ -92,15 +94,31 @@ void cool_main()
 
 void Meshing_Handler::imgui_window(meshing_imgui_window_Params const& meshing_imgui_params)
 {
-    _gui->imgui_window(_meshing_params, [&](std::filesystem::path const& path) {
-        compute_mesh(
+    _gui->imgui_window(_meshing_params, [&](meshing_export_mesh_Params const& meshing_export_params) {
+        const std::optional<Meshing::Mesh> optional_mesh{compute_mesh(
             meshing_imgui_params.feedback_double_buffer,
             meshing_imgui_params.nodes_graph,
             meshing_imgui_params.get_node_definition,
             meshing_imgui_params.project_system_values,
-            _target_node_id,
-            path
-        );
+            _target_node_id
+        )};
+
+        if (!optional_mesh)
+        {
+            // Warning already logged in compute_mesh
+            return;
+        }
+
+        const Meshing::Mesh& mesh{optional_mesh.value()};
+
+        const std::filesystem::path path{meshing_export_params.file_path()};
+        if (!std::filesystem::exists(path.parent_path()))
+        {
+            std::filesystem::create_directories(path.parent_path());
+        }
+
+        Meshing::write_to_file(mesh, path, Meshing::MeshExportFormat::PLY);
+        Cool::Log::Debug::info("Meshing", fmt::format("Mesh exported to  {}", path.string()));
     });
 }
 
@@ -110,19 +128,18 @@ void Meshing_Handler::open_meshing_window(Cool::NodeId const& node_id)
     _gui->open_window();
 }
 
-void Meshing_Handler::compute_mesh(
+std::optional<Meshing::Mesh> Meshing_Handler::compute_mesh(
     Cool::DoubleBufferedRenderTarget const&     feedback_double_buffer,
     Cool::NodesGraph const&                     nodes_graph,
     Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
     SystemValues const&                         system_values,
-    Cool::NodeId const&                         node_id,
-    std::filesystem::path const&                path
+    Cool::NodeId const&                         node_id
 ) const
 {
     if constexpr (COOL_OPENGL_VERSION < 430)
     {
         Cool::Log::ToUser::warning("Meshing", "OpenGL version is lower than 430. Meshing need compute shaders, which are not supported by this version.");
-        return;
+        return std::nullopt;
     }
 
     Cool::SSBO<float> signed_distance_field_ssbo{_ssbo_binding};
@@ -135,7 +152,7 @@ void Meshing_Handler::compute_mesh(
     if (!shader_code)
     {
         Cool::Log::ToUser::error("Meshing", fmt::format("Unable to generate the shader code: {}", shader_code.error()));
-        return;
+        return std::nullopt;
     }
 
     auto meshing_compute_shader{generate_compute_shader(*shader_code)};
@@ -144,7 +161,7 @@ void Meshing_Handler::compute_mesh(
     {
         Cool::Log::ToUser::error("Meshing", fmt::format("Unable to compile the compute shader: {}", meshing_compute_shader.error().error_message()));
         // ImGui::SetClipboardText(shader_code->c_str());
-        return;
+        return std::nullopt;
     }
 
     // TODO(Meshing) expose those parameters
@@ -164,20 +181,7 @@ void Meshing_Handler::compute_mesh(
     sdf_sampling.resize(ssbo_size);
 
     signed_distance_field_ssbo.download_data(sdf_sampling);
-
-    // test print data
-    // for (size_t i = 0; i < sdf_sampling.size(); i++)
-    // {
-    //     std::string s = "v[" + std::to_string(i) + "] = " + std::to_string(sdf_sampling[i]);
-    //     Cool::Log::Debug::info("Meshing", s);
-    // }
-
-    auto mesh{Meshing::mesh_from_sdf_sampling(sdf_sampling, boxSize, meshing_step_size, _meshing_params.sampling_count.x)};
-
-    // TODO [Meshing] : dispatch depending on the export format in path extension
-    Meshing::write_to_ply(mesh, path);
-
-    Cool::Log::Debug::info("Meshing", fmt::format("Mesh exported to  {}", path.string()));
+    return Meshing::mesh_from_sdf_sampling(sdf_sampling, boxSize, meshing_step_size, _meshing_params.sampling_count.x);
 }
 
 } // namespace Lab

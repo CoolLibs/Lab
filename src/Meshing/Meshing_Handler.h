@@ -29,13 +29,12 @@ public:
 
     void open_meshing_window(Cool::NodeId const& node_id);
 
-    void compute_mesh(
+    std::optional<Meshing::Mesh> compute_mesh(
         Cool::DoubleBufferedRenderTarget const&     feedback_double_buffer,
         Cool::NodesGraph const&                     nodes_graph,
         Cool::GetNodeDefinition_Ref<NodeDefinition> get_node_definition,
         SystemValues const&                         system_values,
-        Cool::NodeId const&                         main_node_id,
-        std::filesystem::path const&                path
+        Cool::NodeId const&                         main_node_id
     ) const;
 
 private:

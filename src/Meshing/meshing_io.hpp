@@ -11,7 +11,7 @@ enum class MeshExportFormat {
 
 [[nodiscard]] auto enum_name(MeshExportFormat const& export_format) -> std::string;
 
-void imgui_combo(MeshExportFormat& export_format);
+void imgui_combo(const char* label, MeshExportFormat& export_format);
 
 void write_to_file(Mesh const& mesh, std::filesystem::path const& path, MeshExportFormat const& export_format);
 void write_to_ply(Mesh const& mesh, std::filesystem::path const& path);

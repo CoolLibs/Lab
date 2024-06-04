@@ -10,24 +10,42 @@
 
 namespace Lab {
 
+struct meshing_export_mesh_Params {
+    std::string                          file_name;
+    Meshing::MeshExportFormat            format;
+    std::optional<std::filesystem::path> custom_folder_path;
+
+    [[nodiscard]] auto folder_path_for_mesh() const -> std::filesystem::path;
+    void               set_file_name_to_an_unused_name();
+
+    [[nodiscard]] auto file_path() const -> std::filesystem::path;
+
+private:
+    // Serialization
+    friend class cereal::access;
+    template<class Archive>
+    void serialize(Archive& archive)
+    {
+        archive(
+            cereal::make_nvp("File Name", file_name),
+            cereal::make_nvp("Export Format", Meshing::enum_name(format)),
+            cereal::make_nvp("Folder Path", folder_path_for_mesh())
+        );
+    }
+};
+
 class MeshingGui {
 public:
     MeshingGui();
 
-    void imgui_window(Meshing::MeshingParams& meshing_params, std::function<void(std::filesystem::path const&)> const& on_mesh_exported);
+    void imgui_window(Meshing::MeshingParams& meshing_params, std::function<void(meshing_export_mesh_Params const&)> const& on_mesh_exported);
 
     void open_window();
 
 private:
-    [[nodiscard]] auto folder_path_for_mesh() const -> std::filesystem::path;
-    void               set_file_name_to_an_unused_name();
-
-private:
     // TODO [Meshing] : Add more supported export formats (obj, ply, gltf, etc.)
-    std::filesystem::path                _file_name{"mesh(0)"};
-    std::optional<std::filesystem::path> _folder_path_for_mesh;
-    Meshing::MeshExportFormat            _export_format{Meshing::MeshExportFormat::PLY};
-    Cool::ImGuiWindow                    _window{Cool::icon_fmt("Export a Mesh", ICOMOON_COG), Cool::ImGuiWindowConfig{.is_modal = true}};
+    meshing_export_mesh_Params _export_mesh_params{"mesh(0)", Meshing::MeshExportFormat::PLY, std::nullopt};
+    Cool::ImGuiWindow          _window{Cool::icon_fmt("Export a Mesh", ICOMOON_COG), Cool::ImGuiWindowConfig{.is_modal = true}};
 
     // Serialization
     friend class cereal::access;
@@ -35,7 +53,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Mesh Output Folder", _folder_path_for_mesh)
+            cereal::make_nvp("Mesh Export Params", _export_mesh_params)
         );
     }
 };

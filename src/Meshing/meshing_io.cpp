@@ -1,5 +1,6 @@
 #include "meshing_io.hpp"
 #include <Cool/Path/Path.h>
+#include <imgui.h>
 #include <array>
 #include <fstream>
 
@@ -15,11 +16,12 @@ auto enum_name(MeshExportFormat const& export_format) -> std::string
 }
 
 // TODO: move in Cool::ImGuiExtras and generalize for enums (using magic_enum)
-void imgui_combo(MeshExportFormat& export_format)
+void imgui_combo(const char* label, MeshExportFormat& export_format)
 {
     static const std::array<const char*, 1> items{"PLY"};
     unsigned int                            item_current{static_cast<unsigned int>(export_format)};
-    if (ImGui::BeginCombo("Export Format", items[item_current]))
+
+    if (ImGui::BeginCombo(label, items[item_current]))
     {
         for (unsigned int i{0}; i < items.size(); i++)
         {
