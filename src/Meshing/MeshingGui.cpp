@@ -31,6 +31,13 @@ void MeshingGui::imgui_window(Meshing::MeshingParams& meshing_params, std::funct
 {
     _window.show([&]() {
         meshing_params.imgui();
+
+        // File and Folders
+        Cool::ImGuiExtras::file("File Name", &_file_name, {}, {}, false /*No dialog button*/);
+        if (std::filesystem::exists(folder_path_for_mesh() / _file_name))
+        {
+            ImGui::TextColored(ImVec4(1, 0, 0, 1), Cool::icon_fmt("A file with this name already exists in the folder.", ICOMOON_WARNING).c_str());
+        }
         {
             std::filesystem::path path{folder_path_for_mesh()};
             if (Cool::ImGuiExtras::folder("Folder", &path))
