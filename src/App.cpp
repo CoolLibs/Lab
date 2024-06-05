@@ -361,7 +361,7 @@ void App::imgui_window_exporter()
 void App::imgui_window_meshing()
 {
     _meshing_handler.imgui_window({
-        system_values(render_view().render_target().desired_size(), _project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds()),
+        system_values(render_view().render_target().desired_size(), _project.clock.time(), _project.clock.delta_time()),
         _project.modules_graph->compositing_module().feedback_double_buffer(),
         _project.modules_graph->graph(),
         Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library_manager.library()},
