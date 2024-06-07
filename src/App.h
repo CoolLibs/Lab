@@ -1,37 +1,40 @@
 #pragma once
-#include <Cool/AppManager/IApp.h>
-#include <Cool/DebugOptions/DebugOptions.h>
-#include <Cool/DebugOptions/DebugOptionsManager.h>
-#include <Cool/Exporter/Exporter.h>
-#include <Cool/Exporter/internal/Polaroid.h>
-#include <Cool/Gpu/OpenGL/Texture.h>
-#include <Cool/Gpu/RenderTarget.h>
-#include <Cool/Path/Path.h>
-#include <Cool/Time/Clock_Realtime.h>
-#include <Cool/View/RenderView.h>
-#include <Cool/View/ViewsManager.h>
-#include <Cool/Window/WindowManager.h>
-#include <Nodes/NodesLibraryManager.h>
-#include <ProjectManager/Command_SaveProject.h>
-#include <ProjectManager/RecentlyOpened.h>
-#include <reg/cereal.hpp>
 #include "CommandCore/CommandExecutor_TopLevel.h"
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
 #include "Commands/Command_SetCameraZoom.h" // For the serialization functions
+#include "Cool/AppManager/IApp.h"
+#include "Cool/DebugOptions/DebugOptions.h"
+#include "Cool/DebugOptions/DebugOptionsManager.h"
+#include "Cool/Exporter/Exporter.h"
+#include "Cool/Exporter/internal/Polaroid.h"
+#include "Cool/Gpu/OpenGL/Texture.h"
+#include "Cool/Gpu/RenderTarget.h"
+#include "Cool/Mesh/MeshExportSettings.hpp"
 #include "Cool/Midi/MidiChannel.h"
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/OSC/OSCManager.h"
+#include "Cool/Path/Path.h"
 #include "Cool/StrongTypes/Camera2D.h"
+#include "Cool/Time/Clock_Realtime.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
+#include "Cool/View/RenderView.h"
+#include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
+#include "Cool/Window/WindowManager.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/History.h"
 #include "Gallery/GalleryPoster.h"
-#include "Meshing/Meshing_Handler.h"
+#include "Meshing/MeshingGui.hpp"
+#include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
+#include "Module/ShaderBased/DataToPassToShader.hpp"
+#include "Nodes/NodesLibraryManager.h"
 #include "Project.h"
+#include "ProjectManager/Command_SaveProject.h"
+#include "ProjectManager/RecentlyOpened.h"
+#include "reg/cereal.hpp"
 
 namespace Lab {
 
@@ -71,14 +74,16 @@ private:
     void check_inputs__timeline();
 
     // clang-format off
-    auto make_reversible_commands_context           () { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager, *_project.modules_graph}}; }
+    auto make_reversible_commands_context           () const { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager, *_project.modules_graph}}; }
     auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
-    auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
+    auto command_executor_without_history           () const { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto system_values                              (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
+    auto system_values                              (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor()}; }
+    auto data_to_pass_to_shader                     (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return DataToPassToShader{system_values(render_target_size, time, delta_time),  _project.modules_graph->graph(), _project.modules_graph->compositing_module().feedback_double_buffer() }; }
+    auto data_to_generate_shader_code               () const { return DataToGenerateShaderCode{_project.modules_graph->graph(), Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library_manager.library()} }; }
     // clang-format on
 
     Cool::Polaroid polaroid();
@@ -116,7 +121,8 @@ private:
     NodesLibraryManager                  _nodes_library_manager{};
     bool                                 _is_first_frame{true};
     bool                                 _is_shutting_down{false};
-    Meshing_Handler                      _meshing_handler{};
+    Cool::MeshExportSettings             _mesh_export_settings{};
+    MeshingGui                           _meshing_gui{};
 
 private:
     // Serialization
@@ -131,7 +137,9 @@ private:
             cereal::make_nvp("Output view", app._output_view),
             cereal::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
             cereal::make_nvp("MIDI config", Cool::midi_manager()),
-            cereal::make_nvp("OSC config", Cool::osc_manager())
+            cereal::make_nvp("OSC config", Cool::osc_manager()),
+            cereal::make_nvp("Mesh export settings", app._mesh_export_settings),
+            cereal::make_nvp("Mesh generation", app._meshing_gui)
         );
     }
     template<class Archive>

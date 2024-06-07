@@ -16,8 +16,6 @@ public:
     // Module_Compositing(Module_Compositing&&) noexcept                    = default; // TODO(Modules)
     // auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default; // TODO(Modules)
 
-    Cool::NodesGraph const* _nodes_graph; // TODO(Modules) Remove
-
     void update() override;
     void imgui_windows(Ui_Ref) const override;
     void imgui_show_generated_shader_code();
@@ -36,8 +34,8 @@ public:
     auto feedback_double_buffer() const -> Cool::DoubleBufferedRenderTarget const& { return _feedback_double_buffer; }
 
 private:
-    void render(SystemValues const&) override;
-    void render_impl(SystemValues const&);
+    void render(DataToPassToShader const&) override;
+    void render_impl(DataToPassToShader const&);
     void log_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:

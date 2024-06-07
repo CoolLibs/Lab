@@ -41,7 +41,7 @@ void GalleryPoster::imgui_open_sharing_form(std::optional<Cool::AspectRatio> con
 
 void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& render_png)
 {
-    _window.show([&]() {
+    _window.show([&](bool /*is_opening*/) {
         Cool::ImGuiExtras::markdown("Your image will be visible on [Coollab's gallery](https://coollab-art.com/Gallery).");
         Cool::ImGuiExtras::markdown("If you want to edit or remove it, send an email at [coollab.lib@gmail.com](mailto:coollab.lib@gmail.com) from the email address that you will provide below.");
         Cool::ImGuiExtras::separator_text("Artwork");

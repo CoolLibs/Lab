@@ -1,65 +1,47 @@
-#include "MeshingGui.h"
+#include "MeshingGui.hpp"
 #include <Cool/ImGui/ImGuiExtras.h>
 #include <Cool/Path/Path.h>
-#include <imgui.h>
-#include <filesystem>
-#include <string>
+#include "Cool/ImGui/IcoMoonCodepoints.h"
+#include "Cool/ImGui/icon_fmt.h"
+#include "Cool/Mesh/export_mesh.hpp"
+#include "gen_mesh_from_sdf.hpp"
 
 namespace Lab {
 
-auto meshing_export_mesh_Params::folder_path_for_mesh() const -> std::filesystem::path
-{
-    return std::filesystem::weakly_canonical(custom_folder_path.value_or(Cool::Path::project_folder().value_or(Cool::Path::user_data()) / "mesh"));
-}
-
-void meshing_export_mesh_Params::set_file_name_to_an_unused_name()
-{
-    // Trick to be able to use find_available_name method but store the result without extension
-    file_name = Cool::File::without_extension(Cool::File::find_available_name(folder_path_for_mesh(), file_name, Meshing::enum_name(format)));
-}
-
-auto meshing_export_mesh_Params::file_path() const -> std::filesystem::path
-{
-    return folder_path_for_mesh() / (file_name + "." + Meshing::enum_name(format));
-}
-
 MeshingGui::MeshingGui()
+    : _window{Cool::icon_fmt("Export a Mesh", ICOMOON_COG), Cool::ImGuiWindowConfig{.is_modal = true}}
 {
-    _window.on_open().subscribe([&](auto&&) {
-        _export_mesh_params.set_file_name_to_an_unused_name();
-    });
 }
 
-void MeshingGui::open_window()
+void MeshingGui::open_window(Cool::NodeId const& main_node_id)
 {
+    _main_node_id = main_node_id;
     _window.open();
 }
 
-void MeshingGui::imgui_window(Meshing::MeshingParams& meshing_params, std::function<void(meshing_export_mesh_Params const&)> const& on_mesh_exported)
+static void gen_and_export_mesh(Cool::NodeId const& main_node_id, MeshingSettings const& meshing_settings, Cool::MeshExportSettings const& mesh_export_settings, DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
-    _window.show([&]() {
-        meshing_params.imgui();
-        ImGui::Separator();
-        {
-            std::filesystem::path path{_export_mesh_params.folder_path_for_mesh()};
-            if (Cool::ImGuiExtras::folder("Folder", &path))
-            {
-                _export_mesh_params.custom_folder_path = path;
-                _export_mesh_params.set_file_name_to_an_unused_name();
-            }
-        }
-        ImGui::InputText("File Name", &_export_mesh_params.file_name);
+    auto const maybe_mesh = gen_mesh_from_sdf(main_node_id, meshing_settings, data_to_pass_to_shader, data_to_generate_shader_code);
+    if (!maybe_mesh)
+        return; // TODO(Meshing) Error message should be handled here
+    export_mesh(*maybe_mesh, mesh_export_settings);
+}
 
-        Meshing::imgui_combo("Export Format", _export_mesh_params.format);
-        if (std::filesystem::exists(_export_mesh_params.file_path()))
-        {
-            Cool::ImGuiExtras::warning_text(Cool::icon_fmt("A file with this name and format already exists in the folder. The file will be overwritten.", ICOMOON_WARNING).c_str());
-        }
+void MeshingGui::imgui_window(Cool::MeshExportSettings& mesh_export_settings, DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
+{
+    _window.show([&](bool is_opening) {
+        if (is_opening)
+            mesh_export_settings.set_file_name_to_an_unused_name();
+
+        _meshing_settings.imgui();
+        ImGui::Separator();
+        mesh_export_settings.imgui();
+        ImGui::Separator();
 
         if (ImGui::Button(Cool::icon_fmt("Export Mesh", ICOMOON_COGS).c_str()))
         {
+            gen_and_export_mesh(_main_node_id, _meshing_settings, mesh_export_settings, data_to_pass_to_shader, data_to_generate_shader_code);
             _window.close();
-            on_mesh_exported(_export_mesh_params);
         }
     });
 }

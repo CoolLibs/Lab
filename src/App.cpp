@@ -248,8 +248,8 @@ void App::render(Cool::RenderTarget& render_target, Cool::Time time, Cool::Time 
 {
     _project.modules_graph->render(
         render_target,
-        system_values(render_target.desired_size(), time, delta_time),
-        _nodes_library_manager.library()
+        data_to_pass_to_shader(render_target.desired_size(), time, delta_time),
+        data_to_generate_shader_code()
     );
 }
 
@@ -360,12 +360,11 @@ void App::imgui_window_exporter()
 
 void App::imgui_window_meshing()
 {
-    _meshing_handler.imgui_window({
-        system_values(render_view().render_target().desired_size(), _project.clock.time(), _project.clock.delta_time()),
-        _project.modules_graph->compositing_module().feedback_double_buffer(),
-        _project.modules_graph->graph(),
-        Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library_manager.library()},
-    });
+    _meshing_gui.imgui_window(
+        _mesh_export_settings,
+        data_to_pass_to_shader(render_view().render_target().current_size(), _project.clock.time(), _project.clock.delta_time()),
+        data_to_generate_shader_code()
+    );
 }
 
 void App::imgui_windows()
@@ -663,7 +662,7 @@ void App::open_video_exporter()
 
 void App::open_meshing_window_for_node(Cool::NodeId const& node_id)
 {
-    _meshing_handler.open_meshing_window(node_id);
+    _meshing_gui.open_window(node_id);
 }
 
 } // namespace Lab
