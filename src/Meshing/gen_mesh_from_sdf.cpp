@@ -11,11 +11,6 @@
 
 namespace Lab {
 
-static auto ssbo_size_from_sampling_count(MeshingSettings const& settings) -> unsigned int
-{
-    return glm::compMul(settings.samples_count);
-}
-
 static auto generate_compute_shader(std::string const& shader_code) -> tl::expected<Cool::OpenGL::ComputeShader, Cool::OptionalErrorMessage>
 {
     try
@@ -55,15 +50,14 @@ struct CoollabContext
 void cool_main()
 {{
     uint gid = gl_GlobalInvocationID.x +
-        gl_GlobalInvocationID.y * DispatchSize.x + 
-        gl_GlobalInvocationID.z * DispatchSize.y * DispatchSize.y;
+               gl_GlobalInvocationID.y * DispatchSize.x + 
+               gl_GlobalInvocationID.z * DispatchSize.y * DispatchSize.x;
 
-    vec3 pos = vec3(-_box_size/2. + gl_GlobalInvocationID*_step_size);
+    vec3 pos = vec3(-_box_size / 2. + gl_GlobalInvocationID * _step_size);
 
     CoollabContext dummy_coollab_context;
     dummy_coollab_context.uv = vec2(0);
     _signed_distance_field[gid] = {main_function_name}(dummy_coollab_context, pos);
-    // _signed_distance_field[gid] = pos.x;
 }}
                 )glsl"),
                                  "main_function_name"_a = main_function_name);
@@ -101,16 +95,16 @@ auto gen_mesh_from_sdf(
         return std::nullopt;
     }
 
-    auto signed_distance_field_ssbo = Cool::SSBO<float>{0};
-    signed_distance_field_ssbo.bind();
-    size_t const ssbo_size{ssbo_size_from_sampling_count(meshing_settings)};
-    signed_distance_field_ssbo.upload_data(ssbo_size, nullptr);
+    auto sdf_ssbo = Cool::SSBO<float>{0 /*binding_id*/};
+    sdf_ssbo.bind();
+    size_t const ssbo_size{glm::compMul(meshing_settings.samples_count)};
+    sdf_ssbo.upload_data(ssbo_size, nullptr);
 
     auto const shader_code{generate_meshing_shader_code(main_node_id, data_to_generate_shader_code)};
 
     if (!shader_code)
     {
-        Cool::Log::ToUser::error("Meshing", fmt::format("Unable to generate the shader code: {}", shader_code.error()));
+        Cool::Log::ToUser::error("Meshing", fmt::format("Unable to generate the shader code:\n{}", shader_code.error()));
         return std::nullopt;
     }
 
@@ -118,7 +112,7 @@ auto gen_mesh_from_sdf(
 
     if (!meshing_compute_shader)
     {
-        Cool::Log::ToUser::error("Meshing", fmt::format("Unable to compile the compute shader: {}", meshing_compute_shader.error().error_message()));
+        Cool::Log::ToUser::error("Meshing", fmt::format("Unable to compile the compute shader:\n{}", meshing_compute_shader.error().error_message()));
         return std::nullopt;
     }
 
@@ -138,7 +132,7 @@ auto gen_mesh_from_sdf(
 
     // CPU get data back
     auto sdf_samples = std::vector<float>(ssbo_size);
-    signed_distance_field_ssbo.download_data(sdf_samples);
+    sdf_ssbo.download_data(sdf_samples);
     return gen_mesh_with_marching_cubes(sdf_samples, meshing_settings);
 }
 

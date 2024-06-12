@@ -53,9 +53,9 @@ static constexpr auto edge_table = std::array<int, 256>{
 };
 
 /// triangleTable[i] is a list of edges forming triangles for cubeIndex i
-// Indices into vertex buffer (0 - 11)
+/// Indices into vertex buffer (0 - 11)
+/// To have it on the heap we can't use std::vector // TODO(Meshing) I don't understand this comment
 // clang-format off
-// To have it on the heap we can't use std::vector
 static constexpr auto triangle_table = std::array<std::array<std::optional<TriangleIndex>, 5>, 256> {{
     { {std::nullopt, std::nullopt, std::nullopt, std::nullopt, std::nullopt}},
     { { TriangleIndex{0, 8, 3}, std::nullopt, std::nullopt, std::nullopt, std::nullopt } },
@@ -320,14 +320,14 @@ static constexpr auto triangle_table = std::array<std::array<std::optional<Trian
 static constexpr auto edge_to_vertices = std::array<std::pair<unsigned int, unsigned int>, 12>{{{0, 1}, {1, 2}, {2, 3}, {0, 3}, {4, 5}, {5, 6}, {6, 7}, {4, 7}, {0, 4}, {1, 5}, {2, 6}, {3, 7}}};
 
 /// Given a `cell`, calculate its cube index
-/// The cube index is an 8-bit encoding. Each bit represents a vertex. `index[i]` is the ith bit
-/// If the value at the ith vertex is < iso_value, `index[i]` = 1. Else, `index[i]` = 0
-static auto calculate_cube_index(GridCell const& cell, float const iso_value)
+/// The cube index is an 8-bit encoding. Each bit represents a vertex. `index[i]` is the i-th bit
+/// If the value at the i-th vertex is < sdf_value, `index[i]` = 1. Else, `index[i]` = 0
+static auto calculate_cube_index(GridCell const& cell, float const sdf_value)
 {
     unsigned int cubeIndex{0};
     for (unsigned int i{0}; i < 8; i++)
     {
-        if (cell.sdf_values[i] < iso_value)
+        if (cell.sdf_values[i] < sdf_value)
         {
             cubeIndex |= (1 << i);
         }
@@ -336,26 +336,20 @@ static auto calculate_cube_index(GridCell const& cell, float const iso_value)
     return cubeIndex;
 }
 
-auto interpolate(glm::vec3 const& lhs_pos, float lhs_sdf, glm::vec3 const& rhs_pos, float rhs_sdf, float iso_value)
+auto interpolate(glm::vec3 const& lhs_pos, float lhs_sdf, glm::vec3 const& rhs_pos, float rhs_sdf, float sdf_value)
 {
-    auto epsilon{std::numeric_limits<float>::epsilon()};
-    if (std::fabs(iso_value - lhs_sdf) < epsilon)
-    {
+    static constexpr auto epsilon{std::numeric_limits<float>::epsilon()};
+    if (std::fabs(sdf_value - lhs_sdf) < epsilon)
         return lhs_pos;
-    }
-    if (std::fabs(iso_value - rhs_sdf) < epsilon)
-    {
+    if (std::fabs(sdf_value - rhs_sdf) < epsilon)
         return rhs_pos;
-    }
     if (std::fabs(lhs_sdf - rhs_sdf) < epsilon)
-    {
         return lhs_pos;
-    }
 
-    return ((iso_value - lhs_sdf) / (rhs_sdf - lhs_sdf)) * (rhs_pos - lhs_pos) + lhs_pos;
+    return ((sdf_value - lhs_sdf) / (rhs_sdf - lhs_sdf)) * (rhs_pos - lhs_pos) + lhs_pos;
 }
 
-auto get_intersection_coordinates(GridCell const& cell, int intersections_key, float iso_value)
+auto get_intersection_coordinates(GridCell const& cell, int intersections_key, float sdf_value)
 {
     std::array<glm::vec3, 12> intersections{};
 
@@ -365,7 +359,7 @@ auto get_intersection_coordinates(GridCell const& cell, int intersections_key, f
         if (intersections_key & 1)
         {
             auto const& [v1, v2]        = edge_to_vertices[idx];
-            glm::vec3 intersectionPoint = interpolate(cell.vertices[v1], cell.sdf_values[v1], cell.vertices[v2], cell.sdf_values[v2], iso_value);
+            glm::vec3 intersectionPoint = interpolate(cell.vertices[v1], cell.sdf_values[v1], cell.vertices[v2], cell.sdf_values[v2], sdf_value);
             intersections[idx]          = intersectionPoint;
         }
         idx++;
@@ -391,11 +385,11 @@ auto get_triangles(std::array<glm::vec3, 12> const& intersections, unsigned int 
     return triangles;
 }
 
-static auto triangulate_cell(GridCell const& cell, float iso_value)
+static auto triangulate_cell(GridCell const& cell, float sdf_value)
 {
-    auto const cube_index{calculate_cube_index(cell, iso_value)};
+    auto const cube_index{calculate_cube_index(cell, sdf_value)};
     int const  intersections_key{edge_table[cube_index]};
-    auto const intersection_coordinates{get_intersection_coordinates(cell, intersections_key, iso_value)};
+    auto const intersection_coordinates{get_intersection_coordinates(cell, intersections_key, sdf_value)};
     return get_triangles(intersection_coordinates, cube_index);
 }
 
@@ -426,7 +420,7 @@ auto gen_mesh_with_marching_cubes(std::vector<float> const& sdf_samples, Meshing
 {
     std::vector<Triangle> triangles{};
 
-    float iso_value{0};
+    float sdf_value{0};
 
     auto const sampling_count = settings.samples_count.x; // TODO(Meshing) support different sample counts on each axis
     auto const step_size      = settings.step_size().x;   // TODO(Meshing) same
@@ -465,7 +459,7 @@ auto gen_mesh_with_marching_cubes(std::vector<float> const& sdf_samples, Meshing
                     // clang-format on
                 };
 
-                auto cellTriangles{triangulate_cell(cell, iso_value)};
+                auto cellTriangles{triangulate_cell(cell, sdf_value)};
                 for (const auto& cellTriangle : cellTriangles)
                     triangles.push_back(cellTriangle);
             }

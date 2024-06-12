@@ -10,9 +10,8 @@ void MeshingSettings::imgui()
     {
         // Ensure that the sampling count is at least 1
         samples_count = glm::max(samples_count, glm::uvec3(1));
-        Cool::ImGuiExtras::help_marker(""); // TODO(Meshing) Explain what the setting does
     }
-    ImGui::SetItemTooltip("The number of samples to take along each axis of the volume.");
+    Cool::ImGuiExtras::help_marker("The number of samples to take along each axis of the volume.\nIncreasing it will increase the precision of the mesh, but will take longer to export and add more vertices.");
 }
 
 } // namespace Lab

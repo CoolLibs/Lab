@@ -4,8 +4,6 @@
 
 namespace Lab {
 
-class App;
-
 struct Command_Meshing {
     Cool::NodeId node_id;
 
