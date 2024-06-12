@@ -1,4 +1,5 @@
 #include "MeshingSettings.hpp"
+#include "Cool/ImGui/ImGuiExtras.h"
 
 namespace Lab {
 
@@ -9,6 +10,7 @@ void MeshingSettings::imgui()
     {
         // Ensure that the sampling count is at least 1
         samples_count = glm::max(samples_count, glm::uvec3(1));
+        Cool::ImGuiExtras::help_marker(""); // TODO(Meshing) Explain what the setting does
     }
     ImGui::SetItemTooltip("The number of samples to take along each axis of the volume.");
 }

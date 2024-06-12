@@ -9,7 +9,7 @@
 namespace Lab {
 
 MeshingGui::MeshingGui()
-    : _window{Cool::icon_fmt("Export a Mesh", ICOMOON_COG), Cool::ImGuiWindowConfig{.is_modal = true}}
+    : _window{Cool::icon_fmt("Export a 3D Model", ICOMOON_COGS), Cool::ImGuiWindowConfig{.is_modal = true}}
 {
 }
 
@@ -36,9 +36,9 @@ void MeshingGui::imgui_window(Cool::MeshExportSettings& mesh_export_settings, Da
         _meshing_settings.imgui();
         ImGui::Separator();
         mesh_export_settings.imgui();
-        ImGui::Separator();
 
-        if (ImGui::Button(Cool::icon_fmt("Export Mesh", ICOMOON_COGS).c_str()))
+        Cool::ImGuiExtras::before_export_button(mesh_export_settings.path);
+        if (ImGui::Button(Cool::icon_fmt("Export 3D Model", ICOMOON_UPLOAD2).c_str()))
         {
             gen_and_export_mesh(_main_node_id, _meshing_settings, mesh_export_settings, data_to_pass_to_shader, data_to_generate_shader_code);
             _window.close();

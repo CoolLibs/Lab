@@ -138,8 +138,8 @@ private:
             cereal::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
             cereal::make_nvp("MIDI config", Cool::midi_manager()),
             cereal::make_nvp("OSC config", Cool::osc_manager()),
-            cereal::make_nvp("Mesh export settings", app._mesh_export_settings),
-            cereal::make_nvp("Mesh generation", app._meshing_gui)
+            cereal::make_nvp("3D Model export settings", app._mesh_export_settings),
+            cereal::make_nvp("3D Model generation", app._meshing_gui)
         );
     }
     template<class Archive>
