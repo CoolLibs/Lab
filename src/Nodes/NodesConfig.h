@@ -61,6 +61,7 @@ public:
     void        update_node_with_new_definition(Node&, Cool::NodeDefinition const&, bool store_links_deletion_in_history = false);
     static void widget_to_rename_node(Cool::Node&);
     auto        maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
+    void        node_context_menu(Cool::Node&, Cool::NodeId const&) {}
 
 private:
     auto make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;
