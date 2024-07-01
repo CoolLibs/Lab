@@ -8,7 +8,10 @@
 #include "Cool/Camera/CameraShaderU.h"
 #include "Cool/Gpu/RenderTarget.h"
 #include "Cool/Nodes/NodesLibrary.h"
+#include "Cool/OSC/OSCManager.h"
 #include "Cool/StrongTypes/Camera2D.h"
+#include "Cool/Video/hack_get_global_time_in_seconds.h"
+#include "GLFW/glfw3.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "Nodes/valid_glsl.h"
@@ -26,8 +29,15 @@ void ModulesGraph::update()
     }
 }
 
+static auto has_rendered() -> bool&
+{
+    static bool instance{false};
+    return instance;
+}
+
 void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const& system_values, Cool::NodesLibrary const& nodes_library)
 {
+    has_rendered() = false;
     if (_compositing_module.depends_on().time_since_last_midi_button_pressed
         || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().time_since_last_midi_button_pressed; }))
     {
@@ -67,6 +77,12 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const&
     for (auto& node : _particles_module_nodes)
         render_particle_module(node->module, node->render_target, system_values);
     render_compositing_module(render_target, system_values);
+    if (has_rendered())
+    {
+        auto const leds = render_target.download_led_pixels();
+        // if (glfwGetTime() > 10.)
+        Cool::osc_manager().send_leds(leds);
+    }
 }
 
 void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, SystemValues const& system_values)
@@ -83,6 +99,7 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
 
     if (DebugOptions::log_when_rendering())
         Cool::Log::ToUser::info(some_module.name() + " Module", "Rendered");
+    has_rendered() = true;
 }
 
 void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, SystemValues const& system_values)
