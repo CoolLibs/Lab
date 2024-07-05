@@ -190,3 +190,8 @@ set(CPACK_BUNDLE_ICON "${CMAKE_SOURCE_DIR}/app-resources/icon.icns")
 
 #
 include(CPack)
+
+# ---------------------
+# ---Launcher---
+# ---------------------
+add_subdirectory(Launcher)
