@@ -54,6 +54,8 @@
         <key>NSHumanReadableCopyright</key>
         <string></string>
         <key>NSCameraUsageDescription</key>
-        <string>Our Webcam node uses your cameras.</string>
+        <string>This app requires camera access in order for the Webcam node to work and capture your camera.</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>This app requires microphone access in order for the Audio nodes to work and capture audio from your microphone.</string>
     </dict>
 </plist>
