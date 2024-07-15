@@ -1,0 +1,47 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "22436692-3766-4dd5-980b-1b4c95755f9f",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 2,
+                            "data": {
+                                "Name": "Radius",
+                                "Value": 1.0,
+                                "Metadata": {
+                                    "Bounds": {
+                                        "Has min bound": true,
+                                        "Min": 0.0,
+                                        "Has max bound": false,
+                                        "Max": 1.0,
+                                        "Drag speed": 0.0010000000474974514,
+                                        "Use slider": false,
+                                        "Is logarithmic": true
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "index": 3,
+                            "data": {
+                                "Name": "Center",
+                                "Value": {
+                                    "Point2D": {
+                                        "x": 0.0,
+                                        "y": 0.0
+                                    }
+                                },
+                                "Metadata": {
+                                    "Drag speed": 0.00009999999747378752
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

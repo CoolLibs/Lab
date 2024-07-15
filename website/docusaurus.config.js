@@ -115,6 +115,11 @@ const config = {
             label: "Gallery",
           },
           {
+            to: "Contribute",
+            position: "left",
+            label: "Contribute",
+          },
+          {
             type: "doc",
             docId: "Articles/Alpaca/Alpaca",
             position: "right",

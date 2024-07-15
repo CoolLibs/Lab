@@ -3,6 +3,7 @@
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
+#include "Cool/Midi/MidiManager.h"
 #include "Cool/OSC/OSCConnectionEndpoint.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
@@ -28,6 +29,7 @@ struct Project {
     std::string debug_info_coollab_version{}; // Only used to generate an error message when deserialization fails.
 
     [[nodiscard]] auto is_empty() const -> bool;
+    [[nodiscard]] auto current_clock() const -> Cool::Clock const& { return exporter.is_exporting() ? exporter.clock() : clock; }
 
 private:
     // Serialization
@@ -49,7 +51,8 @@ private:
             cereal::make_nvp("Modules Graph", modules_graph),
             cereal::make_nvp("History", history),
             cereal::make_nvp("Audio", audio),
-            cereal::make_nvp("OSC Endpoint", osc_endpoint)
+            cereal::make_nvp("OSC Endpoint", osc_endpoint),
+            cereal::make_nvp("MIDI Channels", Cool::midi_manager().all_values())
         );
     }
 };

@@ -56,7 +56,7 @@ public:
     auto nodes_library() const -> Cool::NodesLibrary const& { return _nodes_library_manager.library(); }
 
 private:
-    void render(Cool::RenderTarget& render_target, float time, float delta_time);
+    void render(Cool::RenderTarget& render_target, Cool::Time time, Cool::Time delta_time);
     void on_time_changed();
     void on_time_reset();
     auto render_view() -> Cool::RenderView&;
@@ -73,7 +73,7 @@ private:
     auto command_executor_without_history           () { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto system_values                              (img::Size render_target_size, float time, float delta_time) { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
+    auto system_values                              (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor()}; }
     // clang-format on
 
@@ -102,7 +102,7 @@ private:
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
     RecentlyOpened                       _recently_opened_projects{};
-    float                                _last_time{0.f};
+    Cool::Time                           _last_time{0s};
     bool                                 _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
     bool                                 _view_was_in_fullscreen_last_frame{false};
     GalleryPoster                        _gallery_poster{};

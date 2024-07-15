@@ -66,6 +66,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         log_simulation_shader_error(e.error_message());
         return;
     }
+    _depends_on = {};
     update_dependencies_from_shader_code(_depends_on, _shader_code);
     request_particles_to_reset();
 }

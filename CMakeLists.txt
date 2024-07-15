@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(Coollab)
-set(COOLLAB_VERSION "beta-16 WIP")
+set(COOLLAB_VERSION "beta-18 WIP")
 add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
@@ -10,8 +10,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
 target_compile_features(Coollab-Properties INTERFACE cxx_std_20)
 
 # Set the folder where the executable is created
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Needed for OpenCV to copy some DLLs in this folder
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 # Set warning level
 if(MSVC)
@@ -52,6 +53,7 @@ target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
 install(FILES "lib/range-v3/LICENSE.txt" DESTINATION "license/range-v3")
 
 set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, like making HTTPS requests to post images to the Coollab gallery. If you don't have the necessary dependencies these features will be disabled. If you want to make sure you have all the features of Coollab enabled, set this option to ON.")
+set(COOLLAB_BUILD_WITH_OPENSSL ON CACHE BOOL "Needed to make HTTPS requests to post images to the Coollab gallery.")
 
 # ----------------
 # ---OpenSSL---
@@ -61,24 +63,34 @@ set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, lik
 # If OpenSSL is not found this feature will be disabled.
 # Note: cpp-httplib can only work with OpenSSL versions 3 or 1.1.1
 # Set the path to OpenSSL library directory
-set(OPENSSL_USE_STATIC_LIBS TRUE)
+if(COOLLAB_BUILD_WITH_OPENSSL)
+    set(OPENSSL_USE_STATIC_LIBS TRUE)
 
-if(COOLLAB_REQUIRE_ALL_FEATURES)
-    find_package(OpenSSL REQUIRED)
-else()
-    find_package(OpenSSL)
-endif()
+    if(NOT APPLE) # Disabled on Mac for now, because brew installs versions 3.3 now, which isn't compatible with cpp-httplib
+        find_package(OpenSSL 3)
 
-if(OpenSSL_FOUND)
-    message("[Coollab] Found OpenSSL.")
-    target_link_libraries(Coollab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
-    target_compile_definitions(Coollab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
+        if(NOT OpenSSL_FOUND)
+            if(COOLLAB_REQUIRE_ALL_FEATURES)
+                find_package(OpenSSL 1.1.1 REQUIRED)
+            else()
+                find_package(OpenSSL 1.1.1)
+            endif()
+        endif()
+    endif()
+
+    if(OpenSSL_FOUND)
+        message("[Coollab] Found OpenSSL.")
+        target_link_libraries(Coollab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
+        target_compile_definitions(Coollab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
+    else()
+        message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
+    endif()
 else()
-    message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
+    message("[Coollab] Disabled building with OpenSSL.")
 endif()
 
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
-install(FILES "LICENSE.txt" DESTINATION "license")
+install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 
 # Grab all the source files
 file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)

@@ -1,8 +1,10 @@
 // To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
 
-INPUT Midi 'Channel Index';
+INPUT Midi 'Channel';
+INPUT float 'Min';
+INPUT float 'Max';
 
 float main()
 {
-    return 'Channel Index';
+    return mix('Min', 'Max', 'Channel');
 }

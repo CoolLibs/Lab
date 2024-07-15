@@ -62,6 +62,7 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
                                                                                   .extra_bind_group_layout = &*_bind_group_layout})
                                                  .value();
     // log_shader_error(maybe_err); // TODO(WebGPU)
+    _depends_on = {};
     update_dependencies_from_shader_code(_depends_on, _shader_code);
     needs_to_rerender_flag().set_dirty();
 }

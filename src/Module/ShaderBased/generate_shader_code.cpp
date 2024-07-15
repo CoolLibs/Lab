@@ -62,7 +62,6 @@ auto generate_shader_code(
     std::function<std::vector<std::string>()> const& get_module_textures_names
 )
     -> tl::expected<std::string, std::string>
-// TODO(WebGPU) reintroduce #include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 {
     auto       context            = CodeGenContext{graph, get_node_definition};
     auto const main_function_name = gen_desired_function(
@@ -93,6 +92,9 @@ auto generate_shader_code(
 uniform float     _delta_time;
 uniform float     _time;
 uniform float     _height;
+uniform int       _last_midi_button_pressed;
+uniform int       _last_last_midi_button_pressed;
+uniform float     _time_since_last_midi_button_pressed;
 uniform float     _audio_volume;
         // TODO(WebGPU)
 // uniform sampler1D _audio_spectrum;
@@ -103,15 +105,17 @@ uniform mat3      _camera2D_view;
 // group (aka "set") 0 is reserved for internal stuff from the FullscreenPipeline
 layout(set=1, binding=0) uniform texture2D _previous_frame_texture;
 layout(set=1, binding=1) uniform sampler _previous_frame_texture_sampler;
-// uniform texture2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
+// TODO(WebGPU) pass the proper mixbox_lut texture
+layout(set=1, binding=0) uniform texture2D mixbox_lut;// The uniform must have this exact name that mixbox.glsl expects.
+layout(set=1, binding=1) uniform sampler mixbox_lut_sampler;
 {modules_textures_uniforms}
 
-#include "_ROOT_FOLDER_/res/shader-utils.glsl"
+#include "_COOL_RES_/shaders/shader-utils.glsl" 
+#include "_ROOT_FOLDER_/res/mixbox/mixbox.glsl"
 #include "_COOL_RES_/shaders/math.glsl"
 #include "_COOL_RES_/shaders/rand.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 #include "_COOL_RES_/shaders/Texture.glsl"
-#include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 
 vec2 to_view_space(vec2 uv)

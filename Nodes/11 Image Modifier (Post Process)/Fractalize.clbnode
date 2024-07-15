@@ -8,8 +8,8 @@ INPUT bool 'Clamp Output Alpha';
 LinearRGB_PremultipliedA main(UV uv)
 {
     // Initial values
-    vec4  value     = vec4(0.);
-    float amplitude = 'Initial Amplitude';
+    vec4 value     = vec4(0.);
+    vec4 amplitude = vec4(vec3('Initial Amplitude'), 1.); // initial amplitude of alpha is always one to guarantee that an opaque image won't become transparent.
 
     // Loop of octaves
     for (int i = 0; i < 'Iterations'; i++)

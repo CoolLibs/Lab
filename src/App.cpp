@@ -33,6 +33,7 @@
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/Tips/TipsManager.h"
+#include "Cool/Video/hack_get_global_time_in_seconds.h"
 #include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
@@ -52,6 +53,7 @@ namespace Lab {
 App::App(Cool::ViewsManager& views)
     : _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
         .name        = Cool::icon_fmt("Output", ICOMOON_IMAGE),
+          .is_output_view = true,
         .is_closable = true,
         .start_open  = false,
     })}
@@ -126,11 +128,11 @@ void App::update()
 
     _project.audio.set_force_mute(_project.exporter.is_exporting());
     _project.audio.sync_with_clock(
-        _project.exporter.is_exporting()
-            ? _project.exporter.clock()
-            : _project.clock,
+        _project.current_clock(),
         _project.exporter.is_exporting() /* force_sync_time */
     );
+    Cool::hack_get_global_time_in_seconds() = _project.current_clock().time();
+    Cool::hack_get_is_exporting()           = _project.exporter.is_exporting();
     _project.audio.update(/*on_audio_data_changed = */ [&]() {
         _project.modules_graph->on_audio_changed();
     });
@@ -142,6 +144,8 @@ void App::update()
     Cool::midi_manager().for_each_channel_that_has_changed([&](Cool::MidiChannel const& midi_channel) {
         _project.modules_graph->on_midi_channel_changed(midi_channel);
     });
+    if (Cool::midi_manager().last_button_pressed_has_changed())
+        _project.modules_graph->on_last_midi_button_pressed_changed();
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
@@ -154,7 +158,7 @@ void App::update()
     {
         _project.clock.update();
         render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds());
+        polaroid().render(_project.clock.time(), _project.clock.delta_time());
     }
     else
     {
@@ -211,7 +215,7 @@ Cool::Polaroid App::polaroid()
 {
     return {
         .render_target = render_view().render_target(), // TODO(Modules) Each module should have its own render target that it renders on. The views shouldn't have a render target, but receive the one of the top-most module by reference.
-        .render_fn     = [this](Cool::RenderTarget& render_target, float time, float delta_time) {
+        .render_fn     = [this](Cool::RenderTarget& render_target, Cool::Time time, Cool::Time delta_time) {
             if (_last_time != time)
             {
                 _last_time = time;
@@ -240,7 +244,7 @@ static void imgui_window_console()
 #endif
 }
 
-void App::render(Cool::RenderTarget& render_target, float time, float delta_time)
+void App::render(Cool::RenderTarget& render_target, Cool::Time time, Cool::Time delta_time)
 {
     _project.modules_graph->render(
         render_target,
@@ -333,8 +337,8 @@ void App::imgui_window_exporter()
 {
     _project.exporter.imgui_windows({
         .polaroid          = polaroid(),
-        .time              = _project.clock.time_in_seconds(),
-        .delta_time        = _project.clock.delta_time_in_seconds(),
+        .time              = _project.clock.time(),
+        .delta_time        = _project.clock.delta_time(),
         .time_speed        = _project.clock.time_speed().value(),
         .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
             auto folder_path = exported_image_path;
@@ -370,7 +374,11 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
     Cool::ClockU::imgui_timeline(
         _project.clock,
-        /* extra_widgets = */ [&]() { the_ui.widget(_project.clock.time_speed()); },
+        /* extra_widgets = */ [&]() {
+            ImGui::SetNextItemWidth(70.f);
+            the_ui.widget(_project.clock.time_speed());
+            //
+        },
         /* on_time_reset = */ [&]() { on_time_reset(); }
     );
     ImGui::End();
@@ -393,7 +401,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_project.clock.time_in_seconds(), _project.clock.delta_time_in_seconds(), size);
+        the_polaroid.render(_project.clock.time(), _project.clock.delta_time(), size);
         auto const image = the_polaroid.render_target.download_pixels();
         return img::save_png_to_string(image);
     });
@@ -520,7 +528,10 @@ void App::commands_menu()
         if (ImGui::Selectable(ICOMOON_MUSIC " Open Audio config"))
             _project.audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
-            _output_view.open();
+        {
+            _output_view.toggle_open_close();
+            _project.view_constraint.should_control_aspect_ratio(false);
+        }
         if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
             Cool::open(Cool::Path::user_data().string().c_str());
         ImGui::EndMenu();

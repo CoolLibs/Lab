@@ -1,0 +1,67 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Transition Duration';
+
+INPUT int 'Selected ID';
+INPUT int 'Previous Selected ID';
+INPUT float 'Time';
+
+INPUT UV->Oklab_PremultipliedA 'Image 1';
+INPUT int 'ID 1';
+
+INPUT UV->Oklab_PremultipliedA 'Image 2';
+INPUT int 'ID 2';
+
+INPUT UV->Oklab_PremultipliedA 'Image 3';
+INPUT int 'ID 3';
+
+INPUT UV->Oklab_PremultipliedA 'Image 4';
+INPUT int 'ID 4';
+
+INPUT UV->Oklab_PremultipliedA 'Image 5';
+INPUT int 'ID 5';
+
+INPUT UV->Oklab_PremultipliedA 'Image 6';
+INPUT int 'ID 6';
+
+INPUT UV->Oklab_PremultipliedA 'Image 7';
+INPUT int 'ID 7';
+
+INPUT UV->Oklab_PremultipliedA 'Image 8';
+INPUT int 'ID 8';
+
+INPUT UV->Oklab_PremultipliedA 'Image 9';
+INPUT int 'ID 9';
+
+vec4 get_image(int id, vec2 uv)
+{
+    return id == 'ID 1'
+               ? 'Image 1'(uv)
+           : id == 'ID 2'
+               ? 'Image 2'(uv)
+           : id == 'ID 3'
+               ? 'Image 3'(uv)
+           : id == 'ID 4'
+               ? 'Image 4'(uv)
+           : id == 'ID 5'
+               ? 'Image 5'(uv)
+           : id == 'ID 6'
+               ? 'Image 6'(uv)
+           : id == 'ID 7'
+               ? 'Image 7'(uv)
+           : id == 'ID 8'
+               ? 'Image 8'(uv)
+           : id == 'ID 9'
+               ? 'Image 9'(uv)
+               : vec4(0., 0., 0., 1.);
+}
+
+Oklab_PremultipliedA main(UV uv)
+{
+    float mix_factor = 'Time' / 'Transition Duration';
+    if (mix_factor < 0.)
+        return get_image('Previous Selected ID', uv);
+    if (mix_factor > 1.)
+        return get_image('Selected ID', uv);
+    return mix(get_image('Previous Selected ID', uv), get_image('Selected ID', uv), mix_factor);
+}

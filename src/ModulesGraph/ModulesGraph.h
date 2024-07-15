@@ -67,6 +67,7 @@ public:
     void on_osc_channel_changed(Cool::OSCChannel const&);
     /// Function called once on every frame for each Midi channel that has changed.
     void on_midi_channel_changed(Cool::MidiChannel const&);
+    void on_last_midi_button_pressed_changed();
 
     void update_dependencies_from_nodes_graph();
 

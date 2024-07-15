@@ -28,6 +28,11 @@ void ModulesGraph::update()
 
 void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const& system_values, Cool::NodesLibrary const& nodes_library)
 {
+    if (_compositing_module.depends_on().time_since_last_midi_button_pressed
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().time_since_last_midi_button_pressed; }))
+    {
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this
+    }
     if (render_target.needs_resizing())
         request_rerender_all();
     if (rerender_all_flag().is_dirty())
@@ -308,6 +313,15 @@ void ModulesGraph::on_midi_channel_changed(Cool::MidiChannel const& midi_channel
         || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().midi_channel(midi_channel); }))
     {
         request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this Midi channel
+    }
+}
+
+void ModulesGraph::on_last_midi_button_pressed_changed()
+{
+    if (_compositing_module.depends_on().last_midi_button_pressed
+        || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().last_midi_button_pressed; }))
+    {
+        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this last_midi_button_pressed
     }
 }
 

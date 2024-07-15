@@ -30,7 +30,11 @@ auto compute_value_input_color(Cool::AnySharedVariableDefinition const& var_def)
         || std::holds_alternative<Cool::SharedVariableDefinition<bool>>(var_def)
         || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Hue>>(var_def)
         || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Angle>>(var_def)
-        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Direction2D>>(var_def))
+        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Direction2D>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::Time>>(var_def)
+        || std::holds_alternative<Cool::SharedVariableDefinition<Cool::TimeSpeed>>(var_def)
+        //
+    )
         return NodeColor::greyscale();
 
     return NodeColor::miscellaneous();

@@ -1,0 +1,13 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT float 'Radius';
+INPUT Point2D 'Center';
+
+UV main(UV Image)
+{
+    vec2 polar = Cool_polar_coordinates(Image);
+    polar.x *= 'Radius';
+    polar.y /= TAU;
+    polar.y += 0.5;
+    return polar + 'Center';
+}

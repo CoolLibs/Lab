@@ -1,0 +1,51 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->Oklab_PremultipliedA 'Image 1';
+INPUT int 'ID 1';
+
+INPUT UV->Oklab_PremultipliedA 'Image 2';
+INPUT int 'ID 2';
+
+INPUT UV->Oklab_PremultipliedA 'Image 3';
+INPUT int 'ID 3';
+
+INPUT UV->Oklab_PremultipliedA 'Image 4';
+INPUT int 'ID 4';
+
+INPUT UV->Oklab_PremultipliedA 'Image 5';
+INPUT int 'ID 5';
+
+INPUT UV->Oklab_PremultipliedA 'Image 6';
+INPUT int 'ID 6';
+
+INPUT UV->Oklab_PremultipliedA 'Image 7';
+INPUT int 'ID 7';
+
+INPUT UV->Oklab_PremultipliedA 'Image 8';
+INPUT int 'ID 8';
+
+INPUT UV->Oklab_PremultipliedA 'Image 9';
+INPUT int 'ID 9';
+
+Oklab_PremultipliedA main(UV uv)
+{
+    return _last_midi_button_pressed == 'ID 1'
+               ? 'Image 1'(uv)
+           : _last_midi_button_pressed == 'ID 2'
+               ? 'Image 2'(uv)
+           : _last_midi_button_pressed == 'ID 3'
+               ? 'Image 3'(uv)
+           : _last_midi_button_pressed == 'ID 4'
+               ? 'Image 4'(uv)
+           : _last_midi_button_pressed == 'ID 5'
+               ? 'Image 5'(uv)
+           : _last_midi_button_pressed == 'ID 6'
+               ? 'Image 6'(uv)
+           : _last_midi_button_pressed == 'ID 7'
+               ? 'Image 7'(uv)
+           : _last_midi_button_pressed == 'ID 8'
+               ? 'Image 8'(uv)
+           : _last_midi_button_pressed == 'ID 9'
+               ? 'Image 9'(uv)
+               : vec4(0., 0., 0., 1.);
+}

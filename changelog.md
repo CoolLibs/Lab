@@ -1,6 +1,8 @@
 # Changelog
 
-- [🐣beta-16 WIP](#beta-16-wip)
+- [🐣beta-18 WIP](#beta-18-wip)
+- [🐣beta-17](#beta-17)
+- [🐣beta-16](#beta-16)
 - [🐣beta-15](#beta-15)
 - [🐣beta-14](#beta-14)
 - [🐣beta-13](#beta-13)
@@ -18,18 +20,45 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-16 WIP
+## 🐣beta-18 WIP
 
-- ✨ The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
-- ✨ When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
-- ✨ Some node inputs now have a little info icon next to their pin, explaining what the parameter does in more details.
-- 🤏 Random nodes now use an Integer as a Seed, instead of any decimal number.
-- 🤏 Use logarithmic drag for camera zoom (makes it smoother).
+- ✨ Every time input is now nicely formatted like "1h 27m 53s"
+- ✨ The Output Window can now easily be turned fullscreen with <kbd>F10</kbd>
+- ✨ When opening the Output Window, the aspect ratio automatically adapts to it
+- ✨ The Output Window now doesn't have a title bar
+- 🟦 Nodes: Added "MIDI Multi-Select with Transition" 
+![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
+- 🐛 Allow access to your microphone on MacOS for Audio nodes
+
+## 🐣beta-17
+
+- ✨ Greatly improved video import: we now support videos with transparency, and GIFs
+![](https://github.com/CoolLibs/Lab/assets/45451201/e5005eff-5b16-41ef-a4b1-74a46c481edc)
+- ⚡ The performance of playing a video has been greatly improved
+- 🐛 Video import now also works on Linux and MacOS
+- 🐛 Many bug fixes around the video import and playback
+- ✨ Improved MIDI support: buttons now have several modes (toggle, selector, pressed)
+![](https://github.com/CoolLibs/Lab/assets/45451201/7826e34f-9210-4002-a145-385bf4107f29)
+- 🟦 MIDI nodes: Added "Last MIDI button pressed", and you can now change the Min and Max output values of the "MIDI" node
+- 🟦 Nodes: Added "Select" and "Multi-Select" which can typically be used in combination with MIDI buttons, to switch between various images / effects
+![](https://github.com/CoolLibs/Lab/assets/45451201/c1692212-a6ea-4d2f-8e7d-4bc4f1c3f887)
+- ✨ When exporting a video, if the output folder already contains frames from a previous export you now have 4 options, and by default we will prompt you to create a new folder
+![](https://github.com/CoolLibs/Lab/assets/45451201/e5840829-21d5-4734-a388-5fd905dec17d)
+
+## 🐣beta-16
+
+- ✨ You can now import video files! Using the "Video from File" node.
+![](https://github.com/CoolLibs/Lab/assets/45451201/fb7561df-f775-43d5-bbf4-1dedd32563bf)
+- 🤏 The time in the timeline is now nicely formatted (as "3m 43s 512ms"). You can also input it like that (by CTRL+clicking on the timeline), as any combination of millisecond (ms) / second (s) / minute (m) / hour (h) / day (d) / week (w). For example "3m43".
+- 🤏 The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
+- 🤏 When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
+- 🤏 Some node inputs now have a little info icon next to their pin, explaining what the parameter does in more details.
+- 🤏 "Random" nodes now use an integer as a Seed, instead of any decimal number.
 - 🤏 Improved Angle widget.
 - 🤏 Improved final image size calculations based on desired aspect ratio.
 - 🐛 Fixed image generation failure in some rare cases.
 - 🐛 Fixed a crash when loading a project that was made in an older version of Coollab and that used a node that had been updated in Coollab.
-- 🐛 Remove incompatible link when creating a link backward from a pin.
+- 🐛 Fix: Remove incompatible links when creating a link backward from a pin.
 
 ## 🐣beta-15
 
