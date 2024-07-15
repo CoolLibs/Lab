@@ -1,4 +1,4 @@
-#version 430
+#version 460
 
 in vec2      _varying_uv;
 flat in uint _particle_index;

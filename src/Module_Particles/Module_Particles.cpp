@@ -51,7 +51,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
         //                 *Cool::File::to_string(Cool::Path::root() / "res/Particles/init.comp")
         //             ),
         //             .vertex = fmt::format(
-        //                 "#version 430\n{}{}",
+        //                 "#version 460\n{}{}",
         //                 dimension == 3 ? "#define COOLLAB_PARTICLES_3D\n" : "",
         //                 *Cool::File::to_string(Cool::Path::root() / "res/Particles/vertex.vert")
         //             ),

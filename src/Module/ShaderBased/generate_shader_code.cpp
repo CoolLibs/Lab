@@ -100,8 +100,10 @@ uniform float     _audio_volume;
 uniform mat3      _camera2D_transform;
 uniform mat3      _camera2D_view;
         // TODO(WebGPU)
-// uniform sampler2D _previous_frame_texture;
-// uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
+// group (aka "set") 0 is reserved for internal stuff from the FullscreenPipeline
+layout(set=1, binding=0) uniform texture2D _previous_frame_texture;
+layout(set=1, binding=1) uniform sampler _previous_frame_texture_sampler;
+// uniform texture2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 {modules_textures_uniforms}
 
 #include "_ROOT_FOLDER_/res/shader-utils.glsl"
@@ -109,6 +111,7 @@ uniform mat3      _camera2D_view;
 #include "_COOL_RES_/shaders/rand.glsl"
 #include "_COOL_RES_/shaders/color_conversions.glsl"
 #include "_COOL_RES_/shaders/Texture.glsl"
+#include "_COOL_RES_/shaders/camera.glsl"
 #include "_COOL_RES_/shaders/camera.glsl"
 
 vec2 to_view_space(vec2 uv)

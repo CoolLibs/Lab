@@ -13,7 +13,7 @@ auto generate_compositing_shader_code(
 {
     using fmt::literals::operator""_a;
     auto const content = ShaderCodeBits{
-        .version     = "#version 410",
+        .version     = "#version 460",
         .before_main = R"glsl(
 layout(location = 0) out vec4 out_Color;
 struct CoollabContext

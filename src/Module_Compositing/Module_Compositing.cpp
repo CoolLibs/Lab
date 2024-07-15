@@ -1,4 +1,5 @@
 #include "Module_Compositing.h"
+#include "Cool/Gpu/WebGPUContext.h"
 #include "Cool/WebGPU/FullscreenPipelineGLSL.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 
@@ -36,7 +37,30 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
 
     _shader_code = *shader_code;
     std::cout << _shader_code << '\n';
-    /* auto const maybe_err = */ _pipeline = Cool::make_fullscreen_pipeline_glsl({.label = "TODO(WebGPU)", .code = _shader_code}).value();
+
+    auto entries = std::vector<wgpu::BindGroupLayoutEntry>(2, wgpu::Default);
+
+    // TODO(WebGPU) Store the layout instead of recreating it each time we set the shader code ?
+    entries[0].binding               = 0;
+    entries[0].visibility            = wgpu::ShaderStage::Fragment;
+    entries[0].texture.sampleType    = wgpu::TextureSampleType::Float;
+    entries[0].texture.viewDimension = wgpu::TextureViewDimension::_2D;
+
+    entries[1].binding      = 1;
+    entries[1].visibility   = wgpu::ShaderStage::Fragment;
+    entries[1].sampler.type = wgpu::SamplerBindingType::Filtering;
+
+    wgpu::BindGroupLayoutDescriptor bindGroupLayoutDesc{};
+    bindGroupLayoutDesc.entryCount = entries.size();
+    bindGroupLayoutDesc.entries    = entries.data();
+
+    _bind_group_layout                     = Cool::BindGroupLayout{bindGroupLayoutDesc};
+    /* auto const maybe_err = */ _pipeline = Cool::make_fullscreen_pipeline_glsl({.fragment_shader_module_creation_args = {
+                                                                                      .label = "TODO(WebGPU)",
+                                                                                      .code  = _shader_code,
+                                                                                  },
+                                                                                  .extra_bind_group_layout = &*_bind_group_layout})
+                                                 .value();
     // log_shader_error(maybe_err); // TODO(WebGPU)
     update_dependencies_from_shader_code(_depends_on, _shader_code);
     needs_to_rerender_flag().set_dirty();
@@ -80,14 +104,52 @@ void Module_Compositing::render(wgpu::RenderPassEncoder render_pass, SystemValue
     _feedback_double_buffer.swap_buffers();
 }
 
+// TODO(WebGPU) Remove
+static auto dummy_texture() -> Cool::Texture const&
+{
+    static auto instance = texture_from_pixels(img::Size{1, 1}, wgpu::TextureFormat::RGBA8Unorm, Cool::AlphaSpace::Any, std::array<uint8_t, 4>{255, 255, 0, 255});
+    return instance;
+}
+
 void Module_Compositing::render_impl(wgpu::RenderPassEncoder render_pass, SystemValues const& system_values)
 {
     if (!_pipeline.has_value())
         return;
 
+    // Create a sampler
+    wgpu::SamplerDescriptor samplerDesc;
+    samplerDesc.addressModeU  = wgpu::AddressMode::ClampToEdge;
+    samplerDesc.addressModeV  = wgpu::AddressMode::ClampToEdge;
+    samplerDesc.addressModeW  = wgpu::AddressMode::ClampToEdge;
+    samplerDesc.magFilter     = wgpu::FilterMode::Linear;
+    samplerDesc.minFilter     = wgpu::FilterMode::Linear;
+    samplerDesc.mipmapFilter  = wgpu::MipmapFilterMode::Linear;
+    samplerDesc.lodMinClamp   = 0.0f;
+    samplerDesc.lodMaxClamp   = 1.0f;
+    samplerDesc.compare       = wgpu::CompareFunction::Undefined;
+    samplerDesc.maxAnisotropy = 1;
+    wgpu::Sampler sampler     = Cool::webgpu_context().device.createSampler(samplerDesc);
+
+    // Create a bind group
+    std::vector<wgpu::BindGroupEntry> bindings(2, wgpu::Default);
+
+    bindings[0].binding     = 0 /* entries[0].binding */;
+    bindings[0].textureView = dummy_texture().entire_texture_view();
+    bindings[1].binding     = 1 /* entries[1].binding */;
+    bindings[1].sampler     = sampler;
+
+    // A bind group contains one or multiple bindings
+    wgpu::BindGroupDescriptor bindGroupDesc{};
+    bindGroupDesc.layout = *_bind_group_layout;
+    // There must be as many bindings as declared in the layout!
+    bindGroupDesc.entryCount = bindings.size();
+    bindGroupDesc.entries    = bindings.data();
+    _bind_group              = Cool::BindGroup{bindGroupDesc};
+    // TODO(WebGPU) Don't recreate the bind group every frame
+
     set_uniforms_for_shader_based_module(*_pipeline, system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
     _pipeline->set_aspect_ratio_uniform(system_values.aspect_ratio());
-    _pipeline->draw(render_pass);
+    _pipeline->draw(render_pass, &*_bind_group);
 }
 
 } // namespace Lab
