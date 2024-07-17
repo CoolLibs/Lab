@@ -102,7 +102,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-             ${{ runner.os != 'Windows' && github.workspace || '' }}/build/${{ matrix.config.installer_name }}
-             ${{ runner.os != 'Windows' && github.workspace || '' }}/build/release-binaries-${{ matrix.config.name }}.zip
-             ${{ runner.os == 'Windows' && github.workspace || '' }}\build\${{ matrix.config.installer_name }}
-             ${{ runner.os == 'Windows' && github.workspace || '' }}\build\release-binaries-${{ matrix.config.name }}.zip
+            ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/${{matrix.config.installer_name}}
+            ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/release-binaries-${{matrix.config.name}}.zip
