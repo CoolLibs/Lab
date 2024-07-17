@@ -86,18 +86,17 @@ jobs:
         run: |
           cd ${{github.workspace}}/build
           cpack
-        
-     - name: Create zip
-      if: runner.os != 'Windows'
-      run: |
-        cd ${{github.workspace}}/bin/Release
-        zip -r ${{github.workspace}}/Release.zip .
+
+      - name: Create zip
+        if: runner.os != 'Windows'
+        run: |
+          cd ${{github.workspace}}/bin/Release
+          zip -r ${{github.workspace}}/Release.zip .
 
       - name: Create zip (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        powershell Compress-Archive -Path bin/Release -DestinationPath Release.zip
-
+        if: runner.os == 'Windows'
+        run: |
+          powershell Compress-Archive -Path bin/Release -DestinationPath Release.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
