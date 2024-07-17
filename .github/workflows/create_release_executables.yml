@@ -87,7 +87,14 @@ jobs:
           cd ${{github.workspace}}/build
           cpack
 
+      - name: Zip Release binaries
+        run: |
+          cd ${{github.workspace}}/bin/Release
+          zip -r ${GITHUB_WORKSPACE}/build/release-binaries-${{matrix.config.name}}.zip .
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/${{matrix.config.installer_name}}
+          files: |
+            ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/${{matrix.config.installer_name}}
+            ${{github.workspace}}/build/release-binaries-${{matrix.config.name}}.zip
