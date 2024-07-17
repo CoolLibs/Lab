@@ -28,8 +28,6 @@ if(WARNINGS_AS_ERRORS_FOR_COOLLAB_LAUNCHER)
     endif()
 endif()
 
-# Set app icon
-Cool__set_app_icon(${PROJECT_NAME} "../res/logo.png" "${CMAKE_SOURCE_DIR}/app-resources/icon.rc")
 
 # Grab all the source files
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*)
