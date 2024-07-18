@@ -35,7 +35,7 @@ jobs:
           - {
               name: MacOS,
               os: macos-latest, # 13 and 14 run on M1 chips, and we get a linker error when using them
-              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
+              cmake_configure_args: -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
               cpack_generator: Bundle,
               installer_name: Coollab-Mac.dmg,
             }
