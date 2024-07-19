@@ -4,6 +4,7 @@
 #include "Cool/TextureSource/TextureLibrary_Image.h"
 #include "Cool/WebGPU/FullscreenPipelineGLSL.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
+#include "Module/ShaderBased/system_bind_group_layout.hpp"
 
 namespace Lab {
 
@@ -41,18 +42,12 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
 
     // TODO(WebGPU) Store the layout instead of recreating it each time we set the shader code ?
     // TODO(WebGPU) Share it with all shader-based modules
-    _bind_group_layout = Cool::BindGroupLayoutBuilder{wgpu::ShaderStage::Fragment}
-                             .read_texture_2D(0)
-                             .sampler(1)
-                             .read_texture_2D(2)
-                             .sampler(3)
-                             .build();
 
     /* auto const maybe_err = */ _pipeline = Cool::make_fullscreen_pipeline_glsl({.fragment_shader_module_creation_args = {
                                                                                       .label = "TODO(WebGPU)",
                                                                                       .code  = _shader_code,
                                                                                   },
-                                                                                  .extra_bind_group_layout = &*_bind_group_layout})
+                                                                                  .extra_bind_group_layout = &system_bind_group_layout()})
                                                  .value();
     // log_shader_error(maybe_err); // TODO(WebGPU)
     _depends_on = {};
@@ -138,7 +133,7 @@ void Module_Compositing::render_impl(wgpu::RenderPassEncoder render_pass, System
 
     // A bind group contains one or multiple bindings
     wgpu::BindGroupDescriptor bindGroupDesc{};
-    bindGroupDesc.layout = *_bind_group_layout;
+    bindGroupDesc.layout = system_bind_group_layout();
     // There must be as many bindings as declared in the layout!
     bindGroupDesc.entryCount = bindings.size();
     bindGroupDesc.entries    = bindings.data();
