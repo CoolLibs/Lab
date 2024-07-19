@@ -4,5 +4,5 @@ INPUT float 'Opacity';
 
 Oklab_PremultipliedA main(Oklab_PremultipliedA Image)
 {
-    return Image * 'Opacity';
+    return Image / Image.a * saturate('Opacity');
 }
