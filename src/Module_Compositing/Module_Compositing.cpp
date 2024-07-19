@@ -1,5 +1,7 @@
 #include "Module_Compositing.h"
+#include <webgpu/webgpu.hpp>
 #include "Cool/Gpu/WebGPUContext.h"
+#include "Cool/TextureSource/TextureLibrary_Image.h"
 #include "Cool/WebGPU/FullscreenPipelineGLSL.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 
@@ -36,25 +38,16 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     }
 
     _shader_code = *shader_code;
-    std::cout << _shader_code << '\n';
-
-    auto entries = std::vector<wgpu::BindGroupLayoutEntry>(2, wgpu::Default);
 
     // TODO(WebGPU) Store the layout instead of recreating it each time we set the shader code ?
-    entries[0].binding               = 0;
-    entries[0].visibility            = wgpu::ShaderStage::Fragment;
-    entries[0].texture.sampleType    = wgpu::TextureSampleType::Float;
-    entries[0].texture.viewDimension = wgpu::TextureViewDimension::_2D;
+    // TODO(WebGPU) Share it with all shader-based modules
+    _bind_group_layout = Cool::BindGroupLayoutBuilder{wgpu::ShaderStage::Fragment}
+                             .read_texture_2D(0)
+                             .sampler(1)
+                             .read_texture_2D(2)
+                             .sampler(3)
+                             .build();
 
-    entries[1].binding      = 1;
-    entries[1].visibility   = wgpu::ShaderStage::Fragment;
-    entries[1].sampler.type = wgpu::SamplerBindingType::Filtering;
-
-    wgpu::BindGroupLayoutDescriptor bindGroupLayoutDesc{};
-    bindGroupLayoutDesc.entryCount = entries.size();
-    bindGroupLayoutDesc.entries    = entries.data();
-
-    _bind_group_layout                     = Cool::BindGroupLayout{bindGroupLayoutDesc};
     /* auto const maybe_err = */ _pipeline = Cool::make_fullscreen_pipeline_glsl({.fragment_shader_module_creation_args = {
                                                                                       .label = "TODO(WebGPU)",
                                                                                       .code  = _shader_code,
@@ -132,12 +125,16 @@ void Module_Compositing::render_impl(wgpu::RenderPassEncoder render_pass, System
     wgpu::Sampler sampler     = Cool::webgpu_context().device.createSampler(samplerDesc);
 
     // Create a bind group
-    std::vector<wgpu::BindGroupEntry> bindings(2, wgpu::Default);
+    std::vector<wgpu::BindGroupEntry> bindings(4, wgpu::Default);
 
     bindings[0].binding     = 0 /* entries[0].binding */;
     bindings[0].textureView = dummy_texture().entire_texture_view();
     bindings[1].binding     = 1 /* entries[1].binding */;
     bindings[1].sampler     = sampler;
+    bindings[2].binding     = 2;
+    bindings[2].textureView = Cool::TextureLibrary_Image::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->entire_texture_view();
+    bindings[3].binding     = 3;
+    bindings[3].sampler     = sampler;
 
     // A bind group contains one or multiple bindings
     wgpu::BindGroupDescriptor bindGroupDesc{};

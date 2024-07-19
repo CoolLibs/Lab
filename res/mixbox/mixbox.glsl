@@ -45,11 +45,7 @@
 #define MIXBOX_INCLUDED
 
 #ifndef MIXBOX_LUT
-  #if __VERSION__ <= 120
-    #define MIXBOX_LUT(UV) texture2D(mixbox_lut, UV)
-  #else
-    #define MIXBOX_LUT(UV) textureLod(mixbox_lut, UV, 0.0)
-  #endif
+  #define MIXBOX_LUT(UV) texture(sampler2D(mixbox_lut, mixbox_lut_sampler), UV)
 #endif
 
 #define mixbox_latent mat3
