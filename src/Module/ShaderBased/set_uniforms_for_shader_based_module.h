@@ -2,7 +2,7 @@
 #include <Module/ModuleDependencies.h>
 #include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Nodes/NodesGraph.h"
-#include "Cool/WebGPU/BindGroup.h"
+#include "Cool/WebGPU/BindGroup.hpp"
 #include "Cool/WebGPU/FullscreenPipelineGLSL.h"
 #include "Dependencies/SystemValues.h"
 

@@ -1,7 +1,7 @@
 #include "Module_Compositing.h"
 #include <webgpu/webgpu.hpp>
 #include "Cool/Gpu/WebGPUContext.h"
-#include "Cool/TextureSource/TextureLibrary_Image.h"
+#include "Cool/TextureSource/TextureLibrary_Image.hpp"
 #include "Cool/WebGPU/FullscreenPipelineGLSL.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
 #include "Module/ShaderBased/system_bind_group_layout.hpp"

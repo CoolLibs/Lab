@@ -5,9 +5,10 @@
 #include "Cool/Exception/Exception.h"
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
-#include "Cool/TextureSource/TextureLibrary_Image.h"
+#include "Cool/TextureSource/TextureLibrary_Image.hpp"
 #include "Cool/TextureSource/TextureSamplerLibrary.hpp"
 #include "Cool/TextureSource/default_textures.h" // TODO(WebGPU) Remove
+#include "Cool/WebGPU/BindGroupBuilder.hpp"
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
 #include "system_bind_group_layout.hpp"
@@ -141,32 +142,19 @@ auto set_uniforms_for_shader_based_module(
 
 auto make_system_bing_group() -> Cool::BindGroup
 {
-    // Create a bind group
-    std::vector<wgpu::BindGroupEntry> bindings(4, wgpu::Default);
-
-    bindings[0].binding     = 0 /* entries[0].binding */;
-    bindings[0].textureView = Cool::dummy_texture().entire_texture_view();
-    bindings[1].binding     = 1 /* entries[1].binding */;
-    bindings[1].sampler     = Cool::texture_sampler_library().get({
-            .repeat_mode        = Cool::RepeatMode::None,
-            .interpolation_mode = Cool::InterpolationMode::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
-    });
-    bindings[2].binding     = 2;
-    bindings[2].textureView = Cool::TextureLibrary_Image::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->entire_texture_view();
-    bindings[3].binding     = 3;
-    bindings[3].sampler     = Cool::texture_sampler_library().get({
-            .repeat_mode        = Cool::RepeatMode::Clamp,
-            .interpolation_mode = Cool::InterpolationMode::Linear,
-    });
-
-    // A bind group contains one or multiple bindings
-    wgpu::BindGroupDescriptor bindGroupDesc{};
-    bindGroupDesc.layout = system_bind_group_layout();
-    // There must be as many bindings as declared in the layout!
-    bindGroupDesc.entryCount = bindings.size();
-    bindGroupDesc.entries    = bindings.data();
-    return Cool::BindGroup{bindGroupDesc};
     // TODO(WebGPU) Don't recreate the bind group every frame?
+    return Cool::BindGroupBuilder{}
+        .read_texture_2D(0, Cool::dummy_texture())
+        .sampler(1, {
+                        .repeat_mode        = Cool::RepeatMode::None,
+                        .interpolation_mode = Cool::InterpolationMode::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
+                    })
+        .read_texture_2D(2, *Cool::texture_library_image().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png"))
+        .sampler(3, {
+                        .repeat_mode        = Cool::RepeatMode::Clamp,
+                        .interpolation_mode = Cool::InterpolationMode::Linear,
+                    })
+        .build(system_bind_group_layout());
 }
 
 } // namespace Lab

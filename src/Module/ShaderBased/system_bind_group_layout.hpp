@@ -1,5 +1,5 @@
 #pragma once
-#include "Cool/WebGPU/BindGroupLayout.h"
+#include "Cool/WebGPU/BindGroupLayout.hpp"
 
 namespace Lab {
 
