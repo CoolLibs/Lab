@@ -93,56 +93,16 @@ void Module_Compositing::render(wgpu::RenderPassEncoder render_pass, SystemValue
     _feedback_double_buffer.swap_buffers();
 }
 
-// TODO(WebGPU) Remove
-static auto dummy_texture() -> Cool::Texture const&
-{
-    static auto instance = texture_from_pixels(img::Size{1, 1}, wgpu::TextureFormat::RGBA8Unorm, Cool::AlphaSpace::Any, std::array<uint8_t, 4>{255, 255, 0, 255});
-    return instance;
-}
-
 void Module_Compositing::render_impl(wgpu::RenderPassEncoder render_pass, SystemValues const& system_values)
 {
     if (!_pipeline.has_value())
         return;
 
-    // Create a sampler
-    wgpu::SamplerDescriptor samplerDesc;
-    samplerDesc.addressModeU  = wgpu::AddressMode::ClampToEdge;
-    samplerDesc.addressModeV  = wgpu::AddressMode::ClampToEdge;
-    samplerDesc.addressModeW  = wgpu::AddressMode::ClampToEdge;
-    samplerDesc.magFilter     = wgpu::FilterMode::Linear;
-    samplerDesc.minFilter     = wgpu::FilterMode::Linear;
-    samplerDesc.mipmapFilter  = wgpu::MipmapFilterMode::Linear;
-    samplerDesc.lodMinClamp   = 0.0f;
-    samplerDesc.lodMaxClamp   = 1.0f;
-    samplerDesc.compare       = wgpu::CompareFunction::Undefined;
-    samplerDesc.maxAnisotropy = 1;
-    wgpu::Sampler sampler     = Cool::webgpu_context().device.createSampler(samplerDesc);
-
-    // Create a bind group
-    std::vector<wgpu::BindGroupEntry> bindings(4, wgpu::Default);
-
-    bindings[0].binding     = 0 /* entries[0].binding */;
-    bindings[0].textureView = dummy_texture().entire_texture_view();
-    bindings[1].binding     = 1 /* entries[1].binding */;
-    bindings[1].sampler     = sampler;
-    bindings[2].binding     = 2;
-    bindings[2].textureView = Cool::TextureLibrary_Image::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->entire_texture_view();
-    bindings[3].binding     = 3;
-    bindings[3].sampler     = sampler;
-
-    // A bind group contains one or multiple bindings
-    wgpu::BindGroupDescriptor bindGroupDesc{};
-    bindGroupDesc.layout = system_bind_group_layout();
-    // There must be as many bindings as declared in the layout!
-    bindGroupDesc.entryCount = bindings.size();
-    bindGroupDesc.entries    = bindings.data();
-    _bind_group              = Cool::BindGroup{bindGroupDesc};
-    // TODO(WebGPU) Don't recreate the bind group every frame
-
     set_uniforms_for_shader_based_module(*_pipeline, system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
     _pipeline->set_aspect_ratio_uniform(system_values.aspect_ratio());
-    _pipeline->draw(render_pass, &*_bind_group);
+    _bind_group = make_system_bing_group(); // We need to keep the bind group alive until "the end of the frame" (until the render pass that we are filling in is executed)
+    render_pass.setBindGroup(1, *_bind_group, 0, nullptr);
+    _pipeline->draw(render_pass);
 }
 
 } // namespace Lab

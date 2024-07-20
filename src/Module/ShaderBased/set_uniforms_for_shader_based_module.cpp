@@ -6,8 +6,10 @@
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Cool/TextureSource/TextureLibrary_Image.h"
+#include "Cool/TextureSource/default_textures.h" // TODO(WebGPU) Remove
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
+#include "system_bind_group_layout.hpp"
 
 namespace Lab {
 
@@ -103,12 +105,12 @@ auto set_uniforms_for_shader_based_module(
     pipeline.set_uniform_with_name("_time_since_last_midi_button_pressed", Cool::midi_manager().all_values().time_since_last_button_pressed().as_seconds_float());
     pipeline.set_uniform_with_name("_aspect_ratio", system_values.aspect_ratio());
     pipeline.set_uniform_with_name("_inverse_aspect_ratio", system_values.inverse_aspect_ratio());
-    // pipeline.set_uniform_with_name_texture("mixbox_lut", Cool::TextureLibrary_Image::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->id());
     pipeline.set_uniform_with_name("_time", system_values.time.as_seconds_float());
     pipeline.set_uniform_with_name("_delta_time", system_values.delta_time.as_seconds_float());
 
     if (depends_on.audio_volume)
         pipeline.set_uniform_with_name("_audio_volume", system_values.audio_manager.get().volume());
+
     // TODO(WebGPU)
     // if (depends_on.audio_waveform)
     //     pipeline.set_uniform_texture1D("_audio_waveform", system_values.audio_manager.get().waveform_texture().id());
@@ -134,6 +136,44 @@ auto set_uniforms_for_shader_based_module(
                        value_input);
         }
     });
+}
+
+auto make_system_bing_group() -> Cool::BindGroup
+{
+    // Create a sampler
+    wgpu::SamplerDescriptor samplerDesc;
+    samplerDesc.addressModeU  = wgpu::AddressMode::ClampToEdge;
+    samplerDesc.addressModeV  = wgpu::AddressMode::ClampToEdge;
+    samplerDesc.addressModeW  = wgpu::AddressMode::ClampToEdge;
+    samplerDesc.magFilter     = wgpu::FilterMode::Linear;
+    samplerDesc.minFilter     = wgpu::FilterMode::Linear;
+    samplerDesc.mipmapFilter  = wgpu::MipmapFilterMode::Linear;
+    samplerDesc.lodMinClamp   = 0.0f;
+    samplerDesc.lodMaxClamp   = 1.0f;
+    samplerDesc.compare       = wgpu::CompareFunction::Undefined;
+    samplerDesc.maxAnisotropy = 1;
+    wgpu::Sampler sampler     = Cool::webgpu_context().device.createSampler(samplerDesc);
+
+    // Create a bind group
+    std::vector<wgpu::BindGroupEntry> bindings(4, wgpu::Default);
+
+    bindings[0].binding     = 0 /* entries[0].binding */;
+    bindings[0].textureView = Cool::dummy_texture().entire_texture_view();
+    bindings[1].binding     = 1 /* entries[1].binding */;
+    bindings[1].sampler     = sampler;
+    bindings[2].binding     = 2;
+    bindings[2].textureView = Cool::TextureLibrary_Image::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->entire_texture_view();
+    bindings[3].binding     = 3;
+    bindings[3].sampler     = sampler;
+
+    // A bind group contains one or multiple bindings
+    wgpu::BindGroupDescriptor bindGroupDesc{};
+    bindGroupDesc.layout = system_bind_group_layout();
+    // There must be as many bindings as declared in the layout!
+    bindGroupDesc.entryCount = bindings.size();
+    bindGroupDesc.entries    = bindings.data();
+    return Cool::BindGroup{bindGroupDesc};
+    // TODO(WebGPU) Don't recreate the bind group every frame?
 }
 
 } // namespace Lab
