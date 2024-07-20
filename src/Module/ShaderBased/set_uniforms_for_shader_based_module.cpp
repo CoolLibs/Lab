@@ -6,6 +6,7 @@
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Cool/TextureSource/TextureLibrary_Image.h"
+#include "Cool/TextureSource/TextureSamplerLibrary.hpp"
 #include "Cool/TextureSource/default_textures.h" // TODO(WebGPU) Remove
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
@@ -140,31 +141,23 @@ auto set_uniforms_for_shader_based_module(
 
 auto make_system_bing_group() -> Cool::BindGroup
 {
-    // Create a sampler
-    wgpu::SamplerDescriptor samplerDesc;
-    samplerDesc.addressModeU  = wgpu::AddressMode::ClampToEdge;
-    samplerDesc.addressModeV  = wgpu::AddressMode::ClampToEdge;
-    samplerDesc.addressModeW  = wgpu::AddressMode::ClampToEdge;
-    samplerDesc.magFilter     = wgpu::FilterMode::Linear;
-    samplerDesc.minFilter     = wgpu::FilterMode::Linear;
-    samplerDesc.mipmapFilter  = wgpu::MipmapFilterMode::Linear;
-    samplerDesc.lodMinClamp   = 0.0f;
-    samplerDesc.lodMaxClamp   = 1.0f;
-    samplerDesc.compare       = wgpu::CompareFunction::Undefined;
-    samplerDesc.maxAnisotropy = 1;
-    wgpu::Sampler sampler     = Cool::webgpu_context().device.createSampler(samplerDesc);
-
     // Create a bind group
     std::vector<wgpu::BindGroupEntry> bindings(4, wgpu::Default);
 
     bindings[0].binding     = 0 /* entries[0].binding */;
     bindings[0].textureView = Cool::dummy_texture().entire_texture_view();
     bindings[1].binding     = 1 /* entries[1].binding */;
-    bindings[1].sampler     = sampler;
+    bindings[1].sampler     = Cool::texture_sampler_library().get({
+            .repeat_mode        = Cool::RepeatMode::None,
+            .interpolation_mode = Cool::InterpolationMode::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
+    });
     bindings[2].binding     = 2;
     bindings[2].textureView = Cool::TextureLibrary_Image::instance().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png")->entire_texture_view();
     bindings[3].binding     = 3;
-    bindings[3].sampler     = sampler;
+    bindings[3].sampler     = Cool::texture_sampler_library().get({
+            .repeat_mode        = Cool::RepeatMode::Clamp,
+            .interpolation_mode = Cool::InterpolationMode::Linear,
+    });
 
     // A bind group contains one or multiple bindings
     wgpu::BindGroupDescriptor bindGroupDesc{};
