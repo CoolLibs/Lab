@@ -2,7 +2,7 @@
 #include <Cool/Dependencies/AnySharedVariable.h>
 #include <Cool/Nodes/Pin.h>
 #include <Cool/Variables/AnyVariable.h>
-#include <cereal/types/optional.hpp>
+#include <ser20/types/optional.hpp>
 #include "Cool/Nodes/NodeDefinitionIdentifier.h"
 
 namespace Lab {
@@ -19,18 +19,18 @@ struct NodePodPart {
     std::optional<size_t> particles_count{}; // HACK Only used in the case of a Particle Initializer node
 
 private:
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Name", name),
-            cereal::make_nvp("Definition", id_names),
-            cereal::make_nvp("Input Pins", input_pins),
-            cereal::make_nvp("Output Pins", output_pins),
-            cereal::make_nvp("Number of main input pins", number_of_main_input_pins),
-            cereal::make_nvp("Number of function inputs", number_of_function_inputs),
-            cereal::make_nvp("Particle count", particles_count)
+            ser20::make_nvp("Name", name),
+            ser20::make_nvp("Definition", id_names),
+            ser20::make_nvp("Input Pins", input_pins),
+            ser20::make_nvp("Output Pins", output_pins),
+            ser20::make_nvp("Number of main input pins", number_of_main_input_pins),
+            ser20::make_nvp("Number of function inputs", number_of_function_inputs),
+            ser20::make_nvp("Particle count", particles_count)
         );
     }
 };
@@ -41,13 +41,13 @@ struct NodeAsPOD {
     std::vector<Cool::AnyVariable> value_inputs{};
 
 private:
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("POD part", pod_part),
-            cereal::make_nvp("Value inputs", value_inputs)
+            ser20::make_nvp("POD part", pod_part),
+            ser20::make_nvp("Value inputs", value_inputs)
         );
     }
 };
@@ -57,10 +57,10 @@ public:
     Node() = default;
     Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs)
         : _d{
-            .id_names                  = id_names,
-            .number_of_main_input_pins = number_of_main_input_pins,
-            .number_of_function_inputs = number_of_function_inputs,
-        }
+              .id_names                  = id_names,
+              .number_of_main_input_pins = number_of_main_input_pins,
+              .number_of_function_inputs = number_of_function_inputs,
+          }
     {}
     explicit Node(NodePodPart const& pod_part)
         : _d{pod_part}
@@ -116,13 +116,13 @@ private:
     // NB: when adding data to Node, add it to NodePodPart if it is some pod data. Otherwise add it here but you then also need to add it to NodeAsPOD too, and to as_pod(), and to the constructor that takes NodeAsPOD, and to paste_nodes() of NodesConfig.
 
 private:
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("POD part", _d),
-            cereal::make_nvp("Value inputs", _value_inputs)
+            ser20::make_nvp("POD part", _d),
+            ser20::make_nvp("Value inputs", _value_inputs)
         );
     }
 };

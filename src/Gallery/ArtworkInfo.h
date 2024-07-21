@@ -10,13 +10,13 @@ struct ArtworkInfo {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Title", title),
-            cereal::make_nvp("Description", description)
+            ser20::make_nvp("Title", title),
+            ser20::make_nvp("Description", description)
         );
     }
 };

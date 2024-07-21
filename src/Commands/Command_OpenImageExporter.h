@@ -16,7 +16,7 @@ struct Command_OpenImageExporter {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive&)
     {

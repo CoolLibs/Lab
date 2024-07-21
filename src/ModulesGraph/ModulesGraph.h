@@ -29,12 +29,12 @@ struct ModulesGraphNode {
     Cool::RenderTarget render_target{};
 
 private:
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Module", module)
+            ser20::make_nvp("Module", module)
         );
     }
 };
@@ -102,16 +102,16 @@ private:
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Compositing module", _compositing_module),
-            cereal::make_nvp("Particles module", _particles_module_nodes),
-            cereal::make_nvp("Dirty flags", _dirty_flags),
-            cereal::make_nvp("Node editor", _nodes_editor),
-            cereal::make_nvp("Main node ID", _main_node_id)
+            ser20::make_nvp("Compositing module", _compositing_module),
+            ser20::make_nvp("Particles module", _particles_module_nodes),
+            ser20::make_nvp("Dirty flags", _dirty_flags),
+            ser20::make_nvp("Node editor", _nodes_editor),
+            ser20::make_nvp("Main node ID", _main_node_id)
         );
     }
 };

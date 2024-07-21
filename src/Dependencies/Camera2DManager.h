@@ -26,13 +26,13 @@ private:
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Camera", _camera),
-            cereal::make_nvp("Is editable in view", _is_editable_in_view)
+            ser20::make_nvp("Camera", _camera),
+            ser20::make_nvp("Is editable in view", _is_editable_in_view)
         );
     }
 };

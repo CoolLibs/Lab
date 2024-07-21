@@ -16,12 +16,12 @@ struct Command_SetMainNodeId {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Main node id", main_node_id)
+            ser20::make_nvp("Main node id", main_node_id)
         );
     }
 };
@@ -37,13 +37,13 @@ struct ReversibleCommand_SetMainNodeId {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Forward", fwd),
-            cereal::make_nvp("Old main node id", old_main_node_id)
+            ser20::make_nvp("Forward", fwd),
+            ser20::make_nvp("Old main node id", old_main_node_id)
         );
     }
 };

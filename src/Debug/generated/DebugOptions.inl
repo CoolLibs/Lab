@@ -103,41 +103,41 @@ private:
 
     private:
         // Serialization
-        friend class cereal::access;
+        friend class ser20::access;
         template<class Archive>
         void serialize(Archive& archive)
         {
             archive(
 #if DEBUG
-                cereal::make_nvp("Framerate window", show_framerate_window),
-                cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
-                cereal::make_nvp("Show history", show_history_window),
-                cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
-                cereal::make_nvp("Log when rendering", log_when_rendering),
-                cereal::make_nvp("Log when updating particles", log_when_updating_particles),
-                cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
-                cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
-                cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
-                cereal::make_nvp("Log project-related events", log_project_related_events),
-                cereal::make_nvp("Show generated shader code", show_generated_shader_code),
-                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
-                cereal::make_nvp("Open Empty Window", empty_window)
+                ser20::make_nvp("Framerate window", show_framerate_window),
+                ser20::make_nvp("ImGui Demo window", show_imgui_demo_window),
+                ser20::make_nvp("Show history", show_history_window),
+                ser20::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
+                ser20::make_nvp("Log when rendering", log_when_rendering),
+                ser20::make_nvp("Log when updating particles", log_when_updating_particles),
+                ser20::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
+                ser20::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
+                ser20::make_nvp("Log when executing a command", log_when_executing_a_command),
+                ser20::make_nvp("Log project-related events", log_project_related_events),
+                ser20::make_nvp("Show generated shader code", show_generated_shader_code),
+                ser20::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
+                ser20::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                ser20::make_nvp("Open Empty Window", empty_window)
 #else
-                cereal::make_nvp("Framerate window", show_framerate_window),
-                cereal::make_nvp("ImGui Demo window", show_imgui_demo_window),
-                cereal::make_nvp("Show history", show_history_window),
-                cereal::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
-                cereal::make_nvp("Log when rendering", log_when_rendering),
-                cereal::make_nvp("Log when updating particles", log_when_updating_particles),
-                cereal::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
-                cereal::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
-                cereal::make_nvp("Log when executing a command", log_when_executing_a_command),
-                cereal::make_nvp("Log project-related events", log_project_related_events),
-                cereal::make_nvp("Show generated shader code", show_generated_shader_code),
-                cereal::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
-                cereal::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
-                cereal::make_nvp("Open Empty Window", empty_window)
+                ser20::make_nvp("Framerate window", show_framerate_window),
+                ser20::make_nvp("ImGui Demo window", show_imgui_demo_window),
+                ser20::make_nvp("Show history", show_history_window),
+                ser20::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
+                ser20::make_nvp("Log when rendering", log_when_rendering),
+                ser20::make_nvp("Log when updating particles", log_when_updating_particles),
+                ser20::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
+                ser20::make_nvp("Log when parsing node definition", log_when_parsing_node_definition),
+                ser20::make_nvp("Log when executing a command", log_when_executing_a_command),
+                ser20::make_nvp("Log project-related events", log_project_related_events),
+                ser20::make_nvp("Show generated shader code", show_generated_shader_code),
+                ser20::make_nvp("Test all Variable Widgets", test_all_variable_widgets__window),
+                ser20::make_nvp("Test Shaders Compilation", test_shaders_compilation__window),
+                ser20::make_nvp("Open Empty Window", empty_window)
 #endif
 
             );
