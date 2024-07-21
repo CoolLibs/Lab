@@ -96,9 +96,6 @@ uniform int       _last_midi_button_pressed;
 uniform int       _last_last_midi_button_pressed;
 uniform float     _time_since_last_midi_button_pressed;
 uniform float     _audio_volume;
-        // TODO(WebGPU)
-// uniform sampler1D _audio_spectrum;
-// uniform sampler1D _audio_waveform;
 uniform mat3      _camera2D_transform;
 uniform mat3      _camera2D_view;
 // group (aka "set") 0 is reserved for internal stuff from the FullscreenPipeline
@@ -106,6 +103,10 @@ layout(set=1, binding=0) uniform texture2D _previous_frame_texture;
 layout(set=1, binding=1) uniform sampler _previous_frame_texture_sampler;
 layout(set=1, binding=2) uniform texture2D mixbox_lut;      // The uniform must have this exact name that mixbox.glsl expects.
 layout(set=1, binding=3) uniform sampler mixbox_lut_sampler;// The uniform must have this exact name that mixbox.glsl expects.
+layout(set=1, binding=4) uniform texture1D _audio_spectrum;
+layout(set=1, binding=5) uniform sampler _audio_spectrum_sampler;
+layout(set=1, binding=6) uniform texture1D _audio_waveform;
+layout(set=1, binding=7) uniform sampler _audio_waveform_sampler;
 {modules_textures_uniforms}
 
 #include "_COOL_RES_/shaders/shader-utils.glsl" 

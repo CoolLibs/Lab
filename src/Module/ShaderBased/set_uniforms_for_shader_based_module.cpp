@@ -5,13 +5,8 @@
 #include "Cool/Exception/Exception.h"
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
-#include "Cool/TextureSource/TextureLibrary_Image.hpp"
-#include "Cool/TextureSource/TextureSamplerLibrary.hpp"
-#include "Cool/TextureSource/default_textures.h" // TODO(WebGPU) Remove
-#include "Cool/WebGPU/BindGroupBuilder.hpp"
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
-#include "system_bind_group_layout.hpp"
 
 namespace Lab {
 
@@ -114,11 +109,6 @@ auto set_uniforms_for_shader_based_module(
         pipeline.set_uniform_with_name("_audio_volume", system_values.audio_manager.get().volume());
 
     // TODO(WebGPU)
-    // if (depends_on.audio_waveform)
-    //     pipeline.set_uniform_texture1D("_audio_waveform", system_values.audio_manager.get().waveform_texture().id());
-    // if (depends_on.audio_spectrum)
-    //     pipeline.set_uniform_texture1D("_audio_spectrum", system_values.audio_manager.get().spectrum_texture().id());
-
     // pipeline.set_uniform_texture(
     //     "_previous_frame_texture",
     //     feedback_double_buffer.read_target().get().texture_id(),
@@ -138,23 +128,6 @@ auto set_uniforms_for_shader_based_module(
                        value_input);
         }
     });
-}
-
-auto make_system_bing_group() -> Cool::BindGroup
-{
-    // TODO(WebGPU) Don't recreate the bind group every frame?
-    return Cool::BindGroupBuilder{}
-        .read_texture_2D(0, Cool::dummy_texture())
-        .sampler(1, {
-                        .repeat_mode        = Cool::RepeatMode::None,
-                        .interpolation_mode = Cool::InterpolationMode::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
-                    })
-        .read_texture_2D(2, *Cool::texture_library_image().get(Cool::Path::root() / "res/mixbox/mixbox_lut.png"))
-        .sampler(3, {
-                        .repeat_mode        = Cool::RepeatMode::Clamp,
-                        .interpolation_mode = Cool::InterpolationMode::Linear,
-                    })
-        .build(system_bind_group_layout());
 }
 
 } // namespace Lab

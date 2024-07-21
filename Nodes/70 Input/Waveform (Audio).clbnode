@@ -4,5 +4,5 @@ INPUT float 'Stretch';
 
 float main(float Sample)
 {
-    return texture(_audio_waveform, Sample / 'Stretch').r;
+    return texture(sampler1D(_audio_waveform, _audio_waveform_sampler), Sample / 'Stretch').r;
 }

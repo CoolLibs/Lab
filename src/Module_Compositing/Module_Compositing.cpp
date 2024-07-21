@@ -1,10 +1,9 @@
 #include "Module_Compositing.h"
 #include <webgpu/webgpu.hpp>
-#include "Cool/Gpu/WebGPUContext.h"
-#include "Cool/TextureSource/TextureLibrary_Image.hpp"
 #include "Cool/WebGPU/FullscreenPipelineGLSL.h"
+#include "Module/ShaderBased/make_system_bind_group.hpp"
+#include "Module/ShaderBased/make_system_bind_group_layout.hpp"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
-#include "Module/ShaderBased/system_bind_group_layout.hpp"
 
 namespace Lab {
 
@@ -43,15 +42,17 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     // TODO(WebGPU) Store the layout instead of recreating it each time we set the shader code ?
     // TODO(WebGPU) Share it with all shader-based modules
 
+    _depends_on = {};
+    update_dependencies_from_shader_code(_depends_on, _shader_code); // Must be done before creating the bind group layout because it depends on it
+    _bind_group_layout = make_system_bind_group_layout(_depends_on);
+
     /* auto const maybe_err = */ _pipeline = Cool::make_fullscreen_pipeline_glsl({.fragment_shader_module_creation_args = {
                                                                                       .label = "TODO(WebGPU)",
                                                                                       .code  = _shader_code,
                                                                                   },
-                                                                                  .extra_bind_group_layout = &system_bind_group_layout()})
+                                                                                  .extra_bind_group_layout = &*_bind_group_layout})
                                                  .value();
     // log_shader_error(maybe_err); // TODO(WebGPU)
-    _depends_on = {};
-    update_dependencies_from_shader_code(_depends_on, _shader_code);
     needs_to_rerender_flag().set_dirty();
 }
 
@@ -100,7 +101,7 @@ void Module_Compositing::render_impl(wgpu::RenderPassEncoder render_pass, System
 
     set_uniforms_for_shader_based_module(*_pipeline, system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
     _pipeline->set_aspect_ratio_uniform(system_values.aspect_ratio());
-    _bind_group = make_system_bing_group(); // We need to keep the bind group alive until "the end of the frame" (until the render pass that we are filling in is executed)
+    _bind_group = make_system_bind_group(*_bind_group_layout, system_values, _depends_on); // We need to keep the bind group alive until "the end of the frame" (until the render pass that we are filling in is executed)
     render_pass.setBindGroup(1, *_bind_group, 0, nullptr);
     _pipeline->draw(render_pass);
 }

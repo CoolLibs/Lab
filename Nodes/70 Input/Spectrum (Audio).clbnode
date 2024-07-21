@@ -4,5 +4,5 @@ INPUT float 'Stretch';
 
 float main(float Frequency)
 {
-    return texture(_audio_spectrum, Frequency / 'Stretch').r;
+    return texture(sampler1D(_audio_spectrum, _audio_spectrum_sampler), Frequency / 'Stretch').r;
 }

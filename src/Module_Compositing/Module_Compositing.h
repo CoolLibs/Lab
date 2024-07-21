@@ -42,8 +42,9 @@ private:
 
 private:
     mutable std::string                                 _shader_code{};
-    mutable std::optional<Cool::FullscreenPipelineGLSL> _pipeline{};
-    std::optional<Cool::BindGroup>                      _bind_group{}; // TODO(WebGPU) Remove the optional? Currently needed because BindGroup doesn't have a default constructor
+    mutable std::optional<Cool::FullscreenPipelineGLSL> _pipeline{};          // TODO(WebGPU)
+    std::optional<Cool::BindGroup>                      _bind_group{};        // TODO(WebGPU) Move these 3 optionals into a single optional struct
+    std::optional<Cool::BindGroupLayout>                _bind_group_layout{}; // TODO(WebGPU)
     mutable Cool::MessageSender                         _shader_error_sender{};
     Cool::DoubleBufferedRenderTarget                    _feedback_double_buffer{};
     mutable ModuleDependencies                          _depends_on{};
