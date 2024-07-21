@@ -12,7 +12,7 @@
 #include <Nodes/NodesLibraryManager.h>
 #include <ProjectManager/Command_SaveProject.h>
 #include <ProjectManager/RecentlyOpened.h>
-#include <reg/cereal.hpp>
+#include <reg/ser20.hpp>
 #include "CommandCore/CommandExecutor_TopLevel.h"
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
@@ -113,18 +113,18 @@ private:
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive, class AppT>
     static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
     {
         archive(
-            cereal::make_nvp("Recently opened projects", app._recently_opened_projects),
-            cereal::make_nvp("Gallery Poster", app._gallery_poster),
-            cereal::make_nvp("Tips", app._tips_manager),
-            cereal::make_nvp("Output view", app._output_view),
-            cereal::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
-            cereal::make_nvp("MIDI config", Cool::midi_manager()),
-            cereal::make_nvp("OSC config", Cool::osc_manager())
+            ser20::make_nvp("Recently opened projects", app._recently_opened_projects),
+            ser20::make_nvp("Gallery Poster", app._gallery_poster),
+            ser20::make_nvp("Tips", app._tips_manager),
+            ser20::make_nvp("Output view", app._output_view),
+            ser20::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
+            ser20::make_nvp("MIDI config", Cool::midi_manager()),
+            ser20::make_nvp("OSC config", Cool::osc_manager())
         );
     }
     template<class Archive>

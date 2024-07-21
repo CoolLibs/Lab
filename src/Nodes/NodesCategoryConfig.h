@@ -29,13 +29,13 @@ private:
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Color", _nodes_kind),
-            cereal::make_nvp("Number of main input pins", _number_of_main_input_pins)
+            ser20::make_nvp("Color", _nodes_kind),
+            ser20::make_nvp("Number of main input pins", _number_of_main_input_pins)
         );
     }
 };

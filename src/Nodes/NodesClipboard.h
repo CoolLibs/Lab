@@ -10,13 +10,13 @@ struct NodeInClipboard {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Node", node_as_pod),
-            cereal::make_nvp("Position", position)
+            ser20::make_nvp("Node", node_as_pod),
+            ser20::make_nvp("Position", position)
         );
     }
 };
@@ -27,13 +27,13 @@ struct NodesClipboard {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Nodes", nodes),
-            cereal::make_nvp("Links", links)
+            ser20::make_nvp("Nodes", nodes),
+            ser20::make_nvp("Links", links)
         );
     }
 };

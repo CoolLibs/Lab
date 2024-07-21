@@ -88,24 +88,24 @@ inline auto Command_{cmd.name}::make_reversible(const MakeReversibleCommandConte
 
 }} // namespace Lab
 
-namespace cereal {{
+namespace ser20 {{
 
 template<class Archive>
 void serialize(Archive& archive, Lab::Command_{cmd.name}& command)
 {{
-    archive(cereal::make_nvp("{cmd.user_facing_name}", command.value));
+    archive(ser20::make_nvp("{cmd.user_facing_name}", command.value));
 }}
 
 template<class Archive>
 void serialize(Archive& archive, Lab::ReversibleCommand_{cmd.name}& command)
 {{
     archive(
-        cereal::make_nvp("{cmd.user_facing_name}", command.forward_command.value),
-        cereal::make_nvp("Old {cmd.user_facing_name}", command.old_value)
+        ser20::make_nvp("{cmd.user_facing_name}", command.forward_command.value),
+        ser20::make_nvp("Old {cmd.user_facing_name}", command.old_value)
     );
 }}
 
-}} // namespace cereal
+}} // namespace ser20
 
 """
 
