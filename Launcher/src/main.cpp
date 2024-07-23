@@ -18,8 +18,15 @@ auto main() -> int
     {
         auto const release = get_release(requested_version);
         auto const zip     = download_zip(*release);
-        if (extract_zip(*zip, requested_version))
-            std::cout << "✅ Coollab " << requested_version << " is installed! ";
+        try
+        {
+            extract_zip(*zip, requested_version);
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << "Exception occurred: " << e.what() << std::endl;
+        }
+        std::cout << "✅ Coollab " << requested_version << " is installed! ";
     }
     else
         std::cout << "❌ Coollab " << requested_version << " is already installed." << std::endl;
