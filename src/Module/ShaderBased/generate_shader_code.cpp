@@ -89,15 +89,16 @@ auto generate_shader_code(
     return fmt::format(
         FMT_COMPILE(R"glsl(
 {in_version}
-uniform float     _delta_time;
-uniform float     _time;
-uniform float     _height;
-uniform int       _last_midi_button_pressed;
-uniform int       _last_last_midi_button_pressed;
-uniform float     _time_since_last_midi_button_pressed;
-uniform float     _audio_volume;
-uniform mat3      _camera2D_transform;
-uniform mat3      _camera2D_view;
+uniform float _delta_time;
+uniform float _time;
+uniform float _height;
+uniform int   _last_midi_button_pressed;
+uniform int   _last_last_midi_button_pressed;
+uniform float _time_since_last_midi_button_pressed;
+uniform float _audio_volume;
+uniform mat3  _camera2D_transform;
+uniform mat3  _camera2D_view;
+uniform bool  _display_audio_spectrum_as_bars;
 // group (aka "set") 0 is reserved for internal stuff from the FullscreenPipeline
 layout(set=1, binding=0) uniform texture2D _previous_frame_texture;
 layout(set=1, binding=1) uniform sampler _previous_frame_texture_sampler;

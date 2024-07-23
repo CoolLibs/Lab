@@ -6,5 +6,8 @@ INPUT float 'Stretch';
 
 float main(float Frequency)
 {
-    return sample_nearest_neighbour_audio_spectrum(Frequency / 'Stretch');
+    float sampling_point = Frequency / 'Stretch';
+    return _display_audio_spectrum_as_bars
+               ? sample_nearest_neighbour_audio_spectrum(sampling_point)
+               : sample_linear_audio_spectrum(sampling_point);
 }

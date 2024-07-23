@@ -107,6 +107,8 @@ auto set_uniforms_for_shader_based_module(
 
     if (depends_on.audio_volume)
         pipeline.set_uniform_with_name("_audio_volume", system_values.audio_manager.get().volume());
+    if (depends_on.audio_spectrum)
+        pipeline.set_uniform_with_name("_display_audio_spectrum_as_bars", system_values.audio_manager.get().wants_to_display_audio_spectrum_as_bars());
 
     // TODO(WebGPU)
     // pipeline.set_uniform_texture(
