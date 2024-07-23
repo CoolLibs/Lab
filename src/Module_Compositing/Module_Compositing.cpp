@@ -31,6 +31,7 @@ void Module_Compositing::on_time_reset()
 
 void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code)
 {
+    _pipeline.reset();
     if (!shader_code)
     {
         log_shader_error(shader_code.error());
@@ -39,20 +40,20 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
 
     _shader_code = *shader_code;
 
-    // TODO(WebGPU) Store the layout instead of recreating it each time we set the shader code ?
-    // TODO(WebGPU) Share it with all shader-based modules
-
     _depends_on = {};
     update_dependencies_from_shader_code(_depends_on, _shader_code); // Must be done before creating the bind group layout because it depends on it
     _bind_group_layout = make_system_bind_group_layout(_depends_on);
 
-    /* auto const maybe_err = */ _pipeline = Cool::make_fullscreen_pipeline_glsl({.fragment_shader_module_creation_args = {
-                                                                                      .label = "TODO(WebGPU)",
-                                                                                      .code  = _shader_code,
-                                                                                  },
-                                                                                  .extra_bind_group_layout = &*_bind_group_layout})
-                                                 .value();
-    // log_shader_error(maybe_err); // TODO(WebGPU)
+    auto maybe_pipeline = Cool::make_fullscreen_pipeline_glsl({.fragment_shader_module_creation_args = {
+                                                                   .label = "Compositing Module fragment shader",
+                                                                   .code  = _shader_code,
+                                                               },
+                                                               .extra_bind_group_layout = &*_bind_group_layout});
+    if (maybe_pipeline.has_value())
+        _pipeline = std::move(maybe_pipeline.value());
+    else
+        log_shader_error(maybe_pipeline.error());
+
     needs_to_rerender_flag().set_dirty();
 }
 
