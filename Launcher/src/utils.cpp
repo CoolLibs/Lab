@@ -19,7 +19,7 @@ auto string_write_callback(void* ptr, size_t size, size_t nmemb, void* userdata)
     return size * nmemb;
 }
 
-auto get_OS() -> std::string_view
+auto get_OS() -> std::string
 {
     // which OS ?
 #ifdef __APPLE__
@@ -28,6 +28,19 @@ auto get_OS() -> std::string_view
     return "Windows";
 #elif __linux__
     return "Linux";
+#else
+    static_assert(false);
+#endif
+}
+
+auto get_PATH() -> std::string
+{
+#ifdef __APPLE__
+    return "/Applications/Coollab/";
+#elif defined(_WIN32)
+    return "C:\\Program Files\\Coolab\\";
+#elif defined(__linux__)
+    return "/usr/local/Coollab/";
 #else
     static_assert(false);
 #endif

@@ -10,42 +10,10 @@
 
 namespace fs = std::__fs::filesystem;
 
-// // download file from url
-// auto download_zip_to_memory(const std::string& url, std::vector<char>& out_data) -> bool
-// {
-//     CURL*    curl;
-//     CURLcode res;
-//     curl = curl_easy_init();
-//     if (curl)
-//     {
-//         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-//         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-//         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_memory_callback);
-//         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &out_data);
-//         res = curl_easy_perform(curl);
-//         curl_easy_cleanup(curl);
-//         if (res == CURLE_OK)
-//         {
-//             return true;
-//         }
-//         else
-//         {
-//             std::cerr << "Failed to download zip file from URL: " << url << std::endl;
-//             std::cerr << curl_easy_strerror(res) << std::endl;
-//             return false;
-//         }
-//     }
-//     else
-//     {
-//         std::cerr << "Failed to initialize curl." << std::endl;
-//         return false;
-//     }
-// }
-
 // download file from url
 auto download_zip(nlohmann::basic_json<> const& release) -> tl::expected<std::vector<char>, std::string>
 {
-    auto url = get_coollab_download_url(release);
+    auto const url = get_coollab_download_url(release);
     std::cout << url << std::endl;
     CURL* curl;
     curl = curl_easy_init();
@@ -60,9 +28,7 @@ auto download_zip(nlohmann::basic_json<> const& release) -> tl::expected<std::ve
         res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
         if (res == CURLE_OK)
-        {
-            return tl::make_unexpected("error"); // TODO : set a correct error message
-        }
+            return out_data;
         else
         {
             std::cerr << "Failed to download zip file from URL: " << url << std::endl;
@@ -75,7 +41,6 @@ auto download_zip(nlohmann::basic_json<> const& release) -> tl::expected<std::ve
         std::cerr << "Failed to initialize curl." << std::endl;
         return tl::make_unexpected("error"); // TODO : set a correct error message
     }
-    return out_data;
 }
 
 auto install_macos_dependencies_if_necessary() -> void
@@ -120,7 +85,7 @@ auto install_ffmpeg() -> void
     std::cout << "FFmpeg successfully installed." << std::endl;
 }
 
-auto version_is_installed(const std::string& path, const std::string& version_name) -> bool
+auto coollab_version_is_installed(std::string_view const& version) -> bool
 {
-    return fs::exists(path + version_name);
+    return fs::exists(get_PATH() + std::string(version));
 }

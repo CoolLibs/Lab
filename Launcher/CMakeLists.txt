@@ -86,7 +86,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(Coollab-Launcher)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(OPENSSL_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
