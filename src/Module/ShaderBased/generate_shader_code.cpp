@@ -103,10 +103,8 @@ layout(set=1, binding=0) uniform texture2D _previous_frame_texture;
 layout(set=1, binding=1) uniform sampler _previous_frame_texture_sampler;
 layout(set=1, binding=2) uniform texture2D mixbox_lut;      // The uniform must have this exact name that mixbox.glsl expects.
 layout(set=1, binding=3) uniform sampler mixbox_lut_sampler;// The uniform must have this exact name that mixbox.glsl expects.
-layout(set=1, binding=4) uniform texture1D _audio_spectrum;
-layout(set=1, binding=5) uniform sampler _audio_spectrum_sampler;
-layout(set=1, binding=6) uniform texture1D _audio_waveform;
-layout(set=1, binding=7) uniform sampler _audio_waveform_sampler;
+layout(set=1, binding=4)  readonly buffer _audio_spectrum_buffer {{ float _audio_spectrum[]; }} ;
+layout(set=1, binding=5)  readonly buffer _audio_waveform_buffer {{ float _audio_waveform[]; }} ;
 {modules_textures_uniforms}
 
 #include "_COOL_RES_/shaders/shader-utils.glsl" 

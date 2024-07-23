@@ -21,24 +21,10 @@ auto make_system_bind_group(Cool::BindGroupLayout const& layout, SystemValues co
                                    });
 
     if (depends_on.audio_spectrum)
-    {
-        builder
-            .read_texture(4, values.audio_manager.get().spectrum_texture())
-            .sampler(5, {
-                            .repeat_mode        = Cool::RepeatMode::Clamp,
-                            .interpolation_mode = Cool::InterpolationMode::Linear,
-                        });
-    }
+        builder.buffer(4, values.audio_manager.get().spectrum_buffer());
 
     if (depends_on.audio_waveform)
-    {
-        builder
-            .read_texture(6, values.audio_manager.get().waveform_texture())
-            .sampler(7, {
-                            .repeat_mode        = Cool::RepeatMode::Clamp,
-                            .interpolation_mode = Cool::InterpolationMode::Linear,
-                        });
-    }
+        builder.buffer(5, values.audio_manager.get().waveform_buffer());
 
     return builder.build(layout);
 }

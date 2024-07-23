@@ -1,6 +1,7 @@
 #include "ModuleDependencies.h"
 #include "Cool/String/String.h"
 #include "Cool/TextureSource/TextureDescriptor.h"
+#include "Cool/WebGPU/preprocess_shader_source.h"
 #include "Nodes/Node.h"
 
 namespace Lab {
@@ -17,7 +18,7 @@ static auto contains_two_or_more(std::string_view word, std::string_view text) -
 
 void update_dependencies_from_shader_code(ModuleDependencies& dependencies, std::string shader_code)
 {
-    shader_code = Cool::String::remove_comments(shader_code);
+    shader_code = Cool::preprocess_shader_source(shader_code).value_or(""); // Need to preprocess in order to see the content of the includes // TODO(WebGPU) Handle error
 
     dependencies.time |= contains_two_or_more("_time", shader_code)
                          || contains_two_or_more("_previous_frame_texture", shader_code);

@@ -12,18 +12,10 @@ auto make_system_bind_group_layout(ModuleDependencies const& depends_on) -> Cool
                        .sampler(3);        // mixbox_lut_sampler
 
     if (depends_on.audio_spectrum)
-    {
-        builder
-            .read_texture_1D(4) // _audio_spectrum
-            .sampler(5);        // _audio_spectrum_sampler
-    }
+        builder.read_buffer(4); // _audio_spectrum
 
     if (depends_on.audio_waveform)
-    {
-        builder
-            .read_texture_1D(6) // _audio_waveform
-            .sampler(7);        // _audio_waveform_sampler
-    }
+        builder.read_buffer(5); // _audio_waveform
 
     return builder.build();
 }
