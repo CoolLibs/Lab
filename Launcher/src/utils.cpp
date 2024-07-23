@@ -1,6 +1,5 @@
-#include "utils.hpp"
 #include <cstddef>
-#include <string_view>
+#include "utils.hpp"
 
 // Vérifier les permissions sur le dossier /Applications
 

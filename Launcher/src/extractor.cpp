@@ -1,12 +1,9 @@
 #include "extractor.hpp"
 #include <fstream>
 #include <iostream>
-#include <optional>
 #include <vector>
 #include "miniz.h"
 #include "utils.hpp"
-
-namespace fs = std::__fs::filesystem;
 
 namespace fs = std::filesystem;
 

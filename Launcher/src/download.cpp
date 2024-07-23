@@ -1,10 +1,9 @@
-#include "download.hpp"
 #include <curl/curl.h>
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
-#include <optional>
 #include <vector>
+#include "download.hpp"
 #include "release.hpp"
 #include "utils.hpp"
 
