@@ -5,7 +5,7 @@
         <key>CFBundleDevelopmentRegion</key>
         <string>English</string>
         <key>CFBundleExecutable</key>
-        <string>Coollab</string>
+        <string>Coollab-Launcher</string>
         <key>CFBundleIconFile</key>
         <string>Coollab.icns</string>
         <key>CFBundleDocumentTypes</key>
