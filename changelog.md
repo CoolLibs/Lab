@@ -1,6 +1,6 @@
 # Changelog
 
-- [🐣beta-18 WIP](#beta-18-wip)
+- [🐣beta-18](#beta-18)
 - [🐣beta-17](#beta-17)
 - [🐣beta-16](#beta-16)
 - [🐣beta-15](#beta-15)
@@ -20,8 +20,9 @@
 - [🐣beta-1](#beta-1)
 - [🐣beta-0](#beta-0)
 
-## 🐣beta-18 WIP
+## 🐣beta-18
 
+- ✨ We are now using a launcher that will auto-install new Coollab versions automatically
 - ✨ Every time input is now nicely formatted like "1h 27m 53s"
 - ✨ The Output Window can now easily be turned fullscreen with <kbd>F10</kbd>
 - ✨ When opening the Output Window, the aspect ratio automatically adapts to it
@@ -29,6 +30,7 @@
 - 🟦 Nodes: Added "MIDI Multi-Select with Transition" 
 ![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
 - 🐛 Allow access to your microphone on MacOS for Audio nodes
+- 🐛 Fix MacOS version crashing on startup
 
 ## 🐣beta-17
 
