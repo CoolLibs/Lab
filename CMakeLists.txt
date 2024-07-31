@@ -35,6 +35,7 @@ endif()
 # Choose our GPU API and its version
 # set(COOL_USE_VULKAN 110)
 set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,410,430>) # Must be >= 330 for ImGui to work properly # We use 410 when building on Mac because it doesn't support higher versions of OpenGL
+set(COOL_USE_INSTALLER OFF)
 
 # Include Cool
 add_subdirectory(Cool)
