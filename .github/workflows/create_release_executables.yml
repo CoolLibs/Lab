@@ -80,16 +80,15 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           cd ${{github.workspace}}/bin/Release
-          zip -r ${{github.workspace}}/build/release-binaries-${{matrix.config.name}}.zip .
+          zip -r ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip .
 
       - name: Zip Release binaries (Windows)
         if: runner.os == 'Windows'
         run: |
-          Compress-Archive -Path ${{github.workspace}}\bin\Release\* -DestinationPath ${{github.workspace}}\build\release-binaries-${{matrix.config.name}}.zip
+          Compress-Archive -Path ${{github.workspace}}\bin\Release\* -DestinationPath ${{github.workspace}}\build\Coollab-${{matrix.config.name}}.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/${{matrix.config.installer_name}}
-            ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/release-binaries-${{matrix.config.name}}.zip
+            ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/Coollab-${{matrix.config.name}}.zip
