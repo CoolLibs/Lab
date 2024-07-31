@@ -90,5 +90,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/Coollab-${{matrix.config.name}}.zip
+          files: ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/Coollab-${{matrix.config.name}}.zip
