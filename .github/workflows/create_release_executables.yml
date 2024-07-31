@@ -22,22 +22,16 @@ jobs:
               name: Windows,
               os: windows-latest,
               cmake_configure_args: -D CMAKE_C_COMPILER=cl CMAKE_CXX_COMPILER=cl -G Ninja,
-              cpack_generator: NSIS,
-              installer_name: Coollab-Windows.exe,
             }
           - {
               name: Linux,
               os: ubuntu-latest,
               cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja,
-              cpack_generator: STGZ,
-              installer_name: Coollab-Linux.sh,
             }
           - {
               name: MacOS,
-              os: macos-12, # 13 and 14 run on M1 chips, and we get a linker error when using them
-              cmake_configure_args: -D CMAKE_C_COMPILER=$(brew --prefix llvm@15)/bin/clang -D CMAKE_CXX_COMPILER=$(brew --prefix llvm@15)/bin/clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
-              cpack_generator: Bundle,
-              installer_name: Coollab-Mac.dmg,
+              os: macos-latest,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
             }
 
     steps:
@@ -82,12 +76,18 @@ jobs:
           cmakeBuildType: Release
           buildDirectory: ${{github.workspace}}/build
 
-      - name: Create installer
+      - name: Zip Release binaries (Linux and MacOS)
+        if: runner.os != 'Windows'
         run: |
-          cd ${{github.workspace}}/build
-          cpack
+          cd ${{github.workspace}}/bin/Release
+          zip -r ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip .
+
+      - name: Zip Release binaries (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Compress-Archive -Path ${{github.workspace}}\bin\Release\* -DestinationPath ${{github.workspace}}\build\Coollab-${{matrix.config.name}}.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/${{matrix.config.installer_name}}
+          files: ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/Coollab-${{matrix.config.name}}.zip
