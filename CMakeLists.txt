@@ -32,12 +32,11 @@ if(WARNINGS_AS_ERRORS_FOR_COOLLAB)
     endif()
 endif()
 
+# Include Cool
 # Choose our GPU API and its version
 # set(COOL_USE_VULKAN 110)
 set(COOL_USE_OPENGL $<IF:$<PLATFORM_ID:Darwin>,410,430>) # Must be >= 330 for ImGui to work properly # We use 410 when building on Mac because it doesn't support higher versions of OpenGL
 set(COOL_USE_INSTALLER OFF)
-
-# Include Cool
 add_subdirectory(Cool)
 target_link_libraries(Coollab-Properties INTERFACE Cool::Core)
 cool_setup(${PROJECT_NAME})
@@ -94,14 +93,15 @@ install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
 install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 
 # Grab all the source files
-file(GLOB_RECURSE COOL_LAB_SOURCES CONFIGURE_DEPENDS src/*)
+file(GLOB_RECURSE COOLLAB_SOURCES CONFIGURE_DEPENDS src/*)
 set(COOLLAB_VERSION_STRING "\"${COOLLAB_VERSION}\"")
 configure_file("src/Dump/coollab_version.cpp.in" "src/Dump/coollab_version.cpp")
-list(APPEND COOL_LAB_SOURCES "src/Dump/coollab_version.cpp")
-target_sources(${PROJECT_NAME} PRIVATE ${COOL_LAB_SOURCES})
+list(APPEND COOLLAB_SOURCES "src/Dump/coollab_version.cpp")
+target_sources(${PROJECT_NAME} PRIVATE ${COOLLAB_SOURCES})
 
 # Set include directories
-target_include_directories(Coollab-Properties SYSTEM INTERFACE src lib)
+target_include_directories(Coollab-Properties INTERFACE src)
+target_include_directories(Coollab-Properties SYSTEM INTERFACE lib)
 
 # Copy resources to the output folder (where the executable is created) after each build
 # and register them for installation when creating the installer.
@@ -123,8 +123,8 @@ endif()
 # ---------------------
 # ---Setup the tests---
 # ---------------------
-list(REMOVE_ITEM COOL_LAB_SOURCES ${CMAKE_SOURCE_DIR}/src/main.cpp)
-add_executable(Tests-Coollab tests/tests.cpp ${COOL_LAB_SOURCES})
+list(REMOVE_ITEM COOLLAB_SOURCES ${CMAKE_SOURCE_DIR}/src/main.cpp)
+add_executable(Tests-Coollab tests/tests.cpp ${COOLLAB_SOURCES})
 target_compile_definitions(Tests-Coollab PRIVATE LAB_ENABLE_TESTS)
 target_link_libraries(Tests-Coollab PRIVATE Coollab-Properties)
 target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
