@@ -6,6 +6,7 @@
 ///
 #include <ser20/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
+#include "Dump/coollab_version.h"
 #include "SNodesCategoryConfig.h"
 #include "SNodesClipboard.h"
 #include "SProject.h"
@@ -16,11 +17,11 @@ namespace Lab {
 
 auto do_save(Project const& project, std::filesystem::path const& path) -> bool
 {
-    return Cool::Serialization::save<Project, ser20::JSONOutputArchive>(project, path, "Project");
+    return Cool::Serialization::save<Project, ser20::JSONOutputArchive>(project, path, "Project", coollab_version());
 }
-auto do_load(Project& project, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
+auto do_load(Project& project, std::filesystem::path const& path, std::string& coollab_version) -> Cool::OptionalErrorMessage
 {
-    return Cool::Serialization::load<Project, ser20::JSONInputArchive>(project, path);
+    return Cool::Serialization::load<Project, ser20::JSONInputArchive>(project, path, &coollab_version);
 }
 
 auto do_save(NodesCategoryConfig const& config, std::filesystem::path const& path) -> bool

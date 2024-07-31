@@ -10,8 +10,9 @@ namespace Lab {
 
 void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
-    auto       project = Project{};
-    auto const error   = do_load(project, path);
+    auto       project         = Project{};
+    auto       coollab_version = ""s;
+    auto const error           = do_load(project, path, coollab_version);
     if (error)
     {
         error.send_error_if_any(
@@ -21,7 +22,7 @@ void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
                     .category = "Loading Project failed",
                     .message  = fmt::format(
                         "Incompatible version. Use Coollab **{}** instead. You can download it from [https://github.com/CoolLibs/Lab/releases](https://github.com/CoolLibs/Lab/releases).",
-                        project.debug_info_coollab_version
+                        coollab_version
                     ),
                     .severity = Cool::MessageSeverity::Warning,
                 };

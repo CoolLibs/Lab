@@ -8,7 +8,6 @@
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
 #include "Dependencies/Camera3DManager.h"
-#include "Dump/coollab_version.h"
 #include "ModulesGraph/ModulesGraph.h"
 
 namespace Lab {
@@ -26,8 +25,6 @@ struct Project {
     Cool::AudioManager            audio;
     Cool::OSCConnectionEndpoint   osc_endpoint{};
 
-    std::string debug_info_coollab_version{}; // Only used to generate an error message when deserialization fails.
-
     [[nodiscard]] auto is_empty() const -> bool;
     [[nodiscard]] auto current_clock() const -> Cool::Clock const& { return exporter.is_exporting() ? exporter.clock() : clock; }
 
@@ -37,12 +34,10 @@ private:
     template<class Archive>
     void serialize(Archive& archive)
     {
-        debug_info_coollab_version = coollab_version();
 #if defined(__linux__)
         history.set_max_saved_size(0); // TODO HACK to avoid a crash when deserializing the history: https://github.com/orgs/CoolLibs/projects/1/views/1?pane=issue&itemId=46983814
 #endif
         archive(
-            ser20::make_nvp("Coollab version", debug_info_coollab_version), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
             ser20::make_nvp("Time", clock),
             ser20::make_nvp("View Constraint", view_constraint),
             ser20::make_nvp("Exporter (Image and Video)", exporter),
