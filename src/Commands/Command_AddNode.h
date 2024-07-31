@@ -18,13 +18,13 @@ struct Command_AddNode {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Node id", node_id),
-            cereal::make_nvp("Node", node)
+            ser20::make_nvp("Node id", node_id),
+            ser20::make_nvp("Node", node)
         );
     }
 };
@@ -39,12 +39,12 @@ struct ReversibleCommand_AddNode {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Forward", fwd)
+            ser20::make_nvp("Forward", fwd)
         );
     }
 };

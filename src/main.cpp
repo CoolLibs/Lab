@@ -3,7 +3,7 @@
 #include "Cool/Path/Path.h"
 #include "Cool/Path/PathsConfig.h"
 //
-#include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <cereal/archives/json.hpp>
+#include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <ser20/archives/json.hpp>
 
 class PathsConfig : public Cool::PathsConfig {
 public:

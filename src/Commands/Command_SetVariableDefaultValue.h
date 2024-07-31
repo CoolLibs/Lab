@@ -36,13 +36,13 @@ struct Command_SetVariableDefaultValue {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Variable ref", var_ref),
-            cereal::make_nvp("Default value", default_value)
+            ser20::make_nvp("Variable ref", var_ref),
+            ser20::make_nvp("Default value", default_value)
         );
     }
 };
@@ -74,13 +74,13 @@ struct ReversibleCommand_SetVariableDefaultValue {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Forward", fwd),
-            cereal::make_nvp("Old default value", old_default_value)
+            ser20::make_nvp("Forward", fwd),
+            ser20::make_nvp("Old default value", old_default_value)
         );
     }
 };

@@ -27,15 +27,15 @@ private:
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Artwork info", _artwork_info),
-            cereal::make_nvp("Author info", _author_info),
-            cereal::make_nvp("Legal info", _legal_info),
-            cereal::make_nvp("Aspect Ratio", _aspect_ratio)
+            ser20::make_nvp("Artwork info", _artwork_info),
+            ser20::make_nvp("Author info", _author_info),
+            ser20::make_nvp("Legal info", _legal_info),
+            ser20::make_nvp("Aspect Ratio", _aspect_ratio)
         );
     }
 };

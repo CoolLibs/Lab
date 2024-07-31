@@ -1,7 +1,6 @@
 #pragma once
-
 #include <cmd/cmd.hpp>
-#include <cmd/imgui_and_cereal.hpp>
+#include <cmd/imgui_and_ser20.hpp>
 #include "CommandCore/ReversibleCommand.h"
 
 namespace Lab {

@@ -70,21 +70,21 @@ inline auto Command_SetCameraZoom::make_reversible(const MakeReversibleCommandCo
 
 } // namespace Lab
 
-namespace cereal {
+namespace ser20 {
 
 template<class Archive>
 void serialize(Archive& archive, Lab::Command_SetCameraZoom& command)
 {
-    archive(cereal::make_nvp("camera zoom", command.value));
+    archive(ser20::make_nvp("camera zoom", command.value));
 }
 
 template<class Archive>
 void serialize(Archive& archive, Lab::ReversibleCommand_SetCameraZoom& command)
 {
     archive(
-        cereal::make_nvp("camera zoom", command.forward_command.value),
-        cereal::make_nvp("Old camera zoom", command.old_value)
+        ser20::make_nvp("camera zoom", command.forward_command.value),
+        ser20::make_nvp("Old camera zoom", command.old_value)
     );
 }
 
-} // namespace cereal
+} // namespace ser20

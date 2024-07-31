@@ -33,7 +33,7 @@ struct Project {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
@@ -42,17 +42,17 @@ private:
         history.set_max_saved_size(0); // TODO HACK to avoid a crash when deserializing the history: https://github.com/orgs/CoolLibs/projects/1/views/1?pane=issue&itemId=46983814
 #endif
         archive(
-            cereal::make_nvp("Coollab version", debug_info_coollab_version), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
-            cereal::make_nvp("Time", clock),
-            cereal::make_nvp("View Constraint", view_constraint),
-            cereal::make_nvp("Exporter (Image and Video)", exporter),
-            cereal::make_nvp("Camera 3D Manager", camera_3D_manager),
-            cereal::make_nvp("Camera 2D Manager", camera_2D_manager),
-            cereal::make_nvp("Modules Graph", modules_graph),
-            cereal::make_nvp("History", history),
-            cereal::make_nvp("Audio", audio),
-            cereal::make_nvp("OSC Endpoint", osc_endpoint),
-            cereal::make_nvp("MIDI Channels", Cool::midi_manager().all_values())
+            ser20::make_nvp("Coollab version", debug_info_coollab_version), // Must be first, purely informative, so that users can know what version of Coollab a project was built with.
+            ser20::make_nvp("Time", clock),
+            ser20::make_nvp("View Constraint", view_constraint),
+            ser20::make_nvp("Exporter (Image and Video)", exporter),
+            ser20::make_nvp("Camera 3D Manager", camera_3D_manager),
+            ser20::make_nvp("Camera 2D Manager", camera_2D_manager),
+            ser20::make_nvp("Modules Graph", modules_graph),
+            ser20::make_nvp("History", history),
+            ser20::make_nvp("Audio", audio),
+            ser20::make_nvp("OSC Endpoint", osc_endpoint),
+            ser20::make_nvp("MIDI Channels", Cool::midi_manager().all_values())
         );
     }
 };

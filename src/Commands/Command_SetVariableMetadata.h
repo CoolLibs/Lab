@@ -35,13 +35,13 @@ struct Command_SetVariableMetadata {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Variable ref", var_ref),
-            cereal::make_nvp("Metadata", metadata)
+            ser20::make_nvp("Variable ref", var_ref),
+            ser20::make_nvp("Metadata", metadata)
         );
     }
 };
@@ -73,13 +73,13 @@ struct ReversibleCommand_SetVariableMetadata {
 
 private:
     // Serialization
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Forward", fwd),
-            cereal::make_nvp("Old metadata", old_metadata)
+            ser20::make_nvp("Forward", fwd),
+            ser20::make_nvp("Old metadata", old_metadata)
         );
     }
 };

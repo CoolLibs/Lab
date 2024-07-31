@@ -10,9 +10,9 @@ struct Command_NewProject {
 
 } // namespace Lab
 
-namespace cereal {
+namespace ser20 {
 template<class Archive>
 void serialize(Archive&, Lab::Command_NewProject&)
 {
 }
-} // namespace cereal
+} // namespace ser20

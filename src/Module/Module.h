@@ -1,7 +1,7 @@
 #pragma once
 #include <Cool/Log/OptionalErrorMessage.h>
 #include <Dependencies/SystemValues.h>
-#include <cereal/types/polymorphic.hpp>
+#include <ser20/types/polymorphic.hpp>
 #include "Dependencies/Ui.h"
 
 namespace Lab {
@@ -37,7 +37,7 @@ public:
         _needs_to_rerender_flag.set_clean();
     }
     virtual void imgui_windows(Ui_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
-    virtual void update(){};
+    virtual void update() {};
 
     [[nodiscard]] virtual auto needs_to_rerender() const -> bool
     {
@@ -57,13 +57,13 @@ private:
     Cool::DirtyFlag _needs_to_rerender_flag;
 
 private:
-    friend class cereal::access;
+    friend class ser20::access;
     template<class Archive>
     void serialize(Archive& archive)
     {
         archive(
-            cereal::make_nvp("Name", _name),
-            cereal::make_nvp("Dirty Flag: needs to rerender", _needs_to_rerender_flag)
+            ser20::make_nvp("Name", _name),
+            ser20::make_nvp("Dirty Flag: needs to rerender", _needs_to_rerender_flag)
         );
     }
 };

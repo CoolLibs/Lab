@@ -28,6 +28,7 @@
 - ✨ The Output Window now doesn't have a title bar
 - 🟦 Nodes: Added "MIDI Multi-Select with Transition" 
 ![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
+- 🐛 Allow access to your microphone on MacOS for Audio nodes
 
 ## 🐣beta-17
 

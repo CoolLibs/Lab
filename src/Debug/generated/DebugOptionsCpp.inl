@@ -7,13 +7,13 @@
 
 #include <Cool/Path/Path.h>
 #include <Cool/Serialization/Serialization.h>
-#include <cereal/archives/json.hpp>
+#include <ser20/archives/json.hpp>
 
 namespace Lab {
 
 void DebugOptions::save_to_file()
 {
-    Cool::Serialization::save<DebugOptions::Instance, cereal::JSONOutputArchive>(
+    Cool::Serialization::save<DebugOptions::Instance, ser20::JSONOutputArchive>(
         instance(),
         Cool::Path::user_data() / "debug-options-lab.json",
         "Debug Options"
@@ -23,7 +23,7 @@ void DebugOptions::save_to_file()
 auto DebugOptions::load_debug_options() -> Instance
 {
     auto       the_instance = Instance{};
-    auto const err          = Cool::Serialization::load<DebugOptions::Instance, cereal::JSONInputArchive>(the_instance, Cool::Path::user_data() / "debug-options-lab.json");
+    auto const err          = Cool::Serialization::load<DebugOptions::Instance, ser20::JSONInputArchive>(the_instance, Cool::Path::user_data() / "debug-options-lab.json");
     std::ignore             = err; // We don't care about preserving the backward compatibility of debug options. If we break it, we can ignore it.
     return the_instance;
 }
