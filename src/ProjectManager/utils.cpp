@@ -1,6 +1,5 @@
 #include "utils.h"
 #include <CommandCore/CommandExecutionContext_Ref.h>
-#include <CommandLineArgs/CommandLineArgs.h>
 #include <Common/Path.h>
 #include <ProjectManager/Command_OpenProject.h>
 #include <ProjectManager/internal_utils.h>
@@ -10,6 +9,7 @@
 #include "Command_OpenProject.h"
 #include "Command_SaveProject.h"
 #include "Command_SaveProjectAs.h"
+#include "Cool/CommandLineArgs/CommandLineArgs.h"
 #include "Cool/File/File.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/UserSettings/UserSettings.h"
@@ -23,9 +23,9 @@ void initial_project_opening(CommandExecutionContext_Ref const& ctx)
 {
     auto const path = [&]() -> std::filesystem::path {
         // If any, load the project that was requested, e.g. when double-clicking on a .coollab file.
-        if (!command_line_args().get().empty())
+        if (!Cool::command_line_args().get().empty())
         {
-            return command_line_args().get()[0];
+            return Cool::command_line_args().get()[0];
         }
         // Try the untitled project.
         if (Cool::File::exists(Path::untitled_project()))

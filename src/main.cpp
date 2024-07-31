@@ -1,5 +1,5 @@
 #include "App.h"
-#include "CommandLineArgs/CommandLineArgs.h"
+#include "Cool/CommandLineArgs/CommandLineArgs.h"
 #include "Cool/Path/Path.h"
 #include "Cool/Path/PathsConfig.h"
 //
@@ -19,7 +19,7 @@ public:
 
 auto main(int argc, char** argv) -> int
 {
-    Lab::command_line_args().init(argc, argv);
+    Cool::command_line_args().init(argc, argv);
     Cool::Path::initialize<PathsConfig>();
 
     Cool::run<Lab::App>({
