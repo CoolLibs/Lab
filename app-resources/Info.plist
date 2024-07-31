@@ -34,7 +34,7 @@
         <key>CFBundleGetInfoString</key>
         <string></string>
         <key>CFBundleIdentifier</key>
-        <string>com.example.coollab</string>
+        <string>coollab.launcher</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleLongVersionString</key>
@@ -46,13 +46,13 @@
         <key>CFBundleShortVersionString</key>
         <string>1.0</string>
         <key>CFBundleSignature</key>
-        <string>CLLB</string>
+        <string></string>
         <key>CFBundleVersion</key>
         <string>1.0.0</string>
         <key>CSResourcesFileMapped</key>
         <true/>
         <key>NSHumanReadableCopyright</key>
-        <string>Copyright © 2024 Coollab. All rights reserved.</string>
+        <string></string>
         <key>NSCameraUsageDescription</key>
         <string>This app requires camera access in order for the Webcam node to work and capture your camera.</string>
         <key>NSMicrophoneUsageDescription</key>
