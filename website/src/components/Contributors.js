@@ -150,6 +150,36 @@ export default ({}) => {
           link="https://github.com/Xiantas"
           roles={["Programmer (Particles)"]}
         />,
+        <Contributor
+          name="Théo Bonnot"
+          github_name="fochyl"
+          link="https://github.com/fochyl"
+          roles={["Programmer (Webcam)", "Short Tutorials"]}
+        />,
+        <Contributor
+          name="Agathe Jan"
+          github_name="Agwathe"
+          link="https://github.com/Agwathe"
+          roles={["Programmer (Webcam)", "Speed Art Videos"]}
+        />,
+        <Contributor
+          name="Aurélien Michaud"
+          github_name="AurelienMichaud"
+          link="https://github.com/AurelienMichaud"
+          roles={["Short Tutorials"]}
+        />,
+        <Contributor
+          name="Marie Jacquelin"
+          github_name="MarieJcqln"
+          link="https://github.com/MarieJcqln"
+          roles={["Programmer (Webcam)", "Speed Art Videos"]}
+        />,
+        <Contributor
+          name="Maxence Dupuis"
+          github_name="smallboyc"
+          link="https://github.com/smallboyc"
+          roles={["Programmer (Launcher, Webcam)"]}
+        />,
       ]}
     />
   )
