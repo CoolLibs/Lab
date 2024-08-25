@@ -31,6 +31,7 @@
 #include "Cool/Log/Message.h"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/OSC/OSCManager.h"
+#include "Cool/Server/ServerManager.hpp"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/Video/hack_get_global_time_in_seconds.h"
 #include "Cool/View/View.h"
@@ -71,15 +72,6 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
 
     _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
     _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
-
-    // serv::init([](std::string_view request) {
-    //     Cool::Log::Debug::info("Scripting", "{}", request);
-    // });
-}
-
-App::~App()
-{
-    // serv::shut_down();
 }
 
 void App::on_shutdown()
@@ -394,6 +386,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::midi_manager().imgui_window();
     // OSC
     Cool::osc_manager().imgui_window();
+    // Server
+    Cool::server_manager().imgui_window();
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
@@ -525,6 +519,8 @@ void App::commands_menu()
             Cool::midi_manager().open_config_window();
         if (ImGui::Selectable(ICOMOON_CONNECTION " Open OSC config"))
             Cool::osc_manager().open_config_window();
+        if (ImGui::Selectable(ICOMOON_CONNECTION " Open Server config"))
+            Cool::server_manager().open_config_window();
         if (ImGui::Selectable(ICOMOON_MUSIC " Open Audio config"))
             _project.audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))

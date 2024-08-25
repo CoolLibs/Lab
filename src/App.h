@@ -23,6 +23,7 @@
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/OSC/OSCManager.h"
+#include "Cool/Server/ServerManager.hpp"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrRenderView.h"
@@ -41,7 +42,6 @@ using DebugOptionsManager = Cool::DebugOptionsManager<
 class App : public Cool::IApp {
 public:
     explicit App(Cool::WindowManager& windows, Cool::ViewsManager& views);
-    ~App();
     void on_shutdown() override;
 
     void update() override;
@@ -127,7 +127,8 @@ private:
             ser20::make_nvp("Output view", app._output_view),
             ser20::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
             ser20::make_nvp("MIDI config", Cool::midi_manager()),
-            ser20::make_nvp("OSC config", Cool::osc_manager())
+            ser20::make_nvp("OSC config", Cool::osc_manager()),
+            ser20::make_nvp("Server config", Cool::server_manager())
         );
     }
     template<class Archive>
