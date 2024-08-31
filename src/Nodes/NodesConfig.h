@@ -37,7 +37,7 @@ public:
         , _audio_manager{audio_manager}
         , _command_executor{command_executor}
     {}
-
+    void               node_context_menu(Cool::Node&, Cool::NodeId const&);
     auto               name(Cool::Node const&) const -> std::string;
     auto               category_name(Cool::Node const&) const -> std::string;
     void               imgui_above_node_pins(Cool::Node&, Cool::NodeId const&);
@@ -61,7 +61,6 @@ public:
     void        update_node_with_new_definition(Node&, Cool::NodeDefinition const&, bool store_links_deletion_in_history = false);
     static void widget_to_rename_node(Cool::Node&);
     auto        maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition;
-    void        node_context_menu(Cool::Node&, Cool::NodeId const&) {}
 
 private:
     auto make_node(Cool::NodeDefinitionAndCategoryName const&) -> Node;

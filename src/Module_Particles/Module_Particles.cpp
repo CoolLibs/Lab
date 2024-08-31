@@ -1,6 +1,6 @@
 #include "Module_Particles.h"
 #include <glm/gtx/matrix_transform_2d.hpp>
-#include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
+#include "Module/ShaderBased/set_uniforms_for_shader_based_module.hpp"
 #include "Nodes/Node.h"
 
 namespace Lab {
@@ -111,7 +111,7 @@ void Module_Particles::update()
     update_particles_count_ifn();
 }
 
-void Module_Particles::update_particles(SystemValues const& system_values)
+void Module_Particles::update_particles(DataToPassToShader const& data)
 {
     if (!_particle_system)
         return;
@@ -122,7 +122,7 @@ void Module_Particles::update_particles(SystemValues const& system_values)
 
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);
-    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), system_values, _depends_on, *_feedback_double_buffer, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), _depends_on, data);
     _particle_system->update();
     _force_init_particles      = false;
     _needs_to_update_particles = false;
@@ -141,18 +141,18 @@ void Module_Particles::imgui_show_generated_shader_code()
         set_simulation_shader_code(_shader_code, false, _particle_system ? _particle_system->dimension() : _particle_system_dimension);
 }
 
-void Module_Particles::render(SystemValues const& system_values)
+void Module_Particles::render(DataToPassToShader const& data)
 {
     if (!_particle_system)
         return;
 
     if (_needs_to_update_particles)
-        update_particles(system_values);
+        update_particles(data);
 
 #if !defined(COOL_PARTICLES_DISABLED_REASON)
-    set_uniforms_for_shader_based_module(_particle_system->render_shader(), system_values, _depends_on, *_feedback_double_buffer, *_nodes_graph);
+    set_uniforms_for_shader_based_module(_particle_system->render_shader(), _depends_on, data);
 
-    auto const view_proj_matrix_2D_mat3 = system_values.camera_2D_view_projection_matrix();
+    auto const view_proj_matrix_2D_mat3 = data.system_values.camera_2D_view_projection_matrix();
     auto const view_proj_matrix_2D_mat4 = glm::mat4{
         glm::vec4{view_proj_matrix_2D_mat3[0], 0.f},
         glm::vec4{view_proj_matrix_2D_mat3[1], 0.f},
@@ -166,8 +166,8 @@ void Module_Particles::render(SystemValues const& system_values)
     }
     else if (_particle_system->dimension() == 3)
     {
-        _particle_system->render_shader().set_uniform("view_proj_matrix", view_proj_matrix_2D_mat4 * system_values.camera_3D.view_projection_matrix(1.f /* The aspect ratio is already taken into account in the camera 2D matrix */));
-        _particle_system->render_shader().set_uniform("cool_camera_view", system_values.camera_3D.view_matrix());
+        _particle_system->render_shader().set_uniform("view_proj_matrix", view_proj_matrix_2D_mat4 * data.system_values.camera_3D.view_projection_matrix(1.f /* The aspect ratio is already taken into account in the camera 2D matrix */));
+        _particle_system->render_shader().set_uniform("cool_camera_view", data.system_values.camera_3D.view_matrix());
     }
     _particle_system->render();
 #endif

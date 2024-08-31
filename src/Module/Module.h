@@ -1,8 +1,8 @@
 #pragma once
 #include <Cool/Log/OptionalErrorMessage.h>
-#include <Dependencies/SystemValues.h>
 #include <ser20/types/polymorphic.hpp>
 #include "Dependencies/Ui.h"
+#include "ShaderBased/DataToPassToShader.hpp"
 
 namespace Lab {
 
@@ -31,9 +31,9 @@ public:
 
     [[nodiscard]] auto name() const -> const std::string& { return _name; }
 
-    void do_rendering(SystemValues const& system_values)
+    void do_rendering(DataToPassToShader const& data)
     {
-        render(system_values);
+        render(data);
         _needs_to_rerender_flag.set_clean();
     }
     virtual void imgui_windows(Ui_Ref) const = 0; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
@@ -50,7 +50,7 @@ protected:
     void log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
 
 private:
-    virtual void render(SystemValues const&) = 0;
+    virtual void render(DataToPassToShader const&) = 0;
 
 private:
     std::string     _name;

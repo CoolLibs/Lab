@@ -26,7 +26,7 @@ void ModulesGraph::update()
     }
 }
 
-void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const& system_values, Cool::NodesLibrary const& nodes_library)
+void ModulesGraph::render(Cool::RenderTarget& render_target, DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
     if (_compositing_module.depends_on().time_since_last_midi_button_pressed
         || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().time_since_last_midi_button_pressed; }))
@@ -45,7 +45,7 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const&
     {
         if (DebugOptions::log_when_compiling_nodes())
             Cool::Log::ToUser::info("Modules Graph", "Compiled");
-        create_and_compile_all_modules(_nodes_editor.graph(), _main_node_id, nodes_library);
+        create_and_compile_all_modules(_main_node_id, data_to_generate_shader_code);
         request_rerender_all();
         regenerate_code_flag().set_clean();
     }
@@ -62,14 +62,13 @@ void ModulesGraph::render(Cool::RenderTarget& render_target, SystemValues const&
         if (module_node->module.needs_to_rerender())
             _compositing_module.needs_to_rerender_flag().set_dirty(); // Because compositing module depends on particles module
     }
-    _compositing_module._nodes_graph = &_nodes_editor.graph();
     // TODO(Modules) Render in the order of dependency between the modules
     for (auto& node : _particles_module_nodes)
-        render_particle_module(node->module, node->render_target, system_values);
-    render_compositing_module(render_target, system_values);
+        render_particle_module(node->module, node->render_target, data_to_pass_to_shader);
+    render_compositing_module(render_target, data_to_pass_to_shader);
 }
 
-void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, SystemValues const& system_values)
+void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& render_target, DataToPassToShader const& data)
 {
     if (!some_module.needs_to_rerender())
         return;
@@ -78,19 +77,19 @@ void ModulesGraph::render_one_module(Module& some_module, Cool::RenderTarget& re
     render_target.render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        some_module.do_rendering(system_values);
+        some_module.do_rendering(data);
     });
 
     if (DebugOptions::log_when_rendering())
         Cool::Log::ToUser::info(some_module.name() + " Module", "Rendered");
 }
 
-void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, SystemValues const& system_values)
+void ModulesGraph::render_particle_module(Module_Particles& module, Cool::RenderTarget& render_target, DataToPassToShader const& data)
 {
-    render_one_module(module, render_target, system_values);
+    render_one_module(module, render_target, data);
 }
 
-void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, SystemValues const& system_values)
+void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, DataToPassToShader const& data)
 {
     if (_compositing_module.shader_is_valid())
     {
@@ -108,7 +107,7 @@ void ModulesGraph::render_compositing_module(Cool::RenderTarget& render_target, 
         }
     }
 
-    render_one_module(_compositing_module, render_target, system_values);
+    render_one_module(_compositing_module, render_target, data);
 }
 
 void ModulesGraph::request_rerender_all()
@@ -138,19 +137,16 @@ static auto texture_name_for_module(NodeDefinition const& definition, Cool::Node
     );
 }
 
-void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph, Cool::NodeId const& root_node_id, Cool::NodesLibrary const& nodes_library)
+void ModulesGraph::create_and_compile_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
     _particles_module_nodes.clear();
     _compositing_module.reset_shader();
 
-    if (!graph.try_get_node<Node>(root_node_id))
+    if (!data_to_generate_shader_code.nodes_graph.try_get_node<Node>(root_node_id))
         return;
-    auto const get_node_def = Cool::GetNodeDefinition_Ref<NodeDefinition>{nodes_library};
 
     auto const shader_code = generate_compositing_shader_code(
-        graph,
         root_node_id,
-        get_node_def,
         [&](Cool::NodeId const& particles_root_node_id, NodeDefinition const& node_definition) -> std::optional<std::string> {
             if (!is_particle(node_definition.signature()))
                 return std::nullopt;
@@ -168,11 +164,10 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
             {
                 auto       id_of_node_storing_particles_count = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
                 auto const simulation_shader_code             = generate_simulation_shader_code(
-                    graph,
                     particles_root_node_id,
                     id_of_node_storing_particles_count,
-                    get_node_def,
-                    dimension
+                    dimension,
+                    data_to_generate_shader_code
                 );
 
                 _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
@@ -192,7 +187,8 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodesGraph const& graph,
                 tex_names.push_back(node->texture_name_in_shader);
             }
             return tex_names;
-        }
+        },
+        data_to_generate_shader_code
     );
     _compositing_module.set_shader_code(shader_code);
 }
@@ -204,6 +200,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, C
         _particles_module->module.imgui_windows(ui);
     }
     _compositing_module.imgui_windows(ui);
+
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, nodes_library)};
         if (_nodes_editor.imgui_windows(cfg, nodes_library))

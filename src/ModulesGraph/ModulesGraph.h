@@ -3,6 +3,7 @@
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/View/GizmoManager.h"
 #include "DirtyFlags.h"
+#include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Particles/Module_Particles.h"
 #include "Nodes/NodesConfig.h"
@@ -46,7 +47,7 @@ public:
     ModulesGraph() = default;
 
     void update();
-    void render(Cool::RenderTarget&, SystemValues const&, Cool::NodesLibrary const&);
+    void render(Cool::RenderTarget&, DataToPassToShader const&, DataToGenerateShaderCode const&);
 
     void request_rerender_all();
 
@@ -85,12 +86,13 @@ public:
     void remove_link(Cool::LinkId const&);
     auto try_get_node(Cool::NodeId const&) const -> Node const*;
     void set_node(Cool::NodeId const&, Node const&);
+    auto compositing_module() const -> Module_Compositing const& { return _compositing_module; }
 
 private:
-    void create_and_compile_all_modules(Cool::NodesGraph const&, Cool::NodeId const& root_node_id, Cool::NodesLibrary const&);
-    void render_one_module(Module&, Cool::RenderTarget&, SystemValues const&);
-    void render_compositing_module(Cool::RenderTarget&, SystemValues const&);
-    void render_particle_module(Module_Particles&, Cool::RenderTarget&, SystemValues const&);
+    void create_and_compile_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const&);
+    void render_one_module(Module&, Cool::RenderTarget&, DataToPassToShader const&);
+    void render_compositing_module(Cool::RenderTarget&, DataToPassToShader const&);
+    void render_particle_module(Module_Particles&, Cool::RenderTarget&, DataToPassToShader const&);
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};

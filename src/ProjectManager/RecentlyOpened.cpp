@@ -32,7 +32,7 @@ auto RecentlyOpened::most_recent_path() const -> std::optional<std::filesystem::
 void RecentlyOpened::imgui_window(CommandExecutionContext_Ref const& ctx)
 {
     auto selected_path = std::optional<std::filesystem::path>{};
-    _dialog_window.show([&]() {
+    _dialog_window.show([&](bool /*is_opening*/) {
         // Search bar
         bool wants_to_select_first = ImGui::InputTextWithHint(
             "##FilterProjects", Cool::icon_fmt("Select to open", ICOMOON_SEARCH).c_str(), &_filter,

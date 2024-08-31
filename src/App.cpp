@@ -240,8 +240,8 @@ void App::render(Cool::RenderTarget& render_target, Cool::Time time, Cool::Time 
 {
     _project.modules_graph->render(
         render_target,
-        system_values(render_target.desired_size(), time, delta_time),
-        _nodes_library_manager.library()
+        data_to_pass_to_shader(render_target.desired_size(), time, delta_time),
+        data_to_generate_shader_code()
     );
 }
 
@@ -350,11 +350,21 @@ void App::imgui_window_exporter()
     });
 }
 
+void App::imgui_window_meshing()
+{
+    _meshing_gui.imgui_window(
+        _mesh_export_settings,
+        data_to_pass_to_shader(render_view().render_target().current_size(), _project.clock.time(), _project.clock.delta_time()),
+        data_to_generate_shader_code()
+    );
+}
+
 void App::imgui_windows()
 {
     imgui_window_view();
     imgui_window_exporter();
     imgui_window_console();
+    imgui_window_meshing();
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
@@ -644,6 +654,11 @@ void App::open_video_exporter()
 {
     _project.exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
     _project.exporter.video_export_window().open();
+}
+
+void App::open_meshing_window_for_node(Cool::NodeId const& node_id)
+{
+    _meshing_gui.open_window(node_id);
 }
 
 } // namespace Lab

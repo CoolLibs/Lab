@@ -2,6 +2,7 @@
 #include <Commands/Command_AddLink.h>
 #include <Commands/Command_AddNode.h>
 #include <Commands/Command_ChangeNodeDefinition.h>
+#include <Commands/Command_Meshing.h>
 #include <Commands/Command_RemoveLink.h>
 #include <Commands/Command_RemoveNode.h>
 #include <Commands/Command_SetMainNodeId.h>
@@ -157,6 +158,15 @@ static void apply_settings_to_inputs_no_history(
                 node_name
             )
         );
+    }
+}
+
+void NodesConfig::node_context_menu(Cool::Node& /*Node*/, Cool::NodeId const& node_id)
+{
+    if (ImGui::Button("Meshing"))
+    {
+        _command_executor.execute(Command_Meshing{node_id});
+        ImGui::CloseCurrentPopup();
     }
 }
 

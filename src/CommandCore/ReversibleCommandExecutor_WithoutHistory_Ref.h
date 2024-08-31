@@ -1,6 +1,7 @@
 #pragma once
 #include "CommandExecutionContext_Ref.h"
 #include "ConcreteReversibleCommand.h"
+#include "Cool/Log/ToUser.h"
 
 namespace Lab {
 

@@ -1,8 +1,6 @@
 #pragma once
-#include <Cool/Nodes/GetNodeDefinition_Ref.h>
-#include <Cool/Nodes/NodesGraph.h>
+#include "DataToGenerateShaderCode.hpp"
 #include "Nodes/MaybeGenerateModule.h"
-#include "Nodes/NodeDefinition.h"
 
 namespace Lab {
 
@@ -15,13 +13,12 @@ struct ShaderCodeBits {
 };
 
 auto generate_shader_code(
-    Cool::NodesGraph const&,
     Cool::NodeId const& root_node_id,
-    Cool::GetNodeDefinition_Ref<NodeDefinition>,
-    MaybeGenerateModule const&,
+    MaybeGenerateModule const&, // TODO(Module) This shouldn't be a parameter, this should be the same for all modules (e.g. a Particles module might also want to generate modules, in exactly the same way that a Compositing module would)
     FunctionSignature const&,
     ShaderCodeBits const&,
-    std::function<std::vector<std::string>()> const& get_module_textures_names
+    std::function<std::vector<std::string>()> const& get_module_textures_names,
+    DataToGenerateShaderCode const&
 ) -> tl::expected<std::string, std::string>;
 
 } // namespace Lab

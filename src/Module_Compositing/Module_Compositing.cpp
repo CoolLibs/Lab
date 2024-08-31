@@ -1,5 +1,5 @@
 #include "Module_Compositing.h"
-#include "Module/ShaderBased/set_uniforms_for_shader_based_module.h"
+#include "Module/ShaderBased/set_uniforms_for_shader_based_module.hpp"
 
 namespace Lab {
 
@@ -64,26 +64,26 @@ void Module_Compositing::set_render_target_size(img::Size const& size)
     _feedback_double_buffer.set_read_target_size_immediately(size);
 }
 
-void Module_Compositing::render(SystemValues const& system_values)
+void Module_Compositing::render(DataToPassToShader const& data)
 {
     // TODO(Performance) Render only once and then copy to the _feedback_double_buffer ?
     // TODO(Performance) Only render on the _feedback_double_buffer when someone depends on it
     // Render on the normal render target
-    render_impl(system_values);
+    render_impl(data);
 
     // Render on the feedback texture
     _feedback_double_buffer.write_target().render([&]() {
-        render_impl(system_values);
+        render_impl(data);
     });
     _feedback_double_buffer.swap_buffers();
 }
 
-void Module_Compositing::render_impl(SystemValues const& system_values)
+void Module_Compositing::render_impl(DataToPassToShader const& data)
 {
     if (!_pipeline.shader())
         return;
 
-    set_uniforms_for_shader_based_module(*_pipeline.shader(), system_values, _depends_on, _feedback_double_buffer, *_nodes_graph);
+    set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data);
     _pipeline.draw();
 }
 
