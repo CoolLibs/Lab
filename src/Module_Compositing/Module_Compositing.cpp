@@ -46,10 +46,6 @@ void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& mayb
     log_module_error(maybe_err, _shader_error_sender);
 }
 
-void Module_Compositing::imgui_windows(Ui_Ref) const
-{
-}
-
 void Module_Compositing::imgui_show_generated_shader_code()
 {
     if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{-1.f, -1.f}))
@@ -66,25 +62,15 @@ void Module_Compositing::set_render_target_size(img::Size const& size)
 
 void Module_Compositing::render(DataToPassToShader const& data)
 {
-    // TODO(Performance) Render only once and then copy to the _feedback_double_buffer ?
-    // TODO(Performance) Only render on the _feedback_double_buffer when someone depends on it
-    // Render on the normal render target
-    render_impl(data);
-
-    // Render on the feedback texture
-    _feedback_double_buffer.write_target().render([&]() {
-        render_impl(data);
-    });
-    _feedback_double_buffer.swap_buffers();
-}
-
-void Module_Compositing::render_impl(DataToPassToShader const& data)
-{
     if (!_pipeline.shader())
         return;
-
-    set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data);
-    _pipeline.draw();
+    render_target().set_size(data.system_values.render_target_size);
+    render_target().render([&]() {
+        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data);
+        _pipeline.draw();
+    });
 }
 
 } // namespace Lab

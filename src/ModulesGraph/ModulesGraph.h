@@ -19,15 +19,15 @@ struct ModulesGraphNode {
     // ModulesGraphNode(ModulesGraphNode&& other) noexcept            = default;
     // ModulesGraphNode& operator=(ModulesGraphNode&& other) noexcept = default;
 
-    ModulesGraphNode(Module_Particles module, std::string texture_name_in_shader)
+    ModulesGraphNode(std::unique_ptr<Module> module, std::string texture_name_in_shader)
         : module{std::move(module)}
         , texture_name_in_shader{std::move(texture_name_in_shader)}
     {
     }
 
-    Module_Particles   module{};
-    std::string        texture_name_in_shader{};
-    Cool::RenderTarget render_target{};
+    std::unique_ptr<Module> module;
+    std::string             texture_name_in_shader{};
+    // Cool::RenderTarget render_target{};
 
 private:
     friend class ser20::access;
@@ -47,7 +47,7 @@ public:
     ModulesGraph() = default;
 
     void update();
-    void render(Cool::RenderTarget&, DataToPassToShader const&, DataToGenerateShaderCode const&);
+    void render(DataToPassToShader const&, DataToGenerateShaderCode const&);
 
     void request_rerender_all();
 
@@ -75,6 +75,8 @@ public:
     void imgui_windows(Ui_Ref, Cool::AudioManager&, Cool::NodesLibrary const&) const;
     void submit_gizmos(Cool::GizmoManager&, CommandExecutor const&, Cool::Camera2D const&);
 
+    auto final_texture() const -> Cool::TextureRef;
+
     //----
     // These functions are mostly here so that Commands can do their job easily
     //----
@@ -90,9 +92,10 @@ public:
 
 private:
     void create_and_compile_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const&);
-    void render_one_module(Module&, Cool::RenderTarget&, DataToPassToShader const&);
-    void render_compositing_module(Cool::RenderTarget&, DataToPassToShader const&);
-    void render_particle_module(Module_Particles&, Cool::RenderTarget&, DataToPassToShader const&);
+    void render_one_module(Module&, DataToPassToShader const&);
+    void render_compositing_module(DataToPassToShader const&);
+    void render_particle_module(Module&, DataToPassToShader const&);
+    auto root_module() const -> Module const&;
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
@@ -100,7 +103,7 @@ private:
     DirtyFlags                _dirty_flags{};
 
     mutable Module_Compositing                     _compositing_module{};
-    std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)
+    std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)  // TODO(FeedbackLoop) No need for the unique_ptr
 
 private:
     // Serialization

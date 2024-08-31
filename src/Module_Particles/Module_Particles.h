@@ -10,7 +10,7 @@
 namespace Lab {
 class Module_Particles : public Module {
 public:
-    Module_Particles() = default;
+    Module_Particles() = default; // TODO(FeedbackLoop) remove?
     explicit Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
@@ -18,12 +18,8 @@ public:
     auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
     ~Module_Particles() override                                     = default;
 
-    Cool::NodesGraph const*                 _nodes_graph{};            // TODO(Particles) Remove
-    Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer{}; // TODO(Particles) Remove
-
     void update() override;
-    void request_particles_to_update() { _needs_to_update_particles = true; }
-    void imgui_windows(Ui_Ref) const override;
+    void on_time_changed() override;
     void imgui_show_generated_shader_code();
 
     [[nodiscard]] auto needs_to_rerender() const -> bool override
@@ -32,10 +28,10 @@ public:
     };
 
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
-    void on_time_reset();
+    void on_time_reset() override;
 
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
-    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
+    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
     void render(DataToPassToShader const&) override;
@@ -45,6 +41,7 @@ private:
     auto desired_particles_count() const -> size_t;
     void log_simulation_shader_error(Cool::OptionalErrorMessage const&) const;
     void request_particles_to_reset();
+    void request_particles_to_update() { _needs_to_update_particles = true; }
 
 private:
     mutable std::optional<Cool::ParticleSystem> _particle_system{};
