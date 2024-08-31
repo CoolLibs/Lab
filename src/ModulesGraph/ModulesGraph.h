@@ -91,9 +91,14 @@ public:
     void set_node(Cool::NodeId const&, Node const&);
 
 private:
-    void create_and_compile_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const&);
+    void recreate_all_modules(Cool::NodeId const& node_id, DataToGenerateShaderCode const&);
+    auto create_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
+    auto create_compositing_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
+    auto create_particles_module(Cool::NodeId const& node_id, NodeDefinition const&, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
+    auto create_feedback_loop_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
+
     void render_one_module(Module&, DataToPassToShader const&);
-    auto root_module() const -> Module const&;
+    auto root_module() const -> Module const*;
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
@@ -101,6 +106,7 @@ private:
     DirtyFlags                _dirty_flags{};
 
     std::vector<std::shared_ptr<ModulesGraphNode>> _module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)  // TODO(FeedbackLoop) No need for the unique_ptr
+    std::shared_ptr<ModulesGraphNode>              _root_module_node{};
 
 private:
     // Serialization
