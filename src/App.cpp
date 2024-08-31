@@ -206,7 +206,7 @@ auto App::render_view() -> Cool::RenderView&
 Cool::Polaroid App::polaroid()
 {
     return {
-        .texture = _project.modules_graph->final_texture(),
+        .texture = [this]() { return _project.modules_graph->final_texture(); },
         .render  = [this](img::Size size, Cool::Time time, Cool::Time delta_time) {
             render(size, time, delta_time);
         }
@@ -407,7 +407,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
         the_polaroid.render(size, _project.clock.time(), _project.clock.delta_time());
-        auto const image = the_polaroid.texture.download_pixels();
+        auto const image = the_polaroid.texture().download_pixels();
         return img::save_png_to_string(image);
     });
     // Recently opened projects

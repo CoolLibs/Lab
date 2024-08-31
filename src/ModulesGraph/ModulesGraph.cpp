@@ -9,6 +9,7 @@
 #include "Cool/Gpu/RenderTarget.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Camera2D.h"
+#include "Module_Compositing/Module_Compositing.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
 #include "Nodes/valid_glsl.h"
@@ -18,8 +19,7 @@ namespace Lab {
 
 void ModulesGraph::update()
 {
-    _compositing_module.update();
-    for (auto& module_node : _particles_module_nodes)
+    for (auto& module_node : _module_nodes)
     {
         module_node->module->_nodes_graph = &_nodes_editor.graph();
         module_node->module->update();
@@ -58,68 +58,58 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
     // _compositing_module.set_render_target_size(render_target.desired_size()); // Must be done before rendering, otherwise we might read a target that is too small. (e.g. 1 pixel on app startup)
 
     // TODO(Particles) Remove those _nodes_graph
-    for (auto& module_node : _particles_module_nodes)
+    for (auto& module_node : _module_nodes)
     {
-        module_node->module->_nodes_graph            = &_nodes_editor.graph();
-        module_node->module->_feedback_double_buffer = &_compositing_module.feedback_double_buffer();
-        if (module_node->module->needs_to_rerender())
-            _compositing_module.needs_to_rerender_flag().set_dirty(); // Because compositing module depends on particles module
+        module_node->module->_nodes_graph = &_nodes_editor.graph();
+        // TODO(FeedbackLoop) Handle the fact that a node needs to rerender if one of its dependencies needs to rerender
+        // if (module_node->module->needs_to_rerender())
+        //     _compositing_module.needs_to_rerender_flag().set_dirty(); // Because compositing module depends on particles module
     }
-    // TODO(Modules) Render in the order of dependency between the modules
-    for (auto& node : _particles_module_nodes)
-        render_particle_module(*node->module, data_to_pass_to_shader);
-    render_compositing_module(data_to_pass_to_shader);
+    // TODO(Modules) TODO(FeedbackLoop) Render in the order of dependency between the modules
+    for (auto& node : _module_nodes)
+        render_one_module(*node->module, data_to_pass_to_shader);
 }
 
 void ModulesGraph::render_one_module(Module& some_module, DataToPassToShader const& data)
 {
     if (!some_module.needs_to_rerender())
         return;
+
+    // TODO(FeedbackLoop)
+    // if (_compositing_module.shader_is_valid())
+    // {
+    //     _compositing_module.shader().bind();
+    //     for (auto const& module_node : _particles_module_nodes)
+    //     {
+    //         _compositing_module.shader().set_uniform_texture(
+    //             module_node->texture_name_in_shader,
+    //             module_node->module->texture().id,
+    //             Cool::TextureSamplerDescriptor{
+    //                 .repeat_mode        = Cool::TextureRepeatMode::None,
+    //                 .interpolation_mode = glpp::Interpolation::Linear,
+    //             }
+    //         );
+    //     }
+    // }
+    // TODO(FeedbackLoop) The feedback loop texture must use interpolation nearest neighbour (cf  // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).)
+
     // Cool::Log::Debug::info("bob", fmt::format("{} x {}", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
-    some_module.needs_to_rerender_flag().set_clean();
     some_module.do_rendering(data);
+    some_module.needs_to_rerender_flag().set_clean();
 
     if (DebugOptions::log_when_rendering())
         Cool::Log::ToUser::info(some_module.name() + " Module", "Rendered");
 }
 
-void ModulesGraph::render_particle_module(Module& module, DataToPassToShader const& data)
-{
-    render_one_module(module, data);
-}
-
-void ModulesGraph::render_compositing_module(DataToPassToShader const& data)
-{
-    if (_compositing_module.shader_is_valid())
-    {
-        _compositing_module.shader().bind();
-        for (auto const& module_node : _particles_module_nodes)
-        {
-            _compositing_module.shader().set_uniform_texture(
-                module_node->texture_name_in_shader,
-                module_node->module->texture().id,
-                Cool::TextureSamplerDescriptor{
-                    .repeat_mode        = Cool::TextureRepeatMode::None,
-                    .interpolation_mode = glpp::Interpolation::Linear,
-                }
-            );
-        }
-    }
-
-    render_one_module(_compositing_module, data);
-}
-
 void ModulesGraph::request_rerender_all()
 {
-    _compositing_module.needs_to_rerender_flag().set_dirty();
-    for (auto& node : _particles_module_nodes)
+    for (auto& node : _module_nodes)
         node->module->needs_to_rerender_flag().set_dirty();
 }
 
 void ModulesGraph::on_time_reset()
 {
-    _compositing_module.on_time_reset();
-    for (auto& node : _particles_module_nodes)
+    for (auto& node : _module_nodes)
         node->module->on_time_reset();
 }
 
@@ -138,8 +128,7 @@ static auto texture_name_for_module(NodeDefinition const& definition, Cool::Node
 
 void ModulesGraph::create_and_compile_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
-    _particles_module_nodes.clear();
-    _compositing_module.reset_shader();
+    _module_nodes.clear();
 
     if (!data_to_generate_shader_code.nodes_graph.try_get_node<Node>(root_node_id))
         return;
@@ -147,41 +136,44 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodeId const& root_node_
     auto const shader_code = generate_compositing_shader_code(
         root_node_id,
         [&](Cool::NodeId const& particles_root_node_id, NodeDefinition const& node_definition) -> std::optional<std::string> {
+            return std::nullopt;
             if (!is_particle(node_definition.signature()))
                 return std::nullopt;
 
-            int const  dimension              = is_particle_3D(node_definition.signature()) ? 3 : 2;
-            auto const texture_name_in_shader = texture_name_for_module(node_definition, particles_root_node_id);
+            // TODO(FeedbackLoop)
+            return std::nullopt;
+            // int const  dimension              = is_particle_3D(node_definition.signature()) ? 3 : 2;
+            // auto const texture_name_in_shader = texture_name_for_module(node_definition, particles_root_node_id);
 
-            if (std::none_of(
-                    _particles_module_nodes.begin(),
-                    _particles_module_nodes.end(),
-                    [&](std::unique_ptr<ModulesGraphNode> const& node) {
-                        return node->texture_name_in_shader == texture_name_in_shader;
-                    }
-                ))
-            {
-                auto       id_of_node_storing_particles_count = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
-                auto const simulation_shader_code             = generate_simulation_shader_code(
-                    particles_root_node_id,
-                    id_of_node_storing_particles_count,
-                    dimension,
-                    data_to_generate_shader_code
-                );
+            // if (std::none_of(
+            //         _particles_module_nodes.begin(),
+            //         _particles_module_nodes.end(),
+            //         [&](std::unique_ptr<ModulesGraphNode> const& node) {
+            //             return node->texture_name_in_shader == texture_name_in_shader;
+            //         }
+            //     ))
+            // {
+            //     auto       id_of_node_storing_particles_count = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
+            //     auto const simulation_shader_code             = generate_simulation_shader_code(
+            //         particles_root_node_id,
+            //         id_of_node_storing_particles_count,
+            //         dimension,
+            //         data_to_generate_shader_code
+            //     );
 
-                _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
-                    /* .module                 = */ std::make_unique<Module_Particles>(id_of_node_storing_particles_count),
-                    /* .texture_name_in_shader = */ texture_name_in_shader
-                ));
-                static_cast<Module_Particles*>(_particles_module_nodes.back()->module.get())->set_simulation_shader_code(simulation_shader_code, false, dimension);
-            }
+            //     _particles_module_nodes.push_back(std::make_unique<ModulesGraphNode>(
+            //         /* .module                 = */ std::make_unique<Module_Particles>(id_of_node_storing_particles_count),
+            //         /* .texture_name_in_shader = */ texture_name_in_shader
+            //     ));
+            //     static_cast<Module_Particles*>(_particles_module_nodes.back()->module.get())->set_simulation_shader_code(simulation_shader_code, false, dimension);
+            // }
 
-            return texture_name_in_shader;
+            // return texture_name_in_shader;
         },
         [&]() {
             std::vector<std::string> tex_names;
-            tex_names.reserve(_particles_module_nodes.size());
-            for (auto const& node : _particles_module_nodes)
+            tex_names.reserve(_module_nodes.size());
+            for (auto const& node : _module_nodes)
             {
                 tex_names.push_back(node->texture_name_in_shader);
             }
@@ -189,16 +181,20 @@ void ModulesGraph::create_and_compile_all_modules(Cool::NodeId const& root_node_
         },
         data_to_generate_shader_code
     );
-    _compositing_module.set_shader_code(shader_code);
+    // TODO(FeedbackLoop)
+    // auto const texture_name_in_shader = texture_name_for_module(node_definition, root_node_id);
+    _module_nodes.push_back(std::make_shared<ModulesGraphNode>(
+        /* .module                 = */ std::make_shared<Module_Compositing>(),
+        /* .texture_name_in_shader = */ "bob",
+        /* .dependencies           = */ std::vector<std::shared_ptr<ModulesGraphNode>>{}
+    ));
+    static_cast<Module_Compositing*>(_module_nodes.back()->module.get())->set_shader_code(shader_code);
 }
 
 void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const
 {
-    for (auto const& _particles_module : _particles_module_nodes)
-    {
-        _particles_module->module->imgui_windows(ui);
-    }
-    _compositing_module.imgui_windows(ui);
+    for (auto const& node : _module_nodes)
+        node->module->imgui_windows(ui);
 
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, nodes_library)};
@@ -208,21 +204,22 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, C
     DebugOptions::show_generated_shader_code([&] {
         if (ImGui::BeginTabBar("Shaders Tabs", ImGuiTabBarFlags_None))
         {
-            if (ImGui::BeginTabItem("Compositing"))
-            {
-                _compositing_module.imgui_show_generated_shader_code();
-                ImGui::EndTabItem();
-            }
-            for (auto const& _particles_module : _particles_module_nodes)
-            {
-                ImGui::PushID(&_particles_module);
-                if (ImGui::BeginTabItem("Particle Simulation"))
-                {
-                    static_cast<Module_Particles*>(_particles_module->module.get())->imgui_show_generated_shader_code();
-                    ImGui::EndTabItem();
-                }
-                ImGui::PopID();
-            }
+            // TODO(FeedbackLoop)
+            // if (ImGui::BeginTabItem("Compositing"))
+            // {
+            //     _compositing_module.imgui_show_generated_shader_code();
+            //     ImGui::EndTabItem();
+            // }
+            // for (auto const& _particles_module : _particles_module_nodes)
+            // {
+            //     ImGui::PushID(&_particles_module);
+            //     if (ImGui::BeginTabItem("Particle Simulation"))
+            //     {
+            //         static_cast<Module_Particles*>(_particles_module->module.get())->imgui_show_generated_shader_code();
+            //         ImGui::EndTabItem();
+            //     }
+            //     ImGui::PopID();
+            // }
             ImGui::EndTabBar();
         }
     });
@@ -259,12 +256,12 @@ void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, CommandExecutor con
 
 auto ModulesGraph::root_module() const -> Module const&
 {
-    return _compositing_module;
+    return *_module_nodes[0]->module; // TODO(FeedbackLoop)
 }
 
 auto ModulesGraph::final_texture() const -> Cool::TextureRef
 {
-    return root_module().texture();
+    return _module_nodes.empty() ? Cool::TextureRef{} : root_module().texture();
 }
 
 auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const -> NodesConfig
@@ -283,14 +280,14 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Co
 
 void ModulesGraph::on_time_changed()
 {
-    for (auto& node : _particles_module_nodes)
+    for (auto& node : _module_nodes)
     {
         node->module->on_time_changed();
-    }
-    if (_compositing_module.depends_on().time
-        || !_particles_module_nodes.empty())
-    {
-        request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on time
+        // TODO(FeedbackLoop)
+        // if (node->module->depends_on().time)
+        // {
+        //     request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on time
+        // }
     }
 }
 
@@ -336,8 +333,7 @@ void ModulesGraph::on_last_midi_button_pressed_changed()
 
 void ModulesGraph::update_dependencies_from_nodes_graph()
 {
-    _compositing_module.update_dependencies_from_nodes_graph(_nodes_editor.graph());
-    for (auto const& module_node : _particles_module_nodes)
+    for (auto const& module_node : _module_nodes)
         module_node->module->update_dependencies_from_nodes_graph(_nodes_editor.graph());
 }
 

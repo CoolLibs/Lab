@@ -97,7 +97,7 @@ private:
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
     auto system_values                              (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor()}; }
-    auto data_to_pass_to_shader                     (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return DataToPassToShader{system_values(render_target_size, time, delta_time),  _project.modules_graph->graph(), _project.modules_graph->compositing_module().feedback_double_buffer() }; }
+    auto data_to_pass_to_shader                     (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return DataToPassToShader{system_values(render_target_size, time, delta_time),  _project.modules_graph->graph() }; }
     auto data_to_generate_shader_code               () const { return DataToGenerateShaderCode{_project.modules_graph->graph(), Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library_manager.library()} }; }
     // clang-format on
 

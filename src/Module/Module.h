@@ -26,8 +26,7 @@ public:
         : _name{name}
     {}
 
-    Cool::NodesGraph const*                 _nodes_graph{};            // TODO(Particles) Remove
-    Cool::DoubleBufferedRenderTarget const* _feedback_double_buffer{}; // TODO(Particles) Remove
+    Cool::NodesGraph const* _nodes_graph{}; // TODO(Particles) Remove
 
     [[nodiscard]] auto name() const -> const std::string& { return _name; }
 

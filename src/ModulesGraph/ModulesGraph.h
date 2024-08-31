@@ -19,15 +19,16 @@ struct ModulesGraphNode {
     // ModulesGraphNode(ModulesGraphNode&& other) noexcept            = default;
     // ModulesGraphNode& operator=(ModulesGraphNode&& other) noexcept = default;
 
-    ModulesGraphNode(std::unique_ptr<Module> module, std::string texture_name_in_shader)
+    ModulesGraphNode(std::shared_ptr<Module> module, std::string texture_name_in_shader, std::vector<std::shared_ptr<ModulesGraphNode>> dependencies)
         : module{std::move(module)}
         , texture_name_in_shader{std::move(texture_name_in_shader)}
+        , dependencies{std::move(dependencies)}
     {
     }
 
-    std::unique_ptr<Module> module;
-    std::string             texture_name_in_shader{};
-    // Cool::RenderTarget render_target{};
+    std::shared_ptr<Module>                        module;
+    std::string                                    texture_name_in_shader{};
+    std::vector<std::shared_ptr<ModulesGraphNode>> dependencies{};
 
 private:
     friend class ser20::access;
@@ -88,13 +89,10 @@ public:
     void remove_link(Cool::LinkId const&);
     auto try_get_node(Cool::NodeId const&) const -> Node const*;
     void set_node(Cool::NodeId const&, Node const&);
-    auto compositing_module() const -> Module_Compositing const& { return _compositing_module; }
 
 private:
     void create_and_compile_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const&);
     void render_one_module(Module&, DataToPassToShader const&);
-    void render_compositing_module(DataToPassToShader const&);
-    void render_particle_module(Module&, DataToPassToShader const&);
     auto root_module() const -> Module const&;
 
 private:
@@ -102,8 +100,7 @@ private:
     mutable Cool::NodeId      _main_node_id{}; // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
     DirtyFlags                _dirty_flags{};
 
-    mutable Module_Compositing                     _compositing_module{};
-    std::vector<std::unique_ptr<ModulesGraphNode>> _particles_module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)  // TODO(FeedbackLoop) No need for the unique_ptr
+    std::vector<std::shared_ptr<ModulesGraphNode>> _module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)  // TODO(FeedbackLoop) No need for the unique_ptr
 
 private:
     // Serialization
@@ -112,8 +109,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            ser20::make_nvp("Compositing module", _compositing_module),
-            ser20::make_nvp("Particles module", _particles_module_nodes),
+            ser20::make_nvp("Modules", _module_nodes),
             ser20::make_nvp("Dirty flags", _dirty_flags),
             ser20::make_nvp("Node editor", _nodes_editor),
             ser20::make_nvp("Main node ID", _main_node_id)

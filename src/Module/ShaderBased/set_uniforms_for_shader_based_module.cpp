@@ -113,14 +113,6 @@ void set_uniforms_for_shader_based_module(
     if (depends_on.audio_spectrum)
         shader.set_uniform_texture1D("_audio_spectrum", data.system_values.audio_manager.get().spectrum_texture().id());
 
-    shader.set_uniform_texture(
-        "_previous_frame_texture",
-        data.feedback_double_buffer.read_target().get().texture_id(),
-        Cool::TextureSamplerDescriptor{
-            .repeat_mode        = Cool::TextureRepeatMode::None,
-            .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
-        }
-    );
     Cool::CameraShaderU::set_uniform(shader, data.system_values.camera_3D, data.system_values.aspect_ratio());
 
     data.nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there

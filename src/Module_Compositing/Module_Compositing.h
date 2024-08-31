@@ -20,9 +20,7 @@ public:
     void imgui_show_generated_shader_code();
 
     void reset_shader();
-    void on_time_reset() override;
 
-    void set_render_target_size(img::Size const& size);
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code);
 
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
@@ -30,7 +28,6 @@ public:
 
     auto shader_is_valid() const -> bool { return _pipeline.shader().has_value(); } // TODO(Modules) Remove
     auto shader() -> auto const& { return *_pipeline.shader(); }                    // TODO(Modules) Remove
-    auto feedback_double_buffer() const -> Cool::DoubleBufferedRenderTarget const& { return _feedback_double_buffer; }
 
 private:
     void render(DataToPassToShader const&) override;
@@ -40,7 +37,6 @@ private:
     mutable std::string              _shader_code{};
     mutable Cool::FullscreenPipeline _pipeline{};
     mutable Cool::MessageSender      _shader_error_sender{};
-    Cool::DoubleBufferedRenderTarget _feedback_double_buffer{}; // TODO(FeedbackLoop) Remvoe
     mutable ModuleDependencies       _depends_on{};
 
 private:

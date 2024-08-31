@@ -20,11 +20,6 @@ void Module_Compositing::reset_shader()
     _depends_on  = {};
 }
 
-void Module_Compositing::on_time_reset()
-{
-    _feedback_double_buffer.clear_render_targets();
-}
-
 void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code)
 {
     if (!shader_code)
@@ -52,12 +47,6 @@ void Module_Compositing::imgui_show_generated_shader_code()
     {
         set_shader_code(_shader_code);
     }
-}
-
-void Module_Compositing::set_render_target_size(img::Size const& size)
-{
-    _feedback_double_buffer.write_target().set_size(size);
-    _feedback_double_buffer.set_read_target_size_immediately(size);
 }
 
 void Module_Compositing::render(DataToPassToShader const& data)
