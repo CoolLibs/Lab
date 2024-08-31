@@ -13,6 +13,8 @@ namespace Lab {
 /// Each module has a State struct, and that's what is serialized / modified through commands / stored in presets.
 /// Rendering only has const access to the registries: creating / updating values is done trough ui()
 
+class ModulesGraphNode;
+
 class Module {
 public:
     Module()                                     = default; // TODO(FeedbackLoop) remove?
@@ -30,9 +32,9 @@ public:
 
     [[nodiscard]] auto name() const -> const std::string& { return _name; }
 
-    void do_rendering(DataToPassToShader const& data)
+    void do_rendering(DataToPassToShader const& data, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies)
     {
-        render(data);
+        render(data, module_dependencies);
         _needs_to_rerender_flag.set_clean();
     }
     virtual void imgui_windows(Ui_Ref) const {}; /// The ui() method should be const, because it should only trigger commands, not modify internal values (allows us to handle history / re-rendering at a higher level). If you really need to mutate one of your member variables, mark it as `mutable`.
@@ -56,7 +58,7 @@ protected:
     virtual auto render_target() -> Cool::RenderTarget& { return _render_target; }
 
 private:
-    virtual void render(DataToPassToShader const&) = 0;
+    virtual void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) = 0;
 
 private:
     std::string        _name;

@@ -19,7 +19,7 @@ public:
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
-    void render(DataToPassToShader const&) override;
+    void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) override;
 
 private:
     // Module_Compositing _compositing_module{};

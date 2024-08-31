@@ -7,9 +7,12 @@
 #include <ser20/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
 #include "Dump/coollab_version.h"
+#include "Module_Compositing/Module_Compositing.h"
+#include "Module_Particles/Module_Particles.h"
 #include "SNodesCategoryConfig.h"
 #include "SNodesClipboard.h"
 #include "SProject.h"
+
 //
 #include "ser20/archives/json.hpp"
 

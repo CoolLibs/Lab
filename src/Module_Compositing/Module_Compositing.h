@@ -26,11 +26,8 @@ public:
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
-    auto shader_is_valid() const -> bool { return _pipeline.shader().has_value(); } // TODO(Modules) Remove
-    auto shader() -> auto const& { return *_pipeline.shader(); }                    // TODO(Modules) Remove
-
 private:
-    void render(DataToPassToShader const&) override;
+    void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) override;
     void log_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:

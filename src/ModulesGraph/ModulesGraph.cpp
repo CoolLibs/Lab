@@ -12,7 +12,9 @@
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
+#include "Module_Particles/Module_Particles.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
+#include "ModulesGraph/ModulesGraph.h"
 #include "Nodes/valid_glsl.h"
 #include "UI/imgui_show.h"
 
@@ -68,38 +70,20 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
     }
     // TODO(Modules) TODO(FeedbackLoop) Render in the order of dependency between the modules
     for (auto& node : _module_nodes)
-        render_one_module(*node->module, data_to_pass_to_shader);
+        render_one_module(*node, data_to_pass_to_shader);
 }
 
-void ModulesGraph::render_one_module(Module& some_module, DataToPassToShader const& data)
+void ModulesGraph::render_one_module(ModulesGraphNode& node, DataToPassToShader const& data)
 {
-    if (!some_module.needs_to_rerender())
+    if (!node.module->needs_to_rerender())
         return;
 
-    // TODO(FeedbackLoop)
-    // if (_compositing_module.shader_is_valid())
-    // {
-    //     _compositing_module.shader().bind();
-    //     for (auto const& module_node : _particles_module_nodes)
-    //     {
-    //         _compositing_module.shader().set_uniform_texture(
-    //             module_node->texture_name_in_shader,
-    //             module_node->module->texture().id,
-    //             Cool::TextureSamplerDescriptor{
-    //                 .repeat_mode        = Cool::TextureRepeatMode::None,
-    //                 .interpolation_mode = glpp::Interpolation::Linear,
-    //             }
-    //         );
-    //     }
-    // }
-    // TODO(FeedbackLoop) The feedback loop texture must use interpolation nearest neighbour (cf  // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).)
-
     // Cool::Log::Debug::info("bob", fmt::format("{} x {}", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
-    some_module.do_rendering(data);
-    some_module.needs_to_rerender_flag().set_clean();
+    node.module->do_rendering(data, node.dependencies);
+    node.module->needs_to_rerender_flag().set_clean();
 
     if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(some_module.name() + " Module", "Rendered");
+        Cool::Log::ToUser::info(node.module->name() + " Module", "Rendered");
 }
 
 void ModulesGraph::request_rerender_all()

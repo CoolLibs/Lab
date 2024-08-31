@@ -4,42 +4,10 @@
 #include "Cool/View/GizmoManager.h"
 #include "DirtyFlags.h"
 #include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
-#include "Module_Compositing/Module_Compositing.h"
-#include "Module_Particles/Module_Particles.h"
+#include "ModulesGraphNode.hpp"
 #include "Nodes/NodesConfig.h"
 
 namespace Lab {
-
-struct ModulesGraphNode {
-    ModulesGraphNode() = default;
-    // ~ModulesGraphNode() = default;
-
-    // ModulesGraphNode(const ModulesGraphNode&)                      = delete; // We disable copying
-    // ModulesGraphNode& operator=(const ModulesGraphNode&)           = delete; // We disable copying
-    // ModulesGraphNode(ModulesGraphNode&& other) noexcept            = default;
-    // ModulesGraphNode& operator=(ModulesGraphNode&& other) noexcept = default;
-
-    ModulesGraphNode(std::shared_ptr<Module> module, std::string texture_name_in_shader, std::vector<std::shared_ptr<ModulesGraphNode>> dependencies)
-        : module{std::move(module)}
-        , texture_name_in_shader{std::move(texture_name_in_shader)}
-        , dependencies{std::move(dependencies)}
-    {
-    }
-
-    std::shared_ptr<Module>                        module;
-    std::string                                    texture_name_in_shader{};
-    std::vector<std::shared_ptr<ModulesGraphNode>> dependencies{};
-
-private:
-    friend class ser20::access;
-    template<class Archive>
-    void serialize(Archive& archive)
-    {
-        archive(
-            ser20::make_nvp("Module", module)
-        );
-    }
-};
 
 /// The main class containing all the nodes of the project.
 /// It is responsible for spawning the various modules as required by the nodes, and knowing the dependencies between them.
@@ -97,7 +65,7 @@ private:
     auto create_particles_module(Cool::NodeId const& node_id, NodeDefinition const&, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
     auto create_feedback_loop_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
 
-    void render_one_module(Module&, DataToPassToShader const&);
+    void render_one_module(ModulesGraphNode&, DataToPassToShader const&);
     auto root_module() const -> Module const*;
 
 private:

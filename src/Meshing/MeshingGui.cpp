@@ -26,7 +26,7 @@ static void gen_and_export_mesh(Cool::NodeId const& main_node_id, MeshingSetting
     // auto const node_def   = data_to_generate_shader_code.get_node_definition(maybe_node->id_names());
     // is_shape_3D(node_def->signature());
 
-    auto const maybe_mesh = gen_mesh_from_sdf(main_node_id, meshing_settings, data_to_pass_to_shader, data_to_generate_shader_code);
+    auto const maybe_mesh = gen_mesh_from_sdf(main_node_id, meshing_settings, data_to_pass_to_shader, data_to_generate_shader_code, {}); // TODO(Meshing) We need to generate an entire ModulesGraph, so that we can properly handle the fact that our module might depend on other modules
     if (!maybe_mesh)
         return; // TODO(Meshing) Error message should be handled here
     export_mesh(*maybe_mesh, mesh_export_settings);

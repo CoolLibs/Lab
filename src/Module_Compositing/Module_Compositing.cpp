@@ -49,15 +49,16 @@ void Module_Compositing::imgui_show_generated_shader_code()
     }
 }
 
-void Module_Compositing::render(DataToPassToShader const& data)
+void Module_Compositing::render(DataToPassToShader const& data, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies)
 {
     if (!_pipeline.shader())
         return;
+
     render_target().set_size(data.system_values.render_target_size);
     render_target().render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data);
+        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data, module_dependencies);
         _pipeline.draw();
     });
 }

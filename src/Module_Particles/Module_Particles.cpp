@@ -128,7 +128,7 @@ void Module_Particles::update_particles(DataToPassToShader const& data)
 
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);
-    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), _depends_on, data);
+    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), _depends_on, data, {}); // TODO(Module) We need to access the modules that this module depends on
     _particle_system->update();
     _force_init_particles      = false;
     _needs_to_update_particles = false;
@@ -143,7 +143,7 @@ void Module_Particles::imgui_show_generated_shader_code()
         set_simulation_shader_code(_shader_code, false, _particle_system ? _particle_system->dimension() : _particle_system_dimension);
 }
 
-void Module_Particles::render(DataToPassToShader const& data)
+void Module_Particles::render(DataToPassToShader const& data, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies)
 {
     if (!_particle_system)
         return;
@@ -156,7 +156,7 @@ void Module_Particles::render(DataToPassToShader const& data)
     render_target().render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        set_uniforms_for_shader_based_module(_particle_system->render_shader(), _depends_on, data);
+        set_uniforms_for_shader_based_module(_particle_system->render_shader(), _depends_on, data, module_dependencies);
 
         auto const view_proj_matrix_2D_mat3 = data.system_values.camera_2D_view_projection_matrix();
         auto const view_proj_matrix_2D_mat4 = glm::mat4{

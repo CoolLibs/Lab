@@ -83,10 +83,11 @@ void cool_main()
 }
 
 auto gen_mesh_from_sdf(
-    Cool::NodeId const&             main_node_id,
-    MeshingSettings const&          meshing_settings,
-    DataToPassToShader const&       data_to_pass_to_shader,
-    DataToGenerateShaderCode const& data_to_generate_shader_code
+    Cool::NodeId const&                                   main_node_id,
+    MeshingSettings const&                                meshing_settings,
+    DataToPassToShader const&                             data_to_pass_to_shader,
+    DataToGenerateShaderCode const&                       data_to_generate_shader_code,
+    std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies
 ) -> std::optional<Cool::Mesh>
 {
     if constexpr (COOL_OPENGL_VERSION < 430)
@@ -125,7 +126,7 @@ auto gen_mesh_from_sdf(
         auto dependencies = ModuleDependencies{};
         update_dependencies_from_shader_code(dependencies, *shader_code);
         update_dependencies_from_nodes_graph(dependencies, data_to_pass_to_shader.nodes_graph);
-        set_uniforms_for_shader_based_module(*meshing_compute_shader, dependencies, data_to_pass_to_shader);
+        set_uniforms_for_shader_based_module(*meshing_compute_shader, dependencies, data_to_pass_to_shader, module_dependencies);
     }
 
     meshing_compute_shader->compute(meshing_settings.samples_count);
