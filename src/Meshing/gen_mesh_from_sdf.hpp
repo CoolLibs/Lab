@@ -7,7 +7,7 @@
 
 namespace Lab {
 
-class ModulesGraphNode;
+class Module;
 
 // TODO(Meshing) Return error message in case of failure (tl::expected)
 auto gen_mesh_from_sdf(
@@ -15,7 +15,7 @@ auto gen_mesh_from_sdf(
     MeshingSettings const&,
     DataToPassToShader const&,
     DataToGenerateShaderCode const&,
-    std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies
+    std::vector<std::shared_ptr<Module>> const& module_dependencies
 ) -> std::optional<Cool::Mesh>;
 
 } // namespace Lab

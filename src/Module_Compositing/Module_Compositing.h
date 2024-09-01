@@ -8,7 +8,8 @@ namespace Lab {
 
 class Module_Compositing : public Module {
 public:
-    Module_Compositing();
+    Module_Compositing() = default;
+    Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies);
     Module_Compositing(Module_Compositing const&)                    = delete;
     auto operator=(Module_Compositing const&) -> Module_Compositing& = delete;
     // Module_Compositing(Module_Compositing&&) noexcept                    = default; // TODO(Modules)
@@ -24,7 +25,7 @@ public:
     void update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
-    void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) override;
+    void render(DataToPassToShader const&) override;
     void log_shader_error(Cool::OptionalErrorMessage const&) const;
 
 private:

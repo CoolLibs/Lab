@@ -11,8 +11,12 @@ static auto module_id()
     return i++;
 }
 
-Module_Particles::Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count)
-    : Module{fmt::format("Particles {}", module_id())}
+Module_Particles::Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies)
+    : Module{
+          fmt::format("Particles {}", module_id()),
+          std::move(texture_name_in_shader),
+          std::move(dependencies)
+      }
     , _id_of_node_storing_particles_count{id_of_node_storing_particles_count}
 {
 }
@@ -153,7 +157,7 @@ void Module_Particles::imgui_generated_shader_code_tab()
     }
 }
 
-void Module_Particles::render(DataToPassToShader const& data, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies)
+void Module_Particles::render(DataToPassToShader const& data)
 {
     if (!_particle_system)
         return;
@@ -166,7 +170,7 @@ void Module_Particles::render(DataToPassToShader const& data, std::vector<std::s
     render_target().render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        set_uniforms_for_shader_based_module(_particle_system->render_shader(), _depends_on, data, module_dependencies);
+        set_uniforms_for_shader_based_module(_particle_system->render_shader(), _depends_on, data, dependencies());
 
         auto const view_proj_matrix_2D_mat3 = data.system_values.camera_2D_view_projection_matrix();
         auto const view_proj_matrix_2D_mat4 = glm::mat4{

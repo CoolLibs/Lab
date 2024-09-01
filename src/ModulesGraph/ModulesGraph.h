@@ -3,8 +3,8 @@
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/View/GizmoManager.h"
 #include "DirtyFlags.h"
+#include "Module/Module.h"
 #include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
-#include "ModulesGraphNode.hpp"
 #include "Nodes/NodesConfig.h"
 
 namespace Lab {
@@ -60,22 +60,21 @@ public:
 
 private:
     void recreate_all_modules(Cool::NodeId const& node_id, DataToGenerateShaderCode const&);
-    auto create_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
-    auto create_compositing_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
-    auto create_particles_module(Cool::NodeId const& node_id, NodeDefinition const&, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
-    auto create_feedback_loop_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
+    auto create_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
+    auto create_compositing_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
+    auto create_particles_module(Cool::NodeId const& node_id, NodeDefinition const&, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
+    auto create_feedback_loop_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
 
-    void render_module_ifn(ModulesGraphNode&, DataToPassToShader const&);
+    void render_module_ifn(Module&, DataToPassToShader const&);
     void check_for_rerender_and_rebuild(DataToPassToShader const&, DataToGenerateShaderCode const&);
-    auto root_module() const -> Module const*;
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
     mutable Cool::NodeId      _main_node_id{}; // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
     DirtyFlags                _dirty_flags{};
 
-    std::vector<std::shared_ptr<ModulesGraphNode>> _module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)
-    std::shared_ptr<ModulesGraphNode>              _root_module_node{};
+    std::vector<std::shared_ptr<Module>> _modules{}; // TODO(Particles) No need for the unique_ptr (in theory)
+    std::shared_ptr<Module>              _root_module{};
 
 private:
     // Serialization
@@ -84,7 +83,7 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            ser20::make_nvp("Modules", _module_nodes),
+            ser20::make_nvp("Modules", _modules),
             ser20::make_nvp("Dirty flags", _dirty_flags),
             ser20::make_nvp("Node editor", _nodes_editor),
             ser20::make_nvp("Main node ID", _main_node_id)

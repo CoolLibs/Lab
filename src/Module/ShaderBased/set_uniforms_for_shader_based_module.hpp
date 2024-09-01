@@ -5,13 +5,13 @@
 
 namespace Lab {
 
-class ModulesGraphNode;
+class Module;
 
 void set_uniforms_for_shader_based_module(
     Cool::OpenGL::Shader const&,
     ModuleDependencies const&,
     DataToPassToShader const&,
-    std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies
+    std::vector<std::shared_ptr<Module>> const& module_dependencies
 );
 
 } // namespace Lab

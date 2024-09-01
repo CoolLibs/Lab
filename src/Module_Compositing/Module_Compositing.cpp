@@ -6,11 +6,15 @@ namespace Lab {
 static auto module_id()
 {
     static auto i{0};
-    return ++i;
+    return i++;
 }
 
-Module_Compositing::Module_Compositing()
-    : Module{fmt::format("Compositing {}", module_id())}
+Module_Compositing::Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies)
+    : Module{
+          fmt::format("Compositing {}", module_id()),
+          std::move(texture_name_in_shader),
+          std::move(dependencies)
+      }
 {
 }
 
@@ -57,7 +61,7 @@ void Module_Compositing::imgui_generated_shader_code_tab()
     }
 }
 
-void Module_Compositing::render(DataToPassToShader const& data, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies)
+void Module_Compositing::render(DataToPassToShader const& data)
 {
     if (!_pipeline.shader())
         return;
@@ -66,7 +70,7 @@ void Module_Compositing::render(DataToPassToShader const& data, std::vector<std:
     render_target().render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data, module_dependencies);
+        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data, dependencies());
         _pipeline.draw();
     });
 }

@@ -9,8 +9,8 @@
 namespace Lab {
 class Module_Particles : public Module {
 public:
-    Module_Particles() = default; // TODO(Module) remove?
-    explicit Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count);
+    Module_Particles() = default;
+    explicit Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
     Module_Particles(Module_Particles&&) noexcept                    = default;
@@ -32,7 +32,7 @@ public:
     void update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
-    void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) override;
+    void render(DataToPassToShader const&) override;
     void update_particles(DataToPassToShader const&);
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void update_particles_count_ifn();

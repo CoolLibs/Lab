@@ -22,10 +22,10 @@ namespace Lab {
 
 void ModulesGraph::update()
 {
-    for (auto& module_node : _module_nodes)
+    for (auto& module : _modules)
     {
-        module_node->module->_nodes_graph = &_nodes_editor.graph();
-        module_node->module->update();
+        module->_nodes_graph = &_nodes_editor.graph();
+        module->update();
     }
 }
 
@@ -45,55 +45,55 @@ void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data
         rerender_all_flag().set_clean();
     }
 
-    for (auto const& node : _module_nodes)
+    for (auto const& module : _modules)
     {
-        if (node->module->depends_on().time_since_last_midi_button_pressed)
-            node->module->needs_to_rerender_flag().set_dirty();
+        if (module->depends_on().time_since_last_midi_button_pressed)
+            module->needs_to_rerender_flag().set_dirty();
 
-        if (data_to_pass_to_shader.system_values.render_target_size != node->module->texture().size)
-            node->module->needs_to_rerender_flag().set_dirty();
+        if (data_to_pass_to_shader.system_values.render_target_size != module->texture().size)
+            module->needs_to_rerender_flag().set_dirty();
     }
 }
 
 void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
     check_for_rerender_and_rebuild(data_to_pass_to_shader, data_to_generate_shader_code);
-    if (!_root_module_node)
+    if (!_root_module)
         return;
 
     // TODO(Particles) Remove those _nodes_graph
-    for (auto& module_node : _module_nodes)
-        module_node->module->_nodes_graph = &_nodes_editor.graph();
+    for (auto& module : _modules)
+        module->_nodes_graph = &_nodes_editor.graph();
 
-    render_module_ifn(*_root_module_node, data_to_pass_to_shader);
+    render_module_ifn(*_root_module, data_to_pass_to_shader);
 }
 
-void ModulesGraph::render_module_ifn(ModulesGraphNode& node, DataToPassToShader const& data)
+void ModulesGraph::render_module_ifn(Module& module, DataToPassToShader const& data)
 {
-    if (!node.needs_to_rerender())
+    if (!module.needs_to_rerender())
         return;
 
     // Render all the dependencies first, so that we can use their textures
-    for (auto const& prev : node.dependencies)
+    for (auto const& prev : module.dependencies())
         render_module_ifn(*prev, data);
 
-    node.module->do_rendering(data, node.dependencies);
-    node.module->needs_to_rerender_flag().set_clean();
+    module.do_rendering(data);
+    module.needs_to_rerender_flag().set_clean();
 
     if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(node.module->name(), fmt::format("Rendered ({}x{})", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
+        Cool::Log::ToUser::info(module.name(), fmt::format("Rendered ({}x{})", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
 }
 
 void ModulesGraph::request_rerender_all()
 {
-    for (auto& node : _module_nodes)
-        node->module->needs_to_rerender_flag().set_dirty();
+    for (auto& module : _modules)
+        module->needs_to_rerender_flag().set_dirty();
 }
 
 void ModulesGraph::on_time_reset()
 {
-    for (auto& node : _module_nodes)
-        node->module->on_time_reset();
+    for (auto& module : _modules)
+        module->on_time_reset();
 }
 
 static auto texture_name_for_module(Cool::NodeId const& id) -> std::string
@@ -130,12 +130,12 @@ static auto node_moduleness(NodeDefinition const& node_definition)
 
 void ModulesGraph::recreate_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
-    _module_nodes.clear();
-    _root_module_node = create_module(root_node_id, data_to_generate_shader_code);
+    _modules.clear();
+    _root_module = create_module(root_node_id, data_to_generate_shader_code);
     request_rerender_all();
 }
 
-auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<ModulesGraphNode>
+auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<Module>
 {
     auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
     if (!node)
@@ -155,9 +155,9 @@ auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerat
     }
 }
 
-auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<ModulesGraphNode>
+auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<Module>
 {
-    auto dependencies = std::vector<std::shared_ptr<ModulesGraphNode>>{};
+    auto dependencies = std::vector<std::shared_ptr<Module>>{};
 
     auto const shader_code = generate_compositing_shader_code(
         root_node_id,
@@ -169,47 +169,42 @@ auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, D
             case NodeModuleness::Particle:
             {
                 dependencies.push_back(create_particles_module(node_id, node_definition, data));
-                return dependencies.back()->texture_name_in_shader;
+                return dependencies.back()->texture_name_in_shader();
             }
             case NodeModuleness::FeedbackLoop:
             {
                 dependencies.push_back(create_feedback_loop_module(node_id, data));
-                return dependencies.back()->texture_name_in_shader;
+                return dependencies.back()->texture_name_in_shader();
             }
             }
         },
         [&]() {
             std::vector<std::string> tex_names;
-            tex_names.reserve(_module_nodes.size());
-            for (auto const& node : _module_nodes)
+            tex_names.reserve(_modules.size());
+            for (auto const& module : _modules)
             {
-                tex_names.push_back(node->texture_name_in_shader);
+                tex_names.push_back(module->texture_name_in_shader());
             }
             return tex_names;
         },
         data
     );
 
-    auto module = std::make_shared<Module_Compositing>();
+    auto module = std::make_shared<Module_Compositing>(texture_name_for_module(root_node_id), std::move(dependencies));
     module->set_shader_code(shader_code);
-
-    _module_nodes.push_back(std::make_shared<ModulesGraphNode>(
-        /* .module                 = */ module,
-        /* .texture_name_in_shader = */ texture_name_for_module(root_node_id),
-        /* .dependencies           = */ std::move(dependencies)
-    ));
-    return _module_nodes.back();
+    _modules.push_back(module);
+    return module;
 }
 
-auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, NodeDefinition const& node_definition, DataToGenerateShaderCode const& data) -> std::shared_ptr<ModulesGraphNode>
+auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, NodeDefinition const& node_definition, DataToGenerateShaderCode const& data) -> std::shared_ptr<Module>
 {
     int const  dimension              = is_particle_3D(node_definition.signature()) ? 3 : 2;
     auto const texture_name_in_shader = texture_name_for_module(root_node_id);
 
     // TODO(FeedbackLoop) if a module with the same texture_name_in_shader already exists, return it
     // if (std::none_of(
-    //         _particles_module_nodes.begin(),
-    //         _particles_module_nodes.end(),
+    //         _particles_modules.begin(),
+    //         _particles_modules.end(),
     //         [&](std::unique_ptr<ModulesGraphNode> const& node) {
     //             return node->texture_name_in_shader == texture_name_in_shader;
     //         }
@@ -223,21 +218,18 @@ auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, Nod
         data
     );
 
-    auto module = std::make_shared<Module_Particles>(id_of_node_storing_particles_count);
+    auto module = std::make_shared<Module_Particles>(
+        id_of_node_storing_particles_count,
+        texture_name_in_shader,
+        std::vector<std::shared_ptr<Module>>{} // TODO(FeedbackLoop) Accumulate the dependencies while generating the shader code
+    );
     module->set_simulation_shader_code(simulation_shader_code, false, dimension);
-
-    _module_nodes.push_back(std::make_shared<ModulesGraphNode>(
-        /* .module                 = */ module,
-        /* .texture_name_in_shader = */ texture_name_in_shader,
-        /* .dependencies           = */ std::vector<std::shared_ptr<ModulesGraphNode>>{} // TODO(FeedbackLoop) Accumulate the dependencies while generating the shader code
-    ));
-    return _module_nodes.back();
+    _modules.push_back(module);
+    return module;
 }
 
-auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<ModulesGraphNode>
+auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<Module>
 {
-    auto module = std::make_shared<Module_FeedbackLoop>();
-
     auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
     if (!node)
         return nullptr; // TODO(FeedbackLoop) Return an error message?
@@ -246,18 +238,18 @@ auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id,
     auto const predecessor_node_id = data.nodes_graph.find_node_connected_to_input_pin(node->input_pins()[0].id());
     auto const dependency          = create_module(predecessor_node_id, data); // TODO(FeedbackLoop) Handle the case where the input pin is not connected to anything (generate a dummy module that returns a default texture? we could reuse the same dummy module when there is no node at all in the graph)
 
-    _module_nodes.push_back(std::make_shared<ModulesGraphNode>(
-        /* .module                 = */ module,
-        /* .texture_name_in_shader = */ texture_name_for_module(root_node_id),
-        /* .dependencies           = */ std::vector<std::shared_ptr<ModulesGraphNode>>{dependency}
-    ));
-    return _module_nodes.back();
+    auto module = std::make_shared<Module_FeedbackLoop>(
+        texture_name_for_module(root_node_id),
+        std::vector<std::shared_ptr<Module>>{dependency}
+    );
+    _modules.push_back(module);
+    return module;
 }
 
 void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const
 {
-    for (auto const& node : _module_nodes)
-        node->module->imgui_windows(ui);
+    for (auto const& module : _modules)
+        module->imgui_windows(ui);
 
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, nodes_library)};
@@ -267,10 +259,10 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, C
     DebugOptions::show_generated_shader_code([&] {
         if (ImGui::BeginTabBar("Shaders Tabs", ImGuiTabBarFlags_None))
         {
-            for (auto const& node : _module_nodes)
+            for (auto const& module : _modules)
             {
-                ImGui::PushID(&node);
-                node->module->imgui_generated_shader_code_tab();
+                ImGui::PushID(module.get());
+                module->imgui_generated_shader_code_tab();
                 ImGui::PopID();
             }
             ImGui::EndTabBar();
@@ -307,14 +299,9 @@ void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, CommandExecutor con
     });
 }
 
-auto ModulesGraph::root_module() const -> Module const*
-{
-    return _root_module_node ? _root_module_node->module.get() : nullptr;
-}
-
 auto ModulesGraph::final_texture() const -> Cool::TextureRef
 {
-    return root_module() ? root_module()->texture() : Cool::TextureRef{};
+    return _root_module ? _root_module->texture() : Cool::TextureRef{};
 }
 
 auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const -> NodesConfig
@@ -333,54 +320,54 @@ auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Co
 
 void ModulesGraph::on_time_changed()
 {
-    for (auto& node : _module_nodes)
+    for (auto& module : _modules)
     {
-        node->module->on_time_changed();
-        if (node->module->depends_on().time)
-            node->module->needs_to_rerender_flag().set_dirty();
+        module->on_time_changed();
+        if (module->depends_on().time)
+            module->needs_to_rerender_flag().set_dirty();
     }
 }
 
 void ModulesGraph::on_audio_changed()
 {
-    for (auto& node : _module_nodes)
+    for (auto& module : _modules)
     {
-        if (node->module->depends_on().audio())
-            node->module->needs_to_rerender_flag().set_dirty();
+        if (module->depends_on().audio())
+            module->needs_to_rerender_flag().set_dirty();
     }
 }
 
 void ModulesGraph::on_osc_channel_changed(Cool::OSCChannel const& osc_channel)
 {
-    for (auto& node : _module_nodes)
+    for (auto& module : _modules)
     {
-        if (node->module->depends_on().osc_channel(osc_channel))
-            node->module->needs_to_rerender_flag().set_dirty();
+        if (module->depends_on().osc_channel(osc_channel))
+            module->needs_to_rerender_flag().set_dirty();
     }
 }
 
 void ModulesGraph::on_midi_channel_changed(Cool::MidiChannel const& midi_channel)
 {
-    for (auto& node : _module_nodes)
+    for (auto& module : _modules)
     {
-        if (node->module->depends_on().midi_channel(midi_channel))
-            node->module->needs_to_rerender_flag().set_dirty();
+        if (module->depends_on().midi_channel(midi_channel))
+            module->needs_to_rerender_flag().set_dirty();
     }
 }
 
 void ModulesGraph::on_last_midi_button_pressed_changed()
 {
-    for (auto& node : _module_nodes)
+    for (auto& module : _modules)
     {
-        if (node->module->depends_on().last_midi_button_pressed)
-            node->module->needs_to_rerender_flag().set_dirty();
+        if (module->depends_on().last_midi_button_pressed)
+            module->needs_to_rerender_flag().set_dirty();
     }
 }
 
 void ModulesGraph::update_dependencies_from_nodes_graph()
 {
-    for (auto const& module_node : _module_nodes)
-        module_node->module->update_dependencies_from_nodes_graph(_nodes_editor.graph());
+    for (auto const& module : _modules)
+        module->update_dependencies_from_nodes_graph(_nodes_editor.graph());
 }
 
 void ModulesGraph::debug_show_nodes_and_links_registries_windows(Ui_Ref ui) const

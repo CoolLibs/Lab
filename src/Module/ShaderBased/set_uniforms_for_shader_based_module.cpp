@@ -6,10 +6,9 @@
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Cool/TextureSource/TextureLibrary_Image.h"
-#include "ModulesGraph/ModulesGraphNode.hpp"
+#include "Module/Module.h"
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
-
 
 namespace Lab {
 
@@ -90,10 +89,10 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable
 }
 
 void set_uniforms_for_shader_based_module(
-    Cool::OpenGL::Shader const&                           shader,
-    ModuleDependencies const&                             depends_on,
-    DataToPassToShader const&                             data,
-    std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies
+    Cool::OpenGL::Shader const&                 shader,
+    ModuleDependencies const&                   depends_on,
+    DataToPassToShader const&                   data,
+    std::vector<std::shared_ptr<Module>> const& module_dependencies
 )
 {
     shader.bind();
@@ -128,11 +127,11 @@ void set_uniforms_for_shader_based_module(
         }
     });
 
-    for (auto const& module_node : module_dependencies)
+    for (auto const& module : module_dependencies)
     {
         shader.set_uniform_texture(
-            module_node->texture_name_in_shader,
-            module_node->module->texture().id,
+            module->texture_name_in_shader(),
+            module->texture().id,
             Cool::TextureSamplerDescriptor{
                 .repeat_mode        = Cool::TextureRepeatMode::None,
                 .interpolation_mode = glpp::Interpolation::Linear, // TODO(FeedbackLoop) The texture coming from feedback loop module must use nearest neighbour interpolation (cf  // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).)
