@@ -71,26 +71,16 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
     if (!_root_module_node)
         return;
 
-    // TODO(FeedbackLoop) Is this still necessary ?
-    // for (auto& module_node : _particles_module_nodes)
-    //     module_node->render_target.set_size(render_target.desired_size());
-    // _compositing_module.set_render_target_size(render_target.desired_size()); // Must be done before rendering, otherwise we might read a target that is too small. (e.g. 1 pixel on app startup)
-
     // TODO(Particles) Remove those _nodes_graph
     for (auto& module_node : _module_nodes)
-    {
         module_node->module->_nodes_graph = &_nodes_editor.graph();
-        // TODO(FeedbackLoop) Handle the fact that a node needs to rerender if one of its dependencies needs to rerender
-        // if (module_node->module->needs_to_rerender())
-        //     _compositing_module.needs_to_rerender_flag().set_dirty(); // Because compositing module depends on particles module
-    }
 
     render_module_ifn(*_root_module_node, data_to_pass_to_shader);
 }
 
 void ModulesGraph::render_module_ifn(ModulesGraphNode& node, DataToPassToShader const& data)
 {
-    if (!node.module->needs_to_rerender())
+    if (!node.needs_to_rerender())
         return;
 
     // Render all the dependencies first, so that we can use their textures

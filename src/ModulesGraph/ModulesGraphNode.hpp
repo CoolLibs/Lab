@@ -23,6 +23,8 @@ struct ModulesGraphNode {
     std::string                                    texture_name_in_shader{};
     std::vector<std::shared_ptr<ModulesGraphNode>> dependencies{};
 
+    auto needs_to_rerender() const -> bool;
+
 private:
     friend class ser20::access;
     template<class Archive>
