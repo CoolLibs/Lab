@@ -9,7 +9,7 @@
 namespace Lab {
 class Module_Particles : public Module {
 public:
-    Module_Particles() = default; // TODO(FeedbackLoop) remove?
+    Module_Particles() = default; // TODO(Module) remove?
     explicit Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count);
     Module_Particles(Module_Particles const&)                        = delete;
     auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
@@ -19,7 +19,7 @@ public:
 
     void update() override;
     void on_time_changed() override;
-    void imgui_show_generated_shader_code();
+    void imgui_generated_shader_code_tab() override;
 
     [[nodiscard]] auto needs_to_rerender() const -> bool override
     {

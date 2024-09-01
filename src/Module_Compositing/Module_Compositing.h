@@ -15,7 +15,7 @@ public:
     // auto operator=(Module_Compositing&&) noexcept -> Module_Compositing& = default; // TODO(Modules)
 
     void update() override;
-    void imgui_show_generated_shader_code();
+    void imgui_generated_shader_code_tab() override;
 
     void reset_shader();
 

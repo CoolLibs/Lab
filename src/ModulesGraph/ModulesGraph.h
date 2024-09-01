@@ -74,7 +74,7 @@ private:
     mutable Cool::NodeId      _main_node_id{}; // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
     DirtyFlags                _dirty_flags{};
 
-    std::vector<std::shared_ptr<ModulesGraphNode>> _module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)  // TODO(FeedbackLoop) No need for the unique_ptr
+    std::vector<std::shared_ptr<ModulesGraphNode>> _module_nodes{}; // TODO(Particles) No need for the unique_ptr (in theory)
     std::shared_ptr<ModulesGraphNode>              _root_module_node{};
 
 private:

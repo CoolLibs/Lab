@@ -43,6 +43,7 @@ public:
     virtual void on_time_changed() {};
     virtual void on_time_reset() {};
     virtual void update_dependencies_from_nodes_graph(Cool::NodesGraph const&) {};
+    virtual void imgui_generated_shader_code_tab() {};
 
     [[nodiscard]] virtual auto needs_to_rerender() const -> bool
     {

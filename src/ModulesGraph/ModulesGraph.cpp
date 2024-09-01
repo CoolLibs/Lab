@@ -267,22 +267,12 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, C
     DebugOptions::show_generated_shader_code([&] {
         if (ImGui::BeginTabBar("Shaders Tabs", ImGuiTabBarFlags_None))
         {
-            // TODO(FeedbackLoop)
-            // if (ImGui::BeginTabItem("Compositing"))
-            // {
-            //     _compositing_module.imgui_show_generated_shader_code();
-            //     ImGui::EndTabItem();
-            // }
-            // for (auto const& _particles_module : _particles_module_nodes)
-            // {
-            //     ImGui::PushID(&_particles_module);
-            //     if (ImGui::BeginTabItem("Particle Simulation"))
-            //     {
-            //         static_cast<Module_Particles*>(_particles_module->module.get())->imgui_show_generated_shader_code();
-            //         ImGui::EndTabItem();
-            //     }
-            //     ImGui::PopID();
-            // }
+            for (auto const& node : _module_nodes)
+            {
+                ImGui::PushID(&node);
+                node->module->imgui_generated_shader_code_tab();
+                ImGui::PopID();
+            }
             ImGui::EndTabBar();
         }
     });

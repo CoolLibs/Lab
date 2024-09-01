@@ -143,10 +143,14 @@ void Module_Particles::update_particles(DataToPassToShader const& data)
 #endif
 }
 
-void Module_Particles::imgui_show_generated_shader_code()
+void Module_Particles::imgui_generated_shader_code_tab()
 {
-    if (Cool::ImGuiExtras::input_text_multiline("##Particles simulation", &_shader_code, ImVec2{-1.f, -1.f}))
-        set_simulation_shader_code(_shader_code, false, _particle_system ? _particle_system->dimension() : _particle_system_dimension);
+    if (ImGui::BeginTabItem(fmt::format("{} (Simulation)", name()).c_str()))
+    {
+        if (Cool::ImGuiExtras::input_text_multiline("##Particles simulation", &_shader_code, ImVec2{-1.f, -1.f}))
+            set_simulation_shader_code(_shader_code, false, _particle_system ? _particle_system->dimension() : _particle_system_dimension);
+        ImGui::EndTabItem();
+    }
 }
 
 void Module_Particles::render(DataToPassToShader const& data, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies)

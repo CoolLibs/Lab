@@ -47,11 +47,13 @@ void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& mayb
     log_module_error(maybe_err, _shader_error_sender);
 }
 
-void Module_Compositing::imgui_show_generated_shader_code()
+void Module_Compositing::imgui_generated_shader_code_tab()
 {
-    if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{-1.f, -1.f}))
+    if (ImGui::BeginTabItem(name().c_str()))
     {
-        set_shader_code(_shader_code);
+        if (Cool::ImGuiExtras::input_text_multiline("##Compositing shader code", &_shader_code, ImVec2{-1.f, -1.f}))
+            set_shader_code(_shader_code);
+        ImGui::EndTabItem();
     }
 }
 
