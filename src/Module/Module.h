@@ -56,6 +56,7 @@ public:
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
     [[nodiscard]] auto texture_name_in_shader() const -> std::string const& { return _texture_name_in_shader; }
     [[nodiscard]] auto dependencies() const -> std::vector<std::shared_ptr<Module>> const& { return _dependencies; }
+    [[nodiscard]] auto nodes_that_we_depend_on() const -> std::vector<Cool::NodeId> const& { return _nodes_that_we_depend_on; }
 
 private:
     virtual void render(DataToPassToShader const&) = 0;

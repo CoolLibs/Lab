@@ -71,7 +71,7 @@ void Module_Compositing::render(DataToPassToShader const& data)
     render_target().render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data, dependencies());
+        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data, dependencies(), nodes_that_we_depend_on());
         _pipeline.draw();
     });
 }

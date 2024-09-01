@@ -92,7 +92,8 @@ void set_uniforms_for_shader_based_module(
     Cool::OpenGL::Shader const&                 shader,
     ModuleDependencies const&                   depends_on,
     DataToPassToShader const&                   data,
-    std::vector<std::shared_ptr<Module>> const& module_dependencies
+    std::vector<std::shared_ptr<Module>> const& module_dependencies,
+    std::vector<Cool::NodeId> const&            nodes_that_we_depend_on
 )
 {
     shader.bind();
@@ -117,15 +118,19 @@ void set_uniforms_for_shader_based_module(
 
     Cool::CameraShaderU::set_uniform(shader, data.system_values.camera_3D, data.system_values.aspect_ratio());
 
-    data.nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
-        for (auto const& value_input : node.value_inputs())
-        {
-            std::visit([&](auto&& value_input) {
-                set_uniform(shader, value_input);
-            },
-                       value_input);
-        }
-    });
+    for (auto const& node_id : nodes_that_we_depend_on)
+    {
+        data.nodes_graph.nodes().with_ref(node_id, [&](Cool::Node const& abstract_node) {
+            auto const& node = abstract_node.downcast<Node>();
+            for (auto const& value_input : node.value_inputs())
+            {
+                std::visit([&](auto&& value_input) {
+                    set_uniform(shader, value_input);
+                },
+                           value_input);
+            }
+        });
+    }
 
     for (auto const& module : module_dependencies)
     {

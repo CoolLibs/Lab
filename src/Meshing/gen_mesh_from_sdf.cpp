@@ -126,7 +126,7 @@ auto gen_mesh_from_sdf(
         auto dependencies = ModuleDependencies{};
         update_dependencies_from_shader_code(dependencies, *shader_code);
         update_dependencies_from_nodes_graph(dependencies, data_to_pass_to_shader.nodes_graph, {} /*TODO(Meshing) Properly pass the nodes that we depend on*/);
-        set_uniforms_for_shader_based_module(*meshing_compute_shader, dependencies, data_to_pass_to_shader, module_dependencies);
+        set_uniforms_for_shader_based_module(*meshing_compute_shader, dependencies, data_to_pass_to_shader, module_dependencies, {} /*TODO(Meshing) Properly pass the nodes that we depend on*/);
     }
 
     meshing_compute_shader->compute(meshing_settings.samples_count);

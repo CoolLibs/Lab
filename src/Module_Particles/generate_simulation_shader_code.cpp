@@ -10,7 +10,8 @@ auto generate_simulation_shader_code(
     Cool::NodeId const&             root_node_id,
     Cool::NodeId&                   id_of_node_storing_particles_count,
     int                             dimension,
-    DataToGenerateShaderCode const& data
+    DataToGenerateShaderCode const& data,
+    MaybeGenerateModule const&      maybe_generate_module
 ) -> tl::expected<std::string, std::string>
 {
     using fmt::literals::operator""_a;
@@ -142,11 +143,11 @@ void cool_main()
         .arity = 1,
     };
 
-    auto const node_definition_callback = [&](auto const& node_id, auto const&) {
+    auto const node_definition_callback = [&](Cool::NodeId const& node_id, NodeDefinition const& node_definition) {
         auto const* maybe_node = data.nodes_graph.try_get_node<Node>(node_id);
         if (maybe_node && maybe_node->particles_count().has_value())
             id_of_node_storing_particles_count = node_id;
-        return std::nullopt;
+        return maybe_generate_module(node_id, node_definition);
     };
 
     return generate_shader_code(
