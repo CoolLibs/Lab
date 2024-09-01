@@ -14,7 +14,8 @@ Module_FeedbackLoop::Module_FeedbackLoop(std::string texture_name_in_shader, std
     : Module{
           fmt::format("Feedback Loop {}", module_id()),
           std::move(texture_name_in_shader),
-          std::move(deps)
+          std::move(deps),
+          {} // We don't depend on any node
       }
 {
     assert(dependencies().size() == 1);

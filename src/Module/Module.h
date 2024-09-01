@@ -23,10 +23,11 @@ public:
     auto operator=(Module&&) noexcept -> Module& = default;
     virtual ~Module()                            = default;
 
-    explicit Module(std::string_view name, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies)
+    explicit Module(std::string_view name, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies, std::vector<Cool::NodeId> nodes_that_we_depend_on)
         : _name{name}
         , _texture_name_in_shader{std::move(texture_name_in_shader)}
         , _dependencies{std::move(dependencies)}
+        , _nodes_that_we_depend_on{std::move(nodes_that_we_depend_on)}
     {}
 
     Cool::NodesGraph const* _nodes_graph{}; // TODO(Particles) Remove
@@ -48,7 +49,7 @@ public:
     virtual auto               texture() const -> Cool::TextureRef { return _render_target.texture_ref(); }
 
     [[nodiscard]] auto needs_to_rerender_flag() const -> Cool::DirtyFlag const& { return _needs_to_rerender_flag; }
-    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
+    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph, _nodes_that_we_depend_on); }
     void               log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
     auto               render_target() -> Cool::RenderTarget& { return _render_target; }
     auto               render_target() const -> Cool::RenderTarget const& { return _render_target; }
@@ -66,6 +67,7 @@ private:
 
     std::string                          _texture_name_in_shader{};
     std::vector<std::shared_ptr<Module>> _dependencies{};
+    std::vector<Cool::NodeId>            _nodes_that_we_depend_on{};
 
 protected:
     ModuleDependencies _depends_on{};

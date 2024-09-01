@@ -9,11 +9,12 @@ static auto module_id()
     return i++;
 }
 
-Module_Compositing::Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies)
+Module_Compositing::Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies, std::vector<Cool::NodeId> nodes_that_we_depend_on)
     : Module{
           fmt::format("Compositing {}", module_id()),
           std::move(texture_name_in_shader),
-          std::move(dependencies)
+          std::move(dependencies),
+          std::move(nodes_that_we_depend_on)
       }
 {
 }

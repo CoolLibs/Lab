@@ -12,7 +12,8 @@ Module_Default::Module_Default(std::string texture_name_in_shader)
     : Module{
           fmt::format("Default {}", module_id()),
           std::move(texture_name_in_shader),
-          {}
+          {}, // We don't depend on any module
+          {}  // We don't depend on any node
       }
 {}
 
