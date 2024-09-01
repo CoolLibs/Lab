@@ -11,6 +11,7 @@
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
+#include "Module_Default/Module_Default.hpp"
 #include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
 #include "Module_Particles/Module_Particles.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
@@ -142,10 +143,10 @@ auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerat
 {
     auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
     if (!node)
-        return nullptr; // TODO(FeedbackLoop) Return an error message?
+        return std::make_shared<Module_Default>(texture_name_for_module(root_node_id)); // TODO(Module) Return an error message? Probably not because this is legit, eg when a feedback loop has nothing in its input pin
     auto const* node_def = data.get_node_definition(node->id_names());
     if (!node_def)
-        return nullptr; // TODO(FeedbackLoop) Return an error message?
+        return std::make_shared<Module_Default>(texture_name_for_module(root_node_id)); // TODO(Module) Return an error message, this shouldn't happen
 
     switch (node_moduleness(*node_def))
     {
@@ -224,7 +225,7 @@ auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, Nod
     auto module = std::make_shared<Module_Particles>(
         id_of_node_storing_particles_count,
         texture_name_in_shader,
-        std::vector<std::shared_ptr<Module>>{} // TODO(FeedbackLoop) Accumulate the dependencies while generating the shader code
+        std::vector<std::shared_ptr<Module>>{} // TODO(Module) Accumulate the dependencies while generating the shader code
     );
     module->set_simulation_shader_code(simulation_shader_code, false, dimension);
     _modules.push_back(module);
@@ -235,11 +236,11 @@ auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id,
 {
     auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
     if (!node)
-        return nullptr; // TODO(FeedbackLoop) Return an error message?
+        return nullptr; // TODO(Module) Return an error message? This should never happen
 
     assert(node->input_pins().size() == 1);
     auto const predecessor_node_id = data.nodes_graph.find_node_connected_to_input_pin(node->input_pins()[0].id());
-    auto const dependency          = create_module(predecessor_node_id, data); // TODO(FeedbackLoop) Handle the case where the input pin is not connected to anything (generate a dummy module that returns a default texture? we could reuse the same dummy module when there is no node at all in the graph)
+    auto const dependency          = create_module(predecessor_node_id, data);
 
     auto module = std::make_shared<Module_FeedbackLoop>(
         texture_name_for_module(root_node_id),
@@ -304,7 +305,7 @@ void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, CommandExecutor con
 
 auto ModulesGraph::final_texture() const -> Cool::TextureRef
 {
-    return _root_module ? _root_module->texture() : Cool::TextureRef{};
+    return _root_module->texture();
 }
 
 auto ModulesGraph::nodes_config(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const -> NodesConfig

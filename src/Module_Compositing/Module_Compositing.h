@@ -22,8 +22,6 @@ public:
 
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code);
 
-    void update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
-
 private:
     void render(DataToPassToShader const&) override;
     void log_shader_error(Cool::OptionalErrorMessage const&) const;

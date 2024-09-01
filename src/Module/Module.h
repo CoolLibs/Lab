@@ -42,21 +42,17 @@ public:
     virtual void               update() {};
     virtual void               on_time_changed() {};
     virtual void               on_time_reset() {};
-    virtual void               update_dependencies_from_nodes_graph(Cool::NodesGraph const&) {};
     virtual void               imgui_generated_shader_code_tab() {};
     [[nodiscard]] virtual auto needs_to_rerender() const -> bool;
+    virtual void               before_module_graph_renders() {};
+    virtual auto               texture() const -> Cool::TextureRef { return _render_target.texture_ref(); }
 
     [[nodiscard]] auto needs_to_rerender_flag() const -> Cool::DirtyFlag const& { return _needs_to_rerender_flag; }
-
-    void log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
-
-    virtual auto texture() const -> Cool::TextureRef { return _render_target.texture_ref(); }
-
-    auto render_target() -> Cool::RenderTarget& { return _render_target; }
-    auto render_target() const -> Cool::RenderTarget const& { return _render_target; }
-
+    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
+    void               log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
+    auto               render_target() -> Cool::RenderTarget& { return _render_target; }
+    auto               render_target() const -> Cool::RenderTarget const& { return _render_target; }
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
-
     [[nodiscard]] auto texture_name_in_shader() const -> std::string const& { return _texture_name_in_shader; }
     [[nodiscard]] auto dependencies() const -> std::vector<std::shared_ptr<Module>> const& { return _dependencies; }
 

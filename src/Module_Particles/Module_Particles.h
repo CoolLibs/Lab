@@ -29,8 +29,6 @@ public:
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
     void on_time_reset() override;
 
-    void update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
-
 private:
     void render(DataToPassToShader const&) override;
     void update_particles(DataToPassToShader const&);

@@ -18,15 +18,11 @@ public:
     [[nodiscard]] auto needs_to_rerender() const -> bool override;
     void               before_module_graph_renders() override;
 
-    [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
-    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
-
 private:
     void render(DataToPassToShader const&) override;
 
 private:
     Cool::RenderTarget _render_target{};
-    ModuleDependencies _depends_on{};
     bool               _bob{false};
     int                _renders_count{0};
     bool               _rerender_next_frame{false};

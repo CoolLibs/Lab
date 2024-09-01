@@ -73,8 +73,8 @@ private:
     mutable Cool::NodeId      _main_node_id{}; // TODO(Modules) Rename as _root_node_id? Or _output_node_id?
     DirtyFlags                _dirty_flags{};
 
-    std::vector<std::shared_ptr<Module>> _modules{}; // TODO(Particles) No need for the unique_ptr (in theory)
-    std::shared_ptr<Module>              _root_module{};
+    std::vector<std::shared_ptr<Module>> _modules{};     // TODO(Particles) No need for the unique_ptr (in theory)
+    std::shared_ptr<Module>              _root_module{}; // Never null
 
 private:
     // Serialization
