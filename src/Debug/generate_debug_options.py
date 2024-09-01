@@ -63,6 +63,11 @@ def all_debug_options():
             available_in_release=True,
         ),
         DebugOption(
+            name_in_code="force_rerender_every_frame",
+            name_in_ui="Force rerender every frame",
+            available_in_release=True,
+        ),
+        DebugOption(
             name_in_code="log_when_rendering",
             name_in_ui="Log when rendering",
             available_in_release=True,

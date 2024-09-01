@@ -116,6 +116,9 @@ void App::update()
         initial_project_opening(command_execution_context());
     }
 
+    if (DebugOptions::force_rerender_every_frame())
+        _project.modules_graph->request_rerender_all();
+
     Cool::user_settings().color_themes.update();
 
     _project.audio.set_force_mute(_project.exporter.is_exporting());
