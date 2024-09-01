@@ -134,7 +134,7 @@ void set_uniforms_for_shader_based_module(
             module->texture().id,
             Cool::TextureSamplerDescriptor{
                 .repeat_mode        = Cool::TextureRepeatMode::None,
-                .interpolation_mode = glpp::Interpolation::Linear, // TODO(FeedbackLoop) The texture coming from feedback loop module must use nearest neighbour interpolation (cf  // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).)
+                .interpolation_mode = glpp::Interpolation::NearestNeighbour, // TODO(FeedbackLoop) The texture coming from feedback loop module must use nearest neighbour interpolation (cf  // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).), but the texture from other modules is probably better off using Linear ???
             }
         );
     }
