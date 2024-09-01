@@ -54,8 +54,8 @@ public:
 
     virtual auto texture() const -> Cool::TextureRef { return _render_target.texture_ref(); }
 
-protected:
-    virtual auto render_target() -> Cool::RenderTarget& { return _render_target; }
+    auto render_target() -> Cool::RenderTarget& { return _render_target; }
+    auto render_target() const -> Cool::RenderTarget const& { return _render_target; }
 
 private:
     virtual void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) = 0;

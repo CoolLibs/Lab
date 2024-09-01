@@ -1,5 +1,4 @@
 #pragma once
-#include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
 #include "Cool/Nodes/NodesGraph.h"

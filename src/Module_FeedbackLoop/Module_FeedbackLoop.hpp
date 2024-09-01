@@ -1,7 +1,6 @@
 #pragma once
 #include "Module/Module.h"
 #include "Module/ModuleDependencies.h"
-#include "Module_Compositing/Module_Compositing.h"
 
 namespace Lab {
 class Module_FeedbackLoop : public Module {
@@ -14,6 +13,7 @@ public:
     ~Module_FeedbackLoop() override                                        = default;
 
     void on_time_reset() override;
+    auto texture() const -> Cool::TextureRef override;
 
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
@@ -22,8 +22,9 @@ private:
     void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) override;
 
 private:
-    // Module_Compositing _compositing_module{};
+    Cool::RenderTarget _render_target{};
     ModuleDependencies _depends_on{};
+    bool               _bob{false};
 
 private:
     // Serialization

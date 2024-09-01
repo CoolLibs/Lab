@@ -8,6 +8,7 @@
 #include "Cool/Serialization/Serialization.h"
 #include "Dump/coollab_version.h"
 #include "Module_Compositing/Module_Compositing.h"
+#include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
 #include "Module_Particles/Module_Particles.h"
 #include "SNodesCategoryConfig.h"
 #include "SNodesClipboard.h"
@@ -58,5 +59,6 @@ auto string_to_nodes_clipboard(std::string const& string) -> NodesClipboard
 
 } // namespace Lab
 
-SER20_REGISTER_TYPE(Lab::Module_Compositing); // NOLINT
-SER20_REGISTER_TYPE(Lab::Module_Particles);   // NOLINT
+SER20_REGISTER_TYPE(Lab::Module_Compositing);  // NOLINT
+SER20_REGISTER_TYPE(Lab::Module_Particles);    // NOLINT
+SER20_REGISTER_TYPE(Lab::Module_FeedbackLoop); // NOLINT
