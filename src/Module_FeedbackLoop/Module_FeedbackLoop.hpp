@@ -25,6 +25,7 @@ private:
     Cool::RenderTarget _render_target{};
     ModuleDependencies _depends_on{};
     bool               _bob{false};
+    int                _renders_count{0};
 
 private:
     // Serialization

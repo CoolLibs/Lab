@@ -19,17 +19,19 @@ Module_FeedbackLoop::Module_FeedbackLoop()
 
 void Module_FeedbackLoop::on_time_reset()
 {
-    // TODO(FeedbackLoop) Reset the textures
+    _renders_count = 0;
 }
 
 auto Module_FeedbackLoop::texture() const -> Cool::TextureRef
 {
-    return _bob ? _render_target.texture_ref() : render_target().texture_ref();
+    auto const b = _renders_count < 2 ? !_bob : _bob;
+    return b ? _render_target.texture_ref() : render_target().texture_ref();
 }
 
 void Module_FeedbackLoop::render(DataToPassToShader const& data, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies)
 {
     _bob = !_bob;
+    _renders_count++;
     assert(module_dependencies.size() == 1);
     auto& rt = _bob ? render_target() : _render_target;
     rt.set_size(data.system_values.render_target_size);
