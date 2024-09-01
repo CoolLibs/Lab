@@ -3,8 +3,14 @@
 
 namespace Lab {
 
+static auto module_id()
+{
+    static auto i{0};
+    return ++i;
+}
+
 Module_Compositing::Module_Compositing()
-    : Module{"Compositing"}
+    : Module{fmt::format("Compositing {}", module_id())}
 {
 }
 

@@ -23,7 +23,7 @@ public:
     [[nodiscard]] auto is_empty() const -> bool { return _nodes_editor.is_empty(); }
     [[nodiscard]] auto graph() const -> Cool::NodesGraph const& { return _nodes_editor.graph(); }
     [[nodiscard]] auto graph() -> Cool::NodesGraph& { return _nodes_editor.graph(); }
-    [[nodiscard]] auto regenerate_code_flag() const -> Cool::DirtyFlag const& { return _dirty_flags.regenerate_code; }
+    [[nodiscard]] auto rebuild_modules_graph_flag() const -> Cool::DirtyFlag const& { return _dirty_flags.rebuild; }
     [[nodiscard]] auto rerender_all_flag() const -> Cool::DirtyFlag const& { return _dirty_flags.rerender; }
     [[nodiscard]] auto dirty_flags() const -> DirtyFlags const& { return _dirty_flags; }
     [[nodiscard]] auto nodes_config(Ui_Ref, Cool::AudioManager&, Cool::NodesLibrary const&) const -> NodesConfig;
@@ -65,7 +65,8 @@ private:
     auto create_particles_module(Cool::NodeId const& node_id, NodeDefinition const&, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
     auto create_feedback_loop_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<ModulesGraphNode>;
 
-    void render_one_module(ModulesGraphNode&, DataToPassToShader const&);
+    void render_module_ifn(ModulesGraphNode&, DataToPassToShader const&);
+    void check_for_rerender_and_rebuild(DataToPassToShader const&, DataToGenerateShaderCode const&);
     auto root_module() const -> Module const*;
 
 private:

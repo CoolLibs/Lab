@@ -144,7 +144,7 @@ void App::update()
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(_project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
+        _nodes_library_manager.update(_project.modules_graph->rebuild_modules_graph_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
         _project.modules_graph->update();
         check_inputs();
     }

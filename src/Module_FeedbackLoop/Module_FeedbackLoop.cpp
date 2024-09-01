@@ -4,8 +4,14 @@
 
 namespace Lab {
 
+static auto module_id()
+{
+    static auto i{0};
+    return i++;
+}
+
 Module_FeedbackLoop::Module_FeedbackLoop()
-    : Module{"Feedback Loop"}
+    : Module{fmt::format("Feedback Loop {}", module_id())}
 {
 }
 

@@ -29,8 +29,18 @@ void ModulesGraph::update()
     }
 }
 
-void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
+void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
+    if (rebuild_modules_graph_flag().is_dirty())
+    {
+        if (DebugOptions::log_when_compiling_nodes())
+            Cool::Log::ToUser::info("Modules Graph", "Compiled");
+        recreate_all_modules(_main_node_id, data_to_generate_shader_code);
+        request_rerender_all();
+        rebuild_modules_graph_flag().set_clean();
+        return; // We already requested to rerender all, no need to check if we need to rerender
+    }
+
     // TODO(FeedbackLoop) reintroduce it
     // if (_compositing_module.depends_on().time_since_last_midi_button_pressed
     //     || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().time_since_last_midi_button_pressed; }))
@@ -40,20 +50,26 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
 
     // if (render_target.needs_resizing()) // TODO(FeedbackLoop) handle rerender when size changes
     //     request_rerender_all();
+
+    for (auto const& node : _module_nodes)
+    {
+        if (data_to_pass_to_shader.system_values.render_target_size != node->module->texture().size)
+            node->module->needs_to_rerender_flag().set_dirty();
+    }
+
     if (rerender_all_flag().is_dirty())
     {
         request_rerender_all();
         rerender_all_flag().set_clean();
+        return;
     }
+}
 
-    if (regenerate_code_flag().is_dirty())
-    {
-        if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::ToUser::info("Modules Graph", "Compiled");
-        recreate_all_modules(_main_node_id, data_to_generate_shader_code);
-        request_rerender_all();
-        regenerate_code_flag().set_clean();
-    }
+void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
+{
+    check_for_rerender_and_rebuild(data_to_pass_to_shader, data_to_generate_shader_code);
+    if (!_root_module_node)
+        return;
 
     // TODO(FeedbackLoop) Is this still necessary ?
     // for (auto& module_node : _particles_module_nodes)
@@ -69,23 +85,23 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
         //     _compositing_module.needs_to_rerender_flag().set_dirty(); // Because compositing module depends on particles module
     }
 
-    render_one_module(*_root_module_node, data_to_pass_to_shader);
+    render_module_ifn(*_root_module_node, data_to_pass_to_shader);
 }
 
-void ModulesGraph::render_one_module(ModulesGraphNode& node, DataToPassToShader const& data)
+void ModulesGraph::render_module_ifn(ModulesGraphNode& node, DataToPassToShader const& data)
 {
     if (!node.module->needs_to_rerender())
         return;
 
     // Render all the dependencies first, so that we can use their textures
     for (auto const& prev : node.dependencies)
-        render_one_module(*prev, data);
+        render_module_ifn(*prev, data);
 
     node.module->do_rendering(data, node.dependencies);
     node.module->needs_to_rerender_flag().set_clean();
 
     if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(node.module->name() + " Module", fmt::format("Rendered ({}x{})", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
+        Cool::Log::ToUser::info(node.module->name(), fmt::format("Rendered ({}x{})", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
 }
 
 void ModulesGraph::request_rerender_all()
@@ -265,7 +281,7 @@ void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, C
     {
         auto cfg = Cool::NodesConfig{nodes_config(ui, audio_manager, nodes_library)};
         if (_nodes_editor.imgui_windows(cfg, nodes_library))
-            regenerate_code_flag().set_dirty();
+            rebuild_modules_graph_flag().set_dirty();
     }
     DebugOptions::show_generated_shader_code([&] {
         if (ImGui::BeginTabBar("Shaders Tabs", ImGuiTabBarFlags_None))
@@ -420,19 +436,19 @@ auto ModulesGraph::get_main_node_id() const -> Cool::NodeId const&
 void ModulesGraph::set_main_node_id(Cool::NodeId const& id)
 {
     _main_node_id = id;
-    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+    rebuild_modules_graph_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 void ModulesGraph::add_node(Cool::NodeId const& id, Node const& node)
 {
     _nodes_editor.graph().add_node(id, node);
-    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+    rebuild_modules_graph_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 void ModulesGraph::add_link(Cool::LinkId const& id, Cool::Link const& link)
 {
     _nodes_editor.graph().add_link(id, link);
-    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+    rebuild_modules_graph_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 void ModulesGraph::remove_node(Cool::NodeId const& id)
@@ -441,13 +457,13 @@ void ModulesGraph::remove_node(Cool::NodeId const& id)
         node.downcast<Node>().clear_all_error_messages();
     });
     _nodes_editor.graph().remove_node(id);
-    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+    rebuild_modules_graph_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 void ModulesGraph::remove_link(Cool::LinkId const& id)
 {
     _nodes_editor.graph().remove_link(id);
-    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+    rebuild_modules_graph_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 auto ModulesGraph::try_get_node(Cool::NodeId const& id) const -> Node const*
@@ -460,7 +476,7 @@ void ModulesGraph::set_node(Cool::NodeId const& id, Node const& value)
     graph().nodes().with_mutable_ref(id, [&](Cool::Node& node) {
         node.downcast<Node>() = value;
     });
-    regenerate_code_flag().set_dirty(); // Important when calling this function from a Command
+    rebuild_modules_graph_flag().set_dirty(); // Important when calling this function from a Command
 }
 
 } // namespace Lab

@@ -5,8 +5,14 @@
 
 namespace Lab {
 
+static auto module_id()
+{
+    static auto i{0};
+    return i++;
+}
+
 Module_Particles::Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count)
-    : Module{"Particles"}
+    : Module{fmt::format("Particles {}", module_id())}
     , _id_of_node_storing_particles_count{id_of_node_storing_particles_count}
 {
 }
