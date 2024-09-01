@@ -35,8 +35,7 @@ void Module_FeedbackLoop::render(DataToPassToShader const& data)
 {
     _bob = !_bob;
     _renders_count++;
-    _rerender_next_frame = Module::needs_to_rerender();
-    auto& rt             = _bob ? render_target() : _render_target;
+    auto& rt = _bob ? render_target() : _render_target;
     rt.set_size(data.system_values.render_target_size);
     rt.render([&]() {
         // TODO(WebGPU) use a texture copy operation instead, it will be more efficient
@@ -48,12 +47,15 @@ void Module_FeedbackLoop::render(DataToPassToShader const& data)
     });
 }
 
+void Module_FeedbackLoop::before_module_graph_renders()
+{
+    _rerender_this_frame = _rerender_next_frame;
+    _rerender_next_frame = Module::needs_to_rerender();
+}
+
 auto Module_FeedbackLoop::needs_to_rerender() const -> bool
 {
-    if (Module::needs_to_rerender() || _rerender_next_frame)
-        Cool::Log::ToUser::info("bob", _rerender_next_frame ? "true" : "false");
-    // TODO store the result, and use that in render() to check if we need to rerender next frame
-    return Module::needs_to_rerender() || _rerender_next_frame;
+    return Module::needs_to_rerender() || _rerender_this_frame;
 }
 
 } // namespace Lab

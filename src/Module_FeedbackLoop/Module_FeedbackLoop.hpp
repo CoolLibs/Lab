@@ -16,6 +16,7 @@ public:
     void               on_time_reset() override;
     auto               texture() const -> Cool::TextureRef override;
     [[nodiscard]] auto needs_to_rerender() const -> bool override;
+    void               before_module_graph_renders() override;
 
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
@@ -29,6 +30,7 @@ private:
     bool               _bob{false};
     int                _renders_count{0};
     bool               _rerender_next_frame{false};
+    bool               _rerender_this_frame{false};
 
 private:
     // Serialization

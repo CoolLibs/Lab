@@ -63,7 +63,10 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
 
     // TODO(Particles) Remove those _nodes_graph
     for (auto& module : _modules)
+    {
         module->_nodes_graph = &_nodes_editor.graph();
+        module->before_module_graph_renders();
+    }
 
     render_module_ifn(*_root_module, data_to_pass_to_shader);
 }
