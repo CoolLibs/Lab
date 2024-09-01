@@ -34,34 +34,24 @@ void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data
     if (rebuild_modules_graph_flag().is_dirty())
     {
         if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::ToUser::info("Modules Graph", "Compiled");
+            Cool::Log::ToUser::info("Modules Graph", "Rebuilt");
         recreate_all_modules(_main_node_id, data_to_generate_shader_code);
-        request_rerender_all();
         rebuild_modules_graph_flag().set_clean();
-        return; // We already requested to rerender all, no need to check if we need to rerender
-    }
-
-    // TODO(FeedbackLoop) reintroduce it
-    // if (_compositing_module.depends_on().time_since_last_midi_button_pressed
-    //     || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().time_since_last_midi_button_pressed; }))
-    // {
-    //     request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this
-    // }
-
-    // if (render_target.needs_resizing()) // TODO(FeedbackLoop) handle rerender when size changes
-    //     request_rerender_all();
-
-    for (auto const& node : _module_nodes)
-    {
-        if (data_to_pass_to_shader.system_values.render_target_size != node->module->texture().size)
-            node->module->needs_to_rerender_flag().set_dirty();
     }
 
     if (rerender_all_flag().is_dirty())
     {
         request_rerender_all();
         rerender_all_flag().set_clean();
-        return;
+    }
+
+    for (auto const& node : _module_nodes)
+    {
+        if (node->module->depends_on().time_since_last_midi_button_pressed)
+            node->module->needs_to_rerender_flag().set_dirty();
+
+        if (data_to_pass_to_shader.system_values.render_target_size != node->module->texture().size)
+            node->module->needs_to_rerender_flag().set_dirty();
     }
 }
 
@@ -142,6 +132,7 @@ void ModulesGraph::recreate_all_modules(Cool::NodeId const& root_node_id, DataTo
 {
     _module_nodes.clear();
     _root_module_node = create_module(root_node_id, data_to_generate_shader_code);
+    request_rerender_all();
 }
 
 auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<ModulesGraphNode>

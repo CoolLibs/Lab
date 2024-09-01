@@ -18,7 +18,7 @@ class ModulesGraphNode;
 
 class Module {
 public:
-    Module()                                     = default; // TODO(FeedbackLoop) remove?
+    Module()                                     = default; // TODO(Module) remove?
     Module(Module const&)                        = delete;
     auto operator=(Module const&) -> Module&     = delete;
     Module(Module&&) noexcept                    = default;
