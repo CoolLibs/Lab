@@ -68,9 +68,8 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
         // if (module_node->module->needs_to_rerender())
         //     _compositing_module.needs_to_rerender_flag().set_dirty(); // Because compositing module depends on particles module
     }
-    // TODO(Modules) TODO(FeedbackLoop) Render in the order of dependency between the modules
-    for (auto& node : _module_nodes)
-        render_one_module(*node, data_to_pass_to_shader);
+
+    render_one_module(*_root_module_node, data_to_pass_to_shader);
 }
 
 void ModulesGraph::render_one_module(ModulesGraphNode& node, DataToPassToShader const& data)
@@ -78,12 +77,15 @@ void ModulesGraph::render_one_module(ModulesGraphNode& node, DataToPassToShader 
     if (!node.module->needs_to_rerender())
         return;
 
-    // Cool::Log::Debug::info("bob", fmt::format("{} x {}", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
+    // Render all the dependencies first, so that we can use their textures
+    for (auto const& prev : node.dependencies)
+        render_one_module(*prev, data);
+
     node.module->do_rendering(data, node.dependencies);
     node.module->needs_to_rerender_flag().set_clean();
 
     if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(node.module->name() + " Module", "Rendered");
+        Cool::Log::ToUser::info(node.module->name() + " Module", fmt::format("Rendered ({}x{})", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
 }
 
 void ModulesGraph::request_rerender_all()
