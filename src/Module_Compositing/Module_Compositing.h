@@ -1,8 +1,6 @@
 #pragma once
 #include <Cool/Log/MessageSender.h>
 #include <Cool/Nodes/NodesGraph.h>
-#include <Module/ModuleDependencies.h>
-#include "Cool/Gpu/DoubleBufferedRenderTarget.h"
 #include "Cool/Gpu/FullscreenPipeline.h"
 #include "Module/Module.h"
 
@@ -23,8 +21,7 @@ public:
 
     void set_shader_code(tl::expected<std::string, std::string> const& shader_code);
 
-    [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
-    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
+    void update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
     void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) override;
@@ -34,7 +31,6 @@ private:
     mutable std::string              _shader_code{};
     mutable Cool::FullscreenPipeline _pipeline{};
     mutable Cool::MessageSender      _shader_error_sender{};
-    mutable ModuleDependencies       _depends_on{};
 
 private:
     // Serialization

@@ -355,52 +355,45 @@ void ModulesGraph::on_time_changed()
     for (auto& node : _module_nodes)
     {
         node->module->on_time_changed();
-        // TODO(FeedbackLoop)
-        // if (node->module->depends_on().time)
-        // {
-        //     request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on time
-        // }
+        if (node->module->depends_on().time)
+            node->module->needs_to_rerender_flag().set_dirty();
     }
 }
 
 void ModulesGraph::on_audio_changed()
 {
-    // TODO(FeedbackLoop) Reintroduce this
-    // if (_compositing_module.depends_on().audio()
-    //     || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [](auto const& module_node) { return module_node->module.depends_on().audio(); }))
-    // {
-    //     request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on audio
-    // }
+    for (auto& node : _module_nodes)
+    {
+        if (node->module->depends_on().audio())
+            node->module->needs_to_rerender_flag().set_dirty();
+    }
 }
 
 void ModulesGraph::on_osc_channel_changed(Cool::OSCChannel const& osc_channel)
 {
-    // TODO(FeedbackLoop) Reintroduce this
-    // if (_compositing_module.depends_on().osc_channel(osc_channel)
-    //     || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().osc_channel(osc_channel); }))
-    // {
-    //     request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this OSC channel
-    // }
+    for (auto& node : _module_nodes)
+    {
+        if (node->module->depends_on().osc_channel(osc_channel))
+            node->module->needs_to_rerender_flag().set_dirty();
+    }
 }
 
 void ModulesGraph::on_midi_channel_changed(Cool::MidiChannel const& midi_channel)
 {
-    // TODO(FeedbackLoop) Reintroduce this
-    // if (_compositing_module.depends_on().midi_channel(midi_channel)
-    //     || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().midi_channel(midi_channel); }))
-    // {
-    //     request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this Midi channel
-    // }
+    for (auto& node : _module_nodes)
+    {
+        if (node->module->depends_on().midi_channel(midi_channel))
+            node->module->needs_to_rerender_flag().set_dirty();
+    }
 }
 
 void ModulesGraph::on_last_midi_button_pressed_changed()
 {
-    // TODO(FeedbackLoop) Reintroduce this
-    // if (_compositing_module.depends_on().last_midi_button_pressed
-    //     || std::any_of(_particles_module_nodes.begin(), _particles_module_nodes.end(), [&](auto const& module_node) { return module_node->module.depends_on().last_midi_button_pressed; }))
-    // {
-    //     request_rerender_all(); // TODO(Modules) Only rerender the modules that depend on this last_midi_button_pressed
-    // }
+    for (auto& node : _module_nodes)
+    {
+        if (node->module->depends_on().last_midi_button_pressed)
+            node->module->needs_to_rerender_flag().set_dirty();
+    }
 }
 
 void ModulesGraph::update_dependencies_from_nodes_graph()

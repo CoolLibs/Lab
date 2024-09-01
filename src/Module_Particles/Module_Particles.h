@@ -29,8 +29,7 @@ public:
     void set_simulation_shader_code(tl::expected<std::string, std::string> const& shader_code, bool for_testing_nodes, int dimension);
     void on_time_reset() override;
 
-    [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
-    void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
+    void update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) override { Lab::update_dependencies_from_nodes_graph(_depends_on, graph); }
 
 private:
     void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) override;
@@ -45,12 +44,12 @@ private:
 private:
     mutable std::optional<Cool::ParticleSystem> _particle_system{};
     int                                         _particle_system_dimension{};
-    ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
-    Cool::NodeId                                _id_of_node_storing_particles_count{};
-    bool                                        _needs_to_update_particles{true};
-    bool                                        _force_init_particles{true};
-    mutable Cool::MessageSender                 _simulation_shader_error_sender{};
-    mutable std::string                         _shader_code{};
+    // ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
+    Cool::NodeId                _id_of_node_storing_particles_count{};
+    bool                        _needs_to_update_particles{true};
+    bool                        _force_init_particles{true};
+    mutable Cool::MessageSender _simulation_shader_error_sender{};
+    mutable std::string         _shader_code{};
 
 private:
     // Serialization

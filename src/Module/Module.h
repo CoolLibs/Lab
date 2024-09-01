@@ -1,5 +1,6 @@
 #pragma once
 #include <Cool/Log/OptionalErrorMessage.h>
+#include <Module/ModuleDependencies.h>
 #include <ser20/types/polymorphic.hpp>
 #include "Cool/Gpu/OpenGL/TextureRef.hpp"
 #include "Cool/Gpu/RenderTarget.h"
@@ -57,6 +58,8 @@ public:
     auto render_target() -> Cool::RenderTarget& { return _render_target; }
     auto render_target() const -> Cool::RenderTarget const& { return _render_target; }
 
+    [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
+
 private:
     virtual void render(DataToPassToShader const&, std::vector<std::shared_ptr<ModulesGraphNode>> const& module_dependencies) = 0;
 
@@ -64,6 +67,9 @@ private:
     std::string        _name;
     Cool::DirtyFlag    _needs_to_rerender_flag;
     Cool::RenderTarget _render_target{};
+
+protected:
+    ModuleDependencies _depends_on{};
 
 private:
     friend class ser20::access;
