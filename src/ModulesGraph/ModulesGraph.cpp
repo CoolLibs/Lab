@@ -157,102 +157,113 @@ auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerat
     }
 }
 
+auto ModulesGraph::create_module_impl(std::string const& texture_name_in_shader, std::function<std::shared_ptr<Module>()> const& make_module) -> std::shared_ptr<Module>
+{
+    { // If the module already exists, just return it
+        auto const it = std::find_if(_modules.begin(), _modules.end(), [&](auto&& module) {
+            return module->texture_name_in_shader() == texture_name_in_shader;
+        });
+        if (it != _modules.end())
+            return *it;
+    }
+
+    // Otherwise create it and add it to the list
+    _modules.push_back(make_module());
+    return _modules.back();
+}
+
 auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<Module>
 {
-    auto dependencies = std::vector<std::shared_ptr<Module>>{};
+    auto const texture_name_in_shader = texture_name_for_module(root_node_id);
+    return create_module_impl(texture_name_in_shader, [&]() -> std::shared_ptr<Module> {
+        auto dependencies = std::vector<std::shared_ptr<Module>>{};
 
-    auto const shader_code = generate_compositing_shader_code(
-        root_node_id,
-        [&](Cool::NodeId const& node_id, NodeDefinition const& node_definition) -> std::optional<std::string> {
-            switch (node_moduleness(node_definition))
-            {
-            case NodeModuleness::Generic:
-                return std::nullopt;
-            case NodeModuleness::Particle:
-            {
-                dependencies.push_back(create_particles_module(node_id, node_definition, data));
-                return dependencies.back()->texture_name_in_shader();
-            }
-            case NodeModuleness::FeedbackLoop:
-            {
-                dependencies.push_back(create_feedback_loop_module(node_id, data));
-                return dependencies.back()->texture_name_in_shader();
-            }
-            }
-        },
-        [&]() {
-            std::vector<std::string> tex_names;
-            tex_names.reserve(_modules.size());
-            for (auto const& module : _modules)
-            {
-                tex_names.push_back(module->texture_name_in_shader());
-            }
-            return tex_names;
-        },
-        data
-    );
+        auto const shader_code = generate_compositing_shader_code(
+            root_node_id,
+            [&](Cool::NodeId const& node_id, NodeDefinition const& node_definition) -> std::optional<std::string> {
+                switch (node_moduleness(node_definition))
+                {
+                case NodeModuleness::Generic:
+                    return std::nullopt;
+                case NodeModuleness::Particle:
+                {
+                    dependencies.push_back(create_particles_module(node_id, node_definition, data));
+                    return dependencies.back()->texture_name_in_shader();
+                }
+                case NodeModuleness::FeedbackLoop:
+                {
+                    dependencies.push_back(create_feedback_loop_module(node_id, data));
+                    return dependencies.back()->texture_name_in_shader();
+                }
+                }
+            },
+            [&]() {
+                std::vector<std::string> tex_names;
+                tex_names.reserve(_modules.size());
+                for (auto const& module : _modules)
+                {
+                    tex_names.push_back(module->texture_name_in_shader());
+                }
+                return tex_names;
+            },
+            data
+        );
 
-    auto module = std::make_shared<Module_Compositing>(texture_name_for_module(root_node_id), std::move(dependencies));
-    module->set_shader_code(shader_code);
-    _modules.push_back(module);
-    return module;
+        auto module = std::make_shared<Module_Compositing>(texture_name_in_shader, std::move(dependencies));
+        module->set_shader_code(shader_code);
+        return module;
+    });
 }
 
 auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, NodeDefinition const& node_definition, DataToGenerateShaderCode const& data) -> std::shared_ptr<Module>
 {
-    int const  dimension              = is_particle_3D(node_definition.signature()) ? 3 : 2;
     auto const texture_name_in_shader = texture_name_for_module(root_node_id);
+    return create_module_impl(texture_name_in_shader, [&]() -> std::shared_ptr<Module> {
+        int const dimension = is_particle_3D(node_definition.signature()) ? 3 : 2;
 
-    // TODO(FeedbackLoop) if a module with the same texture_name_in_shader already exists, return it
-    // if (std::none_of(
-    //         _particles_modules.begin(),
-    //         _particles_modules.end(),
-    //         [&](std::unique_ptr<ModulesGraphNode> const& node) {
-    //             return node->texture_name_in_shader == texture_name_in_shader;
-    //         }
-    //     ))
+        auto       id_of_node_storing_particles_count = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
+        auto const simulation_shader_code             = generate_simulation_shader_code(
+            root_node_id,
+            id_of_node_storing_particles_count,
+            dimension,
+            data
+        );
 
-    auto       id_of_node_storing_particles_count = Cool::NodeId{}; // Will be initialized by generate_simulation_shader_code()
-    auto const simulation_shader_code             = generate_simulation_shader_code(
-        root_node_id,
-        id_of_node_storing_particles_count,
-        dimension,
-        data
-    );
-
-    auto module = std::make_shared<Module_Particles>(
-        id_of_node_storing_particles_count,
-        texture_name_in_shader,
-        std::vector<std::shared_ptr<Module>>{} // TODO(Module) Accumulate the dependencies while generating the shader code
-    );
-    module->set_simulation_shader_code(simulation_shader_code, false, dimension);
-    _modules.push_back(module);
-    return module;
+        auto module = std::make_shared<Module_Particles>(
+            id_of_node_storing_particles_count,
+            texture_name_in_shader,
+            std::vector<std::shared_ptr<Module>>{} // TODO(Module) Accumulate the dependencies while generating the shader code
+        );
+        module->set_simulation_shader_code(simulation_shader_code, false, dimension);
+        return module;
+    });
 }
 
 auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data) -> std::shared_ptr<Module>
 {
-    auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
-    if (!node)
-        return nullptr; // TODO(Module) Return an error message? This should never happen
+    auto const texture_name_in_shader = texture_name_for_module(root_node_id);
+    return create_module_impl(texture_name_in_shader, [&]() -> std::shared_ptr<Module> {
+        auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
+        if (!node)
+            return nullptr; // TODO(Module) Return an error message? This should never happen
 
-    assert(node->input_pins().size() == 1);
-    auto const predecessor_node_id = data.nodes_graph.find_node_connected_to_input_pin(node->input_pins()[0].id());
-    auto const dependency          = create_module(predecessor_node_id, data);
+        assert(node->input_pins().size() == 1);
+        auto const predecessor_node_id = data.nodes_graph.find_node_connected_to_input_pin(node->input_pins()[0].id());
+        auto const dependency          = create_module(predecessor_node_id, data);
 
-    auto module = std::make_shared<Module_FeedbackLoop>(
-        texture_name_for_module(root_node_id),
-        std::vector<std::shared_ptr<Module>>{dependency}
-    );
-    _modules.push_back(module);
-    return module;
+        return std::make_shared<Module_FeedbackLoop>(
+            texture_name_in_shader,
+            std::vector<std::shared_ptr<Module>>{dependency}
+        );
+    });
 }
 
 auto ModulesGraph::create_default_module() -> std::shared_ptr<Module>
 {
-    auto module = std::make_shared<Module_Default>("texture_of_the_default_module");
-    _modules.push_back(module);
-    return module;
+    auto const texture_name_in_shader = "texture_of_the_default_module"s;
+    return create_module_impl(texture_name_in_shader, [&]() -> std::shared_ptr<Module> {
+        return std::make_shared<Module_Default>(texture_name_in_shader);
+    });
 }
 
 void ModulesGraph::imgui_windows(Ui_Ref ui, Cool::AudioManager& audio_manager, Cool::NodesLibrary const& nodes_library) const

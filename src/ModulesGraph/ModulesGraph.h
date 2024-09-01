@@ -61,6 +61,7 @@ public:
 private:
     void recreate_all_modules(Cool::NodeId const& node_id, DataToGenerateShaderCode const&);
     auto create_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
+    auto create_module_impl(std::string const& texture_name_in_shader, std::function<std::shared_ptr<Module>()> const& make_module) -> std::shared_ptr<Module>;
     auto create_compositing_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
     auto create_particles_module(Cool::NodeId const& node_id, NodeDefinition const&, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
     auto create_feedback_loop_module(Cool::NodeId const& node_id, DataToGenerateShaderCode const&) -> std::shared_ptr<Module>;
