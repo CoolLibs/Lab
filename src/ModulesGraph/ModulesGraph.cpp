@@ -59,8 +59,6 @@ void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data
 void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
     check_for_rerender_and_rebuild(data_to_pass_to_shader, data_to_generate_shader_code);
-    if (!_root_module)
-        return;
 
     // TODO(Particles) Remove those _nodes_graph
     for (auto& module : _modules)
@@ -143,10 +141,10 @@ auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerat
 {
     auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
     if (!node)
-        return std::make_shared<Module_Default>(texture_name_for_module(root_node_id)); // TODO(Module) Return an error message? Probably not because this is legit, eg when a feedback loop has nothing in its input pin
+        return create_default_module(); // TODO(Module) Return an error message? Probably not because this is legit, eg when a feedback loop has nothing in its input pin
     auto const* node_def = data.get_node_definition(node->id_names());
     if (!node_def)
-        return std::make_shared<Module_Default>(texture_name_for_module(root_node_id)); // TODO(Module) Return an error message, this shouldn't happen
+        return create_default_module(); // TODO(Module) Return an error message, this shouldn't happen
 
     switch (node_moduleness(*node_def))
     {
@@ -246,6 +244,13 @@ auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id,
         texture_name_for_module(root_node_id),
         std::vector<std::shared_ptr<Module>>{dependency}
     );
+    _modules.push_back(module);
+    return module;
+}
+
+auto ModulesGraph::create_default_module() -> std::shared_ptr<Module>
+{
+    auto module = std::make_shared<Module_Default>("texture_of_the_default_module");
     _modules.push_back(module);
     return module;
 }
