@@ -92,7 +92,7 @@ void set_uniforms_for_shader_based_module(
     Cool::OpenGL::Shader const&                 shader,
     ModuleDependencies const&                   depends_on,
     DataToPassToShader const&                   data,
-    std::vector<std::shared_ptr<Module>> const& module_dependencies,
+    std::vector<std::shared_ptr<Module>> const& modules_that_we_depend_on,
     std::vector<Cool::NodeId> const&            nodes_that_we_depend_on
 )
 {
@@ -132,7 +132,7 @@ void set_uniforms_for_shader_based_module(
         });
     }
 
-    for (auto const& module : module_dependencies)
+    for (auto const& module : modules_that_we_depend_on)
     {
         shader.set_uniform_texture(
             module->texture_name_in_shader(),
