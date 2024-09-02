@@ -155,6 +155,8 @@ auto ModulesGraph::create_module(Cool::NodeId const& root_node_id, DataToGenerat
     case NodeModuleness::FeedbackLoop:
         return create_feedback_loop_module(root_node_id, data);
     }
+    assert(false);
+    return create_default_module();
 }
 
 auto ModulesGraph::create_module_impl(std::string const& texture_name_in_shader, std::function<std::shared_ptr<Module>()> const& make_module) -> std::shared_ptr<Module>
@@ -200,6 +202,8 @@ auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, D
                     return modules_that_we_depend_on.back()->texture_name_in_shader();
                 }
                 }
+                assert(false);
+                return std::nullopt;
             },
             [&]() {
                 std::vector<std::string> tex_names;
@@ -249,6 +253,8 @@ auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, Nod
                     return modules_that_we_depend_on.back()->texture_name_in_shader();
                 }
                 }
+                assert(false);
+                return std::nullopt;
             }
         );
 
