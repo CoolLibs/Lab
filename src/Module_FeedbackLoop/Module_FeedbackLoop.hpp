@@ -23,7 +23,7 @@ private:
 
 private:
     Cool::RenderTarget _render_target{};
-    bool               _bob{false};
+    bool               _render_target_ping_pong{false};
     int                _renders_count{0};
     bool               _rerender_next_frame{false};
     bool               _rerender_this_frame{false};

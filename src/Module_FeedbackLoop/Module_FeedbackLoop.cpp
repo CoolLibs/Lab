@@ -26,15 +26,15 @@ void Module_FeedbackLoop::on_time_reset()
 
 auto Module_FeedbackLoop::texture() const -> Cool::TextureRef
 {
-    auto const b = _renders_count < 2 ? !_bob : _bob;
+    auto const b = _renders_count < 2 ? !_render_target_ping_pong : _render_target_ping_pong;
     return b ? _render_target.texture_ref() : render_target().texture_ref();
 }
 
 void Module_FeedbackLoop::render(DataToPassToShader const& data)
 {
-    _bob = !_bob;
+    _render_target_ping_pong = !_render_target_ping_pong;
     _renders_count++;
-    auto& rt = _bob ? render_target() : _render_target;
+    auto& rt = _render_target_ping_pong ? render_target() : _render_target;
     rt.set_size(data.system_values.render_target_size);
     rt.render([&]() {
         // TODO(WebGPU) use a texture copy operation instead, it will be more efficient
