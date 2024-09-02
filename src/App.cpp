@@ -52,13 +52,13 @@ namespace Lab {
 
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
-    , _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
+    , _output_view{views.make_view<Cool::TextureView>(Cool::ViewCreationParams{
           .name           = Cool::icon_fmt("Output", ICOMOON_IMAGE),
           .is_output_view = true,
           .is_closable    = true,
           .start_open     = false,
       })}
-    , _preview_view{views.make_view<Cool::ForwardingOrRenderView>(
+    , _preview_view{views.make_view<Cool::ForwardingOrTextureView>(
           _output_view,
           Cool::ViewCreationParams{
               .name        = Cool::icon_fmt("View", ICOMOON_IMAGE),
@@ -152,7 +152,7 @@ void App::update()
     if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
-        auto const render_size = render_view().desired_image_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
+        auto const render_size = render_view().desired_image_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the TextureView ? But that's may be too much coupling
         polaroid().render(render_size, _project.clock.time(), _project.clock.delta_time());
     }
     else
@@ -199,7 +199,7 @@ void App::request_rerender() // TODO(Modules) Sometimes we don't need to call th
     _project.modules_graph->request_rerender_all();
 }
 
-auto App::render_view() -> Cool::RenderView&
+auto App::render_view() -> Cool::TextureView&
 {
     if (_output_view.is_open())
         return _output_view;

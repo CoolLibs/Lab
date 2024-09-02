@@ -8,7 +8,6 @@
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
-#include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <Nodes/NodesLibraryManager.h>
@@ -35,8 +34,8 @@
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
 #include "Cool/Tips/TipsManager.h"
-#include "Cool/View/ForwardingOrRenderView.h"
-#include "Cool/View/RenderView.h"
+#include "Cool/View/ForwardingOrTextureView.hpp"
+#include "Cool/View/TextureView.hpp"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
 #include "Cool/Window/WindowManager.h"
@@ -81,7 +80,7 @@ private:
     void render(img::Size size, Cool::Time time, Cool::Time delta_time);
     void on_time_changed();
     void on_time_reset();
-    auto render_view() -> Cool::RenderView&;
+    auto render_view() -> Cool::TextureView&;
 
     void check_inputs();
     void check_inputs__history();
@@ -123,8 +122,8 @@ private:
 
 private:
     Cool::Window&                        _main_window;
-    Cool::RenderView&                    _output_view;
-    Cool::ForwardingOrRenderView&        _preview_view; // Must be after _output_view because it stores a reference to it
+    Cool::TextureView&                   _output_view;
+    Cool::ForwardingOrTextureView&       _preview_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
     RecentlyOpened                       _recently_opened_projects{};
