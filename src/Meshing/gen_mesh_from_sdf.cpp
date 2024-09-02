@@ -83,10 +83,11 @@ void cool_main()
 }
 
 auto gen_mesh_from_sdf(
-    Cool::NodeId const&             main_node_id,
-    MeshingSettings const&          meshing_settings,
-    DataToPassToShader const&       data_to_pass_to_shader,
-    DataToGenerateShaderCode const& data_to_generate_shader_code
+    Cool::NodeId const&                         main_node_id,
+    MeshingSettings const&                      meshing_settings,
+    DataToPassToShader const&                   data_to_pass_to_shader,
+    DataToGenerateShaderCode const&             data_to_generate_shader_code,
+    std::vector<std::shared_ptr<Module>> const& module_dependencies
 ) -> std::optional<Cool::Mesh>
 {
     if constexpr (COOL_OPENGL_VERSION < 430)
@@ -122,10 +123,13 @@ auto gen_mesh_from_sdf(
     meshing_compute_shader->set_uniform("_step_size", meshing_settings.step_size().x);
 
     {
-        auto dependencies = ModuleDependencies{};
+        auto dependencies            = ModuleDependencies{};
+        auto nodes_that_we_depend_on = std::vector<Cool::NodeId>{}; //  TODO(Meshing) Properly compute the nodes that we depend on
+        for (auto const& [id, _] : data_to_pass_to_shader.nodes_graph.nodes())
+            nodes_that_we_depend_on.emplace_back(id);
         update_dependencies_from_shader_code(dependencies, *shader_code);
-        update_dependencies_from_nodes_graph(dependencies, data_to_pass_to_shader.nodes_graph);
-        set_uniforms_for_shader_based_module(*meshing_compute_shader, dependencies, data_to_pass_to_shader);
+        update_dependencies_from_nodes_graph(dependencies, data_to_pass_to_shader.nodes_graph, nodes_that_we_depend_on);
+        set_uniforms_for_shader_based_module(*meshing_compute_shader, dependencies, data_to_pass_to_shader, module_dependencies, nodes_that_we_depend_on);
     }
 
     meshing_compute_shader->compute(meshing_settings.samples_count);

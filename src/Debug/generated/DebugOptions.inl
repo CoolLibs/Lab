@@ -39,6 +39,7 @@ public:
         }
     }
     [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return instance().show_nodes_and_links_registries; }
+    [[nodiscard]] static auto force_rerender_every_frame() -> bool& { return instance().force_rerender_every_frame; }
     [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
     [[nodiscard]] static auto log_when_updating_particles() -> bool& { return instance().log_when_updating_particles; }
     [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
@@ -90,6 +91,7 @@ private:
         bool show_imgui_demo_window{false};
         bool show_history_window{false};
         bool show_nodes_and_links_registries{false};
+        bool force_rerender_every_frame{false};
         bool log_when_rendering{false};
         bool log_when_updating_particles{false};
         bool log_when_compiling_nodes{false};
@@ -113,6 +115,7 @@ private:
                 ser20::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 ser20::make_nvp("Show history", show_history_window),
                 ser20::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
+                ser20::make_nvp("Force rerender every frame", force_rerender_every_frame),
                 ser20::make_nvp("Log when rendering", log_when_rendering),
                 ser20::make_nvp("Log when updating particles", log_when_updating_particles),
                 ser20::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
@@ -128,6 +131,7 @@ private:
                 ser20::make_nvp("ImGui Demo window", show_imgui_demo_window),
                 ser20::make_nvp("Show history", show_history_window),
                 ser20::make_nvp("Show nodes and links registries", show_nodes_and_links_registries),
+                ser20::make_nvp("Force rerender every frame", force_rerender_every_frame),
                 ser20::make_nvp("Log when rendering", log_when_rendering),
                 ser20::make_nvp("Log when updating particles", log_when_updating_particles),
                 ser20::make_nvp("Log when compiling nodes", log_when_compiling_nodes),
@@ -150,6 +154,7 @@ private:
         instance().show_imgui_demo_window            = false;
         instance().show_history_window               = false;
         instance().show_nodes_and_links_registries   = false;
+        instance().force_rerender_every_frame        = false;
         instance().log_when_rendering                = false;
         instance().log_when_updating_particles       = false;
         instance().log_when_compiling_nodes          = false;
@@ -216,6 +221,11 @@ private:
         if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
         {
             Cool::ImGuiExtras::toggle("Show nodes and links registries", &instance().show_nodes_and_links_registries);
+        }
+
+        if (wafl::similarity_match({filter, "Force rerender every frame"}) >= wafl::Matches::Strongly)
+        {
+            Cool::ImGuiExtras::toggle("Force rerender every frame", &instance().force_rerender_every_frame);
         }
 
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
@@ -305,6 +315,12 @@ private:
         if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
         {
             instance().show_nodes_and_links_registries = !instance().show_nodes_and_links_registries;
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Force rerender every frame"}) >= wafl::Matches::Strongly)
+        {
+            instance().force_rerender_every_frame = !instance().force_rerender_every_frame;
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 

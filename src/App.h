@@ -8,7 +8,6 @@
 #include <Cool/Gpu/RenderTarget.h>
 #include <Cool/Path/Path.h>
 #include <Cool/Time/Clock_Realtime.h>
-#include <Cool/View/RenderView.h>
 #include <Cool/View/ViewsManager.h>
 #include <Cool/Window/WindowManager.h>
 #include <Nodes/NodesLibraryManager.h>
@@ -35,8 +34,8 @@
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
 #include "Cool/Tips/TipsManager.h"
-#include "Cool/View/ForwardingOrRenderView.h"
-#include "Cool/View/RenderView.h"
+#include "Cool/View/ForwardingOrTextureView.hpp"
+#include "Cool/View/TextureView.hpp"
 #include "Cool/View/ViewsManager.h"
 #include "Cool/Webcam/WebcamsConfigs.h"
 #include "Cool/Window/WindowManager.h"
@@ -78,10 +77,10 @@ public:
     auto nodes_library() const -> Cool::NodesLibrary const& { return _nodes_library_manager.library(); }
 
 private:
-    void render(Cool::RenderTarget& render_target, Cool::Time time, Cool::Time delta_time);
+    void render(img::Size size, Cool::Time time, Cool::Time delta_time);
     void on_time_changed();
     void on_time_reset();
-    auto render_view() -> Cool::RenderView&;
+    auto render_view() -> Cool::TextureView&;
 
     void check_inputs();
     void check_inputs__history();
@@ -97,7 +96,7 @@ private:
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
     auto system_values                              (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
     auto ui                                         () { return Ui_Ref{command_executor()}; }
-    auto data_to_pass_to_shader                     (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return DataToPassToShader{system_values(render_target_size, time, delta_time),  _project.modules_graph->graph(), _project.modules_graph->compositing_module().feedback_double_buffer() }; }
+    auto data_to_pass_to_shader                     (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return DataToPassToShader{system_values(render_target_size, time, delta_time),  _project.modules_graph->graph() }; }
     auto data_to_generate_shader_code               () const { return DataToGenerateShaderCode{_project.modules_graph->graph(), Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library_manager.library()} }; }
     // clang-format on
 
@@ -123,8 +122,8 @@ private:
 
 private:
     Cool::Window&                        _main_window;
-    Cool::RenderView&                    _output_view;
-    Cool::ForwardingOrRenderView&        _preview_view; // Must be after _output_view because it stores a reference to it
+    Cool::TextureView&                   _output_view;
+    Cool::ForwardingOrTextureView&       _preview_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
     RecentlyOpened                       _recently_opened_projects{};

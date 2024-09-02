@@ -52,13 +52,13 @@ namespace Lab {
 
 App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     : _main_window{windows.main_window()}
-    , _output_view{views.make_view<Cool::RenderView>(Cool::ViewCreationParams{
+    , _output_view{views.make_view<Cool::TextureView>(Cool::ViewCreationParams{
           .name           = Cool::icon_fmt("Output", ICOMOON_IMAGE),
           .is_output_view = true,
           .is_closable    = true,
           .start_open     = false,
       })}
-    , _preview_view{views.make_view<Cool::ForwardingOrRenderView>(
+    , _preview_view{views.make_view<Cool::ForwardingOrTextureView>(
           _output_view,
           Cool::ViewCreationParams{
               .name        = Cool::icon_fmt("View", ICOMOON_IMAGE),
@@ -116,6 +116,9 @@ void App::update()
         initial_project_opening(command_execution_context());
     }
 
+    if (DebugOptions::force_rerender_every_frame())
+        _project.modules_graph->request_rerender_all();
+
     Cool::user_settings().color_themes.update();
 
     _project.audio.set_force_mute(_project.exporter.is_exporting());
@@ -141,7 +144,7 @@ void App::update()
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(_project.modules_graph->regenerate_code_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
+        _nodes_library_manager.update(_project.modules_graph->rebuild_modules_graph_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
         _project.modules_graph->update();
         check_inputs();
     }
@@ -149,8 +152,8 @@ void App::update()
     if (!_project.exporter.is_exporting())
     {
         _project.clock.update();
-        render_view().update_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the RenderView ? But that's maybe too much coupling
-        polaroid().render(_project.clock.time(), _project.clock.delta_time());
+        auto const render_size = render_view().desired_image_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the TextureView ? But that's may be too much coupling
+        polaroid().render(render_size, _project.clock.time(), _project.clock.delta_time());
     }
     else
     {
@@ -196,7 +199,7 @@ void App::request_rerender() // TODO(Modules) Sometimes we don't need to call th
     _project.modules_graph->request_rerender_all();
 }
 
-auto App::render_view() -> Cool::RenderView&
+auto App::render_view() -> Cool::TextureView&
 {
     if (_output_view.is_open())
         return _output_view;
@@ -206,14 +209,9 @@ auto App::render_view() -> Cool::RenderView&
 Cool::Polaroid App::polaroid()
 {
     return {
-        .render_target = render_view().render_target(), // TODO(Modules) Each module should have its own render target that it renders on. The views shouldn't have a render target, but receive the one of the top-most module by reference.
-        .render_fn     = [this](Cool::RenderTarget& render_target, Cool::Time time, Cool::Time delta_time) {
-            if (_last_time != time)
-            {
-                _last_time = time;
-                on_time_changed();
-            }
-            render(render_target, time, delta_time);
+        .texture = [this]() { return _project.modules_graph->final_texture(); },
+        .render  = [this](img::Size size, Cool::Time time, Cool::Time delta_time) {
+            render(size, time, delta_time);
         }
     };
 }
@@ -236,11 +234,15 @@ static void imgui_window_console()
 #endif
 }
 
-void App::render(Cool::RenderTarget& render_target, Cool::Time time, Cool::Time delta_time)
+void App::render(img::Size size, Cool::Time time, Cool::Time delta_time)
 {
+    if (_last_time != time)
+    {
+        _last_time = time;
+        on_time_changed();
+    }
     _project.modules_graph->render(
-        render_target,
-        data_to_pass_to_shader(render_target.desired_size(), time, delta_time),
+        data_to_pass_to_shader(size, time, delta_time),
         data_to_generate_shader_code()
     );
 }
@@ -280,10 +282,12 @@ void App::imgui_window_view()
     }
 
     _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), command_executor(), _project.camera_2D_manager.camera());
+    _output_view.set_texture(_project.modules_graph->final_texture());
     _output_view.imgui_window({
         .on_open  = [&]() { request_rerender(); }, // When we switch between using the _output_view and the _nodes_view
         .on_close = [&]() { request_rerender(); }, // as our render target, we need to rerender.
     });
+    _preview_view.set_texture(_project.modules_graph->final_texture());
     _preview_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
@@ -354,7 +358,7 @@ void App::imgui_window_meshing()
 {
     _meshing_gui.imgui_window(
         _mesh_export_settings,
-        data_to_pass_to_shader(render_view().render_target().current_size(), _project.clock.time(), _project.clock.delta_time()),
+        data_to_pass_to_shader(render_view().desired_image_size(_project.view_constraint), _project.clock.time(), _project.clock.delta_time()),
         data_to_generate_shader_code()
     );
 }
@@ -405,8 +409,8 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(_project.clock.time(), _project.clock.delta_time(), size);
-        auto const image = the_polaroid.render_target.download_pixels();
+        the_polaroid.render(size, _project.clock.time(), _project.clock.delta_time());
+        auto const image = the_polaroid.texture().download_pixels();
         return img::save_png_to_string(image);
     });
     // Recently opened projects

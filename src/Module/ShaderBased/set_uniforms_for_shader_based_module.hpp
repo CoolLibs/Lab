@@ -5,6 +5,14 @@
 
 namespace Lab {
 
-void set_uniforms_for_shader_based_module(Cool::OpenGL::Shader const&, ModuleDependencies const&, DataToPassToShader const&);
+class Module;
+
+void set_uniforms_for_shader_based_module(
+    Cool::OpenGL::Shader const&,
+    ModuleDependencies const&,
+    DataToPassToShader const&,
+    std::vector<std::shared_ptr<Module>> const& modules_that_we_depend_on,
+    std::vector<Cool::NodeId> const&            nodes_that_we_depend_on
+);
 
 } // namespace Lab

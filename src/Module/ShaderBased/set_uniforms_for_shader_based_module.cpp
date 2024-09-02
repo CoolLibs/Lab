@@ -6,6 +6,7 @@
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Cool/TextureSource/TextureLibrary_Image.h"
+#include "Module/Module.h"
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
 
@@ -88,9 +89,11 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable
 }
 
 void set_uniforms_for_shader_based_module(
-    Cool::OpenGL::Shader const& shader,
-    ModuleDependencies const&   depends_on,
-    DataToPassToShader const&   data
+    Cool::OpenGL::Shader const&                 shader,
+    ModuleDependencies const&                   depends_on,
+    DataToPassToShader const&                   data,
+    std::vector<std::shared_ptr<Module>> const& modules_that_we_depend_on,
+    std::vector<Cool::NodeId> const&            nodes_that_we_depend_on
 )
 {
     shader.bind();
@@ -113,25 +116,33 @@ void set_uniforms_for_shader_based_module(
     if (depends_on.audio_spectrum)
         shader.set_uniform_texture1D("_audio_spectrum", data.system_values.audio_manager.get().spectrum_texture().id());
 
-    shader.set_uniform_texture(
-        "_previous_frame_texture",
-        data.feedback_double_buffer.read_target().get().texture_id(),
-        Cool::TextureSamplerDescriptor{
-            .repeat_mode        = Cool::TextureRepeatMode::None,
-            .interpolation_mode = glpp::Interpolation::NearestNeighbour, // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).
-        }
-    );
     Cool::CameraShaderU::set_uniform(shader, data.system_values.camera_3D, data.system_values.aspect_ratio());
 
-    data.nodes_graph.for_each_node<Node>([&](Node const& node) { // TODO(Modules) Only set it for nodes that are actually compiled in the graph. Otherwise causes problems, e.g. if a webcam node is here but unused, we still request webcam capture every frame, which forces us to rerender every frame for no reason + it does extra work. // TODO(Modules) Each module should store a list of its inputs, so that we can set them there
-        for (auto const& value_input : node.value_inputs())
-        {
-            std::visit([&](auto&& value_input) {
-                set_uniform(shader, value_input);
-            },
-                       value_input);
-        }
-    });
+    for (auto const& node_id : nodes_that_we_depend_on)
+    {
+        data.nodes_graph.nodes().with_ref(node_id, [&](Cool::Node const& abstract_node) {
+            auto const& node = abstract_node.downcast<Node>();
+            for (auto const& value_input : node.value_inputs())
+            {
+                std::visit([&](auto&& value_input) {
+                    set_uniform(shader, value_input);
+                },
+                           value_input);
+            }
+        });
+    }
+
+    for (auto const& module : modules_that_we_depend_on)
+    {
+        shader.set_uniform_texture(
+            module->texture_name_in_shader(),
+            module->texture().id,
+            Cool::TextureSamplerDescriptor{
+                .repeat_mode        = Cool::TextureRepeatMode::None,
+                .interpolation_mode = glpp::Interpolation::NearestNeighbour, // TODO(FeedbackLoop) The texture coming from feedback loop module must use nearest neighbour interpolation (cf  // Very important. If set to linear, artifacts can appear over time (very visible with the Slit Scan effect).), but the texture from other modules is probably better off using Linear ???
+            }
+        );
+    }
 }
 
 } // namespace Lab
