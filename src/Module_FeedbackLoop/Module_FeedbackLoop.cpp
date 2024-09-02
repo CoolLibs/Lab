@@ -10,16 +10,14 @@ static auto module_id()
     return i++;
 }
 
-Module_FeedbackLoop::Module_FeedbackLoop(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> deps)
+Module_FeedbackLoop::Module_FeedbackLoop(std::string texture_name_in_shader, std::shared_ptr<Module> module_that_we_depend_on)
     : Module{
           fmt::format("Feedback Loop {}", module_id()),
           std::move(texture_name_in_shader),
-          std::move(deps),
+          {std::move(module_that_we_depend_on)},
           {} // We don't depend on any node
       }
-{
-    assert(dependencies().size() == 1);
-}
+{}
 
 void Module_FeedbackLoop::on_time_reset()
 {
@@ -41,7 +39,7 @@ void Module_FeedbackLoop::render(DataToPassToShader const& data)
     rt.render([&]() {
         // TODO(WebGPU) use a texture copy operation instead, it will be more efficient
         Cool::copy_tex_pipeline().shader()->bind();
-        Cool::copy_tex_pipeline().shader()->set_uniform_texture("tex_to_copy", dependencies()[0]->texture().id);
+        Cool::copy_tex_pipeline().shader()->set_uniform_texture("tex_to_copy", modules_that_we_depend_on()[0]->texture().id);
         glDisable(GL_BLEND);
         Cool::copy_tex_pipeline().draw();
         glEnable(GL_BLEND);

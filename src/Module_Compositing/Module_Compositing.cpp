@@ -9,11 +9,11 @@ static auto module_id()
     return i++;
 }
 
-Module_Compositing::Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies, std::vector<Cool::NodeId> nodes_that_we_depend_on)
+Module_Compositing::Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> modules_that_we_depend_on, std::vector<Cool::NodeId> nodes_that_we_depend_on)
     : Module{
           fmt::format("Compositing {}", module_id()),
           std::move(texture_name_in_shader),
-          std::move(dependencies),
+          std::move(modules_that_we_depend_on),
           std::move(nodes_that_we_depend_on)
       }
 {
@@ -71,7 +71,7 @@ void Module_Compositing::render(DataToPassToShader const& data)
     render_target().render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data, dependencies(), nodes_that_we_depend_on());
+        set_uniforms_for_shader_based_module(*_pipeline.shader(), _depends_on, data, modules_that_we_depend_on(), nodes_that_we_depend_on());
         _pipeline.draw();
     });
 }

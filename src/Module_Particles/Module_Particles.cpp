@@ -11,11 +11,11 @@ static auto module_id()
     return i++;
 }
 
-Module_Particles::Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies, std::vector<Cool::NodeId> nodes_that_we_depend_on)
+Module_Particles::Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> modules_that_we_depend_on, std::vector<Cool::NodeId> nodes_that_we_depend_on)
     : Module{
           fmt::format("Particles {}", module_id()),
           std::move(texture_name_in_shader),
-          std::move(dependencies),
+          std::move(modules_that_we_depend_on),
           std::move(nodes_that_we_depend_on)
       }
     , _id_of_node_storing_particles_count{id_of_node_storing_particles_count}
@@ -139,7 +139,7 @@ void Module_Particles::update_particles(DataToPassToShader const& data)
 
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);
-    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), _depends_on, data, dependencies(), nodes_that_we_depend_on());
+    set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), _depends_on, data, modules_that_we_depend_on(), nodes_that_we_depend_on());
     _particle_system->update();
     _force_init_particles      = false;
     _needs_to_update_particles = false;
@@ -171,7 +171,7 @@ void Module_Particles::render(DataToPassToShader const& data)
     render_target().render([&]() {
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
-        set_uniforms_for_shader_based_module(_particle_system->render_shader(), _depends_on, data, dependencies(), nodes_that_we_depend_on());
+        set_uniforms_for_shader_based_module(_particle_system->render_shader(), _depends_on, data, modules_that_we_depend_on(), nodes_that_we_depend_on());
 
         auto const view_proj_matrix_2D_mat3 = data.system_values.camera_2D_view_projection_matrix();
         auto const view_proj_matrix_2D_mat4 = glm::mat4{

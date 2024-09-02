@@ -23,10 +23,10 @@ public:
     auto operator=(Module&&) noexcept -> Module& = default;
     virtual ~Module()                            = default;
 
-    explicit Module(std::string_view name, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies, std::vector<Cool::NodeId> nodes_that_we_depend_on)
+    explicit Module(std::string_view name, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> modules_that_we_depend_on, std::vector<Cool::NodeId> nodes_that_we_depend_on)
         : _name{name}
         , _texture_name_in_shader{std::move(texture_name_in_shader)}
-        , _dependencies{std::move(dependencies)}
+        , _modules_that_we_depend_on{std::move(modules_that_we_depend_on)}
         , _nodes_that_we_depend_on{std::move(nodes_that_we_depend_on)}
     {}
 
@@ -55,7 +55,7 @@ public:
     auto               render_target() const -> Cool::RenderTarget const& { return _render_target; }
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }
     [[nodiscard]] auto texture_name_in_shader() const -> std::string const& { return _texture_name_in_shader; }
-    [[nodiscard]] auto dependencies() const -> std::vector<std::shared_ptr<Module>> const& { return _dependencies; }
+    [[nodiscard]] auto modules_that_we_depend_on() const -> std::vector<std::shared_ptr<Module>> const& { return _modules_that_we_depend_on; }
     [[nodiscard]] auto nodes_that_we_depend_on() const -> std::vector<Cool::NodeId> const& { return _nodes_that_we_depend_on; }
 
 private:
@@ -67,7 +67,7 @@ private:
     Cool::RenderTarget _render_target{};
 
     std::string                          _texture_name_in_shader{};
-    std::vector<std::shared_ptr<Module>> _dependencies{};
+    std::vector<std::shared_ptr<Module>> _modules_that_we_depend_on{};
     std::vector<Cool::NodeId>            _nodes_that_we_depend_on{};
 
 protected:

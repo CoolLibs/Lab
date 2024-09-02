@@ -9,7 +9,7 @@ namespace Lab {
 class Module_Compositing : public Module {
 public:
     Module_Compositing() = default;
-    Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> dependencies, std::vector<Cool::NodeId> nodes_that_we_depend_on);
+    Module_Compositing(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> modules_that_we_depend_on, std::vector<Cool::NodeId> nodes_that_we_depend_on);
     Module_Compositing(Module_Compositing const&)                    = delete;
     auto operator=(Module_Compositing const&) -> Module_Compositing& = delete;
     // Module_Compositing(Module_Compositing&&) noexcept                    = default; // TODO(Modules)

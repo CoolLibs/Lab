@@ -76,7 +76,7 @@ void ModulesGraph::render_module_ifn(Module& module, DataToPassToShader const& d
         return;
 
     // Render all the dependencies first, so that we can use their textures
-    for (auto const& prev : module.dependencies())
+    for (auto const& prev : module.modules_that_we_depend_on())
         render_module_ifn(*prev, data);
 
     module.do_rendering(data);
@@ -176,8 +176,8 @@ auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, D
 {
     auto const texture_name_in_shader = texture_name_for_module(root_node_id);
     return create_module_impl(texture_name_in_shader, [&]() -> std::shared_ptr<Module> {
-        auto dependencies            = std::vector<std::shared_ptr<Module>>{};
-        auto nodes_that_we_depend_on = std::vector<Cool::NodeId>{};
+        auto modules_that_we_depend_on = std::vector<std::shared_ptr<Module>>{};
+        auto nodes_that_we_depend_on   = std::vector<Cool::NodeId>{};
 
         auto const shader_code = generate_compositing_shader_code(
             root_node_id,
@@ -191,13 +191,13 @@ auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, D
                 }
                 case NodeModuleness::Particle:
                 {
-                    dependencies.push_back(create_particles_module(node_id, node_definition, data));
-                    return dependencies.back()->texture_name_in_shader();
+                    modules_that_we_depend_on.push_back(create_particles_module(node_id, node_definition, data));
+                    return modules_that_we_depend_on.back()->texture_name_in_shader();
                 }
                 case NodeModuleness::FeedbackLoop:
                 {
-                    dependencies.push_back(create_feedback_loop_module(node_id, data));
-                    return dependencies.back()->texture_name_in_shader();
+                    modules_that_we_depend_on.push_back(create_feedback_loop_module(node_id, data));
+                    return modules_that_we_depend_on.back()->texture_name_in_shader();
                 }
                 }
             },
@@ -213,7 +213,7 @@ auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, D
             data
         );
 
-        auto module = std::make_shared<Module_Compositing>(texture_name_in_shader, std::move(dependencies), std::move(nodes_that_we_depend_on));
+        auto module = std::make_shared<Module_Compositing>(texture_name_in_shader, std::move(modules_that_we_depend_on), std::move(nodes_that_we_depend_on));
         module->set_shader_code(shader_code);
         return module;
     });
@@ -223,8 +223,8 @@ auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, Nod
 {
     auto const texture_name_in_shader = texture_name_for_module(root_node_id);
     return create_module_impl(texture_name_in_shader, [&]() -> std::shared_ptr<Module> {
-        auto dependencies            = std::vector<std::shared_ptr<Module>>{};
-        auto nodes_that_we_depend_on = std::vector<Cool::NodeId>{};
+        auto modules_that_we_depend_on = std::vector<std::shared_ptr<Module>>{};
+        auto nodes_that_we_depend_on   = std::vector<Cool::NodeId>{};
 
         int const dimension = is_particle_3D(node_definition.signature()) ? 3 : 2;
 
@@ -245,8 +245,8 @@ auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, Nod
                 }
                 case NodeModuleness::FeedbackLoop:
                 {
-                    dependencies.push_back(create_feedback_loop_module(node_id, data));
-                    return dependencies.back()->texture_name_in_shader();
+                    modules_that_we_depend_on.push_back(create_feedback_loop_module(node_id, data));
+                    return modules_that_we_depend_on.back()->texture_name_in_shader();
                 }
                 }
             }
@@ -255,7 +255,7 @@ auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, Nod
         auto module = std::make_shared<Module_Particles>(
             id_of_node_storing_particles_count,
             texture_name_in_shader,
-            std::move(dependencies),
+            std::move(modules_that_we_depend_on),
             std::move(nodes_that_we_depend_on)
         );
         module->set_simulation_shader_code(simulation_shader_code, false, dimension);
@@ -277,7 +277,7 @@ auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id,
 
         return std::make_shared<Module_FeedbackLoop>(
             texture_name_in_shader,
-            std::vector<std::shared_ptr<Module>>{dependency}
+            dependency
         );
     });
 }

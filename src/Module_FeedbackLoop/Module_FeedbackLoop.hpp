@@ -6,7 +6,7 @@ namespace Lab {
 class Module_FeedbackLoop : public Module {
 public:
     Module_FeedbackLoop() = default;
-    Module_FeedbackLoop(std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> deps);
+    Module_FeedbackLoop(std::string texture_name_in_shader, std::shared_ptr<Module> module_that_we_depend_on);
     Module_FeedbackLoop(Module_FeedbackLoop const&)                        = delete;
     auto operator=(Module_FeedbackLoop const&) -> Module_FeedbackLoop&     = delete;
     Module_FeedbackLoop(Module_FeedbackLoop&&) noexcept                    = default;
