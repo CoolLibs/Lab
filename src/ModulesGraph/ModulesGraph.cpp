@@ -5,8 +5,6 @@
 #include <imgui.h>
 #include <algorithm>
 #include "Cool/Audio/AudioManager.h"
-#include "Cool/Camera/CameraShaderU.h"
-#include "Cool/Gpu/RenderTarget.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Module_Compositing/Module_Compositing.h"
@@ -15,7 +13,6 @@
 #include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
 #include "Module_Particles/Module_Particles.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
-#include "ModulesGraph/ModulesGraph.h"
 #include "Nodes/valid_glsl.h"
 #include "UI/imgui_show.h"
 
@@ -23,7 +20,7 @@ namespace Lab {
 
 void ModulesGraph::update()
 {
-    for (auto& module : _modules)
+    for (auto const& module : _modules)
     {
         module->_nodes_graph = &_nodes_editor.graph();
         module->update();
@@ -48,9 +45,11 @@ void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data
 
     for (auto const& module : _modules)
     {
+        // Modules that depend on time_since_last_midi_button_pressed should rerender every frame
         if (module->depends_on().time_since_last_midi_button_pressed)
             module->needs_to_rerender_flag().set_dirty();
 
+        // Rerender when render size changes
         if (data_to_pass_to_shader.system_values.render_target_size != module->texture().size)
             module->needs_to_rerender_flag().set_dirty();
     }
@@ -60,10 +59,9 @@ void ModulesGraph::render(DataToPassToShader const& data_to_pass_to_shader, Data
 {
     check_for_rerender_and_rebuild(data_to_pass_to_shader, data_to_generate_shader_code);
 
-    // TODO(Particles) Remove those _nodes_graph
     for (auto& module : _modules)
     {
-        module->_nodes_graph = &_nodes_editor.graph();
+        module->_nodes_graph = &_nodes_editor.graph(); // TODO(Particles) Remove those _nodes_graph
         module->before_module_graph_renders();
     }
 
@@ -100,14 +98,7 @@ void ModulesGraph::on_time_reset()
 
 static auto texture_name_for_module(Cool::NodeId const& id) -> std::string
 {
-    using fmt::literals::operator""_a;
-    return valid_glsl(fmt::format(
-        FMT_COMPILE(
-            R"STR(texture_{id})STR"
-        ),
-        "id"_a = to_string(id.underlying_uuid())
-    )
-    );
+    return valid_glsl(fmt::format("texture_{})", to_string(id.underlying_uuid())));
 }
 
 enum class NodeModuleness {
@@ -217,7 +208,11 @@ auto ModulesGraph::create_compositing_module(Cool::NodeId const& root_node_id, D
             data
         );
 
-        auto module = std::make_shared<Module_Compositing>(texture_name_in_shader, std::move(modules_that_we_depend_on), std::move(nodes_that_we_depend_on));
+        auto module = std::make_shared<Module_Compositing>(
+            texture_name_in_shader, // Don't move it because it might still be used by create_module_impl()
+            std::move(modules_that_we_depend_on),
+            std::move(nodes_that_we_depend_on)
+        );
         module->set_shader_code(shader_code);
         return module;
     });
@@ -260,7 +255,7 @@ auto ModulesGraph::create_particles_module(Cool::NodeId const& root_node_id, Nod
 
         auto module = std::make_shared<Module_Particles>(
             id_of_node_storing_particles_count,
-            texture_name_in_shader,
+            texture_name_in_shader, // Don't move it because it might still be used by create_module_impl()
             std::move(modules_that_we_depend_on),
             std::move(nodes_that_we_depend_on)
         );
@@ -275,15 +270,15 @@ auto ModulesGraph::create_feedback_loop_module(Cool::NodeId const& root_node_id,
     return create_module_impl(texture_name_in_shader, [&]() -> std::shared_ptr<Module> {
         auto const* node = data.nodes_graph.try_get_node<Node>(root_node_id);
         if (!node)
-            return nullptr; // TODO(Module) Return an error message? This should never happen
+            return create_default_module(); // TODO(Module) Return an error message? This should never happen
 
         assert(node->input_pins().size() == 1);
         auto const predecessor_node_id = data.nodes_graph.find_node_connected_to_input_pin(node->input_pins()[0].id());
-        auto const dependency          = create_module(predecessor_node_id, data);
+        auto       dependency          = create_module(predecessor_node_id, data);
 
         return std::make_shared<Module_FeedbackLoop>(
-            texture_name_in_shader,
-            dependency
+            texture_name_in_shader, // Don't move it because it might still be used by create_module_impl()
+            std::move(dependency)
         );
     });
 }
@@ -351,6 +346,7 @@ void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, CommandExecutor con
 
 auto ModulesGraph::final_texture() const -> Cool::TextureRef
 {
+    assert(_root_module && "You must call render() before trying to access the final texture");
     return _root_module->texture();
 }
 
