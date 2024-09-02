@@ -118,7 +118,7 @@ enum class NodeModuleness {
 
 static auto is_feedback_loop(NodeDefinition const& node_definition)
 {
-    return node_definition.name() == "FEEDBACK LOOP";
+    return node_definition.name() == "Feedback (One frame delay)";
 }
 
 static auto node_moduleness(NodeDefinition const& node_definition)

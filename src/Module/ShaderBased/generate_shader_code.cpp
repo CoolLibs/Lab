@@ -97,7 +97,6 @@ uniform sampler1D _audio_spectrum;
 uniform sampler1D _audio_waveform;
 uniform mat3      _camera2D_transform;
 uniform mat3      _camera2D_view;
-uniform sampler2D _previous_frame_texture;
 uniform sampler2D mixbox_lut; // The uniform must have this exact name that mixbox.glsl expects.
 {modules_textures_uniforms}
 

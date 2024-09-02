@@ -20,8 +20,7 @@ void update_dependencies_from_shader_code(ModuleDependencies& dependencies, std:
 {
     shader_code = Cool::String::remove_comments(shader_code);
 
-    dependencies.time |= contains_two_or_more("_time", shader_code)
-                         || contains_two_or_more("_previous_frame_texture", shader_code);
+    dependencies.time |= contains_two_or_more("_time", shader_code);
     dependencies.last_midi_button_pressed |= contains_two_or_more("_last_midi_button_pressed", shader_code)
                                              || contains_two_or_more("_last_last_midi_button_pressed", shader_code);
     dependencies.time_since_last_midi_button_pressed |= contains_two_or_more("_time_since_last_midi_button_pressed", shader_code);
