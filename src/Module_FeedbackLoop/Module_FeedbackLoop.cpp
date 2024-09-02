@@ -1,6 +1,5 @@
 #include "Module_FeedbackLoop.hpp"
 #include "Cool/Gpu/OpenGL/copy_tex_pipeline.hpp"
-#include "Cool/Log/ToUser.h"
 
 namespace Lab {
 
@@ -26,8 +25,8 @@ void Module_FeedbackLoop::on_time_reset()
 
 auto Module_FeedbackLoop::texture() const -> Cool::TextureRef
 {
-    auto const b = _renders_count < 2 ? !_render_target_ping_pong : _render_target_ping_pong;
-    return b ? _render_target.texture_ref() : render_target().texture_ref();
+    auto const b = _renders_count < 2 ? !_render_target_ping_pong : _render_target_ping_pong; // During the first frame, the previous frame texture is not init, so use the current frame texture instead
+    return (b ? _render_target : render_target()).texture_ref();
 }
 
 void Module_FeedbackLoop::render(DataToPassToShader const& data)
@@ -49,7 +48,7 @@ void Module_FeedbackLoop::render(DataToPassToShader const& data)
 void Module_FeedbackLoop::before_module_graph_renders()
 {
     _rerender_this_frame = _rerender_next_frame;
-    _rerender_next_frame = Module::needs_to_rerender();
+    _rerender_next_frame = Module::needs_to_rerender(); // Make sure we will also render one frame after our dependencies rendered
 }
 
 auto Module_FeedbackLoop::needs_to_rerender() const -> bool
