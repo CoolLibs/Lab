@@ -14,6 +14,9 @@ if (std::holds_alternative<Cool::SharedVariable<int>>(var))
 if (std::holds_alternative<Cool::SharedVariable<float>>(var))
     return PrimitiveType::Float;
 
+if (std::holds_alternative<Cool::SharedVariable<Cool::TimeSpeed>>(var))
+    return PrimitiveType::Float;
+
 if (std::holds_alternative<Cool::SharedVariable<glm::vec2>>(var))
     return PrimitiveType::Vec2;
 
