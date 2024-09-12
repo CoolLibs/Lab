@@ -7,11 +7,6 @@ class Module_FeedbackLoop : public Module {
 public:
     Module_FeedbackLoop() = default;
     Module_FeedbackLoop(std::string texture_name_in_shader, std::shared_ptr<Module> module_that_we_depend_on);
-    Module_FeedbackLoop(Module_FeedbackLoop const&)                        = delete;
-    auto operator=(Module_FeedbackLoop const&) -> Module_FeedbackLoop&     = delete;
-    Module_FeedbackLoop(Module_FeedbackLoop&&) noexcept                    = default;
-    auto operator=(Module_FeedbackLoop&&) noexcept -> Module_FeedbackLoop& = default;
-    ~Module_FeedbackLoop() override                                        = default;
 
     void               on_time_reset() override;
     auto               texture() const -> Cool::TextureRef override;
