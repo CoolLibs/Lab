@@ -19,8 +19,8 @@ public:
     Module()                                     = default; // TODO(Module) remove?
     Module(Module const&)                        = delete;
     auto operator=(Module const&) -> Module&     = delete;
-    Module(Module&&) noexcept                    = default;
-    auto operator=(Module&&) noexcept -> Module& = default;
+    Module(Module&&) noexcept                    = delete;
+    auto operator=(Module&&) noexcept -> Module& = delete;
     virtual ~Module()                            = default;
 
     explicit Module(std::string_view name, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> modules_that_we_depend_on, std::vector<Cool::NodeId> nodes_that_we_depend_on)

@@ -11,11 +11,6 @@ class Module_Particles : public Module {
 public:
     Module_Particles() = default;
     explicit Module_Particles(Cool::NodeId const& id_of_node_storing_particles_count, std::string texture_name_in_shader, std::vector<std::shared_ptr<Module>> modules_that_we_depend_on, std::vector<Cool::NodeId> nodes_that_we_depend_on);
-    Module_Particles(Module_Particles const&)                        = delete;
-    auto operator=(Module_Particles const&) -> Module_Particles&     = delete;
-    Module_Particles(Module_Particles&&) noexcept                    = default;
-    auto operator=(Module_Particles&&) noexcept -> Module_Particles& = default;
-    ~Module_Particles() override                                     = default;
 
     void update() override;
     void on_time_changed() override;
