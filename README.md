@@ -11,10 +11,4 @@ Start with any image or shape, like your *Webcam*, add any modifier on top of it
 
 ## Dev
 
-A place to experiment with [Cool](https://coollibs.github.io/) and develop it. 
-
 Check out [this section](https://coollibs.github.io/cool/building) of our website to learn how to clone, build, and more!
-
-### Running the tests
-
-Simply use the `Tests-Coollab` target defined in "CMakeLists.txt".
