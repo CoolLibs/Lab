@@ -12,6 +12,10 @@ import SmallImage from "@site/src/components/SmallImage.js"
 > A node-based software to create visual effects and generative-art, similar to TouchDesigner.<br/>
 > *Free and open-source!*
 
+<a href="https://www.instagram.com/coollab_art/"><SmallImage src="img/instagram.png"/> Instagram</a><br/>
+<a href="https://discord.gg/QEjqnEy4aT"><SmallImage src="img/discord.png"/> Discord</a><br/>
+<a href="https://mastodon.social/@Coollab"><SmallImage src="img/mastodon.svg"/> Mastodon</a>
+
 ## Download
 
 <Download/>
