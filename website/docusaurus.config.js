@@ -143,6 +143,10 @@ const config = {
                 label: "LinkTree",
                 to: "https://linktr.ee/coollab_art",
               },
+              {
+                label: "GitHub",
+                to: "https://github.com/CoolLibs/Lab",
+              },
             ],
           },
           {
