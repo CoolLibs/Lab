@@ -56,8 +56,8 @@ export default ({}) => {
         />,
         <Contributor
           name="Jordan Roberty"
-          github_name="badbois"
-          link="https://github.com/badbois"
+          github_name="JordanRoberty"
+          link="https://github.com/JordanRoberty"
           roles={["Programmer (MacOS port, Tests)"]}
         />,
         <Contributor
