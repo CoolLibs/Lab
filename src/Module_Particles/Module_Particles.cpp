@@ -144,7 +144,7 @@ void Module_Particles::update_particles(DataToPassToShader const& data)
     _force_init_particles      = false;
     _needs_to_update_particles = false;
 #else
-    std::ignore = system_values;
+    std::ignore = data;
 #endif
 }
 
