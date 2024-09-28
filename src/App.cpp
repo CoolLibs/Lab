@@ -40,6 +40,7 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
+#include "Lua/test.hpp"
 #include "Menus/about_menu.h"
 #include "ProjectManager/Command_NewProject.h"
 #include "ProjectManager/Command_OpenBackupProject.h"
@@ -365,6 +366,10 @@ void App::imgui_window_meshing()
 
 void App::imgui_windows()
 {
+    ImGui::Begin("Lua");
+    if (ImGui::Button("Test"))
+        Cool::test_lua();
+    ImGui::End();
     imgui_window_view();
     imgui_window_exporter();
     imgui_window_console();
