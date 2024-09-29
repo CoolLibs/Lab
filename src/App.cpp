@@ -7,7 +7,6 @@
 #include <Cool/Time/ClockU.h>
 #include <Cool/UserSettings/UserSettings.h>
 #include <Cool/Variables/TestVariables.h>
-#include <Cool/Webcam/TextureLibrary_FromWebcam.h>
 #include <IconFontCppHeaders/IconsFontAwesome6.h>
 #include <ModulesGraph/ModulesGraph.h>
 #include <ProjectManager/Command_OpenProject.h>
@@ -36,7 +35,7 @@
 #include "Cool/Video/hack_get_global_time_in_seconds.h"
 #include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
-#include "Cool/Webcam/WebcamsConfigs.h"
+#include "Cool/Webcam/WebcamsConfigs.hpp"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"

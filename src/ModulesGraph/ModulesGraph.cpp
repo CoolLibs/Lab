@@ -52,6 +52,9 @@ void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data
         // Rerender when render size changes
         if (data_to_pass_to_shader.system_values.render_target_size != module->texture().size)
             module->needs_to_rerender_flag().set_dirty();
+
+        if (module->depends_on().always_rerender)
+            module->needs_to_rerender_flag().set_dirty();
     }
 }
 

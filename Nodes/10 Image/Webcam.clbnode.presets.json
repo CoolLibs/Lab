@@ -1,0 +1,39 @@
+{
+    "Presets": {
+        "Underlying container": [
+            {
+                "first": "ae3d018a-7f4e-4cb6-a940-194b6759d37f",
+                "second": {
+                    "Name": "Default",
+                    "Values": [
+                        {
+                            "index": 17,
+                            "data": {
+                                "Name": "Webcam",
+                                "Value": {
+                                    "Source": {
+                                        "index": 1,
+                                        "data": {}
+                                    },
+                                    "Sampler": {
+                                        "Repeat Mode": 0,
+                                        "Interpolation Mode": 9729
+                                    }
+                                },
+                                "Metadata": {}
+                            }
+                        },
+                        {
+                            "index": 0,
+                            "data": {
+                                "Name": "Mirror",
+                                "Value": true,
+                                "Metadata": {}
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
