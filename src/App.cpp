@@ -417,7 +417,11 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     _recently_opened_projects.imgui_window(command_execution_context());
 
     DebugOptions::show_framerate_window([&] {
+        ImGui::PushFont(Cool::Font::monospace());
         ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
+        auto const ms = 1000.f / ImGui::GetIO().Framerate;
+        ImGui::Text(ms >= 10.f ? "%.2f ms" : "0%.2f ms", ms);
+        ImGui::PopFont();
         _main_window.imgui_cap_framerate();
     });
     if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
