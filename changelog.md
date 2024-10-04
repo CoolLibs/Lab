@@ -23,6 +23,10 @@
 
 ## 🐣beta-19 WIP
 
+- Fix accents in webcam name
+- Webcam better error messages, and faster to recover when the error is solved
+- Faster to open the webcam
+
 ## 🐣beta-18
 
 - ✨ We are now using a launcher that will auto-install new Coollab versions automatically
