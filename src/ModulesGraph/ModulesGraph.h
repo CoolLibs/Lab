@@ -69,6 +69,7 @@ private:
 
     void render_module_ifn(Module&, DataToPassToShader const&);
     void check_for_rerender_and_rebuild(DataToPassToShader const&, DataToGenerateShaderCode const&);
+    void clear_error_messages();
 
 private:
     mutable Cool::NodesEditor _nodes_editor{};
