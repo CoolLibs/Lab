@@ -26,6 +26,9 @@
 - 🐛 Fix: properly display accents in webcam name
 - 🤏 Webcams now open faster
 - 🤏 Better error messages when the webcam doesn't work, and it is faster to re-open once the problem is fixed
+- ✨ Improved feedback loop node, you can now apply effects after the feedback node, that won't affect the image sent back into the loop
+- 🐛  When a camera node was present but not actually linked into the graph, it still used the camera and forced us to rerender every frame. Now only the nodes that are actually used affect us.
+- Added server, can send http request to set values in Coollab
 
 ## 🐣beta-18
 
