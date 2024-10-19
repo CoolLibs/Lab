@@ -23,9 +23,9 @@
 
 ## 🐣beta-19 WIP
 
-- Fix accents in webcam name
-- Webcam better error messages, and faster to recover when the error is solved
-- Faster to open the webcam
+- 🐛 Fix: properly display accents in webcam name
+- 🤏 Webcams now open faster
+- 🤏 Better error messages when the webcam doesn't work, and it is faster to re-open once the problem is fixed
 
 ## 🐣beta-18
 
