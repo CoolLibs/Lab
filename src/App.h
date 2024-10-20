@@ -37,7 +37,7 @@
 #include "Cool/View/ForwardingOrTextureView.hpp"
 #include "Cool/View/TextureView.hpp"
 #include "Cool/View/ViewsManager.h"
-#include "Cool/Webcam/WebcamsConfigs.h"
+#include "Cool/Webcam/WebcamsConfigs.hpp"
 #include "Cool/Window/WindowManager.h"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/History.h"

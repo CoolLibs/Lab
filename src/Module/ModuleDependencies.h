@@ -9,6 +9,7 @@ namespace Lab {
 // We don't want to rerender when audio / time changes if we don't depend on them.
 /// Also, audio features are costly to compute, so we only set these uniforms in the shader if we actually need them.
 struct ModuleDependencies {
+    bool                        always_rerender{false};
     bool                        time{false};
     bool                        last_midi_button_pressed{false};
     bool                        time_since_last_midi_button_pressed{false};

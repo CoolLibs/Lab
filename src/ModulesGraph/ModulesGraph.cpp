@@ -5,6 +5,7 @@
 #include <imgui.h>
 #include <algorithm>
 #include "Cool/Audio/AudioManager.h"
+#include "Cool/Log/ToUser.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Module_Compositing/Module_Compositing.h"
@@ -51,6 +52,9 @@ void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data
 
         // Rerender when render size changes
         if (data_to_pass_to_shader.system_values.render_target_size != module->texture().size)
+            module->needs_to_rerender_flag().set_dirty();
+
+        if (module->depends_on().always_rerender)
             module->needs_to_rerender_flag().set_dirty();
     }
 }
@@ -121,9 +125,24 @@ static auto node_moduleness(NodeDefinition const& node_definition)
     return NodeModuleness::Generic;
 }
 
+void ModulesGraph::clear_error_messages()
+{
+    for (auto const& node : _nodes_editor.graph().nodes())
+    {
+        for (auto const& any_input : node.second.downcast<Node>().value_inputs())
+        {
+            std::visit([&](auto&& input) {
+                Cool::Log::ToUser::console().remove(input.message_id());
+            },
+                       any_input);
+        }
+    }
+}
+
 void ModulesGraph::recreate_all_modules(Cool::NodeId const& root_node_id, DataToGenerateShaderCode const& data_to_generate_shader_code)
 {
     _modules.clear();
+    clear_error_messages();
     _root_module = create_module(root_node_id, data_to_generate_shader_code);
     request_rerender_all();
 }

@@ -55,6 +55,11 @@ void update_dependencies_from_nodes_graph(ModuleDependencies& dependencies, Cool
                     if (video_file)
                         dependencies.time = true;
                 }
+                {
+                    auto const* webcam = std::get_if<Cool::SharedVariable<Cool::TextureDescriptor_Webcam>>(&value_input);
+                    if (webcam)
+                        dependencies.always_rerender = true;
+                }
             }
         });
     }
