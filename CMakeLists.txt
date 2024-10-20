@@ -10,9 +10,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
 target_compile_features(Coollab-Properties INTERFACE cxx_std_20)
 
 # Set the folder where the executable is created
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}) # Needed for OpenCV to copy some DLLs in this folder
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
 # Set warning level
 if(MSVC)
@@ -128,3 +126,4 @@ add_executable(Tests-Coollab tests/tests.cpp ${COOLLAB_SOURCES})
 target_compile_definitions(Tests-Coollab PRIVATE LAB_ENABLE_TESTS)
 target_link_libraries(Tests-Coollab PRIVATE Coollab-Properties)
 target_link_libraries(Tests-Coollab PRIVATE doctest::doctest)
+set_target_properties(Tests-Coollab PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/tests/${CMAKE_BUILD_TYPE})
