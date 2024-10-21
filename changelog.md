@@ -23,6 +23,12 @@
 
 ## 🐣beta-19 WIP
 
+- 🐛 Fix: our white was not perfectly pure white
+- 🤏 Improved the linearity of our gradients from black to white
+Before: (notice the huge black region on the left)
+![Before](https://github.com/user-attachments/assets/6f6ef0e9-a67f-438a-8226-11d6b9e52330)
+After:
+![After](https://github.com/user-attachments/assets/a69dc220-b92a-46f4-af90-ea31ee642611)
 - 🐛 Fix: properly display accents in webcam name
 - 🤏 Webcams now open faster
 - 🤏 Better error messages when the webcam doesn't work, and it is faster to re-open once the problem is fixed
