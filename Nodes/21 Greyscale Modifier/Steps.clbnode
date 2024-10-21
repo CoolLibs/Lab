@@ -5,5 +5,5 @@ INPUT int 'Count';
 float main(float Greyscale)
 {
     float n = float('Count');
-    return floor(Greyscale * n) / n;
+    return floor(Greyscale * n) / (n - 1);
 }

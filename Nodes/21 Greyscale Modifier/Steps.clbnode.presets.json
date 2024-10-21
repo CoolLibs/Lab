@@ -10,11 +10,11 @@
                             "index": 1,
                             "data": {
                                 "Name": "Count",
-                                "Value": 1,
+                                "Value": 6,
                                 "Metadata": {
                                     "Bounds": {
                                         "Has min bound": true,
-                                        "Min": 1,
+                                        "Min": 2,
                                         "Has max bound": false,
                                         "Max": 12,
                                         "Drag speed": 0.03999999910593033,
