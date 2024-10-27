@@ -1,5 +1,7 @@
 #include "Module_Particles.h"
+#include <imgui.h>
 #include <glm/gtx/matrix_transform_2d.hpp>
+#include "Cool/TextureSource/TextureLibrary_Image.h"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.hpp"
 #include "Nodes/Node.h"
 
@@ -107,8 +109,8 @@ void Module_Particles::update_particles_count_ifn()
     auto const particles_count = desired_particles_count();
     if (particles_count == _particle_system->particles_count())
         return;
-    _particle_system->set_particles_count(particles_count); // TODO(History) Change through command
-    request_particles_to_reset();
+    // _particle_system->set_particles_count(particles_count); // TODO(History) Change through command
+    // request_particles_to_reset();
 }
 
 void Module_Particles::request_particles_to_reset()
@@ -140,6 +142,12 @@ void Module_Particles::update_particles(DataToPassToShader const& data)
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);
     set_uniforms_for_shader_based_module(_particle_system->simulation_shader(), _depends_on, data, modules_that_we_depend_on(), nodes_that_we_depend_on());
+    _particle_system->simulation_shader().set_uniform("delta_time", delta_time().value());
+    _particle_system->simulation_shader().set_uniform("diffusion_rate_a", diffusion_rate_a().value());
+    _particle_system->simulation_shader().set_uniform("diffusion_rate_b", diffusion_rate_b().value());
+    _particle_system->simulation_shader().set_uniform("feed_rate_a", feed_rate_a().value());
+    _particle_system->simulation_shader().set_uniform("kill_rate_b", kill_rate_b().value());
+    _particle_system->simulation_shader().set_uniform("mask_texture", *Cool::TextureLibrary_Image::instance().get("C:/Users/fouch/Desktop/25h BD 2024/persos masque2.png"));
     _particle_system->update();
     _force_init_particles      = false;
     _needs_to_update_particles = false;
@@ -148,14 +156,15 @@ void Module_Particles::update_particles(DataToPassToShader const& data)
 #endif
 }
 
-void Module_Particles::imgui_generated_shader_code_tab()
+void Module_Particles::imgui_windows(Ui_Ref ui) const
 {
-    if (ImGui::BeginTabItem(fmt::format("{} (Simulation)", name()).c_str()))
-    {
-        if (Cool::ImGuiExtras::input_text_multiline("##Particles simulation", &_shader_code, ImVec2{-1.f, -1.f}))
-            set_simulation_shader_code(_shader_code, false, _particle_system ? _particle_system->dimension() : _particle_system_dimension);
-        ImGui::EndTabItem();
-    }
+    ImGui::Begin("Bob");
+    ui.widget(delta_time());
+    ui.widget(diffusion_rate_a());
+    ui.widget(diffusion_rate_b());
+    ui.widget(feed_rate_a());
+    ui.widget(kill_rate_b());
+    ImGui::End();
 }
 
 void Module_Particles::render(DataToPassToShader const& data)

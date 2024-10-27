@@ -1,12 +1,41 @@
 #pragma once
+#include "Cool/Dependencies/SharedVariable.h"
 #include "Cool/Log/OptionalErrorMessage.h"
 #include "Cool/Nodes/NodeId.h"
 #include "Cool/Nodes/NodesGraph.h"
 #include "Cool/Particles/ParticleSystem.h"
+#include "Cool/Variables/Variable.h"
 #include "Module/Module.h"
 #include "Module/ModuleDependencies.h"
 
 namespace Lab {
+
+inline auto delta_time() -> Cool::SharedVariable<float>&
+{
+    static auto inst = Cool::SharedVariable<float>{Cool::Variable<float>{Cool::VariableData<float>{.name = "Delta Time", .value = 3.f}}, {}};
+    return inst;
+}
+inline auto diffusion_rate_a() -> Cool::SharedVariable<float>&
+{
+    static auto inst = Cool::SharedVariable<float>{Cool::Variable<float>{Cool::VariableData<float>{.name = "Diff A", .value = 0.3f}}, {}};
+    return inst;
+}
+inline auto diffusion_rate_b() -> Cool::SharedVariable<float>&
+{
+    static auto inst = Cool::SharedVariable<float>{Cool::Variable<float>{Cool::VariableData<float>{.name = "Diff B", .value = 0.15f}}, {}};
+    return inst;
+}
+inline auto feed_rate_a() -> Cool::SharedVariable<float>&
+{
+    static auto inst = Cool::SharedVariable<float>{Cool::Variable<float>{Cool::VariableData<float>{.name = "Feed A", .value = 0.0545f}}, {}};
+    return inst;
+}
+inline auto kill_rate_b() -> Cool::SharedVariable<float>&
+{
+    static auto inst = Cool::SharedVariable<float>{Cool::Variable<float>{Cool::VariableData<float>{.name = "Kill B", .value = 0.062f}}, {}};
+    return inst;
+}
+
 class Module_Particles : public Module {
 public:
     Module_Particles() = default;
@@ -14,7 +43,7 @@ public:
 
     void update() override;
     void on_time_changed() override;
-    void imgui_generated_shader_code_tab() override;
+    void imgui_windows(Ui_Ref) const override;
 
     [[nodiscard]] auto needs_to_rerender() const -> bool override
     {
@@ -51,7 +80,12 @@ private:
     void serialize(Archive& archive)
     {
         archive(
-            ser20::make_nvp("Base Module", ser20::base_class<Module>(this))
+            ser20::make_nvp("Base Module", ser20::base_class<Module>(this)),
+            ser20::make_nvp("a", delta_time()),
+            ser20::make_nvp("b", diffusion_rate_a()),
+            ser20::make_nvp("c", diffusion_rate_b()),
+            ser20::make_nvp("d", feed_rate_a()),
+            ser20::make_nvp("e", kill_rate_b())
         );
     }
 };

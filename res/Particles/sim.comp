@@ -1,0 +1,120 @@
+#include "_COOL_RES_/shaders/Texture.glsl"
+
+// uniform float _aspect_ratio;
+uniform bool _add_thing;
+uniform vec2 _mouse_pos;
+uniform bool _first_frame;
+
+uniform float delta_time;
+uniform float diffusion_rate_a;
+uniform float diffusion_rate_b;
+uniform float feed_rate_a;
+uniform float kill_rate_b;
+
+uniform Cool_Texture mask_texture;
+
+layout(std430, binding = 0) buffer _concentration_a_buffer
+{
+    float _concentration_a[];
+};
+
+layout(std430, binding = 1) buffer _concentration_b_buffer
+{
+    float _concentration_b[];
+};
+
+layout(std430, binding = 2) buffer _concentration_a_buffer_2
+{
+    float _concentration_a2[];
+};
+
+layout(std430, binding = 3) buffer _concentration_b_buffer_2
+{
+    float _concentration_b2[];
+};
+
+int cid(ivec2 idx)
+{
+    if (idx.x == -1 || idx.y == -1 || idx.x >= int(DispatchSize.x) || idx.y >= int(DispatchSize.y))
+        return -1;
+    return idx.x + idx.y * int(DispatchSize.x);
+}
+
+float read_a(int idx)
+{
+    if (idx == -1)
+        return 0.;
+    return _first_frame ? _concentration_a[idx] : _concentration_a2[idx];
+}
+float read_b(int idx)
+{
+    if (idx == -1)
+        return 0.;
+    return _first_frame ? _concentration_b[idx] : _concentration_b2[idx];
+}
+void write_a(int idx, float value)
+{
+    if (_first_frame)
+        _concentration_a2[idx] = value;
+    else
+        _concentration_a[idx] = value;
+}
+void write_b(int idx, float value)
+{
+    if (_first_frame)
+        _concentration_b2[idx] = value;
+    else
+        _concentration_b[idx] = value;
+}
+
+float laplacian_a(ivec2 idx)
+{
+    return -1. * read_a(cid(idx))
+           + 0.2 * read_a(cid(idx + ivec2(1, 0)))
+           + 0.2 * read_a(cid(idx + ivec2(-1, 0)))
+           + 0.2 * read_a(cid(idx + ivec2(0, 1)))
+           + 0.2 * read_a(cid(idx + ivec2(0, -1)))
+           + 0.05 * read_a(cid(idx + ivec2(1, 1)))
+           + 0.05 * read_a(cid(idx + ivec2(1, -1)))
+           + 0.05 * read_a(cid(idx + ivec2(-1, -1)))
+           + 0.05 * read_a(cid(idx + ivec2(-1, 1)))
+        //
+        ;
+}
+float laplacian_b(ivec2 idx)
+{
+    return -1. * read_b(cid(idx))
+           + 0.2 * read_b(cid(idx + ivec2(1, 0)))
+           + 0.2 * read_b(cid(idx + ivec2(-1, 0)))
+           + 0.2 * read_b(cid(idx + ivec2(0, 1)))
+           + 0.2 * read_b(cid(idx + ivec2(0, -1)))
+           + 0.05 * read_b(cid(idx + ivec2(1, 1)))
+           + 0.05 * read_b(cid(idx + ivec2(1, -1)))
+           + 0.05 * read_b(cid(idx + ivec2(-1, -1)))
+           + 0.05 * read_b(cid(idx + ivec2(-1, 1)))
+        //
+        ;
+}
+
+void cool_main()
+{
+    int   gid   = cid(ivec2(gl_GlobalInvocationID.xy));
+    float a     = read_a(gid);
+    float b     = read_b(gid);
+    float new_a = a + delta_time * (diffusion_rate_a * laplacian_a(ivec2(gl_GlobalInvocationID.xy)) - a * b * b + feed_rate_a * (1. - a));
+    float new_b = b + delta_time * (diffusion_rate_b * laplacian_b(ivec2(gl_GlobalInvocationID.xy)) + a * b * b - (kill_rate_b + feed_rate_a) * b);
+    // float new_b = b + (diffusion_rate_b * laplacian_b(ivec2(gl_GlobalInvocationID.xy)));
+    if (_add_thing)
+    {
+        vec2 p = (ivec2(gl_GlobalInvocationID.xy) / vec2(int(DispatchSize.xy)) * 2. - 1.) * vec2(_aspect_ratio, 1.);
+        new_b += step(distance(p, _mouse_pos), 0.03);
+    }
+    new_a      = clamp(new_a, 0., 1.);
+    new_b      = clamp(new_b, 0., 1.);
+    vec2  uv   = ivec2(gl_GlobalInvocationID.xy) / vec2(int(DispatchSize.xy)) * 2. - 1.;
+    float mask = sample_cool_texture(mask_texture, uv).r;
+    new_a *= mask;
+    new_b *= mask;
+    write_a(gid, new_a);
+    write_b(gid, new_b);
+}
