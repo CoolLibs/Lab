@@ -248,25 +248,43 @@ void App::render(img::Size size, Cool::Time time, Cool::Time delta_time)
 
 void App::imgui_window_cameras()
 {
-    static constexpr auto help_text = "When disabled, prevents you from changing your camera by clicking in the View. This can be useful when working with both 2D and 3D nodes: you don't want both the 2D and 3D cameras active at the same time.";
+    if (ImGui::BeginTabBar("##cameras"))
+    {
+        ImGui::PushFont(Cool::Font::bold());
+        if (ImGui::BeginTabItem(Cool::icon_fmt("2D Camera", ICOMOON_CAMERA).c_str(), nullptr, _project.camera_2D_manager.is_editable_in_view() ? ImGuiTabItemFlags_SetSelected : 0))
+        {
+            ImGui::PopFont();
+            if (ImGui::IsItemActive())
+            {
+                _project.camera_2D_manager.is_editable_in_view() = true;
+                _project.camera_3D_manager.is_editable_in_view() = false;
+            }
+            _project.camera_2D_manager.imgui(ui());
+            ImGui::EndTabItem();
+        }
+        else
+        {
+            ImGui::PopFont();
+        }
 
-    ImGui::PushID("##2D");
-    Cool::ImGuiExtras::separator_text("2D Camera");
-    if (Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_2D_manager.is_editable_in_view()))
-        _project.camera_3D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view();
-    Cool::ImGuiExtras::help_marker(help_text);
-    _project.camera_2D_manager.imgui(ui());
-    ImGui::PopID();
-
-    ImGui::NewLine();
-
-    ImGui::PushID("##3D");
-    Cool::ImGuiExtras::separator_text("3D Camera");
-    if (Cool::ImGuiExtras::toggle("Editable in view", &_project.camera_3D_manager.is_editable_in_view()))
-        _project.camera_2D_manager.is_editable_in_view() = !_project.camera_3D_manager.is_editable_in_view();
-    Cool::ImGuiExtras::help_marker(help_text);
-    _project.camera_3D_manager.imgui(command_executor());
-    ImGui::PopID();
+        ImGui::PushFont(Cool::Font::bold());
+        if (ImGui::BeginTabItem(Cool::icon_fmt("3D Camera", ICOMOON_VIDEO_CAMERA).c_str(), nullptr, _project.camera_3D_manager.is_editable_in_view() ? ImGuiTabItemFlags_SetSelected : 0))
+        {
+            ImGui::PopFont();
+            if (ImGui::IsItemActive())
+            {
+                _project.camera_3D_manager.is_editable_in_view() = true;
+                _project.camera_2D_manager.is_editable_in_view() = false;
+            }
+            _project.camera_3D_manager.imgui(command_executor());
+            ImGui::PopID();
+        }
+        else
+        {
+            ImGui::PopFont();
+        }
+        ImGui::EndTabBar();
+    }
 }
 
 void App::imgui_window_view()
@@ -387,10 +405,6 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         /* on_time_reset = */ [&]() { on_time_reset(); }
     );
     ImGui::End();
-    // Cameras
-    ImGui::Begin(Cool::icon_fmt("Cameras", ICOMOON_CAMERA).c_str());
-    imgui_window_cameras();
-    ImGui::End();
     // Audio
     _project.audio.imgui_window();
     // Webcams
@@ -404,7 +418,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.modules_graph->imgui_windows(the_ui, _project.audio, _nodes_library_manager.library()); // Must be after cameras so that Inspector window is always preferred over Cameras in tabs.
+    _project.modules_graph->imgui_windows(the_ui, _project.audio, _nodes_library_manager.library());
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();

@@ -44,6 +44,7 @@ public:
     void               imgui_below_node_pins(Cool::Node&, Cool::NodeId const&);
     void               imgui_in_inspector_above_node_info(Cool::Node&, Cool::NodeId const&);
     void               imgui_in_inspector_below_node_info(Cool::Node&, Cool::NodeId const&);
+    void               imgui_inspector_content_when_no_node_is_selected();
     [[nodiscard]] auto node_color(Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
     [[nodiscard]] auto pin_color(Cool::Pin const&, size_t pin_index, Cool::Node const&, Cool::NodeId const&) const -> Cool::Color;
     void               on_link_created_between_existing_nodes(Cool::Link const&, Cool::LinkId const&);

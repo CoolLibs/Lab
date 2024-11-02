@@ -16,8 +16,10 @@
 #include <algorithm>
 #include <reg/src/internal/generate_uuid.hpp>
 #include <string>
+#include "App.h"
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Dependencies/SharedVariable.h"
+#include "Cool/ImGui/Fonts.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Nodes/Link.h"
 #include "Cool/Nodes/NodesLibrary.h"
@@ -266,6 +268,20 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
             // Apply back the variables to the inputs' default variables
             apply_settings_to_inputs(settings, node.value_inputs(), to_string(node), _command_executor);
         }
+    }
+}
+
+void NodesConfig::imgui_inspector_content_when_no_node_is_selected()
+{
+    if (_nodes_editor.graph().nodes().is_empty())
+    {
+        ImGui::PushFont(Cool::Font::italic());
+        ImGui::TextUnformatted("Select a node to edit its parameters");
+        ImGui::PopFont();
+    }
+    else
+    {
+        _command_executor.get_ctx().app().imgui_window_cameras();
     }
 }
 

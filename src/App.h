@@ -106,18 +106,20 @@ private:
 
     void file_menu();
     void view_menu();
-    // void windows_menu();
     void export_menu();
     void settings_menu();
     void commands_menu();
     void debug_menu();
 
     void imgui_windows_only_when_inputs_are_allowed();
-    void imgui_window_cameras();
     void imgui_window_view();
     void imgui_window_exporter();
     void imgui_window_meshing();
 
+public: // Needs to be public so we can call it in the NodesConfig
+    void imgui_window_cameras();
+
+private:
     void compile_all_is0_nodes();
 
 private:
