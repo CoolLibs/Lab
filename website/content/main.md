@@ -9,7 +9,8 @@ import SmallImage from "@site/src/components/SmallImage.js"
 
 ## Coollab
 
-> A node-based software to create visual effects and generative-art, similar to TouchDesigner.<br/>
+> The friendly and powerful alternative to TouchDesigner<br/>
+> A node-based software to create visual effects and generative-art<br/>
 > *Free and open-source!*
 
 <a href="https://www.instagram.com/coollab_art/"><SmallImage src="img/instagram.png"/> Instagram</a><br/>
