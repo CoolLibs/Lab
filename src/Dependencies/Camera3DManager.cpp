@@ -68,6 +68,11 @@ void Camera3DManager::imgui(CommandExecutor const& executor)
     maybe_update_camera(executor, [&](Cool::Camera& camera) {
         return _view_controller.ImGui(camera);
     });
+    maybe_update_camera(executor, [&](Cool::Camera& camera) {
+        return Cool::imgui(camera.projection());
+    });
+    if (ImGui::IsItemDeactivatedAfterEdit())
+        executor.execute(Command_FinishedEditingVariable{});
     if (ImGui::Button(Cool::icon_fmt("Look at the origin", ICOMOON_RADIO_CHECKED).c_str()))
     {
         maybe_update_camera(executor, [&](Cool::Camera& camera) {
@@ -79,13 +84,6 @@ void Camera3DManager::imgui(CommandExecutor const& executor)
     if (ImGui::Button(Cool::icon_fmt("Reset Camera", ICOMOON_TARGET).c_str()))
     {
         reset_camera(executor);
-    }
-    maybe_update_camera(executor, [&](Cool::Camera& camera) {
-        return Cool::imgui(camera.projection());
-    });
-    if (ImGui::IsItemDeactivatedAfterEdit())
-    {
-        executor.execute(Command_FinishedEditingVariable{});
     }
 }
 
