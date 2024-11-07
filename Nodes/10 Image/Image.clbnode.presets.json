@@ -2,21 +2,19 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "080de6f2-f868-4721-8653-c0fd1508f7a0",
+                "first": "be4532e3-7c16-42f8-b4a3-4aac99505b68",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
-                            "index": 17,
+                            "index": 16,
                             "data": {
-                                "Name": "Webcam",
+                                "Name": "Image",
                                 "Value": {
                                     "Source": {
-                                        "index": 1,
+                                        "index": 0,
                                         "data": {
-                                            "Device ID": {
-                                                "ID": ""
-                                            }
+                                            "Path": "res/images/logo.png"
                                         }
                                     },
                                     "Sampler": {
@@ -24,14 +22,6 @@
                                         "Interpolation Mode": 9729
                                     }
                                 },
-                                "Metadata": {}
-                            }
-                        },
-                        {
-                            "index": 0,
-                            "data": {
-                                "Name": "Mirror",
-                                "Value": true,
                                 "Metadata": {}
                             }
                         }

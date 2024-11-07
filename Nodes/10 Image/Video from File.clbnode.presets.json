@@ -2,20 +2,27 @@
     "Presets": {
         "Underlying container": [
             {
-                "first": "080de6f2-f868-4721-8653-c0fd1508f7a0",
+                "first": "05bb6cc4-1040-49a0-9a70-0fdb0af17c76",
                 "second": {
                     "Name": "Default",
                     "Values": [
                         {
-                            "index": 17,
+                            "index": 25,
                             "data": {
-                                "Name": "Webcam",
+                                "Name": "Video",
                                 "Value": {
                                     "Source": {
-                                        "index": 1,
+                                        "index": 2,
                                         "data": {
-                                            "Device ID": {
-                                                "ID": ""
+                                            "Video": {
+                                                "File Path": "",
+                                                "Settings": {
+                                                    "Loop mode": 1,
+                                                    "Playback speed": 1.0,
+                                                    "Start time": {
+                                                        "Nanoseconds": 0
+                                                    }
+                                                }
                                             }
                                         }
                                     },
@@ -24,14 +31,6 @@
                                         "Interpolation Mode": 9729
                                     }
                                 },
-                                "Metadata": {}
-                            }
-                        },
-                        {
-                            "index": 0,
-                            "data": {
-                                "Name": "Mirror",
-                                "Value": true,
                                 "Metadata": {}
                             }
                         }
