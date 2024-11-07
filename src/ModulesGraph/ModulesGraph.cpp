@@ -451,6 +451,8 @@ auto ModulesGraph::get_main_node_id() const -> Cool::NodeId const&
 }
 void ModulesGraph::set_main_node_id(Cool::NodeId const& id)
 {
+    if (_main_node_id == id)
+        return;
     _main_node_id = id;
     rebuild_modules_graph_flag().set_dirty(); // Important when calling this function from a Command
 }
