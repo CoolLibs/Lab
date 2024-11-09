@@ -68,9 +68,6 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
 {
     command_executor().execute(Command_NewProject{});
     _project.clock.pause(); // Make sure the new project will be paused.
-
-    _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
-    _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
 }
 
 void App::on_shutdown()
@@ -78,6 +75,16 @@ void App::on_shutdown()
     _tips_manager.on_app_shutdown();
     command_execution_context().execute(Command_SaveProject{.is_autosave = true});
     _is_shutting_down = true;
+}
+
+void App::on_project_loaded()
+{
+    _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
+    _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
+
+    _project.view_constraint.set_shared_aspect_ratio(_project.shared_aspect_ratio);
+    _project.exporter.set_shared_aspect_ratio(_project.shared_aspect_ratio);
+    _gallery_poster.set_shared_aspect_ratio(_project.shared_aspect_ratio);
 }
 
 void App::compile_all_is0_nodes()
@@ -114,6 +121,9 @@ void App::update()
         _is_first_frame = false;
         initial_project_opening(command_execution_context());
     }
+
+    if (_project.shared_aspect_ratio.fill_the_view)
+        _project.shared_aspect_ratio.aspect_ratio.set(render_view().aspect_ratio());
 
     if (DebugOptions::force_rerender_every_frame())
         _project.modules_graph->request_rerender_all();
@@ -313,7 +323,7 @@ void App::imgui_window_view()
             bool b = false;
 
             bool const align_buttons_vertically = _preview_view.has_vertical_margins()
-                                                  || (!_project.view_constraint.wants_to_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
+                                                  || (!_project.view_constraint.does_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             int buttons_order{0};
             // Reset cameras
@@ -341,6 +351,18 @@ void App::imgui_window_view()
             }
             b |= ImGui::IsItemActive();
             ImGui::SetItemTooltip("%s", _project.camera_2D_manager.is_editable_in_view() ? "2D camera is active" : "3D camera is active");
+
+            // Aspect Ratio
+            if (Cool::ImGuiExtras::floating_button(ICOMOON_CROP, buttons_order++, align_buttons_vertically))
+                ImGui::OpenPopup("##Aspect Ratio");
+            ImGui::SetItemTooltip("%s", "Aspect Ratio");
+            if (ImGui::BeginPopup("##Aspect Ratio"))
+            {
+                _project.view_constraint.imgui_aspect_ratio();
+                ImGui::EndPopup();
+            }
+            b |= ImGui::IsItemActive();
+
             return b;
         },
     });
@@ -479,14 +501,11 @@ void App::file_menu()
     }
 }
 
-void App::view_menu()
+void App::performance_menu()
 {
-    if (ImGui::BeginMenu(Cool::icon_fmt("View", ICOMOON_IMAGE, true).c_str()))
+    if (ImGui::BeginMenu(Cool::icon_fmt("Performance", ICOMOON_POWER, true).c_str()))
     {
-        if (_project.view_constraint.imgui())
-        {
-            // render_impl(_view.render_target, *_current_module, _project.clock.time());
-        }
+        _project.view_constraint.imgui_nb_pixels();
         ImGui::EndMenu();
     }
 }
@@ -515,7 +534,7 @@ void App::export_menu()
             },
             Cool::icon_fmt("Share online", ICOMOON_EARTH, true)
         );
-        _gallery_poster.imgui_open_sharing_form(_project.view_constraint.aspect_ratio());
+        _gallery_poster.imgui_open_sharing_form();
         ImGui::PopStyleVar();
         ImGui::EndMenu();
     }
@@ -557,7 +576,8 @@ void App::commands_menu()
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
         {
             _output_view.toggle_open_close();
-            _project.view_constraint.should_control_aspect_ratio(false);
+            if (_output_view.is_open())
+                _project.shared_aspect_ratio.fill_the_view = true;
         }
         if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
             Cool::open(Cool::Path::user_data().string().c_str());
@@ -579,8 +599,8 @@ void App::imgui_menus()
     file_menu();
     export_menu();
     // windows_menu();/// This menu might make sense if we have several views one day, but for now it just creates a menu for no reason
-    view_menu();
     settings_menu();
+    performance_menu();
     commands_menu();
 
     ImGui::SetCursorPosX( // HACK while waiting for ImGui to support right-to-left layout. See issue https://github.com/ocornut/imgui/issues/5875
@@ -661,13 +681,11 @@ void App::check_inputs__timeline()
 
 void App::open_image_exporter()
 {
-    _project.exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
     _project.exporter.image_export_window().open();
 }
 
 void App::open_video_exporter()
 {
-    _project.exporter.maybe_set_aspect_ratio(_project.view_constraint.aspect_ratio());
     _project.exporter.video_export_window().open();
 }
 

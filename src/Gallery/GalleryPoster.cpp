@@ -24,17 +24,14 @@ static constexpr bool has_openssl =
     false;
 #endif
 
-void GalleryPoster::imgui_open_sharing_form(std::optional<Cool::AspectRatio> const& aspect_ratio)
+void GalleryPoster::imgui_open_sharing_form()
 {
     Cool::ImGuiExtras::disabled_if(
         !has_openssl,
-        "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling Coollab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.", [&]() {
+        "DEV ONLY: We didn't find the OpenSSL library on your machine while compiling Coollab so this feature was disabled.\nLook at how to install OpenSSL on your computer if you want this feature.",
+        [&]() {
             if (ImGui::Button(Cool::icon_fmt("Share online", ICOMOON_EARTH, true).c_str()))
-            {
                 _window.open();
-                if (aspect_ratio)
-                    _aspect_ratio = *aspect_ratio;
-            }
         }
     );
 }
@@ -46,7 +43,7 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
         Cool::ImGuiExtras::markdown("If you want to edit or remove it, send an email at [coollab.lib@gmail.com](mailto:coollab.lib@gmail.com) from the email address that you will provide below.");
         Cool::ImGuiExtras::separator_text("Artwork");
         _artwork_info.imgui();
-        _aspect_ratio.imgui(0.f, "Aspect Ratio");
+        _shared_aspect_ratio->aspect_ratio.imgui(0.f, "Aspect Ratio");
         {
             auto const size = export_size();
             auto       sz   = glm::ivec2{
@@ -82,7 +79,7 @@ void GalleryPoster::imgui_window(std::function<std::string(img::Size)> const& re
 
 auto GalleryPoster::export_size() const -> img::Size
 {
-    return Cool::compute_image_size(_aspect_ratio.get(), 2'250'000.f);
+    return Cool::compute_image_size(_shared_aspect_ratio->aspect_ratio.get(), 2'250'000.f);
 }
 
 } // namespace Lab

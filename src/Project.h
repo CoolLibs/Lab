@@ -3,6 +3,7 @@
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
+#include "Cool/Image/SharedAspectRatio.hpp"
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/OSC/OSCConnectionEndpoint.h"
 #include "Cool/StrongTypes/Camera2D.h"
@@ -24,6 +25,7 @@ struct Project {
     Cool::Exporter                exporter;
     Cool::AudioManager            audio;
     Cool::OSCConnectionEndpoint   osc_endpoint{};
+    Cool::SharedAspectRatio       shared_aspect_ratio{};
 
     [[nodiscard]] auto is_empty() const -> bool;
     [[nodiscard]] auto current_clock() const -> Cool::Clock const& { return exporter.is_exporting() ? exporter.clock() : clock; }
@@ -47,7 +49,8 @@ private:
             ser20::make_nvp("History", history),
             ser20::make_nvp("Audio", audio),
             ser20::make_nvp("OSC Endpoint", osc_endpoint),
-            ser20::make_nvp("MIDI Channels", Cool::midi_manager().all_values())
+            ser20::make_nvp("MIDI Channels", Cool::midi_manager().all_values()),
+            ser20::make_nvp("Shared Aspect Ratio", shared_aspect_ratio)
         );
     }
 };

@@ -61,6 +61,7 @@ class App : public Cool::IApp {
 public:
     explicit App(Cool::WindowManager& windows, Cool::ViewsManager& views);
     void on_shutdown() override;
+    void on_project_loaded();
 
     void update() override;
     void request_rerender() override;
@@ -105,7 +106,7 @@ private:
     void reset_cameras();
 
     void file_menu();
-    void view_menu();
+    void performance_menu();
     void export_menu();
     void settings_menu();
     void commands_menu();

@@ -1,5 +1,6 @@
 #include "internal_utils.h"
 #include <ProjectManager/utils.h>
+#include "App.h"
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
 #include "Cool/OSC/OSCManager.h"
@@ -45,6 +46,7 @@ void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& proje
     before_project_destruction(ctx);
 
     ctx.project() = std::move(project);
+    ctx.app().on_project_loaded();
     for (auto& [_, node] : ctx.project().modules_graph->graph().nodes())
         ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node.downcast<Node>());
 
