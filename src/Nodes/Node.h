@@ -68,6 +68,7 @@ public:
 
     auto name() const -> std::string { return _d.name; }
     void set_name(std::string const& name) { _d.name = name; }
+    auto name_ref() -> std::string& { return _d.name; }
 
     auto definition_name() const -> std::string { return _d.id_names.definition_name; }
     auto category_name() const -> std::string { return _d.id_names.category_name; }

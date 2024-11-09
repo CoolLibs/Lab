@@ -208,18 +208,15 @@ static auto value_input_is_connected_to_a_node(size_t value_input_index, Node co
     return input_node != nullptr;
 }
 
-void NodesConfig::imgui_in_inspector_above_node_info(Cool::Node& /* abstract_node */, Cool::NodeId const& id)
+void NodesConfig::imgui_in_inspector_above_node_info(Cool::Node& /* abstract_node */, Cool::NodeId const& /* id */)
 {
     // auto& node = abstract_node.downcast<Node>();
-
-    main_node_toggle(id);
+    // main_node_toggle(id);
 }
 
 void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, Cool::NodeId const& /* id */)
 {
     auto& node = abstract_node.downcast<Node>();
-
-    ImGui::NewLine();
 
     if (node.is_audio_node())
     {
@@ -735,16 +732,6 @@ void make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& nod
 void NodesConfig::make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& node)
 {
     Lab::make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node, _get_node_definition, graph(), _command_executor, _get_node_category_config, _dirty_flags);
-}
-
-void NodesConfig::widget_to_rename_node(Cool::Node& abstract_node)
-{
-    auto& node = abstract_node.downcast<Node>();
-    auto  name = node.name();
-    ImGui::PushID(21654);
-    ImGui::InputText("Title", &name);
-    ImGui::PopID();
-    node.set_name(name);
 }
 
 auto NodesConfig::maybe_disable_node_definition() const -> Cool::MaybeDisableNodeDefinition
