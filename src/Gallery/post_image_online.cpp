@@ -52,6 +52,11 @@ namespace Lab {
 
 void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, LegalInfo const& legal_info, std::string const& image_png_data)
 {
+    if (image_png_data.empty())
+    {
+        Cool::Log::ToUser::warning("Export", "Failed to export image");
+        return;
+    }
     auto cli = httplib::SSLClient{"api.cloudinary.com"};
 
     // Create the multipart/form-data request

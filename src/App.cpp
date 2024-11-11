@@ -446,7 +446,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         auto the_polaroid = polaroid();
         the_polaroid.render(size, _project.clock.time(), _project.clock.delta_time());
         auto const image = the_polaroid.texture().download_pixels();
-        return img::save_png_to_string(image);
+        return img::save_png_to_string(image).value_or("");
     });
     // Recently opened projects
     _recently_opened_projects.imgui_window(command_execution_context());
