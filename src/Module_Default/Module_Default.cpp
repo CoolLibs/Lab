@@ -21,7 +21,7 @@ void Module_Default::render(DataToPassToShader const& data)
 {
     render_target().set_size(data.system_values.render_target_size);
     render_target().render([&]() {
-        glClearColor(0.f, 0.f, 0.f, 1.f);
+        glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT);
     });
 }
