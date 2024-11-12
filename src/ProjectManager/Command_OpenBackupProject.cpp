@@ -10,7 +10,7 @@ namespace Lab {
 void Command_OpenBackupProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
     auto const path = Path::backup_project();
-    if (!std::filesystem::exists(path))
+    if (!Cool::File::exists(path))
     {
         Cool::Log::ToUser::warning("Loading backup project failed", "No backup found.");
         return;

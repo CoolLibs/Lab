@@ -14,7 +14,7 @@ RecentlyOpened::RecentlyOpened()
 
 void RecentlyOpened::on_project_opened(std::filesystem::path path)
 {
-    path = std::filesystem::weakly_canonical(path);
+    path = Cool::File::weakly_canonical(path);
     std::erase(_list.underlying_container(), path);
     _list.push_front(std::move(path));
 }
@@ -23,7 +23,7 @@ auto RecentlyOpened::most_recent_path() const -> std::optional<std::filesystem::
 {
     for (auto const& path : _list)
     {
-        if (std::filesystem::exists(path))
+        if (Cool::File::exists(path))
             return path;
     }
     return std::nullopt;
@@ -49,7 +49,7 @@ void RecentlyOpened::imgui_window(CommandExecutionContext_Ref const& ctx)
             // Find the first path that is not the current path and focus it.
             if (ImGui::IsWindowAppearing()
                 && !has_set_keyboard_focus
-                && (!ctx.project_path() || path != std::filesystem::weakly_canonical(*ctx.project_path())))
+                && (!ctx.project_path() || path != Cool::File::weakly_canonical(*ctx.project_path())))
             {
                 ImGui::SetKeyboardFocusHere();
                 has_set_keyboard_focus = true;
@@ -81,7 +81,7 @@ void RecentlyOpened::open_window()
 void RecentlyOpened::remove_paths_that_dont_exist_anymore()
 {
     std::erase_if(_list.underlying_container(), [](std::filesystem::path const& path) {
-        return !std::filesystem::exists(path);
+        return !Cool::File::exists(path);
     });
 }
 

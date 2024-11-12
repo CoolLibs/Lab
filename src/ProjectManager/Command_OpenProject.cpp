@@ -37,7 +37,7 @@ void Command_OpenProject::execute(CommandExecutionContext_Ref const& ctx) const
 
 [[nodiscard]] auto Command_OpenProject::to_string() const -> std::string
 {
-    return fmt::format("Opening project \"{}\".", std::filesystem::weakly_canonical(path).string());
+    return fmt::format("Opening project \"{}\".", Cool::File::weakly_canonical(path).string());
 }
 
 } // namespace Lab

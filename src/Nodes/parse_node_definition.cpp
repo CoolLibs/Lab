@@ -666,8 +666,8 @@ static auto presets_paths(std::filesystem::path path) -> Cool::PresetsPaths
     };
 #else
     return Cool::PresetsPaths{
-        .user_defined_presets = Cool::Path::user_data() / std::filesystem::relative(path, Cool::Path::root()), // Convert a path relative to root() into a path relative to user_data()
-        .default_presets = path,
+        .user_defined_presets = Cool::Path::user_data() / Cool::File::relative(path, Cool::Path::root()), // Convert a path relative to root() into a path relative to user_data()
+        .default_presets      = path,
     };
 #endif
 }

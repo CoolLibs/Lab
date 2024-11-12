@@ -19,7 +19,7 @@ static void set_window_title(CommandExecutionContext_Ref const& ctx, std::option
         fmt::format(
             "Coollab [{}]",
             path.has_value()
-                ? std::filesystem::weakly_canonical(*path).string()
+                ? Cool::File::weakly_canonical(*path).string()
                 : "Untitled project"
         )
             .c_str()

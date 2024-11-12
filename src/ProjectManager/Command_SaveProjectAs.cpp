@@ -19,7 +19,7 @@ void Command_SaveProjectAs::execute(CommandExecutionContext_Ref const& ctx) cons
 
 [[nodiscard]] auto Command_SaveProjectAs::to_string() const -> std::string
 {
-    return fmt::format("Saving project as \"{}\".", std::filesystem::weakly_canonical(path).string());
+    return fmt::format("Saving project as \"{}\".", Cool::File::weakly_canonical(path).string());
 }
 
 } // namespace Lab
