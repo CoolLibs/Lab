@@ -243,7 +243,7 @@ void NodesConfig::imgui_in_inspector_below_node_info(Cool::Node& abstract_node, 
     {
         ImGui::NewLine();
         ImGui::Separator();
-        Cool::ImGuiExtras::warning_text("Node definition file not found");
+        Cool::ImGuiExtras::warning_text("Node file not found");
     }
     else if (!node.value_inputs().empty())
     {

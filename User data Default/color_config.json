@@ -2,7 +2,7 @@
     "Config": {
         "Categories": [
             {
-                "Name": "Bright Color",
+                "Name": "Bright",
                 "Behaves differently in light mode": true,
                 "Groups": [
                     {
@@ -18,7 +18,7 @@
                 ]
             },
             {
-                "Name": "Medium Color",
+                "Name": "Medium",
                 "Behaves differently in light mode": true,
                 "Groups": [
                     {
@@ -70,7 +70,23 @@
                 ]
             },
             {
-                "Name": "Accent Color",
+                "Name": "Text",
+                "Behaves differently in light mode": true,
+                "Groups": [
+                    {
+                        "Name": "Normal",
+                        "Brightness delta": 0.0,
+                        "Opacity": 1.0
+                    },
+                    {
+                        "Name": "Darker",
+                        "Brightness delta": 0.0,
+                        "Opacity": 0.75
+                    }
+                ]
+            },
+            {
+                "Name": "Accent",
                 "Behaves differently in light mode": false,
                 "Groups": [
                     {
@@ -106,18 +122,35 @@
                 ]
             },
             {
-                "Name": "Text",
-                "Behaves differently in light mode": true,
+                "Name": "Success",
+                "Behaves differently in light mode": false,
                 "Groups": [
                     {
                         "Name": "Normal",
                         "Brightness delta": 0.0,
                         "Opacity": 1.0
-                    },
+                    }
+                ]
+            },
+            {
+                "Name": "Warning",
+                "Behaves differently in light mode": false,
+                "Groups": [
                     {
-                        "Name": "Darker",
+                        "Name": "Normal",
                         "Brightness delta": 0.0,
-                        "Opacity": 0.75
+                        "Opacity": 1.0
+                    }
+                ]
+            },
+            {
+                "Name": "Error",
+                "Behaves differently in light mode": false,
+                "Groups": [
+                    {
+                        "Name": "Normal",
+                        "Brightness delta": 0.0,
+                        "Opacity": 1.0
                     }
                 ]
             }
@@ -173,7 +206,7 @@
                     "Name": "Border"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -191,7 +224,7 @@
                     "Name": "FrameBg"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -200,7 +233,7 @@
                     "Name": "FrameBgHovered"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Darker"
                 }
             },
@@ -209,7 +242,7 @@
                     "Name": "FrameBgActive"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Darker"
                 }
             },
@@ -218,7 +251,7 @@
                     "Name": "TitleBg"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -227,7 +260,7 @@
                     "Name": "TitleBgActive"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -236,7 +269,7 @@
                     "Name": "TitleBgCollapsed"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -245,7 +278,7 @@
                     "Name": "MenuBarBg"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -254,7 +287,7 @@
                     "Name": "ScrollbarBg"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -263,7 +296,7 @@
                     "Name": "ScrollbarGrab"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -272,7 +305,7 @@
                     "Name": "ScrollbarGrabHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Brighter"
                 }
             },
@@ -281,7 +314,7 @@
                     "Name": "ScrollbarGrabActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -290,7 +323,7 @@
                     "Name": "CheckMark"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -299,7 +332,7 @@
                     "Name": "SliderGrab"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -308,7 +341,7 @@
                     "Name": "SliderGrabActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -317,7 +350,7 @@
                     "Name": "Button"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -326,7 +359,7 @@
                     "Name": "ButtonHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Brighter"
                 }
             },
@@ -335,7 +368,7 @@
                     "Name": "ButtonActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -344,7 +377,7 @@
                     "Name": "Header"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -353,7 +386,7 @@
                     "Name": "HeaderHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Brighter"
                 }
             },
@@ -362,7 +395,7 @@
                     "Name": "HeaderActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -371,7 +404,7 @@
                     "Name": "Separator"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -380,7 +413,7 @@
                     "Name": "SeparatorHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Brighter"
                 }
             },
@@ -389,7 +422,7 @@
                     "Name": "SeparatorActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -398,7 +431,7 @@
                     "Name": "ResizeGrip"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -407,7 +440,7 @@
                     "Name": "ResizeGripHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -416,7 +449,7 @@
                     "Name": "ResizeGripActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -425,7 +458,7 @@
                     "Name": "Tab"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -434,7 +467,7 @@
                     "Name": "TabHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Brighter"
                 }
             },
@@ -443,7 +476,7 @@
                     "Name": "TabActive"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -452,7 +485,7 @@
                     "Name": "TabUnfocused"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -461,7 +494,7 @@
                     "Name": "TabUnfocusedActive"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -470,7 +503,7 @@
                     "Name": "DockingPreview"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -488,7 +521,7 @@
                     "Name": "PlotLines"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -497,7 +530,7 @@
                     "Name": "PlotLinesHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -506,7 +539,7 @@
                     "Name": "PlotHistogram"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -515,7 +548,7 @@
                     "Name": "PlotHistogramHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -524,7 +557,7 @@
                     "Name": "TableHeaderBg"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -551,7 +584,7 @@
                     "Name": "TableRowBg"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -560,7 +593,7 @@
                     "Name": "TableRowBgAlt"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -569,7 +602,7 @@
                     "Name": "TextSelectedBg"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -578,7 +611,7 @@
                     "Name": "DragDropTarget"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -587,7 +620,7 @@
                     "Name": "NavHighlight"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -623,7 +656,7 @@
                     "Name": "SliderGrabHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -632,7 +665,7 @@
                     "Name": "Toggle"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -641,7 +674,7 @@
                     "Name": "ToggleHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -650,7 +683,7 @@
                     "Name": "ToggleBg"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -659,7 +692,7 @@
                     "Name": "ToggleBgHovered"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Darker"
                 }
             },
@@ -668,7 +701,7 @@
                     "Name": "CheckboxButton"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -677,7 +710,7 @@
                     "Name": "CheckboxButtonHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -686,7 +719,7 @@
                     "Name": "CheckboxButtonActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -695,7 +728,7 @@
                     "Name": "FloatingButton"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Transparent"
                 }
             },
@@ -704,7 +737,7 @@
                     "Name": "FloatingButtonHovered"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Slightly Transparent"
                 }
             },
@@ -713,7 +746,7 @@
                     "Name": "FloatingButtonActive"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Slightly Transparent & Brighter"
                 }
             },
@@ -722,7 +755,7 @@
                     "Name": "FloatingButtonEnabled"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Floating Buttons Enabled"
                 }
             },
@@ -731,7 +764,7 @@
                     "Name": "FloatingButtonHoveredEnabled"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Slightly Transparent & Brighter"
                 }
             },
@@ -740,7 +773,7 @@
                     "Name": "FloatingButtonActiveEnabled"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Slightly Transparent & Brighter"
                 }
             },
@@ -749,7 +782,7 @@
                     "Name": "ButtonsSeparator"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Brighter"
                 }
             },
@@ -758,7 +791,7 @@
                     "Name": "HighlightItems"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -767,7 +800,7 @@
                     "Name": "GradientMark"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -776,7 +809,7 @@
                     "Name": "GradientMarkHovered"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Brighter"
                 }
             },
@@ -785,7 +818,7 @@
                     "Name": "GradientMarkSelected"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -794,7 +827,7 @@
                     "Name": "GradientMarkSelectedHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Brighter"
                 }
             },
@@ -812,7 +845,7 @@
                     "Name": "LinkHovered"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -821,7 +854,7 @@
                     "Name": "Frame node"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -830,7 +863,7 @@
                     "Name": "Nodes_Bg"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
@@ -839,7 +872,7 @@
                     "Name": "Nodes_Grid"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -866,7 +899,7 @@
                     "Name": "Nodes_HovNodeBorder"
                 },
                 "second": {
-                    "Category name": "Bright Color",
+                    "Category name": "Bright",
                     "Group name": "Normal"
                 }
             },
@@ -875,7 +908,7 @@
                     "Name": "Nodes_SelNodeBorder"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -884,7 +917,7 @@
                     "Name": "Nodes_NodeSelRect"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Very Transparent"
                 }
             },
@@ -893,7 +926,7 @@
                     "Name": "Nodes_NodeSelRectBorder"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Slightly Transparent"
                 }
             },
@@ -902,7 +935,7 @@
                     "Name": "Nodes_HovLinkBorder"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -911,7 +944,7 @@
                     "Name": "Nodes_SelLinkBorder"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -920,7 +953,7 @@
                     "Name": "Nodes_HighlightLinkBorder"
                 },
                 "second": {
-                    "Category name": "Accent Color",
+                    "Category name": "Accent",
                     "Group name": "Normal"
                 }
             },
@@ -983,7 +1016,7 @@
                     "Name": "Nodes_GroupBg"
                 },
                 "second": {
-                    "Category name": "Medium Color",
+                    "Category name": "Medium",
                     "Group name": "Normal"
                 }
             },
