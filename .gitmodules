@@ -13,3 +13,6 @@
 [submodule "lib/cpp-httplib"]
 	path = lib/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib
+[submodule "lib/no-sleep"]
+	path = lib/no-sleep
+	url = https://github.com/CoolLibs/no-sleep

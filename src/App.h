@@ -49,6 +49,7 @@
 #include "Project.h"
 #include "ProjectManager/Command_SaveProject.h"
 #include "ProjectManager/RecentlyOpened.h"
+#include "no_sleep/no_sleep.hpp"
 #include "reg/ser20.hpp"
 
 namespace Lab {
@@ -140,6 +141,7 @@ private:
     bool                                 _is_shutting_down{false};
     Cool::MeshExportSettings             _mesh_export_settings{};
     MeshingGui                           _meshing_gui{};
+    std::optional<no_sleep::Scoped>      _disable_sleep{};
 
 private:
     // Serialization

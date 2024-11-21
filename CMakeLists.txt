@@ -46,6 +46,10 @@ Cool__set_app_icon(${PROJECT_NAME} "res/logo.png" "${CMAKE_SOURCE_DIR}/app-resou
 add_subdirectory(lib/cmd)
 target_link_libraries(Coollab-Properties INTERFACE cmd::cmd)
 
+# Include no-sleep
+add_subdirectory(lib/no-sleep)
+target_link_libraries(Coollab-Properties INTERFACE no_sleep::no_sleep)
+
 # Include range-v3
 target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
 install(FILES "lib/range-v3/LICENSE.txt" DESTINATION "license/range-v3")
