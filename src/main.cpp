@@ -8,10 +8,6 @@
 
 class PathsConfig : public Cool::PathsConfig {
 public:
-    PathsConfig()
-        : Cool::PathsConfig{"Coollab"}
-    {}
-
     [[nodiscard]] auto default_texture() const -> std::filesystem::path override
     {
         return Cool::Path::root() / "res/images/logo.png";

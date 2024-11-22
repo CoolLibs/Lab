@@ -311,8 +311,9 @@ void App::imgui_window_view()
     _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), command_executor(), _project.camera_2D_manager.camera());
     _output_view.set_texture(_project.modules_graph->final_texture());
     _output_view.imgui_window({
-        .on_open  = [&]() { request_rerender(); _disable_sleep.emplace(); }, // When we switch between using the _output_view and the _nodes_view
-        .on_close = [&]() { request_rerender(); _disable_sleep.reset(); }, // as our render target, we need to rerender.
+        // When we switch between using the _output_view and the _nodes_view we need to rerender on the new render target.
+        .on_open  = [&]() { request_rerender(); _disable_sleep.emplace("Coollab", "Coollab \"Output\" window is open", no_sleep::Mode::KeepScreenOnAndKeepComputing); },
+        .on_close = [&]() { request_rerender(); _disable_sleep.reset(); },
     });
     _preview_view.set_texture(_project.modules_graph->final_texture());
     _preview_view.imgui_window({
