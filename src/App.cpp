@@ -24,6 +24,7 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Common/Path.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
+#include "Cool/Exporter/ExporterU.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Input/MouseCoordinates.h"
@@ -369,21 +370,23 @@ void App::imgui_window_view()
     });
 }
 
+void App::on_image_exported(std::filesystem::path const& exported_image_path)
+{
+    auto folder_path = exported_image_path;
+    folder_path.replace_extension(); // Give project folder the same name as the image.
+    command_executor().execute(Command_PackageProjectInto{
+        .folder_path = folder_path,
+    });
+}
+
 void App::imgui_window_exporter()
 {
     _project.exporter.imgui_windows({
-        .polaroid          = polaroid(),
-        .time              = _project.clock.time(),
-        .delta_time        = _project.clock.delta_time(),
-        .time_speed        = _project.clock.time_speed().value(),
-        .on_image_exported = [&](std::filesystem::path const& exported_image_path) {
-            auto folder_path = exported_image_path;
-            folder_path.replace_extension(); // Give project folder the same name as the image.
-            command_executor().execute(Command_PackageProjectInto{
-                .folder_path = folder_path,
-            });
-            //
-        },
+        .polaroid                                   = polaroid(),
+        .time                                       = _project.clock.time(),
+        .delta_time                                 = _project.clock.delta_time(),
+        .time_speed                                 = _project.clock.time_speed().value(),
+        .on_image_exported                          = [&](std::filesystem::path const& exported_image_path) { on_image_exported(exported_image_path); },
         .on_video_export_start                      = [&]() { on_time_reset(); },
         .widgets_in_window_video_export_in_progress = [&]() {
             ImGui::NewLine();
@@ -632,6 +635,12 @@ void App::check_inputs()
     if (ImGui::IsKeyPressed(ImGuiKey_Escape))
     {
         _wants_view_in_fullscreen = false;
+    }
+    if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_E))
+    {
+        _project.exporter.export_image_immediately(_project.clock.time(), _project.clock.delta_time(), polaroid(), [&](std::filesystem::path const& exported_image_path) {
+            on_image_exported(exported_image_path);
+        });
     }
 }
 
