@@ -60,7 +60,7 @@ using DebugOptionsManager = Cool::DebugOptionsManager<
 
 class App : public Cool::IApp {
 public:
-    explicit App(Cool::WindowManager& windows, Cool::ViewsManager& views);
+    App(Cool::WindowManager& windows, Cool::ViewsManager& views);
     void on_shutdown() override;
     void on_project_loaded();
 
