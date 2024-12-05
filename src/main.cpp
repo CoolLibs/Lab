@@ -1,6 +1,5 @@
 #include "App.h"
 #include "Cool/CommandLineArgs/CommandLineArgs.h"
-#include "Cool/Core/set_utf8_locale.hpp"
 #include "Cool/Path/Path.h"
 #include "Cool/Path/PathsConfig.h"
 //
@@ -16,7 +15,6 @@ public:
 
 auto main(int argc, char** argv) -> int
 {
-    Cool::set_utf8_locale();
     Cool::command_line_args().init(argc, argv);
     Cool::Path::initialize<PathsConfig>();
 
