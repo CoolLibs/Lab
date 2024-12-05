@@ -1,6 +1,4 @@
 #include "App.h"
-#include "Cool/CommandLineArgs/CommandLineArgs.h"
-#include "Cool/Path/Path.h"
 #include "Cool/Path/PathsConfig.h"
 //
 #include <Cool/Core/run.h> // Must be included last otherwise it slows down compilation because it includes <ser20/archives/json.hpp>
@@ -15,14 +13,14 @@ public:
 
 auto main(int argc, char** argv) -> int
 {
-    Cool::command_line_args().init(argc, argv);
-    Cool::Path::initialize<PathsConfig>();
-
-    Cool::run<Lab::App>({
-        .windows_configs   = {Cool::WindowConfig{
-              .title                  = "", // This is set when we load a project.
-              .maximize_on_startup_if = true,
-        }},
-        .imgui_ini_version = 4,
-    });
+    Cool::run<Lab::App, PathsConfig>(
+        argc, argv,
+        {
+            .windows_configs   = {{
+                  .title                  = "", // This is set when we load a project. // TODO(Launcher) how do we set it now ?
+                  .maximize_on_startup_if = true,
+            }},
+            .imgui_ini_version = 4,
+        }
+    );
 }
