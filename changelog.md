@@ -1,27 +1,27 @@
 # Changelog
 
-- [🐣beta-19 WIP](#beta-19-wip)
-- [🐣beta-18](#beta-18)
-- [🐣beta-17](#beta-17)
-- [🐣beta-16](#beta-16)
-- [🐣beta-15](#beta-15)
-- [🐣beta-14](#beta-14)
-- [🐣beta-13](#beta-13)
-- [🐣beta-12](#beta-12)
-- [🐣beta-11](#beta-11)
-- [🐣beta-10](#beta-10)
-- [🐣beta-9](#beta-9)
-- [🐣beta-8](#beta-8)
-- [🐣beta-7](#beta-7)
-- [🐣beta-6](#beta-6)
-- [🐣beta-5](#beta-5)
-- [🐣beta-4](#beta-4)
-- [🐣beta-3](#beta-3)
-- [🐣beta-2](#beta-2)
-- [🐣beta-1](#beta-1)
-- [🐣beta-0](#beta-0)
+- [🐣 Beta 19 WIP](#-beta-19-wip)
+- [🐣 Beta 18](#-beta-18)
+- [🐣 Beta 17](#-beta-17)
+- [🐣 Beta 16](#-beta-16)
+- [🐣 Beta 15](#-beta-15)
+- [🐣 Beta 14](#-beta-14)
+- [🐣 Beta 13](#-beta-13)
+- [🐣 Beta 12](#-beta-12)
+- [🐣 Beta 11](#-beta-11)
+- [🐣 Beta 10](#-beta-10)
+- [🐣 Beta 9](#-beta-9)
+- [🐣 Beta 8](#-beta-8)
+- [🐣 Beta 7](#-beta-7)
+- [🐣 Beta 6](#-beta-6)
+- [🐣 Beta 5](#-beta-5)
+- [🐣 Beta 4](#-beta-4)
+- [🐣 Beta 3](#-beta-3)
+- [🐣 Beta 2](#-beta-2)
+- [🐣 Beta 1](#-beta-1)
+- [🐣 Beta 0](#-beta-0)
 
-## 🐣beta-19 WIP
+## 🐣 Beta 19 WIP
 
 - 🐛 Fix: our white was not perfectly pure white
 - 🤏 Improved the linearity of our gradients from black to white
@@ -37,7 +37,7 @@ After:
 - Added server, can send http request to set values in Coollab
 - 🤏 Merged Camera and Inspector windows. You can now edit camera values in the Inspector, when no node is selected.
 
-## 🐣beta-18
+## 🐣 Beta 18
 
 - ✨ We are now using a launcher that will auto-install new Coollab versions automatically
 - ✨ Every time input is now nicely formatted like "1h 27m 53s"
@@ -49,7 +49,7 @@ After:
 - 🐛 Allow access to your microphone on MacOS for Audio nodes
 - 🐛 Fix MacOS version crashing on startup
 
-## 🐣beta-17
+## 🐣 Beta 17
 
 - ✨ Greatly improved video import: we now support videos with transparency, and GIFs
 ![](https://github.com/CoolLibs/Lab/assets/45451201/e5005eff-5b16-41ef-a4b1-74a46c481edc)
@@ -64,7 +64,7 @@ After:
 - ✨ When exporting a video, if the output folder already contains frames from a previous export you now have 4 options, and by default we will prompt you to create a new folder
 ![](https://github.com/CoolLibs/Lab/assets/45451201/e5840829-21d5-4734-a388-5fd905dec17d)
 
-## 🐣beta-16
+## 🐣 Beta 16
 
 - ✨ You can now import video files! Using the "Video from File" node.
 ![](https://github.com/CoolLibs/Lab/assets/45451201/fb7561df-f775-43d5-bbf4-1dedd32563bf)
@@ -79,7 +79,7 @@ After:
 - 🐛 Fixed a crash when loading a project that was made in an older version of Coollab and that used a node that had been updated in Coollab.
 - 🐛 Fix: Remove incompatible links when creating a link backward from a pin.
 
-## 🐣beta-15
+## 🐣 Beta 15
 
 - ✨ Added a Time Speed on the timeline, which allows you to slow down or speed up your entire animation easily.
 ![](https://github.com/CoolLibs/Lab/assets/45451201/53cb9489-8924-4761-86bc-5191a00afa28)
@@ -89,12 +89,12 @@ After:
 - 🐛 Fixed a few nodes.
 - 👩‍💻 The syntax for creating your own Coollab nodes is now 100% compatible with regular glsl syntax. You can now write structs, global variables, #define, etc.
 
-## 🐣beta-14
+## 🐣 Beta 14
 
 - ✨ You can now create your own nodes! [Read the tutorial](https://coollab-art.com/Tutorials/Writing%20Nodes/Intro) to learn everything you need to know.
 - 🐛 Fixed: Plugging a link into an input pin that already has a link now removes the old link. (This bug was introduced in the previous version).
 
-## 🐣beta-13
+## 🐣 Beta 13
 
 - ✨ You can now copy-paste nodes! (CTRL+C / CTRL+V) You can even paste them from one project to another, or send them as text to a friend, who can then paste them in their instance of Coollab.
 ![](https://github.com/CoolLibs/Lab/assets/45451201/28a9c941-bc9a-49a6-b56f-5dadc2c005d7)
@@ -103,7 +103,7 @@ After:
 - ✨ Changes to the 2D Camera can now be undone and redone (CTRL+Z / CTRL+Y)
 - ✨ Applying a preset can now be undone and redone (CTRL+Z / CTRL+Y)
 
-## 🐣beta-12
+## 🐣 Beta 12
 
 - ✨ Added OSC support! You can now control Coollab through OSC messages from your smartphone or another software on your computer! Just use the "OSC" node and select which channel's value you want to use.
 ![OSC](https://github.com/CoolLibs/Lab/assets/45451201/9e0b1284-97fd-4c4e-8ba5-0909ada8b242)
@@ -111,7 +111,7 @@ After:
 - 🐛 Fixed a rare crash when using Midi input.
 - 🐛 Fixed a bug that caused the Nodes window to zoom out a bit each time you opened Coollab.
 
-## 🐣beta-11
+## 🐣 Beta 11
 
 - ✨ Added particles! This a very promising prototype that you can already use today. An important overhaul of the system will come at some point in a (probably distant) future. (NB: Unfortunately particles are not currently available on MacOS, and will not be for a very long while).
 ![Particles](https://github.com/CoolLibs/Lab/assets/45451201/7a8da2ef-df37-44fe-bf93-6cd37638c9f6)
@@ -126,7 +126,7 @@ After:
 - 🐛 Fixed freeze on Linux when exporting a video.
 - 🐛 Fixed: we won't request use of your microphone unless we actually need it (e.g. as soon as you start using it as an audio input in Coollab).
 
-## 🐣beta-10
+## 🐣 Beta 10
 
 - ✨ Added Audio support! You can now import an audio file and play it while you generate your images. You can also use its volume and waveform to control your images. You can also receive sound from an input device (microphone, etc.). Check out [our audio tutorial](https://coollab-art.com/Tutorials/Features/Audio) to learn everything about it!
 ![node_spectrum](https://github.com/CoolLibs/Lab/assets/45451201/17e77692-7941-4983-b2cf-a30b13aeee12)
@@ -137,7 +137,7 @@ After:
 - 🐛 Temporary workaround: on Linux the history isn't saved when closing Coollab, in order to avoid a crash.
 - 🚚 On Linux, moved user-data folder to *.local/share*
 
-## 🐣beta-9
+## 🐣 Beta 9
 
 - ✨ Added MIDI support! You can now plug-in your MIDI keyboard, select your knob / slider by index, and use its value to control parameters of your nodes.
 ![image](https://github.com/CoolLibs/.github/assets/45451201/5a8d4950-57a0-4282-b549-6c66487448c3)
@@ -157,7 +157,7 @@ After:
 - 👩‍💻 Replaced CIELAB color space with Oklab
 - 👩‍💻 Replaced HSLuv color space with Okhsl
 
-## 🐣beta-8
+## 🐣 Beta 8
 
 - ✨ Added project files: you can now save and open projects, allowing you to keep and share your work!
 ![image](https://github.com/CoolLibs/Lab/assets/45451201/00270343-3a45-4e92-93cc-729f0f674c1e)
@@ -171,7 +171,7 @@ After:
 - 🐛 Fix: some nodes had the wrong color.
 - 🐛 Fix: on Linux, for some window managers like i3, the context menu was not behaving properly. (Now by default we disable multi-viewport in you use one of these custom window managers, which fixes the issue but prevents you from dragging windows outside of the main Coollab window. This can be changed in the Settings menu.) 
 
-## 🐣beta-7
+## 🐣 Beta 7
 
 - ✨ Only one camera (either 2D or 3D) can be active at the same time.
 - ✨ Improved "Distortion Map" node.
@@ -181,13 +181,13 @@ After:
 - 🚚 Moved "Time" node to the "Input" category.
 - 🐛 Fixed implicit conversion between numbers and angles: a number equal to 1 (white) now corresponds to a full turn (360 degrees).
 
-## 🐣beta-6
+## 🐣 Beta 6
 
 - ✨ Added many Shape Booleans.
 - ⚡️ Big performance improvements. If you experienced lag spikes before, they should be gone now!
 - 🐛 Fix: some nodes had the wrong color.
 
-## 🐣beta-5
+## 🐣 Beta 5
 
 - ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
 ![Animation](https://github.com/CoolLibs/Lab/assets/45451201/b2a5ad91-e9bf-42d6-ab7a-c60e86e97c40)
@@ -205,7 +205,7 @@ After:
 - 🐛 Fix: prevent panning the nodes while you are panning the camera.
 - 🐛 Fixed the camera controls not working when the View window was on another screen.
 
-## 🐣beta-4
+## 🐣 Beta 4
 
 - ✨ Improved quite a few existing nodes.
 - ✨ Added new nodes. Check out our "Cloud" renderer for 3D Shapes!
@@ -215,7 +215,7 @@ After:
 - ✨ Added buttons on the view to freeze / enable the 2D and 3D cameras.
 - 🐛 Fixed some effects (Space Transformations) not being applied on top of 3D shapes.
 
-## 🐣beta-3
+## 🐣 Beta 3
 
 - ✨ Added many 3D nodes.
 - ✨ Added a Frame (Comment) node.
@@ -234,14 +234,14 @@ After:
 - 👩‍💻 Node files: now support the `#define` macro, just like any glsl file.
 - 👩‍💻 Node files: added boolean and matrices types for INPUTs, main function and helper functions (they can be used anywhere like any other type now).
 
-## 🐣beta-2
+## 🐣 Beta 2
 
 - Fix "Reserved built-in name" error on some GPUs
 - Fix: properly display error messages when loading (parsing) a node failed (very useful for people creating new nodes)
 - Started using icons all over the place (window titles, buttons, menus, ...)
 - Many more nodes, and improvements to existing nodes
 
-## 🐣beta-1
+## 🐣 Beta 1
 
 - Fix the huge visual glitches that appeared on some computers
 - Image Node: fix the ghost error messages that it would create and that couldn't be removed
@@ -255,6 +255,6 @@ After:
 - Added the debug options menu to the released executables
 - Added debug option to get an info dump in order to help developers debug
 
-## 🐣beta-0
+## 🐣 Beta 0
 
 - First version
