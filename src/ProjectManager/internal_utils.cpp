@@ -3,10 +3,10 @@
 #include "App.h"
 #include "Command_SaveProject.h"
 #include "Common/Path.h"
+#include "Cool/File/File.h"
 #include "Cool/OSC/OSCManager.h"
 #include "FileExtension.h"
 #include "Project.h"
-#include "RecentlyOpened.h"
 #include "Serialization/SProject.h"
 #include "utils.h"
 
@@ -35,8 +35,6 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optio
     }
     Cool::Path::project_folder() = path ? std::make_optional(Cool::File::without_file_name(*path)) : std::nullopt;
     set_window_title(ctx, path);
-    if (path)
-        ctx.recently_opened_projects().on_project_opened(*path);
     ctx.project_path() = path;
 }
 
@@ -63,7 +61,15 @@ auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::pa
     {
         if (!ctx.project_path().has_value() && path != Path::untitled_project())
         { // We just saved the untitled project as an actual project, we can delete the untitled project file so that it won't be loaded the next time we open Coollab.
-            Cool::File::remove(Path::untitled_project());
+            Cool::File::remove_file(Path::untitled_project());
+        }
+        // TODO(Launcher) tell launcher that a new project has been saved
+        auto const path2 = launcher_project_info_folder(ctx.project()) / "path.txt";
+        if (Cool::File::create_folders_for_file_if_they_dont_exist(path2))
+        {
+            auto file = std::ofstream{path2};
+            if (file.is_open())
+                file << path.string();
         }
     }
     else

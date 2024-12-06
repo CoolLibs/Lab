@@ -7,6 +7,7 @@ namespace Lab {
 
 void Command_SaveProjectAs::execute(CommandExecutionContext_Ref const& ctx) const
 {
+    // TODO(Launcher) change uuid of the project
     if (!internal_project::save_project_to(ctx, path))
     {
         internal_project::error_when_save_failed(path);

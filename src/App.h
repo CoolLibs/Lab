@@ -12,7 +12,6 @@
 #include <Cool/Window/WindowManager.h>
 #include <Nodes/NodesLibraryManager.h>
 #include <ProjectManager/Command_SaveProject.h>
-#include <ProjectManager/RecentlyOpened.h>
 #include <reg/ser20.hpp>
 #include "CommandCore/CommandExecutor_TopLevel.h"
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
@@ -48,7 +47,6 @@
 #include "Nodes/NodesLibraryManager.h"
 #include "Project.h"
 #include "ProjectManager/Command_SaveProject.h"
-#include "ProjectManager/RecentlyOpened.h"
 #include "no_sleep/no_sleep.hpp"
 #include "reg/ser20.hpp"
 
@@ -92,7 +90,7 @@ private:
 
     // clang-format off
     auto make_reversible_commands_context           () const { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager, *_project.modules_graph}}; }
-    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _main_window, _project, _current_project_path, command_executor_top_level(), _recently_opened_projects }}; }
+    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _main_window, _project, _current_project_path, command_executor_top_level() }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () const { return CommandExecutor_WithoutHistory_Ref{}; }
     auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
@@ -131,7 +129,6 @@ private:
     Cool::ForwardingOrTextureView&       _preview_view; // Must be after _output_view because it stores a reference to it
     Project                              _project{};
     std::optional<std::filesystem::path> _current_project_path{};
-    RecentlyOpened                       _recently_opened_projects{};
     Cool::Time                           _last_time{0s};
     bool                                 _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
     bool                                 _view_was_in_fullscreen_last_frame{false};
@@ -151,7 +148,6 @@ private:
     static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
     {
         archive(
-            ser20::make_nvp("Recently opened projects", app._recently_opened_projects),
             ser20::make_nvp("Gallery Poster", app._gallery_poster),
             ser20::make_nvp("Tips", app._tips_manager),
             ser20::make_nvp("Output view", app._output_view),

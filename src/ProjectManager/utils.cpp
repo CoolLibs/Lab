@@ -15,7 +15,6 @@
 #include "Cool/UserSettings/UserSettings.h"
 #include "FileExtension.h"
 #include "Project.h"
-#include "RecentlyOpened.h"
 
 namespace Lab {
 
@@ -28,10 +27,10 @@ void initial_project_opening(CommandExecutionContext_Ref const& ctx)
             return Cool::command_line_args().get()[0];
         }
         // Try the untitled project.
-        if (Cool::File::exists(Path::untitled_project()))
-        {
-            return Path::untitled_project();
-        }
+        // if (Cool::File::exists(Path::untitled_project()))
+        // {
+        //     return Path::untitled_project();
+        // }
         // // Try the most recently opened. EDIT: commented out because we are afraid that people will open Coollab, see some nodes, and delete them to start working fresh, thus destroying their project. We'd rather they open it themselves, so they know what they are working on.
         // {
         //     auto const maybe_path = ctx.recently_opened_projects().most_recent_path();
@@ -51,11 +50,12 @@ void initial_project_opening(CommandExecutionContext_Ref const& ctx)
 
 static auto project_dialog_args(CommandExecutionContext_Ref const& ctx) -> Cool::File::file_dialog_args
 {
-    auto initial_folder = ctx.recently_opened_projects().most_recent_path(); // If a project is currently open this will be its path, else it will be the path of the last open one.
-    if (initial_folder)
-        initial_folder = initial_folder->parent_path(); // Remove the file part, keep only the folder.
-    else
-        initial_folder = "";
+    // TODO(Launcher)
+    // auto initial_folder = ctx.recently_opened_projects().most_recent_path(); // If a project is currently open this will be its path, else it will be the path of the last open one.
+    // if (initial_folder)
+    //     initial_folder = initial_folder->parent_path(); // Remove the file part, keep only the folder.
+    // else
+    std::optional<std::string> initial_folder = "";
 
     return Cool::File::file_dialog_args{
         .file_filters   = {{"Coollab project", COOLLAB_FILE_EXTENSION}},
@@ -72,11 +72,6 @@ void dialog_to_open_project(CommandExecutionContext_Ref const& ctx)
     ctx.execute(Command_OpenProject{
         .path = *path,
     });
-}
-
-void dialog_to_open_recent_project(RecentlyOpened& recently_opened)
-{
-    recently_opened.open_window();
 }
 
 auto dialog_to_save_project_as(CommandExecutionContext_Ref const& ctx) -> bool
@@ -116,7 +111,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
             break;
         }
     }
-    Cool::File::remove(Path::untitled_project()); // Users either saved their untitled project, or accepted to lose their changes.
+    Cool::File::remove_file(Path::untitled_project()); // Users either saved their untitled project, or accepted to lose their changes.
     if (!has_saved)
         internal_project::save_project_to(ctx, Path::backup_project());
 }
@@ -127,8 +122,6 @@ void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
         ctx.execute(Command_NewProject{});
     if (ImGui::MenuItem("Open", "Ctrl+O"))
         dialog_to_open_project(ctx);
-    if (ImGui::MenuItem("Open Recent", "Ctrl+R"))
-        dialog_to_open_recent_project(ctx.recently_opened_projects());
     if (ImGui::MenuItem("Open Backup", "Ctrl+Shift+R"))
         ctx.execute(Command_OpenBackupProject{});
     Cool::ImGuiExtras::help_marker("If you accidentally don't save your changes when a message box prompts you to do so before they get lost, you can actually recover them here.");
@@ -136,6 +129,16 @@ void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
         ctx.execute(Command_SaveProject{});
     if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
         dialog_to_save_project_as(ctx);
+}
+
+static auto path_to_launcher_project_info() -> std::filesystem::path
+{
+    return "C:/Dev/Cool/launcher/User data/Projects"; // TODO(Launcher)
+}
+
+auto launcher_project_info_folder(Project const& project) -> std::filesystem::path
+{
+    return path_to_launcher_project_info() / reg::to_string(project.uuid);
 }
 
 } // namespace Lab

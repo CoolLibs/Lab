@@ -43,6 +43,7 @@
 #include "Menus/about_menu.h"
 #include "ProjectManager/Command_NewProject.h"
 #include "ProjectManager/Command_OpenBackupProject.h"
+#include "ProjectManager/utils.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
 #include "img/img.hpp"
@@ -73,8 +74,9 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
 
 void App::on_shutdown()
 {
-    _tips_manager.on_app_shutdown();
     command_execution_context().execute(Command_SaveProject{.is_autosave = true});
+    Cool::ExporterU::export_image({100, 100}, _project.clock.time(), _project.clock.delta_time(), polaroid(), launcher_project_info_folder(_project) / "thumbnail.png", [](auto&&) {});
+    _tips_manager.on_app_shutdown();
     _is_shutting_down = true;
 }
 
@@ -452,8 +454,6 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         auto const image = the_polaroid.texture().download_pixels();
         return img::save_png_to_string(image).value_or("");
     });
-    // Recently opened projects
-    _recently_opened_projects.imgui_window(command_execution_context());
 
     DebugOptions::show_framerate_window([&] {
         ImGui::PushFont(Cool::Font::monospace());
@@ -675,8 +675,6 @@ void App::check_inputs__project()
         dialog_to_open_project(command_execution_context());
     else if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_R))
         command_executor().execute(Command_OpenBackupProject{});
-    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_R))
-        dialog_to_open_recent_project(_recently_opened_projects);
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))
         command_executor().execute(Command_NewProject{});
 }

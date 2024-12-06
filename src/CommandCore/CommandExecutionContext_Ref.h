@@ -8,7 +8,6 @@ namespace Lab {
 
 class Camera3DManager;
 class App;
-class RecentlyOpened;
 struct Project;
 class ModulesGraph;
 class CommandExecutor;
@@ -26,7 +25,6 @@ public:
     [[nodiscard]] auto project() const -> Project& { return _data.project; }
     [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
     [[nodiscard]] auto command_executor() const -> CommandExecutor;
-    [[nodiscard]] auto recently_opened_projects() const -> RecentlyOpened& { return _data.recently_opened; }
     [[nodiscard]] auto modules_graph() const -> ModulesGraph&;
     void               make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& node) const;
     template<ConcreteCommand ConcreteCommandT>
@@ -41,7 +39,6 @@ public:
         std::reference_wrapper<Project>                              project;
         std::reference_wrapper<std::optional<std::filesystem::path>> project_path;
         CommandExecutor_TopLevel                                     executor;
-        std::reference_wrapper<RecentlyOpened>                       recently_opened;
     };
     explicit CommandExecutionContext_Ref(Data data)
         : _data{std::move(data)}
