@@ -39,10 +39,6 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: mjp41/workaround8649@c8550b715ccdc17f89c8d5c28d7a48eeff9c94a8 # Temporary workaround for Linux Clang not working atm. See https://github.com/actions/runner-images/issues/8659
-        with:
-          os: ${{ matrix.config.os }}
-
       - name: Set up MSVC # NOTE: required to find cl.exe when using the Ninja generator. And we need to use Ninja in order for ccache to be able to cache stuff with MSVC.
         if: matrix.config.name == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1.13.0
