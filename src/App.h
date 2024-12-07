@@ -1,37 +1,16 @@
 #pragma once
-#include <Cool/AppManager/IApp.h>
-#include <Cool/DebugOptions/DebugOptions.h>
-#include <Cool/DebugOptions/DebugOptionsManager.h>
-#include <Cool/Exporter/Exporter.h>
-#include <Cool/Exporter/internal/Polaroid.h>
-#include <Cool/Gpu/OpenGL/Texture.h>
-#include <Cool/Gpu/RenderTarget.h>
-#include <Cool/Path/Path.h>
-#include <Cool/Time/Clock_Realtime.h>
-#include <Cool/View/ViewsManager.h>
-#include <Cool/Window/WindowManager.h>
-#include <Nodes/NodesLibraryManager.h>
-#include <ProjectManager/Command_SaveProject.h>
-#include <reg/ser20.hpp>
 #include "CommandCore/CommandExecutor_TopLevel.h"
 #include "CommandCore/CommandExecutor_WithoutHistory_Ref.h"
 #include "CommandCore/ReversibleCommandExecutor_WithoutHistory_Ref.h"
-#include "Commands/Command_SetCameraZoom.h" // For the serialization functions
 #include "Cool/AppManager/IApp.h"
 #include "Cool/DebugOptions/DebugOptions.h"
 #include "Cool/DebugOptions/DebugOptionsManager.h"
-#include "Cool/Exporter/Exporter.h"
-#include "Cool/Exporter/internal/Polaroid.h"
-#include "Cool/Gpu/OpenGL/Texture.h"
-#include "Cool/Gpu/RenderTarget.h"
+#include "Cool/Exporter/Polaroid.hpp"
 #include "Cool/Mesh/MeshExportSettings.hpp"
-#include "Cool/Midi/MidiChannel.h"
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/Server/ServerManager.hpp"
-#include "Cool/StrongTypes/Camera2D.h"
-#include "Cool/Time/Clock_Realtime.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrTextureView.hpp"
 #include "Cool/View/TextureView.hpp"
@@ -39,7 +18,6 @@
 #include "Cool/Webcam/WebcamsConfigs.hpp"
 #include "Cool/Window/WindowManager.h"
 #include "Debug/DebugOptions.h"
-#include "Dependencies/History.h"
 #include "Gallery/GalleryPoster.h"
 #include "Meshing/MeshingGui.hpp"
 #include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
@@ -48,7 +26,6 @@
 #include "Project.h"
 #include "ProjectManager/Command_SaveProject.h"
 #include "no_sleep/no_sleep.hpp"
-#include "reg/ser20.hpp"
 
 namespace Lab {
 
