@@ -584,7 +584,7 @@ void App::commands_menu()
                 _project.shared_aspect_ratio.fill_the_view = true;
         }
         if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
-            Cool::open(Cool::Path::user_data());
+            Cool::open_folder_in_explorer(Cool::Path::user_data());
         ImGui::EndMenu();
     }
 }
