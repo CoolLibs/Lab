@@ -20,7 +20,8 @@ void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
     // Autosave, save in the default project.
     else if (is_autosave)
     {
-        internal_project::save_project_to(ctx, Path::untitled_project());
+        // TODO(Launcher)
+        // internal_project::save_project_to(ctx, Path::untitled_project());
     }
     // The user explicitly asked to save on the Unsaved Project, so run as "Save As".
     else

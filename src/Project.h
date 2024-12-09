@@ -1,7 +1,6 @@
 #pragma once
 #include <Dependencies/Camera2DManager.h>
 #include <reg/src/AnyId.hpp>
-#include <reg/src/internal/generate_uuid.hpp>
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
@@ -17,7 +16,7 @@ namespace Lab {
 
 struct Project {
     Project();
-    reg::AnyId uuid{reg::internal::generate_uuid()};
+    reg::AnyId uuid{reg::generate_uuid()};
 
     std::unique_ptr<ModulesGraph> modules_graph{std::make_unique<ModulesGraph>()}; // TODO(Modules) Can't we avoid the unique_ptr?
     Camera3DManager               camera_3D_manager;                               // Must be after modules_graph because we reference a DirtyFlag from it

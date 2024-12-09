@@ -17,7 +17,6 @@
 #include <cmd/imgui.hpp>
 #include <filesystem>
 #include <open/open.hpp>
-#include <reg/src/internal/generate_uuid.hpp>
 #include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
