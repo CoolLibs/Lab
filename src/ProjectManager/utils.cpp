@@ -48,7 +48,7 @@ void initial_project_opening(CommandExecutionContext_Ref const& ctx)
     });
 }
 
-static auto project_dialog_args(CommandExecutionContext_Ref const& ctx) -> Cool::File::file_dialog_args
+static auto project_dialog_args(CommandExecutionContext_Ref const& /* ctx */) -> Cool::File::file_dialog_args
 {
     // TODO(Launcher)
     // auto initial_folder = ctx.recently_opened_projects().most_recent_path(); // If a project is currently open this will be its path, else it will be the path of the last open one.

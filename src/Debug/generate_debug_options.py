@@ -43,7 +43,6 @@ def all_debug_options():
             available_in_release=True,
             window_name="Framerate",
             kind=Kind.WINDOW,
-            default_value=False,
         ),
         DebugOption(
             name_in_code="show_imgui_demo_window",

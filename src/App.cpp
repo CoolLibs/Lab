@@ -649,7 +649,7 @@ void App::check_inputs()
     }
     if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_E))
     {
-        auto const exported_image_path = _project.exporter.export_image_immediately_using_a_task(_project.clock.time(), _project.clock.delta_time(), polaroid());
+        auto const exported_image_path = _project.exporter.export_image_with_current_settings_using_a_task(_project.clock.time(), _project.clock.delta_time(), polaroid());
         on_image_export_start(exported_image_path);
     }
 }
