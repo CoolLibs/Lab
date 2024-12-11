@@ -1,37 +1,29 @@
 #include "App.h"
-#include <Cool/ImGui/Fonts.h>
-#include <Cool/ImGui/icon_fmt.h>
-#include <Cool/Input/Input.h>
-#include <Cool/Log/ToUser.h>
-#include <Cool/Path/Path.h>
-#include <Cool/Time/ClockU.h>
-#include <Cool/UserSettings/UserSettings.h>
-#include <Cool/Variables/TestVariables.h>
-#include <IconFontCppHeaders/IconsFontAwesome6.h>
-#include <ModulesGraph/ModulesGraph.h>
-#include <ProjectManager/Command_OpenProject.h>
-#include <ProjectManager/Command_PackageProjectInto.h>
-#include <ProjectManager/utils.h>
-#include <Tips/Tips.h>
 #include <chrono>
-#include <cmd/imgui.hpp>
 #include <filesystem>
-#include <open/open.hpp>
-#include <stringify/stringify.hpp>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Common/Path.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
 #include "Cool/Exporter/ExporterU.h"
+#include "Cool/ImGui/Fonts.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
+#include "Cool/ImGui/icon_fmt.h"
+#include "Cool/Image/SaveImage.h"
+#include "Cool/Input/Input.h"
 #include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
+#include "Cool/Log/ToUser.h"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/OSC/OSCManager.h"
+#include "Cool/Path/Path.h"
 #include "Cool/Server/ServerManager.hpp"
+#include "Cool/Time/ClockU.h"
 #include "Cool/Tips/TipsManager.h"
+#include "Cool/UserSettings/UserSettings.h"
+#include "Cool/Variables/TestVariables.h"
 #include "Cool/Video/hack_get_global_time_in_seconds.h"
 #include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
@@ -39,14 +31,21 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
+#include "IconFontCppHeaders/IconsFontAwesome6.h"
 #include "Menus/about_menu.h"
+#include "ModulesGraph/ModulesGraph.h"
 #include "ProjectManager/Command_NewProject.h"
 #include "ProjectManager/Command_OpenBackupProject.h"
+#include "ProjectManager/Command_OpenProject.h"
+#include "ProjectManager/Command_PackageProjectInto.h"
 #include "ProjectManager/utils.h"
 #include "Tips/Tips.h"
 #include "UI/imgui_show.h"
+#include "cmd/imgui.hpp"
 #include "img/img.hpp"
 #include "imgui.h"
+#include "open/open.hpp"
+#include "stringify/stringify.hpp"
 
 namespace Lab {
 
@@ -71,10 +70,23 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
     _project.clock.pause(); // Make sure the new project will be paused.
 }
 
+void App::save_project_thumbnail()
+{
+    auto const polar = polaroid();
+    polar.render({100, 100}, _project.clock.time(), _project.clock.delta_time());
+    auto const result = Cool::ImageU::save(launcher_project_info_folder(_project) / "thumbnail.png", polar.texture().download_pixels());
+#if DEBUG
+    if (!result.has_value())
+        Cool::Log::Debug::error("Save Thumbnail", result.error());
+#else
+    std::ignore = result; // We don't care if we fail, we must do this quickly before shutting down
+#endif
+}
+
 void App::on_shutdown()
 {
     command_execution_context().execute(Command_SaveProject{.is_autosave = true});
-    Cool::ExporterU::export_image({100, 100}, _project.clock.time(), _project.clock.delta_time(), polaroid(), launcher_project_info_folder(_project) / "thumbnail.png", [](auto&&) {});
+    save_project_thumbnail();
     _tips_manager.on_app_shutdown();
     _is_shutting_down = true;
 }
@@ -371,7 +383,7 @@ void App::imgui_window_view()
     });
 }
 
-void App::on_image_exported(std::filesystem::path const& exported_image_path)
+void App::on_image_export_start(std::filesystem::path const& exported_image_path)
 {
     auto folder_path = exported_image_path;
     folder_path.replace_extension(); // Give project folder the same name as the image.
@@ -387,7 +399,7 @@ void App::imgui_window_exporter()
         .time                                       = _project.clock.time(),
         .delta_time                                 = _project.clock.delta_time(),
         .time_speed                                 = _project.clock.time_speed().value(),
-        .on_image_exported                          = [&](std::filesystem::path const& exported_image_path) { on_image_exported(exported_image_path); },
+        .on_image_export_start                      = [&](std::filesystem::path const& exported_image_path) { on_image_export_start(exported_image_path); },
         .on_video_export_start                      = [&]() { on_time_reset(); },
         .widgets_in_window_video_export_in_progress = [&]() {
             ImGui::NewLine();
@@ -637,9 +649,8 @@ void App::check_inputs()
     }
     if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_E))
     {
-        _project.exporter.export_image_immediately(_project.clock.time(), _project.clock.delta_time(), polaroid(), [&](std::filesystem::path const& exported_image_path) {
-            on_image_exported(exported_image_path);
-        });
+        auto const exported_image_path = _project.exporter.export_image_immediately_using_a_task(_project.clock.time(), _project.clock.delta_time(), polaroid());
+        on_image_export_start(exported_image_path);
     }
 }
 

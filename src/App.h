@@ -58,7 +58,8 @@ private:
     void on_time_changed();
     void on_time_reset();
     auto render_view() -> Cool::TextureView&;
-    void on_image_exported(std::filesystem::path const& exported_image_path);
+    void on_image_export_start(std::filesystem::path const& exported_image_path);
+    void save_project_thumbnail();
 
     void check_inputs();
     void check_inputs__history();
