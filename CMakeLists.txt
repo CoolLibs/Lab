@@ -30,6 +30,11 @@ if(WARNINGS_AS_ERRORS_FOR_COOLLAB)
     endif()
 endif()
 
+# Embed the manifest file into the executable. This manifest tells windows that our app supports long paths
+if(WIN32)
+    target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/app-resources/Coollab.manifest")
+endif()
+
 # Include Cool
 # Choose our GPU API and its version
 # set(COOL_USE_VULKAN 110)
