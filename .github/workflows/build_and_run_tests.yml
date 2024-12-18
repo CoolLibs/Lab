@@ -71,6 +71,7 @@ jobs:
           sudo apt-get install -y libpulse-dev libasound2-dev
           sudo apt-get install -y libavcodec-dev libavdevice-dev libavfilter-dev libavformat-dev libavutil-dev libpostproc-dev libswresample-dev libswscale-dev
           sudo apt-get install -y libdbus-1-dev
+          sudo apt-get install -y libjpeg-dev
 
       - name: Install MacOS dependencies
         if: runner.os == 'MacOS'

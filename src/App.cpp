@@ -503,7 +503,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
             compile_all_is0_nodes();
         }
     });
-    Cool::debug_options_windows(_tips_manager);
+    Cool::debug_options_windows(&_tips_manager);
     DebugOptions::empty_window([] {});
 }
 
