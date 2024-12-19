@@ -116,7 +116,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
             break;
         }
     }
-    Cool::File::remove(Path::untitled_project()); // Users either saved their untitled project, or accepted to lose their changes.
+    Cool::File::remove_file(Path::untitled_project()); // Users either saved their untitled project, or accepted to lose their changes.
     if (!has_saved)
         internal_project::save_project_to(ctx, Path::backup_project());
 }
