@@ -16,11 +16,10 @@ auto main(int argc, char** argv) -> int
     Cool::run<Lab::App, PathsConfig>(
         argc, argv,
         {
-            .windows_configs   = {{
-                  .title                  = "", // This is set when we load a project. // TODO(Launcher) how do we set it now ?
-                  .maximize_on_startup_if = true,
+            .windows_configs = {{
+                .title                  = "", // This is set when we load a project. // TODO(Launcher) how do we set it now ?
+                .maximize_on_startup_if = true,
             }},
-            .imgui_ini_version = 4,
         }
     );
 }
