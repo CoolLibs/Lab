@@ -38,21 +38,6 @@ void set_current_project_path(CommandExecutionContext_Ref const& ctx, std::optio
     ctx.project_path() = path;
 }
 
-void set_current_project(CommandExecutionContext_Ref const& ctx, Project&& project, std::optional<std::filesystem::path> const& project_path)
-{
-    bool const is_playing = ctx.project().clock.is_playing(); // Make sure the play/pause state is kept while changing project.
-    before_project_destruction(ctx);
-
-    ctx.project() = std::move(project);
-    ctx.app().on_project_loaded();
-    for (auto& [_, node] : ctx.project().modules_graph->graph().nodes())
-        ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node.downcast<Node>());
-
-    set_current_project_path(ctx, project_path);
-    ctx.project().clock.set_playing(is_playing);
-    Cool::osc_manager().set_connection_endpoint(ctx.project().osc_endpoint); // HACK(OSC See below) Use the endpoint saved on the project
-}
-
 auto save_project_to(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
 {
     ctx.project().osc_endpoint = Cool::osc_manager().get_connection_endpoint(); // HACK(OSC See above) Set the endpoint so that it will be saved in the project file

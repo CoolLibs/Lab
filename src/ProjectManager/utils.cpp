@@ -1,51 +1,72 @@
 #include "utils.h"
-#include <CommandCore/CommandExecutionContext_Ref.h>
-#include <Common/Path.h>
-#include <ProjectManager/Command_OpenProject.h>
-#include <ProjectManager/internal_utils.h>
+#include <ImGuiNotify/ImGuiNotify.hpp>
 #include <filesystem>
-#include "Command_NewProject.h"
-#include "Command_OpenBackupProject.h"
-#include "Command_OpenProject.h"
+#include "App.h"
+#include "CommandCore/CommandExecutionContext_Ref.h"
 #include "Command_SaveProject.h"
 #include "Command_SaveProjectAs.h"
+#include "Common/Path.h"
 #include "Cool/CommandLineArgs/CommandLineArgs.h"
 #include "Cool/File/File.h"
-#include "Cool/ImGui/ImGuiExtras.h"
-#include "Cool/UserSettings/UserSettings.h"
+#include "Cool/OSC/OSCManager.h"
 #include "FileExtension.h"
 #include "Project.h"
+#include "Serialization/SProject.h"
+#include "filesystem"
+#include "internal_utils.h"
 
 namespace Lab {
 
+static void set_current_project(CommandExecutionContext_Ref const& ctx, Project project, std::optional<std::filesystem::path> const& project_path)
+{
+    ctx.project() = std::move(project);
+    ctx.app().on_project_loaded();
+    for (auto& [_, node] : ctx.project().modules_graph->graph().nodes())
+        ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node.downcast<Node>());
+
+    internal_project::set_current_project_path(ctx, project_path);
+    Cool::osc_manager().set_connection_endpoint(ctx.project().osc_endpoint); // HACK(OSC See below) Use the endpoint saved on the project
+}
+
+static void create_new_project(CommandExecutionContext_Ref const& ctx)
+{
+    auto project                                    = Project{};
+    project.camera_3D_manager.is_editable_in_view() = false;
+    project.clock.pause();
+    set_current_project(ctx, std::move(project), std::nullopt /*project_path*/);
+}
+
+[[nodiscard]] static auto try_load_project(CommandExecutionContext_Ref const& ctx, std::filesystem::path const& path) -> bool
+{
+    auto       project = Project{};
+    auto const error   = do_load(project, path);
+    if (error)
+    {
+        ImGuiNotify::send({
+            .type     = ImGuiNotify::Type::Error,
+            .title    = fmt::format("Failed to open project \"{}\"", Cool::File::file_name_without_extension(path)),
+            .content  = *error.error_message(),
+            .duration = std::nullopt,
+        });
+        return false;
+    }
+
+    set_current_project(ctx, std::move(project), path);
+    return true;
+}
+
 void initial_project_opening(CommandExecutionContext_Ref const& ctx)
 {
-    auto const path = [&]() -> std::filesystem::path {
-        // If any, load the project that was requested, e.g. when double-clicking on a .coollab file.
-        if (!Cool::command_line_args().get().empty())
-        {
-            return Cool::command_line_args().get()[0];
-        }
-        // Try the untitled project.
-        // if (Cool::File::exists(Path::untitled_project()))
-        // {
-        //     return Path::untitled_project();
-        // }
-        // // Try the most recently opened. EDIT: commented out because we are afraid that people will open Coollab, see some nodes, and delete them to start working fresh, thus destroying their project. We'd rather they open it themselves, so they know what they are working on.
-        // {
-        //     auto const maybe_path = ctx.recently_opened_projects().most_recent_path();
-        //     if (maybe_path.has_value())
-        //         return *maybe_path;
-        // }
-        // Found nothing
-        return "";
-    }();
-    if (!Cool::File::exists(path))
-        return; // Avoid error message caused by the fact that the file doesn't exist. It is legit if the untitled project doesn't exist, we don't want an error in that case.
-
-    ctx.execute(Command_OpenProject{
-        .path = path,
-    });
+    if (Cool::command_line_args().get().empty())
+    {
+        create_new_project(ctx);
+    }
+    else
+    {
+        auto const success = try_load_project(ctx, Cool::command_line_args().get()[0]); // Load the project that was requested, e.g. when selecting a project from the launcher
+        if (!success)
+            create_new_project(ctx);
+    }
 }
 
 static auto project_dialog_args(CommandExecutionContext_Ref const& /* ctx */) -> Cool::File::file_dialog_args
@@ -61,17 +82,6 @@ static auto project_dialog_args(CommandExecutionContext_Ref const& /* ctx */) ->
         .file_filters   = {{"Coollab project", COOLLAB_FILE_EXTENSION}},
         .initial_folder = *initial_folder,
     };
-}
-
-void dialog_to_open_project(CommandExecutionContext_Ref const& ctx)
-{
-    auto const path = Cool::File::file_opening_dialog(project_dialog_args(ctx));
-    if (!path)
-        return;
-
-    ctx.execute(Command_OpenProject{
-        .path = *path,
-    });
 }
 
 auto dialog_to_save_project_as(CommandExecutionContext_Ref const& ctx) -> bool
@@ -96,6 +106,7 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
     if (ctx.project().is_empty())
         return;
 
+    // TODO(Launcher) We should always save the project
     // We are on an untitled project, ask to save it.
     bool has_saved{false};
     while (true) // If the user cancels the save dialog, we want to ask again if they want to save or not. This will prevent closing the dialog by mistake and then losing your changes.
@@ -116,16 +127,9 @@ void before_project_destruction(CommandExecutionContext_Ref const& ctx)
         internal_project::save_project_to(ctx, Path::backup_project());
 }
 
-void imgui_open_save_project(CommandExecutionContext_Ref const& ctx)
+void imgui_menu_items_to_save_project(CommandExecutionContext_Ref const& ctx)
 {
-    if (ImGui::MenuItem("New", "Ctrl+N")) // TODO(UX) Cmd instead of Ctrl on MacOS
-        ctx.execute(Command_NewProject{});
-    if (ImGui::MenuItem("Open", "Ctrl+O"))
-        dialog_to_open_project(ctx);
-    if (ImGui::MenuItem("Open Backup", "Ctrl+Shift+R"))
-        ctx.execute(Command_OpenBackupProject{});
-    Cool::ImGuiExtras::help_marker("If you accidentally don't save your changes when a message box prompts you to do so before they get lost, you can actually recover them here.");
-    if (ImGui::MenuItem("Save", "Ctrl+S"))
+    if (ImGui::MenuItem("Save", "Ctrl+S")) // TODO(UX) Cmd instead of Ctrl on MacOS
         ctx.execute(Command_SaveProject{});
     if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
         dialog_to_save_project_as(ctx);

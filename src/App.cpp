@@ -1,19 +1,14 @@
 #include "App.h"
-#include <chrono>
 #include <filesystem>
 #include "CommandCore/command_to_string.h"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
-#include "Common/Path.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
-#include "Cool/Exporter/ExporterU.h"
 #include "Cool/ImGui/Fonts.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/icon_fmt.h"
 #include "Cool/Image/SaveImage.h"
-#include "Cool/Input/Input.h"
-#include "Cool/Input/MouseCoordinates.h"
 #include "Cool/Log/Message.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/OSC/OSCChannel.h"
@@ -31,21 +26,12 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
-#include "IconFontCppHeaders/IconsFontAwesome6.h"
 #include "Menus/about_menu.h"
 #include "ModulesGraph/ModulesGraph.h"
-#include "ProjectManager/Command_NewProject.h"
-#include "ProjectManager/Command_OpenBackupProject.h"
-#include "ProjectManager/Command_OpenProject.h"
 #include "ProjectManager/Command_PackageProjectInto.h"
 #include "ProjectManager/utils.h"
 #include "Tips/Tips.h"
-#include "UI/imgui_show.h"
-#include "cmd/imgui.hpp"
-#include "img/img.hpp"
-#include "imgui.h"
 #include "open/open.hpp"
-#include "stringify/stringify.hpp"
 
 namespace Lab {
 
@@ -65,10 +51,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
               .start_open  = true,
           }
       )}
-{
-    command_executor().execute(Command_NewProject{});
-    _project.clock.pause(); // Make sure the new project will be paused.
-}
+{}
 
 void App::save_project_thumbnail()
 {
@@ -511,7 +494,7 @@ void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
-        imgui_open_save_project(command_execution_context());
+        imgui_menu_items_to_save_project(command_execution_context());
         ImGui::EndMenu();
     }
 }
@@ -681,12 +664,6 @@ void App::check_inputs__project()
         dialog_to_save_project_as(command_execution_context());
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
         command_executor().execute(Command_SaveProject{});
-    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
-        dialog_to_open_project(command_execution_context());
-    else if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_R))
-        command_executor().execute(Command_OpenBackupProject{});
-    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_N))
-        command_executor().execute(Command_NewProject{});
 }
 
 void App::check_inputs__timeline()

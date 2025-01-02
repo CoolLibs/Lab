@@ -4,7 +4,6 @@
 namespace Lab::internal_project {
 
 void set_current_project_path(CommandExecutionContext_Ref const&, std::optional<std::filesystem::path>);
-void set_current_project(CommandExecutionContext_Ref const&, Project&&, std::optional<std::filesystem::path> const& project_path);
 /// Returns true iff the save was successful.
 auto save_project_to(CommandExecutionContext_Ref const&, std::filesystem::path const&) -> bool;
 /// Returns true iff the save was successful.
