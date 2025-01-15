@@ -1,6 +1,7 @@
 ---
 Checks: '
   *,
+  -readability-math-missing-parentheses,
   -readability-convert-member-functions-to-static,
   -misc-non-private-member-variables-in-classes,
   -*braces-around-statements,
