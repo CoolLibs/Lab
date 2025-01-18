@@ -8,13 +8,13 @@
 #include "Cool/ImGui/ImGuiExtrasStyle.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Path/Path.h"
+#include "Cool/UserSettings/UserSettings.h"
 #include "Debug/DebugOptions.h"
 #include "ProjectManagerImpl.hpp"
 #include "boxer/boxer.h"
 
 namespace Lab {
 
-// TODO(Launcher) notification to confirm save when pressing CTRL+S (+mention there is autosave(if it is enabled) so there is no need to press CTRL+S)
 // TODO(Launcher) handle invalid file names (with invalid chars, with dots . , with / or \)
 
 void ProjectManager::process_command_line_args(OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title)
@@ -186,7 +186,9 @@ void ProjectManager::save_project(SetWindowTitle const& set_window_title)
     ImGuiNotify::send({
         .type     = ImGuiNotify::Type::Success,
         .title    = "Saved Project",
-        .content  = "Note that there is autosave",
+        .content  = Cool::user_settings().autosave_enabled
+                        ? fmt::format("NB: there is an autosave every {} seconds, so you don't really need to manually save the project", Cool::user_settings().autosave_delay.as_seconds_float())
+                        : "",
         .duration = 2s,
     });
 }

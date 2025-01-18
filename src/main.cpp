@@ -17,7 +17,7 @@ auto main(int argc, char** argv) -> int
         argc, argv,
         {
             .windows_configs = {{
-                .title                  = "", // This is set when we load a project. // TODO(Launcher) how do we set it now ?
+                .title                  = "", // This is set when we load a project.
                 .maximize_on_startup_if = true,
             }},
         }
