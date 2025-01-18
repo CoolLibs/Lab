@@ -1,13 +1,14 @@
 #pragma once
 #include <CommandCore/CommandExecutor_TopLevel.h>
 #include "ConcreteCommand.h"
-#include "Cool/Window/Window.h"
 #include "Dependencies/History.h"
+#include "ProjectManager/Interfaces.hpp"
 
 namespace Lab {
 
 class Camera3DManager;
 class App;
+class ProjectManager;
 struct Project;
 class ModulesGraph;
 class CommandExecutor;
@@ -21,9 +22,10 @@ public:
     [[nodiscard]] auto app() const -> App& { return _data.app; }
     [[nodiscard]] auto history() const -> History const&;
     [[nodiscard]] auto camera_manager() const -> Camera3DManager&;
-    [[nodiscard]] auto main_window() const -> Cool::Window& { return _data.main_window; }
-    [[nodiscard]] auto project() const -> Project& { return _data.project; }
-    [[nodiscard]] auto project_path() const -> std::optional<std::filesystem::path>& { return _data.project_path; }
+    [[nodiscard]] auto project() const -> Project&;
+    [[nodiscard]] auto project_manager() const -> ProjectManager& { return _data.project_manager; }
+    [[nodiscard]] auto window_title_setter() const -> SetWindowTitle;
+    [[nodiscard]] auto on_project_loaded() const -> OnProjectLoaded;
     [[nodiscard]] auto command_executor() const -> CommandExecutor;
     [[nodiscard]] auto modules_graph() const -> ModulesGraph&;
     void               make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& node) const;
@@ -34,11 +36,9 @@ public:
     }
 
     struct Data { // We wrap our members in a struct to get a constructor automatically
-        std::reference_wrapper<App>                                  app;
-        std::reference_wrapper<Cool::Window>                         main_window;
-        std::reference_wrapper<Project>                              project;
-        std::reference_wrapper<std::optional<std::filesystem::path>> project_path;
-        CommandExecutor_TopLevel                                     executor;
+        std::reference_wrapper<App>            app;
+        std::reference_wrapper<ProjectManager> project_manager;
+        CommandExecutor_TopLevel               executor;
     };
     explicit CommandExecutionContext_Ref(Data data)
         : _data{std::move(data)}

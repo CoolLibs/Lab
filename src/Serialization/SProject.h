@@ -1,7 +1,7 @@
 #pragma once
 #include <filesystem>
 #include "Cool/Log/OptionalErrorMessage.h"
-#include "Project.h"
+#include "Project.hpp"
 
 namespace Lab {
 

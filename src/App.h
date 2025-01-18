@@ -23,8 +23,9 @@
 #include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
 #include "Module/ShaderBased/DataToPassToShader.hpp"
 #include "Nodes/NodesLibraryManager.h"
-#include "Project.h"
 #include "ProjectManager/Command_SaveProject.h"
+#include "ProjectManager/ProjectManager.hpp"
+#include "ProjectManager/ProjectManagerImpl.hpp"
 #include "no_sleep/no_sleep.hpp"
 
 namespace Lab {
@@ -67,16 +68,16 @@ private:
     void check_inputs__timeline();
 
     // clang-format off
-    auto make_reversible_commands_context           () const { return MakeReversibleCommandContext_Ref{{ _project.camera_3D_manager, *_project.modules_graph}}; }
-    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _main_window, _project, _current_project_path, command_executor_top_level() }}; }
+    auto make_reversible_commands_context           () const { return MakeReversibleCommandContext_Ref{{ project().camera_3D_manager, *project().modules_graph}}; }
+    auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project_manager, command_executor_top_level() }}; }
     auto reversible_command_executor_without_history() { return ReversibleCommandExecutor_WithoutHistory_Ref{command_execution_context()}; }
     auto command_executor_without_history           () const { return CommandExecutor_WithoutHistory_Ref{}; }
-    auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), _project.history, make_reversible_commands_context()}; }
+    auto command_executor_top_level                 () -> CommandExecutor_TopLevel { return CommandExecutor_TopLevel{command_executor_without_history(), project().history, make_reversible_commands_context()}; }
     auto command_executor                           () { return CommandExecutor{command_execution_context()}; }
-    auto system_values                              (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return SystemValues{render_target_size, time, delta_time, _project.camera_2D_manager.camera(), _project.camera_3D_manager.camera(), _project.audio}; }
+    auto system_values                              (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return SystemValues{render_target_size, time, delta_time, project().camera_2D_manager.camera(), project().camera_3D_manager.camera(), project().audio}; }
     auto ui                                         () { return Ui_Ref{command_executor()}; }
-    auto data_to_pass_to_shader                     (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return DataToPassToShader{system_values(render_target_size, time, delta_time),  _project.modules_graph->graph() }; }
-    auto data_to_generate_shader_code               () const { return DataToGenerateShaderCode{_project.modules_graph->graph(), Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library_manager.library()} }; }
+    auto data_to_pass_to_shader                     (img::Size render_target_size, Cool::Time time, Cool::Time delta_time) const { return DataToPassToShader{system_values(render_target_size, time, delta_time),  project().modules_graph->graph() }; }
+    auto data_to_generate_shader_code               () const { return DataToGenerateShaderCode{project().modules_graph->graph(), Cool::GetNodeDefinition_Ref<NodeDefinition>{_nodes_library_manager.library()} }; }
     // clang-format on
 
     Cool::Polaroid polaroid();
@@ -97,27 +98,30 @@ private:
 
 public: // Needs to be public so we can call it in the NodesConfig
     void imgui_window_cameras();
+    auto make_window_title_setter() -> SetWindowTitle;
+    auto make_on_project_loaded() -> OnProjectLoaded;
 
 private:
     void compile_all_is0_nodes();
+    auto project() -> Project& { return _project_manager.project(); }
+    auto project() const -> Project const& { return _project_manager.project(); }
 
 private:
-    Cool::Window&                        _main_window;
-    Cool::TextureView&                   _output_view;
-    Cool::ForwardingOrTextureView&       _preview_view; // Must be after _output_view because it stores a reference to it
-    Project                              _project{};
-    std::optional<std::filesystem::path> _current_project_path{};
-    Cool::Time                           _last_time{0s};
-    bool                                 _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
-    bool                                 _view_was_in_fullscreen_last_frame{false};
-    GalleryPoster                        _gallery_poster{};
-    Cool::TipsManager                    _tips_manager{};
-    NodesLibraryManager                  _nodes_library_manager{};
-    bool                                 _is_first_frame{true};
-    bool                                 _is_shutting_down{false};
-    Cool::MeshExportSettings             _mesh_export_settings{};
-    MeshingGui                           _meshing_gui{};
-    std::optional<no_sleep::Scoped>      _disable_sleep{};
+    Cool::Window&                   _main_window;
+    Cool::TextureView&              _output_view;
+    Cool::ForwardingOrTextureView&  _preview_view; // Must be after _output_view because it stores a reference to it
+    ProjectManager                  _project_manager{};
+    Cool::Time                      _last_time{0s};
+    bool                            _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
+    bool                            _view_was_in_fullscreen_last_frame{false};
+    GalleryPoster                   _gallery_poster{};
+    Cool::TipsManager               _tips_manager{};
+    NodesLibraryManager             _nodes_library_manager{};
+    bool                            _is_first_frame{true};
+    bool                            _is_shutting_down{false};
+    Cool::MeshExportSettings        _mesh_export_settings{};
+    MeshingGui                      _meshing_gui{};
+    std::optional<no_sleep::Scoped> _disable_sleep{};
 
 private:
     // Serialization

@@ -29,7 +29,9 @@
 #include "Menus/about_menu.h"
 #include "ModulesGraph/ModulesGraph.h"
 #include "ProjectManager/Command_PackageProjectInto.h"
-#include "ProjectManager/utils.h"
+#include "ProjectManager/Command_SaveProject.h"
+#include "ProjectManager/Command_SaveProjectAs.h"
+#include "ProjectManager/Interfaces.hpp"
 #include "Tips/Tips.h"
 #include "open/open.hpp"
 
@@ -55,9 +57,15 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
 
 void App::save_project_thumbnail()
 {
+    if (!_project_manager.has_registered_project_to_the_launcher())
+        return;
+    auto const info_folder_for_the_launcher = _project_manager.info_folder_for_the_launcher();
+    if (!info_folder_for_the_launcher.has_value())
+        return;
+
     auto const polar = polaroid();
-    polar.render({100, 100}, _project.clock.time(), _project.clock.delta_time());
-    auto const result = Cool::ImageU::save(launcher_project_info_folder(_project) / "thumbnail.png", polar.texture().download_pixels());
+    polar.render({100, 100}, project().clock.time(), project().clock.delta_time());
+    auto const result = Cool::ImageU::save(*info_folder_for_the_launcher / "thumbnail.png", polar.texture().download_pixels());
 #if DEBUG
     if (!result.has_value())
         Cool::Log::Debug::error("Save Thumbnail", result.error());
@@ -76,39 +84,57 @@ void App::on_shutdown()
 
 void App::on_project_loaded()
 {
-    _project.camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
-    _project.camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
+    project().camera_3D_manager.hook_events(_preview_view.mouse_events(), command_executor());
+    project().camera_2D_manager.hook_events(_preview_view.mouse_events(), command_executor());
 
-    _project.view_constraint.set_shared_aspect_ratio(_project.shared_aspect_ratio);
-    _project.exporter.set_shared_aspect_ratio(_project.shared_aspect_ratio);
-    _gallery_poster.set_shared_aspect_ratio(_project.shared_aspect_ratio);
+    project().view_constraint.set_shared_aspect_ratio(project().shared_aspect_ratio);
+    project().exporter.set_shared_aspect_ratio(project().shared_aspect_ratio);
+    _gallery_poster.set_shared_aspect_ratio(project().shared_aspect_ratio);
+
+    auto const ctx = command_execution_context();
+    for (auto& [_, node] : project().modules_graph->graph().nodes())
+        ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node.downcast<Node>());
 }
 
 void App::compile_all_is0_nodes()
 {
-    // for (auto const& node_template : _project.modules_graph->compositing_module().nodes_templates())
+    // for (auto const& node_template : project().modules_graph->compositing_module().nodes_templates())
     // {
-    //     _project.modules_graph->compositing_module().remove_all_nodes();
+    //     project().modules_graph->compositing_module().remove_all_nodes();
     //     Cool::Log::ToUser::info("Test is0 Node", node_template.name);
-    //     _project.modules_graph->compositing_module().add_node(NodeFactoryU::node_from_template(node_template));
-    //     _project.modules_graph->compositing_module().recompile(update_context(), true);
+    //     project().modules_graph->compositing_module().add_node(NodeFactoryU::node_from_template(node_template));
+    //     project().modules_graph->compositing_module().recompile(update_context(), true);
     // }
-    // _project.modules_graph->compositing_module().remove_all_nodes();
+    // project().modules_graph->compositing_module().remove_all_nodes();
+}
+
+auto App::make_window_title_setter() -> SetWindowTitle
+{
+    return [window_ptr = _main_window.glfw()](std::string_view title) {
+        glfwSetWindowTitle(window_ptr, title.data());
+    };
+}
+
+auto App::make_on_project_loaded() -> OnProjectLoaded
+{
+    return [&]() {
+        on_project_loaded();
+    };
 }
 
 void App::on_time_changed()
 {
-    _project.modules_graph->on_time_changed();
+    project().modules_graph->on_time_changed();
 }
 
 void App::on_time_reset()
 {
-    _project.modules_graph->on_time_reset();
+    project().modules_graph->on_time_reset();
 }
 
 void App::update()
 {
-    _project.history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
+    project().history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
 
     // First frame the exe is open
     // Since the construction of an App might be in two steps (constructor, and then deserialization)
@@ -116,55 +142,55 @@ void App::update()
     if (_is_first_frame)
     {
         _is_first_frame = false;
-        initial_project_opening(command_execution_context());
+        _project_manager.process_command_line_args(make_on_project_loaded(), make_window_title_setter());
     }
 
-    if (_project.shared_aspect_ratio.fill_the_view)
-        _project.shared_aspect_ratio.aspect_ratio.set(render_view().aspect_ratio());
+    if (project().shared_aspect_ratio.fill_the_view)
+        project().shared_aspect_ratio.aspect_ratio.set(render_view().aspect_ratio());
 
     if (DebugOptions::force_rerender_every_frame())
-        _project.modules_graph->request_rerender_all();
+        project().modules_graph->request_rerender_all();
 
     Cool::user_settings().color_themes.update();
 
-    _project.audio.set_force_mute(_project.exporter.is_exporting());
-    _project.audio.sync_with_clock(
-        _project.current_clock(),
-        _project.exporter.is_exporting() /* force_sync_time */
+    project().audio.set_force_mute(project().exporter.is_exporting());
+    project().audio.sync_with_clock(
+        project().current_clock(),
+        project().exporter.is_exporting() /* force_sync_time */
     );
-    Cool::hack_get_global_time_in_seconds() = _project.current_clock().time();
-    Cool::hack_get_is_exporting()           = _project.exporter.is_exporting();
-    _project.audio.update(/*on_audio_data_changed = */ [&]() {
-        _project.modules_graph->on_audio_changed();
+    Cool::hack_get_global_time_in_seconds() = project().current_clock().time();
+    Cool::hack_get_is_exporting()           = project().exporter.is_exporting();
+    project().audio.update(/*on_audio_data_changed = */ [&]() {
+        project().modules_graph->on_audio_changed();
     });
 
-    _project.modules_graph->update_dependencies_from_nodes_graph(); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC or Midi, so that we can check each time to see which channel they are currently using.
+    project().modules_graph->update_dependencies_from_nodes_graph(); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC or Midi, so that we can check each time to see which channel they are currently using.
     Cool::osc_manager().for_each_channel_that_has_changed([&](Cool::OSCChannel const& osc_channel) {
-        _project.modules_graph->on_osc_channel_changed(osc_channel);
+        project().modules_graph->on_osc_channel_changed(osc_channel);
     });
     Cool::midi_manager().for_each_channel_that_has_changed([&](Cool::MidiChannel const& midi_channel) {
-        _project.modules_graph->on_midi_channel_changed(midi_channel);
+        project().modules_graph->on_midi_channel_changed(midi_channel);
     });
     if (Cool::midi_manager().last_button_pressed_has_changed())
-        _project.modules_graph->on_last_midi_button_pressed_changed();
+        project().modules_graph->on_last_midi_button_pressed_changed();
 
     if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
     {
-        _nodes_library_manager.update(_project.modules_graph->rebuild_modules_graph_flag(), _project.modules_graph->graph(), _project.modules_graph->nodes_config(ui(), _project.audio, _nodes_library_manager.library()));
-        _project.modules_graph->update();
+        _nodes_library_manager.update(project().modules_graph->rebuild_modules_graph_flag(), project().modules_graph->graph(), project().modules_graph->nodes_config(ui(), project().audio, _nodes_library_manager.library()));
+        project().modules_graph->update();
         check_inputs();
     }
 
-    if (!_project.exporter.is_exporting())
+    if (!project().exporter.is_exporting())
     {
-        _project.clock.update();
-        auto const render_size = render_view().desired_image_size(_project.view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the TextureView ? But that's may be too much coupling
-        polaroid().render(render_size, _project.clock.time(), _project.clock.delta_time());
+        project().clock.update();
+        auto const render_size = render_view().desired_image_size(project().view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the TextureView ? But that's may be too much coupling
+        polaroid().render(render_size, project().clock.time(), project().clock.delta_time());
     }
     else
     {
         request_rerender();
-        _project.exporter.update(polaroid());
+        project().exporter.update(polaroid());
     }
 
     // if (_custom_shader_view.render_target.needs_resizing())
@@ -202,7 +228,7 @@ void App::update()
 
 void App::request_rerender() // TODO(Modules) Sometimes we don't need to call this, but only rerender a specific module instead
 {
-    _project.modules_graph->request_rerender_all();
+    project().modules_graph->request_rerender_all();
 }
 
 auto App::render_view() -> Cool::TextureView&
@@ -215,7 +241,7 @@ auto App::render_view() -> Cool::TextureView&
 Cool::Polaroid App::polaroid()
 {
     return {
-        .texture = [this]() { return _project.modules_graph->final_texture(); },
+        .texture = [this]() { return project().modules_graph->final_texture(); },
         .render  = [this](img::Size size, Cool::Time time, Cool::Time delta_time) {
             render(size, time, delta_time);
         }
@@ -224,12 +250,12 @@ Cool::Polaroid App::polaroid()
 
 auto App::inputs_are_allowed() const -> bool
 {
-    return !_project.exporter.is_exporting();
+    return !project().exporter.is_exporting();
 }
 
 auto App::wants_to_show_menu_bar() const -> bool
 {
-    return !_project.exporter.is_exporting() && !_wants_view_in_fullscreen;
+    return !project().exporter.is_exporting() && !_wants_view_in_fullscreen;
 }
 
 static void imgui_window_console()
@@ -247,7 +273,7 @@ void App::render(img::Size size, Cool::Time time, Cool::Time delta_time)
         _last_time = time;
         on_time_changed();
     }
-    _project.modules_graph->render(
+    project().modules_graph->render(
         data_to_pass_to_shader(size, time, delta_time),
         data_to_generate_shader_code()
     );
@@ -258,15 +284,15 @@ void App::imgui_window_cameras()
     if (ImGui::BeginTabBar("##cameras"))
     {
         ImGui::PushFont(Cool::Font::bold());
-        if (ImGui::BeginTabItem(Cool::icon_fmt("2D Camera", ICOMOON_CAMERA).c_str(), nullptr, _project.camera_2D_manager.is_editable_in_view() ? ImGuiTabItemFlags_SetSelected : 0))
+        if (ImGui::BeginTabItem(Cool::icon_fmt("2D Camera", ICOMOON_CAMERA).c_str(), nullptr, project().camera_2D_manager.is_editable_in_view() ? ImGuiTabItemFlags_SetSelected : 0))
         {
             ImGui::PopFont();
             if (ImGui::IsItemActive())
             {
-                _project.camera_2D_manager.is_editable_in_view() = true;
-                _project.camera_3D_manager.is_editable_in_view() = false;
+                project().camera_2D_manager.is_editable_in_view() = true;
+                project().camera_3D_manager.is_editable_in_view() = false;
             }
-            _project.camera_2D_manager.imgui(ui());
+            project().camera_2D_manager.imgui(ui());
             ImGui::EndTabItem();
         }
         else
@@ -275,15 +301,15 @@ void App::imgui_window_cameras()
         }
 
         ImGui::PushFont(Cool::Font::bold());
-        if (ImGui::BeginTabItem(Cool::icon_fmt("3D Camera", ICOMOON_VIDEO_CAMERA).c_str(), nullptr, _project.camera_3D_manager.is_editable_in_view() ? ImGuiTabItemFlags_SetSelected : 0))
+        if (ImGui::BeginTabItem(Cool::icon_fmt("3D Camera", ICOMOON_VIDEO_CAMERA).c_str(), nullptr, project().camera_3D_manager.is_editable_in_view() ? ImGuiTabItemFlags_SetSelected : 0))
         {
             ImGui::PopFont();
             if (ImGui::IsItemActive())
             {
-                _project.camera_3D_manager.is_editable_in_view() = true;
-                _project.camera_2D_manager.is_editable_in_view() = false;
+                project().camera_3D_manager.is_editable_in_view() = true;
+                project().camera_2D_manager.is_editable_in_view() = false;
             }
-            _project.camera_3D_manager.imgui(command_executor());
+            project().camera_3D_manager.imgui(command_executor());
             ImGui::PopID();
         }
         else
@@ -296,7 +322,7 @@ void App::imgui_window_cameras()
 
 void App::imgui_window_view()
 {
-    bool const view_in_fullscreen = _project.exporter.is_exporting() || _wants_view_in_fullscreen;
+    bool const view_in_fullscreen = project().exporter.is_exporting() || _wants_view_in_fullscreen;
     {
         if (!_view_was_in_fullscreen_last_frame && view_in_fullscreen)
             save_imgui_windows_state(); // Save normal state before making the View fullscreen.
@@ -305,23 +331,23 @@ void App::imgui_window_view()
         _view_was_in_fullscreen_last_frame = view_in_fullscreen;
     }
 
-    _project.modules_graph->submit_gizmos(_preview_view.gizmos_manager(), command_executor(), _project.camera_2D_manager.camera());
-    _output_view.set_texture(_project.modules_graph->final_texture());
+    project().modules_graph->submit_gizmos(_preview_view.gizmos_manager(), command_executor(), project().camera_2D_manager.camera());
+    _output_view.set_texture(project().modules_graph->final_texture());
     _output_view.imgui_window({
         // When we switch between using the _output_view and the _nodes_view we need to rerender on the new render target.
         .on_open  = [&]() { request_rerender(); _disable_sleep.emplace("Coollab", "Coollab \"Output\" window is open", no_sleep::Mode::KeepScreenOnAndKeepComputing); },
         .on_close = [&]() { request_rerender(); _disable_sleep.reset(); },
     });
-    _preview_view.set_texture(_project.modules_graph->final_texture());
+    _preview_view.set_texture(project().modules_graph->final_texture());
     _preview_view.imgui_window({
         .fullscreen    = view_in_fullscreen,
         .extra_widgets = [&]() {
-            if (_project.exporter.is_exporting())
+            if (project().exporter.is_exporting())
                 return false;
             bool b = false;
 
             bool const align_buttons_vertically = _preview_view.has_vertical_margins()
-                                                  || (!_project.view_constraint.does_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
+                                                  || (!project().view_constraint.does_constrain_aspect_ratio() && !_output_view.is_open()); // Hack to avoid flickering the alignment of the buttons when we are resizing the View
 
             int buttons_order{0};
             // Reset cameras
@@ -342,13 +368,13 @@ void App::imgui_window_view()
             ImGui::SetItemTooltip("%s", _wants_view_in_fullscreen ? "Shrink the view" : "Expand the view");
 
             // Toggle 2D / 3D cameras
-            if (Cool::ImGuiExtras::floating_button(_project.camera_2D_manager.is_editable_in_view() ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
+            if (Cool::ImGuiExtras::floating_button(project().camera_2D_manager.is_editable_in_view() ? ICOMOON_CAMERA : ICOMOON_VIDEO_CAMERA, buttons_order++, align_buttons_vertically))
             {
-                _project.camera_2D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view();
-                _project.camera_3D_manager.is_editable_in_view() = !_project.camera_2D_manager.is_editable_in_view(); // Only allow one camera active at the same time.
+                project().camera_2D_manager.is_editable_in_view() = !project().camera_2D_manager.is_editable_in_view();
+                project().camera_3D_manager.is_editable_in_view() = !project().camera_2D_manager.is_editable_in_view(); // Only allow one camera active at the same time.
             }
             b |= ImGui::IsItemActive();
-            ImGui::SetItemTooltip("%s", _project.camera_2D_manager.is_editable_in_view() ? "2D camera is active" : "3D camera is active");
+            ImGui::SetItemTooltip("%s", project().camera_2D_manager.is_editable_in_view() ? "2D camera is active" : "3D camera is active");
 
             // Aspect Ratio
             if (Cool::ImGuiExtras::floating_button(ICOMOON_CROP, buttons_order++, align_buttons_vertically))
@@ -356,7 +382,7 @@ void App::imgui_window_view()
             ImGui::SetItemTooltip("%s", "Aspect Ratio");
             if (ImGui::BeginPopup("##Aspect Ratio"))
             {
-                _project.view_constraint.imgui_aspect_ratio();
+                project().view_constraint.imgui_aspect_ratio();
                 ImGui::EndPopup();
             }
             b |= ImGui::IsItemActive();
@@ -377,11 +403,11 @@ void App::on_image_export_start(std::filesystem::path const& exported_image_path
 
 void App::imgui_window_exporter()
 {
-    _project.exporter.imgui_windows({
+    project().exporter.imgui_windows({
         .polaroid                                   = polaroid(),
-        .time                                       = _project.clock.time(),
-        .delta_time                                 = _project.clock.delta_time(),
-        .time_speed                                 = _project.clock.time_speed().value(),
+        .time                                       = project().clock.time(),
+        .delta_time                                 = project().clock.delta_time(),
+        .time_speed                                 = project().clock.time_speed().value(),
         .on_image_export_start                      = [&](std::filesystem::path const& exported_image_path) { on_image_export_start(exported_image_path); },
         .on_video_export_start                      = [&]() { on_time_reset(); },
         .widgets_in_window_video_export_in_progress = [&]() {
@@ -397,7 +423,7 @@ void App::imgui_window_meshing()
 {
     _meshing_gui.imgui_window(
         _mesh_export_settings,
-        data_to_pass_to_shader(render_view().desired_image_size(_project.view_constraint), _project.clock.time(), _project.clock.delta_time()),
+        data_to_pass_to_shader(render_view().desired_image_size(project().view_constraint), project().clock.time(), project().clock.delta_time()),
         data_to_generate_shader_code()
     );
 }
@@ -418,17 +444,17 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
     Cool::ClockU::imgui_timeline(
-        _project.clock,
+        project().clock,
         /* extra_widgets = */ [&]() {
             ImGui::SetNextItemWidth(70.f);
-            the_ui.widget(_project.clock.time_speed());
+            the_ui.widget(project().clock.time_speed());
             //
         },
         /* on_time_reset = */ [&]() { on_time_reset(); }
     );
     ImGui::End();
     // Audio
-    _project.audio.imgui_window();
+    project().audio.imgui_window();
     // Webcams
     Cool::WebcamsConfigs::instance().imgui_window();
     // Midi
@@ -440,11 +466,11 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Tips
     _tips_manager.imgui_windows(all_tips());
     // Nodes
-    _project.modules_graph->imgui_windows(the_ui, _project.audio, _nodes_library_manager.library());
+    project().modules_graph->imgui_windows(the_ui, project().audio, _nodes_library_manager.library());
     // Share online
     _gallery_poster.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
-        the_polaroid.render(size, _project.clock.time(), _project.clock.delta_time());
+        the_polaroid.render(size, project().clock.time(), project().clock.delta_time());
         auto const image = the_polaroid.texture().download_pixels();
         return img::save_png_to_string(image).value_or("");
     });
@@ -462,14 +488,14 @@ void App::imgui_windows_only_when_inputs_are_allowed()
                                                                         // to learn more about Dear ImGui!).
     DebugOptions::show_history_window([&] {
         ImGui::PushFont(Cool::Font::monospace());
-        _project.history.imgui_show([](ReversibleCommand const& command) {
+        project().history.imgui_show([](ReversibleCommand const& command) {
             return command_to_string(command);
         });
         ImGui::PopFont();
     });
     if (DebugOptions::show_nodes_and_links_registries())
     {
-        _project.modules_graph->debug_show_nodes_and_links_registries_windows(ui());
+        project().modules_graph->debug_show_nodes_and_links_registries_windows(ui());
     }
 
     DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
@@ -494,7 +520,15 @@ void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
-        imgui_menu_items_to_save_project(command_execution_context());
+        auto const ctx = command_execution_context();
+        if (ImGui::MenuItem("Save", "Ctrl+S")) // TODO(UX) Cmd instead of Ctrl on MacOS
+            ctx.execute(Command_SaveProject{.is_autosave = false});
+        if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+        {
+            auto const path = _project_manager.file_dialog_to_save_project();
+            if (path)
+                ctx.execute(Command_SaveProjectAs{*path});
+        }
         ImGui::EndMenu();
     }
 }
@@ -503,7 +537,7 @@ void App::performance_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("Performance", ICOMOON_POWER, true).c_str()))
     {
-        _project.view_constraint.imgui_nb_pixels();
+        project().view_constraint.imgui_nb_pixels();
         ImGui::EndMenu();
     }
 }
@@ -525,7 +559,7 @@ void App::export_menu()
     if (ImGui::BeginMenu(Cool::icon_fmt("Export", ICOMOON_UPLOAD2, true).c_str()))
     {
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2{0.f, 0.5f});
-        _project.exporter.imgui_menu_items(
+        project().exporter.imgui_menu_items(
             {
                 .open_image_exporter = [&]() { command_executor().execute(Command_OpenImageExporter{}); },
                 .open_video_exporter = [&]() { command_executor().execute(Command_OpenVideoExporter{}); },
@@ -543,8 +577,8 @@ void App::settings_menu()
     if (ImGui::BeginMenu(Cool::icon_fmt("Settings", ICOMOON_COG, true).c_str()))
     {
         Cool::ImGuiExtras::separator_text("History");
-        _project.history.imgui_max_size(&Cool::ImGuiExtras::help_marker);
-        _project.history.imgui_max_saved_size(&Cool::ImGuiExtras::help_marker);
+        project().history.imgui_max_size(&Cool::ImGuiExtras::help_marker);
+        project().history.imgui_max_saved_size(&Cool::ImGuiExtras::help_marker);
 
         Cool::ImGuiExtras::separator_text("Color Theme");
         Cool::user_settings().color_themes.imgui_theme_picker();
@@ -570,12 +604,12 @@ void App::commands_menu()
         if (ImGui::Selectable(ICOMOON_CONNECTION " Open Server config"))
             Cool::server_manager().open_config_window();
         if (ImGui::Selectable(ICOMOON_MUSIC " Open Audio config"))
-            _project.audio.open_imgui_window();
+            project().audio.open_imgui_window();
         if (ImGui::Selectable(ICOMOON_IMAGE " Open output window"))
         {
             _output_view.toggle_open_close();
             if (_output_view.is_open())
-                _project.shared_aspect_ratio.fill_the_view = true;
+                project().shared_aspect_ratio.fill_the_view = true;
         }
         if (ImGui::Selectable(ICOMOON_FOLDER_OPEN " Open user-data folder"))
             Cool::open_folder_in_explorer(Cool::Path::user_data());
@@ -601,6 +635,8 @@ void App::imgui_menus()
     performance_menu();
     commands_menu();
 
+    _project_manager.imgui_project_name_in_the_middle_of_the_menu_bar(make_window_title_setter());
+
     ImGui::SetCursorPosX( // HACK while waiting for ImGui to support right-to-left layout. See issue https://github.com/ocornut/imgui/issues/5875
         ImGui::GetWindowSize().x
         - ImGui::CalcTextSize("AboutDebug").x
@@ -614,8 +650,8 @@ void App::imgui_menus()
 void App::reset_cameras()
 {
     auto executor = command_executor();
-    _project.camera_2D_manager.reset_camera(executor);
-    _project.camera_3D_manager.reset_camera(executor);
+    project().camera_2D_manager.reset_camera(executor);
+    project().camera_3D_manager.reset_camera(executor);
 }
 
 void App::check_inputs()
@@ -632,7 +668,7 @@ void App::check_inputs()
     }
     if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_E))
     {
-        auto const exported_image_path = _project.exporter.export_image_with_current_settings_using_a_task(_project.clock.time(), _project.clock.delta_time(), polaroid());
+        auto const exported_image_path = project().exporter.export_image_with_current_settings_using_a_task(project().clock.time(), project().clock.delta_time(), polaroid());
         on_image_export_start(exported_image_path);
     }
 }
@@ -645,43 +681,48 @@ void App::check_inputs__history()
     // Undo
     if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z)) // TODO(UX) On MacOS, use command and not Ctrl (and display it as Cmd in the menu )
     {
-        _project.history.move_backward(exec);
+        project().history.move_backward(exec);
     }
 
     // Redo
     if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y))
         || (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
     {
-        _project.history.move_forward(exec);
+        project().history.move_forward(exec);
     }
 }
 
 void App::check_inputs__project()
 {
-    auto const& io = ImGui::GetIO();
+    auto const& io  = ImGui::GetIO();
+    auto const  ctx = command_execution_context();
 
     if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
-        dialog_to_save_project_as(command_execution_context());
+    {
+        auto const path = _project_manager.file_dialog_to_save_project();
+        if (path)
+            ctx.execute(Command_SaveProjectAs{*path});
+    }
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
-        command_executor().execute(Command_SaveProject{});
+        ctx.execute(Command_SaveProject{.is_autosave = false});
 }
 
 void App::check_inputs__timeline()
 {
     if (ImGui::IsKeyReleased(ImGuiKey_Space))
     {
-        _project.clock.toggle_play_pause();
+        project().clock.toggle_play_pause();
     }
 }
 
 void App::open_image_exporter()
 {
-    _project.exporter.image_export_window().open();
+    project().exporter.image_export_window().open();
 }
 
 void App::open_video_exporter()
 {
-    _project.exporter.video_export_window().open();
+    project().exporter.video_export_window().open();
 }
 
 void App::open_meshing_window_for_node(Cool::NodeId const& node_id)
