@@ -83,7 +83,13 @@ void ProjectManager::process_command_line_args(OnProjectLoaded const& on_project
     // In case no command line args told us what to do (which should only happen when Coollab is not launched via the launcher, i.e. only while developing Coollab)
     // then always open the same project, so that it is convenient while developing to access your test project immediately
     if (_impl.project_folder().empty())
-        open_project(Cool::File::with_extension(Cool::Path::user_data() / "Projects/Untitled", COOLLAB_FILE_EXTENSION), on_project_loaded, set_window_title);
+    {
+        auto const path = Cool::File::with_extension(Cool::Path::user_data() / "Projects/Untitled", COOLLAB_FILE_EXTENSION);
+        if (Cool::File::exists(path))
+            open_project(path, on_project_loaded, set_window_title);
+        else
+            create_new_project_in_file(path, on_project_loaded, set_window_title);
+    }
 }
 
 void ProjectManager::create_new_project(OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title)
