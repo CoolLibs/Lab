@@ -20,8 +20,8 @@ public:
 
     void autosave_project(SetWindowTitle const& set_window_title);
     void save_project(SetWindowTitle const& set_window_title);
-    void save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title);
-    void package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title);
+    void save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher = true);
+    void package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher = true);
     void rename_project(std::string new_name, SetWindowTitle const& set_window_title);
 
     void imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const& set_window_title);

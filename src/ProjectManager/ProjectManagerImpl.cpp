@@ -1,4 +1,5 @@
 #include "ProjectManagerImpl.hpp"
+#include <reg/src/AnyId.hpp>
 #include <tl/expected.hpp>
 #include "COOLLAB_FILE_EXTENSION.hpp"
 #include "Cool/File/File.h"
@@ -20,9 +21,14 @@ auto ProjectManagerImpl::project_path(std::string_view file_name) const -> std::
 
 auto ProjectManagerImpl::info_folder_for_the_launcher() const -> std::optional<std::filesystem::path>
 {
+    return info_folder_for_the_launcher(_project.uuid);
+}
+
+auto ProjectManagerImpl::info_folder_for_the_launcher(reg::AnyId const& project_uuid) const -> std::optional<std::filesystem::path>
+{
     if (!_path_to_launcher_info_folder)
         return std::nullopt;
-    return *_path_to_launcher_info_folder / reg::to_string(_project.uuid);
+    return *_path_to_launcher_info_folder / reg::to_string(project_uuid);
 }
 
 auto ProjectManagerImpl::has_registered_project_to_the_launcher() const -> bool

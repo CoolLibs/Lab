@@ -1,4 +1,5 @@
 #pragma once
+#include <reg/src/AnyId.hpp>
 #include "Interfaces.hpp"
 #include "Project.hpp"
 
@@ -13,6 +14,7 @@ public:
     auto project_folder() const -> std::filesystem::path const& { return _folder_path; }
     auto project_name() const -> std::string const& { return _file_name; }
     auto info_folder_for_the_launcher() const -> std::optional<std::filesystem::path>;
+    auto info_folder_for_the_launcher(reg::AnyId const& project_uuid) const -> std::optional<std::filesystem::path>;
     auto has_registered_project_to_the_launcher() const -> bool;
 
     auto               project_path(std::string_view file_name) const -> std::filesystem::path;

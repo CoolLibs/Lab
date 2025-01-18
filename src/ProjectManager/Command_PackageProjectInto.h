@@ -5,6 +5,7 @@ namespace Lab {
 
 struct Command_PackageProjectInto {
     std::filesystem::path folder_path{};
+    bool                  register_project_in_the_launcher{};
 
     void               execute(CommandExecutionContext_Ref const& ctx) const;
     [[nodiscard]] auto to_string() const -> std::string;

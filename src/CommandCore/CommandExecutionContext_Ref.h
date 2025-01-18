@@ -26,6 +26,7 @@ public:
     [[nodiscard]] auto project_manager() const -> ProjectManager& { return _data.project_manager; }
     [[nodiscard]] auto window_title_setter() const -> SetWindowTitle;
     [[nodiscard]] auto on_project_loaded() const -> OnProjectLoaded;
+    [[nodiscard]] auto save_thumbnail() const -> SaveThumbnail;
     [[nodiscard]] auto command_executor() const -> CommandExecutor;
     [[nodiscard]] auto modules_graph() const -> ModulesGraph&;
     void               make_sure_node_uses_the_most_up_to_date_version_of_its_definition(Node& node) const;

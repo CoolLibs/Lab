@@ -63,9 +63,14 @@ void App::save_project_thumbnail()
     if (!info_folder_for_the_launcher.has_value())
         return;
 
+    save_project_thumbnail_impl(*info_folder_for_the_launcher);
+}
+
+void App::save_project_thumbnail_impl(std::filesystem::path const& folder_path)
+{
     auto const polar = polaroid();
     polar.render({100, 100}, project().clock.time(), project().clock.delta_time());
-    auto const result = Cool::ImageU::save(*info_folder_for_the_launcher / "thumbnail.png", polar.texture().download_pixels());
+    auto const result = Cool::ImageU::save(folder_path / "thumbnail.png", polar.texture().download_pixels());
 #if DEBUG
     if (!result.has_value())
         Cool::Log::Debug::error("Save Thumbnail", result.error());
@@ -119,6 +124,13 @@ auto App::make_on_project_loaded() -> OnProjectLoaded
 {
     return [&]() {
         on_project_loaded();
+    };
+}
+
+auto App::make_save_thumbnail() -> SaveThumbnail
+{
+    return [&](std::filesystem::path const& folder_path) {
+        save_project_thumbnail_impl(folder_path);
     };
 }
 
@@ -397,7 +409,8 @@ void App::on_image_export_start(std::filesystem::path const& exported_image_path
     auto folder_path = exported_image_path;
     folder_path.replace_extension(); // Give project folder the same name as the image.
     command_executor().execute(Command_PackageProjectInto{
-        .folder_path = folder_path,
+        .folder_path                      = folder_path,
+        .register_project_in_the_launcher = false,
     });
 }
 

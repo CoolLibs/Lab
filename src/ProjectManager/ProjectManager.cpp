@@ -193,7 +193,7 @@ void ProjectManager::save_project(SetWindowTitle const& set_window_title)
     });
 }
 
-void ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title)
+void ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher)
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
@@ -203,26 +203,29 @@ void ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowT
 
     bool const this_is_the_new_project_path = false;
 
-    auto const previous_uuid = _impl.project().uuid;
-    _impl.project().uuid     = reg::generate_uuid(); // This new project path should be associated with a new uuid
+    auto const old_uuid  = _impl.project().uuid;
+    auto const new_uuid  = reg::generate_uuid(); // This new project path should be associated with a new uuid
+    _impl.project().uuid = new_uuid;
 
     while (!_impl.save(file_path))
         file_path = force_file_dialog_to_save_project(); // Save failed, try in another location
 
     _impl.register_last_write_time(file_path);
-    _impl.set_project_path_for_launcher(file_path);
+    if (register_project_in_the_launcher)
+    {
+        _impl.set_project_path_for_launcher(file_path);
+        auto const info_folder = _impl.info_folder_for_the_launcher(this_is_the_new_project_path ? old_uuid : new_uuid); // Save thumbnail for the project that will not be considered the current one, because we won't save its thumbnail when closing the app
+        if (info_folder)
+            save_thumbnail(*info_folder);
+    }
 
     if (this_is_the_new_project_path)
-    {
         _impl.set_project_path(file_path, set_window_title);
-    }
     else
-    {
-        _impl.project().uuid = previous_uuid; // Keep the same uuid as before because we are still on the same project
-    }
+        _impl.project().uuid = old_uuid; // Keep the same uuid as before because we are still on the same project
 }
 
-void ProjectManager::package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title)
+void ProjectManager::package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher)
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Packaging project into \"{}\"", Cool::File::weakly_canonical(folder_path)));
@@ -230,7 +233,7 @@ void ProjectManager::package_project_into(std::filesystem::path const& folder_pa
     // TODO(Launcher) make sure the folder doesn't exist, or is empty
     auto file_path = folder_path;
     file_path.replace_extension(COOLLAB_FILE_EXTENSION);
-    save_project_as(file_path, set_window_title); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
+    save_project_as(file_path, set_window_title, save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 
 void ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title)

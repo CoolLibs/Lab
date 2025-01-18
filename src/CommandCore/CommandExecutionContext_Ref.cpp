@@ -2,6 +2,7 @@
 #include "App.h"
 #include "CommandExecutor.h"
 #include "Nodes/make_sure_node_uses_the_most_up_to_date_version_of_its_definition.h"
+#include "ProjectManager/Interfaces.hpp"
 #include "ProjectManager/ProjectManager.hpp"
 
 namespace Lab {
@@ -19,6 +20,11 @@ auto CommandExecutionContext_Ref::window_title_setter() const -> SetWindowTitle
 auto CommandExecutionContext_Ref::on_project_loaded() const -> OnProjectLoaded
 {
     return _data.app.get().make_on_project_loaded();
+}
+
+auto CommandExecutionContext_Ref::save_thumbnail() const -> SaveThumbnail
+{
+    return _data.app.get().make_save_thumbnail();
 }
 
 auto CommandExecutionContext_Ref::history() const -> History const&

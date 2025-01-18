@@ -24,6 +24,7 @@
 #include "Module/ShaderBased/DataToPassToShader.hpp"
 #include "Nodes/NodesLibraryManager.h"
 #include "ProjectManager/Command_SaveProject.h"
+#include "ProjectManager/Interfaces.hpp"
 #include "ProjectManager/ProjectManager.hpp"
 #include "ProjectManager/ProjectManagerImpl.hpp"
 #include "no_sleep/no_sleep.hpp"
@@ -61,6 +62,7 @@ private:
     auto render_view() -> Cool::TextureView&;
     void on_image_export_start(std::filesystem::path const& exported_image_path);
     void save_project_thumbnail();
+    void save_project_thumbnail_impl(std::filesystem::path const& folder_path);
 
     void check_inputs();
     void check_inputs__history();
@@ -100,6 +102,7 @@ public: // Needs to be public so we can call it in the NodesConfig
     void imgui_window_cameras();
     auto make_window_title_setter() -> SetWindowTitle;
     auto make_on_project_loaded() -> OnProjectLoaded;
+    auto make_save_thumbnail() -> SaveThumbnail;
 
 private:
     void compile_all_is0_nodes();
