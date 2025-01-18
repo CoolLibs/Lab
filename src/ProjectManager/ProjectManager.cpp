@@ -137,7 +137,7 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
 
 void ProjectManager::autosave_project(SetWindowTitle const& set_window_title)
 {
-    if (_impl.project().is_empty()) // Avoid creating project files if we are just opening and then closing Coollab
+    if (_impl.project().is_empty() && _impl.project_name().starts_with("Untitled")) // Avoid creating project files if we are just opening and then closing Coollab
         return;
 
     if (DebugOptions::log_project_related_events())
@@ -255,16 +255,15 @@ void ProjectManager::rename_project(std::string new_name, SetWindowTitle const& 
 
 void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const& set_window_title)
 {
-    static auto project_name         = ""s;
-    const char* default_project_name = "Untitled Project";
-
+    auto project_name = _impl.project_name();
     // TODO(Launcher) make this an ImGuiExtras widget
-    auto const width = ImGui::CalcTextSize(project_name.empty() ? default_project_name : project_name.c_str()).x
+    auto const width = ImGui::CalcTextSize(project_name.c_str()).x
                        + 2.f * Cool::ImGuiExtras::GetStyle().tab_bar_padding.x;
     ImGui::SetNextItemWidth(width);
     ImGui::SetCursorPosX(ImGui::GetWindowSize().x * 0.5f - width * 0.5f);
 
-    ImGui::InputTextWithHint("##project_name", default_project_name, &project_name);
+    if (ImGui::InputText("##project_name", &project_name))
+        rename_project(project_name, set_window_title);
 }
 
 auto ProjectManager::file_dialog_to_save_project() -> std::optional<std::filesystem::path>

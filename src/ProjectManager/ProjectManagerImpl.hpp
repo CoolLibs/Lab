@@ -11,6 +11,7 @@ public:
     auto project() const -> Project const& { return _project; }
     auto project_path() const -> std::filesystem::path;
     auto project_folder() const -> std::filesystem::path const& { return _folder_path; }
+    auto project_name() const -> std::string const& { return _file_name; }
     auto info_folder_for_the_launcher() const -> std::optional<std::filesystem::path>;
     auto has_registered_project_to_the_launcher() const -> bool;
 
