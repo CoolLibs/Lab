@@ -251,7 +251,8 @@ void ProjectManager::rename_project(std::string new_name, SetWindowTitle const& 
     else
     {
         // We are the ones who last wrote to this file, so we are allowed to delete it
-        Cool::File::rename(_impl.project_path(), _impl.project_path(new_name));
+        if (Cool::File::exists(_impl.project_path()))
+            Cool::File::rename(_impl.project_path(), _impl.project_path(new_name));
         // TODO(Launcher) tell the launcher that the file has been renamed
     }
     _impl.set_project_name(new_name, set_window_title);
