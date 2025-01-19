@@ -38,6 +38,7 @@ using DebugOptionsManager = Cool::DebugOptionsManager<
 class App : public Cool::IApp {
 public:
     App(Cool::WindowManager& windows, Cool::ViewsManager& views);
+    void init() override;
     void on_shutdown() override;
     void on_project_loaded();
 
@@ -120,7 +121,6 @@ private:
     GalleryPoster                   _gallery_poster{};
     Cool::TipsManager               _tips_manager{};
     NodesLibraryManager             _nodes_library_manager{};
-    bool                            _is_first_frame{true};
     bool                            _is_shutting_down{false};
     Cool::MeshExportSettings        _mesh_export_settings{};
     MeshingGui                      _meshing_gui{};

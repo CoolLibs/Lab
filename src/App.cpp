@@ -55,6 +55,96 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
       )}
 {}
 
+void App::init()
+{
+    _project_manager.process_command_line_args(make_on_project_loaded(), make_window_title_setter());
+}
+
+void App::update()
+{
+    project().history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
+
+    if (project().shared_aspect_ratio.fill_the_view)
+        project().shared_aspect_ratio.aspect_ratio.set(render_view().aspect_ratio());
+
+    if (DebugOptions::force_rerender_every_frame())
+        project().modules_graph->request_rerender_all();
+
+    Cool::user_settings().color_themes.update();
+
+    project().audio.set_force_mute(project().exporter.is_exporting());
+    project().audio.sync_with_clock(
+        project().current_clock(),
+        project().exporter.is_exporting() /* force_sync_time */
+    );
+    Cool::hack_get_global_time_in_seconds() = project().current_clock().time();
+    Cool::hack_get_is_exporting()           = project().exporter.is_exporting();
+    project().audio.update(/*on_audio_data_changed = */ [&]() {
+        project().modules_graph->on_audio_changed();
+    });
+
+    project().modules_graph->update_dependencies_from_nodes_graph(); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC or Midi, so that we can check each time to see which channel they are currently using.
+    Cool::osc_manager().for_each_channel_that_has_changed([&](Cool::OSCChannel const& osc_channel) {
+        project().modules_graph->on_osc_channel_changed(osc_channel);
+    });
+    Cool::midi_manager().for_each_channel_that_has_changed([&](Cool::MidiChannel const& midi_channel) {
+        project().modules_graph->on_midi_channel_changed(midi_channel);
+    });
+    if (Cool::midi_manager().last_button_pressed_has_changed())
+        project().modules_graph->on_last_midi_button_pressed_changed();
+
+    if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
+    {
+        _nodes_library_manager.update(project().modules_graph->rebuild_modules_graph_flag(), project().modules_graph->graph(), project().modules_graph->nodes_config(ui(), project().audio, _nodes_library_manager.library()));
+        project().modules_graph->update();
+        check_inputs();
+    }
+
+    if (!project().exporter.is_exporting())
+    {
+        project().clock.update();
+        auto const render_size = render_view().desired_image_size(project().view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the TextureView ? But that's may be too much coupling
+        polaroid().render(render_size, project().clock.time(), project().clock.delta_time());
+    }
+    else
+    {
+        request_rerender();
+        project().exporter.update(polaroid());
+    }
+
+    // if (_custom_shader_view.render_target.needs_resizing())
+    // {
+    // set_dirty_flag()(_custom_shader_module->dirty_flag());
+    // }
+
+    if (DebugOptions::copy_info_dump_to_clipboard())
+    {
+        auto const string = gen_dump_string();
+        ImGui::SetClipboardText(string.c_str());
+        Cool::Log::ToUser::info("Info Dump", fmt::format("Info dump has been successfully copied to clipboard:\n\n{}", string));
+    }
+    if (DebugOptions::generate_dump_file())
+    {
+        auto const path   = Cool::Path::user_data() / "info_dump.txt";
+        auto const string = gen_dump_string();
+        Cool::File::set_content(path, string);
+        Cool::Log::ToUser::info(
+            "Info Dump",
+            fmt::format("Info dump has been successfully generated in {}:\n\n{}", path, string),
+            std::vector{
+                Cool::ClipboardContent{
+                    .title   = "folder path",
+                    .content = path.parent_path().string(),
+                },
+                Cool::ClipboardContent{
+                    .title   = "file path",
+                    .content = path.string(),
+                },
+            }
+        );
+    }
+}
+
 void App::save_project_thumbnail()
 {
     if (!_project_manager.has_registered_project_to_the_launcher())
@@ -142,100 +232,6 @@ void App::on_time_changed()
 void App::on_time_reset()
 {
     project().modules_graph->on_time_reset();
-}
-
-void App::update()
-{
-    project().history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
-
-    // First frame the exe is open
-    // Since the construction of an App might be in two steps (constructor, and then deserialization)
-    // we do our actual construction logic here, to make sure it is done once and only once.
-    if (_is_first_frame)
-    {
-        _is_first_frame = false;
-        _project_manager.process_command_line_args(make_on_project_loaded(), make_window_title_setter());
-    }
-
-    if (project().shared_aspect_ratio.fill_the_view)
-        project().shared_aspect_ratio.aspect_ratio.set(render_view().aspect_ratio());
-
-    if (DebugOptions::force_rerender_every_frame())
-        project().modules_graph->request_rerender_all();
-
-    Cool::user_settings().color_themes.update();
-
-    project().audio.set_force_mute(project().exporter.is_exporting());
-    project().audio.sync_with_clock(
-        project().current_clock(),
-        project().exporter.is_exporting() /* force_sync_time */
-    );
-    Cool::hack_get_global_time_in_seconds() = project().current_clock().time();
-    Cool::hack_get_is_exporting()           = project().exporter.is_exporting();
-    project().audio.update(/*on_audio_data_changed = */ [&]() {
-        project().modules_graph->on_audio_changed();
-    });
-
-    project().modules_graph->update_dependencies_from_nodes_graph(); // TODO(Modules) Don't recompute dependencies on every frame. Instead we should probably store a ref to the variables that use OSC or Midi, so that we can check each time to see which channel they are currently using.
-    Cool::osc_manager().for_each_channel_that_has_changed([&](Cool::OSCChannel const& osc_channel) {
-        project().modules_graph->on_osc_channel_changed(osc_channel);
-    });
-    Cool::midi_manager().for_each_channel_that_has_changed([&](Cool::MidiChannel const& midi_channel) {
-        project().modules_graph->on_midi_channel_changed(midi_channel);
-    });
-    if (Cool::midi_manager().last_button_pressed_has_changed())
-        project().modules_graph->on_last_midi_button_pressed_changed();
-
-    if (inputs_are_allowed()) // Must update() before we render() to make sure the modules are ready (e.g. Nodes need to parse the definitions of the nodes from files)
-    {
-        _nodes_library_manager.update(project().modules_graph->rebuild_modules_graph_flag(), project().modules_graph->graph(), project().modules_graph->nodes_config(ui(), project().audio, _nodes_library_manager.library()));
-        project().modules_graph->update();
-        check_inputs();
-    }
-
-    if (!project().exporter.is_exporting())
-    {
-        project().clock.update();
-        auto const render_size = render_view().desired_image_size(project().view_constraint); // TODO(JF) Integrate the notion of View Constraint inside the TextureView ? But that's may be too much coupling
-        polaroid().render(render_size, project().clock.time(), project().clock.delta_time());
-    }
-    else
-    {
-        request_rerender();
-        project().exporter.update(polaroid());
-    }
-
-    // if (_custom_shader_view.render_target.needs_resizing())
-    // {
-    // set_dirty_flag()(_custom_shader_module->dirty_flag());
-    // }
-
-    if (DebugOptions::copy_info_dump_to_clipboard())
-    {
-        auto const string = gen_dump_string();
-        ImGui::SetClipboardText(string.c_str());
-        Cool::Log::ToUser::info("Info Dump", fmt::format("Info dump has been successfully copied to clipboard:\n\n{}", string));
-    }
-    if (DebugOptions::generate_dump_file())
-    {
-        auto const path   = Cool::Path::user_data() / "info_dump.txt";
-        auto const string = gen_dump_string();
-        Cool::File::set_content(path, string);
-        Cool::Log::ToUser::info(
-            "Info Dump",
-            fmt::format("Info dump has been successfully generated in {}:\n\n{}", path, string),
-            std::vector{
-                Cool::ClipboardContent{
-                    .title   = "folder path",
-                    .content = path.parent_path().string(),
-                },
-                Cool::ClipboardContent{
-                    .title   = "file path",
-                    .content = path.string(),
-                },
-            }
-        );
-    }
 }
 
 void App::request_rerender() // TODO(Modules) Sometimes we don't need to call this, but only rerender a specific module instead
