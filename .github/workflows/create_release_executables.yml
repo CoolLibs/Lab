@@ -82,10 +82,22 @@ jobs:
 
       - name: Zip Release binaries (Windows)
         if: runner.os == 'Windows'
+        # The launcher doesn't need the DLLs because it has them already, and it saves a lot of download time if we don't have to download the DLLs. For convenience we still provide a WithDLLs version, just in case someone wants to download a specific version of Coollab manually.
         run: |
+          Compress-Archive -Path ${{github.workspace}}\bin\Release\* -DestinationPath ${{github.workspace}}\build\Coollab-${{matrix.config.name}}-WithDLLs.zip
+          Get-ChildItem -Path ${{github.workspace}}\bin\Release\ -Filter "*.dll" -Recurse | Remove-Item -Force
           Compress-Archive -Path ${{github.workspace}}\bin\Release\* -DestinationPath ${{github.workspace}}\build\Coollab-${{matrix.config.name}}.zip
 
-      - name: Release
+      - name: Release (Linux and MacOS)
+        if: runner.os != 'Windows'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{runner.os != 'Windows' && github.workspace || ''}}${{runner.os != 'Windows' && '/' || ''}}build/Coollab-${{matrix.config.name}}.zip
+          files: ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip
+
+      - name: Release (Windows)
+        if: runner.os == 'Windows'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/Coollab-${{matrix.config.name}}.zip
+            build/Coollab-${{matrix.config.name}}-WithDLLs.zip
