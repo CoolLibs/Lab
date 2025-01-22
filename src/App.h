@@ -157,7 +157,6 @@ private:
     {
         serialize_impl(archive, *this);
     }
-    DebugOptionsManager::AutoSerializer _auto_serializer_for_debug_options{};
 };
 
 } // namespace Lab

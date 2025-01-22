@@ -143,6 +143,8 @@ void App::update()
             }
         );
     }
+
+    DebugOptionsManager::update();
 }
 
 void App::save_project_thumbnail()
