@@ -21,7 +21,7 @@ void Camera2DManager::hook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinat
             if (!_is_editable_in_view)
                 return;
 
-            float const sensitivity    = Cool::user_settings().camera2D_zoom_sensitivity;
+            float const sensitivity    = Cool::user_settings().camera2D_zoom_sensitivity();
             float const zoom_variation = std::pow(sensitivity, event.dy);
 
             auto new_value = _camera.value();

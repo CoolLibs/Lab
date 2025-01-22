@@ -22,7 +22,6 @@ void ProjectManager::process_command_line_args(OnProjectLoaded const& on_project
     for (size_t i = 0; i < Cool::command_line_args().get().size(); ++i)
     {
         auto const& arg = Cool::command_line_args().get()[i];
-        Cool::Log::Debug::info("cli", arg);
         if (arg == "--create_new_project_in_folder" || arg == "--create_new_project_in_file")
         {
             if (i + 1 == Cool::command_line_args().get().size())
@@ -186,8 +185,8 @@ void ProjectManager::save_project(SetWindowTitle const& set_window_title)
     ImGuiNotify::send({
         .type     = ImGuiNotify::Type::Success,
         .title    = "Saved Project",
-        .content  = Cool::user_settings().autosave_enabled
-                        ? fmt::format("NB: there is an autosave every {} seconds, so you don't really need to manually save the project", Cool::user_settings().autosave_delay.as_seconds_float())
+        .content  = Cool::user_settings().autosave_enabled()
+                        ? fmt::format("NB: there is an autosave every {} seconds, so you don't really need to manually save the project", Cool::user_settings().autosave_delay().as_seconds_float())
                         : "",
         .duration = 2s,
     });
