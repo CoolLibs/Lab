@@ -185,8 +185,8 @@ void ProjectManager::save_project(SetWindowTitle const& set_window_title)
     ImGuiNotify::send({
         .type     = ImGuiNotify::Type::Success,
         .title    = "Saved Project",
-        .content  = Cool::user_settings().autosave_enabled()
-                        ? fmt::format("NB: there is an autosave every {} seconds, so you don't really need to manually save the project", Cool::user_settings().autosave_delay().as_seconds_float())
+        .content  = Cool::user_settings().autosave_enabled
+                        ? fmt::format("NB: there is an autosave every {} seconds, so you don't really need to manually save the project", Cool::user_settings().autosave_delay.as_seconds_float())
                         : "",
         .duration = 2s,
     });

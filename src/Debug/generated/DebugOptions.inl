@@ -7,6 +7,7 @@
 
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/Path/Path.h"
+#include "Cool/Serialization/Json.hpp"
 #include "Cool/Serialization/JsonAutoSerializer.hpp"
 #include "wafl/wafl.hpp"
 
@@ -19,120 +20,211 @@ namespace Lab {
 
 class DebugOptions {
 public:
-    [[nodiscard]] static auto generate_dump_file() -> bool& { return json().get<bool>("Info Dump: Generate file", false); }
-    [[nodiscard]] static auto copy_info_dump_to_clipboard() -> bool& { return json().get<bool>("Info Dump: Copy to clipboard", false); }
+    [[nodiscard]] static auto generate_dump_file() -> bool& { return instance().generate_dump_file; }
+    [[nodiscard]] static auto copy_info_dump_to_clipboard() -> bool& { return instance().copy_info_dump_to_clipboard; }
     static void               show_framerate_window(std::function<void()> callback)
     {
-        bool& val = json().get<bool>("Framerate window", false);
-        if (val)
+        if (instance().show_framerate_window)
         {
-            ImGui::Begin(Cool::icon_fmt("Framerate", ICOMOON_WRENCH).c_str(), &val, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Framerate", ICOMOON_WRENCH).c_str(), &instance().show_framerate_window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
-            if (!val) // Window has just been closed manually by the user
-                json().save();
+            if (!instance().show_framerate_window) // Window has just been closed manually by the user
+                save();
         }
     }
-    [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return json().get<bool>("ImGui Demo window", false); }
+    [[nodiscard]] static auto show_imgui_demo_window() -> bool& { return instance().show_imgui_demo_window; }
     static void               show_history_window(std::function<void()> callback)
     {
-        bool& val = json().get<bool>("Show history", false);
-        if (val)
+        if (instance().show_history_window)
         {
-            ImGui::Begin(Cool::icon_fmt("History", ICOMOON_WRENCH).c_str(), &val, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("History", ICOMOON_WRENCH).c_str(), &instance().show_history_window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
-            if (!val) // Window has just been closed manually by the user
-                json().save();
+            if (!instance().show_history_window) // Window has just been closed manually by the user
+                save();
         }
     }
-    [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return json().get<bool>("Show nodes and links registries", false); }
-    [[nodiscard]] static auto force_rerender_every_frame() -> bool& { return json().get<bool>("Force rerender every frame", false); }
-    [[nodiscard]] static auto log_when_rendering() -> bool& { return json().get<bool>("Log when rendering", false); }
-    [[nodiscard]] static auto log_when_updating_particles() -> bool& { return json().get<bool>("Log when updating particles", false); }
-    [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return json().get<bool>("Log when compiling nodes", false); }
-    [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return json().get<bool>("Log when parsing node definition", false); }
-    [[nodiscard]] static auto log_when_executing_a_command() -> bool& { return json().get<bool>("Log when executing a command", false); }
-    [[nodiscard]] static auto log_project_related_events() -> bool& { return json().get<bool>("Log project-related events", false); }
+    [[nodiscard]] static auto show_nodes_and_links_registries() -> bool& { return instance().show_nodes_and_links_registries; }
+    [[nodiscard]] static auto force_rerender_every_frame() -> bool& { return instance().force_rerender_every_frame; }
+    [[nodiscard]] static auto log_when_rendering() -> bool& { return instance().log_when_rendering; }
+    [[nodiscard]] static auto log_when_updating_particles() -> bool& { return instance().log_when_updating_particles; }
+    [[nodiscard]] static auto log_when_compiling_nodes() -> bool& { return instance().log_when_compiling_nodes; }
+    [[nodiscard]] static auto log_when_parsing_node_definition() -> bool& { return instance().log_when_parsing_node_definition; }
+    [[nodiscard]] static auto log_when_executing_a_command() -> bool& { return instance().log_when_executing_a_command; }
+    [[nodiscard]] static auto log_project_related_events() -> bool& { return instance().log_project_related_events; }
     static void               show_generated_shader_code(std::function<void()> callback)
     {
-        bool& val = json().get<bool>("Show generated shader code", false);
-        if (val)
+        if (instance().show_generated_shader_code)
         {
-            ImGui::Begin(Cool::icon_fmt("Nodes Code", ICOMOON_WRENCH).c_str(), &val, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Nodes Code", ICOMOON_WRENCH).c_str(), &instance().show_generated_shader_code, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
-            if (!val) // Window has just been closed manually by the user
-                json().save();
+            if (!instance().show_generated_shader_code) // Window has just been closed manually by the user
+                save();
         }
     }
     static void test_all_variable_widgets__window(std::function<void()> callback)
     {
-        bool& val = json().get<bool>("Test all Variable Widgets", false);
-        if (val)
+        if (instance().test_all_variable_widgets__window)
         {
-            ImGui::Begin(Cool::icon_fmt("Test all Variable Widgets", ICOMOON_WRENCH).c_str(), &val, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Test all Variable Widgets", ICOMOON_WRENCH).c_str(), &instance().test_all_variable_widgets__window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
-            if (!val) // Window has just been closed manually by the user
-                json().save();
+            if (!instance().test_all_variable_widgets__window) // Window has just been closed manually by the user
+                save();
         }
     }
     static void test_shaders_compilation__window(std::function<void()> callback)
     {
-        bool& val = json().get<bool>("Test Shaders Compilation", false);
-        if (val)
+        if (instance().test_shaders_compilation__window)
         {
-            ImGui::Begin(Cool::icon_fmt("Test Shaders Compilation", ICOMOON_WRENCH).c_str(), &val, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Test Shaders Compilation", ICOMOON_WRENCH).c_str(), &instance().test_shaders_compilation__window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
-            if (!val) // Window has just been closed manually by the user
-                json().save();
+            if (!instance().test_shaders_compilation__window) // Window has just been closed manually by the user
+                save();
         }
     }
     static void empty_window(std::function<void()> callback)
     {
-        bool& val = json().get<bool>("Open Empty Window", false);
-        if (val)
+        if (instance().empty_window)
         {
-            ImGui::Begin(Cool::icon_fmt("Open Empty Window", ICOMOON_WRENCH).c_str(), &val, ImGuiWindowFlags_NoFocusOnAppearing);
+            ImGui::Begin(Cool::icon_fmt("Open Empty Window", ICOMOON_WRENCH).c_str(), &instance().empty_window, ImGuiWindowFlags_NoFocusOnAppearing);
             callback();
             ImGui::End();
-            if (!val) // Window has just been closed manually by the user
-                json().save();
+            if (!instance().empty_window) // Window has just been closed manually by the user
+                save();
         }
     }
 
 private:
-    static auto json() -> Cool::JsonAutoSerializer<bool>&
+    struct Instance {
+        bool generate_dump_file{false};
+        bool copy_info_dump_to_clipboard{false};
+        bool show_framerate_window{false};
+        bool show_imgui_demo_window{false};
+        bool show_history_window{false};
+        bool show_nodes_and_links_registries{false};
+        bool force_rerender_every_frame{false};
+        bool log_when_rendering{false};
+        bool log_when_updating_particles{false};
+        bool log_when_compiling_nodes{false};
+        bool log_when_parsing_node_definition{false};
+        bool log_when_executing_a_command{false};
+        bool log_project_related_events{false};
+        bool show_generated_shader_code{false};
+        bool test_all_variable_widgets__window{false};
+        bool test_shaders_compilation__window{false};
+        bool empty_window{false};
+
+        // Must be declared last, after all the variables it serializes, so that the values it loads overwrite the default values, and not the other way around
+        Cool::JsonAutoSerializer _serializer{
+            Cool::Path::user_data() / "debug_options_lab.json",
+            [&](nlohmann::json const& json) {
+
+#if DEBUG
+                Cool::json_get(json, "Framerate window", show_framerate_window);
+                Cool::json_get(json, "ImGui Demo window", show_imgui_demo_window);
+                Cool::json_get(json, "Show history", show_history_window);
+                Cool::json_get(json, "Show nodes and links registries", show_nodes_and_links_registries);
+                Cool::json_get(json, "Force rerender every frame", force_rerender_every_frame);
+                Cool::json_get(json, "Log when rendering", log_when_rendering);
+                Cool::json_get(json, "Log when updating particles", log_when_updating_particles);
+                Cool::json_get(json, "Log when compiling nodes", log_when_compiling_nodes);
+                Cool::json_get(json, "Log when parsing node definition", log_when_parsing_node_definition);
+                Cool::json_get(json, "Log when executing a command", log_when_executing_a_command);
+                Cool::json_get(json, "Log project-related events", log_project_related_events);
+                Cool::json_get(json, "Show generated shader code", show_generated_shader_code);
+                Cool::json_get(json, "Test all Variable Widgets", test_all_variable_widgets__window);
+                Cool::json_get(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_get(json, "Open Empty Window", empty_window);
+#else
+                Cool::json_get(json, "Framerate window", show_framerate_window);
+                Cool::json_get(json, "ImGui Demo window", show_imgui_demo_window);
+                Cool::json_get(json, "Show history", show_history_window);
+                Cool::json_get(json, "Show nodes and links registries", show_nodes_and_links_registries);
+                Cool::json_get(json, "Force rerender every frame", force_rerender_every_frame);
+                Cool::json_get(json, "Log when rendering", log_when_rendering);
+                Cool::json_get(json, "Log when updating particles", log_when_updating_particles);
+                Cool::json_get(json, "Log when compiling nodes", log_when_compiling_nodes);
+                Cool::json_get(json, "Log when parsing node definition", log_when_parsing_node_definition);
+                Cool::json_get(json, "Log when executing a command", log_when_executing_a_command);
+                Cool::json_get(json, "Log project-related events", log_project_related_events);
+                Cool::json_get(json, "Show generated shader code", show_generated_shader_code);
+                Cool::json_get(json, "Test all Variable Widgets", test_all_variable_widgets__window);
+                Cool::json_get(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_get(json, "Open Empty Window", empty_window);
+#endif
+            },
+            [&](nlohmann::json& json) {
+
+#if DEBUG
+                Cool::json_set(json, "Framerate window", show_framerate_window);
+                Cool::json_set(json, "ImGui Demo window", show_imgui_demo_window);
+                Cool::json_set(json, "Show history", show_history_window);
+                Cool::json_set(json, "Show nodes and links registries", show_nodes_and_links_registries);
+                Cool::json_set(json, "Force rerender every frame", force_rerender_every_frame);
+                Cool::json_set(json, "Log when rendering", log_when_rendering);
+                Cool::json_set(json, "Log when updating particles", log_when_updating_particles);
+                Cool::json_set(json, "Log when compiling nodes", log_when_compiling_nodes);
+                Cool::json_set(json, "Log when parsing node definition", log_when_parsing_node_definition);
+                Cool::json_set(json, "Log when executing a command", log_when_executing_a_command);
+                Cool::json_set(json, "Log project-related events", log_project_related_events);
+                Cool::json_set(json, "Show generated shader code", show_generated_shader_code);
+                Cool::json_set(json, "Test all Variable Widgets", test_all_variable_widgets__window);
+                Cool::json_set(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_set(json, "Open Empty Window", empty_window);
+#else
+                Cool::json_set(json, "Framerate window", show_framerate_window);
+                Cool::json_set(json, "ImGui Demo window", show_imgui_demo_window);
+                Cool::json_set(json, "Show history", show_history_window);
+                Cool::json_set(json, "Show nodes and links registries", show_nodes_and_links_registries);
+                Cool::json_set(json, "Force rerender every frame", force_rerender_every_frame);
+                Cool::json_set(json, "Log when rendering", log_when_rendering);
+                Cool::json_set(json, "Log when updating particles", log_when_updating_particles);
+                Cool::json_set(json, "Log when compiling nodes", log_when_compiling_nodes);
+                Cool::json_set(json, "Log when parsing node definition", log_when_parsing_node_definition);
+                Cool::json_set(json, "Log when executing a command", log_when_executing_a_command);
+                Cool::json_set(json, "Log project-related events", log_project_related_events);
+                Cool::json_set(json, "Show generated shader code", show_generated_shader_code);
+                Cool::json_set(json, "Test all Variable Widgets", test_all_variable_widgets__window);
+                Cool::json_set(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_set(json, "Open Empty Window", empty_window);
+#endif
+            },
+            Cool::WantsToLogWarnings::CheckInDebugOption
+        };
+    };
+
+    static auto instance() -> Instance&
     {
-        static auto the_json = Cool::JsonAutoSerializer<bool>{Cool::Path::user_data() / "debug_options_lab.json", false};
-        return the_json;
+        static auto the_instance = Instance{};
+        return the_instance;
     }
+
+    static void save() { instance()._serializer.save(); }
+    static void load() { instance()._serializer.load(); }
+    static void update() { instance()._serializer.update(); }
 
     static void reset_all()
     {
-        json().get<bool>("Framerate window", false)                 = false;
-        json().get<bool>("ImGui Demo window", false)                = false;
-        json().get<bool>("Show history", false)                     = false;
-        json().get<bool>("Show nodes and links registries", false)  = false;
-        json().get<bool>("Force rerender every frame", false)       = false;
-        json().get<bool>("Log when rendering", false)               = false;
-        json().get<bool>("Log when updating particles", false)      = false;
-        json().get<bool>("Log when compiling nodes", false)         = false;
-        json().get<bool>("Log when parsing node definition", false) = false;
-        json().get<bool>("Log when executing a command", false)     = false;
-        json().get<bool>("Log project-related events", false)       = false;
-        json().get<bool>("Show generated shader code", false)       = false;
-        json().get<bool>("Test all Variable Widgets", false)        = false;
-        json().get<bool>("Test Shaders Compilation", false)         = false;
-        json().get<bool>("Open Empty Window", false)                = false;
-        json().save();
-    }
-
-    static void update()
-    {
-        json().update();
+        instance().show_framerate_window             = false;
+        instance().show_imgui_demo_window            = false;
+        instance().show_history_window               = false;
+        instance().show_nodes_and_links_registries   = false;
+        instance().force_rerender_every_frame        = false;
+        instance().log_when_rendering                = false;
+        instance().log_when_updating_particles       = false;
+        instance().log_when_compiling_nodes          = false;
+        instance().log_when_parsing_node_definition  = false;
+        instance().log_when_executing_a_command      = false;
+        instance().log_project_related_events        = false;
+        instance().show_generated_shader_code        = false;
+        instance().test_all_variable_widgets__window = false;
+        instance().test_shaders_compilation__window  = false;
+        instance().empty_window                      = false;
+        save();
     }
 
     template<typename... Ts>
@@ -142,129 +234,114 @@ private:
     {
         if (wafl::similarity_match({filter, "Info Dump: Generate file"}) >= wafl::Matches::Strongly)
         {
-            json().get<bool>("Info Dump: Generate file", false) = ImGui::Button("##Info Dump: Generate file", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
+            instance().generate_dump_file = ImGui::Button("##Info Dump: Generate file", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
             ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
             ImGui::Text("Info Dump: Generate file");
             if (ImGui::IsItemClicked())
-                json().get<bool>("Info Dump: Generate file", true) = true;
+                instance().generate_dump_file = true;
 
             Cool::ImGuiExtras::help_marker("Creates an info_dump.txt file next to your executable. It can be used when submitting a bug report, in order to give the devs more information.");
         }
 
         if (wafl::similarity_match({filter, "Info Dump: Copy to clipboard"}) >= wafl::Matches::Strongly)
         {
-            json().get<bool>("Info Dump: Copy to clipboard", false) = ImGui::Button("##Info Dump: Copy to clipboard", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
+            instance().copy_info_dump_to_clipboard = ImGui::Button("##Info Dump: Copy to clipboard", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
             ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
             ImGui::Text("Info Dump: Copy to clipboard");
             if (ImGui::IsItemClicked())
-                json().get<bool>("Info Dump: Copy to clipboard", true) = true;
+                instance().copy_info_dump_to_clipboard = true;
 
             Cool::ImGuiExtras::help_marker("Copies an info dump to your clipboard. It can be used when submitting a bug report, in order to give the devs more information.");
         }
 
         if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Framerate window", false);
-            if (Cool::ImGuiExtras::toggle("Framerate window", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Framerate window", &instance().show_framerate_window))
+                save();
         }
 
         if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("ImGui Demo window", false);
-            if (Cool::ImGuiExtras::toggle("ImGui Demo window", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("ImGui Demo window", &instance().show_imgui_demo_window))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Show history"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Show history", false);
-            if (Cool::ImGuiExtras::toggle("Show history", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Show history", &instance().show_history_window))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Show nodes and links registries", false);
-            if (Cool::ImGuiExtras::toggle("Show nodes and links registries", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Show nodes and links registries", &instance().show_nodes_and_links_registries))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Force rerender every frame"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Force rerender every frame", false);
-            if (Cool::ImGuiExtras::toggle("Force rerender every frame", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Force rerender every frame", &instance().force_rerender_every_frame))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when rendering", false);
-            if (Cool::ImGuiExtras::toggle("Log when rendering", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Log when rendering", &instance().log_when_rendering))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Log when updating particles"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when updating particles", false);
-            if (Cool::ImGuiExtras::toggle("Log when updating particles", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Log when updating particles", &instance().log_when_updating_particles))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Log when compiling nodes"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when compiling nodes", false);
-            if (Cool::ImGuiExtras::toggle("Log when compiling nodes", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Log when compiling nodes", &instance().log_when_compiling_nodes))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Log when parsing node definition"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when parsing node definition", false);
-            if (Cool::ImGuiExtras::toggle("Log when parsing node definition", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Log when parsing node definition", &instance().log_when_parsing_node_definition))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Log when executing a command"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when executing a command", false);
-            if (Cool::ImGuiExtras::toggle("Log when executing a command", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Log when executing a command", &instance().log_when_executing_a_command))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Log project-related events"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log project-related events", false);
-            if (Cool::ImGuiExtras::toggle("Log project-related events", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Log project-related events", &instance().log_project_related_events))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Show generated shader code"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Show generated shader code", false);
-            if (Cool::ImGuiExtras::toggle("Show generated shader code", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Show generated shader code", &instance().show_generated_shader_code))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Test all Variable Widgets", false);
-            if (Cool::ImGuiExtras::toggle("Test all Variable Widgets", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Test all Variable Widgets", &instance().test_all_variable_widgets__window))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Test Shaders Compilation", false);
-            if (Cool::ImGuiExtras::toggle("Test Shaders Compilation", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window))
+                save();
         }
 
         if (wafl::similarity_match({filter, "Open Empty Window"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Open Empty Window", false);
-            if (Cool::ImGuiExtras::toggle("Open Empty Window", &val))
-                json().save();
+            if (Cool::ImGuiExtras::toggle("Open Empty Window", &instance().empty_window))
+                save();
 
             Cool::ImGuiExtras::help_marker("Useful when you want some blank space in your windows layout.");
         }
@@ -274,120 +351,120 @@ private:
     {
         if (wafl::similarity_match({filter, "Info Dump: Generate file"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Info Dump: Generate file", false);
-            val       = !val;
+            instance().generate_dump_file = !instance().generate_dump_file;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Info Dump: Copy to clipboard"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Info Dump: Copy to clipboard", false);
-            val       = !val;
+            instance().copy_info_dump_to_clipboard = !instance().copy_info_dump_to_clipboard;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Framerate window"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Framerate window", false);
-            val       = !val;
+            instance().show_framerate_window = !instance().show_framerate_window;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "ImGui Demo window"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("ImGui Demo window", false);
-            val       = !val;
+            instance().show_imgui_demo_window = !instance().show_imgui_demo_window;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Show history"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Show history", false);
-            val       = !val;
+            instance().show_history_window = !instance().show_history_window;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Show nodes and links registries"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Show nodes and links registries", false);
-            val       = !val;
+            instance().show_nodes_and_links_registries = !instance().show_nodes_and_links_registries;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Force rerender every frame"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Force rerender every frame", false);
-            val       = !val;
+            instance().force_rerender_every_frame = !instance().force_rerender_every_frame;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Log when rendering"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when rendering", false);
-            val       = !val;
+            instance().log_when_rendering = !instance().log_when_rendering;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Log when updating particles"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when updating particles", false);
-            val       = !val;
+            instance().log_when_updating_particles = !instance().log_when_updating_particles;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Log when compiling nodes"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when compiling nodes", false);
-            val       = !val;
+            instance().log_when_compiling_nodes = !instance().log_when_compiling_nodes;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Log when parsing node definition"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when parsing node definition", false);
-            val       = !val;
+            instance().log_when_parsing_node_definition = !instance().log_when_parsing_node_definition;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Log when executing a command"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log when executing a command", false);
-            val       = !val;
+            instance().log_when_executing_a_command = !instance().log_when_executing_a_command;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Log project-related events"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Log project-related events", false);
-            val       = !val;
+            instance().log_project_related_events = !instance().log_project_related_events;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Show generated shader code"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Show generated shader code", false);
-            val       = !val;
+            instance().show_generated_shader_code = !instance().show_generated_shader_code;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Test all Variable Widgets"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Test all Variable Widgets", false);
-            val       = !val;
+            instance().test_all_variable_widgets__window = !instance().test_all_variable_widgets__window;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Test Shaders Compilation", false);
-            val       = !val;
+            instance().test_shaders_compilation__window = !instance().test_shaders_compilation__window;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
 
         if (wafl::similarity_match({filter, "Open Empty Window"}) >= wafl::Matches::Strongly)
         {
-            bool& val = json().get<bool>("Open Empty Window", false);
-            val       = !val;
+            instance().empty_window = !instance().empty_window;
+            save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }
     }
