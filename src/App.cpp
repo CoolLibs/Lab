@@ -4,6 +4,7 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
+#include "Cool/ImGui/ColorThemes.h"
 #include "Cool/ImGui/Fonts.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -69,8 +70,6 @@ void App::update()
 
     if (DebugOptions::force_rerender_every_frame())
         project().modules_graph->request_rerender_all();
-
-    Cool::user_settings().color_themes.update();
 
     project().audio.set_force_mute(project().exporter.is_exporting());
     project().audio.sync_with_clock(
@@ -592,7 +591,7 @@ void App::settings_menu()
         project().history.imgui_max_saved_size(&Cool::ImGuiExtras::help_marker);
 
         Cool::ImGuiExtras::separator_text("Color Theme");
-        Cool::user_settings().color_themes.imgui_theme_picker();
+        Cool::color_themes()->imgui_theme_picker();
 
         Cool::user_settings().imgui();
 
