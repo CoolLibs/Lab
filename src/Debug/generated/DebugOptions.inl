@@ -120,7 +120,7 @@ private:
 
         // Must be declared last, after all the variables it serializes, so that the values it loads overwrite the default values, and not the other way around
         Cool::JsonAutoSerializer _serializer{
-            Cool::Path::user_data() / "debug_options_lab.json",
+            "debug_options_lab.json",
             [&](nlohmann::json const& json) {
 
 #if DEBUG
