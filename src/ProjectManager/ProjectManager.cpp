@@ -142,9 +142,6 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
 
 void ProjectManager::autosave_project(SetWindowTitle const& set_window_title)
 {
-    if (_impl.project().is_empty() && _impl.project_name().starts_with("Untitled")) // Avoid creating project files if we are just opening and then closing Coollab
-        return;
-
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Autosaving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
 

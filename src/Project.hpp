@@ -33,7 +33,6 @@ struct Project {
     Cool::MeshExportSettings      mesh_export_settings{};
     MeshingGui                    meshing_gui{};
 
-    [[nodiscard]] auto is_empty() const -> bool;
     [[nodiscard]] auto current_clock() const -> Cool::Clock const& { return exporter.is_exporting() ? exporter.clock() : clock; }
 
 private:
