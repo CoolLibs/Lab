@@ -185,7 +185,7 @@ void App::on_project_loaded()
 
     project().view_constraint.set_shared_aspect_ratio(project().shared_aspect_ratio);
     project().exporter.set_shared_aspect_ratio(project().shared_aspect_ratio);
-    _gallery_poster.set_shared_aspect_ratio(project().shared_aspect_ratio);
+    _gallery_publisher.set_shared_aspect_ratio(project().shared_aspect_ratio);
 
     auto const ctx = command_execution_context();
     for (auto& [_, node] : project().modules_graph->graph().nodes())
@@ -478,11 +478,10 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     // Nodes
     project().modules_graph->imgui_windows(the_ui, project().audio, _nodes_library_manager.library());
     // Share online
-    _gallery_poster.imgui_window([&](img::Size size) {
+    _gallery_publisher.imgui_window([&](img::Size size) {
         auto the_polaroid = polaroid();
         the_polaroid.render(size, project().clock.time(), project().clock.delta_time());
-        auto const image = the_polaroid.texture().download_pixels();
-        return img::save_png_to_string(image).value_or("");
+        return the_polaroid.texture().download_pixels();
     });
 
     DebugOptions::show_framerate_window([&] {
@@ -576,7 +575,7 @@ void App::export_menu()
             },
             Cool::icon_fmt("Share online", ICOMOON_EARTH, true)
         );
-        _gallery_poster.imgui_open_sharing_form();
+        _gallery_publisher.imgui_open_sharing_form();
         ImGui::PopStyleVar();
         ImGui::EndMenu();
     }

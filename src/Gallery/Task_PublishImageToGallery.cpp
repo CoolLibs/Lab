@@ -1,12 +1,10 @@
-#include "post_image_online.h"
-#if COOLLAB_HAS_OPENSSL
-#include <string>
-#include "Cool/File/File.h"
-#include "Cool/Log/Message.h"
-#include "Cool/Log/ToUser.h"
-#include "Cool/Path/Path.h"
+#include "Task_PublishImageToGallery.hpp"
+#include <tl/expected.hpp>
+#include "Cool/ImGui/markdown.h"
 #include "Cool/String/String.h"
+#include "ImGuiNotify/ImGuiNotify.hpp"
 
+#if COOLLAB_HAS_OPENSSL
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "cpp-httplib/httplib.h"
 
@@ -47,14 +45,24 @@ TEST_CASE("process_link()")
     CHECK(process_link("@@") == "https://www.instagram.com/@");
 }
 #endif
+#endif
 
 namespace Lab {
 
-void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author_info, LegalInfo const& legal_info, std::string const& image_png_data)
+void Task_PublishImageToGallery::execute()
 {
-    if (image_png_data.empty())
+#if COOLLAB_HAS_OPENSSL
+    auto const image_png_data =
+        img::save_png_to_string(
+            _image,
+            stbiw_SaveOptions{
+                .cancel_requested = [&]() { return cancel_requested(); },
+                .set_progress     = [&](float progress) { set_progress(0.9f * progress); },
+            }
+        );
+    if (!image_png_data.has_value())
     {
-        Cool::Log::ToUser::warning("Export", "Failed to export image");
+        _result = tl::make_unexpected("Failed to convert image to PNG, please try again."s);
         return;
     }
     auto cli = httplib::SSLClient{"api.cloudinary.com"};
@@ -64,7 +72,7 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
         // Add the image file as a binary data item
         httplib::MultipartFormData{
             .name         = "file",
-            .content      = image_png_data,
+            .content      = *image_png_data,
             .filename     = "image.png",
             .content_type = "image/png",
         },
@@ -84,12 +92,12 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
             .name    = "context",
             .content = fmt::format(
                 "title={}|description={}|author_name={}|author_link={}|email={}|agreed_to_have_it_shared_on_our_instagram={}",
-                escape(artwork_info.title),
-                escape(artwork_info.description),
-                escape(author_info.name),
-                escape(process_link(author_info.link)),
-                escape(legal_info.email),
-                escape(legal_info.has_agreed_to_share_on_instagram ? "true" : "false")
+                escape(_artwork_info.title),
+                escape(_artwork_info.description),
+                escape(_author_info.name),
+                escape(process_link(_author_info.link)),
+                escape(_legal_info.email),
+                escape(_legal_info.has_agreed_to_share_on_instagram ? "true" : "false")
             ),
             .filename     = {},
             .content_type = {},
@@ -98,35 +106,40 @@ void post_image_online(ArtworkInfo const& artwork_info, AuthorInfo const& author
 
     // Send the POST request with the multipart/form-data
     auto const res = cli.Post("/v1_1/coollab/image/upload", items);
-    if (res && res->status == 200)
+    if (!res || res->status != 200)
     {
-        Cool::Log::ToUser::info(
-            "Gallery",
-            "Posted successfully.\nYou can now see your image online at https://coollab-art.com/Gallery.",
-            std::vector{
-                Cool::ClipboardContent{
-                    .title   = "link",
-                    .content = "https://coollab-art.com/Gallery",
-                },
-            }
+        _result = tl::make_unexpected(
+            res
+                ? fmt::format("Failed to publish.\nStatus {}.\n{}: {}", res->status, res->reason, res->body)
+                : fmt::format("Failed to publish.\n{}", httplib::to_string(res.error()))
         );
     }
-    else
+#else
+    assert(false && "Coollab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
+    _result = tl::make_unexpected("This version of Coollab was not built with OpenSSL, you cannot publish images online."s);
+#endif
+}
+
+auto Task_PublishImageToGallery::notification_after_execution_completes() const -> ImGuiNotify::Notification
+{
+    if (_result.has_value())
     {
-        if (!res)
-            Cool::Log::ToUser::warning("Gallery", fmt::format("Failed to post.\n{}", httplib::to_string(res.error())));
-        else
-            Cool::Log::ToUser::warning("Gallery", fmt::format("Failed to post.\nStatus {}.\n{}: {}", res->status, res->reason, res->body));
+        return {
+            .type                 = ImGuiNotify::Type::Success,
+            .title                = name(),
+            .custom_imgui_content = []() {
+                Cool::ImGuiExtras::markdown("You can now see your image online at [https://coollab-art.com/Gallery](https://coollab-art.com/Gallery)");
+            },
+        };
+    }
+    else // NOLINT(*else-after-return)
+    {
+        return {
+            .type    = ImGuiNotify::Type::Error,
+            .title   = name(),
+            .content = _result.error(),
+        };
     }
 }
 
 } // namespace Lab
-
-#else
-namespace Lab {
-void post_image_online(ArtworkInfo const&, AuthorInfo const&, LegalInfo const&, std::string const&)
-{
-    assert(false && "Coollab was not built with the OpenSSL library because it was not found while compiling. You cannot use this function.");
-}
-} // namespace Lab
-#endif

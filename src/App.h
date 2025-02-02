@@ -18,15 +18,12 @@
 #include "Cool/Webcam/WebcamsConfigs.hpp"
 #include "Cool/Window/WindowManager.h"
 #include "Debug/DebugOptions.h"
-#include "Gallery/GalleryPoster.h"
+#include "Gallery/GalleryPublisher.hpp"
 #include "Meshing/MeshingGui.hpp"
-#include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
-#include "Module/ShaderBased/DataToPassToShader.hpp"
 #include "Nodes/NodesLibraryManager.h"
 #include "ProjectManager/Command_SaveProject.h"
 #include "ProjectManager/Interfaces.hpp"
 #include "ProjectManager/ProjectManager.hpp"
-#include "ProjectManager/ProjectManagerImpl.hpp"
 #include "no_sleep/no_sleep.hpp"
 
 namespace Lab {
@@ -118,7 +115,7 @@ private:
     Cool::Time                      _last_time{0s};
     bool                            _wants_view_in_fullscreen{false}; // Boolean that anyone can set to true or false at any moment to toggle the view's fullscreen mode.
     bool                            _view_was_in_fullscreen_last_frame{false};
-    GalleryPoster                   _gallery_poster{};
+    GalleryPublisher                _gallery_publisher{};
     Cool::TipsManager               _tips_manager{};
     NodesLibraryManager             _nodes_library_manager{};
     bool                            _is_shutting_down{false};
@@ -133,7 +130,6 @@ private:
     static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
     {
         archive(
-            ser20::make_nvp("Gallery Poster", app._gallery_poster),
             ser20::make_nvp("Tips", app._tips_manager),
             ser20::make_nvp("Output view", app._output_view),
             ser20::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
