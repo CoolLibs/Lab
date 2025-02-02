@@ -1,17 +1,17 @@
 #pragma once
-#include <Dependencies/Camera2DManager.h>
-#include <reg/src/AnyId.hpp>
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
 #include "Cool/Image/SharedAspectRatio.hpp"
+#include "Cool/Mesh/MeshExportSettings.hpp"
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/Server/ServerManager.hpp"
-#include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/Time/Clock_Realtime.h"
 #include "Cool/Webcam/WebcamsConfigs.hpp"
+#include "Dependencies/Camera2DManager.h"
 #include "Dependencies/Camera3DManager.h"
+#include "Meshing/MeshingGui.hpp"
 #include "ModulesGraph/ModulesGraph.h"
 
 namespace Lab {
@@ -29,6 +29,8 @@ struct Project {
     Cool::Exporter                exporter{};
     Cool::AudioManager            audio{};
     Cool::SharedAspectRatio       shared_aspect_ratio{};
+    Cool::MeshExportSettings      mesh_export_settings{};
+    MeshingGui                    meshing_gui{};
 
     [[nodiscard]] auto is_empty() const -> bool;
     [[nodiscard]] auto current_clock() const -> Cool::Clock const& { return exporter.is_exporting() ? exporter.clock() : clock; }
@@ -56,7 +58,9 @@ private:
             ser20::make_nvp("MIDI", Cool::midi_manager()),
             ser20::make_nvp("OSC", Cool::osc_manager()),
             ser20::make_nvp("Server", Cool::server_manager()),
-            ser20::make_nvp("Shared Aspect Ratio", shared_aspect_ratio)
+            ser20::make_nvp("Shared Aspect Ratio", shared_aspect_ratio),
+            ser20::make_nvp("3D Model export settings", mesh_export_settings),
+            ser20::make_nvp("3D Model generation", meshing_gui)
         );
     }
 };

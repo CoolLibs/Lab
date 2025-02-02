@@ -6,7 +6,6 @@
 #include "Cool/DebugOptions/DebugOptions.h"
 #include "Cool/DebugOptions/DebugOptionsManager.h"
 #include "Cool/Exporter/Polaroid.hpp"
-#include "Cool/Mesh/MeshExportSettings.hpp"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrTextureView.hpp"
@@ -15,7 +14,6 @@
 #include "Cool/Window/WindowManager.h"
 #include "Debug/DebugOptions.h"
 #include "Gallery/GalleryPublisher.hpp"
-#include "Meshing/MeshingGui.hpp"
 #include "Nodes/NodesLibraryManager.h"
 #include "ProjectManager/Command_SaveProject.h"
 #include "ProjectManager/Interfaces.hpp"
@@ -115,8 +113,6 @@ private:
     Cool::TipsManager               _tips_manager{};
     NodesLibraryManager             _nodes_library_manager{};
     bool                            _is_shutting_down{false};
-    Cool::MeshExportSettings        _mesh_export_settings{};
-    MeshingGui                      _meshing_gui{};
     std::optional<no_sleep::Scoped> _disable_sleep{};
 
 private:
@@ -127,9 +123,7 @@ private:
     {
         archive(
             ser20::make_nvp("Tips", app._tips_manager),
-            ser20::make_nvp("Output view", app._output_view),
-            ser20::make_nvp("3D Model export settings", app._mesh_export_settings),
-            ser20::make_nvp("3D Model generation", app._meshing_gui)
+            ser20::make_nvp("Output view", app._output_view)
         );
     }
     template<class Archive>

@@ -431,8 +431,8 @@ void App::imgui_window_exporter()
 
 void App::imgui_window_meshing()
 {
-    _meshing_gui.imgui_window(
-        _mesh_export_settings,
+    project().meshing_gui.imgui_window(
+        project().mesh_export_settings,
         data_to_pass_to_shader(render_view().desired_image_size(project().view_constraint), project().clock.time(), project().clock.delta_time()),
         data_to_generate_shader_code()
     );
@@ -736,7 +736,7 @@ void App::open_video_exporter()
 
 void App::open_meshing_window_for_node(Cool::NodeId const& node_id)
 {
-    _meshing_gui.open_window(node_id);
+    project().meshing_gui.open_window(node_id);
 }
 
 } // namespace Lab
