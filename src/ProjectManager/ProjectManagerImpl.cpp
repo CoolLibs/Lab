@@ -88,14 +88,12 @@ void ProjectManagerImpl::set_project(Project project, OnProjectLoaded const& on_
 {
     _project = std::move(project);
     on_project_loaded();
-    Cool::osc_manager().set_connection_endpoint(_project.osc_endpoint); // HACK(OSC See below) Use the endpoint saved on the project
 }
 
 auto ProjectManagerImpl::save(std::filesystem::path const& file_path) -> bool
 {
     if (!Cool::File::create_folders_for_file_if_they_dont_exist(file_path))
         return false;
-    _project.osc_endpoint = Cool::osc_manager().get_connection_endpoint(); // HACK(OSC See above) Set the endpoint so that it will be saved in the project file
     return do_save(_project, file_path);
 }
 

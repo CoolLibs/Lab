@@ -7,15 +7,11 @@
 #include "Cool/DebugOptions/DebugOptionsManager.h"
 #include "Cool/Exporter/Polaroid.hpp"
 #include "Cool/Mesh/MeshExportSettings.hpp"
-#include "Cool/Midi/MidiManager.h"
 #include "Cool/Nodes/NodesLibrary.h"
-#include "Cool/OSC/OSCManager.h"
-#include "Cool/Server/ServerManager.hpp"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/View/ForwardingOrTextureView.hpp"
 #include "Cool/View/TextureView.hpp"
 #include "Cool/View/ViewsManager.h"
-#include "Cool/Webcam/WebcamsConfigs.hpp"
 #include "Cool/Window/WindowManager.h"
 #include "Debug/DebugOptions.h"
 #include "Gallery/GalleryPublisher.hpp"
@@ -132,10 +128,6 @@ private:
         archive(
             ser20::make_nvp("Tips", app._tips_manager),
             ser20::make_nvp("Output view", app._output_view),
-            ser20::make_nvp("Webcams config", Cool::WebcamsConfigs::instance()),
-            ser20::make_nvp("MIDI config", Cool::midi_manager()),
-            ser20::make_nvp("OSC config", Cool::osc_manager()),
-            ser20::make_nvp("Server config", Cool::server_manager()),
             ser20::make_nvp("3D Model export settings", app._mesh_export_settings),
             ser20::make_nvp("3D Model generation", app._meshing_gui)
         );
