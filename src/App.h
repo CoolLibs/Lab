@@ -122,8 +122,7 @@ private:
     static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
     {
         archive(
-            ser20::make_nvp("Tips", app._tips_manager),
-            ser20::make_nvp("Output view", app._output_view)
+            ser20::make_nvp("Tips", app._tips_manager)
         );
     }
     template<class Archive>

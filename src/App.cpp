@@ -54,7 +54,9 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
               .start_open  = true,
           }
       )}
-{}
+{
+    output_view_ptr() = &_output_view;
+}
 
 void App::init()
 {

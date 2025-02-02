@@ -13,6 +13,7 @@
 #include "Dependencies/Camera3DManager.h"
 #include "Meshing/MeshingGui.hpp"
 #include "ModulesGraph/ModulesGraph.h"
+#include "output_view_ptr.hpp"
 
 namespace Lab {
 
@@ -60,7 +61,8 @@ private:
             ser20::make_nvp("Server", Cool::server_manager()),
             ser20::make_nvp("Shared Aspect Ratio", shared_aspect_ratio),
             ser20::make_nvp("3D Model export settings", mesh_export_settings),
-            ser20::make_nvp("3D Model generation", meshing_gui)
+            ser20::make_nvp("3D Model generation", meshing_gui),
+            ser20::make_nvp("Output view", *output_view_ptr())
         );
     }
 };
