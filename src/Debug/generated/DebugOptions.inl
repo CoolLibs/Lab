@@ -121,6 +121,7 @@ private:
         // Must be declared last, after all the variables it serializes, so that the values it loads overwrite the default values, and not the other way around
         Cool::JsonAutoSerializer _serializer{
             "debug_options_lab.json",
+            true /*autosave_when_destroyed*/,
             [&](nlohmann::json const& json) {
 
 #if DEBUG

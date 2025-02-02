@@ -116,6 +116,7 @@ endfunction()
 
 Lab_copy_folder("res")
 Lab_copy_folder("User data Default")
+Lab_copy_folder("User data Init")
 Lab_copy_folder("Nodes")
 
 if(MSVC)
