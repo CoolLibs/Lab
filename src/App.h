@@ -116,27 +116,16 @@ private:
     std::optional<no_sleep::Scoped> _disable_sleep{};
 
 private:
-    // Serialization
-    friend class ser20::access;
-    template<class Archive, class AppT>
-    static void serialize_impl(Archive& archive, AppT&& app) // Template to allow us to use it for both App& and App const&.
+    void save_to_json(nlohmann::json& json) const override
     {
-        archive(
-            ser20::make_nvp("Tips", app._tips_manager)
-        );
-    }
-    template<class Archive>
-    void save(Archive& archive) const
-    {
-        serialize_impl(archive, *this);
+        Cool::json_set(json, "Tips", _tips_manager);
         if (!_is_shutting_down)
             const_cast<App&>(*this).command_executor().execute(Command_SaveProject{.is_autosave = true}); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because no one will ever create a const App.
         // else: The project has already been saved during App::on_shutdown(), no need to save it here.
     }
-    template<class Archive>
-    void load(Archive& archive)
+    void load_from_json(nlohmann::json const& json) override
     {
-        serialize_impl(archive, *this);
+        Cool::json_get(json, "Tips", _tips_manager);
     }
 };
 
