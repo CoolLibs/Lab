@@ -1,7 +1,7 @@
 # Changelog
 
-- [🐣 Beta 19 WIP](#-beta-19-wip)
-- [🐣 Beta 18](#-beta-18)
+- [](#)
+- [1.0.0 Launcher](#100-launcher)
 - [🐣 Beta 17](#-beta-17)
 - [🐣 Beta 16](#-beta-16)
 - [🐣 Beta 15](#-beta-15)
@@ -21,9 +21,12 @@
 - [🐣 Beta 1](#-beta-1)
 - [🐣 Beta 0](#-beta-0)
 
-## 🐣 Beta 19 WIP
+## 
 
-- 🐛 Fix: our white was not perfectly pure white
+## 1.0.0 Launcher
+
+- ✨ We are now using a launcher that will auto-install new Coollab versions automatically
+- 🐛 Fix: our white was not a perfectly pure white in some cases
 - 🤏 Improved the linearity of our gradients from black to white
 Before: (notice the huge black region on the left)
 ![Before](https://github.com/user-attachments/assets/6f6ef0e9-a67f-438a-8226-11d6b9e52330)
@@ -33,13 +36,9 @@ After:
 - 🤏 Webcams now open faster
 - 🤏 Better error messages when the webcam doesn't work, and it is faster to re-open once the problem is fixed
 - ✨ Improved feedback loop node, you can now apply effects after the feedback node, that won't affect the image sent back into the loop
-- 🐛  When a camera node was present but not actually linked into the graph, it still used the camera and forced us to rerender every frame. Now only the nodes that are actually used affect us.
-- Added server, can send http request to set values in Coollab
+- 🐛 When a camera node was present but not actually linked into the graph, it still used the camera and forced us to rerender every frame. Now only the nodes that are actually used affect us.
+- ✨ Added server, can send http request to set values in Coollab
 - 🤏 Merged Camera and Inspector windows. You can now edit camera values in the Inspector, when no node is selected.
-
-## 🐣 Beta 18
-
-- ✨ We are now using a launcher that will auto-install new Coollab versions automatically
 - ✨ Every time input is now nicely formatted like "1h 27m 53s"
 - ✨ The Output Window can now easily be turned fullscreen with <kbd>F10</kbd> or by right-clicking on it
 - ✨ When opening the Output Window, the aspect ratio automatically adapts to it
