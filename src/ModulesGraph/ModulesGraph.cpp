@@ -8,6 +8,7 @@
 #include "Cool/Log/ToUser.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Camera2D.h"
+#include "Cool/TextureSource/default_textures.h"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Default/Module_Default.hpp"
@@ -365,7 +366,8 @@ void ModulesGraph::submit_gizmos(Cool::GizmoManager& gizmos, CommandExecutor con
 
 auto ModulesGraph::final_texture() const -> Cool::TextureRef
 {
-    assert(_root_module && "You must call render() before trying to access the final texture");
+    if (!_root_module)
+        return Cool::transparent_texture().ref();
     return _root_module->texture();
 }
 
