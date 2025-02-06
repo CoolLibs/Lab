@@ -1,6 +1,6 @@
 #include "about_menu.h"
 #include <Cool/ImGui/ImGuiExtras.h>
-#include "Dump/coollab_version.h"
+#include "Dump/coollab_version.hpp"
 
 namespace Lab {
 

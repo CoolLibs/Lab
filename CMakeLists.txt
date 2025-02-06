@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(Coollab)
-set(COOLLAB_VERSION "Beta 19 WIP")
 add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
@@ -96,9 +95,6 @@ install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 
 # Grab all the source files
 file(GLOB_RECURSE COOLLAB_SOURCES CONFIGURE_DEPENDS src/*)
-set(COOLLAB_VERSION_STRING "\"${COOLLAB_VERSION}\"")
-configure_file("src/Dump/coollab_version.cpp.in" "src/Dump/coollab_version.cpp")
-list(APPEND COOLLAB_SOURCES "src/Dump/coollab_version.cpp")
 target_sources(${PROJECT_NAME} PRIVATE ${COOLLAB_SOURCES})
 
 # Set include directories

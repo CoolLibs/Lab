@@ -4,7 +4,7 @@
 #include "COOLLAB_FILE_EXTENSION.hpp"
 #include "Cool/File/File.h"
 #include "Cool/OSC/OSCManager.h"
-#include "Dump/coollab_version.h"
+#include "Dump/coollab_version.hpp"
 #include "Serialization/SProject.h"
 
 namespace Lab::internal {

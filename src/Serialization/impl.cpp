@@ -6,7 +6,7 @@
 ///
 #include <ser20/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
-#include "Dump/coollab_version.h"
+#include "Dump/coollab_version.hpp"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Default/Module_Default.hpp"
 #include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
