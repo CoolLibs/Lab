@@ -3,9 +3,6 @@
 #include "Cool/ImGui/markdown.h"
 #include "Cool/String/String.h"
 #include "ImGuiNotify/ImGuiNotify.hpp"
-
-#if COOLLAB_HAS_OPENSSL
-#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include "cpp-httplib/httplib.h"
 
 static auto escape(std::string str) -> std::string
@@ -45,13 +42,12 @@ TEST_CASE("process_link()")
     CHECK(process_link("@@") == "https://www.instagram.com/@");
 }
 #endif
-#endif
 
 namespace Lab {
 
 void Task_PublishImageToGallery::execute()
 {
-#if COOLLAB_HAS_OPENSSL
+#if CPPHTTPLIB_OPENSSL_SUPPORT
     auto const image_png_data =
         img::save_png_to_string(
             _image,

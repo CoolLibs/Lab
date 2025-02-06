@@ -62,6 +62,41 @@ jobs:
         if: matrix.config.name == 'Windows MSVC'
         uses: ilammy/msvc-dev-cmd@v1.13.0
 
+      - name: Cache vcpkg
+        if: runner.os == 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ runner.temp }}/vcpkg
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
+          restore-keys: vcpkg-${{ runner.os }}-
+
+      - name: Cache vcpkg installed packages
+        if: runner.os == 'Windows'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ runner.temp }}/vcpkg/installed
+            ${{ runner.temp }}/vcpkg/buildtrees
+          key: vcpkg-packages-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
+          restore-keys: vcpkg-packages-${{ runner.os }}-
+
+      - name: Install vcpkg
+        if: runner.os == 'Windows'
+        run: |
+          if not exist "${{ runner.temp }}\vcpkg" (
+            git clone https://github.com/microsoft/vcpkg.git ${{ runner.temp }}\vcpkg
+            cd ${{ runner.temp }}\vcpkg
+            .\bootstrap-vcpkg.bat
+          )
+        shell: cmd
+
+      - name: Install Windows dependencies
+        if: runner.os == 'Windows'
+        run: |
+          ${{ runner.temp }}\vcpkg\vcpkg.exe install openssl:x64-windows
+        shell: cmd
+
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
@@ -82,12 +117,17 @@ jobs:
         with:
           key: ${{matrix.config.name}}-${{matrix.build_type}}
 
+      - name: Set CMake Toolchain Argument
+        if: runner.os == 'Windows'
+        run: echo "CMAKE_TOOLCHAIN_ARG=-D CMAKE_TOOLCHAIN_FILE=${{ runner.temp }}\vcpkg\scripts\buildsystems\vcpkg.cmake" >> $GITHUB_ENV
+        shell: bash
+
       - name: Build
         uses: lukka/run-cmake@v3
         with:
           cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
           cmakeListsTxtPath: ${{github.workspace}}/${{env.cmakelists_folder}}/CMakeLists.txt
-          cmakeAppendedArgs: ${{env.cmake_configure_args}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} ${{matrix.config.cmake_configure_args}} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmakeAppendedArgs: ${{env.cmake_configure_args}} -D CMAKE_BUILD_TYPE=${{matrix.build_type}} ${{matrix.config.cmake_configure_args}} -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache ${{ env.CMAKE_TOOLCHAIN_ARG }}
           buildWithCMakeArgs: --config ${{matrix.build_type}} --target ${{env.cmake_target}}
           cmakeBuildType: ${{matrix.build_type}}
           buildDirectory: ${{github.workspace}}/build

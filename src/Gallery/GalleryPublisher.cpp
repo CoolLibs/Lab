@@ -32,7 +32,7 @@ GalleryPublisher::GalleryPublisher()
 }
 
 static constexpr bool has_openssl =
-#if COOLLAB_HAS_OPENSSL
+#if CPPHTTPLIB_OPENSSL_SUPPORT
     true;
 #else
     false;

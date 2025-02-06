@@ -54,43 +54,25 @@ target_include_directories(Coollab-Properties INTERFACE lib/range-v3/include)
 install(FILES "lib/range-v3/LICENSE.txt" DESTINATION "license/range-v3")
 
 set(COOLLAB_REQUIRE_ALL_FEATURES OFF CACHE BOOL "Some features are optional, like making HTTPS requests to post images to the Coollab gallery. If you don't have the necessary dependencies these features will be disabled. If you want to make sure you have all the features of Coollab enabled, set this option to ON.")
-set(COOLLAB_BUILD_WITH_OPENSSL ON CACHE BOOL "Needed to make HTTPS requests to post images to the Coollab gallery.")
 
-# ----------------
-# ---OpenSSL---
-# ----------------
-# Link OpenSSL if we find it. It will be used
-# to send images to the Coollab gallery.
-# If OpenSSL is not found this feature will be disabled.
-# Note: cpp-httplib can only work with OpenSSL versions 3 or 1.1.1
-# Set the path to OpenSSL library directory
-if(COOLLAB_BUILD_WITH_OPENSSL)
-    set(OPENSSL_USE_STATIC_LIBS TRUE)
+# -----------------
+# ---cpp-httplib---
+# -----------------
+set(OPENSSL_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
-    if(NOT APPLE) # Disabled on Mac for now, because brew installs versions 3.3 now, which isn't compatible with cpp-httplib
-        find_package(OpenSSL 3)
-
-        if(NOT OpenSSL_FOUND)
-            if(COOLLAB_REQUIRE_ALL_FEATURES)
-                find_package(OpenSSL 1.1.1 REQUIRED)
-            else()
-                find_package(OpenSSL 1.1.1)
-            endif()
-        endif()
-    endif()
-
-    if(OpenSSL_FOUND)
-        message("[Coollab] Found OpenSSL.")
-        target_link_libraries(Coollab-Properties INTERFACE OpenSSL::SSL OpenSSL::Crypto)
-        target_compile_definitions(Coollab-Properties INTERFACE "COOLLAB_HAS_OPENSSL")
-    else()
-        message("[Coollab] Did not find OpenSSL. Posting images to the Coollab gallery will be disabled.")
-    endif()
+if(COOLLAB_REQUIRE_ALL_FEATURES)
+    set(HTTPLIB_REQUIRE_OPENSSL ON CACHE BOOL "" FORCE)
+    set(HTTPLIB_USE_OPENSSL_IF_AVAILABLE OFF CACHE BOOL "" FORCE)
 else()
-    message("[Coollab] Disabled building with OpenSSL.")
+    set(HTTPLIB_REQUIRE_OPENSSL OFF CACHE BOOL "" FORCE)
+    set(HTTPLIB_USE_OPENSSL_IF_AVAILABLE ON CACHE BOOL "" FORCE)
 endif()
 
+add_subdirectory(lib/cpp-httplib)
+target_link_libraries(Coollab-Properties INTERFACE httplib)
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
+
+# License
 install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 
 # Grab all the source files
