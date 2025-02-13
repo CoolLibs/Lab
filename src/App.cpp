@@ -19,7 +19,6 @@
 #include "Cool/Time/ClockU.h"
 #include "Cool/Tips/TipsManager.h"
 #include "Cool/UserSettings/UserSettings.h"
-#include "Cool/Variables/TestVariables.h"
 #include "Cool/Video/hack_get_global_time_in_seconds.h"
 #include "Cool/View/View.h"
 #include "Cool/View/ViewsManager.h"
@@ -487,17 +486,6 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         return the_polaroid.texture().download_pixels();
     });
 
-    DebugOptions::show_framerate_window([&] {
-        ImGui::PushFont(Cool::Font::monospace());
-        ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
-        auto const ms = 1000.f / ImGui::GetIO().Framerate;
-        ImGui::Text(ms >= 10.f ? "%.2f ms" : "0%.2f ms", ms);
-        ImGui::PopFont();
-        _main_window.imgui_cap_framerate();
-    });
-    if (DebugOptions::show_imgui_demo_window())                         // Show the big demo window (Most of the sample code is
-        ImGui::ShowDemoWindow(&DebugOptions::show_imgui_demo_window()); // in ImGui::ShowDemoWindow()! You can browse its code
-                                                                        // to learn more about Dear ImGui!).
     DebugOptions::show_history_window([&] {
         ImGui::PushFont(Cool::Font::monospace());
         project().history.imgui_show([](ReversibleCommand const& command) {
@@ -510,7 +498,6 @@ void App::imgui_windows_only_when_inputs_are_allowed()
         project().modules_graph->debug_show_nodes_and_links_registries_windows(ui());
     }
 
-    DebugOptions::test_all_variable_widgets__window(&Cool::test_variables);
     DebugOptions::test_shaders_compilation__window([&]() {
         if (ImGui::Button("Compile everything"))
         {
@@ -524,8 +511,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
             compile_all_is0_nodes();
         }
     });
-    Cool::debug_options_windows(&_tips_manager);
-    DebugOptions::empty_window([] {});
+    Cool::debug_options_windows(&_tips_manager, _main_window);
 }
 
 void App::file_menu()

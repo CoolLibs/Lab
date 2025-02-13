@@ -40,20 +40,6 @@ def all_debug_options():
             detailed_description="Copies an info dump to your clipboard. It can be used when submitting a bug report, in order to give the devs more information.",
         ),
         DebugOption(
-            name_in_code="show_framerate_window",
-            name_in_ui="Framerate window",
-            name_in_json=None,
-            available_in_release=True,
-            window_name="Framerate",
-            kind=Kind.WINDOW,
-        ),
-        DebugOption(
-            name_in_code="show_imgui_demo_window",
-            name_in_ui="ImGui Demo window",
-            name_in_json=None,
-            available_in_release=True,
-        ),
-        DebugOption(
             name_in_code="show_history_window",
             name_in_ui="Show history",
             name_in_json=None,
@@ -118,26 +104,11 @@ def all_debug_options():
             kind=Kind.WINDOW,
         ),
         DebugOption(
-            name_in_code="test_all_variable_widgets__window",
-            name_in_ui="Test all Variable Widgets",
-            name_in_json=None,
-            kind=Kind.WINDOW,
-            available_in_release=True,
-        ),
-        DebugOption(
             name_in_code="test_shaders_compilation__window",
             name_in_ui="Test Shaders Compilation",
             name_in_json=None,
             kind=Kind.WINDOW,
             available_in_release=True,
-        ),
-        DebugOption(
-            name_in_code="empty_window",
-            name_in_ui="Open Empty Window",
-            name_in_json=None,
-            kind=Kind.WINDOW,
-            available_in_release=True,
-            detailed_description="Useful when you want some blank space in your windows layout.",
         ),
     ]
 
