@@ -98,6 +98,8 @@ public:
         }
     }
 
+    static void save() { instance()._serializer.save(); }
+
 private:
     struct Instance {
         bool generate_dump_file{false};
@@ -121,7 +123,7 @@ private:
         // Must be declared last, after all the variables it serializes, so that the values it loads overwrite the default values, and not the other way around
         Cool::JsonAutoSerializer _serializer{
             "debug_options_lab.json",
-            true /*autosave_when_destroyed*/,
+            false /*autosave_when_destroyed*/, // This is a static instance, so saving it in the destructor is dangerous because we don't know when it will happen exactly. Instead, we call save manually at the end of the run()
             [&](nlohmann::json const& json) {
 
 #if DEBUG
@@ -204,7 +206,6 @@ private:
         return the_instance;
     }
 
-    static void save() { instance()._serializer.save(); }
     static void load() { instance()._serializer.load(); }
     static void update() { instance()._serializer.update(); }
 

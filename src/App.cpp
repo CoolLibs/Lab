@@ -178,6 +178,7 @@ void App::on_shutdown()
     save_project_thumbnail();
     _tips_manager.on_app_shutdown();
     _is_shutting_down = true;
+    DebugOptions::save();
 }
 
 void App::on_project_loaded()
