@@ -1,7 +1,7 @@
 #include "gen_dump_string.h"
 #include <string>
 #include "Cool/Dump/gen_dump_string.h"
-#include "coollab_version.h"
+#include "coollab_version.hpp"
 
 namespace Lab {
 
