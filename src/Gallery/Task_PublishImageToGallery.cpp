@@ -48,6 +48,8 @@ namespace Lab {
 void Task_PublishImageToGallery::execute()
 {
 #if CPPHTTPLIB_OPENSSL_SUPPORT
+    TaskWithProgressBar::change_notification_when_execution_starts();
+
     auto const image_png_data =
         img::save_png_to_string(
             _image,
