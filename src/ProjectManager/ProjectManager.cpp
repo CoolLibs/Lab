@@ -16,67 +16,68 @@
 namespace Lab {
 
 // TODO(Launcher) handle invalid file names (with invalid chars, with dots . , with / or \)
+// TODO(Launcher) check that project name is valid (no -- at the start, and is a valid file name)
+
+static auto get_argument_after(size_t& i) -> std::string const*
+{
+    assert(i < Cool::command_line_args().get().size());
+
+    if (i + 1 == Cool::command_line_args().get().size()
+        || Cool::command_line_args().get()[i + 1].starts_with("--"))
+    {
+        ImGuiNotify::send({
+            .type    = ImGuiNotify::Type::Warning,
+            .title   = "Project Command-Line Arguments",
+            .content = fmt::format("Missing argument after \"{}\"", Cool::command_line_args().get()[i]),
+        });
+        return nullptr;
+    }
+
+    i++;
+    return &Cool::command_line_args().get()[i];
+}
 
 void ProjectManager::process_command_line_args(OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title)
 {
     for (size_t i = 0; i < Cool::command_line_args().get().size(); ++i)
     {
         auto const& arg = Cool::command_line_args().get()[i];
-        if (arg == "--create_new_project_in_folder" || arg == "--create_new_project_in_file")
-        {
-            if (i + 1 == Cool::command_line_args().get().size())
+
+        if (arg == "--create_new_project")
             {
                 create_new_project(on_project_loaded, set_window_title);
-                continue;
             }
-
-            auto const& arg2 = Cool::command_line_args().get()[i + 1];
-            if (arg2.starts_with("--"))
+        else if (arg == "--create_new_project_in_folder")
             {
-                create_new_project(on_project_loaded, set_window_title);
-                continue;
+            auto const* const arg2 = get_argument_after(i); // NB: this might increment i
+            if (arg2)
+                create_new_project_in_folder(*arg2, on_project_loaded, set_window_title);
             }
-            if (arg == "--create_new_project_in_folder")
-                create_new_project_in_folder(arg2, on_project_loaded, set_window_title);
-            else
-                create_new_project_in_file(arg2, on_project_loaded, set_window_title);
-            continue;
-        }
-        if (arg == "--open_project")
+        else if (arg == "--create_new_project_in_file")
+            {
+            auto const* const arg2 = get_argument_after(i); // NB: this might increment i
+            if (arg2)
+                create_new_project_in_file(*arg2, on_project_loaded, set_window_title);
+            }
+        else if (arg == "--open_project")
+            {
+            auto const* const arg2 = get_argument_after(i); // NB: this might increment i
+            if (arg2)
+                open_project(*arg2, on_project_loaded, set_window_title);
+            }
+        else if (arg == "--projects_info_folder_for_the_launcher")
+            {
+            auto const* const arg2 = get_argument_after(i); // NB: this might increment i
+            if (arg2)
+                _impl.set_projects_info_folder_for_the_launcher(*arg2);
+            }
+        else
         {
-            if (i + 1 == Cool::command_line_args().get().size())
-            {
-                // TODO(Launcher) warning
-                continue;
-            }
-
-            auto const& arg2 = Cool::command_line_args().get()[i + 1];
-            if (arg2.starts_with("--"))
-            {
-                // TODO(Launcher) warning
-                continue;
-            }
-
-            open_project(arg2, on_project_loaded, set_window_title);
-            continue;
-        }
-        if (arg == "--projects_info_folder_for_the_launcher")
-        {
-            if (i + 1 == Cool::command_line_args().get().size())
-            {
-                // TODO(Launcher) warning
-                continue;
-            }
-
-            auto const& arg2 = Cool::command_line_args().get()[i + 1];
-            if (arg2.starts_with("--"))
-            {
-                // TODO(Launcher) warning
-                continue;
-            }
-
-            _impl.set_projects_info_folder_for_the_launcher(arg2);
-            continue;
+            ImGuiNotify::send({
+                .type    = ImGuiNotify::Type::Warning,
+                .title   = "Project Command-Line Arguments",
+                .content = fmt::format("Unknown argument \"{}\"", arg),
+            });
         }
     }
     // In case no command line args told us what to do (which should only happen when Coollab is not launched via the launcher, i.e. only while developing Coollab)
