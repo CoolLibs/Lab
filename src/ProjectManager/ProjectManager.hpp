@@ -12,25 +12,37 @@ public:
     auto info_folder_for_the_launcher() const -> std::optional<std::filesystem::path> { return _impl.info_folder_for_the_launcher(); }
     auto has_registered_project_to_the_launcher() const -> bool { return _impl.has_registered_project_to_the_launcher(); }
 
-    void process_command_line_args(OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title);
-    void create_new_project(OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title);
-    void create_new_project_in_folder(std::filesystem::path const& folder_path, OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title);
-    void create_new_project_in_file(std::filesystem::path file_path, OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title);
-    void open_project(std::filesystem::path const& file_path, OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title);
+    void process_command_line_args(OnProjectLoaded const&, OnProjectUnloaded const&, SetWindowTitle const&);
+    void create_new_project(OnProjectLoaded const&, SetWindowTitle const&);
+    void create_new_project_in_folder(std::filesystem::path const& folder_path, OnProjectLoaded const&, SetWindowTitle const&);
+    void create_new_project_in_file(std::filesystem::path file_path, OnProjectLoaded const&, SetWindowTitle const&);
 
-    void autosave_project(SetWindowTitle const& set_window_title);
-    void save_project(SetWindowTitle const& set_window_title);
-    void save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher = true);
-    void package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher = true);
-    void rename_project(std::string new_name, SetWindowTitle const& set_window_title);
+    // We only open projects at the beginning of a frame, because
+    void open_project_on_next_frame(std::filesystem::path const& file_path);
+    void open_requested_project_if_any(OnProjectLoaded const&, OnProjectUnloaded const&, SetWindowTitle const&);
 
-    void imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const& set_window_title);
+    auto autosave_project(SetWindowTitle const&) -> bool;
+    auto save_project(SetWindowTitle const&) -> bool;
+    auto save_project_as(std::filesystem::path file_path, SetWindowTitle const&, SaveThumbnail const&, bool register_project_in_the_launcher = true) -> bool;
+    auto package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const&, SaveThumbnail const&, bool register_project_in_the_launcher = true) -> bool;
+    auto rename_project(std::string new_name, SetWindowTitle const&) -> bool;
+
+    void imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const&);
 
     auto file_dialog_to_save_project() -> std::optional<std::filesystem::path>;
+    auto file_dialog_to_open_project() -> std::optional<std::filesystem::path>;
     auto force_file_dialog_to_save_project() -> std::filesystem::path;
 
 private:
-    internal::ProjectManagerImpl _impl;
+    /// Returns true iff we saved successfully
+    [[nodiscard]] auto save_project_impl(SetWindowTitle const&) -> bool;
+    [[nodiscard]] auto save_project_impl(std::filesystem::path file_path, SetWindowTitle const&) -> bool;
+
+    void open_project(std::filesystem::path const& file_path, OnProjectLoaded const&, OnProjectUnloaded const&, SetWindowTitle const&);
+
+private:
+    internal::ProjectManagerImpl         _impl{};
+    std::optional<std::filesystem::path> _project_to_open_on_next_frame{};
 };
 
 } // namespace Lab

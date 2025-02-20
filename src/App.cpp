@@ -29,6 +29,7 @@
 #include "Dump/gen_dump_string.h"
 #include "Menus/about_menu.h"
 #include "ModulesGraph/ModulesGraph.h"
+#include "ProjectManager/Command_OpenProjectOnNextFrame.hpp"
 #include "ProjectManager/Command_PackageProjectInto.h"
 #include "ProjectManager/Command_SaveProject.h"
 #include "ProjectManager/Command_SaveProjectAs.h"
@@ -56,16 +57,19 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
       )}
 {
     internal::get_app() = this;
-    output_view_ptr() = &_output_view;
+    output_view_ptr()   = &_output_view;
 }
 
 void App::init()
 {
-    _project_manager.process_command_line_args(make_on_project_loaded(), make_window_title_setter());
+    _project_manager.process_command_line_args(make_on_project_loaded(), make_on_project_unloaded(), make_window_title_setter());
 }
 
 void App::update()
 {
+    // Must be done first in the frame, because then we use the current project, and don't want to change it during the frame
+    _project_manager.open_requested_project_if_any(make_on_project_loaded(), make_on_project_unloaded(), make_window_title_setter());
+
     project().history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
 
     if (project().shared_aspect_ratio.fill_the_view)
@@ -176,7 +180,7 @@ void App::save_project_thumbnail_impl(std::filesystem::path const& folder_path)
 void App::on_shutdown()
 {
     command_execution_context().execute(Command_SaveProject{.is_autosave = true});
-    save_project_thumbnail();
+    on_project_unloaded();
     _tips_manager.on_app_shutdown();
     _is_shutting_down = true;
     DebugOptions::save();
@@ -194,6 +198,14 @@ void App::on_project_loaded()
     auto const ctx = command_execution_context();
     for (auto& [_, node] : project().modules_graph->graph().nodes())
         ctx.make_sure_node_uses_the_most_up_to_date_version_of_its_definition(node.downcast<Node>());
+}
+
+void App::on_project_unloaded()
+{
+    save_project_thumbnail();
+
+    project().camera_3D_manager.unhook_events(_preview_view.mouse_events());
+    project().camera_2D_manager.unhook_events(_preview_view.mouse_events());
 }
 
 void App::compile_all_is0_nodes()
@@ -219,6 +231,13 @@ auto App::make_on_project_loaded() -> OnProjectLoaded
 {
     return [&]() {
         on_project_loaded();
+    };
+}
+
+auto App::make_on_project_unloaded() -> OnProjectUnloaded
+{
+    return [&]() {
+        on_project_unloaded();
     };
 }
 
@@ -529,6 +548,15 @@ void App::file_menu()
             if (path)
                 ctx.execute(Command_SaveProjectAs{*path});
         }
+        if (DebugOptions::allow_user_to_open_any_file())
+        {
+            if (ImGui::MenuItem("Open", "Ctrl+O")) // TODO(UX) Cmd instead of Ctrl on MacOS
+            {
+                auto const path = _project_manager.file_dialog_to_open_project();
+                if (path)
+                    ctx.execute(Command_OpenProjectOnNextFrame{*path});
+            }
+        }
         ImGui::EndMenu();
     }
 }
@@ -704,7 +732,18 @@ void App::check_inputs__project()
             ctx.execute(Command_SaveProjectAs{*path});
     }
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
+    {
         ctx.execute(Command_SaveProject{.is_autosave = false});
+    }
+    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
+    {
+        if (DebugOptions::allow_user_to_open_any_file())
+        {
+            auto const path = _project_manager.file_dialog_to_open_project();
+            if (path)
+                ctx.execute(Command_OpenProjectOnNextFrame{*path});
+        }
+    }
 }
 
 void App::check_inputs__timeline()

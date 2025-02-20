@@ -21,7 +21,7 @@ auto ProjectManagerImpl::project_path(std::string_view file_name) const -> std::
 
 auto ProjectManagerImpl::info_folder_for_the_launcher() const -> std::optional<std::filesystem::path>
 {
-    return info_folder_for_the_launcher(_project.uuid);
+    return info_folder_for_the_launcher(_project->uuid);
 }
 
 auto ProjectManagerImpl::info_folder_for_the_launcher(reg::AnyId const& project_uuid) const -> std::optional<std::filesystem::path>
@@ -69,10 +69,7 @@ void ProjectManagerImpl::set_project_path_for_launcher(std::filesystem::path con
     if (!folder.has_value())
         return;
 
-    Cool::File::set_content(
-        *folder / "path.txt",
-        file_path.string()
-    );
+    Cool::File::set_content(*folder / "path.txt", file_path.string());
 }
 
 auto ProjectManagerImpl::load(std::filesystem::path const& file_path) -> tl::expected<Project, std::string>
@@ -94,7 +91,7 @@ auto ProjectManagerImpl::save(std::filesystem::path const& file_path) -> bool
 {
     if (!Cool::File::create_folders_for_file_if_they_dont_exist(file_path))
         return false;
-    return do_save(_project, file_path);
+    return do_save(*_project, file_path);
 }
 
 void ProjectManagerImpl::register_last_write_time(std::filesystem::path const& file_path)

@@ -63,6 +63,7 @@ public:
                 save();
         }
     }
+    [[nodiscard]] static auto allow_user_to_open_any_file() -> bool& { return instance().allow_user_to_open_any_file; }
 
     static void save() { instance()._serializer.save(); }
 
@@ -81,6 +82,7 @@ private:
         bool log_project_related_events{false};
         bool show_generated_shader_code{false};
         bool test_shaders_compilation__window{false};
+        bool allow_user_to_open_any_file{false};
 
         // Must be declared last, after all the variables it serializes, so that the values it loads overwrite the default values, and not the other way around
         Cool::JsonAutoSerializer _serializer{
@@ -100,6 +102,7 @@ private:
                 Cool::json_get(json, "Log project-related events", log_project_related_events);
                 Cool::json_get(json, "Show generated shader code", show_generated_shader_code);
                 Cool::json_get(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_get(json, "Allow opening any file", allow_user_to_open_any_file);
 #else
                 Cool::json_get(json, "Show history", show_history_window);
                 Cool::json_get(json, "Show nodes and links registries", show_nodes_and_links_registries);
@@ -112,6 +115,7 @@ private:
                 Cool::json_get(json, "Log project-related events", log_project_related_events);
                 Cool::json_get(json, "Show generated shader code", show_generated_shader_code);
                 Cool::json_get(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_get(json, "Allow opening any file", allow_user_to_open_any_file);
 #endif
             },
             [&](nlohmann::json& json) {
@@ -128,6 +132,7 @@ private:
                 Cool::json_set(json, "Log project-related events", log_project_related_events);
                 Cool::json_set(json, "Show generated shader code", show_generated_shader_code);
                 Cool::json_set(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_set(json, "Allow opening any file", allow_user_to_open_any_file);
 #else
                 Cool::json_set(json, "Show history", show_history_window);
                 Cool::json_set(json, "Show nodes and links registries", show_nodes_and_links_registries);
@@ -140,6 +145,7 @@ private:
                 Cool::json_set(json, "Log project-related events", log_project_related_events);
                 Cool::json_set(json, "Show generated shader code", show_generated_shader_code);
                 Cool::json_set(json, "Test Shaders Compilation", test_shaders_compilation__window);
+                Cool::json_set(json, "Allow opening any file", allow_user_to_open_any_file);
 #endif
             },
             Cool::WantsToLogWarnings::CheckInDebugOption
@@ -168,6 +174,7 @@ private:
         instance().log_project_related_events       = false;
         instance().show_generated_shader_code       = false;
         instance().test_shaders_compilation__window = false;
+        instance().allow_user_to_open_any_file      = false;
         save();
     }
 
@@ -263,6 +270,14 @@ private:
             if (Cool::ImGuiExtras::toggle("Test Shaders Compilation", &instance().test_shaders_compilation__window))
                 save();
         }
+
+        if (wafl::similarity_match({filter, "Allow opening any file"}) >= wafl::Matches::Strongly)
+        {
+            if (Cool::ImGuiExtras::toggle("Allow opening any file", &instance().allow_user_to_open_any_file))
+                save();
+
+            Cool::ImGuiExtras::help_marker("This is dangerous. If you try to open a file that was made with a version of Coollab not compatible with the current one, it might corrupt your file. Prefer opening your project from the Launcher, which will choose the right version for you.");
+        }
     }
 
     static void toggle_first_option(std::string_view filter)
@@ -354,6 +369,13 @@ private:
         if (wafl::similarity_match({filter, "Test Shaders Compilation"}) >= wafl::Matches::Strongly)
         {
             instance().test_shaders_compilation__window = !instance().test_shaders_compilation__window;
+            save();
+            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
+        }
+
+        if (wafl::similarity_match({filter, "Allow opening any file"}) >= wafl::Matches::Strongly)
+        {
+            instance().allow_user_to_open_any_file = !instance().allow_user_to_open_any_file;
             save();
             throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
         }

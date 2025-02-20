@@ -8,8 +8,9 @@ namespace Lab::internal {
 /// Contains the low-level operations, they don't do any error checking, don't retry if a file already exists, etc.
 class ProjectManagerImpl {
 public:
-    auto project() -> Project& { return _project; }
-    auto project() const -> Project const& { return _project; }
+    auto project() -> Project& { return *_project; }
+    auto project() const -> Project const& { return *_project; }
+    auto has_project() const -> bool { return _project.has_value(); }
     auto project_path() const -> std::filesystem::path;
     auto project_folder() const -> std::filesystem::path const& { return _folder_path; }
     auto project_name() const -> std::string const& { return _file_name; }
@@ -29,9 +30,9 @@ public:
     auto               file_contains_data_that_we_did_not_write_ourselves(std::filesystem::path const& file_path) const -> bool;
 
 private:
-    Project               _project{};
-    std::filesystem::path _folder_path{};
-    std::string           _file_name{};
+    std::optional<Project> _project{};
+    std::filesystem::path  _folder_path{};
+    std::string            _file_name{};
 
     std::optional<std::filesystem::path> _path_to_launcher_info_folder{};
 

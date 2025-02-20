@@ -32,6 +32,7 @@ public:
     void init() override;
     void on_shutdown() override;
     void on_project_loaded();
+    void on_project_unloaded();
 
     void update() override;
     void request_rerender() override;
@@ -96,6 +97,7 @@ public: // Needs to be public so we can call it in the NodesConfig
     void imgui_window_cameras();
     auto make_window_title_setter() -> SetWindowTitle;
     auto make_on_project_loaded() -> OnProjectLoaded;
+    auto make_on_project_unloaded() -> OnProjectUnloaded;
     auto make_save_thumbnail() -> SaveThumbnail;
 
 private:

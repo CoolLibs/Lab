@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <reg/src/generate_uuid.hpp>
 #include "COOLLAB_FILE_EXTENSION.hpp"
+#include "CommandCore/execute_command.hpp"
+#include "Command_OpenProjectOnNextFrame.hpp"
 #include "Cool/CommandLineArgs/CommandLineArgs.h"
 #include "Cool/File/File.h"
 #include "Cool/ImGui/ImGuiExtrasStyle.h"
@@ -15,7 +17,7 @@
 
 namespace Lab {
 
-// TODO(Launcher) handle invalid file names (with invalid chars, with dots . , with / or \)
+// TODO(Launcher) handle invalid file names (with invalid chars, with dots . , with / or \) or empty name
 // TODO(Launcher) check that project name is valid (no -- at the start, and is a valid file name)
 
 static auto get_argument_after(size_t& i) -> std::string const*
@@ -37,40 +39,40 @@ static auto get_argument_after(size_t& i) -> std::string const*
     return &Cool::command_line_args().get()[i];
 }
 
-void ProjectManager::process_command_line_args(OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title)
+void ProjectManager::process_command_line_args(OnProjectLoaded const& on_project_loaded, OnProjectUnloaded const& on_project_unloaded, SetWindowTitle const& set_window_title)
 {
     for (size_t i = 0; i < Cool::command_line_args().get().size(); ++i)
     {
         auto const& arg = Cool::command_line_args().get()[i];
 
         if (arg == "--create_new_project")
-            {
-                create_new_project(on_project_loaded, set_window_title);
-            }
+        {
+            create_new_project(on_project_loaded, set_window_title);
+        }
         else if (arg == "--create_new_project_in_folder")
-            {
+        {
             auto const* const arg2 = get_argument_after(i); // NB: this might increment i
             if (arg2)
                 create_new_project_in_folder(*arg2, on_project_loaded, set_window_title);
-            }
+        }
         else if (arg == "--create_new_project_in_file")
-            {
+        {
             auto const* const arg2 = get_argument_after(i); // NB: this might increment i
             if (arg2)
                 create_new_project_in_file(*arg2, on_project_loaded, set_window_title);
-            }
+        }
         else if (arg == "--open_project")
-            {
+        {
             auto const* const arg2 = get_argument_after(i); // NB: this might increment i
             if (arg2)
-                open_project(*arg2, on_project_loaded, set_window_title);
-            }
+                open_project(*arg2, on_project_loaded, on_project_unloaded, set_window_title);
+        }
         else if (arg == "--projects_info_folder_for_the_launcher")
-            {
+        {
             auto const* const arg2 = get_argument_after(i); // NB: this might increment i
             if (arg2)
                 _impl.set_projects_info_folder_for_the_launcher(*arg2);
-            }
+        }
         else
         {
             ImGuiNotify::send({
@@ -86,7 +88,7 @@ void ProjectManager::process_command_line_args(OnProjectLoaded const& on_project
     {
         auto const path = Cool::File::with_extension(Cool::Path::user_data() / "Projects/Untitled", COOLLAB_FILE_EXTENSION);
         if (Cool::File::exists(path))
-            open_project(path, on_project_loaded, set_window_title);
+            open_project(path, on_project_loaded, on_project_unloaded, set_window_title);
         else
             create_new_project_in_file(path, on_project_loaded, set_window_title);
     }
@@ -105,23 +107,32 @@ void ProjectManager::create_new_project_in_folder(std::filesystem::path const& f
 void ProjectManager::create_new_project_in_file(std::filesystem::path file_path, OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title)
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Created new project in \"{}\"", file_path));
-
-    file_path = Cool::File::find_available_path(file_path);
+        Cool::Log::ToUser::info("Project", fmt::format("Creating new project in \"{}\"", Cool::File::weakly_canonical(file_path)));
 
     auto project = Project{};
     project.clock.pause();
     project.camera_3D_manager.is_editable_in_view() = false;
-
     _impl.set_project(std::move(project), on_project_loaded);
-    _impl.set_project_path(file_path, set_window_title);
-    // _impl.register_last_write_time(file_path); // No need
+
+    file_path = Cool::File::find_available_path(file_path);
+
+    while (!save_project_impl(file_path, set_window_title)) // Save immediately, so that no one will try to create another project with the same name, thinking the name is not in use
+    {
+    }
 }
 
-void ProjectManager::open_project(std::filesystem::path const& file_path, OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title)
+void ProjectManager::open_project(std::filesystem::path const& file_path, OnProjectLoaded const& on_project_loaded, OnProjectUnloaded const& on_project_unloaded, SetWindowTitle const& set_window_title)
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Opening project \"{}\"", Cool::File::weakly_canonical(file_path)));
+
+    if (_impl.has_project())
+    {
+        if (!save_project_impl(set_window_title))
+            // TODO(Launcher) warning, can't open because we didn't save current project
+            return;
+        on_project_unloaded();
+    }
 
     auto maybe_project = _impl.load(file_path);
     if (!maybe_project.has_value())
@@ -132,7 +143,7 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
             .content  = maybe_project.error(),
             .duration = std::nullopt,
         });
-        create_new_project_in_file(file_path, on_project_loaded, set_window_title);
+        create_new_project_in_folder(Cool::File::without_file_name(file_path), on_project_loaded, set_window_title);
         return;
     }
 
@@ -141,56 +152,81 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
     _impl.register_last_write_time(file_path);
 }
 
-void ProjectManager::autosave_project(SetWindowTitle const& set_window_title)
+auto ProjectManager::autosave_project(SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Autosaving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
 
-    // TODO(Launcher) if file_contains_data_that_we_did_not_write_ourselves(), dialog to save in another file
-    // "This file has been modified externally. We cannot save there because it would overwrite the changes."
-    while (!_impl.save(_impl.project_path()))
-        _impl.set_project_path(force_file_dialog_to_save_project(), set_window_title); // Save failed, try in another location.
-    _impl.register_last_write_time(_impl.project_path());
-    _impl.set_project_path_for_launcher(_impl.project_path());
+    return save_project_impl(set_window_title);
 }
 
-void ProjectManager::save_project(SetWindowTitle const& set_window_title)
+auto ProjectManager::save_project(SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
 
-    if (_impl.file_contains_data_that_we_did_not_write_ourselves(_impl.project_path()))
+    if (!save_project_impl(set_window_title))
+        return false;
+
+    ImGuiNotify::send({
+        .type     = ImGuiNotify::Type::Success,
+        .title    = "Saved Project",
+        .content  = Cool::user_settings().autosave_enabled
+                        ? fmt::format("NB: there is an autosave every {} seconds, so you don't really need to save the project manually", Cool::user_settings().autosave_delay.as_seconds_float())
+                        : "",
+        .duration = 2s,
+    });
+
+    return true;
+}
+
+auto ProjectManager::save_project_impl(SetWindowTitle const& set_window_title) -> bool
+{
+    return save_project_impl(_impl.project_path(), set_window_title);
+}
+
+auto ProjectManager::save_project_impl(std::filesystem::path file_path, SetWindowTitle const& set_window_title) -> bool
+{
+    if (_impl.file_contains_data_that_we_did_not_write_ourselves(file_path))
     {
-        // We are overwriting a file that we did not write ourselves, this is dangerous because we might overwrite data saved by the user
+        // We would overwrite a file that we did not write ourselves, this is dangerous because we might overwrite data saved by the user with another application
         boxer::show(
             "This file has been modified externally. We cannot save there because it would overwrite the changes.\nPlease select another location to save the file.",
             "Cannot save here",
             boxer::Style::Warning,
             boxer::Buttons::OK
         );
-        auto const file_path = file_dialog_to_save_project();
-        if (!file_path.has_value())
-            return;
-        _impl.set_project_path(*file_path, set_window_title);
+        auto const path = file_dialog_to_save_project();
+        if (!path.has_value())
+            return false;
+        file_path = *path;
     }
 
-    while (!_impl.save(_impl.project_path()))
-        _impl.set_project_path(force_file_dialog_to_save_project(), set_window_title); // Save failed, try in another location.
+    while (!_impl.save(file_path))
+    {
+        boxer::show(
+            "Save failed.\nPlease select another location to save the file.",
+            "Cannot save here",
+            boxer::Style::Warning,
+            boxer::Buttons::OK
+        );
+        auto const path = file_dialog_to_save_project();
+        if (!path.has_value())
+            return false;
+        file_path = *path;
+    }
 
-    _impl.register_last_write_time(_impl.project_path());
-    _impl.set_project_path_for_launcher(_impl.project_path());
+    if (file_path != _impl.project_path())
+    {
+        _impl.set_project_path(file_path, set_window_title);
+        _impl.set_project_path_for_launcher(file_path);
+    }
+    _impl.register_last_write_time(file_path);
 
-    ImGuiNotify::send({
-        .type     = ImGuiNotify::Type::Success,
-        .title    = "Saved Project",
-        .content  = Cool::user_settings().autosave_enabled
-                        ? fmt::format("NB: there is an autosave every {} seconds, so you don't really need to manually save the project", Cool::user_settings().autosave_delay.as_seconds_float())
-                        : "",
-        .duration = 2s,
-    });
+    return true;
 }
 
-void ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher)
+auto ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
@@ -198,31 +234,66 @@ void ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowT
     // TODO(Launcher) setting to choose if we make this path the new path for the project, or if this is just a one-off save
     // By default this should just be a one-off save
 
-    bool const this_is_the_new_project_path = false;
+    bool const this_is_the_new_project_path = false && register_project_in_the_launcher; // If we don't register this project in the launcher, then we shouldn't make it the current project either
 
     auto const old_uuid  = _impl.project().uuid;
     auto const new_uuid  = reg::generate_uuid(); // This new project path should be associated with a new uuid
     _impl.project().uuid = new_uuid;
 
     while (!_impl.save(file_path))
-        file_path = force_file_dialog_to_save_project(); // Save failed, try in another location
+    {
+        boxer::show(
+            "Save failed.\nPlease select another location to save the file.",
+            "Cannot save here",
+            boxer::Style::Warning,
+            boxer::Buttons::OK
+        );
+        auto const path = file_dialog_to_save_project();
+        if (!path.has_value())
+        {
+            _impl.project().uuid = old_uuid;
+            return false;
+        }
+        file_path = *path;
+    }
 
-    _impl.register_last_write_time(file_path);
     if (register_project_in_the_launcher)
     {
         _impl.set_project_path_for_launcher(file_path);
-        auto const info_folder = _impl.info_folder_for_the_launcher(this_is_the_new_project_path ? old_uuid : new_uuid); // Save thumbnail for the project that will not be considered the current one, because we won't save its thumbnail when closing the app
+        // Save thumbnail for the project that will not be considered the current one, because we won't save its thumbnail when closing the app
+        auto const info_folder = _impl.info_folder_for_the_launcher(this_is_the_new_project_path ? old_uuid : new_uuid);
         if (info_folder)
             save_thumbnail(*info_folder);
     }
 
     if (this_is_the_new_project_path)
+    {
         _impl.set_project_path(file_path, set_window_title);
+        _impl.register_last_write_time(file_path);
+    }
     else
+    {
         _impl.project().uuid = old_uuid; // Keep the same uuid as before because we are still on the same project
+    }
+
+    if (register_project_in_the_launcher)
+    {
+        ImGuiNotify::send({
+            .type                 = ImGuiNotify::Type::Success,
+            .title                = fmt::format("Saved as"),
+            .content              = Cool::File::weakly_canonical(file_path).string(),
+            .custom_imgui_content = [=]() {
+                if (ImGui::Button("Switch to this new project"))
+                    execute_command(Command_OpenProjectOnNextFrame{file_path});
+            },
+            .duration = 5s,
+        });
+    }
+
+    return true;
 }
 
-void ProjectManager::package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher)
+auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Packaging project into \"{}\"", Cool::File::weakly_canonical(folder_path)));
@@ -230,17 +301,17 @@ void ProjectManager::package_project_into(std::filesystem::path const& folder_pa
     // TODO(Launcher) make sure the folder doesn't exist, or is empty
     auto file_path = folder_path;
     file_path.replace_extension(COOLLAB_FILE_EXTENSION);
-    save_project_as(file_path, set_window_title, save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
+    return save_project_as(file_path, set_window_title, save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 
-void ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title)
+auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Renaming project as \"{}\"", new_name));
 
     // TODO(Launcher) make sure the name is a valid file name, with no ".", no "/" or "\"
     new_name = Cool::File::find_available_name(_impl.project_folder(), new_name, COOLLAB_FILE_EXTENSION).string();
-    // TODO(Launcher)warning if we changed the name of the project because another file with the same name already exists
+    // TODO(Launcher) warning if we changed the name of the project because another file with the same name already exists
 
     if (_impl.file_contains_data_that_we_did_not_write_ourselves(project_path()))
     {
@@ -260,6 +331,8 @@ void ProjectManager::rename_project(std::string new_name, SetWindowTitle const& 
     _impl.set_project_name(new_name, set_window_title);
     _impl.register_last_write_time(_impl.project_path());
     _impl.set_project_path_for_launcher(_impl.project_path());
+
+    return true;
 }
 
 void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const& set_window_title)
@@ -283,6 +356,15 @@ auto ProjectManager::file_dialog_to_save_project() -> std::optional<std::filesys
     });
 }
 
+auto ProjectManager::file_dialog_to_open_project() -> std::optional<std::filesystem::path>
+{
+    return Cool::File::file_opening_dialog(Cool::File::file_dialog_args{
+        .file_filters   = {{"Coollab project", COOLLAB_FILE_EXTENSION}},
+        .initial_folder = _impl.project_folder(),
+    });
+}
+
+// TODO(Launcher) remove
 auto ProjectManager::force_file_dialog_to_save_project() -> std::filesystem::path
 {
     while (true)
@@ -290,6 +372,20 @@ auto ProjectManager::force_file_dialog_to_save_project() -> std::filesystem::pat
         auto const path = file_dialog_to_save_project();
         if (path.has_value())
             return *path;
+    }
+}
+
+void ProjectManager::open_project_on_next_frame(std::filesystem::path const& file_path)
+{
+    _project_to_open_on_next_frame = file_path;
+}
+
+void ProjectManager::open_requested_project_if_any(OnProjectLoaded const& on_project_loaded, OnProjectUnloaded const& on_project_unloaded, SetWindowTitle const& set_window_title)
+{
+    if (_project_to_open_on_next_frame.has_value())
+    {
+        open_project(*_project_to_open_on_next_frame, on_project_loaded, on_project_unloaded, set_window_title);
+        _project_to_open_on_next_frame.reset();
     }
 }
 

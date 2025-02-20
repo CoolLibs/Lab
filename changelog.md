@@ -1,26 +1,5 @@
 # Changelog
 
-- [](#)
-- [1.0.0 Launcher](#100-launcher)
-- [🐣 Beta 17](#-beta-17)
-- [🐣 Beta 16](#-beta-16)
-- [🐣 Beta 15](#-beta-15)
-- [🐣 Beta 14](#-beta-14)
-- [🐣 Beta 13](#-beta-13)
-- [🐣 Beta 12](#-beta-12)
-- [🐣 Beta 11](#-beta-11)
-- [🐣 Beta 10](#-beta-10)
-- [🐣 Beta 9](#-beta-9)
-- [🐣 Beta 8](#-beta-8)
-- [🐣 Beta 7](#-beta-7)
-- [🐣 Beta 6](#-beta-6)
-- [🐣 Beta 5](#-beta-5)
-- [🐣 Beta 4](#-beta-4)
-- [🐣 Beta 3](#-beta-3)
-- [🐣 Beta 2](#-beta-2)
-- [🐣 Beta 1](#-beta-1)
-- [🐣 Beta 0](#-beta-0)
-
 ## 
 
 ## 1.0.0 Launcher
@@ -45,6 +24,7 @@ After:
 - ✨ The Output Window now doesn't have a title bar
 - 🟦 Nodes: Added "MIDI Multi-Select with Transition" 
 ![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
+- 🟦 Nodes: Added a Glow that works on any Image (the previous one only worked on Shapes, and is still here because it still looks better on Shapes than the new one). This is a contribution by [illtellyoulater](https://github.com/CoolLibs/Lab/issues/110)
 - 🐛 Allow access to your microphone on MacOS for Audio nodes
 - 🐛 Fix MacOS version crashing on startup
 
@@ -142,9 +122,9 @@ After:
 ![image](https://github.com/CoolLibs/.github/assets/45451201/5a8d4950-57a0-4282-b549-6c66487448c3)
 - ✨ Added the "Paint" blend mode.
 
-| ![image](https://github.com/CoolLibs/.github/assets/45451201/6f57a43d-a422-4056-81e1-c691e4c85d84)  | ![image](https://github.com/CoolLibs/.github/assets/45451201/9b12b5bf-7f15-408b-93e9-552e0caa30ea)  |
-|---|----|
-| "Light" mode (what was already there in Coollab) | "Paint" mode (the new blend mode) |
+| ![image](https://github.com/CoolLibs/.github/assets/45451201/6f57a43d-a422-4056-81e1-c691e4c85d84) | ![image](https://github.com/CoolLibs/.github/assets/45451201/9b12b5bf-7f15-408b-93e9-552e0caa30ea) |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| "Light" mode (what was already there in Coollab)                                                   | "Paint" mode (the new blend mode)                                                                  |
 
 - ✨ Added an Output window that you can project during live shows, while still having your View window on your screen to move the camera and the widgets. To open this window, go in the `Commands` menu and select `Open output window`.
 ![image](https://github.com/CoolLibs/.github/assets/45451201/3d6a14ec-69ca-44b1-81e0-1d4139b72544)
