@@ -42,6 +42,9 @@ private:
 
     void open_project(std::filesystem::path const& file_path, OnProjectLoaded const&, OnProjectUnloaded const&, SetWindowTitle const&);
 
+    auto project_name_error_message(std::string const& name) const -> std::optional<std::string>;
+    auto is_project_name_valid(std::string const& name) const -> bool;
+
 private:
     internal::ProjectManagerImpl         _impl{};
     std::optional<std::filesystem::path> _project_to_open_on_next_frame{};

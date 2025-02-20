@@ -7,6 +7,7 @@
 #include "Command_OpenProjectOnNextFrame.hpp"
 #include "Cool/CommandLineArgs/CommandLineArgs.h"
 #include "Cool/File/File.h"
+#include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/ImGuiExtrasStyle.h"
 #include "Cool/Log/ToUser.h"
 #include "Cool/Path/Path.h"
@@ -248,6 +249,7 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
 
 auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
+    // TODO(Launcher) ? make sure the name is a valid file name, with no ".", no "/" or "\"
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
 
@@ -352,30 +354,33 @@ auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& 
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Renaming project as \"{}\"", new_name));
 
-    // TODO(Launcher) make sure the name is a valid file name, with no ".", no "/" or "\"
-    new_name = Cool::File::find_available_name(_impl.project_folder(), new_name, COOLLAB_FILE_EXTENSION).string();
-    // TODO(Launcher) warning if we changed the name of the project because another file with the same name already exists
+    auto const old_path = _impl.project_path();
+    if (!save_project_impl(_impl.project_path(new_name), false, set_window_title))
+        return false;
 
-    if (_impl.file_contains_data_that_we_did_not_write_ourselves(project_path()))
-    {
-        // Somehow, someone wrote something to this file, so we will not overwrite it, just in case they saved something important
-        _impl.set_project_path(_impl.project_path(new_name), set_window_title);
-        while (!_impl.save(_impl.project_path()))
-            _impl.set_project_path(force_file_dialog_to_save_project(), set_window_title);
-        // TODO(Launcher) warning to the user
-    }
-    else
-    {
-        // We are the ones who last wrote to this file, so we are allowed to delete it
-        if (Cool::File::exists(_impl.project_path()))
-            Cool::File::rename(_impl.project_path(), _impl.project_path(new_name));
-        // TODO(Launcher) tell the launcher that the file has been renamed
-    }
-    _impl.set_project_name(new_name, set_window_title);
-    _impl.register_last_write_time(_impl.project_path());
-    _impl.set_project_path_for_launcher(_impl.project_path());
+    if (!_impl.file_contains_data_that_we_did_not_write_ourselves(old_path))
+        Cool::File::remove_file(old_path);
 
     return true;
+}
+
+auto ProjectManager::project_name_error_message(std::string const& name) const -> std::optional<std::string>
+{
+    // TODO(Launcher) make sure the name is a valid file name, with no ".", no "/" or "\"
+    // TODO(Launcher) check file name too long
+    // TODO(Launcher) check non-ascii-extended characters
+    if (Cool::File::exists(_impl.project_path(name)) && name != _impl.project_name())
+        return "Name already used by another project";
+
+    if (name.empty())
+        return "Name cannot be empty";
+
+    return std::nullopt;
+}
+
+auto ProjectManager::is_project_name_valid(std::string const& name) const -> bool
+{
+    return !project_name_error_message(name).has_value();
 }
 
 void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const& set_window_title)
@@ -388,7 +393,13 @@ void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowT
     ImGui::SetCursorPosX(ImGui::GetWindowSize().x * 0.5f - width * 0.5f);
 
     if (ImGui::InputText("##project_name", &project_name))
-        rename_project(project_name, set_window_title);
+    {
+        if (is_project_name_valid(project_name) && project_name != _impl.project_name())
+            rename_project(project_name, set_window_title);
+    }
+    auto const maybe_err = project_name_error_message(project_name);
+    if (maybe_err.has_value())
+        Cool::ImGuiExtras::warning_text(maybe_err->c_str());
 }
 
 auto ProjectManager::file_dialog_to_save_project() -> std::optional<std::filesystem::path>
