@@ -61,6 +61,8 @@ private:
     void check_inputs__project();
     void check_inputs__timeline();
 
+    friend auto get_context() -> CommandExecutionContext_Ref;
+
     // clang-format off
     auto make_reversible_commands_context           () const { return MakeReversibleCommandContext_Ref{{ project().camera_3D_manager, *project().modules_graph}}; }
     auto command_execution_context                  () -> CommandExecutionContext_Ref { return CommandExecutionContext_Ref{{*this, _project_manager, command_executor_top_level() }}; }

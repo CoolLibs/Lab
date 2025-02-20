@@ -1,6 +1,7 @@
 #include "App.h"
 #include <filesystem>
 #include "CommandCore/command_to_string.h"
+#include "CommandCore/get_app.hpp"
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
@@ -54,6 +55,7 @@ App::App(Cool::WindowManager& windows, Cool::ViewsManager& views)
           }
       )}
 {
+    internal::get_app() = this;
     output_view_ptr() = &_output_view;
 }
 
