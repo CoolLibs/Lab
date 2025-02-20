@@ -126,9 +126,16 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
 
     if (_impl.has_project())
     {
-        if (!save_project_impl(set_window_title))
-            // TODO(Launcher) warning, can't open because we didn't save current project
+        if (!save_project_impl(false /*must_absolutely_succeed*/, set_window_title))
+        {
+            ImGuiNotify::send({
+                .type     = ImGuiNotify::Type::Error,
+                .title    = fmt::format("Failed to open project \"{}\"", Cool::File::weakly_canonical(file_path)),
+                .content  = "We failed to save the current project, so we didn't open the new one because we would have lost the changes to the current project.",
+                .duration = std::nullopt,
+            });
             return;
+        }
         on_project_unloaded();
     }
 
@@ -214,7 +221,7 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
             if (must_absolutely_succeed)
                 continue;
             else // NOLINT(*else-after-return)
-            return false;
+                return false;
         }
         file_path = *path;
     }
