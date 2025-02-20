@@ -385,7 +385,7 @@ auto ProjectManager::is_project_name_valid(std::string const& name) const -> boo
 
 void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const& set_window_title)
 {
-    auto project_name = _impl.project_name();
+    auto project_name = _next_project_name.value_or(_impl.project_name());
     // TODO(Launcher) make this an ImGuiExtras widget
     auto const width = ImGui::CalcTextSize(project_name.c_str()).x
                        + 2.f * Cool::ImGuiExtras::GetStyle().tab_bar_padding.x;
@@ -393,9 +393,13 @@ void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowT
     ImGui::SetCursorPosX(ImGui::GetWindowSize().x * 0.5f - width * 0.5f);
 
     if (ImGui::InputText("##project_name", &project_name))
+        _next_project_name = project_name;
+    if (ImGui::IsItemDeactivatedAfterEdit())
     {
-        if (is_project_name_valid(project_name) && project_name != _impl.project_name())
-            rename_project(project_name, set_window_title);
+        assert(_next_project_name.has_value());
+        if (is_project_name_valid(*_next_project_name) && *_next_project_name != _impl.project_name())
+            rename_project(*_next_project_name, set_window_title);
+        _next_project_name.reset();
     }
     auto const maybe_err = project_name_error_message(project_name);
     if (maybe_err.has_value())

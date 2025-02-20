@@ -48,6 +48,8 @@ private:
 private:
     internal::ProjectManagerImpl         _impl{};
     std::optional<std::filesystem::path> _project_to_open_on_next_frame{};
+
+    std::optional<std::string> _next_project_name{};
 };
 
 } // namespace Lab
