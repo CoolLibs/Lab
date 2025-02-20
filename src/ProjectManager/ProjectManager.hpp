@@ -21,8 +21,8 @@ public:
     void open_project_on_next_frame(std::filesystem::path const& file_path);
     void open_requested_project_if_any(OnProjectLoaded const&, OnProjectUnloaded const&, SetWindowTitle const&);
 
-    auto autosave_project(SetWindowTitle const&) -> bool;
-    auto save_project(SetWindowTitle const&) -> bool;
+    auto autosave_project(bool must_absolutely_succeed, SetWindowTitle const&) -> bool;
+    auto save_project(bool must_absolutely_succeed, SetWindowTitle const&) -> bool;
     auto save_project_as(std::filesystem::path file_path, SetWindowTitle const&, SaveThumbnail const&, bool register_project_in_the_launcher = true) -> bool;
     auto package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const&, SaveThumbnail const&, bool register_project_in_the_launcher = true) -> bool;
     auto rename_project(std::string new_name, SetWindowTitle const&) -> bool;
@@ -35,8 +35,8 @@ public:
 
 private:
     /// Returns true iff we saved successfully
-    [[nodiscard]] auto save_project_impl(SetWindowTitle const&) -> bool;
-    [[nodiscard]] auto save_project_impl(std::filesystem::path file_path, SetWindowTitle const&) -> bool;
+    [[nodiscard]] auto save_project_impl(bool must_absolutely_succeed, SetWindowTitle const&) -> bool;
+    [[nodiscard]] auto save_project_impl(std::filesystem::path file_path, bool must_absolutely_succeed, SetWindowTitle const&) -> bool;
 
     void open_project(std::filesystem::path const& file_path, OnProjectLoaded const&, OnProjectUnloaded const&, SetWindowTitle const&);
 

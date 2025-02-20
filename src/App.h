@@ -124,7 +124,8 @@ private:
     {
         Cool::json_set(json, "Tips", _tips_manager);
         if (!_is_shutting_down)
-            const_cast<App&>(*this).command_executor().execute(Command_SaveProject{.is_autosave = true}); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because no one will ever create a const App.
+            // Autosave
+            const_cast<App&>(*this).command_executor().execute(Command_SaveProject{.is_autosave = true, .must_absolutely_succeed = false}); // NOLINT(cppcoreguidelines-pro-type-const-cast) This is not UB because no one will ever create a const App.
         // else: The project has already been saved during App::on_shutdown(), no need to save it here.
     }
     void load_from_json(nlohmann::json const& json) override

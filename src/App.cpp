@@ -179,7 +179,7 @@ void App::save_project_thumbnail_impl(std::filesystem::path const& folder_path)
 
 void App::on_shutdown()
 {
-    command_execution_context().execute(Command_SaveProject{.is_autosave = true});
+    command_execution_context().execute(Command_SaveProject{.is_autosave = true, .must_absolutely_succeed = true});
     on_project_unloaded();
     _tips_manager.on_app_shutdown();
     _is_shutting_down = true;
@@ -541,7 +541,7 @@ void App::file_menu()
     {
         auto const ctx = command_execution_context();
         if (ImGui::MenuItem("Save", "Ctrl+S")) // TODO(UX) Cmd instead of Ctrl on MacOS
-            ctx.execute(Command_SaveProject{.is_autosave = false});
+            ctx.execute(Command_SaveProject{.is_autosave = false, .must_absolutely_succeed = false});
         if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
         {
             auto const path = _project_manager.file_dialog_to_save_project();
@@ -733,7 +733,7 @@ void App::check_inputs__project()
     }
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
     {
-        ctx.execute(Command_SaveProject{.is_autosave = false});
+        ctx.execute(Command_SaveProject{.is_autosave = false, .must_absolutely_succeed = false});
     }
     else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
     {

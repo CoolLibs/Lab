@@ -7,9 +7,9 @@ namespace Lab {
 void Command_SaveProject::execute(CommandExecutionContext_Ref const& ctx) const
 {
     if (is_autosave)
-        ctx.project_manager().autosave_project(ctx.window_title_setter());
+        ctx.project_manager().autosave_project(must_absolutely_succeed, ctx.window_title_setter());
     else
-        ctx.project_manager().save_project(ctx.window_title_setter());
+        ctx.project_manager().save_project(must_absolutely_succeed, ctx.window_title_setter());
 }
 
 [[nodiscard]] auto Command_SaveProject::to_string() const -> std::string

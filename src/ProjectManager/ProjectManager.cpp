@@ -115,10 +115,8 @@ void ProjectManager::create_new_project_in_file(std::filesystem::path file_path,
     _impl.set_project(std::move(project), on_project_loaded);
 
     file_path = Cool::File::find_available_path(file_path);
-
-    while (!save_project_impl(file_path, set_window_title)) // Save immediately, so that no one will try to create another project with the same name, thinking the name is not in use
-    {
-    }
+    // Save immediately, so that no one will try to create another project with the same name, thinking the name is not in use
+    std::ignore = save_project_impl(file_path, true /*must_absolutely_succeed*/, set_window_title);
 }
 
 void ProjectManager::open_project(std::filesystem::path const& file_path, OnProjectLoaded const& on_project_loaded, OnProjectUnloaded const& on_project_unloaded, SetWindowTitle const& set_window_title)
@@ -152,20 +150,20 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
     _impl.register_last_write_time(file_path);
 }
 
-auto ProjectManager::autosave_project(SetWindowTitle const& set_window_title) -> bool
+auto ProjectManager::autosave_project(bool must_absolutely_succeed, SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Autosaving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
 
-    return save_project_impl(set_window_title);
+    return save_project_impl(must_absolutely_succeed, set_window_title);
 }
 
-auto ProjectManager::save_project(SetWindowTitle const& set_window_title) -> bool
+auto ProjectManager::save_project(bool must_absolutely_succeed, SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
 
-    if (!save_project_impl(set_window_title))
+    if (!save_project_impl(must_absolutely_succeed, set_window_title))
         return false;
 
     ImGuiNotify::send({
@@ -180,12 +178,12 @@ auto ProjectManager::save_project(SetWindowTitle const& set_window_title) -> boo
     return true;
 }
 
-auto ProjectManager::save_project_impl(SetWindowTitle const& set_window_title) -> bool
+auto ProjectManager::save_project_impl(bool must_absolutely_succeed, SetWindowTitle const& set_window_title) -> bool
 {
-    return save_project_impl(_impl.project_path(), set_window_title);
+    return save_project_impl(_impl.project_path(), must_absolutely_succeed, set_window_title);
 }
 
-auto ProjectManager::save_project_impl(std::filesystem::path file_path, SetWindowTitle const& set_window_title) -> bool
+auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool must_absolutely_succeed, SetWindowTitle const& set_window_title) -> bool
 {
     if (_impl.file_contains_data_that_we_did_not_write_ourselves(file_path))
     {
@@ -212,7 +210,12 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, SetWindo
         );
         auto const path = file_dialog_to_save_project();
         if (!path.has_value())
+        {
+            if (must_absolutely_succeed)
+                continue;
+            else // NOLINT(*else-after-return)
             return false;
+        }
         file_path = *path;
     }
 
