@@ -6,7 +6,7 @@ namespace Lab {
 
 void Command_SaveProjectAs::execute(CommandExecutionContext_Ref const& ctx) const
 {
-    ctx.project_manager().save_project_as(path, ctx.window_title_setter(), ctx.save_thumbnail());
+    ctx.project_manager().save_project_as(path, ctx.save_thumbnail());
 }
 
 [[nodiscard]] auto Command_SaveProjectAs::to_string() const -> std::string

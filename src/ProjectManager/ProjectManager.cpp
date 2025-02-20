@@ -13,6 +13,7 @@
 #include "Cool/UserSettings/UserSettings.h"
 #include "Debug/DebugOptions.h"
 #include "ProjectManagerImpl.hpp"
+#include "UserSettings/UserSettings.hpp"
 #include "boxer/boxer.h"
 
 namespace Lab {
@@ -195,22 +196,31 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
     if (_impl.file_contains_data_that_we_did_not_write_ourselves(file_path))
     {
         // We would overwrite a file that we did not write ourselves, this is dangerous because we might overwrite data saved by the user with another application
-        boxer::show(
-            "This file has been modified externally. We cannot save there because it would overwrite the changes.\nPlease select another location to save the file.",
-            "Cannot save here",
-            boxer::Style::Warning,
-            boxer::Buttons::OK
-        );
-        auto const path = file_dialog_to_save_project();
-        if (!path.has_value())
-            return false;
-        file_path = *path;
+        while (true)
+        {
+            boxer::show(
+                fmt::format("This file has been modified externally. We cannot save there because it would overwrite the changes.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
+                "Cannot save here",
+                boxer::Style::Warning,
+                boxer::Buttons::OK
+            );
+            auto const path = file_dialog_to_save_project();
+            if (!path.has_value())
+            {
+                if (must_absolutely_succeed)
+                    continue;
+                else // NOLINT(*else-after-return)
+                    return false;
+            }
+            file_path = *path;
+            break;
+        }
     }
 
     while (!_impl.save(file_path))
     {
         boxer::show(
-            "Save failed.\nPlease select another location to save the file.",
+            fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
             "Cannot save here",
             boxer::Style::Warning,
             boxer::Buttons::OK
@@ -226,7 +236,7 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
         file_path = *path;
     }
 
-    if (file_path != _impl.project_path())
+    // if (file_path != _impl.project_path()) // Do it all the time, so that if we open a file that was not registered in the launcher, it now will be
     {
         _impl.set_project_path(file_path, set_window_title);
         _impl.set_project_path_for_launcher(file_path);
@@ -236,15 +246,13 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
     return true;
 }
 
-auto ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
+auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
 
     // TODO(Launcher) setting to choose if we make this path the new path for the project, or if this is just a one-off save
     // By default this should just be a one-off save
-
-    bool const this_is_the_new_project_path = false && register_project_in_the_launcher; // If we don't register this project in the launcher, then we shouldn't make it the current project either
 
     auto const old_uuid  = _impl.project().uuid;
     auto const new_uuid  = reg::generate_uuid(); // This new project path should be associated with a new uuid
@@ -253,7 +261,7 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowT
     while (!_impl.save(file_path))
     {
         boxer::show(
-            "Save failed.\nPlease select another location to save the file.",
+            fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
             "Cannot save here",
             boxer::Style::Warning,
             boxer::Buttons::OK
@@ -270,21 +278,18 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowT
     if (register_project_in_the_launcher)
     {
         _impl.set_project_path_for_launcher(file_path);
-        // Save thumbnail for the project that will not be considered the current one, because we won't save its thumbnail when closing the app
-        auto const info_folder = _impl.info_folder_for_the_launcher(this_is_the_new_project_path ? old_uuid : new_uuid);
+        auto const info_folder = _impl.info_folder_for_the_launcher(new_uuid);
         if (info_folder)
             save_thumbnail(*info_folder);
     }
 
-    if (this_is_the_new_project_path)
-    {
-        _impl.set_project_path(file_path, set_window_title);
-        _impl.register_last_write_time(file_path);
-    }
-    else
-    {
-        _impl.project().uuid = old_uuid; // Keep the same uuid as before because we are still on the same project
-    }
+    _impl.project().uuid = old_uuid; // Keep the same uuid as before because we are still on the same project
+
+    bool const wants_to_switch_to_new_project = user_settings().switch_to_new_project_when_saving_as
+                                                && register_project_in_the_launcher; // If we don't register this project in the launcher, then we shouldn't make it the current project either)
+
+    if (wants_to_switch_to_new_project)
+        open_project_on_next_frame(file_path);
 
     if (register_project_in_the_launcher)
     {
@@ -292,9 +297,17 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowT
             .type                 = ImGuiNotify::Type::Success,
             .title                = fmt::format("Saved as"),
             .content              = Cool::File::weakly_canonical(file_path).string(),
-            .custom_imgui_content = [=]() {
-                if (ImGui::Button("Switch to this new project"))
-                    execute_command(Command_OpenProjectOnNextFrame{file_path});
+            .custom_imgui_content = [wants_to_switch_to_new_project, file_path, old_file_path = _impl.project_path()]() {
+                if (wants_to_switch_to_new_project)
+                {
+                    if (ImGui::Button("Switch back to the old project"))
+                        execute_command(Command_OpenProjectOnNextFrame{old_file_path});
+                }
+                else
+                {
+                    if (ImGui::Button("Switch to this new project"))
+                        execute_command(Command_OpenProjectOnNextFrame{file_path});
+                }
             },
             .duration = 5s,
         });
@@ -303,7 +316,7 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SetWindowT
     return true;
 }
 
-auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SetWindowTitle const& set_window_title, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
+auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Packaging project into \"{}\"", Cool::File::weakly_canonical(folder_path)));
@@ -311,7 +324,7 @@ auto ProjectManager::package_project_into(std::filesystem::path const& folder_pa
     // TODO(Launcher) make sure the folder doesn't exist, or is empty
     auto file_path = folder_path;
     file_path.replace_extension(COOLLAB_FILE_EXTENSION);
-    return save_project_as(file_path, set_window_title, save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
+    return save_project_as(file_path, save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 
 auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title) -> bool

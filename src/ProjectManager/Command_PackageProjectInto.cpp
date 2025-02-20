@@ -6,7 +6,7 @@ namespace Lab {
 
 void Command_PackageProjectInto::execute(CommandExecutionContext_Ref const& ctx) const
 {
-    ctx.project_manager().package_project_into(folder_path, ctx.window_title_setter(), ctx.save_thumbnail(), register_project_in_the_launcher);
+    ctx.project_manager().package_project_into(folder_path, ctx.save_thumbnail(), register_project_in_the_launcher);
 }
 
 [[nodiscard]] auto Command_PackageProjectInto::to_string() const -> std::string
