@@ -35,6 +35,7 @@
 #include "ProjectManager/Command_SaveProjectAs.h"
 #include "ProjectManager/Interfaces.hpp"
 #include "Tips/Tips.h"
+#include "UserSettings/UserSettings.hpp"
 #include "open/open.hpp"
 
 namespace Lab {
@@ -71,6 +72,8 @@ void App::update()
     _project_manager.open_requested_project_if_any(make_on_project_loaded(), make_on_project_unloaded(), make_window_title_setter());
 
     project().history.start_new_commands_group(); // All commands done in one frame are grouped together, and will be done / undone at once.
+
+    user_settings().update();
 
     if (project().shared_aspect_ratio.fill_the_view)
         project().shared_aspect_ratio.aspect_ratio.set(render_view().aspect_ratio());
@@ -181,6 +184,7 @@ void App::on_shutdown()
 {
     command_execution_context().execute(Command_SaveProject{.is_autosave = true, .must_absolutely_succeed = true});
     on_project_unloaded();
+    user_settings().save();
     _tips_manager.on_app_shutdown();
     _is_shutting_down = true;
     DebugOptions::save();
@@ -612,6 +616,8 @@ void App::settings_menu()
         Cool::color_themes()->imgui_theme_picker();
 
         Cool::user_settings().imgui();
+
+        user_settings().imgui();
 
         ImGui::EndMenu();
     }
