@@ -19,9 +19,6 @@
 
 namespace Lab {
 
-// TODO(Launcher) handle invalid file names (with invalid chars, with dots . , with / or \) or empty name
-// TODO(Launcher) check that project name is valid (no -- at the start, and is a valid file name)
-
 static auto get_argument_after(size_t& i) -> std::string const*
 {
     assert(i < Cool::command_line_args().get().size());
@@ -366,14 +363,42 @@ auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& 
 
 auto ProjectManager::project_name_error_message(std::string const& name) const -> std::optional<std::string>
 {
-    // TODO(Launcher) make sure the name is a valid file name, with no ".", no "/" or "\"
-    // TODO(Launcher) check file name too long
-    // TODO(Launcher) check non-ascii-extended characters
     if (Cool::File::exists(_impl.project_path(name)) && name != _impl.project_name())
         return "Name already used by another project";
 
     if (name.empty())
         return "Name cannot be empty";
+
+    if (Cool::File::weakly_canonical(_impl.project_path(name)).string().size() > 255)
+        return "Name is too long";
+
+    for (char const invalid_char : {'.', '<', '>', ':', '\"', '/', '\\', '|', '?', '*', '\0'})
+    {
+        if (name.find(invalid_char) != std::string::npos)
+            return fmt::format("Name cannot contain a {}", invalid_char);
+    }
+
+    if (name.ends_with(' '))
+        return "Name cannot end with a space";
+
+    if (name.starts_with("--"))
+        return "Name cannot start with --"; // Otherwise, when passing this file name as a command-line argument, we would think it's an argument and not a file name
+
+    {
+        auto upper_case_name = name;
+        std::transform(upper_case_name.begin(), upper_case_name.end(), upper_case_name.begin(), [](char c) {
+            return static_cast<char>(std::toupper(static_cast<unsigned char>(c))); // We need those static_casts to avoid undefined behaviour, cf. https://en.cppreference.com/w/cpp/string/byte/toupper
+        });
+        for (const char* invalid_name : {
+                 "CON", "PRN", "AUX", "NUL",
+                 "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+                 "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"
+             })
+        {
+            if (upper_case_name == invalid_name)
+                return fmt::format("{} is a reserved name", name);
+        }
+    }
 
     return std::nullopt;
 }
