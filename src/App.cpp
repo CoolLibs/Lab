@@ -34,6 +34,7 @@
 #include "ProjectManager/Command_SaveProject.h"
 #include "ProjectManager/Command_SaveProjectAs.h"
 #include "ProjectManager/Interfaces.hpp"
+#include "ProjectManager/ProjectManager.hpp"
 #include "Tips/Tips.h"
 #include "UserSettings/UserSettings.hpp"
 #include "open/open.hpp"
@@ -428,12 +429,16 @@ void App::imgui_window_view()
     });
 }
 
+static auto folder_to_package_project_into(std::filesystem::path image_path)
+{
+    image_path.replace_extension(); // Give project folder the same name as the image.
+    return image_path;
+}
+
 void App::on_image_export_start(std::filesystem::path const& exported_image_path)
 {
-    auto folder_path = exported_image_path;
-    folder_path.replace_extension(); // Give project folder the same name as the image.
     command_executor().execute(Command_PackageProjectInto{
-        .folder_path                      = folder_path,
+        .folder_path                      = folder_to_package_project_into(exported_image_path),
         .register_project_in_the_launcher = false,
     });
 }
@@ -702,7 +707,9 @@ void App::check_inputs()
     }
     if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_E))
     {
-        auto const exported_image_path = project().exporter.export_image_with_current_settings_using_a_task(project().clock.time(), project().clock.delta_time(), polaroid());
+        auto const exported_image_path = project().exporter.export_image_with_current_settings_using_a_task(project().clock.time(), project().clock.delta_time(), polaroid(), [](std::filesystem::path const& image_path) {
+            return is_valid_path_to_package_project_into(folder_to_package_project_into(image_path)); // Make sure that if a project file already exists at "img(3).coollab" we won't try to call the image "img(3).png" even if that png file doesn't exist. We will skip directly to "img(4).png", to make sure we are able to create a project with the same name, without conflicting with any existing project.
+        });
         on_image_export_start(exported_image_path);
     }
 }

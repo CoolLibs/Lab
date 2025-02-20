@@ -4,6 +4,8 @@
 
 namespace Lab {
 
+auto is_valid_path_to_package_project_into(std::filesystem::path const& folder_path) -> bool;
+
 class ProjectManager {
 public:
     auto project() -> Project& { return _impl.project(); }

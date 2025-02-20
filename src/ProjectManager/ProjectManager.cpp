@@ -131,8 +131,8 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
         {
             ImGuiNotify::send({
                 .type     = ImGuiNotify::Type::Error,
-                .title    = fmt::format("Failed to open project \"{}\"", Cool::File::weakly_canonical(file_path)),
-                .content  = "We failed to save the current project, so we didn't open the new one because we would have lost the changes to the current project.",
+                .title    = "Failed to open project",
+                .content  = fmt::format("We failed to save the current project, so we didn't open the new one because we would have lost the changes to the current project.\n{}", Cool::File::weakly_canonical(file_path)),
                 .duration = std::nullopt,
             });
             return;
@@ -145,8 +145,8 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
     {
         ImGuiNotify::send({
             .type     = ImGuiNotify::Type::Error,
-            .title    = fmt::format("Failed to open project \"{}\"", Cool::File::weakly_canonical(file_path)),
-            .content  = maybe_project.error(),
+            .title    = "Failed to open project",
+            .content  = maybe_project.error() + fmt::format("\n{}", Cool::File::weakly_canonical(file_path)),
             .duration = std::nullopt,
         });
         create_new_project_in_folder(Cool::File::without_file_name(file_path), on_project_loaded, set_window_title);
@@ -316,15 +316,35 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
     return true;
 }
 
+static auto file_name_to_package_project_into(std::filesystem::path folder_path) -> std::filesystem::path
+{
+    folder_path.replace_extension(COOLLAB_FILE_EXTENSION);
+    return folder_path;
+}
+
+auto is_valid_path_to_package_project_into(std::filesystem::path const& folder_path) -> bool
+{
+    // TODO(Project) once we really save in a folder, it's okay if the folder exists, as long as it is empty
+    return !Cool::File::exists(file_name_to_package_project_into(folder_path));
+}
+
 auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Packaging project into \"{}\"", Cool::File::weakly_canonical(folder_path)));
 
-    // TODO(Launcher) make sure the folder doesn't exist, or is empty
-    auto file_path = folder_path;
-    file_path.replace_extension(COOLLAB_FILE_EXTENSION);
-    return save_project_as(file_path, save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
+    if (!is_valid_path_to_package_project_into(folder_path))
+    {
+        ImGuiNotify::send({
+            .type     = ImGuiNotify::Type::Error,
+            .title    = "Failed to package project",
+            .content  = fmt::format("This file already exists. Please choose another one.\n{}", Cool::File::weakly_canonical(folder_path)), // TODO(Project) replace text with "this folder" once we package into a folder
+            .duration = std::nullopt,
+        });
+        return false;
+    }
+
+    return save_project_as(file_name_to_package_project_into(folder_path), save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 
 auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title) -> bool
