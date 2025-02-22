@@ -215,14 +215,32 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
         }
     }
 
-    while (!_impl.save(file_path))
+    while (true)
     {
-        boxer::show(
-            fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
-            "Cannot save here",
-            boxer::Style::Warning,
-            boxer::Buttons::OK
-        );
+        auto const maybe_err = project_path_error_message(file_path, {.allow_overwrite_existing_file = true});
+        if (maybe_err.has_value())
+        {
+            boxer::show(
+                fmt::format("{}\nPlease choose another name for your project\n{}", *maybe_err, Cool::File::weakly_canonical(file_path)).c_str(),
+                "Invalid name",
+                boxer::Style::Warning,
+                boxer::Buttons::OK
+            );
+        }
+        else if (!_impl.save(file_path))
+        {
+            boxer::show(
+                fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
+                "Cannot save here",
+                boxer::Style::Warning,
+                boxer::Buttons::OK
+            );
+        }
+        else
+        {
+            break; // Save succeeded
+        }
+
         auto const path = file_dialog_to_save_project();
         if (!path.has_value())
         {
@@ -246,25 +264,39 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
 
 auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
-    // TODO(Launcher) ? make sure the name is a valid file name, with no ".", no "/" or "\"
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
-
-    // TODO(Launcher) setting to choose if we make this path the new path for the project, or if this is just a one-off save
-    // By default this should just be a one-off save
 
     auto const old_uuid  = _impl.project().uuid;
     auto const new_uuid  = reg::generate_uuid(); // This new project path should be associated with a new uuid
     _impl.project().uuid = new_uuid;
 
-    while (!_impl.save(file_path))
+    while (true)
     {
-        boxer::show(
-            fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
-            "Cannot save here",
-            boxer::Style::Warning,
-            boxer::Buttons::OK
-        );
+        auto const maybe_err = project_path_error_message(file_path, {.allow_overwrite_existing_file = true});
+        if (maybe_err.has_value())
+        {
+            boxer::show(
+                fmt::format("{}\nPlease choose another name for your project\n{}", *maybe_err, Cool::File::weakly_canonical(file_path)).c_str(),
+                "Invalid name",
+                boxer::Style::Warning,
+                boxer::Buttons::OK
+            );
+        }
+        else if (!_impl.save(file_path))
+        {
+            boxer::show(
+                fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
+                "Cannot save here",
+                boxer::Style::Warning,
+                boxer::Buttons::OK
+            );
+        }
+        else
+        {
+            break; // Save succeeded
+        }
+
         auto const path = file_dialog_to_save_project();
         if (!path.has_value())
         {
@@ -315,7 +347,7 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
     return true;
 }
 
-static auto file_name_to_package_project_into(std::filesystem::path folder_path) -> std::filesystem::path
+static auto file_path_to_package_project_into(std::filesystem::path folder_path) -> std::filesystem::path
 {
     folder_path.replace_extension(COOLLAB_FILE_EXTENSION);
     return folder_path;
@@ -324,7 +356,10 @@ static auto file_name_to_package_project_into(std::filesystem::path folder_path)
 auto is_valid_path_to_package_project_into(std::filesystem::path const& folder_path) -> bool
 {
     // TODO(Project) once we really save in a folder, it's okay if the folder exists, as long as it is empty
-    return !Cool::File::exists(file_name_to_package_project_into(folder_path));
+    auto const file_path = file_path_to_package_project_into(folder_path);
+    return !Cool::File::exists(file_path)
+        // && is_valid_project_path(file_path) // NB: we need to be able to find another valid path with the same name and an extra number at the end at the end (e.g. "MyProj (5)"). Otherwise we will loop infinitely to find an available project name. This is why we don't check that here, but it will be checked later when we save the project as.
+        ;
 }
 
 auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
@@ -343,7 +378,7 @@ auto ProjectManager::package_project_into(std::filesystem::path const& folder_pa
         return false;
     }
 
-    return save_project_as(file_name_to_package_project_into(folder_path), save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
+    return save_project_as(file_path_to_package_project_into(folder_path), save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 
 auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title) -> bool
@@ -361,10 +396,13 @@ auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& 
     return true;
 }
 
-auto ProjectManager::project_name_error_message(std::string const& name) const -> std::optional<std::string>
+auto ProjectManager::project_name_error_message(std::string const& name, NameValidityChecks checks) const -> std::optional<std::string>
 {
-    if (Cool::File::exists(_impl.project_path(name)) && name != _impl.project_name())
-        return "Name already used by another project";
+    if (!checks.allow_overwrite_existing_file)
+    {
+        if (Cool::File::exists(_impl.project_path(name)) && name != _impl.project_name())
+            return "Name already used by another project";
+    }
 
     if (name.empty())
         return "Name cannot be empty";
@@ -403,9 +441,19 @@ auto ProjectManager::project_name_error_message(std::string const& name) const -
     return std::nullopt;
 }
 
-auto ProjectManager::is_project_name_valid(std::string const& name) const -> bool
+auto ProjectManager::project_path_error_message(std::filesystem::path const& file_path, NameValidityChecks checks) const -> std::optional<std::string>
 {
-    return !project_name_error_message(name).has_value();
+    return project_name_error_message(Cool::File::file_name_without_extension(file_path).string(), checks);
+}
+
+auto ProjectManager::is_valid_project_name(std::string const& name, NameValidityChecks checks) const -> bool
+{
+    return !project_name_error_message(name, checks).has_value();
+}
+
+auto ProjectManager::is_valid_project_path(std::filesystem::path const& file_path, NameValidityChecks checks) const -> bool
+{
+    return is_valid_project_name(Cool::File::file_name_without_extension(file_path).string(), checks);
 }
 
 void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const& set_window_title)
@@ -419,14 +467,16 @@ void ProjectManager::imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowT
 
     if (ImGui::InputText("##project_name", &project_name))
         _next_project_name = project_name;
+
+    auto const name_validity_checks = NameValidityChecks{.allow_overwrite_existing_file = false};
     if (ImGui::IsItemDeactivatedAfterEdit())
     {
         assert(_next_project_name.has_value());
-        if (is_project_name_valid(*_next_project_name) && *_next_project_name != _impl.project_name())
+        if (is_valid_project_name(*_next_project_name, name_validity_checks) && *_next_project_name != _impl.project_name())
             rename_project(*_next_project_name, set_window_title);
         _next_project_name.reset();
     }
-    auto const maybe_err = project_name_error_message(project_name);
+    auto const maybe_err = project_name_error_message(project_name, name_validity_checks);
     if (maybe_err.has_value())
         Cool::ImGuiExtras::warning_text(maybe_err->c_str());
 }
@@ -445,17 +495,6 @@ auto ProjectManager::file_dialog_to_open_project() -> std::optional<std::filesys
         .file_filters   = {{"Coollab project", COOLLAB_FILE_EXTENSION}},
         .initial_folder = _impl.project_folder(),
     });
-}
-
-// TODO(Launcher) remove
-auto ProjectManager::force_file_dialog_to_save_project() -> std::filesystem::path
-{
-    while (true)
-    {
-        auto const path = file_dialog_to_save_project();
-        if (path.has_value())
-            return *path;
-    }
 }
 
 void ProjectManager::open_project_on_next_frame(std::filesystem::path const& file_path)

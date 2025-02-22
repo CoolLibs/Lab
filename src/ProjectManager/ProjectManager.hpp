@@ -33,7 +33,6 @@ public:
 
     auto file_dialog_to_save_project() -> std::optional<std::filesystem::path>;
     auto file_dialog_to_open_project() -> std::optional<std::filesystem::path>;
-    auto force_file_dialog_to_save_project() -> std::filesystem::path;
 
 private:
     /// Returns true iff we saved successfully
@@ -42,8 +41,13 @@ private:
 
     void open_project(std::filesystem::path const& file_path, OnProjectLoaded const&, OnProjectUnloaded const&, SetWindowTitle const&);
 
-    auto project_name_error_message(std::string const& name) const -> std::optional<std::string>;
-    auto is_project_name_valid(std::string const& name) const -> bool;
+    struct NameValidityChecks {
+        bool allow_overwrite_existing_file{false};
+    };
+    auto project_name_error_message(std::string const& name, NameValidityChecks) const -> std::optional<std::string>;
+    auto project_path_error_message(std::filesystem::path const& file_path, NameValidityChecks) const -> std::optional<std::string>;
+    auto is_valid_project_name(std::string const& name, NameValidityChecks) const -> bool;
+    auto is_valid_project_path(std::filesystem::path const& file_path, NameValidityChecks) const -> bool;
 
 private:
     internal::ProjectManagerImpl         _impl{};
