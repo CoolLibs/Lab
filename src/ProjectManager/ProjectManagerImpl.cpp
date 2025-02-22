@@ -3,7 +3,7 @@
 #include <tl/expected.hpp>
 #include "COOLLAB_FILE_EXTENSION.hpp"
 #include "Cool/File/File.h"
-#include "Cool/OSC/OSCManager.h"
+#include "Cool/Utils/hash_project_path_for_info_folder.hpp"
 #include "Dump/coollab_version.hpp"
 #include "Serialization/SProject.h"
 
@@ -21,14 +21,14 @@ auto ProjectManagerImpl::project_path(std::string_view file_name) const -> std::
 
 auto ProjectManagerImpl::info_folder_for_the_launcher() const -> std::optional<std::filesystem::path>
 {
-    return info_folder_for_the_launcher(_project->uuid);
+    return info_folder_for_the_launcher(project_path());
 }
 
-auto ProjectManagerImpl::info_folder_for_the_launcher(reg::AnyId const& project_uuid) const -> std::optional<std::filesystem::path>
+auto ProjectManagerImpl::info_folder_for_the_launcher(std::filesystem::path const& project_file_path) const -> std::optional<std::filesystem::path>
 {
     if (!_path_to_launcher_info_folder)
         return std::nullopt;
-    return *_path_to_launcher_info_folder / reg::to_string(project_uuid);
+    return *_path_to_launcher_info_folder / Cool::hash_project_path_for_info_folder(project_file_path);
 }
 
 auto ProjectManagerImpl::has_registered_project_to_the_launcher() const -> bool
@@ -63,13 +63,13 @@ void ProjectManagerImpl::set_project_name(std::string_view file_name, SetWindowT
     set_window_title(window_title(project_path()));
 }
 
-void ProjectManagerImpl::set_project_path_for_launcher(std::filesystem::path const& file_path) const
+void ProjectManagerImpl::set_project_path_in_info_folder_for_the_launcher(std::filesystem::path const& file_path) const
 {
-    auto const folder = info_folder_for_the_launcher();
+    auto const folder = info_folder_for_the_launcher(file_path);
     if (!folder.has_value())
         return;
 
-    Cool::File::set_content(*folder / "path.txt", file_path.string());
+    Cool::File::set_content(*folder / "path.txt", Cool::File::weakly_canonical(file_path).string());
 }
 
 auto ProjectManagerImpl::load(std::filesystem::path const& file_path) -> tl::expected<Project, std::string>
@@ -111,6 +111,13 @@ auto ProjectManagerImpl::file_contains_data_that_we_did_not_write_ourselves(std:
         return true;
 
     return our_last_write_time->second != Cool::File::last_write_time(file_path);
+}
+
+void ProjectManagerImpl::remove_info_folder_for_the_launcher(std::filesystem::path const& project_file_path) const
+{
+    auto const info_folder = info_folder_for_the_launcher(project_file_path);
+    if (info_folder.has_value())
+        Cool::File::remove_folder(*info_folder);
 }
 
 } // namespace Lab::internal

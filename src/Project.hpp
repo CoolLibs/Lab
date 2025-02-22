@@ -19,7 +19,6 @@ namespace Lab {
 
 struct Project {
     Project();
-    reg::AnyId uuid{reg::generate_uuid()};
 
     std::unique_ptr<ModulesGraph> modules_graph{std::make_unique<ModulesGraph>()}; // TODO(Modules) Can't we avoid the unique_ptr?
     Camera3DManager               camera_3D_manager{};                             // Must be after modules_graph because we reference a DirtyFlag from it
@@ -45,7 +44,6 @@ private:
         history.set_max_saved_size(0); // TODO HACK to avoid a crash when deserializing the history: https://github.com/orgs/CoolLibs/projects/1/views/1?pane=issue&itemId=46983814
 #endif
         archive(
-            ser20::make_nvp("UUID", uuid),
             ser20::make_nvp("Time", clock),
             ser20::make_nvp("View Constraint", view_constraint),
             ser20::make_nvp("Exporter (Image and Video)", exporter),

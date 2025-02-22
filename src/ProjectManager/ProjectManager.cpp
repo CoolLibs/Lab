@@ -191,6 +191,7 @@ auto ProjectManager::save_project_impl(bool must_absolutely_succeed, SetWindowTi
 
 auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool must_absolutely_succeed, SetWindowTitle const& set_window_title) -> bool
 {
+    auto const old_path = _impl.project_path();
     if (_impl.file_contains_data_that_we_did_not_write_ourselves(file_path))
     {
         // We would overwrite a file that we did not write ourselves, this is dangerous because we might overwrite data saved by the user with another application
@@ -255,9 +256,11 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
     // if (file_path != _impl.project_path()) // Do it all the time, so that if we open a file that was not registered in the launcher, it now will be
     {
         _impl.set_project_path(file_path, set_window_title);
-        _impl.set_project_path_for_launcher(file_path);
+        _impl.set_project_path_in_info_folder_for_the_launcher(file_path);
     }
     _impl.register_last_write_time(file_path);
+    if (old_path != file_path && !_impl.file_contains_data_that_we_did_not_write_ourselves(old_path))
+        _impl.remove_info_folder_for_the_launcher(old_path);
 
     return true;
 }
@@ -266,10 +269,6 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::ToUser::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
-
-    auto const old_uuid  = _impl.project().uuid;
-    auto const new_uuid  = reg::generate_uuid(); // This new project path should be associated with a new uuid
-    _impl.project().uuid = new_uuid;
 
     while (true)
     {
@@ -299,22 +298,17 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
 
         auto const path = file_dialog_to_save_project();
         if (!path.has_value())
-        {
-            _impl.project().uuid = old_uuid;
             return false;
-        }
         file_path = *path;
     }
 
     if (register_project_in_the_launcher)
     {
-        _impl.set_project_path_for_launcher(file_path);
-        auto const info_folder = _impl.info_folder_for_the_launcher(new_uuid);
+        _impl.set_project_path_in_info_folder_for_the_launcher(file_path);
+        auto const info_folder = _impl.info_folder_for_the_launcher(file_path);
         if (info_folder)
             save_thumbnail(*info_folder);
     }
-
-    _impl.project().uuid = old_uuid; // Keep the same uuid as before because we are still on the same project
 
     bool const wants_to_switch_to_new_project = user_settings().switch_to_new_project_when_saving_as
                                                 && register_project_in_the_launcher; // If we don't register this project in the launcher, then we shouldn't make it the current project either)
@@ -391,7 +385,10 @@ auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& 
         return false;
 
     if (!_impl.file_contains_data_that_we_did_not_write_ourselves(old_path))
+    {
         Cool::File::remove_file(old_path);
+        _impl.remove_info_folder_for_the_launcher(old_path);
+    }
 
     return true;
 }
