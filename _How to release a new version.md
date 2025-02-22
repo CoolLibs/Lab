@@ -2,7 +2,7 @@
 - Add gifs and images in the changelog to illustrate the changes
 - Choose a name for the version and add it in *changelog.md*
 - Create a new section with no name in *changelog.md*
-- In *versions_compatibility.txt*, add the name of the version, and incompatibility markers if necessary
+- At the top of *versions_compatibility.txt*, add the name of the version, and incompatibility markers if necessary
 - Commit with the message "🔖 [version_name] Release" (make sure to replace with the right version name)
 - On GitHub, create a new release with the name of the version you just chose. Use a new tag with the same name as the version (replace spaces with underscores). As a description, use whatever is in the changelog for the new version
 - Make an announcement on our Discord + thank the contributors if any (ptut, interns, etc.)
