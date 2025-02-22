@@ -1,8 +1,1 @@
 1.0.0 Launcher
-1.0.1 Launcher
----
-1.1.0 WebGPU
----Qqchhhh sdkjfh
-1.2.0 Bidule
----Node "Bidule" has been renamed as "Truc"
-1.3.0 Truc
