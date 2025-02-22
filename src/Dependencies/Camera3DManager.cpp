@@ -15,31 +15,33 @@ void Camera3DManager::hook_events(
     CommandExecutor const&                             executor
 )
 {
-    events
-        .scroll_event()
-        .subscribe([this, executor](auto const& event) {
-            if (!_is_editable_in_view)
-                return;
+    _scroll_callback_id =
+        events
+            .scroll_event()
+            .subscribe([this, executor](auto const& event) {
+                if (!_is_editable_in_view)
+                    return;
 
-            auto       camera   = _camera.value();
-            auto const old_zoom = _view_controller.get_distance_to_orbit_center();
-            if (_view_controller.on_wheel_scroll(camera, event.dy))
-            {
-                auto const zoom = _view_controller.get_distance_to_orbit_center();
-                _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
+                auto       camera   = _camera.value();
+                auto const old_zoom = _view_controller.get_distance_to_orbit_center();
+                if (_view_controller.on_wheel_scroll(camera, event.dy))
+                {
+                    auto const zoom = _view_controller.get_distance_to_orbit_center();
+                    _view_controller.set_distance_to_orbit_center(old_zoom); // Undo the zoom, it will be done by the Command_SetCameraZoom
 
-                { // Don't merge with zooms that happened a while ago
-                    static auto chrono = Cool::Chrono{};
-                    if (chrono.elapsed_more_than(0.5s))
-                        executor.execute(Command_FinishedEditingVariable{});
+                    { // Don't merge with zooms that happened a while ago
+                        static auto chrono = Cool::Chrono{};
+                        if (chrono.elapsed_more_than(0.5s))
+                            executor.execute(Command_FinishedEditingVariable{});
+                    }
+                    executor.execute(Command_SetCameraZoom{zoom});
                 }
-                executor.execute(Command_SetCameraZoom{zoom});
-            }
-        });
-    events
-        .drag()
-        .subscribe({
-            .on_start  = [this, executor](auto const&) {
+            });
+    _drag_callback_id =
+        events
+            .drag()
+            .subscribe({
+                .on_start  = [this, executor](auto const&) {
                 if (!_is_editable_in_view)
                     return false;
 
@@ -47,20 +49,27 @@ void Camera3DManager::hook_events(
                     return _view_controller.on_drag_start(camera);
                 });
                 return true; },
-            .on_update = [this, executor](auto const&) {
-                //
-                maybe_update_camera(executor, [&](Cool::Camera& camera) {
-                    return _view_controller.on_drag(camera, ImGui::GetIO().MouseDelta); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
-                });
-                ImGui::WrapMousePos(ImGuiAxesMask_All);
-                //
-            },
-            .on_stop = [this, executor](auto&&) {
+                .on_update = [this, executor](auto const&) {
+                    //
+                    maybe_update_camera(executor, [&](Cool::Camera& camera) {
+                        return _view_controller.on_drag(camera, ImGui::GetIO().MouseDelta); // NB: we don't use event.delta as it is in relative coordinates, and we want a delta in pixels to keep the drag speed the same no matter the size of the View.
+                    });
+                    ImGui::WrapMousePos(ImGuiAxesMask_All);
+                    //
+                },
+                .on_stop = [this, executor](auto&&) {
                 maybe_update_camera( executor,  [&](Cool::Camera& camera) {
                     return _view_controller.on_drag_stop(camera);
                 });
                 executor.execute(Command_FinishedEditingVariable{}); },
-        });
+            });
+}
+
+void Camera3DManager::unhook_events(Cool::MouseEventDispatcher<Cool::ViewCoordinates>& events
+)
+{
+    events.scroll_event().unsubscribe(_scroll_callback_id);
+    events.drag().unsubscribe(_drag_callback_id);
 }
 
 void Camera3DManager::imgui(CommandExecutor const& executor)

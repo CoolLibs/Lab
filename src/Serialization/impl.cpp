@@ -6,7 +6,7 @@
 ///
 #include <ser20/types/polymorphic.hpp>
 #include "Cool/Serialization/Serialization.h"
-#include "Dump/coollab_version.h"
+#include "Dump/coollab_version.hpp"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Default/Module_Default.hpp"
 #include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
@@ -24,8 +24,9 @@ auto do_save(Project const& project, std::filesystem::path const& path) -> bool
 {
     return Cool::Serialization::save<Project, ser20::JSONOutputArchive>(project, path, "Project", coollab_version());
 }
-auto do_load(Project& project, std::filesystem::path const& path, std::string& coollab_version) -> Cool::OptionalErrorMessage
+auto do_load(Project& project, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
 {
+    auto coollab_version = ""s; // Ignore it, we don't need it when loading the project, only the launcher needs it
     return Cool::Serialization::load<Project, ser20::JSONInputArchive>(project, path, &coollab_version);
 }
 

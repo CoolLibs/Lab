@@ -3,8 +3,10 @@
 
 namespace Lab {
 
-struct Command_OpenBackupProject {
-    void               execute(CommandExecutionContext_Ref const&) const;
+struct Command_OpenProjectOnNextFrame {
+    std::filesystem::path path{};
+
+    void               execute(CommandExecutionContext_Ref const& ctx) const;
     [[nodiscard]] auto to_string() const -> std::string;
 };
 
@@ -12,7 +14,7 @@ struct Command_OpenBackupProject {
 
 namespace ser20 {
 template<class Archive>
-void serialize(Archive&, Lab::Command_OpenBackupProject&)
+void serialize(Archive&, Lab::Command_OpenProjectOnNextFrame&)
 {
 }
 } // namespace ser20

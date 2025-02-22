@@ -1,29 +1,11 @@
 # Changelog
 
-- [🐣 Beta 19 WIP](#-beta-19-wip)
-- [🐣 Beta 18](#-beta-18)
-- [🐣 Beta 17](#-beta-17)
-- [🐣 Beta 16](#-beta-16)
-- [🐣 Beta 15](#-beta-15)
-- [🐣 Beta 14](#-beta-14)
-- [🐣 Beta 13](#-beta-13)
-- [🐣 Beta 12](#-beta-12)
-- [🐣 Beta 11](#-beta-11)
-- [🐣 Beta 10](#-beta-10)
-- [🐣 Beta 9](#-beta-9)
-- [🐣 Beta 8](#-beta-8)
-- [🐣 Beta 7](#-beta-7)
-- [🐣 Beta 6](#-beta-6)
-- [🐣 Beta 5](#-beta-5)
-- [🐣 Beta 4](#-beta-4)
-- [🐣 Beta 3](#-beta-3)
-- [🐣 Beta 2](#-beta-2)
-- [🐣 Beta 1](#-beta-1)
-- [🐣 Beta 0](#-beta-0)
+## 
 
-## 🐣 Beta 19 WIP
+## 1.0.0 Launcher
 
-- 🐛 Fix: our white was not perfectly pure white
+- ✨ We are now using a launcher that will auto-install new Coollab versions automatically
+- 🐛 Fix: our white was not a perfectly pure white in some cases
 - 🤏 Improved the linearity of our gradients from black to white
 Before: (notice the huge black region on the left)
 ![Before](https://github.com/user-attachments/assets/6f6ef0e9-a67f-438a-8226-11d6b9e52330)
@@ -33,19 +15,16 @@ After:
 - 🤏 Webcams now open faster
 - 🤏 Better error messages when the webcam doesn't work, and it is faster to re-open once the problem is fixed
 - ✨ Improved feedback loop node, you can now apply effects after the feedback node, that won't affect the image sent back into the loop
-- 🐛  When a camera node was present but not actually linked into the graph, it still used the camera and forced us to rerender every frame. Now only the nodes that are actually used affect us.
-- Added server, can send http request to set values in Coollab
+- 🐛 When a camera node was present but not actually linked into the graph, it still used the camera and forced us to rerender every frame. Now only the nodes that are actually used affect us.
+- ✨ Added server, can send http request to set values in Coollab
 - 🤏 Merged Camera and Inspector windows. You can now edit camera values in the Inspector, when no node is selected.
-
-## 🐣 Beta 18
-
-- ✨ We are now using a launcher that will auto-install new Coollab versions automatically
 - ✨ Every time input is now nicely formatted like "1h 27m 53s"
 - ✨ The Output Window can now easily be turned fullscreen with <kbd>F10</kbd> or by right-clicking on it
 - ✨ When opening the Output Window, the aspect ratio automatically adapts to it
 - ✨ The Output Window now doesn't have a title bar
 - 🟦 Nodes: Added "MIDI Multi-Select with Transition" 
 ![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
+- 🟦 Nodes: Added a Glow that works on any Image (the previous one only worked on Shapes, and is still here because it still looks better on Shapes than the new one). This is a contribution by [illtellyoulater](https://github.com/CoolLibs/Lab/issues/110)
 - 🐛 Allow access to your microphone on MacOS for Audio nodes
 - 🐛 Fix MacOS version crashing on startup
 
@@ -143,9 +122,9 @@ After:
 ![image](https://github.com/CoolLibs/.github/assets/45451201/5a8d4950-57a0-4282-b549-6c66487448c3)
 - ✨ Added the "Paint" blend mode.
 
-| ![image](https://github.com/CoolLibs/.github/assets/45451201/6f57a43d-a422-4056-81e1-c691e4c85d84)  | ![image](https://github.com/CoolLibs/.github/assets/45451201/9b12b5bf-7f15-408b-93e9-552e0caa30ea)  |
-|---|----|
-| "Light" mode (what was already there in Coollab) | "Paint" mode (the new blend mode) |
+| ![image](https://github.com/CoolLibs/.github/assets/45451201/6f57a43d-a422-4056-81e1-c691e4c85d84) | ![image](https://github.com/CoolLibs/.github/assets/45451201/9b12b5bf-7f15-408b-93e9-552e0caa30ea) |
+| -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| "Light" mode (what was already there in Coollab)                                                   | "Paint" mode (the new blend mode)                                                                  |
 
 - ✨ Added an Output window that you can project during live shows, while still having your View window on your screen to move the camera and the widgets. To open this window, go in the `Commands` menu and select `Open output window`.
 ![image](https://github.com/CoolLibs/.github/assets/45451201/3d6a14ec-69ca-44b1-81e0-1d4139b72544)

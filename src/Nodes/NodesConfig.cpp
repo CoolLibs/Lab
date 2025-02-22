@@ -14,7 +14,6 @@
 #include <Cool/Nodes/ed.h>
 #include <Nodes/NodesClipboard.h>
 #include <algorithm>
-#include <reg/src/internal/generate_uuid.hpp>
 #include <string>
 #include "App.h"
 #include "Cool/Audio/AudioManager.h"
@@ -386,14 +385,14 @@ auto NodesConfig::add_node(Cool::NodeDefinitionAndCategoryName const& cat_id) ->
 
 auto NodesConfig::add_node(Node const& node) -> Cool::NodeId
 {
-    auto const id = Cool::NodeId{reg::internal::generate_uuid()};
+    auto const id = Cool::NodeId{reg::generate_uuid()};
     _command_executor.execute(Command_AddNode{id, node});
     return id;
 }
 
 auto NodesConfig::add_link(Cool::Link const& link) -> Cool::LinkId
 {
-    auto const id = Cool::LinkId{reg::internal::generate_uuid()};
+    auto const id = Cool::LinkId{reg::generate_uuid()};
     _command_executor.execute(Command_AddLink{id, link});
     return id;
 }
@@ -548,7 +547,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
             }
             for (auto& pin : node.input_pins())
             {
-                auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
+                auto const new_pin_id = Cool::PinId{reg::generate_uuid()};
                 for (auto& link : clipboard.links)
                 {
                     if (link.to_pin_id == pin.id())
@@ -558,7 +557,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
             }
             for (auto& pin : node.output_pins())
             {
-                auto const new_pin_id = Cool::PinId{reg::internal::generate_uuid()};
+                auto const new_pin_id = Cool::PinId{reg::generate_uuid()};
                 for (auto& link : clipboard.links)
                 {
                     if (link.from_pin_id == pin.id())

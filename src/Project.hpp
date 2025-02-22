@@ -1,15 +1,19 @@
 #pragma once
-#include <Dependencies/Camera2DManager.h>
 #include "Cool/Audio/AudioManager.h"
 #include "Cool/Exporter/Exporter.h"
 #include "Cool/Image/ImageSizeConstraint.h"
 #include "Cool/Image/SharedAspectRatio.hpp"
+#include "Cool/Mesh/MeshExportSettings.hpp"
 #include "Cool/Midi/MidiManager.h"
-#include "Cool/OSC/OSCConnectionEndpoint.h"
-#include "Cool/StrongTypes/Camera2D.h"
+#include "Cool/OSC/OSCManager.h"
+#include "Cool/Server/ServerManager.hpp"
 #include "Cool/Time/Clock_Realtime.h"
+#include "Cool/Webcam/WebcamsConfigs.hpp"
+#include "Dependencies/Camera2DManager.h"
 #include "Dependencies/Camera3DManager.h"
+#include "Meshing/MeshingGui.hpp"
 #include "ModulesGraph/ModulesGraph.h"
+#include "output_view_ptr.hpp"
 
 namespace Lab {
 
@@ -17,17 +21,17 @@ struct Project {
     Project();
 
     std::unique_ptr<ModulesGraph> modules_graph{std::make_unique<ModulesGraph>()}; // TODO(Modules) Can't we avoid the unique_ptr?
-    Camera3DManager               camera_3D_manager;                               // Must be after modules_graph because we reference a DirtyFlag from it
-    Camera2DManager               camera_2D_manager;                               // Must be after modules_graph because we reference a DirtyFlag from it
-    Cool::Clock_Realtime          clock;
-    Cool::ImageSizeConstraint     view_constraint;
+    Camera3DManager               camera_3D_manager{};                             // Must be after modules_graph because we reference a DirtyFlag from it
+    Camera2DManager               camera_2D_manager{};                             // Must be after modules_graph because we reference a DirtyFlag from it
+    Cool::Clock_Realtime          clock{};
+    Cool::ImageSizeConstraint     view_constraint{};
     History                       history{};
-    Cool::Exporter                exporter;
-    Cool::AudioManager            audio;
-    Cool::OSCConnectionEndpoint   osc_endpoint{};
+    Cool::Exporter                exporter{};
+    Cool::AudioManager            audio{};
     Cool::SharedAspectRatio       shared_aspect_ratio{};
+    Cool::MeshExportSettings      mesh_export_settings{};
+    MeshingGui                    meshing_gui{};
 
-    [[nodiscard]] auto is_empty() const -> bool;
     [[nodiscard]] auto current_clock() const -> Cool::Clock const& { return exporter.is_exporting() ? exporter.clock() : clock; }
 
 private:
@@ -48,9 +52,14 @@ private:
             ser20::make_nvp("Modules Graph", modules_graph),
             ser20::make_nvp("History", history),
             ser20::make_nvp("Audio", audio),
-            ser20::make_nvp("OSC Endpoint", osc_endpoint),
-            ser20::make_nvp("MIDI Channels", Cool::midi_manager().all_values()),
-            ser20::make_nvp("Shared Aspect Ratio", shared_aspect_ratio)
+            ser20::make_nvp("Webcams", Cool::WebcamsConfigs::instance()),
+            ser20::make_nvp("MIDI", Cool::midi_manager()),
+            ser20::make_nvp("OSC", Cool::osc_manager()),
+            ser20::make_nvp("Server", Cool::server_manager()),
+            ser20::make_nvp("Shared Aspect Ratio", shared_aspect_ratio),
+            ser20::make_nvp("3D Model export settings", mesh_export_settings),
+            ser20::make_nvp("3D Model generation", meshing_gui),
+            ser20::make_nvp("Output view", *output_view_ptr())
         );
     }
 };

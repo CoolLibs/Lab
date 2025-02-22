@@ -3,17 +3,19 @@
 #include "AuthorInfo.h"
 #include "Cool/ImGui/ImGuiWindow.h"
 #include "Cool/Image/SharedAspectRatio.hpp"
+#include "Cool/Serialization/JsonAutoSerializer.hpp"
 #include "LegalInfo.h"
+#include "img/img.hpp"
 
 namespace Lab {
 
-class GalleryPoster {
+class GalleryPublisher {
 public:
-    GalleryPoster();
+    GalleryPublisher();
 
     void imgui_open_sharing_form();
-    /// `render` is a function that renders an image to a .png and returns it in a string.
-    void imgui_window(std::function<std::string(img::Size)> const& render_png);
+    /// `render_image` is a function that renders an image of the requested size
+    void imgui_window(std::function<img::Image(img::Size)> const& render_image);
 
     void set_shared_aspect_ratio(Cool::SharedAspectRatio& shared_aspect_ratio) { _shared_aspect_ratio = &shared_aspect_ratio; }
 
@@ -27,18 +29,7 @@ private:
     LegalInfo                _legal_info{};
     Cool::SharedAspectRatio* _shared_aspect_ratio{};
 
-private:
-    // Serialization
-    friend class ser20::access;
-    template<class Archive>
-    void serialize(Archive& archive)
-    {
-        archive(
-            ser20::make_nvp("Artwork info", _artwork_info),
-            ser20::make_nvp("Author info", _author_info),
-            ser20::make_nvp("Legal info", _legal_info)
-        );
-    }
+    Cool::JsonAutoSerializer _serializer;
 };
 
 } // namespace Lab
