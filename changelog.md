@@ -4,29 +4,69 @@
 
 ## 1.0.0 Launcher
 
+### Launcher
+
 - ✨ We are now using a launcher that will auto-install new Coollab versions automatically
-- 🐛 Fix: our white was not a perfectly pure white in some cases
-- 🤏 Improved the linearity of our gradients from black to white
+- 💥 You can no longer open a project directly from Coollab, you have to go through the Launcher. (This is to ensure we use the right version of Coollab for each project, instead of facing an "incompatible version" error when trying to open it)
+- ✨ Added a field to rename the project, in the center of the top menu bar
+- ✨ Reworked how "Save As" works, to be more intuitive. You also have an option in the Settings menu to change its behaviour.
+
+### Quality of Life changes
+
+- ✨ Added shortcut <kbd>CTRL</kbd>+<kbd>E</kbd> to quickly export an image
+- ✨ The aspect ratio of the View is now controlled through a small button in the View
+![](https://github.com/user-attachments/assets/a536802b-9e06-40f7-bd57-7485d5a37859)
+- 🤏 Merged Camera and Inspector windows. You can now edit camera values in the Inspector, when no node is selected.
+![](https://github.com/user-attachments/assets/e7536282-3431-4f0b-97e7-dc3da13c8ca2)
+- ✨ Removed some useless options in the Node's Inspector. Renaming a node is now done by right-clicking on it (or pressing <kbd>F2</kbd>)
+![](https://github.com/user-attachments/assets/520b1999-61b5-4a49-9b08-33a23ecfac75)
+- ✨ Added a progress bar for long operations like exporting an image, and it will no longer freeze Coollab while the operation is in progress
+![](https://github.com/user-attachments/assets/421febbc-5c94-471e-93bf-0d7388f7f278)
+- ✨ Added nice notifications for all kinds of events and errors
+![](https://github.com/user-attachments/assets/cd43b632-0f90-492e-bbb4-356794bf5523)
+- ✨ Every time value is now nicely formatted as "1h 27m 53s"
+
+### Improved VJing setup
+
+- ✨ The Output Window can now easily be turned fullscreen with <kbd>F10</kbd> or by right-clicking on it
+- ✨ When opening the Output Window, the aspect ratio automatically adapts to it
+- 🤏 We now automatically prevent your computer from going to sleep while you are exporting a video, or using the Output window to project Coollab during a live show or an installation
+- 🤏 The Output Window now doesn't have a title bar
+![](https://github.com/user-attachments/assets/73f3b250-8f33-4c9c-b602-63d5496027b5)
+
+### New and improved nodes
+
+- 🟦 Added a Glow node that works on any Image (the previous one only worked on Shapes, and is still here because it still looks better on Shapes than the new one). Thank you to [illtellyoulater](https://github.com/CoolLibs/Lab/issues/110) for this contribution!
+![](https://github.com/user-attachments/assets/3337367d-d2ee-498b-a5ff-ba2131ecbedb)
+- 🟦 Added "Monochrome" node
+![](https://github.com/user-attachments/assets/08d7d280-c8b9-4ae2-b640-20d6c4817a9a)
+- 🟦 Added "MIDI Multi-Select with Transition" node
+![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
+- 🟦 "Mirror Repeat" and "Grid" nodes now have a "Content Size" parameter to allow you to fit your content in the square that will be repeated
+![](https://github.com/user-attachments/assets/af5f70ee-d43c-488c-bc03-bc691d072386)
+- 🟦 Image, Video, Webcam and Color Ramp are now using the "Mirror" repeat mode by default. This can be changed in the Inspector.
+![](https://github.com/user-attachments/assets/117959ea-2b25-4fff-ba76-db739f3f090f)
+- 🟦 Changed feedback loop node, you can now apply effects after the feedback node, that won't affect the image sent back into the loop (NB: this is still an experiment, this node will be greatly improved in the future)
+
+### Miscellaneous
+
+- 🤏 Webcams now open faster
+- 🤏 Better error messages when the webcam doesn't work, and it is faster to re-open once the problem is fixed
+- 🚧 You can now send http requests to Coollab to set values (NB: this is still a work in progress, we will document it later once it is stabilized)
+
+### Bug fixes
+
+- 🐛 Improved the linearity of our gradients from black to white
 Before: (notice the huge black region on the left)
 ![Before](https://github.com/user-attachments/assets/6f6ef0e9-a67f-438a-8226-11d6b9e52330)
 After:
 ![After](https://github.com/user-attachments/assets/a69dc220-b92a-46f4-af90-ea31ee642611)
-- 🐛 Fix: properly display accents in webcam name
-- 🤏 Webcams now open faster
-- 🤏 Better error messages when the webcam doesn't work, and it is faster to re-open once the problem is fixed
-- ✨ Improved feedback loop node, you can now apply effects after the feedback node, that won't affect the image sent back into the loop
+- 🐛 Fix: our white was not a perfectly pure white in some cases
+- 🐛 Fix: properly display accents (like "é") in webcam name
 - 🐛 When a camera node was present but not actually linked into the graph, it still used the camera and forced us to rerender every frame. Now only the nodes that are actually used affect us.
-- ✨ Added server, can send http request to set values in Coollab
-- 🤏 Merged Camera and Inspector windows. You can now edit camera values in the Inspector, when no node is selected.
-- ✨ Every time input is now nicely formatted like "1h 27m 53s"
-- ✨ The Output Window can now easily be turned fullscreen with <kbd>F10</kbd> or by right-clicking on it
-- ✨ When opening the Output Window, the aspect ratio automatically adapts to it
-- ✨ The Output Window now doesn't have a title bar
-- 🟦 Nodes: Added "MIDI Multi-Select with Transition" 
-![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
-- 🟦 Nodes: Added a Glow that works on any Image (the previous one only worked on Shapes, and is still here because it still looks better on Shapes than the new one). This is a contribution by [illtellyoulater](https://github.com/CoolLibs/Lab/issues/110)
 - 🐛 Allow access to your microphone on MacOS for Audio nodes
 - 🐛 Fix MacOS version crashing on startup
+- 🐛 Many many other small bug fixes ^^
 
 ## 🐣 Beta 17
 
