@@ -114,6 +114,13 @@ jobs:
           cmakeBuildType: Release
           buildDirectory: ${{github.workspace}}/build
 
+      - name: Copy licenses
+        shell: pwsh
+        run: |
+          cd ${{github.workspace}}/build
+          cmake --install . --prefix tmp_install
+          Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/bin/Release/license/* -Recurse
+
       - name: Zip Release binaries (Linux and MacOS)
         if: runner.os != 'Windows'
         run: |
