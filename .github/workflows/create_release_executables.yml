@@ -119,7 +119,8 @@ jobs:
         run: |
           cd ${{github.workspace}}/build
           cmake --install . --prefix tmp_install
-          Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/bin/Release/license/* -Recurse
+          New-Item -ItemType Directory -Path "${{github.workspace}}/bin/Release/license"
+          Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/bin/Release/license/ -Recurse
 
       - name: Zip Release binaries (Linux and MacOS)
         if: runner.os != 'Windows'
