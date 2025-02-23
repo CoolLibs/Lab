@@ -404,9 +404,6 @@ auto ProjectManager::project_name_error_message(std::string const& name, NameVal
     if (name.empty())
         return "Name cannot be empty";
 
-    if (Cool::File::weakly_canonical(_impl.project_path(name)).string().size() > 255)
-        return "Name is too long";
-
     for (char const invalid_char : {'.', '<', '>', ':', '\"', '/', '\\', '|', '?', '*', '\0'})
     {
         if (name.find(invalid_char) != std::string::npos)
