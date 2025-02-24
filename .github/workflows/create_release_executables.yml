@@ -75,7 +75,7 @@ jobs:
       - name: Install Windows dependencies
         if: runner.os == 'Windows'
         run: |
-          ${{ runner.temp }}\vcpkg\vcpkg.exe install openssl:x64-windows
+          ${{ runner.temp }}\vcpkg\vcpkg.exe install openssl:x64-windows-static
         shell: cmd
 
       - name: Install Linux dependencies
