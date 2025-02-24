@@ -92,6 +92,7 @@ private:
     void imgui_window_view();
     void imgui_window_exporter();
     void imgui_window_meshing();
+    void imgui_window_license();
 
 public: // Needs to be public so we can call it in the NodesConfig
     void imgui_window_cameras();
@@ -104,6 +105,7 @@ private:
     void compile_all_is0_nodes();
     auto project() -> Project& { return _project_manager.project(); }
     auto project() const -> Project const& { return _project_manager.project(); }
+    void about_menu();
 
 private:
     Cool::Window&                   _main_window;
@@ -118,6 +120,7 @@ private:
     NodesLibraryManager             _nodes_library_manager{};
     bool                            _is_shutting_down{false};
     std::optional<no_sleep::Scoped> _disable_sleep{};
+    bool                            _license_window_is_open{false};
 
 private:
     void save_to_json(nlohmann::json& json) const override

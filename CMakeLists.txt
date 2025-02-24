@@ -102,6 +102,7 @@ Lab_copy_folder("res")
 Lab_copy_folder("User data Default")
 Lab_copy_folder("User data Init")
 Lab_copy_folder("Nodes")
+Cool__target_copy_file(${PROJECT_NAME} LICENSE.txt)
 
 if(MSVC)
     target_compile_options(Coollab-Properties INTERFACE /bigobj) # We use too many templates apparently so we need this flag O:)

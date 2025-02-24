@@ -5,6 +5,7 @@
 #include "Commands/Command_OpenImageExporter.h"
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
+#include "Cool/File/File.h"
 #include "Cool/ImGui/ColorThemes.h"
 #include "Cool/ImGui/Fonts.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
@@ -27,7 +28,6 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "Dump/gen_dump_string.h"
-#include "Menus/about_menu.h"
 #include "ModulesGraph/ModulesGraph.h"
 #include "ProjectManager/Command_OpenProjectOnNextFrame.hpp"
 #include "ProjectManager/Command_PackageProjectInto.h"
@@ -470,18 +470,32 @@ void App::imgui_window_meshing()
     );
 }
 
+void App::imgui_window_license()
+{
+    if (_license_window_is_open)
+    {
+        ImGui::Begin(Cool::icon_fmt("License", ICOMOON_FILE_TEXT).c_str(), &_license_window_is_open);
+        static auto license_text = Cool::File::to_string(Cool::Path::root() / "LICENSE.txt");
+        if (license_text.has_value())
+            ImGui::TextUnformatted(license_text->c_str());
+        ImGui::End();
+    }
+}
+
 void App::imgui_windows()
 {
     imgui_window_view();
     imgui_window_exporter();
     imgui_window_console();
-    imgui_window_meshing();
     if (inputs_are_allowed())
         imgui_windows_only_when_inputs_are_allowed();
 }
 
 void App::imgui_windows_only_when_inputs_are_allowed()
 {
+    imgui_window_meshing();
+    imgui_window_license();
+
     auto const the_ui = ui();
     // Time
     ImGui::Begin(Cool::icon_fmt("Time", ICOMOON_STOPWATCH).c_str());
@@ -661,6 +675,19 @@ void App::debug_menu()
     if (ImGui::BeginMenu("Debug"))
     {
         DebugOptionsManager::imgui_ui_for_all_options();
+        ImGui::EndMenu();
+    }
+}
+
+void App::about_menu()
+{
+    if (ImGui::BeginMenu("About"))
+    {
+        if (ImGui::Button("Website"))
+            Cool::open_link("https://coollab-art.com/");
+        if (ImGui::Button("License"))
+            _license_window_is_open = true;
+
         ImGui::EndMenu();
     }
 }
