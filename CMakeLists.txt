@@ -73,6 +73,7 @@ endif()
 add_subdirectory(lib/cpp-httplib)
 target_link_libraries(Coollab-Properties INTERFACE httplib)
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
+install(FILES "lib/openssl/LICENSE.txt" DESTINATION "license/openssl")
 
 # License
 install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
