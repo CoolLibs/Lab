@@ -21,7 +21,7 @@ jobs:
           - {
               name: Windows,
               os: windows-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=cl CMAKE_CXX_COMPILER=cl -G Ninja,
+              cmake_configure_args: -D CMAKE_C_COMPILER=cl CMAKE_CXX_COMPILER=cl -G Ninja -D VCPKG_TARGET_TRIPLET=x64-windows-static,
             }
           - {
               name: Linux,
