@@ -114,7 +114,8 @@ jobs:
           cmakeBuildType: Release
           buildDirectory: ${{github.workspace}}/build
 
-      - name: Copy licenses
+      - name: Copy licenses (Windows and MacOS)
+        if: runner.os != 'Linux'
         shell: pwsh
         run: |
           cd ${{github.workspace}}/build
@@ -122,11 +123,14 @@ jobs:
           New-Item -ItemType Directory -Path "${{github.workspace}}/bin/Release/license"
           Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/bin/Release/license/ -Recurse
 
-      - name: Zip Release binaries (Linux and MacOS)
-        if: runner.os != 'Windows'
+      - name: Copy licenses (Linux)
+        if: runner.os == 'Linux'
+        shell: pwsh
         run: |
-          cd ${{github.workspace}}/bin/Release
-          zip -r ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip .
+          cd ${{github.workspace}}/build
+          cmake --install . --prefix tmp_install
+          New-Item -ItemType Directory -Path "${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab"
+          Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab -Recurse
 
       - name: Zip Release binaries (Windows)
         if: runner.os == 'Windows'
@@ -136,11 +140,24 @@ jobs:
           Get-ChildItem -Path ${{github.workspace}}\bin\Release\ -Filter "*.dll" -Recurse | Remove-Item -Force
           Compress-Archive -Path ${{github.workspace}}\bin\Release\* -DestinationPath ${{github.workspace}}\build\Coollab-${{matrix.config.name}}.zip
 
-      - name: Release (Linux and MacOS)
-        if: runner.os != 'Windows'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip
+      - name: Build AppImage (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cd app-resources
+          mkdir -p Coollab.AppDir/usr/bin/
+          cp -r "${{github.workspace}}/bin/Release/"* Coollab.AppDir/usr/bin/
+          strip Coollab.AppDir/usr/bin/Coollab
+          chmod +x Coollab.AppDir/AppRun
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/latest/download/linuxdeploy-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage
+          ./linuxdeploy-x86_64.AppImage --appdir Coollab.AppDir --output appimage
+          mv Coollab-x86_64.AppImage Coollab.AppImage
+
+      - name: Zip Release binaries (MacOS)
+        if: runner.os == 'MacOS'
+        run: |
+          cd ${{github.workspace}}/bin/Release
+          zip -r ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip .
 
       - name: Release (Windows)
         if: runner.os == 'Windows'
@@ -149,3 +166,15 @@ jobs:
           files: |
             build/Coollab-${{matrix.config.name}}.zip
             build/Coollab-${{matrix.config.name}}-WithDLLs.zip
+
+      - name: Release (Linux)
+        if: runner.os == 'Linux'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{github.workspace}}/app-resources/Coollab.AppImage
+
+      - name: Release (MacOS)
+        if: runner.os == 'MacOS'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip
