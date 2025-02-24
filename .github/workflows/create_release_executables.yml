@@ -26,7 +26,7 @@ jobs:
           - {
               name: Linux,
               os: ubuntu-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja -D CMAKE_PREFIX_PATH=/opt/glibc-2.36, # Some distros (like Debian 12) are still using this "old" glibc version, so we can't use any newer version for compatibility
             }
           - {
               name: MacOS,
