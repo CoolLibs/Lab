@@ -26,7 +26,8 @@ GalleryPublisher::GalleryPublisher()
               Cool::json_set(json, "Artwork info", _artwork_info);
               Cool::json_set(json, "Author info", _author_info);
               Cool::json_set(json, "Legal info", _legal_info);
-          }
+          },
+          false /*use_shared_user_data*/
       }
 {
 }

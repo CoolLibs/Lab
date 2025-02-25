@@ -148,6 +148,7 @@ private:
                 Cool::json_set(json, "Allow opening any file", allow_user_to_open_any_file);
 #endif
             },
+            false /*use_shared_user_data*/,
             Cool::WantsToLogWarnings::CheckInDebugOption
         };
     };

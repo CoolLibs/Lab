@@ -23,7 +23,8 @@ private:
         },
         [&](nlohmann::json& json) {
             Cool::json_set(json, "Switch to the new project when saving as", switch_to_new_project_when_saving_as);
-        }
+        },
+        false /*use_shared_user_data*/
     };
 };
 
