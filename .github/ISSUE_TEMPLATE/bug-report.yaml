@@ -21,11 +21,6 @@ body:
     id: version
     attributes:
       label: Coollab version or commit id
-      placeholder: You can find the Coollab version in the About menu in the top-right of Coollab. If you are a developer working on Coollab, give us the commit id (SHA) and branch instead.
+      placeholder: You can see the version name in the window's title bar (e.g. "Coollab 1.0.0 Launcher"). If you are a developer working on Coollab, give us the commit id (SHA) and branch instead.
     validations:
       required: true
-  - type: textarea
-    id: logs
-    attributes:
-      label: Relevant log output
-      description: Copy-paste any relevant log output if any.
