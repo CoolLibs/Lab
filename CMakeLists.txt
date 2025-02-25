@@ -75,9 +75,6 @@ target_link_libraries(Coollab-Properties INTERFACE httplib)
 install(FILES "lib/cpp-httplib/LICENSE" DESTINATION "license/cpp-httplib")
 install(FILES "lib/openssl/LICENSE.txt" DESTINATION "license/openssl")
 
-# License
-install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
-
 # Grab all the source files
 file(GLOB_RECURSE COOLLAB_SOURCES CONFIGURE_DEPENDS src/*)
 set(COOLLAB_VERSION_STRING "\"${COOLLAB_VERSION}\"")
@@ -102,6 +99,9 @@ Lab_copy_folder("res")
 Lab_copy_folder("User data Default")
 Lab_copy_folder("User data Init")
 Lab_copy_folder("Nodes")
+
+# License
+install(FILES "LICENSE.txt" DESTINATION "license" RENAME "Coollab-LICENSE.txt")
 Cool__target_copy_file(${PROJECT_NAME} LICENSE.txt)
 
 if(MSVC)
