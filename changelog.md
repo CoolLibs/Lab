@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 Launcher
+
+- 🐛 Fixed: we used to do work all the time to check for the list of webcams even if you were not using any webcam in your project
+
 ## 1.0.0 Launcher
 
 ### Launcher
