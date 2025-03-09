@@ -63,7 +63,8 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable
                 .content  = fmt::format("In node \"{}\":\n{}", node_name, e.error_message().message),
                 .duration = std::nullopt,
                 .closable = false,
-            }
+            },
+            false /*trigger_notification_callbacks_when_changed*/ // To avoid spamming the log file. Otherwise each time we rerender we would re-log the error
         );
     }
 
@@ -81,7 +82,8 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable
                     .content  = err.value(),
                     .duration = std::nullopt,
                     .closable = false,
-                }
+                },
+                false /*trigger_notification_callbacks_when_changed*/ // To avoid spamming the log file. Otherwise each time we rerender we would re-log the error
             );
         }
         else
