@@ -14,9 +14,9 @@ void Module::log_module_error(tl::expected<void, Cool::ErrorMessage> const& resu
         Cool::message_console().send(
             message_id,
             {
-                .category           = name(),
-                .message            = result.error().message,
-                .severity           = Cool::MessageSeverity::Error,
+                .type               = Cool::MessageType::Error,
+                .title              = name(),
+                .content            = result.error().message,
                 .clipboard_contents = result.error().clipboard_contents,
             }
         );
