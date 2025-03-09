@@ -57,10 +57,10 @@ public:
     Node() = default;
     Node(Cool::NodeDefinitionIdentifier const& id_names, size_t number_of_main_input_pins, size_t number_of_function_inputs)
         : _d{
-              .id_names                  = id_names,
-              .number_of_main_input_pins = number_of_main_input_pins,
-              .number_of_function_inputs = number_of_function_inputs,
-          }
+            .id_names                  = id_names,
+            .number_of_main_input_pins = number_of_main_input_pins,
+            .number_of_function_inputs = number_of_function_inputs,
+        }
     {}
     explicit Node(NodePodPart const& pod_part)
         : _d{pod_part}

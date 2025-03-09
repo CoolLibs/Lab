@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(Coollab)
-set(COOLLAB_VERSION "1.0.0 Launcher")
+set(COOL_APP_VERSION "1.0.0 Launcher")
 add_executable(${PROJECT_NAME})
 add_library(Coollab-Properties INTERFACE) # This is needed by both Coollab and its tests
 target_link_libraries(${PROJECT_NAME} PRIVATE Coollab-Properties)
@@ -77,9 +77,6 @@ install(FILES "lib/openssl/LICENSE.txt" DESTINATION "license/openssl")
 
 # Grab all the source files
 file(GLOB_RECURSE COOLLAB_SOURCES CONFIGURE_DEPENDS src/*)
-set(COOLLAB_VERSION_STRING "\"${COOLLAB_VERSION}\"")
-configure_file("src/Dump/coollab_version.cpp.in" "src/Dump/coollab_version.cpp")
-list(APPEND COOLLAB_SOURCES "src/Dump/coollab_version.cpp")
 target_sources(${PROJECT_NAME} PRIVATE ${COOLLAB_SOURCES})
 
 # Set include directories

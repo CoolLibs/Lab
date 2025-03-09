@@ -1,5 +1,6 @@
 #include "Module_Particles.h"
 #include <glm/gtx/matrix_transform_2d.hpp>
+#include "Cool/Log/message_console.hpp"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.hpp"
 #include "Nodes/Node.h"
 
@@ -32,13 +33,13 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
 {
     if (!shader_code)
     {
-        log_simulation_shader_error(shader_code.error());
+        log_simulation_shader_error(tl::make_unexpected(Cool::ErrorMessage{shader_code.error()})); // TODO(Logs) should be a notification
         return;
     }
 
     _shader_code               = *shader_code;
     _particle_system_dimension = dimension;
-    _simulation_shader_error_sender.clear();
+    Cool::message_console().remove(_simulation_shader_error_id);
 
     // TODO(Particles) Don't recreate the particle system every time, just change the shader but keep the current position and velocity of the particles
     try
@@ -73,7 +74,7 @@ void Module_Particles::set_simulation_shader_code(tl::expected<std::string, std:
     }
     catch (Cool::Exception const& e)
     {
-        log_simulation_shader_error(e.error_message());
+        log_simulation_shader_error(tl::make_unexpected(Cool::ErrorMessage{e.error_message()}));
         return;
     }
     _depends_on      = {};
@@ -95,9 +96,9 @@ auto Module_Particles::desired_particles_count() const -> size_t
     return maybe_node->particles_count().value_or(default_particles_count);
 }
 
-void Module_Particles::log_simulation_shader_error(Cool::OptionalErrorMessage const& maybe_err) const
+void Module_Particles::log_simulation_shader_error(tl::expected<void, Cool::ErrorMessage> const& error) const
 {
-    log_module_error(maybe_err, _simulation_shader_error_sender);
+    log_module_error(error, _simulation_shader_error_id);
 }
 
 void Module_Particles::update_particles_count_ifn()
@@ -135,7 +136,7 @@ void Module_Particles::update_particles(DataToPassToShader const& data)
 
 #if !defined(COOL_PARTICLES_DISABLED_REASON)
     if (DebugOptions::log_when_updating_particles())
-        Cool::Log::ToUser::info(name(), "Updated particles");
+        Cool::Log::info(name(), "Updated particles");
 
     _particle_system->simulation_shader().bind();
     _particle_system->simulation_shader().set_uniform("_force_init_particles", _force_init_particles);

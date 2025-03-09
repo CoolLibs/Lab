@@ -1,17 +1,18 @@
 #include "gen_mesh_from_sdf.hpp"
-#include <Module/ShaderBased/DataToGenerateShaderCode.hpp>
-#include <Module/ShaderBased/set_uniforms_for_shader_based_module.hpp>
 #include "Cool/Gpu/OpenGL/ComputeShader.h"
 #include "Cool/Gpu/OpenGL/SSBO.h"
+#include "ImGuiNotify/ImGuiNotify.hpp"
 #include "MeshingSettings.hpp"
 #include "Module/ModuleDependencies.h"
+#include "Module/ShaderBased/DataToGenerateShaderCode.hpp"
 #include "Module/ShaderBased/generate_shader_code.hpp"
+#include "Module/ShaderBased/set_uniforms_for_shader_based_module.hpp"
 #include "glm/gtx/component_wise.hpp"
 #include "marching_cubes.hpp"
 
 namespace Lab {
 
-static auto generate_compute_shader(std::string const& shader_code) -> tl::expected<Cool::OpenGL::ComputeShader, Cool::OptionalErrorMessage>
+static auto generate_compute_shader(std::string const& shader_code) -> tl::expected<Cool::OpenGL::ComputeShader, Cool::ErrorMessage>
 {
     try
     {
@@ -92,7 +93,11 @@ auto gen_mesh_from_sdf(
 {
     if constexpr (COOL_OPENGL_VERSION < 430)
     {
-        Cool::Log::ToUser::warning("Meshing", "OpenGL version is lower than 430. Meshing need compute shaders, which are not supported by this version.");
+        ImGuiNotify::send({
+            .type    = ImGuiNotify::Type::Warning,
+            .title   = "3D Model Export",
+            .content = "OpenGL version is lower than 430. Meshing need compute shaders, which are not supported by this version.",
+        });
         return std::nullopt;
     }
 
@@ -105,7 +110,11 @@ auto gen_mesh_from_sdf(
 
     if (!shader_code)
     {
-        Cool::Log::ToUser::error("Meshing", fmt::format("Unable to generate the shader code:\n{}", shader_code.error()));
+        ImGuiNotify::send({
+            .type    = ImGuiNotify::Type::Error,
+            .title   = "3D Model Export",
+            .content = fmt::format("Unable to generate the shader code:\n{}", shader_code.error()),
+        });
         return std::nullopt;
     }
 
@@ -113,7 +122,12 @@ auto gen_mesh_from_sdf(
 
     if (!meshing_compute_shader)
     {
-        Cool::Log::ToUser::error("Meshing", fmt::format("Unable to compile the compute shader:\n{}", meshing_compute_shader.error().error_message()));
+        assert(meshing_compute_shader.error().clipboard_contents.empty() && "Ignoring some clipboard contents");
+        ImGuiNotify::send({
+            .type    = ImGuiNotify::Type::Error,
+            .title   = "3D Model Export",
+            .content = fmt::format("Unable to compile the compute shader:\n{}", meshing_compute_shader.error().message),
+        });
         return std::nullopt;
     }
 

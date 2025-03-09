@@ -6,6 +6,7 @@
 #include "Cool/Midi/MidiManager.h"
 #include "Cool/StrongTypes/set_uniform.h"
 #include "Cool/TextureSource/TextureLibrary_Image.h"
+#include "ImGuiNotify/ImGuiNotify.hpp"
 #include "Module/Module.h"
 #include "Nodes/Node.h"
 #include "Nodes/valid_input_name.h"
@@ -49,20 +50,19 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable
             valid_input_name(var),
             value
         );
-        Cool::Log::ToUser::console().remove(var.message_id());
+        ImGuiNotify::close_immediately(var.notification_id());
     }
     catch (Cool::Exception const& e)
     {
-        e.error_message().send_error_if_any(
-            var.message_id(),
-            [&](std::string const& msg) {
-                return Cool::Message{
-                    .category = "Invalid node parameter",
-                    .message  = msg,
-                    .severity = Cool::MessageSeverity::Error,
-                };
-            },
-            Cool::Log::ToUser::console()
+        assert(false); // TODO I think there is no exception ever thrown, so I put this assert to check that. We can probably remove this whole try-catch
+        assert(e.error_message().clipboard_contents.empty() && "Ignoring clipboard contents");
+        ImGuiNotify::send_or_change(
+            var.notification_id(),
+            {
+                .type    = ImGuiNotify::Type::Error,
+                .title   = "Invalid node parameter",
+                .content = e.error_message().message,
+            }
         );
     }
 
@@ -72,18 +72,20 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable
         auto const err = Cool::get_error(value.source);
         if (err)
         {
-            Cool::Log::ToUser::console().send(
-                var.message_id(),
-                Cool::Message{
-                    .category = "Missing Texture",
-                    .message  = err.value(),
-                    .severity = Cool::MessageSeverity::Error,
+            ImGuiNotify::send_or_change(
+                var.notification_id(),
+                {
+                    .type     = ImGuiNotify::Type::Error,
+                    .title    = "Missing Texture",
+                    .content  = err.value(),
+                    .duration = std::nullopt,
+                    .closable = false,
                 }
             );
         }
         else
         {
-            Cool::Log::ToUser::console().remove(var.message_id());
+            ImGuiNotify::close_immediately(var.notification_id());
         }
     }
 }

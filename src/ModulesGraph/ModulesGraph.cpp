@@ -1,22 +1,21 @@
 #include "ModulesGraph.h"
-#include <CommandCore/CommandExecutor.h>
-#include <Module_Particles/Module_Particles.h>
-#include <Nodes/FunctionSignature.h>
-#include <imgui.h>
 #include <algorithm>
+#include "CommandCore/CommandExecutor.h"
 #include "Cool/Audio/AudioManager.h"
-#include "Cool/Log/ToUser.h"
 #include "Cool/Nodes/NodesLibrary.h"
 #include "Cool/StrongTypes/Camera2D.h"
 #include "Cool/TextureSource/default_textures.h"
+#include "ImGuiNotify/ImGuiNotify.hpp"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Compositing/generate_compositing_shader_code.h"
 #include "Module_Default/Module_Default.hpp"
 #include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
 #include "Module_Particles/Module_Particles.h"
 #include "Module_Particles/generate_simulation_shader_code.h"
+#include "Nodes/FunctionSignature.h"
 #include "Nodes/valid_glsl.h"
 #include "UI/imgui_show.h"
+#include "imgui.h"
 
 namespace Lab {
 
@@ -34,7 +33,7 @@ void ModulesGraph::check_for_rerender_and_rebuild(DataToPassToShader const& data
     if (rebuild_modules_graph_flag().is_dirty())
     {
         if (DebugOptions::log_when_compiling_nodes())
-            Cool::Log::ToUser::info("Modules Graph", "Rebuilt");
+            Cool::Log::info("Modules Graph", "Rebuilt");
         recreate_all_modules(_main_node_id, data_to_generate_shader_code);
         rebuild_modules_graph_flag().set_clean();
     }
@@ -86,7 +85,7 @@ void ModulesGraph::render_module_ifn(Module& module, DataToPassToShader const& d
     module.needs_to_rerender_flag().set_clean();
 
     if (DebugOptions::log_when_rendering())
-        Cool::Log::ToUser::info(module.name(), fmt::format("Rendered ({}x{})", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
+        Cool::Log::info(module.name(), fmt::format("Rendered ({}x{})", data.system_values.render_target_size.width(), data.system_values.render_target_size.height()));
 }
 
 void ModulesGraph::request_rerender_all()
@@ -133,7 +132,7 @@ void ModulesGraph::clear_error_messages()
         for (auto const& any_input : node.second.downcast<Node>().value_inputs())
         {
             std::visit([&](auto&& input) {
-                Cool::Log::ToUser::console().remove(input.message_id());
+                ImGuiNotify::close_immediately(input.notification_id());
             },
                        any_input);
         }

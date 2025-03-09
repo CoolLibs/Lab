@@ -20,9 +20,7 @@ namespace Lab {
 
 class DebugOptions {
 public:
-    [[nodiscard]] static auto generate_dump_file() -> bool& { return instance().generate_dump_file; }
-    [[nodiscard]] static auto copy_info_dump_to_clipboard() -> bool& { return instance().copy_info_dump_to_clipboard; }
-    static void               show_history_window(std::function<void()> callback)
+    static void show_history_window(std::function<void()> callback)
     {
         if (instance().show_history_window)
         {
@@ -69,8 +67,6 @@ public:
 
 private:
     struct Instance {
-        bool generate_dump_file{false};
-        bool copy_info_dump_to_clipboard{false};
         bool show_history_window{false};
         bool show_nodes_and_links_registries{false};
         bool force_rerender_every_frame{false};
@@ -184,28 +180,6 @@ private:
 
     static void imgui_ui_for_all_options(std::string_view filter)
     {
-        if (wafl::similarity_match({filter, "Info Dump: Generate file"}) >= wafl::Matches::Strongly)
-        {
-            instance().generate_dump_file = ImGui::Button("##Info Dump: Generate file", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
-            ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
-            ImGui::Text("Info Dump: Generate file");
-            if (ImGui::IsItemClicked())
-                instance().generate_dump_file = true;
-
-            Cool::ImGuiExtras::help_marker("Creates an info_dump.txt file next to your executable. It can be used when submitting a bug report, in order to give the devs more information.");
-        }
-
-        if (wafl::similarity_match({filter, "Info Dump: Copy to clipboard"}) >= wafl::Matches::Strongly)
-        {
-            instance().copy_info_dump_to_clipboard = ImGui::Button("##Info Dump: Copy to clipboard", {ImGui::GetFrameHeight(), ImGui::GetFrameHeight()});
-            ImGui::SameLine(0.f, ImGui::GetStyle().ItemInnerSpacing.x);
-            ImGui::Text("Info Dump: Copy to clipboard");
-            if (ImGui::IsItemClicked())
-                instance().copy_info_dump_to_clipboard = true;
-
-            Cool::ImGuiExtras::help_marker("Copies an info dump to your clipboard. It can be used when submitting a bug report, in order to give the devs more information.");
-        }
-
         if (wafl::similarity_match({filter, "Show history"}) >= wafl::Matches::Strongly)
         {
             if (Cool::ImGuiExtras::toggle("Show history", &instance().show_history_window))
@@ -283,20 +257,6 @@ private:
 
     static void toggle_first_option(std::string_view filter)
     {
-        if (wafl::similarity_match({filter, "Info Dump: Generate file"}) >= wafl::Matches::Strongly)
-        {
-            instance().generate_dump_file = !instance().generate_dump_file;
-            save();
-            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
-        }
-
-        if (wafl::similarity_match({filter, "Info Dump: Copy to clipboard"}) >= wafl::Matches::Strongly)
-        {
-            instance().copy_info_dump_to_clipboard = !instance().copy_info_dump_to_clipboard;
-            save();
-            throw 0.f; // To understand why we need to throw, see `toggle_first_option()` in <Cool/DebugOptions/DebugOptionsManager.h>
-        }
-
         if (wafl::similarity_match({filter, "Show history"}) >= wafl::Matches::Strongly)
         {
             instance().show_history_window = !instance().show_history_window;

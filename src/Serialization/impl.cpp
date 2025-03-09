@@ -4,9 +4,8 @@
 /// compilation by A LOT. So we want to avoid recompiling
 /// this file as much as possible.
 ///
-#include <ser20/types/polymorphic.hpp>
+#include "Cool/Dump/app_version.hpp"
 #include "Cool/Serialization/Serialization.h"
-#include "Dump/coollab_version.hpp"
 #include "Module_Compositing/Module_Compositing.h"
 #include "Module_Default/Module_Default.hpp"
 #include "Module_FeedbackLoop/Module_FeedbackLoop.hpp"
@@ -14,7 +13,7 @@
 #include "SNodesCategoryConfig.h"
 #include "SNodesClipboard.h"
 #include "SProject.h"
-
+#include "ser20/types/polymorphic.hpp"
 //
 #include "ser20/archives/json.hpp"
 
@@ -22,9 +21,9 @@ namespace Lab {
 
 auto do_save(Project const& project, std::filesystem::path const& path) -> bool
 {
-    return Cool::Serialization::save<Project, ser20::JSONOutputArchive>(project, path, "Project", coollab_version());
+    return Cool::Serialization::save<Project, ser20::JSONOutputArchive>(project, path, "Project", Cool::app_version());
 }
-auto do_load(Project& project, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
+auto do_load(Project& project, std::filesystem::path const& path) -> tl::expected<void, Cool::ErrorMessage>
 {
     auto coollab_version = ""s; // Ignore it, we don't need it when loading the project, only the launcher needs it
     return Cool::Serialization::load<Project, ser20::JSONInputArchive>(project, path, &coollab_version);
@@ -34,7 +33,7 @@ auto do_save(NodesCategoryConfig const& config, std::filesystem::path const& pat
 {
     return Cool::Serialization::save<NodesCategoryConfig, ser20::JSONOutputArchive>(config, path);
 }
-auto do_load(NodesCategoryConfig& config, std::filesystem::path const& path) -> Cool::OptionalErrorMessage
+auto do_load(NodesCategoryConfig& config, std::filesystem::path const& path) -> tl::expected<void, Cool::ErrorMessage>
 {
     return Cool::Serialization::load<NodesCategoryConfig, ser20::JSONInputArchive>(config, path);
 }

@@ -24,20 +24,6 @@ def all_debug_options():
 
     return [
         DebugOption(
-            name_in_code="generate_dump_file",
-            name_in_ui="Info Dump: Generate file",
-            available_in_release=True,
-            kind=Kind.BUTTON,
-            detailed_description="Creates an info_dump.txt file next to your executable. It can be used when submitting a bug report, in order to give the devs more information.",
-        ),
-        DebugOption(
-            name_in_code="copy_info_dump_to_clipboard",
-            name_in_ui="Info Dump: Copy to clipboard",
-            available_in_release=True,
-            kind=Kind.BUTTON,
-            detailed_description="Copies an info dump to your clipboard. It can be used when submitting a bug report, in order to give the devs more information.",
-        ),
-        DebugOption(
             name_in_code="show_history_window",
             name_in_ui="Show history",
             window_name="History",

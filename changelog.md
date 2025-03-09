@@ -2,6 +2,7 @@
 
 ## 1.0.1 Launcher
 
+- ✨ If there is a problem (crash, etc.), errors will now be written to a file, so that you can then send it to us to help us debugging and fixing your problem. To find this file, follow this tutorial:
 - 🐛 Fixed: we used to do work all the time to check for the list of webcams even if you were not using any webcam in your project
 
 ## 1.0.0 Launcher

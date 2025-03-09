@@ -1,5 +1,5 @@
 #pragma once
-#include "Cool/Log/OptionalErrorMessage.h"
+#include "Cool/Log/MessageId.h"
 #include "Cool/Nodes/NodeId.h"
 #include "Cool/Nodes/NodesGraph.h"
 #include "Cool/Particles/ParticleSystem.h"
@@ -30,7 +30,7 @@ private:
     auto create_particle_system() const -> std::optional<Cool::ParticleSystem>;
     void update_particles_count_ifn();
     auto desired_particles_count() const -> size_t;
-    void log_simulation_shader_error(Cool::OptionalErrorMessage const&) const;
+    void log_simulation_shader_error(tl::expected<void, Cool::ErrorMessage> const&) const;
     void request_particles_to_reset();
     void request_particles_to_update() { _needs_to_update_particles = true; }
 
@@ -38,11 +38,11 @@ private:
     mutable std::optional<Cool::ParticleSystem> _particle_system{};
     int                                         _particle_system_dimension{};
     // ModuleDependencies                          _depends_on{}; // TODO(Particles) Two dependencies, one for each shader (simulation and render)
-    Cool::NodeId                _id_of_node_storing_particles_count{};
-    bool                        _needs_to_update_particles{true};
-    bool                        _force_init_particles{true};
-    mutable Cool::MessageSender _simulation_shader_error_sender{};
-    mutable std::string         _shader_code{};
+    Cool::NodeId            _id_of_node_storing_particles_count{};
+    bool                    _needs_to_update_particles{true};
+    bool                    _force_init_particles{true};
+    mutable Cool::MessageId _simulation_shader_error_id{};
+    mutable std::string     _shader_code{};
 
 private:
     // Serialization

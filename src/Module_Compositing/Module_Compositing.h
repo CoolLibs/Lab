@@ -1,7 +1,7 @@
 #pragma once
-#include <Cool/Log/MessageSender.h>
-#include <Cool/Nodes/NodesGraph.h>
 #include "Cool/Gpu/FullscreenPipeline.h"
+#include "Cool/Log/MessageId.h"
+#include "Cool/Nodes/NodesGraph.h"
 #include "Module/Module.h"
 
 namespace Lab {
@@ -20,12 +20,12 @@ public:
 
 private:
     void render(DataToPassToShader const&) override;
-    void log_shader_error(Cool::OptionalErrorMessage const&) const;
+    void log_shader_error(tl::expected<void, Cool::ErrorMessage> const&) const;
 
 private:
     mutable std::string              _shader_code{};
     mutable Cool::FullscreenPipeline _pipeline{};
-    mutable Cool::MessageSender      _shader_error_sender{};
+    mutable Cool::MessageId          _shader_error_id{};
 
 private:
     // Serialization

@@ -2,9 +2,9 @@
 #include <reg/src/AnyId.hpp>
 #include <tl/expected.hpp>
 #include "COOLLAB_FILE_EXTENSION.hpp"
+#include "Cool/Dump/app_version.hpp"
 #include "Cool/File/File.h"
 #include "Cool/Utils/hash_project_path_for_info_folder.hpp"
-#include "Dump/coollab_version.hpp"
 #include "Serialization/SProject.h"
 
 namespace Lab::internal {
@@ -44,7 +44,7 @@ static auto window_title(std::filesystem::path const& path) -> std::string
 {
     return fmt::format(
         "Coollab {} [{}]",
-        coollab_version(),
+        Cool::app_version(),
         Cool::File::weakly_canonical(path)
     );
 }
@@ -75,9 +75,12 @@ void ProjectManagerImpl::set_project_path_in_info_folder_for_the_launcher(std::f
 auto ProjectManagerImpl::load(std::filesystem::path const& file_path) -> tl::expected<Project, std::string>
 {
     auto       project = Project{};
-    auto const error   = do_load(project, file_path);
-    if (error)
-        return tl::make_unexpected(*error.error_message());
+    auto const success = do_load(project, file_path);
+    if (!success.has_value())
+    {
+        assert(success.error().clipboard_contents.empty() && "Ignoring clipboard contents");
+        return tl::make_unexpected(success.error().message);
+    }
     return project;
 }
 

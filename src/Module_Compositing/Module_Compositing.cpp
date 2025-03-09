@@ -1,5 +1,8 @@
 #include "Module_Compositing.h"
+#include "Cool/Log/ErrorMessage.hpp"
+#include "Cool/Log/message_console.hpp"
 #include "Module/ShaderBased/set_uniforms_for_shader_based_module.hpp"
+#include "tl/expected.hpp"
 
 namespace Lab {
 
@@ -25,17 +28,17 @@ void Module_Compositing::update()
 
 void Module_Compositing::reset_shader()
 {
-    _pipeline.reset();            // Make sure the shader will be empty if the compilation fails.
-    _shader_error_sender.clear(); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
+    _pipeline.reset(); // Make sure the shader will be empty if the compilation fails.
     _shader_code = "";
     _depends_on  = {};
+    Cool::message_console().remove(_shader_error_id); // Make sure the error is removed if for some reason we don't compile the code (e.g. when there is no main node).
 }
 
 void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> const& shader_code)
 {
     if (!shader_code)
     {
-        log_shader_error(shader_code.error());
+        log_shader_error(tl::make_unexpected(Cool::ErrorMessage{shader_code.error()})); // TODO(Logs) should be a notification
         return;
     }
 
@@ -47,9 +50,9 @@ void Module_Compositing::set_shader_code(tl::expected<std::string, std::string> 
     needs_to_rerender_flag().set_dirty();
 }
 
-void Module_Compositing::log_shader_error(Cool::OptionalErrorMessage const& maybe_err) const
+void Module_Compositing::log_shader_error(tl::expected<void, Cool::ErrorMessage> const& maybe_err) const
 {
-    log_module_error(maybe_err, _shader_error_sender);
+    log_module_error(maybe_err, _shader_error_id);
 }
 
 void Module_Compositing::imgui_generated_shader_code_tab()

@@ -1,11 +1,12 @@
 #pragma once
-#include <Cool/Log/OptionalErrorMessage.h>
-#include <Module/ModuleDependencies.h>
-#include <ser20/types/polymorphic.hpp>
 #include "Cool/Gpu/OpenGL/TextureRef.hpp"
 #include "Cool/Gpu/RenderTarget.h"
+#include "Cool/Log/ErrorMessage.hpp"
+#include "Cool/Log/MessageId.h"
 #include "Dependencies/Ui.h"
+#include "Module/ModuleDependencies.h"
 #include "ShaderBased/DataToPassToShader.hpp"
+#include "ser20/types/polymorphic.hpp"
 
 namespace Lab {
 
@@ -50,7 +51,7 @@ public:
 
     [[nodiscard]] auto needs_to_rerender_flag() const -> Cool::DirtyFlag const& { return _needs_to_rerender_flag; }
     void               update_dependencies_from_nodes_graph(Cool::NodesGraph const& graph) { Lab::update_dependencies_from_nodes_graph(_depends_on, graph, _nodes_that_we_depend_on); }
-    void               log_module_error(Cool::OptionalErrorMessage const&, Cool::MessageSender&) const;
+    void               log_module_error(tl::expected<void, Cool::ErrorMessage> const&, Cool::MessageId&) const;
     auto               render_target() -> Cool::RenderTarget& { return _render_target; }
     auto               render_target() const -> Cool::RenderTarget const& { return _render_target; }
     [[nodiscard]] auto depends_on() const -> ModuleDependencies const& { return _depends_on; }

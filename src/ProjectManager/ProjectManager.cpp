@@ -9,7 +9,6 @@
 #include "Cool/File/File.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/ImGuiExtrasStyle.h"
-#include "Cool/Log/ToUser.h"
 #include "Cool/Path/Path.h"
 #include "Cool/UserSettings/UserSettings.h"
 #include "Debug/DebugOptions.h"
@@ -106,7 +105,7 @@ void ProjectManager::create_new_project_in_folder(std::filesystem::path const& f
 void ProjectManager::create_new_project_in_file(std::filesystem::path file_path, OnProjectLoaded const& on_project_loaded, SetWindowTitle const& set_window_title)
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Creating new project in \"{}\"", Cool::File::weakly_canonical(file_path)));
+        Cool::Log::info("Project", fmt::format("Creating new project in \"{}\"", Cool::File::weakly_canonical(file_path)));
 
     auto project = Project{};
     project.clock.pause();
@@ -121,7 +120,7 @@ void ProjectManager::create_new_project_in_file(std::filesystem::path file_path,
 void ProjectManager::open_project(std::filesystem::path const& file_path, OnProjectLoaded const& on_project_loaded, OnProjectUnloaded const& on_project_unloaded, SetWindowTitle const& set_window_title)
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Opening project \"{}\"", Cool::File::weakly_canonical(file_path)));
+        Cool::Log::info("Project", fmt::format("Opening project \"{}\"", Cool::File::weakly_canonical(file_path)));
 
     if (_impl.has_project())
     {
@@ -159,7 +158,7 @@ void ProjectManager::open_project(std::filesystem::path const& file_path, OnProj
 auto ProjectManager::autosave_project(bool must_absolutely_succeed, SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Autosaving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
+        Cool::Log::info("Project", fmt::format("Autosaving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
 
     return save_project_impl(must_absolutely_succeed, set_window_title);
 }
@@ -167,7 +166,7 @@ auto ProjectManager::autosave_project(bool must_absolutely_succeed, SetWindowTit
 auto ProjectManager::save_project(bool must_absolutely_succeed, SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Saving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
+        Cool::Log::info("Project", fmt::format("Saving project \"{}\"", Cool::File::weakly_canonical(_impl.project_path())));
 
     if (!save_project_impl(must_absolutely_succeed, set_window_title))
         return false;
@@ -268,7 +267,7 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
 auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
+        Cool::Log::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
 
     while (true)
     {
@@ -359,7 +358,7 @@ auto is_valid_path_to_package_project_into(std::filesystem::path const& folder_p
 auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Packaging project into \"{}\"", Cool::File::weakly_canonical(folder_path)));
+        Cool::Log::info("Project", fmt::format("Packaging project into \"{}\"", Cool::File::weakly_canonical(folder_path)));
 
     if (!is_valid_path_to_package_project_into(folder_path))
     {
@@ -378,7 +377,7 @@ auto ProjectManager::package_project_into(std::filesystem::path const& folder_pa
 auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title) -> bool
 {
     if (DebugOptions::log_project_related_events())
-        Cool::Log::ToUser::info("Project", fmt::format("Renaming project as \"{}\"", new_name));
+        Cool::Log::info("Project", fmt::format("Renaming project as \"{}\"", new_name));
 
     auto const old_path = _impl.project_path();
     if (!save_project_impl(_impl.project_path(new_name), false, set_window_title))

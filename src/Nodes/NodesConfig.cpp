@@ -115,13 +115,7 @@ static void apply_settings_to_inputs(
     catch (...)
     {
         // TODO(Settings) Remove this try-catch once we update presets properly
-        Cool::Log::ToUser::warning(
-            "Presets",
-            fmt::format(
-                "Current preset for node \"{}\" does not match the INPUTs of the shader anymore, it has not been applied fully.",
-                node_name
-            )
-        );
+        Cool::Log::warning("Presets", fmt::format("Current preset for node \"{}\" does not match the INPUTs of the shader anymore, it has not been applied fully.", node_name));
     }
 }
 
@@ -152,13 +146,7 @@ static void apply_settings_to_inputs_no_history(
     catch (...)
     {
         // TODO(Settings) Remove this try-catch once we update presets properly
-        Cool::Log::ToUser::warning(
-            "Presets",
-            fmt::format(
-                "Current preset for node \"{}\" does not match the INPUTs of the shader anymore, it has not been applied fully.",
-                node_name
-            )
-        );
+        Cool::Log::warning("Presets", fmt::format("Current preset for node \"{}\" does not match the INPUTs of the shader anymore, it has not been applied fully.", node_name));
     }
 }
 
@@ -591,7 +579,7 @@ auto NodesConfig::paste_nodes(std::string_view clipboard_string) -> bool
     }
     catch (std::exception const& e)
     {
-        Cool::Log::Debug::warning("Copy-Paste", fmt::format("Failed to paste nodes.\n({})", e.what()));
+        Cool::Log::internal_warning("Copy-Paste", fmt::format("Failed to paste nodes:\n{}", e.what()));
         return false;
     }
 }

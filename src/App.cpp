@@ -12,8 +12,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/icon_fmt.h"
 #include "Cool/Image/SaveImage.h"
-#include "Cool/Log/Message.h"
-#include "Cool/Log/ToUser.h"
+#include "Cool/Log/message_console.hpp"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/OSC/OSCManager.h"
 #include "Cool/Path/Path.h"
@@ -27,7 +26,6 @@
 #include "Cool/Webcam/WebcamsConfigs.hpp"
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
-#include "Dump/gen_dump_string.h"
 #include "ModulesGraph/ModulesGraph.h"
 #include "ProjectManager/Command_OpenProjectOnNextFrame.hpp"
 #include "ProjectManager/Command_PackageProjectInto.h"
@@ -127,33 +125,6 @@ void App::update()
     // set_dirty_flag()(_custom_shader_module->dirty_flag());
     // }
 
-    if (DebugOptions::copy_info_dump_to_clipboard())
-    {
-        auto const string = gen_dump_string();
-        ImGui::SetClipboardText(string.c_str());
-        Cool::Log::ToUser::info("Info Dump", fmt::format("Info dump has been successfully copied to clipboard:\n\n{}", string));
-    }
-    if (DebugOptions::generate_dump_file())
-    {
-        auto const path   = Cool::Path::user_data() / "info_dump.txt";
-        auto const string = gen_dump_string();
-        Cool::File::set_content(path, string);
-        Cool::Log::ToUser::info(
-            "Info Dump",
-            fmt::format("Info dump has been successfully generated in {}:\n\n{}", path, string),
-            std::vector{
-                Cool::ClipboardContent{
-                    .title   = "folder path",
-                    .content = path.parent_path().string(),
-                },
-                Cool::ClipboardContent{
-                    .title   = "file path",
-                    .content = path.string(),
-                },
-            }
-        );
-    }
-
     DebugOptionsManager::update();
 }
 
@@ -172,13 +143,10 @@ void App::save_project_thumbnail_impl(std::filesystem::path const& folder_path)
 {
     auto const polar = polaroid();
     polar.render({100, 100}, project().clock.time(), project().clock.delta_time());
-    auto const result = Cool::ImageU::save(folder_path / "thumbnail.png", polar.texture().download_pixels());
-#if DEBUG
-    if (!result.has_value())
-        Cool::Log::Debug::error("Save Thumbnail", result.error());
-#else
-    std::ignore = result; // We don't care if we fail, we must do this quickly before shutting down
-#endif
+    Cool::ImageU::save(folder_path / "thumbnail.png", polar.texture().download_pixels())
+        .or_else([&](std::string const& err) {
+            Cool::Log::internal_warning("Save Thumbnail", err);
+        });
 }
 
 void App::on_shutdown()
@@ -297,10 +265,7 @@ auto App::wants_to_show_menu_bar() const -> bool
 
 static void imgui_window_console()
 {
-    Cool::Log::ToUser::console().imgui_window();
-#if DEBUG
-    Cool::Log::Debug::console().imgui_window();
-#endif
+    Cool::message_console().imgui_window();
 }
 
 void App::render(img::Size size, Cool::Time time, Cool::Time delta_time)
@@ -545,13 +510,13 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     DebugOptions::test_shaders_compilation__window([&]() {
         if (ImGui::Button("Compile everything"))
         {
-            Cool::Log::ToUser::console().clear();
+            Cool::message_console().clear();
             compile_all_is0_nodes();
         }
         ImGui::Separator();
         if (ImGui::Button("Compile all is0 Nodes"))
         {
-            Cool::Log::ToUser::console().clear();
+            Cool::message_console().clear();
             compile_all_is0_nodes();
         }
     });
