@@ -14,7 +14,7 @@
 namespace Lab {
 
 template<typename T>
-static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable<T> const& var)
+static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable<T> const& var, std::string const& node_name)
 {
     auto const value = [&] {
         if constexpr (std::is_same_v<T, Cool::Color>)
@@ -52,16 +52,17 @@ static void set_uniform(Cool::OpenGL::Shader const& shader, Cool::SharedVariable
         );
         ImGuiNotify::close_immediately(var.notification_id());
     }
-    catch (Cool::Exception const& e)
+    catch (Cool::Exception const& e) // Can be thrown for example when an OSC Channel does not exist
     {
-        assert(false); // TODO I think there is no exception ever thrown, so I put this assert to check that. We can probably remove this whole try-catch
         assert(e.error_message().clipboard_contents.empty() && "Ignoring clipboard contents");
         ImGuiNotify::send_or_change(
             var.notification_id(),
             {
-                .type    = ImGuiNotify::Type::Error,
-                .title   = "Invalid node parameter",
-                .content = e.error_message().message,
+                .type     = ImGuiNotify::Type::Error,
+                .title    = "Invalid node parameter",
+                .content  = fmt::format("In node \"{}\":\n{}", node_name, e.error_message().message),
+                .duration = std::nullopt,
+                .closable = false,
             }
         );
     }
@@ -127,7 +128,7 @@ void set_uniforms_for_shader_based_module(
             for (auto const& value_input : node.value_inputs())
             {
                 std::visit([&](auto&& value_input) {
-                    set_uniform(shader, value_input);
+                    set_uniform(shader, value_input, to_string(node));
                 },
                            value_input);
             }
