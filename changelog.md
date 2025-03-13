@@ -2,7 +2,7 @@
 
 ## 1.0.1 Launcher
 
-- ✨ If there is a problem (crash, etc.), errors will now be written to a file, so that you can then send it to us to help us debugging and fixing your problem. To find this file, [follow this short tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File).
+- ✨ If there is a problem (crash, etc.), errors will now be written to a file, so that you can then send it to us to help us debugging and fixing your problem. To find this file, [follow this short tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File)
 - ✨ Some messages that were displayed in the Console are now shown as Notifications, which should look nicer and be more noticeable
 - 🐛 Fixed: the OSC listener did not start automatically when opening a project that was making use of OSC
 - 🐛 Fixed: we used to always do some work in the background to check for the list of webcams, even if you were not using any webcam in your project
