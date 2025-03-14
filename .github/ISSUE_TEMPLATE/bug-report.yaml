@@ -14,13 +14,13 @@ body:
     id: project-file
     attributes:
       label: Project file
-      description: Please share your project which is causing the problem, so that we can easily reproduce it
+      description: Please share your project file which is causing the problem, so that we can easily reproduce it. [Here is a quick tutorial to find your project file](https://coollab-art.com/Tutorials/Miscellaneous/Finding%20your%20project%20file)
     validations:
       required: false
   - type: textarea
     id: log-file
     attributes:
       label: Log file
-      description: "[Use this short tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File) to find the \"LOG Coollab.txt\" file, and drop it here"
+      description: "[Use this quick tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File) to find the \"LOG Coollab.txt\" file, and drop it here"
     validations:
       required: true
