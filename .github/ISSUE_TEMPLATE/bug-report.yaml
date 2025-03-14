@@ -7,20 +7,14 @@ body:
     id: what-happened
     attributes:
       label: What happened?
-      description: Also tell us, what did you expect to happen?
+      description: Also, how can we reproduce the bug? Does it happen all the time or is it random?
     validations:
       required: true
-  - type: textarea
-    id: repro
+  - type: file
+    id: log-file
     attributes:
-      label: Steps to reproduce
-      description: How can we reproduce the bug? Does it happen all the time or is it random?
-    validations:
-      required: true
-  - type: textarea
-    id: version
-    attributes:
-      label: Coollab version or commit id
-      placeholder: You can see the version name in the window's title bar (e.g. "Coollab 1.0.0 Launcher"). If you are a developer working on Coollab, give us the commit id (SHA) and branch instead.
+      label: Log file
+      description: [Use this short tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File) to find the "LOG Coollab.txt" file, and drop it here.
+      multiple: true
     validations:
       required: true
