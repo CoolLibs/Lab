@@ -10,11 +10,10 @@ body:
       description: Also, how can we reproduce the bug? Does it happen all the time or is it random?
     validations:
       required: true
-  - type: file
+  - type: textarea
     id: log-file
     attributes:
       label: Log file
-      description: [Use this short tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File) to find the "LOG Coollab.txt" file, and drop it here.
-      multiple: true
+      description: "[Use this short tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File) to find the \"LOG Coollab.txt\" file, and drop it here."
     validations:
       required: true
