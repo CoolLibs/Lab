@@ -2,8 +2,9 @@
 
 ## 1.1.0 UI Scale
 
-- ✨ The UI will automatically scale to take your screen's pixel density (DPI) into account
+- ✨ The UI will automatically scale to match your screen's pixel density (DPI)
 - ✨ Added an option to scale the UI manually
+![](https://github.com/user-attachments/assets/175414c0-8075-4f68-b524-2d1e15575a12)
 - 🐛 Fixed: Settings were unnecessarily re-loaded from disk each time we saved them 
 - 🐛 Fixed: On MacOS the user data where saved in the home directory (`~`) instead of `~/Library/Application Support`
 
