@@ -96,19 +96,19 @@
   }
  },
  "ImGuiExtras": {
-  "Floating buttons spacing": 4.0,
+  "Floating buttons spacing": 3.0,
   "Frame padding": {
-   "x": 9.0,
-   "y": 4.0
+   "x": 7.0,
+   "y": 3.0
   },
   "Menu bar spacing": {
-   "x": 5.0,
-   "y": 4.0
+   "x": 4.0,
+   "y": 3.0
   },
   "Node title vertical alignment": 0.3089999854564667,
   "Tab bar padding": {
-   "x": 9.0,
-   "y": 6.0
+   "x": 7.0,
+   "y": 4.0
   }
  },
  "ImNodes": {
