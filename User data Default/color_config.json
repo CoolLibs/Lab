@@ -283,14 +283,6 @@
    "Category": "Accent",
    "Group": "Normal"
   },
-  "Link": {
-   "Category": "Text",
-   "Group": "Normal"
-  },
-  "LinkHovered": {
-   "Category": "Accent",
-   "Group": "Normal"
-  },
   "MenuBarBg": {
    "Category": "Bright",
    "Group": "Normal"
@@ -309,6 +301,14 @@
   },
   "NavWindowingHighlight": {
    "Category": "Background",
+   "Group": "Normal"
+  },
+  "NodeLink": {
+   "Category": "Text",
+   "Group": "Normal"
+  },
+  "NodeLinkHovered": {
+   "Category": "Accent",
    "Group": "Normal"
   },
   "Nodes_Bg": {
@@ -538,6 +538,14 @@
   "ToggleHovered": {
    "Category": "Accent",
    "Group": "Brighter"
+  },
+  "UrlLink": {
+   "Category": "Text",
+   "Group": "Normal"
+  },
+  "UrlLinkHovered": {
+   "Category": "Accent",
+   "Group": "Normal"
   },
   "WindowBg": {
    "Category": "Background",

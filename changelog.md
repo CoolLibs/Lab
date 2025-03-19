@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0 UI Scale
+
+- ✨ The UI will automatically scale to take your screen's pixel density (DPI) into account
+- ✨ Added an option to scale the UI manually
+- 🐛 Fixed: Settings were unnecessarily re-loaded from disk each time we saved them 
+- 🐛 Fixed: On MacOS the user data where saved in the home directory (`~`) instead of `~/Library/Application Support`
+
 ## 1.0.1 Launcher
 
 - ✨ If there is a problem (crash, etc.), errors will now be written to a file, so that you can then send it to us to help us debugging and fixing your problem. To find this file, [follow this short tutorial](https://coollab-art.com/Tutorials/Miscellaneous/Log%20File)

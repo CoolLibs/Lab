@@ -247,9 +247,7 @@ Cool::Polaroid App::polaroid()
 {
     return {
         .texture = [this]() { return project().modules_graph->final_texture(); },
-        .render  = [this](img::Size size, Cool::Time time, Cool::Time delta_time) {
-            render(size, time, delta_time);
-        }
+        .render  = [this](img::Size size, Cool::Time time, Cool::Time delta_time) { render(size, time, delta_time); },
     };
 }
 
@@ -467,7 +465,7 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::ClockU::imgui_timeline(
         project().clock,
         /* extra_widgets = */ [&]() {
-            ImGui::SetNextItemWidth(70.f);
+            ImGui::SetNextItemWidth(3.5f * ImGui::GetFontSize());
             the_ui.widget(project().clock.time_speed());
             //
         },
