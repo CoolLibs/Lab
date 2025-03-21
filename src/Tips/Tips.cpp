@@ -11,6 +11,7 @@ auto all_tips() -> Cool::Tips
         "You can press ESCAPE to close these popups.",
         "You can change the color theme in the \" " ICOMOON_COG "Settings\" menu.",
         "Right-click on a node to replace it with a new node of the same category.",
+        "Use CTRL+E to quickly export an image with the current export settings",
         "Use F in the \" " ICOMOON_TREE "Nodes\" window to focus the view on the nodes.",
         "CTRL+click on a slider to input a value manually. (It also allows you to bypass the bounds of the slider!).",
         "In an angle or direction widget, hold SHIFT to snap to precise angles.",
