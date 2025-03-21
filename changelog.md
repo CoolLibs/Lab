@@ -1,5 +1,9 @@
 # Changelog
 
+## 
+
+- 🐛 We now stop checking for webcams info as soon as we stop using a webcam
+
 ## 1.1.1 UI Scale
 
 - ✨ Added inputs for Camera 3D's position and rotation
