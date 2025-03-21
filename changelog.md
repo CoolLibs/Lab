@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 UI Scale
+
+- ✨ Added inputs for Camera 3D's position and rotation
+![](https://github.com/user-attachments/assets/435075c8-89ab-442f-82d5-5dd9ec44c06f)
+
 ## 1.1.0 UI Scale
 
 - ✨ The UI will automatically scale to match your screen's pixel density (DPI)
