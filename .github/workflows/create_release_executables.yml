@@ -105,6 +105,7 @@ jobs:
       - name: Install MacOS dependencies
         if: runner.os == 'MacOS'
         run: |
+          brew install openssl
           brew install ffmpeg
 
       - name: ccache
