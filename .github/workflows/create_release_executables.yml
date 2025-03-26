@@ -31,7 +31,7 @@ jobs:
           - {
               name: MacOS,
               os: macos-latest,
-              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl -D OPENSSL_INCLUDE_DIR=/usr/local/opt/openssl/include,
+              cmake_configure_args: -D CMAKE_C_COMPILER=clang -D CMAKE_CXX_COMPILER=clang++ -G Ninja -D OPENSSL_ROOT_DIR=/usr/local/opt/openssl,
             }
 
     steps:
@@ -105,7 +105,6 @@ jobs:
       - name: Install MacOS dependencies
         if: runner.os == 'MacOS'
         run: |
-          brew install openssl
           brew install ffmpeg
 
       - name: ccache
