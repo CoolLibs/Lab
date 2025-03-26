@@ -35,6 +35,19 @@ jobs:
             }
 
     steps:
+      - name: Import Code Signing Certificate (MacOS)
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE_PASSWORD }}
+        run: |
+          echo "$CERTIFICATE_BASE64" | base64 --decode > certificate.p12
+          security create-keychain -p "" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "" build.keychain
+          security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
+          rm certificate.p12
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -113,6 +126,20 @@ jobs:
           buildWithCMakeArgs: --config Release --target ${{env.cmake_target}}
           cmakeBuildType: Release
           buildDirectory: ${{github.workspace}}/build
+
+      - name: Code Sign Executable (MacOS)
+        run: |
+          codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy - 5YNUCBTLY8" "${{github.workspace}}/bin/Release/Coollab"
+
+      - name: Notarize Executable (MacOS)
+        env:
+          APPLE_ID_USERNAME: ${{ secrets.APPLE_ID_USERNAME }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          ditto -c -k --keepParent "${{github.workspace}}/bin/Release/Coollab" Coollab.zip
+          xcrun notarytool submit Coollab.zip --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_PASSWORD" --team-id "$TEAM_ID" --wait
+          xcrun stapler staple "${{github.workspace}}/bin/Release/Coollab"
 
       - name: Copy licenses (Windows and MacOS)
         if: runner.os != 'Linux'
