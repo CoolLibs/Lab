@@ -45,7 +45,7 @@ jobs:
           security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
-          security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security import certificate.p12 -k build.keychain -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign -v
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" build.keychain
           rm certificate.p12
 
@@ -133,7 +133,7 @@ jobs:
 
       - name: Code Sign Executable (MacOS)
         run: |
-          codesign --verbose --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy - 5YNUCBTLY8" "${{github.workspace}}/bin/Release/Coollab"
+          codesign --verbose --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy (5YNUCBTLY8)" "${{github.workspace}}/bin/Release/Coollab"
 
       - name: Notarize Executable (MacOS)
         env:
