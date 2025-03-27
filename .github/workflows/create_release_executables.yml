@@ -145,7 +145,8 @@ jobs:
         run: |
           ditto -c -k --keepParent "${{github.workspace}}/bin/Release/Coollab" Coollab.zip
           xcrun notarytool submit Coollab.zip --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_PASSWORD" --team-id "$TEAM_ID" --wait
-          xcrun stapler staple "${{github.workspace}}/bin/Release/Coollab"
+          unzip -o Coollab.zip -d "${{github.workspace}}/bin/Release/"
+          xcrun stapler staple -v "${{github.workspace}}/bin/Release/Coollab"
 
       - name: Copy licenses (Windows and MacOS)
         if: runner.os != 'Linux'
