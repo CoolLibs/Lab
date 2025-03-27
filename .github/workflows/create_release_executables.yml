@@ -132,8 +132,10 @@ jobs:
           buildDirectory: ${{github.workspace}}/build
 
       - name: Code Sign Executable (MacOS)
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          codesign --verbose --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy (5YNUCBTLY8)" "${{github.workspace}}/bin/Release/Coollab"
+          codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" "${{github.workspace}}/bin/Release/Coollab"
 
       - name: Notarize Executable (MacOS)
         env:
