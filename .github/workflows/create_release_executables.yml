@@ -48,6 +48,9 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "" build.keychain
           rm certificate.p12
 
+      - name: Test
+        run: security find-identity -p codesigning -v
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -129,7 +132,7 @@ jobs:
 
       - name: Code Sign Executable (MacOS)
         run: |
-          codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy - 5YNUCBTLY8" "${{github.workspace}}/bin/Release/Coollab"
+          codesign --verbose --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy - 5YNUCBTLY8" "${{github.workspace}}/bin/Release/Coollab"
 
       - name: Notarize Executable (MacOS)
         env:
