@@ -8,6 +8,8 @@ on:
       - "User data Default/**"
       - "Nodes/**"
       - "**.md"
+      - ".github/workflows/create_release_executables.yml"
+      - ".github/workflows/deploy_website.yml"
   pull_request:
     branches: [main]
 
