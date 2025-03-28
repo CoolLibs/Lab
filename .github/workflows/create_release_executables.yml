@@ -115,6 +115,7 @@ jobs:
           buildDirectory: ${{github.workspace}}/build
 
       - name: Build app bundle (MacOS)
+        if: runner.os == 'MacOS'
         run: |
           mkdir -p "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources"
           mkdir -p "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS"
@@ -147,7 +148,7 @@ jobs:
           New-Item -ItemType Directory -Path "${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab"
           Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab -Recurse
 
-      - name: Code Sign and Notarize (MacOS)
+      - name: Codesign and Notarize (MacOS)
         if: runner.os == 'MacOS'
         env:
           CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE }}
