@@ -132,12 +132,11 @@ jobs:
 
       - name: Copy licenses (MacOS)
         if: runner.os == 'MacOS'
-        shell: pwsh
         run: |
           cd ${{github.workspace}}/build
           cmake --install . --prefix tmp_install
-          New-Item -ItemType Directory -Path "${{github.workspace}}/bin/Release/license"
-          Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/license/ -Recurse
+          mkdir -p "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/license"
+          cp -r "tmp_install/license" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/license/"
 
       - name: Copy licenses (Linux)
         if: runner.os == 'Linux'
