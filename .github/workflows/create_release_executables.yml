@@ -131,11 +131,18 @@ jobs:
       - name: Test
         run: security find-identity -p codesigning -v
 
+      - name: Build app bundle (MacOS)
+        run: |
+          mkdir -p "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources"
+          mkdir -p "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS"
+          rsync -av --exclude='Coollab' "${{github.workspace}}/bin/Release/" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/"
+          cp "${{github.workspace}}/bin/Release/Coollab" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+
       - name: Code Sign Executable (MacOS)
         env:
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" "${{github.workspace}}/bin/Release/Coollab"
+          codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" --entitlements "${{github.workspace}}/app-resources/Coollab.entitlements" "${{github.workspace}}/app-resources/Coollab.app"
 
       - name: Notarize Executable (MacOS)
         env:
@@ -143,10 +150,9 @@ jobs:
           APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}
           TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          ditto -c -k --keepParent "${{github.workspace}}/bin/Release/Coollab" Coollab.zip
+          ditto -c -k --keepParent "${{github.workspace}}/app-resources/Coollab.app" Coollab.zip
           xcrun notarytool submit Coollab.zip --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_PASSWORD" --team-id "$TEAM_ID" --wait
-          unzip -o Coollab.zip -d "${{github.workspace}}/bin/Release/"
-          xcrun stapler staple -v "${{github.workspace}}/bin/Release/Coollab"
+          xcrun stapler staple "${{github.workspace}}/app-resources/Coollab.app"
 
       - name: Copy licenses (Windows and MacOS)
         if: runner.os != 'Linux'
@@ -191,8 +197,7 @@ jobs:
       - name: Zip Release binaries (MacOS)
         if: runner.os == 'MacOS'
         run: |
-          cd ${{github.workspace}}/bin/Release
-          zip -r ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip .
+          ditto -c -k --keepParent "${{github.workspace}}/app-resources/Coollab.app" Coollab-${{matrix.config.name}}.zip
 
       - name: Release (Windows)
         if: runner.os == 'Windows'
@@ -212,4 +217,4 @@ jobs:
         if: runner.os == 'MacOS'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{github.workspace}}/build/Coollab-${{matrix.config.name}}.zip
+          files: "${{github.workspace}}/Coollab-${{matrix.config.name}}.zip"

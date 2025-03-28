@@ -1,5 +1,5 @@
 - If new windows have been added, make sure that *imgui.ini* has been updated in *User data Default*
-- Choose a name for the version and add it in *changelog.md* and *CMakeLists.txt*
+- Choose a name for the version and add it in *changelog.md*, *CMakeLists.txt* and *Info.plist* (in CFBundleVersion AND CFBundleShortVersionString)
 - At the top of *versions_compatibility.txt*, add the name of the version, and incompatibility markers if necessary
 - Add gifs and images in the changelog to illustrate the changes
 - Commit with the message "🔖 [version_name] Release" (make sure to replace with the right version name)
