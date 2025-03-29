@@ -143,6 +143,7 @@ jobs:
               otool -L "$dylib" | awk '/opt\/homebrew/ {print $1}' | while read -r dep; do
                   dep_name=$(basename "$dep")
                   if [ -f "$FRAMEWORKS_DIR/$dep_name" ]; then
+                      cp "$dep" "$FRAMEWORKS_DIR/"
                       install_name_tool -change "$dep" "@rpath/$dep_name" "$dylib"
                   fi
               done
