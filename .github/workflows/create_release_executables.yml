@@ -122,6 +122,9 @@ jobs:
           rsync -av --exclude='Coollab' "${{github.workspace}}/bin/Release/" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/"
           cp "${{github.workspace}}/bin/Release/Coollab" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
+      - name: test 1
+        run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+
       - name: Bundle FFmpeg libraries (MacOS)
         if: runner.os == 'MacOS'
         run: |
@@ -131,6 +134,9 @@ jobs:
           for lib in "${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks/"*.dylib; do
             install_name_tool -change "/opt/homebrew/*/$(basename $lib)" "@rpath/$(basename $lib)" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
           done
+
+      - name: test 2
+        run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
       - name: Copy licenses (Windows)
         if: runner.os == 'Windows'
@@ -157,9 +163,6 @@ jobs:
           cmake --install . --prefix tmp_install
           New-Item -ItemType Directory -Path "${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab"
           Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab -Recurse
-
-      - name: test
-        run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
       - name: Codesign and Notarize (MacOS)
         if: runner.os == 'MacOS'
