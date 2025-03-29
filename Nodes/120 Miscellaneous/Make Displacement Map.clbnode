@@ -1,0 +1,21 @@
+// To learn how to write nodes, see https://coollab-art.com/Tutorials/Writing%20Nodes/Intro
+
+INPUT UV->float 'Height Map';
+INPUT bool 'Normalize';
+
+vec2 main(UV uv)
+{
+    float off = 0.0001;
+
+    vec2 bob = (vec2(
+                    'Height Map'(uv + off * vec2(1, 0)),
+                    'Height Map'(uv + off * vec2(0, 1))
+                )
+                - 'Height Map'(uv)
+               )
+               / off;
+
+    if ('Normalize')
+        bob = normalize(bob);
+    return bob;
+}

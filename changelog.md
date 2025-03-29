@@ -1,10 +1,13 @@
 # Changelog
 
-## 
+## 1.1.2 UI Scale
 
+- ✨ Coollab now works on MacOS!
 - 🤏 Added shortcuts <kbd>CTRL</kbd><kbd>+</kbd> and <kbd>CTRL</kbd><kbd>-</kbd> to zoom the UI
 - 🤏 Renamed "UI Scale" as "UI Zoom"
 - 🐛 We now stop checking for webcams info as soon as we stop using a webcam
+- 🟦 Nodes: renamed "2D Variation (Gradient)" as "Make Displacement Map"
+- 🟦 Nodes: renamed "Displace" as "Displacement Map" + improved it and added some parameters
 
 ## 1.1.1 UI Scale
 
