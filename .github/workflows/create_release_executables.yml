@@ -139,7 +139,7 @@ jobs:
           cp /opt/homebrew/Cellar/ffmpeg/*/lib/*.dylib "${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks/"
           install_name_tool -add_rpath "@executable_path/../Frameworks" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
           for lib in "${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks/"*.dylib; do
-            install_name_tool -change "/opt/homebrew/lib/$(basename $lib)" "@rpath/$(basename $lib)" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+            install_name_tool -change "/opt/homebrew/*/$(basename $lib)" "@rpath/$(basename $lib)" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
           done
 
       - name: Copy licenses (Windows)
