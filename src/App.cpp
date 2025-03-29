@@ -728,17 +728,17 @@ void App::check_inputs__project()
     auto const& io  = ImGui::GetIO();
     auto const  ctx = command_execution_context();
 
-    if (io.KeyCtrl && io.KeyShift && ImGui::IsKeyReleased(ImGuiKey_S))
+    if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl && io.KeyShift && !io.KeyAlt)
     {
         auto const path = _project_manager.file_dialog_to_save_project();
         if (path)
             ctx.execute(Command_SaveProjectAs{*path});
     }
-    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_S))
+    else if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
     {
         ctx.execute(Command_SaveProject{.is_autosave = false, .must_absolutely_succeed = false});
     }
-    else if (io.KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_O))
+    else if (ImGui::IsKeyReleased(ImGuiKey_O) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
     {
         if (DebugOptions::allow_user_to_open_any_file())
         {
@@ -746,6 +746,14 @@ void App::check_inputs__project()
             if (path)
                 ctx.execute(Command_OpenProjectOnNextFrame{*path});
         }
+    }
+    else if ((ImGui::IsKeyReleased(ImGuiKey_KeypadAdd) || ImGui::IsKeyReleased(ImGuiKey_Equal)) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
+    {
+        Cool::user_settings().change_ui_scale(+1.f);
+    }
+    else if ((ImGui::IsKeyReleased(ImGuiKey_KeypadSubtract) || ImGui::IsKeyReleased(ImGuiKey_Minus)) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
+    {
+        Cool::user_settings().change_ui_scale(-1.f);
     }
 }
 
