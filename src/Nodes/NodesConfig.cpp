@@ -152,11 +152,11 @@ static void apply_settings_to_inputs_no_history(
 
 void NodesConfig::node_context_menu(Cool::Node& /*Node*/, Cool::NodeId const& node_id)
 {
-    if (ImGui::Button("Meshing"))
-    {
-        _command_executor.execute(Command_Meshing{node_id});
-        ImGui::CloseCurrentPopup();
-    }
+    // if (ImGui::Button("Meshing"))
+    // {
+    //     _command_executor.execute(Command_Meshing{node_id});
+    //     ImGui::CloseCurrentPopup();
+    // }
 }
 
 auto NodesConfig::name(Cool::Node const& abstract_node) const -> std::string
