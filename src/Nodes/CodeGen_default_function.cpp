@@ -243,6 +243,21 @@ vec3 default_curve_3D(float t)
 
     {
         auto const func = maybe_generate_default(
+            FunctionSignature{PrimitiveType::UV, PrimitiveType::Vec2},
+            "default_displacement_map", R"STR(
+vec2 default_displacement_map(vec2 uv)
+{
+    return normalize(uv);
+}
+)STR",
+            signature, context
+        );
+        if (func)
+            return *func;
+    }
+
+    {
+        auto const func = maybe_generate_default(
             FunctionSignature{.from = PrimitiveType::Oklab_PremultipliedA, .to = PrimitiveType::Oklab_PremultipliedA, .arity = 2},
             "default_blend_mode", R"STR(
 vec4 default_blend_mode(vec4 over, vec4 under)
