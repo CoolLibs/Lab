@@ -35,6 +35,9 @@ jobs:
             }
 
     steps:
+      - name: test
+        run: xcrun notarytool log 4e73aeb5-1b2b-4abd-a67e-d7b9dd2d826b
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
