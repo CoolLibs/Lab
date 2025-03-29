@@ -35,16 +35,6 @@ jobs:
             }
 
     steps:
-      - name: test
-        env:
-          CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE }}
-          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-          APPLE_ID_USERNAME: ${{ secrets.APPLE_ID_USERNAME }}
-          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}
-          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: xcrun notarytool log 3a974a70-5591-4281-bdc7-d2ee617c43c7 --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_PASSWORD" --team-id "$TEAM_ID"
-
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -167,6 +157,9 @@ jobs:
           cmake --install . --prefix tmp_install
           New-Item -ItemType Directory -Path "${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab"
           Copy-Item -Path tmp_install/license/* -Destination ${{github.workspace}}/app-resources/Coollab.AppDir/usr/share/licenses/coollab -Recurse
+
+      - name: test
+        run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
       - name: Codesign and Notarize (MacOS)
         if: runner.os == 'MacOS'
