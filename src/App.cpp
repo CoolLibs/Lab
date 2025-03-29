@@ -749,11 +749,11 @@ void App::check_inputs__project()
     }
     else if ((ImGui::IsKeyReleased(ImGuiKey_KeypadAdd) || ImGui::IsKeyReleased(ImGuiKey_Equal)) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
     {
-        Cool::user_settings().change_ui_scale(+1.f);
+        Cool::user_settings().change_ui_zoom(+1.f);
     }
     else if ((ImGui::IsKeyReleased(ImGuiKey_KeypadSubtract) || ImGui::IsKeyReleased(ImGuiKey_Minus)) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
     {
-        Cool::user_settings().change_ui_scale(-1.f);
+        Cool::user_settings().change_ui_zoom(-1.f);
     }
 }
 

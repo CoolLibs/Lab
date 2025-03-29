@@ -3,6 +3,7 @@
 ## 
 
 - 🤏 Added shortcuts <kbd>CTRL</kbd><kbd>+</kbd> and <kbd>CTRL</kbd><kbd>-</kbd> to zoom the UI
+- 🤏 Renamed "UI Scale" as "UI Zoom"
 - 🐛 We now stop checking for webcams info as soon as we stop using a webcam
 
 ## 1.1.1 UI Scale
