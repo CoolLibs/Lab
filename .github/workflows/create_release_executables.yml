@@ -129,21 +129,23 @@ jobs:
           FRAMEWORKS_DIR="${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks"
           mkdir -p "$FRAMEWORKS_DIR"
           install_name_tool -add_rpath "@executable_path/../Frameworks" "$EXECUTABLE"
-          otool -L "$EXECUTABLE" | awk '/opt\/homebrew/ {print $1}' | while read -r dylib; do
-              if [ -f "$dylib" ]; then
-                  dylib_name=$(basename "$dylib")
-                  cp "$dylib" "$FRAMEWORKS_DIR/"
-                  install_name_tool -change "$dylib" "@rpath/$dylib_name" "$EXECUTABLE"
+          copy_and_patch_lib() {
+              local dylib="$1"
+              local basename=$(basename "$dylib")
+              if [ -f "$FRAMEWORKS_DIR/$basename" ]; then
+                  return
               fi
-          done
-          for dylib in "$FRAMEWORKS_DIR"/*.dylib; do
-              otool -L "$dylib" | awk '/opt\/homebrew/ {print $1}' | while read -r dep; do
-                  if [ -f "$dep" ]; then
-                      dep_name=$(basename "$dep")
-                      cp "$dep" "$FRAMEWORKS_DIR/"
-                      install_name_tool -change "$dep" "@rpath/$dep_name" "$dylib"
-                  fi
+              cp "$dylib" "$FRAMEWORKS_DIR/"
+              install_name_tool -change "$dylib" "@rpath/$basename" "$EXECUTABLE"
+              for lib in "$FRAMEWORKS_DIR"/*.dylib; do
+                  install_name_tool -change "$dylib" "@rpath/$basename" "$lib"
               done
+              otool -L "$FRAMEWORKS_DIR/$basename" | awk '{print $1}' | grep '/opt/homebrew' | while read -r dep; do
+                  copy_and_patch_lib "$dep"
+              done
+          }
+          otool -L "$EXECUTABLE" | awk '{print $1}' | grep '/opt/homebrew' | while read -r dylib; do
+              copy_and_patch_lib "$dylib"
           done
 
       - name: Copy licenses (Windows)
