@@ -48,7 +48,7 @@
   },
   "ItemSpacing": {
    "x": 3.0,
-   "y": 4.0
+   "y": 3.5
   },
   "LayoutAlign": 0.5,
   "LogSliderDeadzone": 2.0,
