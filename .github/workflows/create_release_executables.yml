@@ -125,14 +125,19 @@ jobs:
       - name: test 1
         run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
-      - name: Bundle FFmpeg libraries (MacOS)
+      - name: Bundle dynamic libraries (MacOS)
         if: runner.os == 'MacOS'
         run: |
-          mkdir -p "${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks"
-          cp /opt/homebrew/Cellar/ffmpeg/*/lib/*.dylib "${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks/"
-          install_name_tool -add_rpath "@executable_path/../Frameworks" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
-          for lib in "${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks/"*.dylib; do
-            install_name_tool -change "/opt/homebrew/opt/ffmpeg/lib/$(basename $lib)" "@rpath/$(basename $lib)" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          EXECUTABLE="${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          FRAMEWORKS_DIR="${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks"
+          mkdir -p "$FRAMEWORKS_DIR"
+          otool -L "$EXECUTABLE" | awk '/opt\/homebrew/ {print $1}' | while read -r dylib; do
+              if [ -f "$dylib" ]; then
+                  dylib_name=$(basename "$dylib")
+                  echo "Copying $dylib to Frameworks"
+                  cp "$dylib" "$FRAMEWORKS_DIR/"
+                  install_name_tool -change "$dylib" "@rpath/Frameworks/$dylib_name" "$EXECUTABLE"
+              fi
           done
 
       - name: test 2
