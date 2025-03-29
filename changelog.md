@@ -8,6 +8,7 @@
 - 🐛 We now stop checking for webcams info as soon as we stop using a webcam
 - 🟦 Nodes: renamed "2D Variation (Gradient)" as "Make Displacement Map"
 - 🟦 Nodes: renamed "Displace" as "Displacement Map" + improved it and added some parameters
+- 🟦 Nodes: added "Distance", that gives the distance to a Shape (green nodes)
 
 ## 1.1.1 UI Scale
 
