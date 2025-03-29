@@ -125,28 +125,28 @@ jobs:
       - name: Bundle dynamic libraries (MacOS)
         if: runner.os == 'MacOS'
         run: |
-          EXECUTABLE="${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          APP_EXE="${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
           FRAMEWORKS_DIR="${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks"
           mkdir -p "$FRAMEWORKS_DIR"
-          install_name_tool -add_rpath "@executable_path/../Frameworks" "$EXECUTABLE"
-          copy_and_patch_lib() {
-              local dylib="$1"
-              local basename=$(basename "$dylib")
-              if [ -f "$FRAMEWORKS_DIR/$basename" ]; then
-                  return
+
+          function copy_and_fix_dylibs() {
+            local binary="$1"
+            echo "Processing $binary"
+            otool -L "$binary" | awk '{print $1}' | grep -E '^/usr/local|^/opt|^/Library|^/System/Library' | while read dylib; do
+              if [ ! -f "$FRAMEWORKS_DIR/$(basename "$dylib")" ]; then
+                echo "Copying $dylib to Frameworks..."
+                cp "$dylib" "$FRAMEWORKS_DIR/"
+                chmod +w "$FRAMEWORKS_DIR/$(basename "$dylib")"
+                copy_and_fix_dylibs "$FRAMEWORKS_DIR/$(basename "$dylib")"
               fi
-              cp "$dylib" "$FRAMEWORKS_DIR/"
-              install_name_tool -change "$dylib" "@rpath/$basename" "$EXECUTABLE"
-              for lib in "$FRAMEWORKS_DIR"/*.dylib; do
-                  install_name_tool -change "$dylib" "@rpath/$basename" "$lib"
-              done
-              otool -L "$FRAMEWORKS_DIR/$basename" | awk '{print $1}' | grep '/opt/homebrew' | while read -r dep; do
-                  copy_and_patch_lib "$dep"
-              done
+              install_name_tool -change "$dylib" "@executable_path/../Frameworks/$(basename "$dylib")" "$binary"
+            done
           }
-          otool -L "$EXECUTABLE" | awk '{print $1}' | grep '/opt/homebrew' | while read -r dylib; do
-              copy_and_patch_lib "$dylib"
-          done
+          copy_and_fix_dylibs "$APP_EXE"
+
+      - name: Verify changes
+        run: |
+          otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
       - name: Copy licenses (Windows)
         if: runner.os == 'Windows'
