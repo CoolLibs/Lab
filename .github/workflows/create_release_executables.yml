@@ -35,16 +35,6 @@ jobs:
             }
 
     steps:
-      - name: test
-        env:
-          CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE }}
-          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_CERTIFICATE_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-          APPLE_ID_USERNAME: ${{ secrets.APPLE_ID_USERNAME }}
-          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_APP_SPECIFIC_PASSWORD }}
-          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: xcrun notarytool log 4e73aeb5-1b2b-4abd-a67e-d7b9dd2d826b --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_PASSWORD" --team-id "$TEAM_ID"
-
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -186,9 +176,9 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" build.keychain
           rm certificate.p12
           codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" --entitlements "${{github.workspace}}/app-resources/Coollab.entitlements" "${{github.workspace}}/app-resources/Coollab.app"
+          find "${{github.workspace}}/app-resources/Coollab.app" -name "*.dylib" -exec codesign --force --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" {} \;
           ditto -c -k --keepParent "${{github.workspace}}/app-resources/Coollab.app" Coollab.zip
           xcrun notarytool submit Coollab.zip --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_PASSWORD" --team-id "$TEAM_ID" --wait
-          xcrun notarytool history --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_PASSWORD" --team-id "$TEAM_ID"
           xcrun stapler staple "${{github.workspace}}/app-resources/Coollab.app"
 
       - name: Zip Release binaries (Windows)
