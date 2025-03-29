@@ -122,9 +122,6 @@ jobs:
           rsync -av --exclude='Coollab' "${{github.workspace}}/bin/Release/" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/"
           cp "${{github.workspace}}/bin/Release/Coollab" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
-      - name: test 1
-        run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
-
       - name: Bundle dynamic libraries (MacOS)
         if: runner.os == 'MacOS'
         run: |
@@ -141,16 +138,13 @@ jobs:
           done
           for dylib in "$FRAMEWORKS_DIR"/*.dylib; do
               otool -L "$dylib" | awk '/opt\/homebrew/ {print $1}' | while read -r dep; do
-                  dep_name=$(basename "$dep")
-                  if [ -f "$FRAMEWORKS_DIR/$dep_name" ]; then
+                  if [ -f "$dep" ]; then
+                      dep_name=$(basename "$dep")
                       cp "$dep" "$FRAMEWORKS_DIR/"
                       install_name_tool -change "$dep" "@rpath/$dep_name" "$dylib"
                   fi
               done
           done
-
-      - name: test 2
-        run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
       - name: Copy licenses (Windows)
         if: runner.os == 'Windows'
