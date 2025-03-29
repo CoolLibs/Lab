@@ -139,6 +139,14 @@ jobs:
                   install_name_tool -change "$dylib" "@rpath/$dylib_name" "$EXECUTABLE"
               fi
           done
+          for dylib in "$FRAMEWORKS_DIR"/*.dylib; do
+              otool -L "$dylib" | awk '/opt\/homebrew/ {print $1}' | while read -r dep; do
+                  dep_name=$(basename "$dep")
+                  if [ -f "$FRAMEWORKS_DIR/$dep_name" ]; then
+                      install_name_tool -change "$dep" "@rpath/$dep_name" "$dylib"
+                  fi
+              done
+          done
 
       - name: test 2
         run: otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
