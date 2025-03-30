@@ -124,6 +124,11 @@ jobs:
 
       - name: Recursively Find and Copy Dependencies
         run: |
+          EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          FRAMEWORKS_DIR="${{ github.workspace }}/app-resources/Coollab.app/Contents/Frameworks"
+
+          mkdir -p "$FRAMEWORKS_DIR"
+
           function resolve_rpath_lib {
               LIB_NAME=$1
               LIB_PATH=$(find /usr/local /opt/homebrew -name "$LIB_NAME" 2>/dev/null | head -n 1)
