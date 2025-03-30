@@ -35,6 +35,15 @@ jobs:
             }
 
     steps:
+      - name: Install MacOS dependencies
+        if: runner.os == 'MacOS'
+        run: |
+          brew install ffmpeg
+
+      - name: Verify changes
+        run: |
+          otool -L "/opt/homebrew/opt/webp/lib/libwebpmux.3.dylib"
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
