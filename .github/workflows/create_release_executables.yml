@@ -35,15 +35,6 @@ jobs:
             }
 
     steps:
-      - name: Install MacOS dependencies
-        if: runner.os == 'MacOS'
-        run: |
-          brew install ffmpeg
-
-      - name: Verify changes
-        run: |
-          find /usr/local /opt/homebrew -name "libsharpyuv.0.dylib" 2>/dev/null
-
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -131,7 +122,7 @@ jobs:
           rsync -av --exclude='Coollab' "${{github.workspace}}/bin/Release/" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/"
           cp "${{github.workspace}}/bin/Release/Coollab" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
-      - name: Find and copy Homebrew dynamic libraries recursively
+      - name: Find and copy Homebrew & @rpath libraries
         run: |
           EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
           FRAMEWORKS_DIR="${{ github.workspace }}/app-resources/Coollab.app/Contents/Frameworks"
@@ -145,24 +136,32 @@ jobs:
             HOMEBREW_PREFIX="/usr/local"
           fi
 
-          copy_libs_recursively() {
-            local target="$1"
-
-            otool -L "$target" | awk '{print $1}' | grep "^$HOMEBREW_PREFIX" | while read -r lib; do
-              BASENAME=$(basename "$lib")
-              DEST_LIB="$FRAMEWORKS_DIR/$BASENAME"
-
-              if [[ ! -f "$DEST_LIB" ]]; then
-                echo "Copying $lib to $DEST_LIB"
-                cp "$lib" "$DEST_LIB"
-                chmod +w "$DEST_LIB"
-                copy_libs_recursively "$DEST_LIB"  # Recurse into newly copied lib
-              fi
-            done
+          function resolve_rpath_lib {
+            LIB_NAME=$1
+            LIB_PATH=$(find /usr/local /opt/homebrew -name "$LIB_NAME" 2>/dev/null | head -n 1)
+            echo "$LIB_PATH"
           }
 
-          # Start recursive copying from the main executable
-          copy_libs_recursively "$EXECUTABLE"
+          # Find all linked libraries (Homebrew + @rpath)
+          otool -L "$EXECUTABLE" | awk '{print $1}' | while read -r lib; do
+            BASENAME=$(basename "$lib")
+
+            if [[ "$lib" == @rpath/* ]]; then
+              # Handle @rpath dependencies
+              REAL_LIB_PATH=$(resolve_rpath_lib "$BASENAME")
+            elif [[ "$lib" == "$HOMEBREW_PREFIX"* ]]; then
+              # Handle Homebrew libraries
+              REAL_LIB_PATH="$lib"
+            else
+              continue
+            fi
+
+            if [[ -n "$REAL_LIB_PATH" && ! -f "$FRAMEWORKS_DIR/$BASENAME" ]]; then
+              echo "Copying $REAL_LIB_PATH to $FRAMEWORKS_DIR"
+              cp "$REAL_LIB_PATH" "$FRAMEWORKS_DIR/"
+              chmod +w "$FRAMEWORKS_DIR/$BASENAME"
+            fi
+          done
 
       - name: Update library paths for copied Homebrew libraries
         run: |
