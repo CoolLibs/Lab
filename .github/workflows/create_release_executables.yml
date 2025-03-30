@@ -122,46 +122,41 @@ jobs:
           rsync -av --exclude='Coollab' "${{github.workspace}}/bin/Release/" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/"
           cp "${{github.workspace}}/bin/Release/Coollab" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
-      - name: Find and copy Homebrew & @rpath libraries
+      - name: Recursively Find and Copy Dependencies
         run: |
-          EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
-          FRAMEWORKS_DIR="${{ github.workspace }}/app-resources/Coollab.app/Contents/Frameworks"
-
-          mkdir -p "$FRAMEWORKS_DIR"
-
-          # Detect Homebrew prefix
-          if [[ -d "/opt/homebrew" ]]; then
-            HOMEBREW_PREFIX="/opt/homebrew"
-          else
-            HOMEBREW_PREFIX="/usr/local"
-          fi
-
           function resolve_rpath_lib {
-            LIB_NAME=$1
-            LIB_PATH=$(find /usr/local /opt/homebrew -name "$LIB_NAME" 2>/dev/null | head -n 1)
-            echo "$LIB_PATH"
+              LIB_NAME=$1
+              LIB_PATH=$(find /usr/local /opt/homebrew -name "$LIB_NAME" 2>/dev/null | head -n 1)
+              echo "$LIB_PATH"
           }
 
-          # Find all linked libraries (Homebrew + @rpath)
-          otool -L "$EXECUTABLE" | awk '{print $1}' | while read -r lib; do
-            BASENAME=$(basename "$lib")
+          function process_library {
+              TARGET_LIB=$1
+              echo "Processing: $TARGET_LIB"
 
-            if [[ "$lib" == @rpath/* ]]; then
-              # Handle @rpath dependencies
-              REAL_LIB_PATH=$(resolve_rpath_lib "$BASENAME")
-            elif [[ "$lib" == "$HOMEBREW_PREFIX"* ]]; then
-              # Handle Homebrew libraries
-              REAL_LIB_PATH="$lib"
-            else
-              continue
-            fi
+              otool -L "$TARGET_LIB" | awk '{print $1}' | while read -r lib; do
+                BASENAME=$(basename "$lib")
 
-            if [[ -n "$REAL_LIB_PATH" && ! -f "$FRAMEWORKS_DIR/$BASENAME" ]]; then
-              echo "Copying $REAL_LIB_PATH to $FRAMEWORKS_DIR"
-              cp "$REAL_LIB_PATH" "$FRAMEWORKS_DIR/"
-              chmod +w "$FRAMEWORKS_DIR/$BASENAME"
-            fi
-          done
+                if [[ "$lib" == @rpath/* ]]; then
+                    # Resolve @rpath dependencies
+                    REAL_LIB_PATH=$(resolve_rpath_lib "$BASENAME")
+                elif [[ "$lib" == "$HOMEBREW_PREFIX"* ]]; then
+                    # Handle Homebrew libraries
+                    REAL_LIB_PATH="$lib"
+                else
+                    continue
+                fi
+
+                if [[ -n "$REAL_LIB_PATH" && ! -f "$FRAMEWORKS_DIR/$BASENAME" ]]; then
+                    echo "Copying $REAL_LIB_PATH to $FRAMEWORKS_DIR"
+                    cp "$REAL_LIB_PATH" "$FRAMEWORKS_DIR/"
+                    chmod +w "$FRAMEWORKS_DIR/$BASENAME"
+                    process_library "$FRAMEWORKS_DIR/$BASENAME"  # Recursively process this new library
+                fi
+              done
+          }
+            # Start recursion from the main executable
+            process_library "$EXECUTABLE"
 
       - name: Update library paths for copied Homebrew libraries
         run: |
