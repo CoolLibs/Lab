@@ -42,7 +42,7 @@ jobs:
 
       - name: Verify changes
         run: |
-          otool -L "/opt/homebrew/opt/webp/lib/libwebpmux.3.dylib"
+          dyld_info -dependents "/opt/homebrew/opt/webp/lib/libwebpmux.3.dylib"
 
       - uses: actions/checkout@v3
         with:
