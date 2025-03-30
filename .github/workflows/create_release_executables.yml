@@ -122,31 +122,75 @@ jobs:
           rsync -av --exclude='Coollab' "${{github.workspace}}/bin/Release/" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/"
           cp "${{github.workspace}}/bin/Release/Coollab" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
-      - name: Bundle dynamic libraries (MacOS)
-        if: runner.os == 'MacOS'
+      - name: Find and copy Homebrew dynamic libraries recursively
         run: |
-          APP_EXE="${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
-          FRAMEWORKS_DIR="${{github.workspace}}/app-resources/Coollab.app/Contents/Frameworks"
+          EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          FRAMEWORKS_DIR="${{ github.workspace }}/app-resources/Coollab.app/Contents/Frameworks"
+
           mkdir -p "$FRAMEWORKS_DIR"
 
-          function copy_and_fix_dylibs() {
-            local binary="$1"
-            echo "Processing $binary"
-            otool -L "$binary" | awk '{print $1}' | grep -E '^/usr/local|^/opt|^/Library|^/System/Library' | while read dylib; do
-              if [ ! -f "$FRAMEWORKS_DIR/$(basename "$dylib")" ]; then
-                echo "Copying $dylib to Frameworks..."
-                cp "$dylib" "$FRAMEWORKS_DIR/"
-                chmod +w "$FRAMEWORKS_DIR/$(basename "$dylib")"
-                copy_and_fix_dylibs "$FRAMEWORKS_DIR/$(basename "$dylib")"
+          # Detect Homebrew prefix
+          if [[ -d "/opt/homebrew" ]]; then
+            HOMEBREW_PREFIX="/opt/homebrew"
+          else
+            HOMEBREW_PREFIX="/usr/local"
+          fi
+
+          copy_libs_recursively() {
+            local target="$1"
+
+            otool -L "$target" | awk '{print $1}' | grep "^$HOMEBREW_PREFIX" | while read -r lib; do
+              BASENAME=$(basename "$lib")
+              DEST_LIB="$FRAMEWORKS_DIR/$BASENAME"
+
+              if [[ ! -f "$DEST_LIB" ]]; then
+                echo "Copying $lib to $DEST_LIB"
+                cp "$lib" "$DEST_LIB"
+                chmod +w "$DEST_LIB"
+                copy_libs_recursively "$DEST_LIB"  # Recurse into newly copied lib
               fi
-              install_name_tool -change "$dylib" "@executable_path/../Frameworks/$(basename "$dylib")" "$binary"
             done
           }
-          copy_and_fix_dylibs "$APP_EXE"
+
+          # Start recursive copying from the main executable
+          copy_libs_recursively "$EXECUTABLE"
+
+      - name: Update library paths for copied Homebrew libraries
+        run: |
+          EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          FRAMEWORKS_DIR="${{ github.workspace }}/app-resources/Coollab.app/Contents/Frameworks"
+
+          install_name_tool -add_rpath "@executable_path/../Frameworks" "$EXECUTABLE"
+
+          # Change library paths in the executable
+          otool -L "$EXECUTABLE" | awk '{print $1}' | grep "^/opt/homebrew\|^/usr/local" | while read -r lib; do
+            BASENAME=$(basename "$lib")
+            DEST_LIB="$FRAMEWORKS_DIR/$BASENAME"
+
+            if [[ -f "$DEST_LIB" ]]; then
+              echo "Updating $EXECUTABLE: changing $lib -> @rpath/$BASENAME"
+              install_name_tool -change "$lib" "@rpath/$BASENAME" "$EXECUTABLE"
+            fi
+          done
+
+          # Change library paths for each copied Homebrew library
+          for LIB in "$FRAMEWORKS_DIR"/*; do
+            otool -L "$LIB" | awk '{print $1}' | grep "^/opt/homebrew\|^/usr/local" | while read -r dep; do
+              DEP_BASENAME=$(basename "$dep")
+              DEST_DEP="$FRAMEWORKS_DIR/$DEP_BASENAME"
+
+              if [[ -f "$DEST_DEP" ]]; then
+                echo "Updating $LIB: changing $dep -> @rpath/$DEP_BASENAME"
+                install_name_tool -change "$dep" "@rpath/$DEP_BASENAME" "$LIB"
+              fi
+            done
+          done
 
       - name: Verify changes
         run: |
-          otool -L "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
+          echo "Final dependencies in $EXECUTABLE:"
+          otool -L "$EXECUTABLE"
 
       - name: Copy licenses (Windows)
         if: runner.os == 'Windows'
