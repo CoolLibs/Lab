@@ -42,7 +42,7 @@ jobs:
 
       - name: Verify changes
         run: |
-          dyld_info -dependents "/opt/homebrew/opt/webp/lib/libwebpmux.3.dylib"
+          find /usr/local /opt/homebrew -name "libsharpyuv.0.dylib" 2>/dev/null
 
       - uses: actions/checkout@v3
         with:
