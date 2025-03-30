@@ -150,7 +150,7 @@ static void apply_settings_to_inputs_no_history(
     }
 }
 
-void NodesConfig::node_context_menu(Cool::Node& /*Node*/, Cool::NodeId const& node_id)
+void NodesConfig::node_context_menu(Cool::Node& /*Node*/, Cool::NodeId const& /* node_id */)
 {
     // if (ImGui::Button("Meshing"))
     // {
