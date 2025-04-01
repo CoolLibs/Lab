@@ -9,12 +9,12 @@
 #include "Cool/File/File.h"
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/ImGuiExtrasStyle.h"
+#include "Cool/Log/boxer_show.hpp"
 #include "Cool/Path/Path.h"
 #include "Cool/UserSettings/UserSettings.h"
 #include "Debug/DebugOptions.h"
 #include "ProjectManagerImpl.hpp"
 #include "UserSettings/UserSettings.hpp"
-#include "boxer/boxer.h"
 
 namespace Lab {
 
@@ -196,7 +196,7 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
         // We would overwrite a file that we did not write ourselves, this is dangerous because we might overwrite data saved by the user with another application
         while (true)
         {
-            boxer::show(
+            Cool::boxer_show(
                 fmt::format("This file has been modified externally. We cannot save there because it would overwrite the changes.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
                 "Cannot save here",
                 boxer::Style::Warning,
@@ -220,7 +220,7 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
         auto const maybe_err = project_path_error_message(file_path, {.allow_overwrite_existing_file = true});
         if (maybe_err.has_value())
         {
-            boxer::show(
+            Cool::boxer_show(
                 fmt::format("{}\nPlease choose another name for your project\n{}", *maybe_err, Cool::File::weakly_canonical(file_path)).c_str(),
                 "Invalid name",
                 boxer::Style::Warning,
@@ -229,7 +229,7 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
         }
         else if (!_impl.save(file_path))
         {
-            boxer::show(
+            Cool::boxer_show(
                 fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
                 "Cannot save here",
                 boxer::Style::Warning,
@@ -274,7 +274,7 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
         auto const maybe_err = project_path_error_message(file_path, {.allow_overwrite_existing_file = true});
         if (maybe_err.has_value())
         {
-            boxer::show(
+            Cool::boxer_show(
                 fmt::format("{}\nPlease choose another name for your project\n{}", *maybe_err, Cool::File::weakly_canonical(file_path)).c_str(),
                 "Invalid name",
                 boxer::Style::Warning,
@@ -283,7 +283,7 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
         }
         else if (!_impl.save(file_path))
         {
-            boxer::show(
+            Cool::boxer_show(
                 fmt::format("Save failed.\nPlease select another location to save the file.\n{}", Cool::File::weakly_canonical(file_path)).c_str(),
                 "Cannot save here",
                 boxer::Style::Warning,
