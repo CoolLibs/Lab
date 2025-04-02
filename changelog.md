@@ -5,6 +5,7 @@
 - ✨ Coollab now works on MacOS!
 - 🤏 Added shortcuts <kbd>CTRL</kbd><kbd>+</kbd> and <kbd>CTRL</kbd><kbd>-</kbd> to zoom the UI
 - 🤏 Renamed "UI Scale" as "UI Zoom"
+- 🤏 Improved fullscreen mode (<kbd>F11</kbd>). The window will no longer minify when clicking on another screen. It is also faster to switch between fullscreen and non-fullscreen, and the window does not flicker weirdly when switching to another window or screen.
 - 🐛 We now stop checking for webcams info as soon as we stop using a webcam
 - 🟦 Nodes: renamed "2D Variation (Gradient)" as "Make Displacement Map"
 - 🟦 Nodes: renamed "Displace" as "Displacement Map" + improved it and added some parameters
