@@ -122,8 +122,8 @@ jobs:
           rsync -av --exclude='Coollab' "${{github.workspace}}/bin/Release/" "${{github.workspace}}/app-resources/Coollab.app/Contents/Resources/"
           cp "${{github.workspace}}/bin/Release/Coollab" "${{github.workspace}}/app-resources/Coollab.app/Contents/MacOS/Coollab"
 
-      - name: Recursively Find and Copy Dependencies
-        run: |
+          # Recursively find and copy all dynamic libraries
+
           EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
           FRAMEWORKS_DIR="${{ github.workspace }}/app-resources/Coollab.app/Contents/Frameworks"
 
@@ -137,16 +137,12 @@ jobs:
 
           function process_library {
               TARGET_LIB=$1
-              echo "Processing: $TARGET_LIB"
-
               otool -L "$TARGET_LIB" | awk '{print $1}' | while read -r lib; do
                 BASENAME=$(basename "$lib")
 
                 if [[ "$lib" == @rpath/* ]]; then
-                    # Resolve @rpath dependencies
                     REAL_LIB_PATH=$(resolve_rpath_lib "$BASENAME")
                 elif [[ "$lib" == "$HOMEBREW_PREFIX"* ]]; then
-                    # Handle Homebrew libraries
                     REAL_LIB_PATH="$lib"
                 else
                     continue
@@ -156,17 +152,13 @@ jobs:
                     echo "Copying $REAL_LIB_PATH to $FRAMEWORKS_DIR"
                     cp "$REAL_LIB_PATH" "$FRAMEWORKS_DIR/"
                     chmod +w "$FRAMEWORKS_DIR/$BASENAME"
-                    process_library "$FRAMEWORKS_DIR/$BASENAME"  # Recursively process this new library
+                    process_library "$FRAMEWORKS_DIR/$BASENAME"
                 fi
               done
           }
-            # Start recursion from the main executable
-            process_library "$EXECUTABLE"
+          process_library "$EXECUTABLE"
 
-      - name: Update library paths for copied Homebrew libraries
-        run: |
-          EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
-          FRAMEWORKS_DIR="${{ github.workspace }}/app-resources/Coollab.app/Contents/Frameworks"
+          # Update rpath for copied libraries:
 
           install_name_tool -add_rpath "@executable_path/../Frameworks" "$EXECUTABLE"
 
@@ -193,12 +185,6 @@ jobs:
               fi
             done
           done
-
-      - name: Verify changes
-        run: |
-          EXECUTABLE="${{ github.workspace }}/app-resources/Coollab.app/Contents/MacOS/Coollab"
-          echo "Final dependencies in $EXECUTABLE:"
-          otool -L "$EXECUTABLE"
 
       - name: Copy licenses (Windows)
         if: runner.os == 'Windows'
