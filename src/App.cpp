@@ -12,6 +12,7 @@
 #include "Cool/ImGui/ImGuiExtras.h"
 #include "Cool/ImGui/icon_fmt.h"
 #include "Cool/Image/SaveImage.h"
+#include "Cool/Input/CTRL_OR_CMD.hpp"
 #include "Cool/Log/message_console.hpp"
 #include "Cool/OSC/OSCChannel.h"
 #include "Cool/OSC/OSCManager.h"
@@ -526,9 +527,9 @@ void App::file_menu()
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
     {
         auto const ctx = command_execution_context();
-        if (ImGui::MenuItem("Save", "Ctrl+S")) // TODO(UX) Cmd instead of Ctrl on MacOS
+        if (ImGui::MenuItem("Save", ctrl_or_cmd "+S"))
             ctx.execute(Command_SaveProject{.is_autosave = false, .must_absolutely_succeed = false});
-        if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+        if (ImGui::MenuItem("Save As", ctrl_or_cmd "+Shift+S"))
         {
             auto const path = _project_manager.file_dialog_to_save_project();
             if (path)
@@ -536,7 +537,7 @@ void App::file_menu()
         }
         if (DebugOptions::allow_user_to_open_any_file())
         {
-            if (ImGui::MenuItem("Open", "Ctrl+O")) // TODO(UX) Cmd instead of Ctrl on MacOS
+            if (ImGui::MenuItem("Open", ctrl_or_cmd "+O"))
             {
                 auto const path = _project_manager.file_dialog_to_open_project();
                 if (path)
@@ -691,11 +692,11 @@ void App::check_inputs()
     check_inputs__history();
     check_inputs__project();
     check_inputs__timeline();
-    if (ImGui::IsKeyPressed(ImGuiKey_Escape))
+    if (ImGui::IsKeyChordPressed(ImGuiKey_Escape))
     {
         _wants_view_in_fullscreen = false;
     }
-    if (ImGui::GetIO().KeyCtrl && ImGui::IsKeyReleased(ImGuiKey_E))
+    if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_E))
     {
         auto const exported_image_path = project().exporter.export_image_with_current_settings_using_a_task(project().clock.time(), project().clock.delta_time(), polaroid(), [](std::filesystem::path const& image_path) {
             return is_valid_path_to_package_project_into(folder_to_package_project_into(image_path)); // Make sure that if a project file already exists at "img(3).coollab" we won't try to call the image "img(3).png" even if that png file doesn't exist. We will skip directly to "img(4).png", to make sure we are able to create a project with the same name, without conflicting with any existing project.
@@ -706,18 +707,17 @@ void App::check_inputs()
 
 void App::check_inputs__history()
 {
-    auto        exec = reversible_command_executor_without_history();
-    auto const& io   = ImGui::GetIO();
+    auto exec = reversible_command_executor_without_history();
 
     // Undo
-    if (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Z)) // TODO(UX) On MacOS, use command and not Ctrl (and display it as Cmd in the menu )
+    if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_Z))
     {
         project().history.move_backward(exec);
     }
 
     // Redo
-    if ((io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Y))
-        || (io.KeyCtrl && io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)))
+    if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_Y)
+        || ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiMod_Shift | ImGuiKey_Z))
     {
         project().history.move_forward(exec);
     }
@@ -725,20 +725,19 @@ void App::check_inputs__history()
 
 void App::check_inputs__project()
 {
-    auto const& io  = ImGui::GetIO();
-    auto const  ctx = command_execution_context();
+    auto const ctx = command_execution_context();
 
-    if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl && io.KeyShift && !io.KeyAlt)
+    if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiMod_Shift | ImGuiKey_S))
     {
         auto const path = _project_manager.file_dialog_to_save_project();
         if (path)
             ctx.execute(Command_SaveProjectAs{*path});
     }
-    else if (ImGui::IsKeyReleased(ImGuiKey_S) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
+    else if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_S))
     {
         ctx.execute(Command_SaveProject{.is_autosave = false, .must_absolutely_succeed = false});
     }
-    else if (ImGui::IsKeyReleased(ImGuiKey_O) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
+    else if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_O))
     {
         if (DebugOptions::allow_user_to_open_any_file())
         {
@@ -747,11 +746,13 @@ void App::check_inputs__project()
                 ctx.execute(Command_OpenProjectOnNextFrame{*path});
         }
     }
-    else if ((ImGui::IsKeyReleased(ImGuiKey_KeypadAdd) || ImGui::IsKeyReleased(ImGuiKey_Equal)) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
+    else if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_KeypadAdd)
+             || ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_Equal))
     {
         Cool::user_settings().change_ui_zoom(+1.f);
     }
-    else if ((ImGui::IsKeyReleased(ImGuiKey_KeypadSubtract) || ImGui::IsKeyReleased(ImGuiKey_Minus)) && io.KeyCtrl && !io.KeyShift && !io.KeyAlt)
+    else if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_KeypadSubtract)
+             || ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_Minus))
     {
         Cool::user_settings().change_ui_zoom(-1.f);
     }
@@ -759,7 +760,7 @@ void App::check_inputs__project()
 
 void App::check_inputs__timeline()
 {
-    if (ImGui::IsKeyReleased(ImGuiKey_Space))
+    if (ImGui::IsKeyChordPressed(ImGuiKey_Space))
     {
         project().clock.toggle_play_pause();
     }
