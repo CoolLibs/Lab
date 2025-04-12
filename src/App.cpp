@@ -7,6 +7,7 @@
 #include "Cool/DebugOptions/debug_options_windows.h"
 #include "Cool/File/File.h"
 #include "Cool/ImGui/ColorThemes.h"
+#include "Cool/ImGui/ExportPathChecks.hpp"
 #include "Cool/ImGui/Fonts.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -28,8 +29,8 @@
 #include "Debug/DebugOptions.h"
 #include "Dependencies/Camera2DManager.h"
 #include "ModulesGraph/ModulesGraph.h"
+#include "ProjectManager/COOLLAB_FILE_EXTENSION.hpp"
 #include "ProjectManager/Command_OpenProjectOnNextFrame.hpp"
-#include "ProjectManager/Command_PackageProjectInto.h"
 #include "ProjectManager/Command_SaveProject.h"
 #include "ProjectManager/Command_SaveProjectAs.h"
 #include "ProjectManager/Interfaces.hpp"
@@ -393,17 +394,35 @@ void App::imgui_window_view()
     });
 }
 
-static auto folder_to_package_project_into(std::filesystem::path image_path)
+static auto file_to_save_backup_project(std::filesystem::path const& image_path)
 {
-    image_path.replace_extension(); // Give project folder the same name as the image.
-    return image_path;
+    return Cool::File::with_extension(image_path, COOLLAB_FILE_EXTENSION);
+}
+
+static auto image_export_path_checks() -> Cool::ExportPathChecks
+{
+    return Cool::ExportPathChecks{
+        .warnings_checks = {
+            Cool::export_path_existence_check(),
+            [](std::filesystem::path const& image_path) {
+                auto const backup_project_path = file_to_save_backup_project(image_path);
+                return Cool::File::exists(backup_project_path)
+                           // Make sure that if a project file already exists at "img(3).coollab" we won't try to call the image "img(3).png" even if that png file doesn't exist. We will skip directly to "img(4).png", to make sure we are able to create a project with the same name, without conflicting with any existing project.
+                           ? fmt::format("A backup project \"{}\" already exists. Are you sure you want to overwrite it?", Cool::File::file_name(backup_project_path))
+                           : ""s;
+            },
+        },
+    };
 }
 
 void App::on_image_export_start(std::filesystem::path const& exported_image_path)
 {
-    command_executor().execute(Command_PackageProjectInto{
-        .folder_path                      = folder_to_package_project_into(exported_image_path),
-        .register_project_in_the_launcher = false,
+    command_executor().execute(Command_SaveProjectAs{
+        file_to_save_backup_project(exported_image_path),
+        {
+            .register_project_in_the_launcher = false,
+            .allow_overwrite_existing_file    = true,
+        },
     });
 }
 
@@ -422,6 +441,7 @@ void App::imgui_window_exporter()
             _tips_manager.imgui_show_one_tip(all_tips());
             //
         },
+        .image_path_checks = image_export_path_checks(),
     });
 }
 
@@ -522,6 +542,21 @@ void App::imgui_windows_only_when_inputs_are_allowed()
     Cool::debug_options_windows(&_tips_manager, _main_window);
 }
 
+void App::save_as()
+{
+    auto const path = _project_manager.file_dialog_to_save_project();
+    if (!path.has_value())
+        return;
+
+    command_execution_context().execute(Command_SaveProjectAs{
+        *path,
+        {
+            .register_project_in_the_launcher = true,
+            .allow_overwrite_existing_file    = true,
+        },
+    });
+}
+
 void App::file_menu()
 {
     if (ImGui::BeginMenu(Cool::icon_fmt("File", ICOMOON_FILE_TEXT2, true).c_str()))
@@ -531,9 +566,7 @@ void App::file_menu()
             ctx.execute(Command_SaveProject{.is_autosave = false, .must_absolutely_succeed = false});
         if (ImGui::MenuItem("Save As", ctrl_or_cmd "+Shift+S"))
         {
-            auto const path = _project_manager.file_dialog_to_save_project();
-            if (path)
-                ctx.execute(Command_SaveProjectAs{*path});
+            save_as();
         }
         if (DebugOptions::allow_user_to_open_any_file())
         {
@@ -698,9 +731,7 @@ void App::check_inputs()
     }
     if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_E))
     {
-        auto const exported_image_path = project().exporter.export_image_with_current_settings_using_a_task(project().clock.time(), project().clock.delta_time(), polaroid(), [](std::filesystem::path const& image_path) {
-            return is_valid_path_to_package_project_into(folder_to_package_project_into(image_path)); // Make sure that if a project file already exists at "img(3).coollab" we won't try to call the image "img(3).png" even if that png file doesn't exist. We will skip directly to "img(4).png", to make sure we are able to create a project with the same name, without conflicting with any existing project.
-        });
+        auto const exported_image_path = project().exporter.export_image_with_current_settings_using_a_task(project().clock.time(), project().clock.delta_time(), polaroid(), image_export_path_checks());
         on_image_export_start(exported_image_path);
     }
 }
@@ -729,9 +760,7 @@ void App::check_inputs__project()
 
     if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiMod_Shift | ImGuiKey_S))
     {
-        auto const path = _project_manager.file_dialog_to_save_project();
-        if (path)
-            ctx.execute(Command_SaveProjectAs{*path});
+        save_as();
     }
     else if (ImGui::IsKeyChordPressed(ImGuiMod_Shortcut | ImGuiKey_S))
     {

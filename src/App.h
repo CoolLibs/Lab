@@ -80,6 +80,7 @@ private:
     Cool::Polaroid polaroid();
 
     void reset_cameras();
+    void save_as();
 
     void file_menu();
     void performance_menu();

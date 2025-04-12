@@ -1,6 +1,7 @@
 #pragma once
 #include "Project.hpp"
 #include "ProjectManagerImpl.hpp"
+#include "SaveAsOptions.hpp"
 
 namespace Lab {
 
@@ -25,8 +26,8 @@ public:
 
     auto autosave_project(bool must_absolutely_succeed, SetWindowTitle const&) -> bool;
     auto save_project(bool must_absolutely_succeed, SetWindowTitle const&) -> bool;
-    auto save_project_as(std::filesystem::path file_path, SaveThumbnail const&, bool register_project_in_the_launcher = true) -> bool;
-    auto package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const&, bool register_project_in_the_launcher = true) -> bool;
+    auto save_project_as(std::filesystem::path file_path, SaveThumbnail const&, SaveAsOptions = {}) -> bool;
+    auto package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const&, SaveAsOptions = {}) -> bool;
     auto rename_project(std::string new_name, SetWindowTitle const&) -> bool;
 
     void imgui_project_name_in_the_middle_of_the_menu_bar(SetWindowTitle const&);

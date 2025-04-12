@@ -14,6 +14,7 @@
 #include "Cool/UserSettings/UserSettings.h"
 #include "Debug/DebugOptions.h"
 #include "ProjectManagerImpl.hpp"
+#include "SaveAsOptions.hpp"
 #include "UserSettings/UserSettings.hpp"
 
 namespace Lab {
@@ -112,7 +113,7 @@ void ProjectManager::create_new_project_in_file(std::filesystem::path file_path,
     project.camera_3D_manager.is_editable_in_view() = false;
     _impl.set_project(std::move(project), on_project_loaded);
 
-    file_path = Cool::File::find_available_path(file_path);
+    file_path = Cool::File::find_available_path(file_path, Cool::ExportPathChecks{});
     // Save immediately, so that no one will try to create another project with the same name, thinking the name is not in use
     std::ignore = save_project_impl(file_path, true /*must_absolutely_succeed*/, set_window_title);
 }
@@ -264,14 +265,14 @@ auto ProjectManager::save_project_impl(std::filesystem::path file_path, bool mus
     return true;
 }
 
-auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
+auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbnail const& save_thumbnail, SaveAsOptions options) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::info("Project", fmt::format("Saving project as \"{}\"", Cool::File::weakly_canonical(file_path)));
 
     while (true)
     {
-        auto const maybe_err = project_path_error_message(file_path, {.allow_overwrite_existing_file = true});
+        auto const maybe_err = project_path_error_message(file_path, {.allow_overwrite_existing_file = options.allow_overwrite_existing_file});
         if (maybe_err.has_value())
         {
             Cool::boxer_show(
@@ -301,7 +302,7 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
         file_path = *path;
     }
 
-    if (register_project_in_the_launcher)
+    if (options.register_project_in_the_launcher)
     {
         _impl.set_project_path_in_info_folder_for_the_launcher(file_path);
         auto const info_folder = _impl.info_folder_for_the_launcher(file_path);
@@ -310,12 +311,12 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
     }
 
     bool const wants_to_switch_to_new_project = user_settings().switch_to_new_project_when_saving_as
-                                                && register_project_in_the_launcher; // If we don't register this project in the launcher, then we shouldn't make it the current project either)
+                                                && options.register_project_in_the_launcher; // If we don't register this project in the launcher, then we shouldn't make it the current project either)
 
     if (wants_to_switch_to_new_project)
         open_project_on_next_frame(file_path);
 
-    if (register_project_in_the_launcher)
+    if (options.register_project_in_the_launcher)
     {
         ImGuiNotify::send({
             .type                 = ImGuiNotify::Type::Success,
@@ -355,7 +356,7 @@ auto is_valid_path_to_package_project_into(std::filesystem::path const& folder_p
         ;
 }
 
-auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const& save_thumbnail, bool register_project_in_the_launcher) -> bool
+auto ProjectManager::package_project_into(std::filesystem::path const& folder_path, SaveThumbnail const& save_thumbnail, SaveAsOptions options) -> bool
 {
     if (DebugOptions::log_project_related_events())
         Cool::Log::info("Project", fmt::format("Packaging project into \"{}\"", Cool::File::weakly_canonical(folder_path)));
@@ -371,7 +372,7 @@ auto ProjectManager::package_project_into(std::filesystem::path const& folder_pa
         return false;
     }
 
-    return save_project_as(file_path_to_package_project_into(folder_path), save_thumbnail, register_project_in_the_launcher); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
+    return save_project_as(file_path_to_package_project_into(folder_path), save_thumbnail, options); // TODO(Project) Implement the packaging-specific stuff like copying images and nodes.
 }
 
 auto ProjectManager::rename_project(std::string new_name, SetWindowTitle const& set_window_title) -> bool

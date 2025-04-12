@@ -7,6 +7,7 @@
 - 🤏 Renamed "UI Scale" as "UI Zoom"
 - 🤏 Improved fullscreen mode (<kbd>F11</kbd>). The window will no longer minify when clicking on another screen. It is also faster to switch between fullscreen and non-fullscreen, and the window does not flicker weirdly when switching to another window or screen.
 - 🐛 We now stop checking for webcams info as soon as we stop using a webcam
+- 🐛 When exporting an image that overwrites an existing image file, the backup project that we create will now also overwrite the existing backup project. And we added a warning to tell you that this will happen and ask for your confirmation.
 - 🟦 Nodes: renamed "2D Variation (Gradient)" as "Make Displacement Map"
 - 🟦 Nodes: renamed "Displace" as "Displacement Map" + improved it and added some parameters
 - 🟦 Nodes: added "Distance", that gives the distance to a Shape (green nodes)
