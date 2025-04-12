@@ -113,7 +113,7 @@ void ProjectManager::create_new_project_in_file(std::filesystem::path file_path,
     project.camera_3D_manager.is_editable_in_view() = false;
     _impl.set_project(std::move(project), on_project_loaded);
 
-    file_path = Cool::File::find_available_path(file_path, Cool::ExportPathChecks{});
+    file_path = Cool::File::find_available_path(file_path, Cool::PathChecks{});
     // Save immediately, so that no one will try to create another project with the same name, thinking the name is not in use
     std::ignore = save_project_impl(file_path, true /*must_absolutely_succeed*/, set_window_title);
 }

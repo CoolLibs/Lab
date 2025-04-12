@@ -6,8 +6,8 @@
 #include "Commands/Command_OpenVideoExporter.h"
 #include "Cool/DebugOptions/debug_options_windows.h"
 #include "Cool/File/File.h"
+#include "Cool/File/PathChecks.hpp"
 #include "Cool/ImGui/ColorThemes.h"
-#include "Cool/ImGui/ExportPathChecks.hpp"
 #include "Cool/ImGui/Fonts.h"
 #include "Cool/ImGui/IcoMoonCodepoints.h"
 #include "Cool/ImGui/ImGuiExtras.h"
@@ -399,9 +399,9 @@ static auto file_to_save_backup_project(std::filesystem::path const& image_path)
     return Cool::File::with_extension(image_path, COOLLAB_FILE_EXTENSION);
 }
 
-static auto image_export_path_checks() -> Cool::ExportPathChecks
+static auto image_export_path_checks() -> Cool::PathChecks
 {
-    return Cool::ExportPathChecks{
+    return Cool::PathChecks{
         .warnings_checks = {
             Cool::export_path_existence_check(),
             [](std::filesystem::path const& image_path) {
