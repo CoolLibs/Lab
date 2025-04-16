@@ -25,18 +25,12 @@ public:
         revert(make_reversible_command(std::forward<ConcreteReversibleCommandT>(command)));
     }
 
-    void execute(ReversibleCommand const& command)
+    void execute(TestCommand const& command)
     {
-        command->execute(_context);
-        if (DebugOptions::log_when_executing_a_command())
-            Cool::Log::info("Command", command->to_string());
     }
 
-    void revert(ReversibleCommand const& command)
+    void revert(TestCommand const& command)
     {
-        command->revert(_context);
-        if (DebugOptions::log_when_executing_a_command())
-            Cool::Log::info("Command", command->to_string());
     }
 
 private:

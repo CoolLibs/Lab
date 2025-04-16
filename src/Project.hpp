@@ -42,7 +42,7 @@ private:
     {
 #if defined(__linux__) || defined(__APPLE__)
         // TODO fix this, on macos too
-        history.set_max_saved_size(0); // TODO HACK to avoid a crash when deserializing the history: https://github.com/orgs/CoolLibs/projects/1/views/1?pane=issue&itemId=46983814
+        //  history.set_max_saved_size(0); // TODO HACK to avoid a crash when deserializing the history: https://github.com/orgs/CoolLibs/projects/1/views/1?pane=issue&itemId=46983814
 #endif
         archive(
             ser20::make_nvp("Time", clock),

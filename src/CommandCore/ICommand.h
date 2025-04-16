@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ReversibleCommand.h"
 
 namespace Lab {

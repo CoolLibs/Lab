@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Dependencies/TestCommand.hpp"
 #include "ReversibleCommand.h"
 
 namespace Lab {
@@ -7,12 +8,12 @@ namespace Lab {
 class ReversibleCommandMerger_Ref {
 public:
     static auto merge(
-        const ReversibleCommand& prev,
-        const ReversibleCommand& curr
+        const TestCommand& prev,
+        const TestCommand& curr
     )
-        -> std::optional<ReversibleCommand>
+        -> std::optional<TestCommand>
     {
-        return curr->merge(*prev);
+        return {};
     }
 };
 
