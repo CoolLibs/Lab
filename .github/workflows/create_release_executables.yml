@@ -230,7 +230,7 @@ jobs:
           security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" build.keychain
           rm certificate.p12
           find "${{github.workspace}}/app-resources/Coollab.app" -name "*.dylib" -exec codesign --force --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" {} \;
-          codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" --entitlements "${{github.workspace}}/app-resources/Coollab.entitlements" "${{github.workspace}}/app-resources/Coollab.app"
+          codesign --timestamp --options runtime --sign "Developer ID Application: Jules Fouchy ($TEAM_ID)" "${{github.workspace}}/app-resources/Coollab.app"
           ditto -c -k --keepParent "${{github.workspace}}/app-resources/Coollab.app" Coollab.zip
           xcrun notarytool submit Coollab.zip --apple-id "$APPLE_ID_USERNAME" --password "$APPLE_ID_APP_SPECIFIC_PASSWORD" --team-id "$TEAM_ID" --wait
           xcrun stapler staple "${{github.workspace}}/app-resources/Coollab.app"
