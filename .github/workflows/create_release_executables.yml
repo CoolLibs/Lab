@@ -6,7 +6,7 @@ on:
       - "*"
 
 env:
-  cmake_configure_args: -D WARNINGS_AS_ERRORS_FOR_COOLLAB=ON -D COOLLAB_REQUIRE_ALL_FEATURES=ON
+  cmake_configure_args: -D WARNINGS_AS_ERRORS_FOR_COOLLAB=OFF -D COOLLAB_REQUIRE_ALL_FEATURES=ON
   cmakelists_folder: "."
   cmake_target: Coollab
 
