@@ -1,17 +1,23 @@
 # Changelog
 
-##
+## 1.2.0 MacOS
 
+- 💥 [**YOU NEED TO INSTALL THE LATEST VERSION OF THE LAUNCHER (2.0.0)**](https://coollab-art.com/Download). We had a nasty bug that could cause some projects to not appear properly in the launcher. We fixed it but this means all projects created with new versions of Coollab will not work well with the old launcher. We are sorry to add this annoying breaking change, but we decided to do it now while we don't have too many users, and while you don't have too many projects, rather than having the bug break some projects randomly in the future. 
 - ✨ Coollab now works on MacOS!
+- 🟦 Node: renamed "2D Variation (Gradient)" as "Make Displacement Map"
+- 🟦 Node: renamed "Displace" as "Displacement Map" and improved it and added some parameters
+![](https://github.com/user-attachments/assets/e0adaaef-fad8-496c-b8e3-7f2b6d6a6f88)
+- 🟦 Node: added "Distance", that gives the distance to a Shape. You can use it for example to apply a Color Ramp that changes as you get away from the shape
+![](https://github.com/user-attachments/assets/37929fcf-7215-45c6-b0fa-76de32ae63f5)
+- 🟦 Node: better default values for "Fisheye" parameters
+- 🤏 Improved fullscreen mode (<kbd>F11</kbd>). The window will no longer minify when clicking on another screen. It is also faster to switch between fullscreen and non-fullscreen, and the window does not flicker weirdly when switching to another window or screen
 - 🤏 Added shortcuts <kbd>CTRL</kbd><kbd>+</kbd> and <kbd>CTRL</kbd><kbd>-</kbd> to zoom the UI
 - 🤏 Renamed "UI Scale" as "UI Zoom"
-- 🤏 Improved fullscreen mode (<kbd>F11</kbd>). The window will no longer minify when clicking on another screen. It is also faster to switch between fullscreen and non-fullscreen, and the window does not flicker weirdly when switching to another window or screen.
-- 🐛 We now stop checking for webcams info as soon as we stop using a webcam
-- 🐛 When exporting an image that overwrites an existing image file, the backup project that we create will now also overwrite the existing backup project. And we added a warning to tell you that this will happen and ask for your confirmation.
-- 🟦 Nodes: renamed "2D Variation (Gradient)" as "Make Displacement Map"
-- 🟦 Nodes: renamed "Displace" as "Displacement Map" + improved it and added some parameters
-- 🟦 Nodes: added "Distance", that gives the distance to a Shape (green nodes)
-- 🟦 Nodes: better default values for "Fisheye" parameters
+- 🤏 Save As now switches to the new project by default. Also the setting to control this has been renamed as *\"Save As\" behaves as a \"Save Backup\"*
+- 🤏 We now use the Dark theme by default, instead of using the theme configured in your OS (which was Light for most people)
+- 🐛 When exporting an image that overwrites an existing image file, the backup project that we create will now also overwrite the existing backup project. And we added a warning to tell you that this will happen and ask for your confirmation
+- 🐛 Notifications where not properly scaled when zooming the UI
+- 🐛 We now stop checking for webcams info as soon as we stop using a webcam, which saves some performance
 
 ## 1.1.1 UI Scale
 
