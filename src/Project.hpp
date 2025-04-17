@@ -41,8 +41,9 @@ private:
     void serialize(Archive& archive)
     {
 #if defined(__linux__) || defined(__APPLE__)
-        // TODO fix this, on macos too
         history.set_max_saved_size(0); // TODO HACK to avoid a crash when deserializing the history: https://github.com/orgs/CoolLibs/projects/1/views/1?pane=issue&itemId=46983814
+                                       // This crash is coming from the deserialization of our commands, this is not specific to the history
+                                       // We would need to simplify / rewrite our Commands because there is a bug in all our templates and virtual classes
 #endif
         archive(
             ser20::make_nvp("Time", clock),

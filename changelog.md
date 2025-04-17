@@ -13,7 +13,7 @@
 - 🤏 Improved fullscreen mode (<kbd>F11</kbd>). The window will no longer minify when clicking on another screen. It is also faster to switch between fullscreen and non-fullscreen, and the window does not flicker weirdly when switching to another window or screen
 - 🤏 Added shortcuts <kbd>CTRL</kbd><kbd>+</kbd> and <kbd>CTRL</kbd><kbd>-</kbd> to zoom the UI
 - 🤏 Renamed "UI Scale" as "UI Zoom"
-- 🤏 Save As now switches to the new project by default. Also the setting to control this has been renamed as *\"Save As\" behaves as a \"Save Backup\"*
+- 🤏 *Save As* now switches to the new project by default. The setting to control this has been renamed as *\"Save As\" behaves as a \"Save Backup\"*
 - 🤏 We now use the Dark theme by default, instead of using the theme configured in your OS (which was Light for most people)
 - 🐛 When exporting an image that overwrites an existing image file, the backup project that we create will now also overwrite the existing backup project. And we added a warning to tell you that this will happen and ask for your confirmation
 - 🐛 Notifications where not properly scaled when zooming the UI
