@@ -310,7 +310,7 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
             save_thumbnail(*info_folder);
     }
 
-    bool const wants_to_switch_to_new_project = user_settings().switch_to_new_project_when_saving_as
+    bool const wants_to_switch_to_new_project = !user_settings().save_as_behaves_as_save_backup
                                                 && options.register_project_in_the_launcher; // If we don't register this project in the launcher, then we shouldn't make it the current project either)
 
     if (wants_to_switch_to_new_project)
@@ -325,13 +325,15 @@ auto ProjectManager::save_project_as(std::filesystem::path file_path, SaveThumbn
             .custom_imgui_content = [wants_to_switch_to_new_project, file_path, old_file_path = _impl.project_path()]() {
                 if (wants_to_switch_to_new_project)
                 {
-                    if (ImGui::Button("Switch back to the old project"))
+                    if (ImGui::Button(fmt::format("Switch back to \"{}\"", Cool::File::file_name_without_extension(old_file_path)).c_str()))
                         execute_command(Command_OpenProjectOnNextFrame{old_file_path});
+                    Cool::ImGuiExtras::help_marker("If you always want to switch back you can make this the default behaviour by enabling \"Save As behaves as a Save Backup\" in the  " ICOMOON_COG "Settings menu");
                 }
                 else
                 {
-                    if (ImGui::Button("Switch to this new project"))
+                    if (ImGui::Button(fmt::format("Switch to \"{}\"", Cool::File::file_name_without_extension(file_path)).c_str()))
                         execute_command(Command_OpenProjectOnNextFrame{file_path});
+                    Cool::ImGuiExtras::help_marker("If you always want to switch you can make this the default behaviour by disabling \"Save As behaves as a Save Backup\" in the  " ICOMOON_COG "Settings menu");
                 }
             },
             .duration = 5s,

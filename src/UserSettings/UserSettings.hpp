@@ -5,10 +5,10 @@
 namespace Lab {
 
 struct UserSettings {
-    bool switch_to_new_project_when_saving_as{false};
+    bool save_as_behaves_as_save_backup{false};
 
     auto imgui() -> bool;
-    auto imgui_switch_to_new_project_when_saving_as() -> bool;
+    auto imgui_save_as_behaves_as_save_backup() -> bool;
 
     void update() { _serializer.update(); }
     void save() { _serializer.save(); }
@@ -19,10 +19,10 @@ private:
         "coollab_user_settings.json",
         false /*autosave_when_destroyed*/, // This is a static instance, so saving it in the destructor is dangerous because we don't know when it will happen exactly. Instead, we call save manually at the end of the run()
         [&](nlohmann::json const& json) {
-            Cool::json_get(json, "Switch to the new project when saving as", switch_to_new_project_when_saving_as);
+            Cool::json_get(json, "Save As behaves as Save Backup", save_as_behaves_as_save_backup);
         },
         [&](nlohmann::json& json) {
-            Cool::json_set(json, "Switch to the new project when saving as", switch_to_new_project_when_saving_as);
+            Cool::json_set(json, "Save As behaves as Save Backup", save_as_behaves_as_save_backup);
         },
         false /*use_shared_user_data*/
     };
