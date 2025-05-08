@@ -16,18 +16,22 @@ Coollab can be used for VJing, exporting videos, creating interactive installati
 
 ### Clone
 
-⚠ Since we use Git submodules you need to clone them alongside the project. The easiest way is to use the command
+⚠ Since we use Git submodules you need to clone them alongside the project. The easiest way is to use the command:
 ```
 git clone --recursive https://github.com/Coollab-Art/Coollab
 ```
 
-If later on while compiling you get an error like
+If later on while compiling you get an error like:
 ```
-include could not find requested file:
-  Cool/cmake/IncludeMe.cmake
+[cmake] CMake Error at CMakeLists.txt:44 (add_subdirectory):
+[cmake]   The source directory
+[cmake] 
+[cmake]     C:/Users/fouch/Downloads/Coollab/Cool
+[cmake] 
+[cmake]   does not contain a CMakeLists.txt file.
 ```
 
-it most likely means you forgot the submodules. To grab them after having cloned the project, use 
+it most likely means you forgot the submodules. To grab them after having cloned the project, use:
 ```
 git submodule update --init --recursive
 ```
@@ -36,12 +40,41 @@ git submodule update --init --recursive
 
 Coollab is built using CMake. If you don't know how to install and use it, [here is a tutorial](https://github.com/JulesFouchy/Simple-Cpp-Setup?tab=readme-ov-file#simple-cpp-setup).
 
+### Important tools
+
+Install [clang-format](https://julesfouchy.github.io/Learn--Clean-Code-With-Cpp/lessons/formatting-tool/) and [clang-tidy](https://julesfouchy.github.io/Learn--Clean-Code-With-Cpp/lessons/static-analysers/). Clang-format will format your code automatically, and clang-tidy will warn you when you make programming mistakes. These are two very important tools!
+
+### Dev Tips
+
+- TODO create a page explaining how to edit the Default User Data (imgui.ini, color_config.json, etc)
+- If you add a third-party library, check its license and, if it requires it, make sure we install the license in the CMake:
+```cmake
+# LICENSE
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}\\\\LICENSE")
+install(FILES "lib/cpp-httplib/LICENSE" DESTINATION license/cpp-httplib)
+```
+
+- TODO Talk about debug options (and you can create your own)
+
+- TODO Talk about shortcut for ImGui Item Picker
+- TODO Talk about the ImGui demo window
+
+- TODO how to run the tests
+
+### Branches
+
+:::tip
+**Never commit on the *main* branch!**<br/>
+We always work on branches, and then create pull requests that must be reviewed by others before merging them into main.
+:::
+
+- Create a branch on *Cool*, and a branch on *CoolLab*. **They should both have the same name**.
+- Switching between your branch and main is annoying because we use submodules and you would have two branches to switch and it can be painful. This is why we **strongly** recommend that you clone the repository twice, and you always leave one of them on main, and the other on your branch.
+
 ### Creating a new library
 
 If you are about to create a small system that doesn't have any dependencies on the rest of *Cool*, then making it into a standalone library makes a lot of sense.<br/>
 We try to do that whenever possible because it encourages a more decoupled and flexible design, and makes it easily reusable by others without having to include the whole of *Cool*.
-
-## How to
 
 - Create a new repository from [our template](https://github.com/Coollab-Art/library-template):
     - ⚠️ **Make sure the _Owner_ is set to Coollab-Art, not to your personal account!**
