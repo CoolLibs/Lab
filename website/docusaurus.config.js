@@ -7,7 +7,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula")
 const math = require("remark-math")
 const katex = require("rehype-katex")
 
-const organizationName = "CoolLibs"
+const organizationName = "Coollab-Art"
 const projectName = "Lab"
 
 /** @type {import('@docusaurus/types').Config} */
@@ -145,7 +145,7 @@ const config = {
               },
               {
                 label: "GitHub",
-                to: "https://github.com/CoolLibs/Lab",
+                to: "https://github.com/Coollab-Art/Coollab",
               },
             ],
           },
@@ -154,11 +154,11 @@ const config = {
             items: [
               {
                 label: "Report a bug",
-                to: "https://github.com/CoolLibs/Lab/issues/new?assignees=&labels=bug%2Ctriage&template=bug-report.yaml&title=%5BBug%5D+",
+                to: "https://github.com/Coollab-Art/Coollab/issues/new?assignees=&labels=bug%2Ctriage&template=bug-report.yaml&title=%5BBug%5D+",
               },
               {
                 label: "Give us feedback",
-                to: "https://github.com/CoolLibs/Lab/issues/new?assignees=&labels=enhancement%2Ctriage&template=feature-suggestion.yaml&title=%5BFeature%5D+",
+                to: "https://github.com/Coollab-Art/Coollab/issues/new?assignees=&labels=enhancement%2Ctriage&template=feature-suggestion.yaml&title=%5BFeature%5D+",
               },
             ],
           },

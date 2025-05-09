@@ -74,12 +74,12 @@
 
 ### New and improved nodes
 
-- 🟦 Added a Glow node that works on any Image (the previous one only worked on Shapes, and is still here because it still looks better on Shapes than the new one). Thank you to [illtellyoulater](https://github.com/CoolLibs/Lab/issues/110) for this contribution!
+- 🟦 Added a Glow node that works on any Image (the previous one only worked on Shapes, and is still here because it still looks better on Shapes than the new one). Thank you to [illtellyoulater](https://github.com/Coollab-Art/Coollab/issues/110) for this contribution!
 ![](https://github.com/user-attachments/assets/3337367d-d2ee-498b-a5ff-ba2131ecbedb)
 - 🟦 Added "Monochrome" node
 ![](https://github.com/user-attachments/assets/08d7d280-c8b9-4ae2-b640-20d6c4817a9a)
 - 🟦 Added "MIDI Multi-Select with Transition" node
-![](https://github.com/CoolLibs/Lab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/bb809bdf-c0ae-44c1-af53-2ef3961d99fa)
 - 🟦 "Mirror Repeat" and "Grid" nodes now have a "Content Size" parameter to allow you to fit your content in the square that will be repeated
 ![](https://github.com/user-attachments/assets/af5f70ee-d43c-488c-bc03-bc691d072386)
 - 🟦 Image, Video, Webcam and Color Ramp are now using the "Mirror" repeat mode by default. This can be changed in the Inspector.
@@ -109,22 +109,22 @@ After:
 ## 🐣 Beta 17
 
 - ✨ Greatly improved video import: we now support videos with transparency, and GIFs
-![](https://github.com/CoolLibs/Lab/assets/45451201/e5005eff-5b16-41ef-a4b1-74a46c481edc)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/e5005eff-5b16-41ef-a4b1-74a46c481edc)
 - ⚡ The performance of playing a video has been greatly improved
 - 🐛 Video import now also works on Linux and MacOS
 - 🐛 Many bug fixes around the video import and playback
 - ✨ Improved MIDI support: buttons now have several modes (toggle, selector, pressed)
-![](https://github.com/CoolLibs/Lab/assets/45451201/7826e34f-9210-4002-a145-385bf4107f29)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/7826e34f-9210-4002-a145-385bf4107f29)
 - 🟦 MIDI nodes: Added "Last MIDI button pressed", and you can now change the Min and Max output values of the "MIDI" node
 - 🟦 Nodes: Added "Select" and "Multi-Select" which can typically be used in combination with MIDI buttons, to switch between various images / effects
-![](https://github.com/CoolLibs/Lab/assets/45451201/c1692212-a6ea-4d2f-8e7d-4bc4f1c3f887)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/c1692212-a6ea-4d2f-8e7d-4bc4f1c3f887)
 - ✨ When exporting a video, if the output folder already contains frames from a previous export you now have 4 options, and by default we will prompt you to create a new folder
-![](https://github.com/CoolLibs/Lab/assets/45451201/e5840829-21d5-4734-a388-5fd905dec17d)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/e5840829-21d5-4734-a388-5fd905dec17d)
 
 ## 🐣 Beta 16
 
 - ✨ You can now import video files! Using the "Video from File" node.
-![](https://github.com/CoolLibs/Lab/assets/45451201/fb7561df-f775-43d5-bbf4-1dedd32563bf)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/fb7561df-f775-43d5-bbf4-1dedd32563bf)
 - 🤏 The time in the timeline is now nicely formatted (as "3m 43s 512ms"). You can also input it like that (by CTRL+clicking on the timeline), as any combination of millisecond (ms) / second (s) / minute (m) / hour (h) / day (d) / week (w). For example "3m43".
 - 🤏 The slider for some parameters (Zoom, Time Speed, etc.) now behaves logarithmically, meaning it will have equal precision in the 0-1 range as in 1-∞. Basically this means they are more practical to use.
 - 🤏 When using a Drag widget, the mouse position now stays locked in place instead of wrapping around the screen.
@@ -139,7 +139,7 @@ After:
 ## 🐣 Beta 15
 
 - ✨ Added a Time Speed on the timeline, which allows you to slow down or speed up your entire animation easily.
-![](https://github.com/CoolLibs/Lab/assets/45451201/53cb9489-8924-4761-86bc-5191a00afa28)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/53cb9489-8924-4761-86bc-5191a00afa28)
 - 🐛 Fixed camera movements when using particles
 - 🐛 When dragging gizmos, mouse can now wrap around the screen
 - 🐛 Fixed: When writing your own nodes, they were not detected.
@@ -154,16 +154,16 @@ After:
 ## 🐣 Beta 13
 
 - ✨ You can now copy-paste nodes! (CTRL+C / CTRL+V) You can even paste them from one project to another, or send them as text to a friend, who can then paste them in their instance of Coollab.
-![](https://github.com/CoolLibs/Lab/assets/45451201/28a9c941-bc9a-49a6-b56f-5dadc2c005d7)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/28a9c941-bc9a-49a6-b56f-5dadc2c005d7)
 - ✨ Adding and removing nodes and links can now be undone and redone (CTRL+Z / CTRL+Y)
-![](https://github.com/CoolLibs/Lab/assets/45451201/6e4d7e62-a919-4e71-81cf-76e5cb0b24e5)
+![](https://github.com/Coollab-Art/Coollab/assets/45451201/6e4d7e62-a919-4e71-81cf-76e5cb0b24e5)
 - ✨ Changes to the 2D Camera can now be undone and redone (CTRL+Z / CTRL+Y)
 - ✨ Applying a preset can now be undone and redone (CTRL+Z / CTRL+Y)
 
 ## 🐣 Beta 12
 
 - ✨ Added OSC support! You can now control Coollab through OSC messages from your smartphone or another software on your computer! Just use the "OSC" node and select which channel's value you want to use.
-![OSC](https://github.com/CoolLibs/Lab/assets/45451201/9e0b1284-97fd-4c4e-8ba5-0909ada8b242)
+![OSC](https://github.com/Coollab-Art/Coollab/assets/45451201/9e0b1284-97fd-4c4e-8ba5-0909ada8b242)
 - ⚡ Improved performance when using Midi input.
 - 🐛 Fixed a rare crash when using Midi input.
 - 🐛 Fixed a bug that caused the Nodes window to zoom out a bit each time you opened Coollab.
@@ -171,7 +171,7 @@ After:
 ## 🐣 Beta 11
 
 - ✨ Added particles! This a very promising prototype that you can already use today. An important overhaul of the system will come at some point in a (probably distant) future. (NB: Unfortunately particles are not currently available on MacOS, and will not be for a very long while).
-![Particles](https://github.com/CoolLibs/Lab/assets/45451201/7a8da2ef-df37-44fe-bf93-6cd37638c9f6)
+![Particles](https://github.com/Coollab-Art/Coollab/assets/45451201/7a8da2ef-df37-44fe-bf93-6cd37638c9f6)
 - ✨ Improved the randomness of our Random and Noise nodes.
 - ✨ Prevented mouse from getting blocked on the screen edges while dragging a widget or the camera. Instead the mouse wraps around.
 - ✨ Prevented mouse from getting blocked on the screen edges while dragging a node or a link or a selection rectangle in the nodes view. Instead the canvas starts translating as expected.
@@ -186,10 +186,10 @@ After:
 ## 🐣 Beta 10
 
 - ✨ Added Audio support! You can now import an audio file and play it while you generate your images. You can also use its volume and waveform to control your images. You can also receive sound from an input device (microphone, etc.). Check out [our audio tutorial](https://coollab-art.com/Tutorials/Features/Audio) to learn everything about it!
-![node_spectrum](https://github.com/CoolLibs/Lab/assets/45451201/17e77692-7941-4983-b2cf-a30b13aeee12)
+![node_spectrum](https://github.com/Coollab-Art/Coollab/assets/45451201/17e77692-7941-4983-b2cf-a30b13aeee12)
 - 🟦 Added new nodes that you can use to display the audio features: "Fill Function", "Function to Shape" and "Add Displacement".
 - 💄 Added icons in the Commands menu.
-![open_audio_config_command](https://github.com/CoolLibs/Lab/assets/45451201/3a49dd4b-1247-4329-8ed0-81004940ae77)
+![open_audio_config_command](https://github.com/Coollab-Art/Coollab/assets/45451201/3a49dd4b-1247-4329-8ed0-81004940ae77)
 - 🐛 Fixed crash on Linux when opening a file explorer.
 - 🐛 Temporary workaround: on Linux the history isn't saved when closing Coollab, in order to avoid a crash.
 - 🚚 On Linux, moved user-data folder to *.local/share*
@@ -197,17 +197,17 @@ After:
 ## 🐣 Beta 9
 
 - ✨ Added MIDI support! You can now plug-in your MIDI keyboard, select your knob / slider by index, and use its value to control parameters of your nodes.
-![image](https://github.com/CoolLibs/.github/assets/45451201/5a8d4950-57a0-4282-b549-6c66487448c3)
+![image](https://github.com/Coollab-Art/.github/assets/45451201/5a8d4950-57a0-4282-b549-6c66487448c3)
 - ✨ Added the "Paint" blend mode.
 
-| ![image](https://github.com/CoolLibs/.github/assets/45451201/6f57a43d-a422-4056-81e1-c691e4c85d84) | ![image](https://github.com/CoolLibs/.github/assets/45451201/9b12b5bf-7f15-408b-93e9-552e0caa30ea) |
+| ![image](https://github.com/Coollab-Art/.github/assets/45451201/6f57a43d-a422-4056-81e1-c691e4c85d84) | ![image](https://github.com/Coollab-Art/.github/assets/45451201/9b12b5bf-7f15-408b-93e9-552e0caa30ea) |
 | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | "Light" mode (what was already there in Coollab)                                                   | "Paint" mode (the new blend mode)                                                                  |
 
 - ✨ Added an Output window that you can project during live shows, while still having your View window on your screen to move the camera and the widgets. To open this window, go in the `Commands` menu and select `Open output window`.
-![image](https://github.com/CoolLibs/.github/assets/45451201/3d6a14ec-69ca-44b1-81e0-1d4139b72544)
+![image](https://github.com/Coollab-Art/.github/assets/45451201/3d6a14ec-69ca-44b1-81e0-1d4139b72544)
 - ✨ Added "Open Backup" in case you accidentally refused to save your unsaved changes.
-![image](https://github.com/CoolLibs/.github/assets/45451201/99287d7b-15a1-480b-98d4-0ca5c4777b86)
+![image](https://github.com/Coollab-Art/.github/assets/45451201/99287d7b-15a1-480b-98d4-0ca5c4777b86)
 - 🐛 Fix: the transparency information was sometimes getting lost between nodes.
 - 🐛 Fix: crash on Linux "Too many open files".
 - ⚡️ Fix lag when editing the color gradient on a Color Ramp node.
@@ -217,13 +217,13 @@ After:
 ## 🐣 Beta 8
 
 - ✨ Added project files: you can now save and open projects, allowing you to keep and share your work!
-![image](https://github.com/CoolLibs/Lab/assets/45451201/00270343-3a45-4e92-93cc-729f0f674c1e)
+![image](https://github.com/Coollab-Art/Coollab/assets/45451201/00270343-3a45-4e92-93cc-729f0f674c1e)
 - ✨ Coollab now has an installer! You don't need to download the raw executable anymore.
-![image](https://github.com/CoolLibs/Lab/assets/45451201/a1042659-e003-4dcf-b917-79505c84c28e)
+![image](https://github.com/Coollab-Art/Coollab/assets/45451201/a1042659-e003-4dcf-b917-79505c84c28e)
 - ✨ Added the "Webcam" node!
-![image](https://github.com/CoolLibs/Lab/assets/45451201/77fd1a74-2e7c-43eb-914a-90a711ce2cae)
+![image](https://github.com/Coollab-Art/Coollab/assets/45451201/77fd1a74-2e7c-43eb-914a-90a711ce2cae)
 - ✨ Added feedback loops! Check out the "Feedback" node.
-![ezgif-5-a3c56b1c92](https://github.com/CoolLibs/Lab/assets/45451201/d6513535-6f53-4932-b260-20a54c032380)
+![ezgif-5-a3c56b1c92](https://github.com/Coollab-Art/Coollab/assets/45451201/d6513535-6f53-4932-b260-20a54c032380)
 - 🚚 Renamed "Space Transformation" category as "2D Modifier".
 - 🐛 Fix: some nodes had the wrong color.
 - 🐛 Fix: on Linux, for some window managers like i3, the context menu was not behaving properly. (Now by default we disable multi-viewport in you use one of these custom window managers, which fixes the issue but prevents you from dragging windows outside of the main Coollab window. This can be changed in the Settings menu.) 
@@ -247,17 +247,17 @@ After:
 ## 🐣 Beta 5
 
 - ✨ Added gizmos on the view that allow you to edit Point2Ds visually.
-![Animation](https://github.com/CoolLibs/Lab/assets/45451201/b2a5ad91-e9bf-42d6-ab7a-c60e86e97c40)
+![Animation](https://github.com/Coollab-Art/Coollab/assets/45451201/b2a5ad91-e9bf-42d6-ab7a-c60e86e97c40)
 
 - ✨ Added Bezier Curve node.
 - ✨ Added a full 3D renderer node.
-![Animation-min](https://github.com/CoolLibs/Lab/assets/45451201/5996fb72-258b-46ff-b87d-4195bda21215)
+![Animation-min](https://github.com/Coollab-Art/Coollab/assets/45451201/5996fb72-258b-46ff-b87d-4195bda21215)
 
 - ✨ Added tips that will show up from time to time and teach you about the subtleties and shortcuts of Coollab.
-![image](https://github.com/CoolLibs/Lab/assets/45451201/112c4431-5e68-4617-9bcb-6591755aae05)
+![image](https://github.com/Coollab-Art/Coollab/assets/45451201/112c4431-5e68-4617-9bcb-6591755aae05)
 
 - ✨ Main input pins now have a different icon to distinguish them from the other pins.
-![image](https://github.com/CoolLibs/Lab/assets/45451201/73191129-3c1a-4fb0-afa8-6651100399aa)
+![image](https://github.com/Coollab-Art/Coollab/assets/45451201/73191129-3c1a-4fb0-afa8-6651100399aa)
 
 - 🐛 Fix: prevent panning the nodes while you are panning the camera.
 - 🐛 Fixed the camera controls not working when the View window was on another screen.

@@ -1,4 +1,4 @@
-// Credit: [illtellyoulater](https://github.com/CoolLibs/Lab/issues/110)
+// Credit: [illtellyoulater](https://github.com/Coollab-Art/Coollab/issues/110)
 
 INPUT UV->Oklab_PremultipliedA 'Image';
 INPUT float 'Brightness';
