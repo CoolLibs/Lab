@@ -1,6 +1,6 @@
 # Changelog
 
-## 
+## 1.7.9 Mask to Shape
 
 - 🐛 Fix: "Noise Simplex" and "Screen Shake" nodes couldn't be both used at the same time
 
