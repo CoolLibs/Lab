@@ -1,5 +1,9 @@
 # Changelog
 
+## 
+
+- 🐛 Fix: "Noise Simplex" and "Screen Shake" nodes couldn't be both used at the same time
+
 ## 1.7.8 Mask to Shape
 
 - 🐛 Fix particles not working on some computers
